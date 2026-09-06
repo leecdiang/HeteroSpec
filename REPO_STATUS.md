@@ -1,6 +1,6 @@
 # Repository status
 
-- Repository root: `D:\HeteroSpec-PC` (local only; collaborators may clone elsewhere)
+- Repository root: `<local clone root>`
 - Current branch: `main`
 - Initial commit: `2d5da413daf6bd6a44008b5954bdcf2f9a19ed3f`
 - Initially tracked file count: 117
@@ -33,5 +33,5 @@
 
 ## Remote status
 
-No GitHub remote configured.  
-No files pushed.
+Private GitHub target: `https://github.com/leecdiang/HeteroSpec`.  
+The initial push is authorized for `main`; no other remotes are configured.

@@ -3,4 +3,24 @@ status: pending_architecture_control
 os: macOS
 device: MacBook Air M4
 unified_memory_gb: 24
-
+research_role: unified_memory_single_vendor_runtime_control
+runtime_primary: mlx-lm
+runtime_fallback: llama.cpp-metal
+model_pair_primary:
+  target: Qwen3-8B
+  draft: Qwen3-0.6B
+  quantization: native_4bit_to_be_frozen_on_device
+protocol:
+  split: root_cause_12q
+  batch_size: 1
+  temperature: 0
+  max_new_tokens: 64
+  fixed_k: [2, 4, 6]
+  dynamic_schedule: optional_separate_condition
+gates:
+  exact_token_equality: required
+  sustained_swap_growth: forbidden
+  memory_pressure: normal
+  silent_fallback: forbidden
+  telemetry_domains: qualify_on_device
+out_of_scope: [full_benchmark, 60q, 420q, 20b, ane_draft, custom_harness_port]

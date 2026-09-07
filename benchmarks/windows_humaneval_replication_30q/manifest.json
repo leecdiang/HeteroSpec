@@ -1,0 +1,40 @@
+{
+  "schema": "heterospec.windows_humaneval_replication.v1",
+  "status": "closed_correctness_blocked_with_exact_serialized_control",
+  "relationship": "Post-hoc cross-platform replication of the frozen M4 HumanEval 30-prompt study; it does not alter prior Spec-Bench conclusions.",
+  "source_preregistration_commit": "1646c56",
+  "m4_result_commit": null,
+  "m4_result_commit_status": "The attachment reports an M4 result, but no corresponding result commit was present on the fetched origin/macos/m4-feasibility branch; the supplied aggregate is retained as externally reported data.",
+  "task_source": "benchmarks/m4_code_conditioned_30q/preregistration.json",
+  "task_count": 30,
+  "repetitions": 3,
+  "conditions": ["baseline", "cpu_k2", "rtx_k2"],
+  "decoding": {"temperature": 0, "top_k": 0, "top_p": 1, "seed": 123, "max_output_tokens": 128, "k": 2},
+  "runtime": {"name": "llama.cpp", "build": "b10839", "commit": "0cae43063", "backend": "CUDA 12.4", "driver": "616.56"},
+  "models": {
+    "target": {"name": "Qwen3-8B Q8_0", "sha256": "408B955510E196121C1C375201744783B5C9A43C7956D73FC78DF54C66E883D6"},
+    "draft": {"name": "Qwen3-0.6B Q8_0", "sha256": "9465E63A22ADD5354D9BB4B99E90117043C7124007664907259BD16D043BB031"}
+  },
+  "primary_attempt": {"ubatch_size": 2, "flash_attention": "off", "result": "ABORTED_CORRECTNESS_FAILURE", "failure_task": "HumanEval/106", "evidence": "logs/windows-humaneval-replication-30q.json"},
+  "diagnostic_control": {"ubatch_size": 1, "flash_attention": "off", "result": "PASS_270_OF_270_EXACT", "evidence": "logs/windows-humaneval-replication-30q-ub1.json"},
+  "analysis": {"unit": "prompt", "estimator": "geometric mean of three paired repetition speedups, then geometric mean over 30 prompts", "uncertainty": "10000-resample prompt bootstrap", "seed": 20260910},
+  "energy_limitation": "NVML was sampled at 1 Hz over each process lifetime, including model loading; no decode-window or CPU package trace was captured, so formal J/output-token is not reported.",
+  "mechanism_followup": {
+    "scope": "Two post-closure validation controls only",
+    "verification_cost": "20-repetition PP2/PP1 proxy at context depths 0 and 256, ubatch 2 versus ubatch 1",
+    "divergence_minrepro": "HumanEval/106 and HumanEval/129, three repetitions, fixed ubatch 2; HumanEval/106 diverged identically 3/3",
+    "logit_margin": "captured with an isolated response-only debug server built from the same commit; formal binary unchanged",
+    "numerical_diagnosis": {
+      "prompt": "HumanEval/106",
+      "legacy_capture_index": 190,
+      "api_generated_index": 65,
+      "runs": 3,
+      "prefix_exact": true,
+      "baseline_delta_2790_minus_2629": 0.08094793558120728,
+      "batched_ub2_delta_2790_minus_2629": -0.12645727396011353,
+      "serialized_ub1_delta_2790_minus_2629": 0.08094793558120728,
+      "sign_flip": true,
+      "interpretation": "consistent with a batch-shape-dependent numerical argmax flip"
+    }
+  }
+}

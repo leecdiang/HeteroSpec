@@ -117,6 +117,21 @@ The RTX 5070 Ti platform will not run the 420 holdout, 20B targets, RTX 14B+draf
 
 > **PRIMARY PLATFORM = CLOSED**
 
+## 10. HumanEval cross-platform follow-up
+
+The frozen M4 30-prompt HumanEval study was replicated with the same Qwen3 Q8_0 model pair, greedy decoding, `k=2`, 128-token cap and three paired repetitions. The intended Windows CUDA batched condition failed the hard token-exact gate and therefore has no admissible speed estimate. An exact serialized (`ubatch=1`) diagnostic completed all 270 generations:
+
+| Diagnostic | Geomean speedup | 95% CI | Exact | Faster prompts | Acceptance |
+|---|---:|---:|---:|---:|---:|
+| CPU→RTX | 0.404x | [0.390, 0.418] | 90/90 | 0/30 | 91.31% |
+| RTX→RTX | 0.650x | [0.629, 0.673] | 90/90 | 0/30 | 91.21% |
+
+Against the reported M4 result of 1.387x [1.351, 1.422], this follow-up shows that high acceptance alone does not determine profitability. Same-GPU placement reduces the Windows penalty but does not remove it, while the CUDA batched verification route on this Blackwell/Q8_0 configuration violates the required lossless equivalence. The cross-platform study is therefore closed as a correctness-blocked primary replication plus decisive exact negative controls; it does not reopen this platform or the 420-question holdout.
+
+Two post-closure mechanism controls quantify the constraint. The CUDA batched PP2/PP1 target-forward ratio is 1.009x at empty depth and 0.983x at depth 256, whereas the exact `ubatch=1` path costs 2.431x and 2.137x respectively. HumanEval/106 reproduces the same divergence at captured index 190 (token 2790 versus 2629) in 3/3 repetitions, while the earlier exact control matches in 3/3. Thus the efficient batched path exists, but the correctness gate forces a near-serial verification path that removes its amortization advantage.
+
+An isolated same-commit diagnostic capture subsequently verified the numerical mechanism without changing the formal binary. At the first divergence, all paths shared the same prefix. Baseline and serialized execution ranked token 2790 above 2629 by +0.080948 logit-equivalent units; batched `ubatch=2` reversed the order to -0.126457 and selected 2629. The values and sign flip repeated identically in 3/3 independent processes. This supports a batch-shape-dependent numerical argmax flip, without identifying a specific CUDA kernel as causal.
+
 ## Artifacts
 
 - `analysis/all_runs.csv`, `analysis/all_rounds.csv`, `analysis/all_power_1s.csv`
@@ -131,3 +146,12 @@ The RTX 5070 Ti platform will not run the 420 holdout, 20B targets, RTX 14B+draf
 - `reports/figures/figure5_power_energy.*`
 - `reports/figures/figure6_empirical_break_even_curve.*`
 - `reports/figures/figure7_draft_device_characterization.*`
+- `reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.{md,csv}`
+- `reports/5070ti/HUMANEVAL_CROSS_PLATFORM_COMPARISON.{md,csv}`
+- `reports/5070ti/figures/humaneval_30q_speedup.*`
+- `reports/5070ti/figures/humaneval_acceptance_speedup.*`
+- `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`
+- `reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv`
+- `reports/5070ti/WINDOWS_CUDA_DIVERGENCE_MINREPRO.csv`
+- `reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md`
+- `reports/5070ti/CUDA_DIVERGENCE_LOGITS.csv`

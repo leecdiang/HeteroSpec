@@ -1,0 +1,80 @@
+{
+  "schema": "heterospec.m4_code_conditioned_preregistration.v1",
+  "study_id": "m4_humaneval_code_conditioned_30q",
+  "preregistered_at_utc": "2026-09-07",
+  "relationship_to_prior_work": "A new workload-conditioned study. It does not reopen or alter the frozen representative Spec-Bench 24Q conclusion (0.842x).",
+  "dataset": {
+    "name": "OpenAI HumanEval",
+    "source": "https://github.com/openai/human-eval",
+    "task_universe": "HumanEval/0 through HumanEval/163",
+    "selection_seed": 20260908,
+    "selection_method": "Python random.Random(seed).sample(range(164), 30), then numeric sort",
+    "selection_frozen_before_prompt_download": true,
+    "task_ids": [
+      "HumanEval/3", "HumanEval/10", "HumanEval/19", "HumanEval/20",
+      "HumanEval/28", "HumanEval/32", "HumanEval/44", "HumanEval/47",
+      "HumanEval/48", "HumanEval/50", "HumanEval/54", "HumanEval/57",
+      "HumanEval/62", "HumanEval/64", "HumanEval/68", "HumanEval/70",
+      "HumanEval/89", "HumanEval/90", "HumanEval/101", "HumanEval/104",
+      "HumanEval/105", "HumanEval/106", "HumanEval/107", "HumanEval/111",
+      "HumanEval/119", "HumanEval/123", "HumanEval/126", "HumanEval/128",
+      "HumanEval/129", "HumanEval/162"
+    ],
+    "selection_exclusions": [],
+    "selection_did_not_use": [
+      "prompt contents",
+      "acceptance",
+      "speedup",
+      "model output",
+      "estimated difficulty"
+    ]
+  },
+  "fixed_runtime": {
+    "runtime": "llama.cpp + Metal (installed build recorded at execution)",
+    "target": "Qwen3-8B Q8_0",
+    "draft": "Qwen3-0.6B Q8_0",
+    "temperature": 0,
+    "batch_size": 1,
+    "max_output_tokens": 128,
+    "spec_draft_n_max": 2,
+    "repetitions_per_prompt_condition": 3,
+    "prompt_template": "Complete the following Python function. Return only the completed Python code, without Markdown fences.\n\n{humaneval_prompt}"
+  },
+  "primary_confirmatory_comparison": {
+    "conditions": ["baseline", "fixed_k2"],
+    "pairing": "Within each prompt and repetition; condition order randomized with seed 20260909 and prompt order randomized within repetition blocks.",
+    "correctness_gate": "100% token-exact baseline/speculative pairs; any mismatch aborts the study.",
+    "unit_of_analysis": "prompt",
+    "speed_estimator": "Geometric mean of each prompt's geometric-mean paired speedup across three repetitions.",
+    "uncertainty": "95% prompt bootstrap confidence interval with seed 20260910.",
+    "energy_metric": "Package J/output-token and baseline/speculative efficiency ratio.",
+    "profitable_regime_confirmed_if": [
+      "token-exact rate is 100%",
+      "geometric-mean speedup is greater than 1.05",
+      "the 95% prompt-bootstrap confidence interval lower bound is greater than 1.00",
+      "package J/output-token is lower under speculation"
+    ],
+    "otherwise": "The code-conditioned profitable regime is not confirmed; no prompt may be removed using post-run acceptance or speed."
+  },
+  "secondary_confidence_gating": {
+    "role": "Secondary runtime-policy analysis; it cannot rescue or redefine the primary fixed-k2 result.",
+    "conditions": [
+      {"name": "k2_pmin_0.8", "spec_draft_n_max": 2, "spec_draft_p_min": 0.8},
+      {"name": "k2_pmin_0.9", "spec_draft_n_max": 2, "spec_draft_p_min": 0.9}
+    ],
+    "dataset_and_repetitions": "The same frozen 30 prompts and three paired repetitions.",
+    "reporting": "Report both thresholds, exactness, speed, energy, acceptance, and all prompts. No threshold selection after observing results."
+  },
+  "synthetic_ceiling": {
+    "role": "Controlled implementation ceiling only; never reported as real-workload performance.",
+    "spec_draft_n_max": 2,
+    "conditional_acceptance_probabilities": [0.6, 0.7, 0.8, 0.9, 0.95, 1.0],
+    "llama_cpp_rates_mapping": "For conditional probability p, pass unconditional per-position rates p,p^2 for k=2.",
+    "repetitions_per_level": 5,
+    "baseline_repetitions": 5,
+    "order_seed": 20260911,
+    "output_tokens": 128,
+    "reporting": "Observed acceptance, accepted tokens/round, median and geometric-mean speedup, and interpolated empirical break-even threshold."
+  },
+  "stop_rule": "After the primary code comparison, registered p-min secondary analysis, and corrected synthetic ceiling are complete, stop M4 experimentation regardless of outcome. Do not change model, runtime, k, acceptance rule, dataset membership, or correctness standard."
+}

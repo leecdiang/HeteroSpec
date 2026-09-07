@@ -15,7 +15,7 @@ For BF16 KV, bytes per token are estimated as `2 × layers × KV heads × head_d
 
 Initial measured state was zero allocated swap and 48% system-wide memory free. The selected short/medium smoke prompts and 64-token cap are far below the 2k row, so the estimate clears the load gate for Qwen3-8B + 0.6B. A passing run still requires no sustained swap growth and normal memory pressure.
 
-## Measured smoke values
+## Pre-reboot measured smoke values
 
 | Run | Prompt tokens | MLX peak | Swap before | Swap after | Formal memory gate |
 |---|---:|---:|---:|---:|---|
@@ -35,3 +35,19 @@ This is an operational classification, not evidence that 24 GB is intrinsically 
 Unified memory can reduce physical device-to-device copies and model-coexistence friction. It does not eliminate kernel dispatch, synchronization, KV bookkeeping, cache trimming, Metal scheduling or contention when target and draft share the GPU. It therefore removes one architectural penalty without guaranteeing speculative speedup.
 
 Qwen3-14B is estimate-only in this phase and was not downloaded or run.
+
+## Post-reboot requalification
+
+After a clean reboot, swap was 0 MiB with zero swap-ins and swap-outs, system
+memory pressure reported 91% free, AC power was connected and Low Power Mode
+was disabled. Two complete paired question-395 runs and the first four-block
+question-469 pilot block all ended with swap still at 0 MiB. Memory pressure
+remained normal (85--86% free after the paired runs).
+
+**Qwen3-8B target = SAFE for the bounded 64-token M1/M2 protocol.**
+
+**Qwen3-8B + 0.6B = SAFE for the bounded 64-token M1/M2 protocol.**
+
+This replaces the earlier session-specific UNSAFE classification. The M2 run
+was stopped for correctness, not memory, so this does not qualify larger
+contexts, 14B, or any expanded benchmark.

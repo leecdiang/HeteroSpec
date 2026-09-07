@@ -2,9 +2,15 @@
 
 ## Decision
 
-**M4 PLATFORM = READY FOR 12Q PILOT**, conditional on a fresh zero-swap memory requalification and one privileged `powermetrics` qualification capture.
+**M4 PLATFORM = HALTED AT M1 EXACT-TOKEN GATE**
 
-The M4 MacBook Air is suitable as HeteroSpec's architecture-control platform: native MLX speculation exists, target/draft KV caches persist, Metal execution works, the specified 8B/0.6B pair coexists, and the bounded `k=4` canary produced 64/64 exact target tokens. A one-prompt warm diagnostic showed useful speedup, so a later 12Q native control has research value. It is not ready to start that pilot in the current desktop session because swap grew during both target-only and paired canaries, and component-power fields remain unqualified without administrator authorization.
+The reboot resolved the two operational blockers: the 8B/0.6B pair repeatedly
+ran with swap fixed at zero, and Silemetry supplied valid no-sudo component
+power through IOReport. The original question-395 canary again matched exactly.
+However, frozen question 469 diverged deterministically at output token 24 for
+`k=2,4,6`, including a fresh-process `k=2` reproduction. The 12Q performance
+pilot therefore stopped after its first 4 of 144 planned blocks. No speed or
+energy result is promoted.
 
 ## Required status
 
@@ -28,35 +34,39 @@ MLX/Metal and a native speculative canary were tested. MPS executed an on-device
 ### Memory
 
 ```text
-Qwen3-8B target = UNSAFE
-Qwen3-8B + 0.6B = UNSAFE
+Qwen3-8B target = SAFE FOR BOUNDED 64-TOKEN PROTOCOL
+Qwen3-8B + 0.6B = SAFE FOR BOUNDED 64-TOKEN PROTOCOL
 ```
 
-Both configurations fit and ran, but the formal no-swap-growth rule failed in the current active desktop state. Reclassification to SAFE requires a fresh zero-swap rerun.
+After reboot, two paired canaries and the first pilot block retained swap at
+0 MiB with normal memory pressure. This does not qualify larger contexts or
+models.
 
 ### Correctness
 
 ```text
 BASELINE = PASS
 SPECULATIVE = PASS
-EXACT MATCH = PASS
+EXACT MATCH = FAIL (FROZEN QUESTION 469)
 ```
 
 ### Telemetry
 
 ```text
-POWER TELEMETRY = PARTIAL
+POWER TELEMETRY = PASS WITH PRIVATE-API LIMITATION
 ```
 
-The OS advertises CPU/GPU/ANE/thermal samplers at 1 s resolution, but actual `powermetrics` sampling requires root and non-interactive sudo was unavailable.
+Silemetry TelemetryCore returned CPU/GPU/ANE/DRAM/package power without sudo.
+It relies on private IOReport/AppleSMC interfaces, so captures are suitable for
+this fixed machine/build but not presented as a stable cross-version API.
 
 ## Bounded next-phase recommendation
 
-After the two preconditions pass, run only the existing 12 root-cause prompts:
-
-- M0: Qwen3-8B target-only.
-- M1: Qwen3-8B + Qwen3-0.6B native MLX-LM speculation.
-- Fixed `k=2,4,6`, three repetitions per configuration; dynamic scheduling is omitted because installed MLX-LM exposes fixed `num_draft_tokens`, not a dynamic scheduler.
-- Preserve exact-token gating, 1-second raw/aggregated telemetry, swap/pressure/thermal state and within-M4 relative speedup.
+Do not resume the 12Q performance run under the current exact-token protocol.
+The bounded result is a correctness failure of native speculation with the
+selected 4-bit target, traced to a target-logit near tie that changes under the
+batched verification shape. A future, separately approved diagnostic could
+test a higher-precision target or independent runtime, but it must not be
+merged with this stopped condition.
 
 Do not enter 60Q, 420Q, a 14B run, ANE development or a custom speculative-runtime rewrite without a separate decision.

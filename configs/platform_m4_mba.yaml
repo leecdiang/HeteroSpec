@@ -1,5 +1,5 @@
 platform: m4_mba
-status: ready_for_12q_pilot_conditional
+status: halted_at_m1_exact_token_gate
 os: macOS 26.6.2
 os_build: 25G83
 model_identifier: Mac16,13
@@ -40,9 +40,15 @@ observed_gates:
   mps_basic_operation: pass
   baseline_smoke: pass
   speculative_smoke: pass
-  exact_token_equality: pass
-  current_session_swap_growth: fail
-  power_telemetry: partial_requires_root
+  exact_token_equality: fail_on_frozen_question_469_at_output_index_24
+  post_reboot_swap_growth: pass_zero_to_zero
+  power_telemetry: pass_silemetry_ioreport_sudoless
+  m2_12q_pilot: aborted_after_first_question_block
+telemetry:
+  source: Silemetry-mac_TelemetryCore_0.1.0_macmon_0.8.0
+  interface: IOReport_and_AppleSMC_private_unsupported_apis
+  sample_interval_ms: 1000
+  qualified_domains: [cpu_power, gpu_power, ane_power, dram_power, package_power]
 power_state:
   source: AC
   low_power_mode: false

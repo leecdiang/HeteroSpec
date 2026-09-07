@@ -23,6 +23,13 @@ MLX-LM's generate and server CLIs expose `--draft-model` and `--num-draft-tokens
 
 This is fixed-k native speculation. No dynamic speculation scheduler was found in the installed MLX-LM CLI or implementation. Exact offered tokens and per-round timings are not exposed by the high-level response and would require a small instrumentation patch; that is outside this feasibility phase.
 
+Post-reboot expansion exposed a strict-correctness limitation. On frozen
+question 469, the sequential target path selected token `14374` while the
+batched speculative target verification selected token `16` at output index
+24. The shared-prefix target logits show a near tie that becomes an exact BF16
+tie in the batched shape. Thus “native speculative = available” remains true,
+but “native speculative = exact under this quantized target” is false.
+
 llama.cpp was installed externally through Homebrew, not vendored. Its CLI exposes a draft model/device, draft KV types, min/max draft tokens, prompt-cache reuse and metrics. No GGUF models were downloaded because MLX is the selected smoke-test runtime.
 
 Transformers source includes assisted generation, constant/heuristic schedules and assistant cache handling. Only an MPS tensor-operation gate was run; Qwen3 assisted generation on MPS was not model-tested, so it is PARTIAL rather than a formal-runtime pass.

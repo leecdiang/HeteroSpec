@@ -36,8 +36,10 @@ def run(model, tokenizer, messages, max_tokens, draft=None, k=4):
         messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
     )
     mx.reset_peak_memory()
+    wall_started_ns = time.time_ns()
     started = time.perf_counter()
     first = None
+    first_wall_ns = None
     tokens, from_draft = [], []
     last_response = None
     for response in stream_generate(
@@ -51,10 +53,15 @@ def run(model, tokenizer, messages, max_tokens, draft=None, k=4):
         last_response = response
         if first is None:
             first = time.perf_counter()
+            first_wall_ns = time.time_ns()
         tokens.append(int(response.token))
         from_draft.append(bool(response.from_draft))
     ended = time.perf_counter()
+    wall_ended_ns = time.time_ns()
     return {
+        "wall_started_unix_ns": wall_started_ns,
+        "first_token_unix_ns": first_wall_ns,
+        "wall_ended_unix_ns": wall_ended_ns,
         "tokens": tokens,
         "token_sha256": digest(tokens),
         "output_tokens": len(tokens),

@@ -130,6 +130,8 @@ Against the reported M4 result of 1.387x [1.351, 1.422], this follow-up shows th
 
 Two post-closure mechanism controls quantify the constraint. The CUDA batched PP2/PP1 target-forward ratio is 1.009x at empty depth and 0.983x at depth 256, whereas the exact `ubatch=1` path costs 2.431x and 2.137x respectively. HumanEval/106 reproduces the same divergence at captured index 190 (token 2790 versus 2629) in 3/3 repetitions, while the earlier exact control matches in 3/3. Thus the efficient batched path exists, but the correctness gate forces a near-serial verification path that removes its amortization advantage.
 
+An isolated same-commit diagnostic capture subsequently verified the numerical mechanism without changing the formal binary. At the first divergence, all paths shared the same prefix. Baseline and serialized execution ranked token 2790 above 2629 by +0.080948 logit-equivalent units; batched `ubatch=2` reversed the order to -0.126457 and selected 2629. The values and sign flip repeated identically in 3/3 independent processes. This supports a batch-shape-dependent numerical argmax flip, without identifying a specific CUDA kernel as causal.
+
 ## Artifacts
 
 - `analysis/all_runs.csv`, `analysis/all_rounds.csv`, `analysis/all_power_1s.csv`
@@ -151,3 +153,5 @@ Two post-closure mechanism controls quantify the constraint. The CUDA batched PP
 - `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`
 - `reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv`
 - `reports/5070ti/WINDOWS_CUDA_DIVERGENCE_MINREPRO.csv`
+- `reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md`
+- `reports/5070ti/CUDA_DIVERGENCE_LOGITS.csv`

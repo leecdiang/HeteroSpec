@@ -23,6 +23,18 @@
     "scope": "Two post-closure validation controls only",
     "verification_cost": "20-repetition PP2/PP1 proxy at context depths 0 and 256, ubatch 2 versus ubatch 1",
     "divergence_minrepro": "HumanEval/106 and HumanEval/129, three repetitions, fixed ubatch 2; HumanEval/106 diverged identically 3/3",
-    "logit_margin": "unavailable from the frozen llama-cli interface"
+    "logit_margin": "captured with an isolated response-only debug server built from the same commit; formal binary unchanged",
+    "numerical_diagnosis": {
+      "prompt": "HumanEval/106",
+      "legacy_capture_index": 190,
+      "api_generated_index": 65,
+      "runs": 3,
+      "prefix_exact": true,
+      "baseline_delta_2790_minus_2629": 0.08094793558120728,
+      "batched_ub2_delta_2790_minus_2629": -0.12645727396011353,
+      "serialized_ub1_delta_2790_minus_2629": 0.08094793558120728,
+      "sign_flip": true,
+      "interpretation": "consistent with a batch-shape-dependent numerical argmax flip"
+    }
   }
 }

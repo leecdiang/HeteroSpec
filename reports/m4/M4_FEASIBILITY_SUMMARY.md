@@ -2,7 +2,7 @@
 
 ## Decision
 
-**M4 MLX PATH = HALTED; LLAMA.CPP METAL CORRECTNESS CONTROL = PASS**
+**M4 MLX PATH = HALTED; LLAMA.CPP METAL `k=2` = POSITIVE SIGNAL**
 
 The reboot resolved the two operational blockers: the 8B/0.6B pair repeatedly
 ran with normal memory pressure, and Silemetry supplied valid no-sudo component
@@ -12,7 +12,9 @@ However, frozen question 469 diverged deterministically at output token 24 for
 pilot therefore stopped after its first 4 of 144 planned blocks. An 8-bit MLX
 target still diverged on questions 395 and 469. In contrast, the independent
 llama.cpp Metal Q8_0 target/draft pair matched exactly on both questions for
-`k=2,4,6`. No 12Q speed or energy result is promoted yet.
+`k=2,4,6`. The subsequent 12Q decision matrix passed all 48 exact comparisons;
+`k=2` delivered 1.350x geometric-mean decode speedup, was faster on 11/12
+questions and improved paired package energy by 1.162x.
 
 ## Required status
 
@@ -50,7 +52,9 @@ not a `swap == 0` rule. This does not qualify larger contexts or models.
 BASELINE = PASS
 SPECULATIVE = PASS
 MLX EXACT MATCH = FAIL
-LLAMA.CPP Q8_0 EXACT MATCH = PASS (Q395/Q469, k=2/4/6)
+LLAMA.CPP Q8_0 EXACT MATCH = PASS (12/12, k=2/4/6)
+LLAMA.CPP k=2 PERFORMANCE = PASS (1.350x decode, 11/12 faster)
+LLAMA.CPP k=2 ENERGY = PASS (1.162x paired package-energy improvement)
 ```
 
 ### Telemetry
@@ -65,10 +69,10 @@ this fixed machine/build but not presented as a stable cross-version API.
 
 ## Bounded next-phase recommendation
 
-Do not resume the 12Q performance run on MLX. The independent llama.cpp Metal
-path has cleared its two-question correctness gate and is eligible for a
-separate bounded 12Q baseline plus `k=2,4,6` performance/energy matrix. Keep
-its results separate from the failed MLX condition and require exact equality
-before promoting any speed or energy result.
+Do not resume performance work on MLX. The llama.cpp Metal 12Q matrix provides
+a strong architecture-control positive signal for `k=2`; `k=4` was near
+break-even and `k=6` was negative. A bounded `k=2` replication is justified if
+tighter noise estimates are required, while expansion to 60Q remains a
+separate decision.
 
 Do not enter 60Q, 420Q, a 14B run, ANE development or a custom speculative-runtime rewrite without a separate decision.

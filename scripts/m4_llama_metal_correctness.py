@@ -55,10 +55,12 @@ def run_cli(target, prompt, max_tokens, draft=None, k=2):
     result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
     ended = time.perf_counter()
     prompt_text = Path(prompt).read_text(encoding="utf-8")
-    prefix = f"> {prompt_text}\n"
-    if prefix not in result.stdout or "\n\n[ Prompt:" not in result.stdout:
+    if "\n> " not in result.stdout or "\n\n[ Prompt:" not in result.stdout:
         raise RuntimeError("Could not isolate completion from llama-cli output")
-    completion_text = result.stdout.split(prefix, 1)[1].rsplit("\n\n[ Prompt:", 1)[0]
+    prompt_echo_and_completion = result.stdout.rsplit("\n> ", 1)[1]
+    if "\n" not in prompt_echo_and_completion:
+        raise RuntimeError("llama-cli prompt echo has no completion boundary")
+    completion_text = prompt_echo_and_completion.split("\n", 1)[1].rsplit("\n\n[ Prompt:", 1)[0]
     return {
         "wall_started_unix_ns": started_ns,
         "wall_ended_unix_ns": time.time_ns(),

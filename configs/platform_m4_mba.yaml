@@ -1,5 +1,5 @@
 platform: m4_mba
-status: llama_cpp_q8_correctness_pass_performance_pending
+status: llama_cpp_q8_k2_positive_signal
 os: macOS 26.6.2
 os_build: 25G83
 model_identifier: Mac16,13
@@ -51,6 +51,11 @@ observed_gates:
   mlx_8bit_exact_token_equality: fail_q395_index_54_q469_index_60
   llama_cpp_q8_exact_token_equality: pass_q395_q469_k2_k4_k6
   llama_cpp_q8_memory: pass_or_warn_no_throttling
+  llama_cpp_q8_12q_exact: pass_48_of_48_generations
+  llama_cpp_q8_k2_decode_geomean_speedup: 1.350
+  llama_cpp_q8_k2_package_energy_improvement: 1.162
+  llama_cpp_q8_k2_questions_faster: 11_of_12
+  llama_cpp_q8_12q_memory: pass_48_of_48
 telemetry:
   source: Silemetry-mac_TelemetryCore_0.1.0_macmon_0.8.0
   interface: IOReport_and_AppleSMC_private_unsupported_apis

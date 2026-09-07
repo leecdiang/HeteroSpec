@@ -59,3 +59,28 @@ question-469 failure above.
 A separate target-only medium canary used frozen ID 291 (400 prompt tokens). It completed 64 tokens at 17.11 MLX generation tok/s, with 2,562.80 ms TTFT, 6,331.80 ms completion and 4.718 GiB MLX peak allocation.
 
 Raw token arrays and full metrics remain in ignored local files under `work/m4/`; benchmark content and raw runs are not committed.
+
+## Precision rescue and independent-runtime control
+
+An 8-bit MLX target did not rescue strict equivalence. Two fresh-process
+checks reproduced deterministic divergence: question 395 first diverged at
+output index 54, and question 469 first diverged at output index 60. The
+original 4-bit question-469 index-24 flip disappeared, but exactness still
+failed at a later position.
+
+The independent `llama.cpp` 0.4.0 Metal control used official Qwen Q8_0 GGUF
+artifacts for both the 8B target and 0.6B draft. It passed both frozen questions
+at every tested draft depth:
+
+| Runtime / target | `k` | Q395 | Q469 | Gate |
+|---|---:|---|---|---|
+| llama.cpp Metal / Q8_0 | 2 | Exact | Exact | PASS |
+| llama.cpp Metal / Q8_0 | 4 | Exact | Exact | PASS |
+| llama.cpp Metal / Q8_0 | 6 | Exact | Exact | PASS |
+
+The runner compares canonical token sequences produced by the tokenizer
+embedded in the target GGUF over the isolated completion text. CLI banners,
+prompt echo and timing lines are excluded. This establishes that strict greedy
+equivalence is achievable on the same Apple GPU and narrows the observed
+failure to MLX's speculative/batched-verification numerical path or its
+interaction with target quantization. It does not yet qualify 12Q performance.

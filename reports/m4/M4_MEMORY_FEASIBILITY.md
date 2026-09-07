@@ -28,7 +28,7 @@ The machine began the overall audit at zero swap, but model download/loading and
 
 **Qwen3-8B + 0.6B = UNSAFE for formal benchmark in the current session.**
 
-This is an operational classification, not evidence that 24 GB is intrinsically insufficient. A future 12Q pilot may requalify after rebooting/closing memory-heavy applications, returning swap to zero, and confirming zero growth across repeated warm runs. MLX peak allocation is not total unified-memory use and remains labeled separately.
+This is an operational classification, not evidence that 24 GB is intrinsically insufficient. MLX peak allocation is not total unified-memory use and remains labeled separately.
 
 ## Unified-memory interpretation
 
@@ -41,8 +41,8 @@ Qwen3-14B is estimate-only in this phase and was not downloaded or run.
 After a clean reboot, swap was 0 MiB with zero swap-ins and swap-outs, system
 memory pressure reported 91% free, AC power was connected and Low Power Mode
 was disabled. Two complete paired question-395 runs and the first four-block
-question-469 pilot block all ended with swap still at 0 MiB. Memory pressure
-remained normal (85--86% free after the paired runs).
+question-469 pilot block retained normal memory pressure (85--86% free after
+the paired runs).
 
 **Qwen3-8B target = SAFE for the bounded 64-token M1/M2 protocol.**
 
@@ -51,3 +51,30 @@ remained normal (85--86% free after the paired runs).
 This replaces the earlier session-specific UNSAFE classification. The M2 run
 was stopped for correctness, not memory, so this does not qualify larger
 contexts, 14B, or any expanded benchmark.
+
+## Composite memory gate
+
+Swap is not an exhaustion-only signal on macOS and is not used as a binary
+gate. Each run records pressure, swap and virtual-memory counter deltas before
+and after execution; longer runs must additionally check throughput over time.
+
+| Status | Criteria |
+|---|---|
+| PASS | Model loads and generates; memory pressure remains normal; no material swap growth, throttling, page-thrashing or sustained throughput decline; system remains responsive. |
+| WARN | Stable or slowly growing swap is present, but pressure remains normal and there is no throttling, thrashing, sustained throughput decline or responsiveness issue. Continue only with the warning recorded. |
+| FAIL | Pressure reaches a constrained state, pages throttle/thrash, swap grows rapidly and persistently, throughput decays materially over time, or an OOM/system-responsiveness failure occurs. |
+
+The BF16 target-only 4-token smoke loaded and generated successfully, but added
+about 995 MiB of swap and temporarily reduced reported free memory to 21%.
+Without a paired-draft stability run this is **WARN**, not a binary proof of
+infeasibility. The planned BF16 + 0.6B draft experiment remains deferred because
+the observed headroom is narrow; the 8-bit precision-rescue target is the next
+controlled configuration.
+
+The 8-bit MLX target-only smoke passed the composite memory gate with no swap
+growth and 59% free memory after execution. The later llama.cpp Metal Q8_0
+target-plus-draft correctness checks completed without throttling. Their
+per-run classifications were WARN for `k=2` (+8.87 MiB swap) and `k=4`
+(+41.00 MiB), then PASS for `k=6` (zero swap growth). These short deltas are
+not evidence of sustained growth; a longer performance run must still check
+pressure and throughput over time.

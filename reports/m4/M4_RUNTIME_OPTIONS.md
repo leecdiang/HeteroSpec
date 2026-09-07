@@ -30,7 +30,12 @@ batched speculative target verification selected token `16` at output index
 tie in the batched shape. Thus “native speculative = available” remains true,
 but “native speculative = exact under this quantized target” is false.
 
-llama.cpp was installed externally through Homebrew, not vendored. Its CLI exposes a draft model/device, draft KV types, min/max draft tokens, prompt-cache reuse and metrics. No GGUF models were downloaded because MLX is the selected smoke-test runtime.
+llama.cpp was installed externally through Homebrew, not vendored. Its CLI
+exposes a draft model/device, draft KV types, min/max draft tokens, prompt-cache
+reuse and metrics. The independent Metal control subsequently ran official
+Qwen Q8_0 GGUF target/draft artifacts: frozen questions 395 and 469 matched the
+baseline exactly for `k=2,4,6`. This makes llama.cpp the qualified correctness
+control; performance remains unqualified until the bounded 12Q matrix runs.
 
 Transformers source includes assisted generation, constant/heuristic schedules and assistant cache handling. Only an MPS tensor-operation gate was run; Qwen3 assisted generation on MPS was not model-tested, so it is PARTIAL rather than a formal-runtime pass.
 

@@ -1,5 +1,5 @@
 platform: m4_mba
-status: halted_at_m1_exact_token_gate
+status: llama_cpp_q8_correctness_pass_performance_pending
 os: macOS 26.6.2
 os_build: 25G83
 model_identifier: Mac16,13
@@ -31,8 +31,11 @@ protocol:
   dynamic_schedule: optional_separate_condition
 gates:
   exact_token_equality: required
-  sustained_swap_growth: forbidden
-  memory_pressure: normal
+  memory_feasibility: composite_pass_warn_fail
+  memory_pressure: normal_required_for_pass
+  swap: stable_or_slow_growth_warn_rapid_growth_fail
+  page_thrashing: forbidden
+  throughput_over_time: no_material_sustained_decline
   silent_fallback: forbidden
   telemetry_domains: qualify_on_device
 observed_gates:
@@ -44,6 +47,10 @@ observed_gates:
   post_reboot_swap_growth: pass_zero_to_zero
   power_telemetry: pass_silemetry_ioreport_sudoless
   m2_12q_pilot: aborted_after_first_question_block
+  bf16_target_only: warn_swap_growth_and_reduced_headroom
+  mlx_8bit_exact_token_equality: fail_q395_index_54_q469_index_60
+  llama_cpp_q8_exact_token_equality: pass_q395_q469_k2_k4_k6
+  llama_cpp_q8_memory: pass_or_warn_no_throttling
 telemetry:
   source: Silemetry-mac_TelemetryCore_0.1.0_macmon_0.8.0
   interface: IOReport_and_AppleSMC_private_unsupported_apis

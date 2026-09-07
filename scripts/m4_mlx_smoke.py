@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -14,9 +15,46 @@ import mlx.core as mx
 from mlx_lm import load, stream_generate
 
 
-def swap_usage():
-    text = subprocess.check_output(["sysctl", "vm.swapusage"], text=True).strip()
-    return text
+def memory_snapshot():
+    swap_text = subprocess.check_output(["sysctl", "vm.swapusage"], text=True).strip()
+    vm_text = subprocess.check_output(["vm_stat"], text=True)
+    pressure_text = subprocess.check_output(["memory_pressure"], text=True)
+
+    def vm_counter(name):
+        match = re.search(rf"^{re.escape(name)}:\s+([0-9]+)", vm_text, re.MULTILINE)
+        return int(match.group(1)) if match else None
+
+    swap_match = re.search(r"used = ([0-9.]+)M", swap_text)
+    free_match = re.search(r"System-wide memory free percentage:\s+([0-9.]+)%", pressure_text)
+    return {
+        "swap_raw": swap_text,
+        "swap_used_mib": float(swap_match.group(1)) if swap_match else None,
+        "memory_free_percent": float(free_match.group(1)) if free_match else None,
+        "pageins": vm_counter("Pageins"),
+        "pageouts": vm_counter("Pageouts"),
+        "swapins": vm_counter("Swapins"),
+        "swapouts": vm_counter("Swapouts"),
+        "pages_throttled": vm_counter("Pages throttled"),
+    }
+
+
+def memory_gate(before, after, elapsed_seconds):
+    delta_swap = after["swap_used_mib"] - before["swap_used_mib"]
+    delta_pageouts = after["pageouts"] - before["pageouts"]
+    delta_throttled = after["pages_throttled"] - before["pages_throttled"]
+    result = {
+        "swap_delta_mib": delta_swap,
+        "swap_growth_mib_per_min": delta_swap * 60 / elapsed_seconds if elapsed_seconds else None,
+        "pageout_delta_pages": delta_pageouts,
+        "throttled_delta_pages": delta_throttled,
+    }
+    if (after["memory_free_percent"] is not None and after["memory_free_percent"] < 10) or delta_throttled > 0:
+        result["status"] = "FAIL"
+    elif delta_swap > 0 or (after["memory_free_percent"] is not None and after["memory_free_percent"] < 20):
+        result["status"] = "WARN"
+    else:
+        result["status"] = "PASS"
+    return result
 
 
 def digest(tokens):
@@ -101,6 +139,7 @@ def main():
         messages = [{"role": "user", "content": "Explain in two sentences why the sky appears blue."}]
         prompt_source = {"dataset": None, "question_id": None, "fallback": "embedded canary"}
 
+    process_started = time.perf_counter()
     record = {
         "started": datetime.now(timezone.utc).isoformat(),
         "target": args.target,
@@ -109,7 +148,7 @@ def main():
         "batch_size": 1,
         "k": args.k,
         "prompt_source": prompt_source,
-        "swap_before": swap_usage(),
+        "memory_before": memory_snapshot(),
     }
     target, tokenizer = load(args.target)
     warmup = [{"role": "user", "content": "Reply with OK."}]
@@ -119,12 +158,15 @@ def main():
         record["speculative"] = None
         record["exact_match"] = None
         record["first_divergent_token"] = None
-        record["swap_after"] = swap_usage()
+        record["memory_after"] = memory_snapshot()
+        record["memory_gate"] = memory_gate(
+            record["memory_before"], record["memory_after"], time.perf_counter() - process_started
+        )
         record["status"] = "PASS"
         record["ended"] = datetime.now(timezone.utc).isoformat()
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(record, indent=2), encoding="utf-8")
-        print(json.dumps({k: record[k] for k in ("status", "swap_before", "swap_after")}, indent=2))
+        print(json.dumps({k: record[k] for k in ("status", "memory_gate")}, indent=2))
         return
     draft, draft_tokenizer = load(args.draft)
     if draft_tokenizer.vocab_size != tokenizer.vocab_size:
@@ -134,12 +176,15 @@ def main():
     left, right = record["baseline"]["tokens"], record["speculative"]["tokens"]
     record["exact_match"] = left == right
     record["first_divergent_token"] = first_divergence(left, right)
-    record["swap_after"] = swap_usage()
+    record["memory_after"] = memory_snapshot()
+    record["memory_gate"] = memory_gate(
+        record["memory_before"], record["memory_after"], time.perf_counter() - process_started
+    )
     record["status"] = "PASS" if record["exact_match"] else "FAIL_CORRECTNESS"
     record["ended"] = datetime.now(timezone.utc).isoformat()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(record, indent=2), encoding="utf-8")
-    print(json.dumps({k: record[k] for k in ("status", "exact_match", "first_divergent_token", "swap_before", "swap_after")}, indent=2))
+    print(json.dumps({k: record[k] for k in ("status", "exact_match", "first_divergent_token", "memory_gate")}, indent=2))
 
 
 if __name__ == "__main__":

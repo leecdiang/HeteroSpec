@@ -1,25 +1,37 @@
 # M4 Unified-Memory Feasibility
 
-## Method
+## Planning estimate
 
-These are planning estimates, not measurements on an M4. Local Qwen3 configs give BF16 KV bytes/token as `2 × layers × KV heads × head_dim × 2 bytes`: 144 KiB for 8B, 160 KiB for 14B, and 112 KiB for 0.6B. Native speculation keeps target and draft caches, so the pair is budgeted together. Four-bit weight ranges include quantization metadata; runtime buffers and macOS use remain separate.
+The selected MLX artifacts are native group-size-64 4-bit models. The verified files are 4,607,835,174 bytes for the target and 335,450,584 bytes for the draft.
 
-| Pair / context | 4-bit weights (estimate) | Pair BF16 KV | Runtime/buffer allowance | Assessment on 24 GB |
+For BF16 KV, bytes per token are estimated as `2 × layers × KV heads × head_dim × 2 bytes`: 144 KiB/token for Qwen3-8B and 112 KiB/token for Qwen3-0.6B.
+
+| Pair / context | Pair KV estimate | Weights | Runtime/buffer allowance | 24 GB assessment before load |
 |---|---:|---:|---:|---|
-| 8B + 0.6B, 2k | 5.0--6.0 GiB | 0.50 GiB | 2--4 GiB | Comfortable |
-| 8B + 0.6B, 8k | 5.0--6.0 GiB | 2.00 GiB | 2--4 GiB | Feasible with substantial system headroom |
-| 14B + 0.6B, 2k | 8.0--9.5 GiB | 0.53 GiB | 3--5 GiB | Feasible canary, not automatically safe |
-| 14B + 0.6B, 8k | 8.0--9.5 GiB | 2.13 GiB | 3--5 GiB | Tight after macOS/apps; feasibility-only |
+| 8B + 0.6B, 2k | 0.50 GiB | about 4.7--5.1 GiB | 2--4 GiB | Safe with substantial OS headroom |
+| 8B + 0.6B, 8k | 2.00 GiB | about 4.7--5.1 GiB | 2--4 GiB | Feasible, but must gate on swap/pressure |
+| 14B + 0.6B, 2k | about 0.53 GiB | about 8--9.5 GiB | 3--5 GiB | Estimate only; not authorized for this run |
+| 14B + 0.6B, 8k | about 2.13 GiB | about 8--9.5 GiB | 3--5 GiB | Tight enough to require a separate future gate |
 
-For the required 12-question run with a 64-token output cap, 8B+0.6B 4-bit should be the only initial pair. Keep at least 6 GiB visibly available for macOS and transient allocations, close memory-heavy applications, and reject any run that creates sustained swap growth or yellow/red memory pressure. “24 GB unified” is not a 24 GB model budget.
+Initial measured state was zero allocated swap and 48% system-wide memory free. The selected short/medium smoke prompts and 64-token cap are far below the 2k row, so the estimate clears the load gate for Qwen3-8B + 0.6B. A passing run still requires no sustained swap growth and normal memory pressure.
 
-The 14B pair is allowed only after the 8B protocol is complete and only as a separate load/one-prompt canary. It is not part of the minimum matrix. No 20B model is authorized.
+## Measured smoke values
 
-## What unified memory changes
+| Run | Prompt tokens | MLX peak | Swap before | Swap after | Formal memory gate |
+|---|---:|---:|---:|---:|---|
+| 8B target-only, ID 291 | 400 | 4.718 GiB | 1,751.75 MiB | 1,780.44 MiB | FAIL: +28.69 MiB |
+| 8B + 0.6B, ID 395, k=4 | 21 | 4.742 GiB | 1,487.81 MiB | 1,751.75 MiB | FAIL: +263.94 MiB |
 
-Unified memory can remove an explicit CPU-to-discrete-GPU payload copy and makes model coexistence more flexible. It does **not** remove command submission, producer/consumer synchronization, cache coherency or residency costs, KV bookkeeping, target verification, kernel launch overhead, or contention when draft and target use the same GPU. It may therefore improve the Windows cross-memory component without guaranteeing speculative speedup.
+The machine began the overall audit at zero swap, but model download/loading and the active desktop session caused macOS to allocate swap before the formal canaries. Memory pressure still reported about 49--50% free, and no runtime OOM occurred. This proves the pair can coexist and execute, but it does not satisfy the stricter no-swap-growth benchmark gate.
 
-## Qualification measurements
+**Qwen3-8B target = UNSAFE for formal benchmark in the current session.**
 
-Record MLX active/peak allocator bytes before load, after both models load, after warm-up and after each run; also record `vm_stat`, `memory_pressure`, process RSS and swap usage. The formal pass condition is no increasing swap during the timed region and normal/green memory pressure. Allocator peak is not total unified-memory use and must be labeled separately.
+**Qwen3-8B + 0.6B = UNSAFE for formal benchmark in the current session.**
 
+This is an operational classification, not evidence that 24 GB is intrinsically insufficient. A future 12Q pilot may requalify after rebooting/closing memory-heavy applications, returning swap to zero, and confirming zero growth across repeated warm runs. MLX peak allocation is not total unified-memory use and remains labeled separately.
+
+## Unified-memory interpretation
+
+Unified memory can reduce physical device-to-device copies and model-coexistence friction. It does not eliminate kernel dispatch, synchronization, KV bookkeeping, cache trimming, Metal scheduling or contention when target and draft share the GPU. It therefore removes one architectural penalty without guaranteeing speculative speedup.
+
+Qwen3-14B is estimate-only in this phase and was not downloaded or run.

@@ -1,26 +1,26 @@
 # M4 Telemetry Feasibility
 
-## Feasibility verdict
+## Result
 
-One-hertz system/process/memory/thermal logging is feasible. Reliable per-domain power must be qualified on the actual M4/macOS build; the experiment must not promise separate CPU, GPU or ANE watts before `powermetrics` exposes and validates those fields.
+`powermetrics` on macOS 26.6.2 advertises `cpu_power`, `gpu_power`, `ane_power` and `thermal` samplers, supports 1,000 ms sampling, and can preserve machine-readable plist output. Actual sampling returns `powermetrics must be invoked as the superuser`. Non-interactive sudo is unavailable in this session, so the required 30-second idle capture was not fabricated or bypassed.
 
-| Source | Candidate signals | 1 Hz | Privilege | Role / limitation |
-|---|---|---:|---|---|
-| `powermetrics` | CPU/GPU/SoC energy or power, frequency, residency, thermal data depending on hardware/OS sampler | Yes, if supported | Usually `sudo` for full sampling | Primary power candidate; run an idle and workload qualification and preserve raw output. Available domains vary. |
-| `vm_stat`, `memory_pressure`, `sysctl`, process RSS | pages, pressure, physical memory, process memory | Yes | No | Primary memory/swap context; not model allocator memory. |
-| `pmset` | AC/battery and selected thermal/power state | Yes/periodic | Mostly no | Platform-state metadata, not component watts. |
-| `ioreg` | Registry/power-state properties | Technically | Some fields restricted | Discovery/sanity only; keys are not a stable research power API. |
-| MLX memory APIs | Active/cache/peak allocator bytes | Per run | No | Runtime memory attribution; not total unified memory or energy. |
-| Instruments / Metal System Trace | GPU command and kernel timeline | Trace session | Developer tools, permissions | Root-cause profiling only; too intrusive for the primary formal logger. |
-| Activity Monitor | Human sanity check | Not a stable experiment API | No | Do not scrape for formal data. |
+**POWER TELEMETRY = PARTIAL**: capability is present and the sampling design is viable, but observed field names, units and availability remain unqualified until the user runs the logger with administrator authorization.
 
-## Qualification procedure
+| Source | Verified capability | Privilege | Interpretation |
+|---|---|---|---|
+| `powermetrics` | CPU/GPU/ANE power and thermal sampler names; text/plist; 1 s interval | Root required | Primary candidate; reported power is estimated and Apple warns against cross-device comparison. |
+| `vm_stat` / `memory_pressure` / `sysctl vm.swapusage` | PASS | None | System memory, compression, pressure and swap; not model allocator memory. |
+| MLX allocator | PASS | None | Active/peak runtime allocations; not total unified memory. |
+| `pmset` / system profiler | PASS | None | AC/battery, Low Power Mode and battery state; not component watts. |
 
-Capture 30 seconds idle and a short warmed generation at 1 Hz. Store raw `powermetrics` output, command/help text, exit status, sudo requirement and parser coverage. Validate counter units and monotonicity; energy counters may be differenced into 1-second bins, while instantaneous power is retained as reported. Separately sample memory pressure, swap and process RSS. Measure baseline throughput once with and once without logging; if median perturbation exceeds 2%, use power as a separately labeled run or lower-cost sampler.
+## Qualification command
 
-Report only observed domains. If only aggregate SoC/package energy is stable, publish that and state that CPU/GPU/ANE attribution is unavailable. Never infer ANE power by subtraction, and never add overlapping domains as “whole-machine power.” Battery discharge rate is not a substitute for component power.
+Run telemetry as a separate privileged process, never as `sudo python benchmark.py`:
 
-## Thermal controls
+```sh
+sudo powermetrics --samplers cpu_power,gpu_power,ane_power,thermal \
+  --sample-rate 1000 --sample-count 30 --format plist \
+  --output-file telemetry/m4/powermetrics_idle_30s.plist
+```
 
-The MacBook Air is fanless, so thermal history is a first-order covariate. Record ambient notes, AC/battery state, Low Power Mode, start/end thermal pressure, warm-up policy and run order. Randomize or counterbalance baseline/spec conditions, enforce cooldown to the same thermal state, and invalidate runs that enter serious/critical thermal pressure.
-
+Retain the raw capture and aggregate into 1-second bins only after validating the actual plist keys and units. Report only domains present on this hardware/build. Do not split aggregate SoC power, infer ANE watts by subtraction, or sum overlapping domains as whole-machine power. Compare logger-on/off throughput before formal use and separate power runs if perturbation exceeds 2%.

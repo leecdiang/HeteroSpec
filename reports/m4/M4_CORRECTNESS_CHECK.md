@@ -58,7 +58,9 @@ question-469 failure above.
 
 A separate target-only medium canary used frozen ID 291 (400 prompt tokens). It completed 64 tokens at 17.11 MLX generation tok/s, with 2,562.80 ms TTFT, 6,331.80 ms completion and 4.718 GiB MLX peak allocation.
 
-Raw token arrays and full metrics remain in ignored local files under `work/m4/`; benchmark content and raw runs are not committed.
+Raw token arrays and full metrics are archived under `work/m4/`; the archive
+commit preserves the original files without rewriting their embedded local
+paths.
 
 ## Precision rescue and independent-runtime control
 

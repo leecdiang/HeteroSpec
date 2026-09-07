@@ -11,3 +11,9 @@ to relabel a failed primary test as a successful confirmation.
 Generated code is not executed in this throughput study. "Exact" means that
 the baseline and speculative paths emit identical token IDs under greedy
 decoding; it is not a HumanEval functional-correctness claim.
+
+The completed experiment is archived in
+`../../artifacts/m4_humaneval_code_conditioned/`. Its `results.json` and
+`telemetry.csv` files are authoritative; `manifest.json` records provenance
+and checksums. Derived tables are under `../../analysis/`, and the formal
+report is `../../reports/m4/M4_HUMANEVAL_CODE_CONDITIONED.md`.

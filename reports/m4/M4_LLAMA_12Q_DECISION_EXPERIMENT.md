@@ -2,7 +2,7 @@
 
 ## Decision
 
-**POSITIVE SIGNAL: `k=2` PASSES THE M4 ARCHITECTURE-CONTROL GATE.**
+**POSITIVE SIGNAL: `k=2` PASSES THE INITIAL M4 ARCHITECTURE-CONTROL GATE.**
 
 The frozen root-cause 12Q matrix completed all 48 generations with exact-token
 agreement. The Qwen3-8B Q8_0 target and Qwen3-0.6B Q8_0 draft ran through
@@ -64,5 +64,12 @@ OS thermal warnings do not support a material late-run throttling confound.
 - Questions 164 and 239 reached EOS after nine runtime output tokens; paired
   comparisons use the same exact output length.
 
-The result authorizes a bounded replication of the `k=2` condition if tighter
-noise estimates are needed. It does not authorize 60Q, 420Q, 14B or ANE work.
+The subsequent mechanism diagnosis found a cheap two-token verification ratio
+and strong acceptance/speedup correlation, but a two-prompt paired recheck did
+not reproduce the original per-question magnitudes: high-acceptance Q438
+remained positive at 1.169x geomean, while low-acceptance Q395 was negative at
+0.704x. Therefore 1.350x is retained as an initial positive signal rather than
+a replicated effect-size estimate. See `M4_SPECULATION_MECHANISM_DIAGNOSIS.md`.
+
+The result authorizes a bounded full paired replication of the `k=2` condition
+if tighter estimates are needed. It does not authorize 60Q, 420Q, 14B or ANE.

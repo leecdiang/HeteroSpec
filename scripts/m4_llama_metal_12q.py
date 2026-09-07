@@ -66,6 +66,10 @@ def parse_cli(stdout, stderr, prompt):
         r"#gen drafts =\s*(\d+), #acc drafts =\s*(\d+), #gen tokens =\s*(\d+), #acc tokens =\s*(\d+)",
         stderr,
     )
+    spec_durations = re.search(
+        r"statistics\s+draft-simple:.*?dur\(b,g,a\) =\s*([0-9.]+),\s*([0-9.]+),\s*([0-9.]+) ms",
+        stderr,
+    )
     launch_s = None
     end_s = None
     for line in stderr.splitlines():
@@ -97,6 +101,12 @@ def parse_cli(stdout, stderr, prompt):
             "accepted_tokens": int(spec_stats.group(7)),
         }
         result["verification_rounds"] = int(spec_stats.group(2))
+    if spec_durations:
+        result["spec_impl_duration_ms"] = {
+            "batch": float(spec_durations.group(1)),
+            "draft_generate": float(spec_durations.group(2)),
+            "accept": float(spec_durations.group(3)),
+        }
     return result
 
 
@@ -113,7 +123,7 @@ def peak_rss_sampler(process, result):
     result.append(peak_kib / 1024)
 
 
-def run_cli(target, draft, prompt_path, max_tokens, condition):
+def run_cli(target, draft, prompt_path, max_tokens, condition, extra_args=None):
     command = [
         "llama-cli", "--model", str(target), "--device", "MTL0", "--n-gpu-layers", "all",
         "--file", str(prompt_path), "--n-predict", str(max_tokens), "--temp", "0",
@@ -128,6 +138,8 @@ def run_cli(target, draft, prompt_path, max_tokens, condition):
             "--spec-draft-device", "MTL0", "--spec-draft-ngl", "all",
             "--spec-draft-n-max", str(k), "--spec-draft-n-min", "0",
         ]
+    if extra_args:
+        command += list(extra_args)
     before = memory_snapshot()
     wall_start_ns = time.time_ns()
     started = time.perf_counter()

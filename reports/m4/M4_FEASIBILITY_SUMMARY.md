@@ -14,7 +14,10 @@ target still diverged on questions 395 and 469. In contrast, the independent
 llama.cpp Metal Q8_0 target/draft pair matched exactly on both questions for
 `k=2,4,6`. The subsequent 12Q decision matrix passed all 48 exact comparisons;
 `k=2` delivered 1.350x geometric-mean decode speedup, was faster on 11/12
-questions and improved paired package energy by 1.162x.
+questions and improved paired package energy by 1.162x. Mechanism follow-up
+confirmed a profitable high-acceptance region but found session-sensitive
+per-question magnitudes, so 1.350x is an initial signal rather than a replicated
+effect-size estimate.
 
 ## Required status
 
@@ -70,9 +73,11 @@ this fixed machine/build but not presented as a stable cross-version API.
 ## Bounded next-phase recommendation
 
 Do not resume performance work on MLX. The llama.cpp Metal 12Q matrix provides
-a strong architecture-control positive signal for `k=2`; `k=4` was near
-break-even and `k=6` was negative. A bounded `k=2` replication is justified if
-tighter noise estimates are required, while expansion to 60Q remains a
+a strong initial architecture-control signal for `k=2`; `k=4` was near
+break-even and `k=6` was negative. Synchronized microbenchmarks found
+`V2=1.022--1.076`, idle draft residency added only 0.65%, and 12Q
+acceptance/speedup correlation was 0.893. A bounded full `k=2` paired
+replication is justified before a stable effect-size claim; 60Q remains a
 separate decision.
 
 Do not enter 60Q, 420Q, a 14B run, ANE development or a custom speculative-runtime rewrite without a separate decision.

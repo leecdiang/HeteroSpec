@@ -93,4 +93,6 @@ workloads, while low-acceptance workloads remain clearly negative.
 - Attribute the positive region to cheap two-token verification plus structured
   acceptance and tight runtime state reuse; treat unified memory as an enabling
   condition, not an isolated cause.
-- Do not run 60Q until a full paired replication is explicitly approved.
+- The approved full paired replication is reported in
+  `M4_CONFIRMATORY_VALIDATION.md`; it did not generalize the positive signal.
+  The M4 platform is closed and 60Q is not authorized.

@@ -71,5 +71,7 @@ remained positive at 1.169x geomean, while low-acceptance Q395 was negative at
 0.704x. Therefore 1.350x is retained as an initial positive signal rather than
 a replicated effect-size estimate. See `M4_SPECULATION_MECHANISM_DIAGNOSIS.md`.
 
-The result authorizes a bounded full paired replication of the `k=2` condition
-if tighter estimates are needed. It does not authorize 60Q, 420Q, 14B or ANE.
+The bounded full paired replication is now complete and reported in
+`M4_CONFIRMATORY_VALIDATION.md`. It found 0.842x geometric-mean speedup on 24
+unseen prompts and closed the platform as initial signal not generalized. It
+does not authorize 60Q, 420Q, 14B or ANE.

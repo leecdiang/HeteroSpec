@@ -7,6 +7,7 @@ import hashlib
 import json
 import random
 import re
+import math
 import subprocess
 import threading
 import time
@@ -107,6 +108,37 @@ def parse_cli(stdout, stderr, prompt):
             "draft_generate": float(spec_durations.group(2)),
             "accept": float(spec_durations.group(3)),
         }
+    candidate_rows = []
+    current = None
+    for match in re.finditer(r"draft candidate\s+(\d+), pos\s+(\d+):\s+\d+ \(\s*([0-9.]+)\)", stderr):
+        rank, position, probability = int(match.group(1)), int(match.group(2)), float(match.group(3))
+        if rank == 0:
+            current = {"position": position, "probabilities": [probability]}
+            candidate_rows.append(current)
+        elif current is not None and current["position"] == position:
+            current["probabilities"].append(probability)
+    complete = [row["probabilities"] for row in candidate_rows if len(row["probabilities"]) >= 2]
+    if complete:
+        top1 = [values[0] for values in complete]
+        margins = [values[0] - values[1] for values in complete]
+        entropies = []
+        for values in complete:
+            shown = values[:3]
+            residual = max(0.0, 1.0 - sum(shown))
+            buckets = shown + ([residual] if residual else [])
+            entropies.append(-sum(value * math.log(value) for value in buckets if value > 0))
+        result["draft_confidence"] = {
+            "observations": len(complete),
+            "mean_top1_probability": sum(top1) / len(top1),
+            "mean_top1_top2_margin": sum(margins) / len(margins),
+            "mean_truncated_entropy_nats": sum(entropies) / len(entropies),
+        }
+    round_acceptance = [
+        {"accepted": int(a), "drafted": int(b)}
+        for a, b in re.findall(r"accepted\s+(\d+)/(\d+) draft tokens", stderr)
+    ]
+    if round_acceptance:
+        result["round_acceptance"] = round_acceptance
     return result
 
 

@@ -2,7 +2,7 @@
 
 ## Decision
 
-**M4 MLX PATH = HALTED; LLAMA.CPP METAL `k=2` = POSITIVE SIGNAL**
+**M4 PLATFORM = CLOSED — INITIAL SIGNAL NOT GENERALIZED**
 
 The reboot resolved the two operational blockers: the 8B/0.6B pair repeatedly
 ran with normal memory pressure, and Silemetry supplied valid no-sudo component
@@ -18,6 +18,12 @@ questions and improved paired package energy by 1.162x. Mechanism follow-up
 confirmed a profitable high-acceptance region but found session-sensitive
 per-question magnitudes, so 1.350x is an initial signal rather than a replicated
 effect-size estimate.
+
+The final frozen-k validation used 24 previously unseen prompts with three
+paired repetitions. All 72 pairs were exact, but prompt-level geometric-mean
+speedup was 0.842x (95% prompt-bootstrap CI [0.809, 0.877]), only 1/24 prompts
+was faster, and package-energy improvement was 0.678x. Even the highest
+accepted-tokens/round tertile remained below break-even at 0.921x.
 
 ## Required status
 
@@ -56,8 +62,10 @@ BASELINE = PASS
 SPECULATIVE = PASS
 MLX EXACT MATCH = FAIL
 LLAMA.CPP Q8_0 EXACT MATCH = PASS (12/12, k=2/4/6)
-LLAMA.CPP k=2 PERFORMANCE = PASS (1.350x decode, 11/12 faster)
-LLAMA.CPP k=2 ENERGY = PASS (1.162x paired package-energy improvement)
+LLAMA.CPP k=2 DISCOVERY = INITIAL POSITIVE SIGNAL
+LLAMA.CPP k=2 CONFIRMATORY PERFORMANCE = FAIL (0.842x, 1/24 faster)
+LLAMA.CPP k=2 CONFIRMATORY ENERGY = FAIL (0.678x improvement ratio)
+FINAL M4 DECISION = CLOSED — INITIAL SIGNAL NOT GENERALIZED
 ```
 
 ### Telemetry
@@ -77,7 +85,13 @@ a strong initial architecture-control signal for `k=2`; `k=4` was near
 break-even and `k=6` was negative. Synchronized microbenchmarks found
 `V2=1.022--1.076`, idle draft residency added only 0.65%, and 12Q
 acceptance/speedup correlation was 0.893. A bounded full `k=2` paired
-replication is justified before a stable effect-size claim; 60Q remains a
-separate decision.
+replication was therefore run on 24 frozen unseen prompts; it failed to
+generalize the positive performance and energy result.
+
+The confirmatory stop rule has now fired. Do not run 60Q or attempt to rescue
+the M4 result with another model, runtime, draft depth or algorithm. Preserve
+the mechanism result—cheap `k=2` verification and strong acceptance dependence—
+while reporting that an always-on profitable region did not generalize to the
+frozen unseen sample.
 
 Do not enter 60Q, 420Q, a 14B run, ANE development or a custom speculative-runtime rewrite without a separate decision.

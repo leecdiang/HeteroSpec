@@ -236,6 +236,7 @@ def main():
     parser.add_argument("--ctx-size", type=int, default=4096)
     parser.add_argument("--flash-attn", choices=["on", "off", "auto"], default="off")
     parser.add_argument("--ubatch-size", type=int, default=512)
+    parser.add_argument("--continue-on-divergence", action="store_true", help="Diagnostic only: retain all mismatching pairs instead of stopping at the hard gate")
     args = parser.parse_args()
     prereg = json.loads(args.preregistration.read_text(encoding="utf-8"))
     frozen_ids = prereg["dataset"]["task_ids"]
@@ -275,13 +276,13 @@ def main():
             item["first_divergent_token"] = first_divergence(baseline["tokens"], item["tokens"])
             if item["condition"] != "baseline": item["paired_speedup"] = baseline["metrics"]["decode_ms"] / item["metrics"]["decode_ms"]
         save_json(record, args.output)
-        if not all(item["exact_match"] for item in pair):
+        if not all(item["exact_match"] for item in pair) and not args.continue_on_divergence:
             record["status"] = "ABORTED_CORRECTNESS"; break
     else:
-        record["status"] = "PASS"
+        record["status"] = "PASS" if all(r.get("exact_match", True) for r in record["runs"]) else "DIAGNOSTIC_DIVERGENCE"
     record["ended"] = utc_now(); save_json(record, args.output)
     print(json.dumps({"status": record["status"], "runs": len(record["runs"])}, indent=2))
-    return 0 if record["status"] == "PASS" else 3
+    return 0 if record["status"] in ("PASS", "DIAGNOSTIC_DIVERGENCE") else 3
 
 
 if __name__ == "__main__":

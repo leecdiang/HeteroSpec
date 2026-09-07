@@ -18,5 +18,11 @@
   "primary_attempt": {"ubatch_size": 2, "flash_attention": "off", "result": "ABORTED_CORRECTNESS_FAILURE", "failure_task": "HumanEval/106", "evidence": "logs/windows-humaneval-replication-30q.json"},
   "diagnostic_control": {"ubatch_size": 1, "flash_attention": "off", "result": "PASS_270_OF_270_EXACT", "evidence": "logs/windows-humaneval-replication-30q-ub1.json"},
   "analysis": {"unit": "prompt", "estimator": "geometric mean of three paired repetition speedups, then geometric mean over 30 prompts", "uncertainty": "10000-resample prompt bootstrap", "seed": 20260910},
-  "energy_limitation": "NVML was sampled at 1 Hz over each process lifetime, including model loading; no decode-window or CPU package trace was captured, so formal J/output-token is not reported."
+  "energy_limitation": "NVML was sampled at 1 Hz over each process lifetime, including model loading; no decode-window or CPU package trace was captured, so formal J/output-token is not reported.",
+  "mechanism_followup": {
+    "scope": "Two post-closure validation controls only",
+    "verification_cost": "20-repetition PP2/PP1 proxy at context depths 0 and 256, ubatch 2 versus ubatch 1",
+    "divergence_minrepro": "HumanEval/106 and HumanEval/129, three repetitions, fixed ubatch 2; HumanEval/106 diverged identically 3/3",
+    "logit_margin": "unavailable from the frozen llama-cli interface"
+  }
 }

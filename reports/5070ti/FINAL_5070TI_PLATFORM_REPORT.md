@@ -128,6 +128,8 @@ The frozen M4 30-prompt HumanEval study was replicated with the same Qwen3 Q8_0 
 
 Against the reported M4 result of 1.387x [1.351, 1.422], this follow-up shows that high acceptance alone does not determine profitability. Same-GPU placement reduces the Windows penalty but does not remove it, while the CUDA batched verification route on this Blackwell/Q8_0 configuration violates the required lossless equivalence. The cross-platform study is therefore closed as a correctness-blocked primary replication plus decisive exact negative controls; it does not reopen this platform or the 420-question holdout.
 
+Two post-closure mechanism controls quantify the constraint. The CUDA batched PP2/PP1 target-forward ratio is 1.009x at empty depth and 0.983x at depth 256, whereas the exact `ubatch=1` path costs 2.431x and 2.137x respectively. HumanEval/106 reproduces the same divergence at captured index 190 (token 2790 versus 2629) in 3/3 repetitions, while the earlier exact control matches in 3/3. Thus the efficient batched path exists, but the correctness gate forces a near-serial verification path that removes its amortization advantage.
+
 ## Artifacts
 
 - `analysis/all_runs.csv`, `analysis/all_rounds.csv`, `analysis/all_power_1s.csv`
@@ -146,3 +148,6 @@ Against the reported M4 result of 1.387x [1.351, 1.422], this follow-up shows th
 - `reports/5070ti/HUMANEVAL_CROSS_PLATFORM_COMPARISON.{md,csv}`
 - `reports/5070ti/figures/humaneval_30q_speedup.*`
 - `reports/5070ti/figures/humaneval_acceptance_speedup.*`
+- `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`
+- `reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv`
+- `reports/5070ti/WINDOWS_CUDA_DIVERGENCE_MINREPRO.csv`

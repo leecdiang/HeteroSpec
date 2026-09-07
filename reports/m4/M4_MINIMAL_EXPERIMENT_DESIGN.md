@@ -26,3 +26,13 @@ Collect TTFT, completion time, output tok/s, TPOT, per-token ITL p50/p95, offere
 
 No 60Q/420Q expansion, 14B matrix, ANE draft, custom speculative rewrite or cross-platform absolute tok/s comparison belongs to this phase.
 
+## Execution outcome
+
+M0 passed after a clean reboot: swap remained zero, the model pair loaded, and a
+second 30-second desktop-idle capture produced valid Silemetry/IOReport power
+samples. M1 failed on frozen question 469. Baseline and native speculative
+generation shared the first 24 output tokens, then selected different target
+tokens at output index 24. The mismatch reproduced in a fresh process with
+`k=2`; `k=2,4,6` all produced the same alternate speculative sequence in the
+first attempted M2 block. Per the stop condition, M2 was aborted after 4 of 144
+planned generation blocks and no performance result was promoted.

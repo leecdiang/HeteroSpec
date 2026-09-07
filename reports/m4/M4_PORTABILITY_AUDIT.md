@@ -2,30 +2,26 @@
 
 ## Verdict
 
-The M4 MacBook Air can be a bounded third-platform architecture control, but the existing execution engine is not a drop-in port. The low-cost path is to retain the experiment contract and analysis layer, add a thin MLX-LM runner, and use the runtime's native speculation. Porting the CUDA/OpenVINO custom harness would be a separate medium-to-high-cost systems project.
+The experiment contract and processed-analysis layer are portable; the Windows execution and telemetry layers are not. The bounded Mac path should use a thin MLX-LM runner and native speculation rather than porting the CUDA/OpenVINO verifier.
 
-## Reuse map
-
-| Area | Status | Evidence / action |
+| Area | Classification | Evidence / required action |
 |---|---|---|
-| Research questions, relative-speedup interpretation | Reuse | Compare each M4 mode with its own M4 baseline; do not rank hardware by absolute tok/s. |
-| `root_cause_12q` prompt IDs and selection rule | Reuse | Keep the existing two-per-task split and prompt hashes. Benchmark text remains external under the repository data policy. |
-| Result schema | Reuse with extension | `analysis/all_runs.csv` already carries TTFT, TPOT, ITL, acceptance, timing, power, memory, exactness and validity. Add Apple memory/thermal fields without renaming shared columns. |
-| Analysis and figures | Reuse | `build_paper_dataset.py`, `build_break_even_and_figures.py`, `build_final_platform_figures.py`, and processed CSV conventions are platform-neutral once an adapter emits the shared schema. |
-| Environment setup | Partial | `scripts/setup/macos/configure_env.sh`, `configs/platform_m4_mba.yaml`, and `requirements/macos-mlx.txt` are scaffolds, not frozen reproduction artifacts. |
-| Target/draft execution | Replace | Phase 2--6 scripts call `torch.cuda`, CUDA synchronization/memory APIs, bitsandbytes, or OpenVINO. Add an MLX-LM-native runner; do not hide CPU fallback. |
-| Custom speculative harness | Not portable directly | `phase3_*` couples an OpenVINO draft to a CUDA verifier and encodes Windows-derived cache/synchronization behavior. Preserve it as Platform A evidence. |
-| NVIDIA telemetry | Replace | `check_nvml.py`, `phase2_target_baseline.py`, and power loggers use NVML/`nvidia-smi`. macOS needs a separate qualified logger. |
-| Intel telemetry | Replace | Intel Unified Telemetry and OpenVINO device checks are Windows/Intel-only. |
-| Windows controls | Not applicable | Power mode, MUX, WDDM, page-file and HYPERVISOR_ERROR mitigations must not be mapped mechanically to macOS. Record macOS power source, Low Power Mode, thermal pressure and swap instead. |
+| Research question and within-platform relative speedup | Platform-independent | Reuse unchanged; do not compare Mac and Windows absolute tok/s as equivalent configurations. |
+| `benchmarks/root_cause_12q/selection.json` | Direct reuse | All 12 frozen IDs exist in upstream Spec-Bench; prompt content stays in ignored `datasets/`. |
+| Processed CSV analysis and figure builders | Reuse with schema adapter | Analysis code is mostly platform-neutral once the runner emits the shared columns. |
+| Run schema | Reuse with extension | Add Apple runtime memory, swap, pressure, thermal state and observed power domains. |
+| Phase 1 Intel qualification | OpenVINO-only | Scripts import OpenVINO/OpenVINO GenAI and explicitly select Intel devices. Do not port for this phase. |
+| Phase 2--6 target/speculative runners | CUDA/NVML/OpenVINO-only | They call `torch.cuda`, CUDA synchronization/allocator APIs, bitsandbytes, NVML, and/or OpenVINO. Replace with the MLX adapter. |
+| Windows setup | PowerShell-only | `scripts/setup/windows/configure_env.ps1` remains Windows-specific and unchanged. |
+| NVIDIA telemetry | NVML-only | `check_nvml.py`, `nvidia-smi`, and in-process loggers cannot be reused on macOS. |
+| macOS scaffolding | Reusable | `scripts/setup/macos/` now performs system, MLX, MPS and memory gates without personal paths. |
 
-## Required macOS adapter boundary
+## Hard-coded paths
 
-Implement one platform runner that accepts prompt IDs, fixed `k`, output cap, greedy mode and repetition metadata, then emits the existing run schema plus raw token IDs and a separate per-token timing trace. Runtime-specific fields should include MLX/MLX-LM versions, model revisions, quantization, macOS build, M4 GPU-core count, active/peak MLX memory, system memory pressure and swap deltas.
+One tracked metadata field remains Windows-specific: `benchmarks/specbench/pilot_60q_ids.json` records the provenance path `D:\\HeteroSpec-PC\\...`. `scripts/migrate_repo_paths.py` intentionally contains old Windows paths as migration search patterns. These do not affect the M4 runner. No new Mac file contains a hard-coded `/Users/<name>` path.
 
-The adapter must expose baseline and native-speculation modes through the same prompt preparation and timing boundary. It must not recreate the Windows custom verifier in the feasibility phase.
+## Adapter boundary
 
-## Scope note
+`scripts/m4_mlx_smoke.py` accepts a target, draft, dataset, prompt ID, output cap and fixed `k`; it uses the same prompt preparation for baseline and native speculation, records raw token IDs/hashes, TTFT, completion time, throughput, accepted-output markers, MLX peak memory and swap snapshots. It does not modify Platform A results or reproduce the Windows custom verifier.
 
-The supplied task attachment ends after the word “最多”. This audit uses the complete preceding constraint as authoritative: 12 questions, baseline plus native speculation, and a small fixed-`k` set only.
-
+The analysis adapter for a later 12Q pilot should map those records into the existing run schema. That adapter is intentionally deferred until the smoke correctness gate passes.

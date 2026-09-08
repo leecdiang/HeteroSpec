@@ -23,7 +23,7 @@ The evidence supports three bounded claims:
 
 It does **not** justify attributing the M4 advantage solely to unified memory. The comparison simultaneously changes GPU architecture, backend kernels, scheduling, memory organization, and implementation behavior.
 
-The M4 aggregate values came from the supplied frozen result summary. The fetched `origin/macos/m4-feasibility` branch contained the preregistration and runner commits but not the referenced formal result commit, so per-prompt M4 rows were unavailable and were not reconstructed or invented.
+At the time of the Windows run, the formal M4 result commit was not yet present on the fetched branch, so the comparison used the supplied frozen aggregate without reconstructing per-prompt rows. The formal M4 result and raw provenance were subsequently archived in commit `60fc8e41292b88d92cb71c7ed6ce52e7a4344c1d`; its authoritative summary confirms the reported aggregate (1.387352×, 95% CI [1.350574, 1.421625]). This provenance update does not change the frozen Windows calculations or conclusions.
 
 ![Cross-platform speedup](figures/humaneval_30q_speedup.png)
 

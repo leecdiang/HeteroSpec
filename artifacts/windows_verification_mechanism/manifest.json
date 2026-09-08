@@ -1,0 +1,21 @@
+{
+  "schema": "heterospec.raw_archive_manifest.v1",
+  "archive_id": "windows_verification_mechanism",
+  "purpose": "Raw measurements supporting the exact-verification PP2/PP1 cost ratios.",
+  "runtime": {"name": "llama.cpp llama-bench", "build": 10839, "commit": "0cae43063", "backend": "CUDA 12.4"},
+  "files": [
+    {
+      "original_local_path": "logs/windows-exact-verification-microbench.json",
+      "archived_relative_path": "artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json",
+      "size": 7298,
+      "sha256": "541E6EC04ED1B6752A5B4F42D231B3C45FA9D0D1079AB236B8C852069E12197B",
+      "experiment_run_id": "windows_exact_verification_cost_depth0_depth256_20rep",
+      "classification": "authoritative",
+      "derived_processed_files": ["reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv", "reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md"]
+    }
+  ],
+  "exclusions": [
+    {"paths": "earlier console-only llama-bench trials", "classification": "redundant", "reason": "Exploratory invocations preceding the frozen 20-repetition raw JSON; no unique result evidence."}
+  ],
+  "integrity": "The archived payload is an unmodified byte-for-byte copy; verify against size and SHA-256."
+}

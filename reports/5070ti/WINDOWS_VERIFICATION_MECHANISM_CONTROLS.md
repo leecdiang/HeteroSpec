@@ -36,6 +36,8 @@ The index refers to the runner's tokenized captured output, which includes a sha
 
 This llama.cpp CLI build exposes generated token IDs and aggregate performance statistics but does not export per-step top logits/logprobs for speculative CLI execution. Consequently, the logit margin is recorded as **unavailable**, not estimated from token identity. Obtaining it would require instrumenting or changing the runtime, which is outside this minimal validation and would weaken the frozen-build reproduction.
 
+**Subsequent evidence:** “unavailable” describes this original CLI-only control, not the final archive state. A later isolated, same-commit diagnostic build captured the target scores without modifying the formal binary and found the stable margin sign flip. `CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md` supersedes this limitation for the numerical mechanism claim; the measurements in this report remain unchanged.
+
 ## Conclusion
 
 These controls strengthen rather than change the closed-platform result. Windows CUDA has an efficient batched two-token path, but that path is not lossless for the stable HumanEval/106 case. The exact fallback makes two-token target verification cost 2.14–2.43 times one-token decoding, removing the core amortization speculative decoding depends on.

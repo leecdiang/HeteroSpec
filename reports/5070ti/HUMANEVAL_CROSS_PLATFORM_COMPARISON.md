@@ -23,7 +23,7 @@ The evidence supports three bounded claims:
 
 It does **not** justify attributing the M4 advantage solely to unified memory. The comparison simultaneously changes GPU architecture, backend kernels, scheduling, memory organization, and implementation behavior.
 
-The M4 aggregate values came from the supplied frozen result summary. The fetched `origin/macos/m4-feasibility` branch contained the preregistration and runner commits but not the referenced formal result commit, so per-prompt M4 rows were unavailable and were not reconstructed or invented.
+The M4 formal archive is now merged into `main`. Its authoritative `results.json` and raw `telemetry.csv`, all 30 frozen prompts, manifest/checksums, prompt-level summary, machine-readable aggregate, report, and figures are tracked under `artifacts/m4_humaneval_code_conditioned/`, `analysis/`, and `reports/m4/`. The M4 values in this comparison agree with that archive. The comparison CSV remains an intentionally compact cross-platform aggregate/Windows diagnostic table; readers needing M4 per-prompt values should use `analysis/m4_humaneval_prompt_summary.csv` rather than infer or reconstruct rows.
 
 ![Cross-platform speedup](figures/humaneval_30q_speedup.png)
 

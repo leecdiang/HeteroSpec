@@ -13,3 +13,11 @@ Primary gate value: `V2_exact(512) = NOT RUN`. Secondary: `V2_exact(2048) = NOT 
 The original formal correctness result remains **FAIL** and unchanged. A later explicitly post-hoc diagnostic extension measured frozen HumanEval30 prevalence and raw mechanisms; it cannot rescue or replace the gate. See `B570_DIAGNOSTIC_EXTENSION.md`.
 
 The post-gate fast-path mechanism values are `V2_raw(512)=1.2426` and `V2_raw(2048)=1.6373`. A preregistered serialized fallback passed its six-prompt correctness probe (18/18 exact), but its subsequent V2 observations overlap or cannot be separated from a ToDesk reconnection; `2.0352` and `2.0177` are retained as remote-contaminated raw provenance, not admissible V2_exact.
+
+## Exact fallback final validation (exact-fallback-v1-20260912-222617)
+
+- correctness: 60/90 exact pairs
+- V2_exact: 512=1.9827, 2048=1.9917
+- speedup GM: 0.3087
+- Arc B570 board-energy efficiency ratio: 0.3023
+- platform status: CLOSED

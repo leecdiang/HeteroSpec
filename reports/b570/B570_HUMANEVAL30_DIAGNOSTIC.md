@@ -36,3 +36,11 @@ This is a post-gate prevalence study. The frozen fast path remains correctness-b
 | HumanEval/162 | STABLE_3_OF_3 | 3/3 |
 
 Raw all-pair speedup: `0.5383x`; exact-subset descriptive speedup: `0.5475x`. See the machine-readable result and diagnostic summary for all 90 pair classifications, individual timing, acceptance, telemetry, and divergence evidence.
+
+## Exact fallback final validation (exact-fallback-v1-20260912-222617)
+
+- correctness: 60/90 exact pairs
+- V2_exact: 512=1.9827, 2048=1.9917
+- speedup GM: 0.3087
+- Arc B570 board-energy efficiency ratio: 0.3023
+- platform status: CLOSED

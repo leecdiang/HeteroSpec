@@ -27,3 +27,11 @@ No CUDA/Vulkan/Metal causal equivalence is claimed. Results characterize only th
 ## Post-gate diagnostic extension (diagnostic-v1-20260912-170834)
 
 The original formal correctness result remains **FAIL** and unchanged. A later explicitly post-hoc diagnostic extension measured frozen HumanEval30 prevalence and raw mechanisms; it cannot rescue or replace the gate. See `B570_DIAGNOSTIC_EXTENSION.md`.
+
+## Exact fallback final validation (exact-fallback-v1-20260912-222617)
+
+- correctness: 60/90 exact pairs
+- V2_exact: 512=1.9827, 2048=1.9917
+- speedup GM: 0.3087
+- Arc B570 board-energy efficiency ratio: 0.3023
+- platform status: CLOSED

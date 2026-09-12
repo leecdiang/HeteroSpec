@@ -27,7 +27,7 @@ def heartbeat(a):
     while not a.status_stop.wait(20): status_update(a)
 def run(a, depth, batch, ubatch, repetitions, path_name):
     exe, model = a.exe, a.model
-    cmd = [str(exe), "-m", str(model), "-dev", "Vulkan0", "-ngl", "all", "-fitt", "off", "-fa", "off",
+    cmd = [str(exe), "-v", "-m", str(model), "-dev", "Vulkan0", "-ngl", "99", "-fa", "off",
            "-p", "1,2", "-n", "0", "-d", str(depth), "-b", str(batch), "-ub", str(ubatch),
            "-r", str(repetitions), "-o", "json"]
     stem=f"v2-n{depth}-{path_name}"; td=a.run_root/"telemetry"; td.mkdir(parents=True, exist_ok=True)
@@ -44,12 +44,17 @@ def run(a, depth, batch, ubatch, repetitions, path_name):
     (a.run_root/"stdout"/f"{stem}.txt").write_text(p.stdout,encoding="utf-8"); (a.run_root/"stderr"/f"{stem}.txt").write_text(p.stderr,encoding="utf-8")
     if tp.returncode: raise RuntimeError(f"Telemetry collector failed: {tp.returncode}")
     if p.returncode: raise RuntimeError(f"llama-bench failed {p.returncode}: {p.stderr[-3000:]}")
-    values = json.loads(p.stdout); by_pp = {int(v["n_prompt"]): summarize(v["samples_ns"]) for v in values}
+    values = json.loads(p.stdout)
+    if not values or any(v.get("n_gpu_layers") != 99 or v.get("devices") != "Vulkan0" for v in values):
+        raise RuntimeError("llama-bench placement metadata does not confirm numeric full-offload request on Vulkan0")
+    if "offloaded 37/37 layers to GPU" not in p.stderr:
+        raise RuntimeError("llama-bench verbose log does not confirm target 37/37 GPU offload")
+    by_pp = {int(v["n_prompt"]): summarize(v["samples_ns"]) for v in values}
     if set(by_pp) != {1, 2}: raise RuntimeError(f"Unexpected PP cells: {set(by_pp)}")
     energy=integrate(load_samples(csv_path),workload_start_qpc,workload_end_qpc,qpf())
     recorded_cmd=[Path(x).name if x in (str(exe),str(model)) else x for x in cmd]
     return {"pp1": by_pp[1], "pp2": by_pp[2], "v2_ratio_of_medians": by_pp[2]["median_ns"] / by_pp[1]["median_ns"],
-            "command": recorded_cmd, "stderr_tail": p.stderr[-4000:], "workload_start_qpc":workload_start_qpc,"workload_end_qpc":workload_end_qpc,
+            "command": recorded_cmd, "placement_evidence":{"requested_n_gpu_layers":99,"device":"Vulkan0","offload":"37/37","semantic_mapping":"99 is a legal numeric upper bound and offloads every target layer"}, "stderr_tail": p.stderr[-4000:], "workload_start_qpc":workload_start_qpc,"workload_end_qpc":workload_end_qpc,
             "workload_start_utc":workload_start_utc,"workload_end_utc":workload_end_utc,"qpc_frequency_hz":qpf(),
             "telemetry_start_qpc":telemetry_start_qpc,"telemetry_end_qpc":telemetry_end_qpc,
             "telemetry_start_utc":telemetry_start_utc,"telemetry_end_utc":telemetry_end_utc,

@@ -21,6 +21,11 @@ while($true){
     $watch=[ordered]@{schema='heterospec.b570.watchdog.v1';state='WATCHING';formal_task_state=$task.State;formal_task_last_result=$info.LastTaskResult;heartbeat_age_seconds=$age;checked_at=(Get-Date).ToString('o')}
     Write-TaskStatus -JsonPath $watchJson -TextPath $watchTxt -Status $watch
     if($value.state -in @('COMPLETE','COMPLETE_STOP_RULE','FAILED_INFRASTRUCTURE','RUNTIME_FAILURE','PRECONDITION_FAILURE','CONFIGURATION_ERROR','FINALIZING')){break}
+    if($age -ne $null -and $age -gt $StaleSeconds -and $task.State -ne 'Running'){
+        $watch.state='TASK_EXITED_WITH_STALE_HEARTBEAT'; $watch.detail='Watchdog did not overwrite the primary task failure classification.'
+        Write-TaskStatus -JsonPath $watchJson -TextPath $watchTxt -Status $watch
+        break
+    }
     if($age -ne $null -and $age -gt $StaleSeconds){
         $snapshot=[ordered]@{detected_at=(Get-Date).ToString('o');reason="central heartbeat stale for $([math]::Round($age,1)) seconds";formal_task=$task;formal_task_info=$info;processes=@(Get-Process|Where-Object{$_.ProcessName -match 'python|llama|presentmon|powershell'}|Select-Object Id,ProcessName,StartTime)}
         Write-AtomicText -Path (Join-Path $RunRoot 'FAILED_INFRASTRUCTURE.snapshot.json') -Text (($snapshot|ConvertTo-Json -Depth 8)+"`n")

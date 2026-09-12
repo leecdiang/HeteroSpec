@@ -19,11 +19,15 @@ try{
   if($max -gt 0.1){throw "PRECONDITION_FAILURE: ToDesk B570 activity $max%"}
   Wait-Heartbeat 60 'idle-settling' 'Disconnected idle settling'
   Status 'RUNNING' 'diagnostic-extension' 'V2_raw then frozen HumanEval30 then the single preregistered fallback'
+  $savedPreference=$ErrorActionPreference;$ErrorActionPreference='Continue'
   & $python (Join-Path $PSScriptRoot 'b570_diagnostic_extension.py') --diagnostic-config (Join-Path $repo 'benchmarks\b570_backend_control\diagnostic_extension_v1.json') --base-config (Join-Path $repo 'benchmarks\b570_backend_control\preregistration_v2.json') --run-root $RunRoot --status $status --llama-completion (Join-Path $bin 'llama-completion.exe') --llama-speculative (Join-Path $bin 'llama-speculative.exe') --tokenize (Join-Path $bin 'llama-tokenize.exe') --bench (Join-Path $bin 'llama-bench.exe') --target $target --draft $draft --dataset $dataset --collector $collector 1> (Join-Path $RunRoot 'stdout\diagnostic-controller.log') 2> (Join-Path $RunRoot 'stderr\diagnostic-controller.log')
-  if($LASTEXITCODE -ne 0){throw "DIAGNOSTIC_CONTROLLER_FAILURE exit=$LASTEXITCODE"}
+  $controllerExit=$LASTEXITCODE;$ErrorActionPreference=$savedPreference
+  if($controllerExit -ne 0){throw "DIAGNOSTIC_CONTROLLER_FAILURE exit=$controllerExit"}
   Status 'FINALIZING' 'reports-archive-publish' 'Generating reports, archive, checksums, commits, push, and PR'
+  $ErrorActionPreference='Continue'
   & $python (Join-Path $PSScriptRoot 'finalize_b570_diagnostic.py') --repo $repo --run-root $RunRoot 1> (Join-Path $RunRoot 'stdout\diagnostic-finalizer.log') 2> (Join-Path $RunRoot 'stderr\diagnostic-finalizer.log')
-  if($LASTEXITCODE -ne 0){throw "DIAGNOSTIC_FINALIZER_FAILURE exit=$LASTEXITCODE"}
+  $finalizerExit=$LASTEXITCODE;$ErrorActionPreference=$savedPreference
+  if($finalizerExit -ne 0){throw "DIAGNOSTIC_FINALIZER_FAILURE exit=$finalizerExit"}
   Status 'COMPLETE' 'done' 'Diagnostic extension complete; automatic shutdown disabled'
   exit 0
 }catch{

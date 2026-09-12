@@ -1,0 +1,59 @@
+{
+  "schema": "heterospec.cross_platform_backend_summary.v1",
+  "scope": "bounded comparison; no shared-root-cause claim",
+  "platforms": [
+    {
+      "platform": "M4 / Metal",
+      "fast_path_correctness": "PASS 90/90 exact HumanEval pairs",
+      "V2_raw": null,
+      "V2_exact": null,
+      "humaneval_exactness": "90/90",
+      "raw_speedup": 1.387,
+      "admissible_speedup_status": "admissible for frozen M4 HumanEval30",
+      "energy_boundary": "Apple package energy",
+      "energy_result": "1.013x efficiency ratio; CI crosses 1",
+      "key_limitation": "HumanEval-conditioned result; representative Spec-Bench 24Q was 0.842x"
+    },
+    {
+      "platform": "RTX 5070 Ti / CUDA",
+      "fast_path_correctness": "CORRECTNESS-BLOCKED",
+      "V2_raw": {
+        "empty": 1.009,
+        "depth256": 0.983
+      },
+      "V2_exact": {
+        "empty": 2.431,
+        "depth256": 2.137
+      },
+      "humaneval_exactness": "fast path failed gate; serialized RTX fallback 90/90",
+      "raw_speedup": null,
+      "admissible_speedup_status": "serialized RTX fallback 0.650x, exact and slower",
+      "energy_boundary": "RTX component energy where measured",
+      "energy_result": "no decode-window HumanEval30 energy claim",
+      "key_limitation": "do not infer same numerical root cause as Vulkan"
+    },
+    {
+      "platform": "Arc B570 / Vulkan",
+      "fast_path_correctness": "CORRECTNESS-BLOCKED; original six-prompt gate 9/18 exact",
+      "V2_raw": {
+        "512": 1.242576302357408,
+        "2048": 1.6372954963969046
+      },
+      "V2_exact": null,
+      "V2_exact_raw_remote_contaminated": {
+        "512": 2.0351502643977883,
+        "2048": 2.017698740806398
+      },
+      "humaneval_exactness": "45/90 pairs; 15/30 prompts wholly exact; serialized fallback gate 18/18 exact",
+      "raw_speedup": 0.5382767140997617,
+      "admissible_speedup_status": "all-pair result diagnostic only; exact subset post-hoc descriptive",
+      "energy_boundary": "Intel Arc B570 GPU board energy",
+      "energy_result": {
+        "raw_ratio": 0.6960649725818646,
+        "exact_subset_ratio": 0.7107473097348285
+      },
+      "key_limitation": "strict token exactness blocks the frozen fast path; fallback V2 timing excluded for remote interference"
+    }
+  ],
+  "bounded_interpretation": "Multiple discrete-GPU backend paths can be correctness-blocked under strict token-exact evaluation; no claim is made that CUDA and Vulkan share a root cause."
+}

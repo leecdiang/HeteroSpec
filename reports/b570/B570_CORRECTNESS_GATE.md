@@ -13,3 +13,7 @@ Run `formal-v2-20260912-122930` executed the six frozen prompts under preregistr
 - frozen configuration: Vulkan0 Arc B570; Qwen3-8B/Qwen3-0.6B Q8_0; greedy; k=2; ctx 1024; batch 512; ubatch 128; full offload
 
 Telemetry was collected as supporting instrumentation at the qualified B570 board boundary. It does not retroactively change preregistration v2's `power_measurement=false` declaration.
+
+## Post-gate diagnostic extension (diagnostic-v1-20260912-170834)
+
+The original formal correctness result remains **FAIL** and unchanged. A later explicitly post-hoc diagnostic extension measured frozen HumanEval30 prevalence and raw mechanisms; it cannot rescue or replace the gate. See `B570_DIAGNOSTIC_EXTENSION.md`.

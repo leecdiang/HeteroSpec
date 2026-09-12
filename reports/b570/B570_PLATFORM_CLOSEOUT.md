@@ -23,3 +23,7 @@ Preregistration v2 is controlling. Its stop rule permits only the six-prompt cor
 The sensor boundary is Intel Arc B570 **GPU board energy**, `PM_METRIC_GPU_CARD_POWER` at 100 ms, integrated over exact QPC workload bounds. CPU package energy was unavailable, so no result is whole-system energy. Level Zero B570 energy was unsupported. Correctness-run supporting median J/token was `6.292920` baseline and `5.449823` speculative; these are not promoted to a preregistered energy comparison.
 
 No CUDA/Vulkan/Metal causal equivalence is claimed. Results characterize only the tested runtime, models, driver, device and frozen settings. The B570 platform is **CLOSED** unless a later paper-review protocol explicitly reopens it.
+
+## Post-gate diagnostic extension (diagnostic-v1-20260912-170834)
+
+The original formal correctness result remains **FAIL** and unchanged. A later explicitly post-hoc diagnostic extension measured frozen HumanEval30 prevalence and raw mechanisms; it cannot rescue or replace the gate. See `B570_DIAGNOSTIC_EXTENSION.md`.

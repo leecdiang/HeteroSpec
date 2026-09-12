@@ -138,6 +138,8 @@ The Arc B570 backend-control work is closed after the one preregistered serializ
     cross=f"""# Cross-platform Backend Summary\n\n| Platform | Backend | Fast-path correctness | V2 fast/raw | Exact fallback | V2 exact | HumanEval exactness | Valid speedup | Energy boundary | Main limitation |\n|---|---|---|---|---|---|---|---|---|---|\n| Apple M4 | Metal | PASS | not recorded here | available | not recorded here | 90/90 | 1.387x | Apple package | representative 24Q was 0.842x |\n| RTX 5070 Ti | CUDA | blocked | 1.009 / 0.983 | available | 2.431 / 2.137 | fallback 90/90 | 0.650x | RTX component where measured | exact fallback expensive |\n| Intel Arc B570 | Vulkan | blocked, 45/90 | 1.2426 / 1.6373 | unique serialized candidate | {fmt(v512)} / {fmt(v2048)} | {exact}/{len(pairs)} | {fmt(analysis['performance']['prompt_geometric_mean_speedup']) if all_exact else 'not globally admissible'} | Arc B570 board | strict exactness changes the admissible path |\n\nStrict exactness can alter the admissible execution path across multiple tested discrete-GPU backends. This does not claim that CUDA and Vulkan share an identical root cause.\n"""
     (repo/"reports/b570/B570_CROSS_PLATFORM_SUMMARY.md").write_text(cross,encoding="utf-8")
 
+    run(["git","add","--","analysis/b570_exact_fallback_summary.json","analysis/b570_exact_fallback_prompt_summary.csv"],repo)
+    run(["git","commit","-m","experiment: complete B570 exact fallback validation"],repo)
     archive=repo/"artifacts/b570_backend_control"/root.name/"exact_fallback"
     if archive.exists(): raise RuntimeError(f"Archive already exists: {archive}")
     archive.mkdir(parents=True)
@@ -146,12 +148,17 @@ The Arc B570 backend-control work is closed after the one preregistered serializ
         if src.exists(): shutil.copytree(src,archive/rel,dirs_exist_ok=True)
     for name in ("status.json","status.txt","EXACT_FALLBACK_STATUS.txt","preflight.json","todesk-disconnect-check.json"):
         if (root/name).exists(): shutil.copy2(root/name,archive/name)
+    shutil.copy2(repo/"benchmarks/b570_backend_control/exact_fallback_validation_v1.json",archive/"exact_fallback_validation_v1.json")
     files=[]
     for p in sorted(x for x in archive.rglob("*") if x.is_file()): files.append({"path":str(p.relative_to(repo)),"size":p.stat().st_size,"sha256":sha(p)})
-    manifest={"schema":"heterospec.b570.exact_fallback_archive.v1","run_id":root.name,"created_at":utc(),"files":files}
+    manifest={"schema":"heterospec.b570.exact_fallback_archive.v1","run_id":root.name,"created_at":utc(),
+      "classification":"formal exact fallback validation","runtime_commit":cfg["platform"]["runtime_commit"],
+      "target_sha256":cfg["platform"]["target"]["sha256"],"draft_sha256":cfg["platform"]["draft"]["sha256"],
+      "backend_device":"Vulkan0 / Intel Arc B570","derived_outputs":["analysis/b570_exact_fallback_summary.json","analysis/b570_exact_fallback_prompt_summary.csv"],
+      "exclusions":["models","runtime binaries","private caches","fast-path archives retained separately","remote-contaminated fallback V2"],"files":files}
     save(archive/"manifest.json",manifest)
     run(["git","add","-f","--",str(archive.relative_to(repo))],repo); run(["git","commit","-m","archive: preserve B570 exact fallback validation"],repo)
-    run(["git","add","--","reports/b570","analysis/b570_exact_fallback_summary.json","analysis/b570_exact_fallback_prompt_summary.csv"],repo); run(["git","commit","-m","docs: close B570 backend-control platform"],repo)
+    run(["git","add","--","reports/b570"],repo); run(["git","commit","-m","docs: close B570 backend-control platform"],repo)
     run(["git","push","origin","windows/b570-backend-control"],repo,timeout=1200)
     final={"schema":"heterospec.b570.exact_fallback_final_status.v1","status":"COMPLETE","run_id":root.name,
       "correctness":"PASS" if all_exact else "FAIL","exact_pairs":f"{exact}/{len(pairs)}","V2_exact":analysis["V2_exact"],

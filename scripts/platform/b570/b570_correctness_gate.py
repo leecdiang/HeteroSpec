@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, ctypes, gzip, hashlib, json, random, re, subprocess, time
+import argparse, ctypes, gzip, hashlib, json, os, random, re, subprocess, threading, time
 from datetime import datetime, timezone
 from pathlib import Path
 from integrate_energy import integrate, load_samples
@@ -10,6 +10,15 @@ def save(value, path):
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(value, indent=2), encoding="utf-8")
     tmp.replace(path)
+def status_update(a, **fields):
+    if not a.status_file: return
+    with a.status_lock:
+        try: value = json.loads(a.status_file.read_text(encoding="utf-8-sig"))
+        except Exception: value = {}
+        value.update(fields); value["heartbeat_at"] = now(); value["worker_pid"] = os.getpid()
+        save(value, a.status_file)
+def heartbeat(a):
+    while not a.status_stop.wait(20): status_update(a)
 def sha256(path):
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -163,7 +172,10 @@ def main():
     ap.add_argument("--target", type=Path, required=True); ap.add_argument("--draft", type=Path, required=True)
     ap.add_argument("--dataset", type=Path, required=True)
     ap.add_argument("--collector", type=Path, required=True); ap.add_argument("--run-root", type=Path, required=True)
+    ap.add_argument("--status-file", type=Path)
     a = ap.parse_args(); a.run_root = a.run_root.resolve()
+    a.status_lock=threading.Lock(); a.status_stop=threading.Event()
+    threading.Thread(target=heartbeat,args=(a,),daemon=True).start()
     for directory in (a.run_root/"stdout", a.run_root/"stderr", a.run_root/"telemetry", a.run_root/"raw", a.output.parent): directory.mkdir(parents=True, exist_ok=True)
     cfg = json.loads(a.config.read_text(encoding="utf-8")); ccfg = cfg["correctness_gate"]; a.cfg = cfg
     if sha256(a.dataset) != "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef": raise RuntimeError("Dataset SHA256 mismatch")
@@ -185,6 +197,9 @@ def main():
         prompt_path = prompt_dir / f"{task.replace('/', '_')}.txt"; prompt_path.write_text(prompt, encoding="utf-8")
         pair = []
         for condition in block["order"]:
+            status_update(a, state="RUNNING", stage="correctness", current_prompt=task,
+                          repetition=block["repetition"], condition=condition,
+                          completed_workloads=len(record["runs"]), total_workloads=36)
             item = run(a, prompt, task, block["repetition"], condition, prompt_path)
             pair.append(item); record["runs"].append(item); save(record, a.output)
             print(f"{item['run_id']} tokens={item['output_token_count']}", flush=True)
@@ -200,6 +215,8 @@ def main():
         save(record, a.output)
     record["status"] = "PASS" if not record["mismatches"] else "FAIL"
     record["ended"] = now(); save(record, a.output)
+    a.status_stop.set(); status_update(a, state="RUNNING", stage="correctness-complete",
+                                       completed_workloads=len(record["runs"]), correctness=record["status"])
     print(json.dumps({"status": record["status"], "runs": len(record["runs"]), "mismatches": len(record["mismatches"])}))
     return 0 if record["status"] == "PASS" else 3
 if __name__ == "__main__": raise SystemExit(main())

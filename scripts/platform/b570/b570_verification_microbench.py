@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, ctypes, json, statistics, subprocess, time
+import argparse, ctypes, json, os, statistics, subprocess, threading, time
 from datetime import datetime, timezone
 from pathlib import Path
 from integrate_energy import integrate, load_samples
@@ -16,6 +16,15 @@ def summarize(samples):
 def save(value, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp"); tmp.write_text(json.dumps(value, indent=2), encoding="utf-8"); tmp.replace(path)
+def status_update(a, **fields):
+    if not a.status_file: return
+    with a.status_lock:
+        try: value=json.loads(a.status_file.read_text(encoding="utf-8-sig"))
+        except Exception: value={}
+        value.update(fields); value["heartbeat_at"]=datetime.now(timezone.utc).isoformat(); value["worker_pid"]=os.getpid()
+        save(value,a.status_file)
+def heartbeat(a):
+    while not a.status_stop.wait(20): status_update(a)
 def run(a, depth, batch, ubatch, repetitions, path_name):
     exe, model = a.exe, a.model
     cmd = [str(exe), "-m", str(model), "-dev", "Vulkan0", "-ngl", "all", "-fitt", "off", "-fa", "off",
@@ -48,7 +57,8 @@ def run(a, depth, batch, ubatch, repetitions, path_name):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--config", type=Path, required=True)
     ap.add_argument("--exe", type=Path, required=True); ap.add_argument("--model", type=Path, required=True)
-    ap.add_argument("--output", type=Path, required=True); ap.add_argument("--collector",type=Path,required=True); ap.add_argument("--run-root",type=Path,required=True); a = ap.parse_args()
+    ap.add_argument("--output", type=Path, required=True); ap.add_argument("--collector",type=Path,required=True); ap.add_argument("--run-root",type=Path,required=True); ap.add_argument("--status-file",type=Path); a = ap.parse_args()
+    a.status_lock=threading.Lock(); a.status_stop=threading.Event(); threading.Thread(target=heartbeat,args=(a,),daemon=True).start()
     a.run_root=a.run_root.resolve(); (a.run_root/"stdout").mkdir(parents=True,exist_ok=True); (a.run_root/"stderr").mkdir(parents=True,exist_ok=True)
     cfg = json.loads(a.config.read_text(encoding="utf-8")); vcfg = cfg["verification"]
     result = {"schema": "heterospec.b570.verification.v1", "status": "STARTED",
@@ -57,7 +67,9 @@ def main():
     for depth in vcfg["contexts"]:
         result["depths"][str(depth)] = {}
         for name, ubatch in vcfg["paths"].items():
+            status_update(a,state="RUNNING",stage="verification",current_context=depth,condition=name)
             result["depths"][str(depth)][name] = run(a, depth, vcfg["batch"], ubatch, vcfg["repetitions_per_cell"], name)
             save(result, a.output); print(f"depth={depth} path={name} V2={result['depths'][str(depth)][name]['v2_ratio_of_medians']:.6f}", flush=True)
     result["status"] = "PASS"; result["ended"] = datetime.now(timezone.utc).isoformat(); save(result, a.output)
+    a.status_stop.set(); status_update(a,state="RUNNING",stage="verification-complete",verification="PASS")
 if __name__ == "__main__": main()

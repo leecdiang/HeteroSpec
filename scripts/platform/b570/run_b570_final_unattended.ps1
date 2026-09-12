@@ -5,12 +5,14 @@ $repo=(Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 $python='C:\Users\DIANG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 $bin='C:\hs\b\bin\Release'; $collector='C:\hs\pm\Release\b570_presentmon_telemetry.exe'
 $config=Join-Path $repo 'benchmarks\b570_backend_control\preregistration_v2.json'; $target=Join-Path $repo 'models\gguf\Qwen3-8B-Q8_0.gguf'; $draft=Join-Path $repo 'models\gguf\Qwen3-0.6B-Q8_0.gguf'; $dataset=Join-Path $repo 'datasets\humaneval\HumanEval.jsonl.gz'
-$status=Join-Path $RunRoot 'status.json'; $processed=Join-Path $RunRoot 'processed'; foreach($d in @($processed,(Join-Path $RunRoot 'stdout'),(Join-Path $RunRoot 'stderr'),(Join-Path $RunRoot 'telemetry'),(Join-Path $RunRoot 'raw'))){New-Item -ItemType Directory -Force -Path $d|Out-Null}
-function Status([string]$state,[string]$stage,[string]$detail){[ordered]@{run_id=(Split-Path $RunRoot -Leaf);state=$state;stage=$stage;detail=$detail;updated_at=(Get-Date).ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath $status -Encoding utf8}
+$status=Join-Path $repo 'work\b570\current_task_status.json'; $statusText=Join-Path $repo 'work\b570\current_task_status.txt'; $processed=Join-Path $RunRoot 'processed'; foreach($d in @($processed,(Join-Path $RunRoot 'stdout'),(Join-Path $RunRoot 'stderr'),(Join-Path $RunRoot 'telemetry'),(Join-Path $RunRoot 'raw'))){New-Item -ItemType Directory -Force -Path $d|Out-Null}
+. (Join-Path $PSScriptRoot 'task_status_helpers.ps1')
+function Status([string]$state,[string]$stage,[string]$detail){$value=[ordered]@{schema='heterospec.b570.formal-task.v1';run_id=(Split-Path $RunRoot -Leaf);state=$state;stage=$stage;detail=$detail;task_name='HeteroSpec_B570_Formal';main_pid=$PID;heartbeat_at=(Get-Date).ToString('o')}; Write-TaskStatus -JsonPath $status -TextPath $statusText -Status $value; Copy-Item -LiteralPath $status -Destination (Join-Path $RunRoot 'status.json') -Force}
+function Wait-WithHeartbeat([int]$Seconds,[string]$state,[string]$stage,[string]$detail){$remaining=$Seconds; while($remaining -gt 0){Status $state $stage "$detail ($remaining seconds remaining)"; $slice=[Math]::Min(20,$remaining); Start-Sleep -Seconds $slice; $remaining-=$slice}}
 $overall='RUNTIME_FAILURE'; $correctness='NOT_RUN'; $verification='NOT_RUN'; $failure=$null
 try {
   Status 'GRACE_PERIOD' 'preflight' "Waiting $GraceSeconds seconds for ToDesk disconnect"
-  Start-Sleep -Seconds $GraceSeconds
+  Wait-WithHeartbeat $GraceSeconds 'GRACE_PERIOD' 'preflight' 'Waiting for ToDesk disconnect'
   $adapter=(Get-Counter '\GPU Adapter Memory(*)\Dedicated Usage' -ErrorAction SilentlyContinue).CounterSamples|Sort-Object CookedValue -Descending|Select-Object -First 1
   $pids=@(Get-Process ToDesk -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id)
   $samples=@(Get-Counter '\GPU Engine(*)\Utilization Percentage' -SampleInterval 1 -MaxSamples 5 -ErrorAction SilentlyContinue).CounterSamples
@@ -19,13 +21,13 @@ try {
   [ordered]@{checked_at=(Get-Date).ToString('o');b570_instance=$adapter.InstanceName;todesk_gpu_max_pct=$max;samples=$hits}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $RunRoot 'todesk-disconnect-check.json') -Encoding utf8
   if($max -gt 0.1){throw "PRECONDITION_FAILURE: ToDesk B570 GPU activity $max%"}
   Status 'SETTLING' 'preflight' 'Disconnected check passed; 60 second preregistered settling interval'
-  Start-Sleep -Seconds 60
+  Wait-WithHeartbeat 60 'SETTLING' 'preflight' 'Disconnected idle settling interval'
   Status 'RUNNING' 'correctness' 'Six frozen prompts, baseline/speculative x3'
-  & $python (Join-Path $PSScriptRoot 'b570_correctness_gate.py') --config $config --output (Join-Path $processed 'correctness.json') --run-root $RunRoot --collector $collector --llama-completion (Join-Path $bin 'llama-completion.exe') --llama-speculative (Join-Path $bin 'llama-speculative.exe') --tokenize (Join-Path $bin 'llama-tokenize.exe') --target $target --draft $draft --dataset $dataset 1> (Join-Path $RunRoot 'stdout\correctness-controller.log') 2> (Join-Path $RunRoot 'stderr\correctness-controller.log')
+  & $python (Join-Path $PSScriptRoot 'b570_correctness_gate.py') --config $config --output (Join-Path $processed 'correctness.json') --run-root $RunRoot --status-file $status --collector $collector --llama-completion (Join-Path $bin 'llama-completion.exe') --llama-speculative (Join-Path $bin 'llama-speculative.exe') --tokenize (Join-Path $bin 'llama-tokenize.exe') --target $target --draft $draft --dataset $dataset 1> (Join-Path $RunRoot 'stdout\correctness-controller.log') 2> (Join-Path $RunRoot 'stderr\correctness-controller.log')
   $ce=$LASTEXITCODE
   if($ce -eq 0){
     $correctness='PASS'; Status 'RUNNING' 'verification' 'Correctness PASS; running preregistered V2 cells'
-    & $python (Join-Path $PSScriptRoot 'b570_verification_microbench.py') --config $config --exe (Join-Path $bin 'llama-bench.exe') --model $target --output (Join-Path $processed 'verification.json') --collector $collector --run-root $RunRoot 1> (Join-Path $RunRoot 'stdout\verification-controller.log') 2> (Join-Path $RunRoot 'stderr\verification-controller.log')
+    & $python (Join-Path $PSScriptRoot 'b570_verification_microbench.py') --config $config --exe (Join-Path $bin 'llama-bench.exe') --model $target --output (Join-Path $processed 'verification.json') --collector $collector --run-root $RunRoot --status-file $status 1> (Join-Path $RunRoot 'stdout\verification-controller.log') 2> (Join-Path $RunRoot 'stderr\verification-controller.log')
     if($LASTEXITCODE -ne 0){throw "V2_RUNTIME_FAILURE exit=$LASTEXITCODE"}; $verification='PASS'; $overall='COMPLETE'
   } elseif($ce -eq 3){$correctness='FAIL';$verification='NOT_RUN_BY_PREREGISTERED_STOP_RULE';$overall='COMPLETE_STOP_RULE'}
   else {$correctness='CONFIGURATION_ERROR';throw "CORRECTNESS_CONFIGURATION_OR_RUNTIME_ERROR exit=$ce"}

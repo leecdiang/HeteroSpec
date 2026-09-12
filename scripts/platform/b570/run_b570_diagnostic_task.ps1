@@ -28,7 +28,12 @@ try{
   & $python (Join-Path $PSScriptRoot 'finalize_b570_diagnostic.py') --repo $repo --run-root $RunRoot 1> (Join-Path $RunRoot 'stdout\diagnostic-finalizer.log') 2> (Join-Path $RunRoot 'stderr\diagnostic-finalizer.log')
   $finalizerExit=$LASTEXITCODE;$ErrorActionPreference=$savedPreference
   if($finalizerExit -ne 0){throw "DIAGNOSTIC_FINALIZER_FAILURE exit=$finalizerExit"}
-  Status 'COMPLETE' 'done' 'Diagnostic extension complete; automatic shutdown disabled'
+  $finalPath=Join-Path $repo 'work\b570\DIAGNOSTIC_FINAL_STATUS.json'
+  $final=Get-Content $finalPath -Raw|ConvertFrom-Json;$final.shutdown_status='SCHEDULED_60_SECONDS';$final|ConvertTo-Json -Depth 8|Set-Content $finalPath -Encoding utf8
+  $final|ConvertTo-Json -Depth 8|Set-Content (Join-Path $repo 'work\b570\DIAGNOSTIC_FINAL_STATUS.txt') -Encoding utf8
+  Status 'COMPLETE' 'done' 'Diagnostic extension complete; automatic shutdown scheduled in 60 seconds'
+  Stop-ScheduledTask -TaskName 'HeteroSpec_B570_Diagnostic_Watchdog' -ErrorAction SilentlyContinue
+  shutdown.exe /s /t 60 /c "HeteroSpec B570 diagnostic characterization completed; results preserved."
   exit 0
 }catch{
   $message=$_|Out-String;$message|Set-Content (Join-Path $RunRoot 'stderr\task-failure.log') -Encoding utf8

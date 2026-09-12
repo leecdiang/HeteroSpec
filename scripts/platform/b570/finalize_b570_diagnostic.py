@@ -129,6 +129,24 @@ This is a post-gate prevalence study. The frozen fast path remains correctness-b
 Raw all-pair speedup: `{fmt(analyses['raw_speedup']['gm'])}x`; exact-subset descriptive speedup: `{fmt(analyses['exact_subset_speedup']['gm'])}x`. See the machine-readable result and diagnostic summary for all 90 pair classifications, individual timing, acceptance, telemetry, and divergence evidence.
 """
     (repo/"reports/b570/B570_HUMANEVAL30_DIAGNOSTIC.md").write_text(he,encoding="utf-8")
+    cross={"schema":"heterospec.cross_platform_backend_summary.v1","scope":"bounded comparison; no shared-root-cause claim",
+      "platforms":[
+        {"platform":"M4 / Metal","fast_path_correctness":"PASS 90/90 exact HumanEval pairs","V2_raw":None,"V2_exact":None,"humaneval_exactness":"90/90","raw_speedup":1.387,"admissible_speedup_status":"admissible for frozen M4 HumanEval30","energy_boundary":"Apple package energy","energy_result":"1.013x efficiency ratio; CI crosses 1","key_limitation":"HumanEval-conditioned result; representative Spec-Bench 24Q was 0.842x"},
+        {"platform":"RTX 5070 Ti / CUDA","fast_path_correctness":"CORRECTNESS-BLOCKED","V2_raw":{"empty":1.009,"depth256":0.983},"V2_exact":{"empty":2.431,"depth256":2.137},"humaneval_exactness":"fast path failed gate; serialized RTX fallback 90/90","raw_speedup":None,"admissible_speedup_status":"serialized RTX fallback 0.650x, exact and slower","energy_boundary":"RTX component energy where measured","energy_result":"no decode-window HumanEval30 energy claim","key_limitation":"do not infer same numerical root cause as Vulkan"},
+        {"platform":"Arc B570 / Vulkan","fast_path_correctness":"CORRECTNESS-BLOCKED; original six-prompt gate 9/18 exact","V2_raw":{"512":v512,"2048":v2048},"V2_exact":{"512":fv512,"2048":fv2048},"humaneval_exactness":f"{analyses['counts']['exact_pairs']}/90 pairs; {analyses['counts']['exact_prompts']}/30 prompts wholly exact","raw_speedup":analyses['raw_speedup']['gm'],"admissible_speedup_status":"all-pair result diagnostic only; exact subset post-hoc descriptive","energy_boundary":"Intel Arc B570 GPU board energy","energy_result":{"raw_ratio":analyses['raw_energy']['gm_ratio'],"exact_subset_ratio":analyses['exact_subset_energy']['gm_ratio']},"key_limitation":"strict token exactness blocks the frozen fast path"}],
+      "bounded_interpretation":"Multiple discrete-GPU backend paths can be correctness-blocked under strict token-exact evaluation; no claim is made that CUDA and Vulkan share a root cause."}
+    save(proc/"cross_platform_summary.json",cross)
+    cross_md=f"""# Cross-platform Backend Summary
+
+| Platform | Fast-path correctness | V2 raw | V2 exact | Frozen HumanEval | Speed status | Energy boundary | Key limitation |
+|---|---|---|---|---|---|---|---|
+| M4 / Metal | PASS, 90/90 | not recorded here | not recorded here | 90/90 exact; 1.387x | admissible for this conditioned workload | Apple package | representative 24Q was 0.842x |
+| RTX 5070 Ti / CUDA | correctness-blocked | 1.009 / 0.983 at registered depths | 2.431 / 2.137 serialized | fast path failed; exact RTX fallback 90/90 and 0.650x | fast inadmissible; fallback exact but slower | RTX component | no same-root-cause inference |
+| Arc B570 / Vulkan | correctness-blocked | {fmt(v512)} / {fmt(v2048)} at 512/2048 | {fmt(fv512)} / {fmt(fv2048)} | {analyses['counts']['exact_pairs']}/90 exact pairs | all-pair diagnostic; exact subset post-hoc | Arc B570 GPU board | original six-prompt gate remains FAIL |
+
+Bounded interpretation: multiple discrete-GPU backend paths can be correctness-blocked under strict token-exact evaluation. This does **not** establish a shared CUDA/Vulkan root cause.
+"""
+    (repo/"reports/b570/B570_CROSS_PLATFORM_SUMMARY.md").write_text(cross_md,encoding="utf-8")
     note=f"""## Post-gate diagnostic extension ({root.name})
 
 The original formal correctness result remains **FAIL** and unchanged. A later explicitly post-hoc diagnostic extension measured frozen HumanEval30 prevalence and raw mechanisms; it cannot rescue or replace the gate. See `B570_DIAGNOSTIC_EXTENSION.md`.
@@ -141,7 +159,9 @@ The original formal correctness result remains **FAIL** and unchanged. A later e
         if td.exists(): sources += list(td.glob("*.csv"))+list(td.glob("*.metadata.json"))
     entries=[]
     for src in sources:
-        rel=src.relative_to(repo) if repo in src.parents else src.name; dst=archive/("telemetry" if src.parent.name=="telemetry" else "raw")/src.name; dst.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(src,dst)
+        rel=src.relative_to(repo) if repo in src.parents else src.name
+        dst=(archive/"telemetry"/src.parent.parent.name/src.name) if src.parent.name=="telemetry" else (archive/"raw"/src.name)
+        dst.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(src,dst)
         if src.read_bytes()!=dst.read_bytes():raise RuntimeError(f"Archive byte mismatch: {src}")
         entries.append({"source_path":str(rel),"archived_path":str(dst.relative_to(repo)),"size":dst.stat().st_size,"sha256":sha(dst),"run_id":root.name,"classification":"authoritative" if src.suffix==".json" and src.name not in ("manifest-preflight.json",) else "supporting","runtime_commit":"0cae43063cf15170e91a2ff4d034da0ecef4a1b2","target_sha256":"408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6","draft_sha256":"9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031","backend_device":"Vulkan0 / Intel Arc B570"})
     manifest={"schema":"heterospec.b570.diagnostic_archive.v1","run_id":root.name,"created_at":utc(),"files":entries,"derived_reports":["reports/b570/B570_DIAGNOSTIC_EXTENSION.md","reports/b570/B570_HUMANEVAL30_DIAGNOSTIC.md"],"exclusions":["models","binaries","installers","caches","redundant stdout","mismatch timing as admissible optimization evidence"]}; save(archive/"manifest.json",manifest)
@@ -157,7 +177,7 @@ The original formal correctness result remains **FAIL** and unchanged. A later e
     else:
         z=run(["gh","pr","create","--base","main","--head","windows/b570-backend-control","--title","Characterize Arc B570 post-gate diagnostic behavior","--body","Post-gate diagnostic extension preserving the prior correctness failure while reporting V2_raw, frozen HumanEval30 prevalence, descriptive timing, board energy, and one preregistered serialized fallback."],repo)
         if z.returncode==0:pr_url=z.stdout.strip().splitlines()[-1]
-    final={"original_correctness":"FAIL","V2_raw_512":v512,"V2_raw_2048":v2048,"humaneval30_status":h["status"],**analyses["counts"],"raw_GM_speedup":analyses["raw_speedup"]["gm"],"raw_speedup_CI":analyses["raw_speedup"]["ci95"],"exact_subset_GM_speedup":analyses["exact_subset_speedup"]["gm"],"exact_subset_count":len(exact_prompts),"raw_board_energy_ratio":analyses["raw_energy"]["gm_ratio"],"exact_subset_energy_ratio":analyses["exact_subset_energy"]["gm_ratio"],"stable_divergence_prompts":stable,"fallback_status":f["status"],"fallback_correctness":"PASS" if f["status"]=="PASS" else "FAIL","fallback_V2_exact":{"512":fv512,"2048":fv2048},"archive_status":"PASS","git_commits":commits,"push_status":push_status,"PR_url":pr_url,"auto_shutdown":False,"completed_at":utc()}
+    final={"original_correctness":"FAIL","V2_raw_512":v512,"V2_raw_2048":v2048,"humaneval30_status":h["status"],**analyses["counts"],"raw_GM_speedup":analyses["raw_speedup"]["gm"],"raw_speedup_CI":analyses["raw_speedup"]["ci95"],"exact_subset_GM_speedup":analyses["exact_subset_speedup"]["gm"],"exact_subset_count":len(exact_prompts),"raw_board_energy_ratio":analyses["raw_energy"]["gm_ratio"],"exact_subset_energy_ratio":analyses["exact_subset_energy"]["gm_ratio"],"stable_divergence_prompts":stable,"fallback_status":f["status"],"fallback_correctness":"PASS" if f["status"]=="PASS" else "FAIL","fallback_V2_exact":{"512":fv512,"2048":fv2048},"archive_status":"PASS","git_commits":commits,"push_status":push_status,"PR_url":pr_url,"shutdown_status":"PENDING_SCHEDULING_BY_TASK_RUNNER","completed_at":utc()}
     save(repo/"work/b570/DIAGNOSTIC_FINAL_STATUS.json",final); (repo/"work/b570/DIAGNOSTIC_FINAL_STATUS.txt").write_text(json.dumps(final,indent=2)+"\n",encoding="utf-8")
 
 if __name__=="__main__":main()

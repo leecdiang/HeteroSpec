@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Summarize, report, archive, and publish one B570 diagnostic extension."""
-import argparse, hashlib, json, math, random, shutil, statistics, subprocess
+import argparse, hashlib, json, math, os, random, shutil, statistics, subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -37,7 +37,9 @@ def corr(x,y,rank=False):
         a,b=ranks(a),ranks(b)
     ma,mb=statistics.fmean(a),statistics.fmean(b); den=math.sqrt(sum((z-ma)**2 for z in a)*sum((z-mb)**2 for z in b))
     return sum((u-ma)*(v-mb) for u,v in zip(a,b))/den if den else None
-def run(cmd,cwd,timeout=300): return subprocess.run(cmd,cwd=cwd,text=True,capture_output=True,timeout=timeout)
+def run(cmd,cwd,timeout=300):
+    if cmd and cmd[0]=="git": cmd[0]=os.environ.get("HETEROSPEC_GIT_EXE",r"C:\Users\DIANG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\cmd\git.exe")
+    return subprocess.run(cmd,cwd=cwd,text=True,capture_output=True,timeout=timeout)
 def fmt(x): return "NOT RUN" if x is None else f"{x:.4f}"
 def append_once(path,marker,text):
     old=path.read_text(encoding="utf-8") if path.exists() else ""

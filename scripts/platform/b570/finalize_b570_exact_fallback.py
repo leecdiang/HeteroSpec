@@ -146,7 +146,7 @@ The Arc B570 backend-control work is closed after the one preregistered serializ
     for rel in ("processed","stdout","stderr","telemetry","v2_exact","humaneval30"):
         src=root/rel
         if src.exists(): shutil.copytree(src,archive/rel,dirs_exist_ok=True)
-    for name in ("status.json","status.txt","EXACT_FALLBACK_STATUS.txt","preflight.json","todesk-disconnect-check.json"):
+    for name in ("status.json","status.txt","EXACT_FALLBACK_STATUS.txt","manifest-preflight.json","todesk-disconnect-check.json"):
         if (root/name).exists(): shutil.copy2(root/name,archive/name)
     shutil.copy2(repo/"benchmarks/b570_backend_control/exact_fallback_validation_v1.json",archive/"exact_fallback_validation_v1.json")
     files=[]

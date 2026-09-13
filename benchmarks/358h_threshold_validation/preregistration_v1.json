@@ -1,0 +1,99 @@
+{
+  "schema": "heterospec.358h.threshold_validation.v1",
+  "status": "DRAFT_TO_BE_COMPLETED_BEFORE_FORMAL_MEASUREMENT",
+  "purpose": "Predictive draft-cost threshold validation on Intel Core Ultra X7 358H across CPU, Xe3-class iGPU, and NPU.",
+  "scientific_question": "Do measured draft-device costs on 358H approach or cross the existing speculative-decoding break-even boundary, and for plausible paths does end-to-end k=2 decoding remain token-exact and profitable?",
+  "platform": {
+    "cpu": "Intel Core Ultra X7 358H",
+    "ram_gb": 32,
+    "igpu": "Intel Arc B390 / Xe3-class",
+    "npu_tops_nominal": 50,
+    "os": "Windows 11",
+    "driver_versions": "FILL_BEFORE_FORMAL",
+    "runtime_versions": "FILL_BEFORE_FORMAL"
+  },
+  "phase_0_qualification": {
+    "require_explicit_devices": ["CPU", "GPU", "NPU"],
+    "forbid_openvino_auto_multi_for_single_device_claims": true,
+    "require_model_hashes": true,
+    "require_no_silent_fallback": true,
+    "require_warmup_protocol": true,
+    "require_telemetry_boundary_documented": true
+  },
+  "phase_1_draft_characterization": {
+    "draft_model": "FILL_FROZEN_MODEL_ID_AND_HASH_BEFORE_FORMAL",
+    "devices": ["CPU", "GPU", "NPU"],
+    "precision_or_conversion": "FILL_AND_FREEZE_BEFORE_FORMAL",
+    "contexts": "FILL_CONTEXT_POINTS_BEFORE_FORMAL",
+    "repetitions": "FILL_REPETITIONS_BEFORE_FORMAL",
+    "metrics": [
+      "steady_state_latency_ms_per_token",
+      "tokens_per_second",
+      "warmup_behavior",
+      "dispatch_or_handoff_overhead_if_measurable",
+      "host_ram",
+      "device_memory_if_available",
+      "component_power_or_energy_if_valid"
+    ],
+    "single_device_binding_required": true
+  },
+  "phase_2_threshold_gate": {
+    "framework": "T_spec/token = [T_d(k) + T_v(k,e) + T_x(e)] / C",
+    "speedup_model": "speedup = T_b * C / [T_d(k) + V_k(e) * T_b + T_x(e)]",
+    "proposal_width": 2,
+    "classes": ["NO-GO", "BORDERLINE", "GO"],
+    "rule": "FILL_NUMERIC_OR_ALGORITHMIC_GO_NO_GO_RULE_BEFORE_FORMAL",
+    "report_before_phase_3": "reports/358h/358H_DRAFT_THRESHOLD_ANALYSIS.md"
+  },
+  "phase_3_end_to_end": {
+    "eligibility": "Only BORDERLINE or GO device paths from Phase 2 may advance.",
+    "baseline": "paired target-only greedy decoding",
+    "speculation": {
+      "k": 2,
+      "temperature": 0,
+      "seed": "FILL_BEFORE_FORMAL",
+      "output_cap_generated_tokens": "FILL_BEFORE_FORMAL"
+    },
+    "correctness": {
+      "contract": "generated token IDs only; exclude prompt; first divergence is FAIL",
+      "small_gate": "FILL_FROZEN_PROMPT_IDS_AND_REPETITIONS_BEFORE_FORMAL",
+      "full_workload": "Use the existing frozen cross-platform HumanEval30 IDs if the small gate passes the preregistered rule."
+    },
+    "metrics": [
+      "exact_pairs",
+      "exact_prompts",
+      "prompt_speedup",
+      "geometric_mean_speedup",
+      "paired_bootstrap_ci",
+      "prompts_faster",
+      "acceptance",
+      "accepted_draft_tokens_per_round_if_directly_available",
+      "verification_factor_if_measurable",
+      "memory",
+      "energy_per_output_token_if_sensor_boundary_is_valid"
+    ]
+  },
+  "interpretation_rules": {
+    "correctness_gate_precedes_performance_claim": true,
+    "divergent_timing_is_diagnostic_only": true,
+    "tops_is_not_a_latency_metric": true,
+    "do_not_mix_energy_sensor_boundaries": true,
+    "negative_results_are_valid": true,
+    "no_post_result_parameter_search_without_new_preregistration": true
+  },
+  "frozen_variables_to_complete_before_formal": [
+    "repository_commit",
+    "driver_versions",
+    "runtime_builds",
+    "model_ids_and_hashes",
+    "conversion_or_precision",
+    "context_points",
+    "repetition_counts",
+    "prompt_ids",
+    "seed",
+    "output_cap",
+    "numeric_or_algorithmic_go_no_go_rule",
+    "telemetry_sampling_and_sensor_boundaries"
+  ],
+  "closure": "After the preregistered 358H campaign, report COMPLETE, NO-GO, or BLOCKED. Do not automatically search new k values, models, backends, precisions, or drivers."
+}

@@ -27,20 +27,41 @@ The formal HumanEval archive is self-contained for result auditing:
 
 The preregistered corrected synthetic ceiling is **not reproduced by a matching tracked result**. `work/m4/llama_synthetic_crossover.json` is an earlier, differently parameterized exploratory mechanism diagnostic and must not be relabeled as the preregistered ceiling.
 
-## Windows evidence
+## Windows RTX evidence
 
-The platform-level result and matched HumanEval follow-up are summarized in `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md` and `reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.md`. The paper-critical raw provenance now tracked in Git is split into three archives:
+The platform-level result and matched HumanEval follow-up are summarized in `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md` and `reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.md`. The paper-critical raw provenance tracked in Git is split into three archives:
 
 - `artifacts/windows_humaneval_replication/` — exact `ubatch=1` replication, correctness-aborted `ubatch=2` attempt, and supporting NVML telemetry.
 - `artifacts/windows_verification_mechanism/` — raw 20-repetition verification microbenchmark supporting the exact-verification ratios.
 - `artifacts/windows_cuda_divergence/` — raw divergence minimum reproduction, authoritative logit-capture payload, and supporting telemetry.
 
-Each archive contains a `manifest.json` with size/SHA-256 integrity, runtime metadata, classification, derived outputs, and exclusions. Bulk or redundant machine-local logs remain excluded; in particular, server stdout/stderr that contains no evidence beyond the authoritative JSON is intentionally not archived.
+Each archive contains a `manifest.json` with size/SHA-256 integrity, runtime metadata, classification, derived outputs, and exclusions.
+
+## Arc B570 evidence
+
+B570 is closed. Qualification, the formal correctness gate, the full post-gate diagnostic, and the unique serialized fallback validation are documented under `reports/b570/` and archived under `artifacts/b570_backend_control/`.
+
+The B570 archive uses Git text conversion disabled for paper-critical files. The closeout audit verified committed Git-object bytes against manifest size/SHA256 entries. The serialized fallback remained non-universal on the full HumanEval30 selection, so its overall timing is diagnostic only.
+
+## 358H planned study
+
+No 358H result exists yet. The repository now contains an onboarding protocol rather than a fabricated executable recipe:
+
+- platform config: `configs/platform_358h.yaml`
+- runbook: `docs/358H_RUNBOOK.md`
+- preregistration template: `benchmarks/358h_threshold_validation/preregistration_v1.json`
+- planned report index: `reports/358h/README.md`
+- future script location: `scripts/platform/358h/README.md`
+
+The experimenter must first qualify the exact Intel/OpenVINO device names, runtime versions, model representation, and telemetry interfaces on the physical machine. All `FILL_*` fields in the preregistration template must be completed and committed **before formal measurements begin**.
+
+The planned sequence is CPU/iGPU/NPU draft latency characterization -> predictive GO/BORDERLINE/NO-GO threshold analysis -> frozen end-to-end `k=2` validation only for plausible paths. Do not infer a result from vendor TOPS or configuration files.
 
 ## Interpretation constraints
 
-- Preserve frozen prompt sets, seeds, model revisions, quantization, `k`, runtime flags, pairing, and stop rules.
+- Preserve frozen prompt sets, seeds, model revisions, quantization/precision, `k`, runtime flags, pairing, and stop rules.
 - Apply correctness gates before reading a timing as performance evidence.
 - Treat “exact” as paired token equality, not functional correctness of generated code.
 - Do not compare energy domains as though they were the same sensor boundary.
 - Do not fill missing evidence from prose, a different experiment, or a platform with similar hardware.
+- For 358H single-device claims, explicit CPU/GPU/NPU binding is mandatory; OpenVINO `AUTO` and `MULTI` are not admissible substitutes.

@@ -31,8 +31,10 @@ def main() -> int:
 
     if not (1.0 <= args.central_committed <= args.optimistic_committed <= 3.0):
         parser.error("for frozen k=2, require 1 <= central <= optimistic <= 3 committed output tokens/round")
-    if min(args.target_token_ms, args.verification_factor, args.residual_ms) < 0:
-        parser.error("cost inputs must be non-negative")
+    if args.target_token_ms <= 0:
+        parser.error("target-token-ms must be positive")
+    if min(args.verification_factor, args.residual_ms) < 0:
+        parser.error("verification-factor and residual-ms must be non-negative")
 
     rows = []
     with args.draft_csv.open(newline="", encoding="utf-8-sig") as handle:
@@ -71,4 +73,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

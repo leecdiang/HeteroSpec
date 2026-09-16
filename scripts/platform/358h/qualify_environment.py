@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
-"""Capture a non-formal 358H/OpenVINO qualification record.
-
-This script never uses AUTO, MULTI, or HETERO.  With --model-xml it also
-queries and compiles the exact IR on every requested physical device.
-"""
+"""Capture a non-formal 358H/OpenVINO qualification record."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
-import os
 import platform
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-
 
 FORBIDDEN_PREFIXES = ("AUTO", "MULTI", "HETERO")
 
@@ -50,7 +44,7 @@ def git_value(*args: str) -> str | None:
 def safe_property(core: Any, device: str, key: str) -> Any:
     try:
         return jsonable(core.get_property(device, key))
-    except Exception as exc:  # device plugins expose different property sets
+    except Exception as exc:
         return {"error": f"{type(exc).__name__}: {exc}"}
 
 

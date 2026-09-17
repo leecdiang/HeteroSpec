@@ -1,27 +1,33 @@
 {
-  "schema": "heterospec.358h.phase0_gate.v2",
-  "formal_measurement": false,
-  "status": "PASS",
-  "qualification_pass": true,
-  "source_equivalence": "STRONGLY_SUPPORTED",
-  "historical_provenance_limitation": "Exact upstream Transformers source revision was not historically recorded; see reports/358h/358H_PROVENANCE_AMENDMENT.md.",
-  "frozen_manifest": "runs/358h/qualification/phase0_frozen_manifest.json",
-  "passed": [
-    "canonical historical GGUF immutable and hashed",
-    "historical provenance limitation transparently amended",
-    "immutable reconstructed source independently qualified",
-    "conversion fully reproducible and package-frozen",
-    "IR and NPU cache artifacts hashed",
-    "CPU requested -> CPU executes",
-    "GPU requested -> GPU.0 executes",
-    "NPU requested -> NPU executes",
-    "NPU bounded smoke succeeds through the planned 8192-token context ceiling",
-    "AUTO, MULTI, HETERO, and silent fallback excluded",
-    "no formal performance data collected"
+  "schema_version": 3,
+  "platform": "Intel Core Ultra X7 358H",
+  "scope": ["CPU draft", "NPU draft"],
+  "status": "PENDING_FINAL_TELEMETRY_OVERHEAD_GATE",
+  "qualification_pass": false,
+  "formal_measurement_authorized": false,
+  "supersedes_commit": "a957791b9a13fe51a35e62b66a12f88ace83a6bb",
+  "preserved_evidence": [
+    "immutable model and tokenizer provenance",
+    "semantic-equivalence analysis",
+    "OpenVINO conversion recipe and artifact hashes"
   ],
-  "blocked_or_failed": [],
-  "formal_phase1_authorized": false,
-  "phase1_authorization_condition": "Freeze and commit benchmarks/358h_threshold_validation/preregistration_v1.json after this PASS.",
-  "timing_data_collected": false
+  "invalidated_evidence": [
+    "machine-side device binding",
+    "functional smoke tests",
+    "NPU shape-profile qualification",
+    "telemetry qualification"
+  ],
+  "completed_replacement_gates": [
+    "AC CPU binding and bounded smoke",
+    "AC NPU 8192 cache construction, strict NPU binding and bounded smoke",
+    "Intel Unified Telemetry Package/NPU domain and idle-load-idle sanity",
+    "QPC-to-UT clock calibration spread 1.907 ms <= 5 ms",
+    "frozen Qwen3-8B target download verified by exact size and SHA256"
+  ],
+  "remaining_blockers": [
+    "run randomized 10-OFF/10-ON <=1% overhead gate for final no-ITT 100 ms CPU and NPU collectors from an Administrator shell; latest UAC launch was cancelled",
+    "freeze and commit Phase-1 preregistration only after replacement Phase-0 PASS"
+  ],
+  "formal_data_collected": false
 }
 

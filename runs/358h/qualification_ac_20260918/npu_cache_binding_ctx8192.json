@@ -1,0 +1,61 @@
+{
+  "schema": "heterospec.358h.npu_cache_binding.v1",
+  "formal_measurement": false,
+  "performance_metrics_recorded": false,
+  "captured_at_utc": "2026-09-17T16:27:46.895552+00:00",
+  "requested_device": "NPU",
+  "available_devices": [
+    "CPU",
+    "GPU",
+    "NPU"
+  ],
+  "cache_blob": {
+    "path": "C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\runs\\358h\\qualification_ac_20260918\\npu_cache_ctx8192\\5153695462235992255.blob",
+    "bytes": 220376087,
+    "sha256": "3008579cfaa057bfddc430c70dae3f9f0e184589b72d2df816c2cf157d9ae915",
+    "wrapper_header": "<?xml version=\"1.0\"?><compiled_blob ie_version=\"2026.3.1-22476-759c5a6ab8c-releases/2026/3\" file_info=\"14695981042001091806\" runtime_info=\"\" header_size_alignment=\"4096\"/>",
+    "compiled_payload_offset": 4096,
+    "compiled_payload_sha256": "afa31184808eb1b60ea870c93566c3cc4580926568c1fd5dd2662bee926cea6a"
+  },
+  "weights": {
+    "path": "C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\models\\openvino\\qwen3-0.6b-6130ef-int4-sym-g128\\openvino_model.bin",
+    "bytes": 383383261,
+    "sha256": "2e129cffb1a7239007a3df27e0f3f7bb12f65a40e5c9b1e24a250d952da47837"
+  },
+  "actual_execution_devices": "NPU",
+  "actual_execution_devices_match_request": true,
+  "loaded_from_cache": true,
+  "inputs": [
+    {
+      "name": "input_ids",
+      "shape": "[?,?]",
+      "type": "<Type: 'int64_t'>"
+    },
+    {
+      "name": "attention_mask",
+      "shape": "[?,?]",
+      "type": "<Type: 'int64_t'>"
+    },
+    {
+      "name": "position_ids",
+      "shape": "[?,?]",
+      "type": "<Type: 'int64_t'>"
+    },
+    {
+      "name": "beam_idx",
+      "shape": "[?]",
+      "type": "<Type: 'int32_t'>"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "logits",
+      "shape": "[?,?,151936]",
+      "type": "<Type: 'float32'>"
+    }
+  ],
+  "bounded_single_step_inference": "PASS",
+  "top_token_id": 220,
+  "qualification_pass": true
+}
+

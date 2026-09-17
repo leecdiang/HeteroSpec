@@ -1,0 +1,39 @@
+{
+  "schema": "heterospec.358h.telemetry_overhead_analysis.v1",
+  "formal_measurement": false,
+  "performance_claim_prohibited": true,
+  "source": "runs\\358h\\qualification_ac_20260918\\telemetry_overhead_v7_phase1like_isolated\\overhead_qualification.json",
+  "frozen_gate_result": {
+    "absolute_median_overhead_percent": 0.12242300727457467,
+    "threshold_percent": 1,
+    "qualification_pass": true
+  },
+  "descriptive_uncertainty_not_used_as_gate": {
+    "method": "independent nonparametric bootstrap of ON and OFF medians",
+    "seed": 572,
+    "resamples": 10000,
+    "signed_overhead_percent_ci95": [
+      -1.9683422472066003,
+      1.2203552949378471
+    ],
+    "probability_absolute_overhead_le_1_percent": 0.7134
+  },
+  "dispersion": {
+    "off_cv_percent": 1.3284767127922803,
+    "on_cv_percent": 3.189022922741975
+  },
+  "order_and_thermal_diagnostics": {
+    "spearman_index_vs_duration": -0.07368421052631578,
+    "first_half_median_ms": 1877.6951,
+    "second_half_median_ms": 1877.46355,
+    "second_vs_first_half_percent": -0.012331608044346964,
+    "interpretation": "descriptive only; randomized interleaving protects the frozen median comparison"
+  },
+  "collector": {
+    "metadata_files": 10,
+    "max_process_cpu_seconds": 0.015625,
+    "max_cpu_fraction_of_wall": 0.0010416666666666667,
+    "max_collection_call_ms": 0.7512
+  }
+}
+

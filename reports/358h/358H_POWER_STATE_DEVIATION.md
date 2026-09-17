@@ -18,4 +18,3 @@ Superseded remote evidence commit: `a957791b9a13fe51a35e62b66a12f88ace83a6bb`.
 
 No formal Phase-1 timing or energy observation was collected before this deviation was identified.
 
-

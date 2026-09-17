@@ -87,4 +87,3 @@ $after = Get-PowerState
     before = $before
     after = $after
 } | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 -LiteralPath $MetadataJson
-

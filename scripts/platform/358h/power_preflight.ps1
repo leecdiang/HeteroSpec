@@ -52,4 +52,3 @@ if ($OutputPath) {
 }
 $json
 if ($issues.Count -gt 0) { exit 2 }
-

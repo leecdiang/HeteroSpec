@@ -24,4 +24,3 @@ foreach ($device in @('CPU','NPU')) {
     }
     if ($LASTEXITCODE -ne 0) { throw "Unified Telemetry sensor qualification failed for $device" }
 }
-

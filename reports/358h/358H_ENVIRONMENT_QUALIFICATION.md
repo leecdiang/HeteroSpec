@@ -98,7 +98,6 @@ All 14 checks in `runs/358h/qualification/phase0_frozen_manifest.json` are true:
 
 The machine-side PASS below was superseded by `reports/358h/358H_POWER_STATE_DEVIATION.md` after the operator confirmed that the host was not connected to external power. It is retained only as a description of the completed engineering checks and is not an active qualification.
 
-**358H PHASE-0 QUALIFICATION: INVALID 鈥?AC REQUALIFICATION REQUIRED**
+**358H PHASE-0 QUALIFICATION: INVALID — AC REQUALIFICATION REQUIRED**
 
 Formal Phase 1 remains prohibited until the completed preregistration is committed.
-

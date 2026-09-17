@@ -64,4 +64,3 @@ $result = [ordered]@{
 }
 $result | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $OutputDirectory 'overhead_qualification.json')
 if (-not $result.qualification_pass) { throw "Telemetry overhead gate failed: $overheadPct percent" }
-

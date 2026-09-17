@@ -78,4 +78,3 @@ $manifest = [ordered]@{
     overlap_rule = 'Report Package and NPU domains separately; never add overlapping domains.'
 }
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 -LiteralPath ($OutputPrefix + '.manifest.json')
-

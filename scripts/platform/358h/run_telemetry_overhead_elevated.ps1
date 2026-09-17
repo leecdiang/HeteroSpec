@@ -14,4 +14,3 @@ try {
     Stop-Transcript
     exit 1
 }
-

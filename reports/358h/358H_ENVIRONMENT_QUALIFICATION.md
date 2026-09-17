@@ -1,8 +1,33 @@
 # Core Ultra X7 358H Phase-0 Environment Qualification
 
-Status: **PASS**
+Status: **AC REQUALIFICATION PASS / SEPARATED TELEMETRY POLICY FROZEN**
 
 Frozen: 2026-09-16 CST. This record contains qualification-only compilation and bounded functional smoke tests. No formal latency, throughput, or energy measurement was collected.
+
+## 2026-09-18 AC replacement status
+
+The earlier machine-side qualification remains invalid because the host power condition was not positively frozen. A replacement evidence set was created under `runs/358h/qualification_ac_20260918/` with `PowerOnline=true`, `Discharging=false`, the Windows Balanced scheme, and no formal performance run.
+
+Completed replacement gates:
+
+- CPU lower-level compile reports `EXECUTION_DEVICES=CPU`; bounded generation passes.
+- A new NPU 8192-token profile/cache was built under AC power; bounded generation passes.
+- Direct import of the new cache reports `EXECUTION_DEVICES=NPU`; bounded single-step inference passes.
+- Intel Unified Telemetry 0.2.0-beta1.1 was frozen by distribution and executable SHA256 and successfully collected Package and NPU power domains.
+- A frozen 100 ms official-format power configuration passed idle-load-idle, unit/scale, sampling-gap, and nonzero-NPU-activity sanity checks.
+- QPC-to-Unified-Telemetry clock calibration spread is 1.907 ms, below the frozen 5 ms limit.
+- The Qwen3-8B target artifact is downloaded and verified at exactly 8,709,518,112 bytes and SHA256 `408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6`.
+
+Telemetry resolution:
+
+- Repository history establishes that the 1% rule is an energy-admissibility gate inherited from B570, not a hard gate on the primary latency/break-even question. The evidence and decision are frozen in `reports/358h/358H_TELEMETRY_GATE_AUDIT.md`; the threshold itself was not relaxed.
+- Direct Windows PDH sampling of hardware-backed `RAPL_Package0_PKG` passed the short 10 OFF + 10 ON gate at 0.2004%, but an unpinned Phase-1-like 2048-context/128-output qualification failed at 1.6602%. That failure is retained.
+- The predeclared isolation configuration—workload logical CPUs 0–11 and collector logical CPUs 12–15—then passed the Phase-1-like 10 OFF + 10 ON gate at 0.122423% (seed 573). This exact CPU process affinity is frozen for both telemetry-OFF latency and telemetry-ON energy runs; it is not applied only to the favorable condition.
+- CPU package energy is therefore qualified only under this isolated configuration. The physical boundary is package RAPL, not wall, system, CPU-core-only, or NPU energy.
+- NPU energy is **not admissible**. The latest minimal SocWatch attempt failed at 2.2364%; the earlier 0.6981% pass is not cherry-picked, and package RAPL is not relabeled as an NPU domain.
+- Phase 1 uses separated tracks: primary CPU/NPU latency with telemetry OFF, plus a conditional CPU-package energy track. No symmetric CPU-versus-NPU energy claim is permitted.
+
+Two earlier telemetry configurations are preserved as engineering failures: stock 1 ms power collection caused 51.2649% CPU observer overhead; the 100 ms trace with dense OpenVINO ITT collection was stopped after confirming ITT remained a material observer. Neither is formal data. The final no-ITT attempt uses adjacent calibration traces solely to map exact QPC boundaries into the Unified Telemetry clock; it passed on NPU but failed on CPU, and is also qualification-only evidence.
 
 ## Scientific provenance
 
@@ -76,7 +101,9 @@ All 14 checks in `runs/358h/qualification/phase0_frozen_manifest.json` are true:
 - successful NPU functional smoke through the 8192-token planned ceiling;
 - no formal performance data collected.
 
+The machine-side PASS below was superseded by `reports/358h/358H_POWER_STATE_DEVIATION.md` after the operator confirmed that the host was not connected to external power. It is retained only as a description of the completed engineering checks and is not an active qualification.
+
 **358H PHASE-0 QUALIFICATION: PASS**
 
-Formal Phase 1 remains prohibited until the completed preregistration is committed.
+Formal Phase 1 remains prohibited until the completed preregistration, deterministic Phase-2 gate, Phase-3 entry rule, and non-formal dry run are frozen and committed.
 

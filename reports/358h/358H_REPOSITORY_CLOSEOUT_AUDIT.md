@@ -15,7 +15,7 @@ Six large text paths in the initial PR upload were truncated to approximately
 damaged. The affected content comprises the full and small-gate JSONL records,
 their resolved JSON forms, and the per-round CSV (including its top-level copy).
 
-The recovery artifact is:
+The recovery artifact created during repair is:
 
 - `artifacts/358h_threshold_validation/phase3-final-20260918-144458/358h_phase3_complete_evidence.tar.gz`
 - bytes: `694239`
@@ -24,24 +24,26 @@ The recovery artifact is:
 
 The gzip-compressed tar contains the complete 34-entry archive manifest and all
 34 byte-complete files. A clean extraction was validated against every manifest
-size and SHA256 with zero failures. Until the convenient text paths are replaced,
-the compressed bundle is the authoritative committed Git representation and the
-approximately-80-KiB text objects are non-authoritative previews only.
+size and SHA256 with zero failures. The six initially truncated paths and the
+remaining text objects were subsequently replaced with byte-identical Git blobs.
+The final remote audit verified all 34/34 manifest entries by local SHA256/size
+and local-versus-remote Git object identity, with zero failures. The bundle is
+retained as a compact recovery copy, not as a substitute for broken text paths.
 
 ## Merge gate
 
 Closeout repair status:
 
-1. **PASS** — the remote recovery object is 694239 bytes and has Git blob SHA1
-   `efa399823049ee57968b0bfa00b0ea41cca9c975`, identical to the local object;
+1. **PASS** — all 34/34 direct archive paths are byte-identical to the local
+   manifest sources; the recovery object is additionally 694239 bytes and has
+   Git blob SHA1 `efa399823049ee57968b0bfa00b0ea41cca9c975`, identical to the local object;
 2. **PASS** — repository-wide status and mechanism documents no longer say 358H
    is pending;
 3. **PASS** — this audit and the formal-execution amendment are committed;
 4. **PASS** — the branch incorporates current `main` through merge commit
    `8d15dbc4c86b6317e626b5a7aa42862c75af7a08` and is zero commits behind;
-5. **PASS** — the PR description identifies the compressed bundle as
-   authoritative and does not claim that truncated preview blobs match the
-   original manifest.
+5. **PASS** — the PR description records both the repaired 34/34 direct Git
+   objects and the independently validated compressed recovery bundle.
 
 The transport-recovery and documentation gates are complete. The final GitHub
 check reports a clean merge state, zero commits behind `main`, and no configured

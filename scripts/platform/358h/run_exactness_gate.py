@@ -27,7 +27,7 @@ def execute(prompt_path, condition, out, stem):
          "--ctx-size","16384","--batch-size","512","--ubatch-size","1","--flash-attn","off",
          "--file",str(prompt_path),"--n-predict","128","--temp","0","--top-k","0","--top-p","1",
          "--min-p","0","--seed","123","--ignore-eos","--reasoning","off","--simple-io",
-         "--no-display-prompt","--no-warmup","--perf","--no-conversation"]
+         "--no-display-prompt","--no-warmup","--perf"]
     if condition=="speculative":
         cmd += ["--spec-type","draft-simple","--spec-draft-model",str(DRAFT),"--spec-draft-device","Vulkan0",
                 "--spec-draft-ngl","99","--spec-draft-n-max","2","--spec-draft-n-min","0"]

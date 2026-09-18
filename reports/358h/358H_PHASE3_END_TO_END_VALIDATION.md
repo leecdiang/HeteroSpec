@@ -2,7 +2,7 @@
 
 ## Result
 
-**COMPLETE — correctness-admissible, not profitable.** The frozen heterogeneous OpenVINO-draft / llama.cpp-Vulkan target system passed every paired greedy token-ID comparison, but neither draft device accelerated the frozen HumanEval30 workload.
+**COMPLETE — correctness-admissible, not profitable.** The frozen heterogeneous OpenVINO-draft / llama.cpp-Vulkan target system passed every paired greedy token-ID comparison, but neither draft device accelerated the frozen HumanEval30 workload. The primary metric is post-prefill decode end-to-end time, not whole-request user-perceived latency.
 
 | Path | Exact pairs | Exact prompts | GM speedup (95% prompt-bootstrap CI) | Median prompt speedup | Faster prompts |
 |---|---:|---:|---:|---:|---:|
@@ -15,7 +15,7 @@ The Stage-A gate also passed: CPU 18/18 and NPU 18/18 exact pairs. There were no
 
 - HumanEval30, three paired repetitions per task; 90 shared target-only baselines, 90 CPU-draft observations, and 90 NPU-draft observations.
 - Greedy Qwen3-8B Q8_0 target on explicit llama.cpp b10839 Vulkan0; 37/37 model layers and 36/36 KV layers on Vulkan0 in each campaign session log.
-- Frozen Qwen3-0.6B symmetric INT4 OpenVINO IR; CPU session `EXECUTION_DEVICES=[CPU]`, NPU session `EXECUTION_DEVICES=[NPU]`.
+- Frozen Qwen3-0.6B symmetric INT4 OpenVINO IR. CPU/NPU placement is supported by the frozen explicit-device compilation and cache-binding qualification evidence; OpenVINO GenAI's LLMPipeline does not expose `EXECUTION_DEVICES` for every formal observation.
 - k=2, output cap 128, prompt prefill excluded from all paired primary timing boundaries.
 
 ## Performance
@@ -26,6 +26,8 @@ The Stage-A gate also passed: CPU 18/18 and NPU 18/18 exact pairs. There were no
 | NPU draft k=2 | 13.365 | 4.647 | 74.825 | 215.186 |
 
 The estimation unit is the HumanEval prompt: each prompt's three paired speedups is reduced to its median, and the geometric mean is bootstrapped over 30 prompts (10,000 resamples, seed 20260919).
+
+HumanEval functional execution/pass@k was not evaluated. Correctness in this report means generated token-ID equality with the target-only baseline.
 
 ## Acceptance and committed work
 
@@ -60,4 +62,6 @@ No end-to-end energy claim is made. CPU package energy was qualified only for Ph
 - Processed summary: `analysis/358h_phase3_summary.json`.
 - Per-prompt and per-round records: `analysis/358h_phase3_prompt_summary.csv` and `analysis/358h_phase3_rounds.csv`.
 - Authoritative raw archive: `artifacts/358h_threshold_validation/phase3-final-20260918-144458/`.
+- Formal host-state, interaction, randomization, and terminology disclosure: `reports/358h/358H_FORMAL_EXECUTION_AMENDMENT.md`.
+- Byte-complete committed recovery artifact: `artifacts/358h_threshold_validation/phase3-final-20260918-144458/358h_phase3_complete_evidence.tar.gz`.
 

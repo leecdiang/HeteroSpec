@@ -43,8 +43,10 @@ Closeout repair status:
    authoritative and does not claim that truncated preview blobs match the
    original manifest.
 
-The transport-recovery and documentation gates are complete. The PR may move
-from audit hold to ordinary review after its final changed-file/CI check.
+The transport-recovery and documentation gates are complete. The final GitHub
+check reports a clean merge state, zero commits behind `main`, and no configured
+workflow/status checks for the current head. PR #12 has therefore moved from
+audit hold to **READY FOR REVIEW**; it has not been merged automatically.
 
 The transport incident does not invalidate the scientific result because the
 complete source files, hashes, and independently verified compressed recovery

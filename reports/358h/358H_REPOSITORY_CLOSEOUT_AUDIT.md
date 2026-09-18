@@ -30,14 +30,21 @@ approximately-80-KiB text objects are non-authoritative previews only.
 
 ## Merge gate
 
-The PR must remain a draft until all of the following are true:
+Closeout repair status:
 
-1. the recovery bundle Git blob identity and byte count are verified remotely;
-2. repository-wide status and mechanism documents no longer say 358H is pending;
-3. this audit and the formal-execution amendment are committed;
-4. the PR branch is reconciled with the current `main` branch;
-5. the PR description names the compressed bundle as authoritative and does not
-   claim that the truncated text blobs match the original manifest.
+1. **PASS** — the remote recovery object is 694239 bytes and has Git blob SHA1
+   `efa399823049ee57968b0bfa00b0ea41cca9c975`, identical to the local object;
+2. **PASS** — repository-wide status and mechanism documents no longer say 358H
+   is pending;
+3. **PASS** — this audit and the formal-execution amendment are committed;
+4. **PASS** — the branch incorporates current `main` through merge commit
+   `8d15dbc4c86b6317e626b5a7aa42862c75af7a08` and is zero commits behind;
+5. **PASS** — the PR description identifies the compressed bundle as
+   authoritative and does not claim that truncated preview blobs match the
+   original manifest.
+
+The transport-recovery and documentation gates are complete. The PR may move
+from audit hold to ordinary review after its final changed-file/CI check.
 
 The transport incident does not invalidate the scientific result because the
 complete source files, hashes, and independently verified compressed recovery

@@ -1,0 +1,29 @@
+{
+  "schema": "heterospec.358h.phase3.summary.v1",
+  "status": "BLOCKED_BEFORE_FORMAL_DATA",
+  "phase1_phase2_source_commit": "4b655522225f73aa3aba64e7ae6141081d8270af",
+  "phase3_protocol_commit": "011ebe967fdf0d49f037a80f825951cb6bbfacbd",
+  "formal_phase3_data_seen": false,
+  "formal_pairs_expected_if_unblocked": {
+    "small_gate_baselines": 18,
+    "small_gate_cpu_pairs": 18,
+    "small_gate_npu_pairs": 18,
+    "humaneval30_baselines": 90,
+    "humaneval30_cpu_pairs": 90,
+    "humaneval30_npu_pairs": 90
+  },
+  "formal_pairs_completed": 0,
+  "blocker_class": "ENGINEERING_BLOCKER",
+  "blocker": "No qualified runner currently connects the frozen OpenVINO CPU/NPU draft IR to the frozen llama.cpp Vulkan0 target while preserving the exact k=2 verification semantics and instrumentation.",
+  "scientifically_forbidden_workarounds": [
+    "Use the canonical GGUF draft in llama.cpp instead of the frozen OpenVINO CPU/NPU IR",
+    "Move the target from the frozen Vulkan0 Qwen3-8B Q8_0 runtime to OpenVINO",
+    "Claim NPU execution through AUTO, MULTI, HETERO, CPU fallback, or a different model",
+    "Run formal timings before a non-formal end-to-end exactness dry run"
+  ],
+  "energy": {
+    "CPU_DRAFT_K2": "NOT_CLAIMED",
+    "NPU_DRAFT_K2": "NOT_ADMISSIBLE"
+  }
+}
+

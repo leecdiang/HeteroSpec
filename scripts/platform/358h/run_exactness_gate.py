@@ -22,7 +22,11 @@ def tokenize(text):
     p=subprocess.run([str(TOKENIZE),"--model",str(TARGET),"--stdin","--ids","--no-bos"],input=text,
                      capture_output=True,text=True,encoding="utf-8",errors="replace",check=True)
     return json.loads(p.stdout.strip())
-def generated_text(stdout, prompt):
+def generated_text(stdout, prompt, stderr=""):
+    parsed=re.findall(r"Parsed message:\s*(\{.*\})\s*$",stderr,re.MULTILINE)
+    if parsed:
+        value=json.loads(parsed[-1])
+        if value.get("role")=="assistant" and isinstance(value.get("content"),str): return value["content"]
     needle=prompt.rstrip()
     first=stdout.find(needle)
     if first < 0 or stdout.find(needle,first+1) >= 0: raise RuntimeError("prompt boundary absent or non-unique")
@@ -47,7 +51,7 @@ def execute(prompt_path, prompt, condition, out, stem):
     off=[tuple(map(int,x)) for x in re.findall(r"offloaded\s+(\d+)/(\d+) layers to GPU",combined)]
     required=2 if condition=="speculative" else 1
     if len(off)<required or any(a!=b for a,b in off[-required:]): raise RuntimeError(f"full-offload failed: {off}")
-    ids=tokenize(generated_text(p.stdout,prompt))[:128]
+    ids=tokenize(generated_text(p.stdout,prompt,p.stderr))[:128]
     return {"condition":condition,"token_ids":ids,"token_ids_sha256":hashlib.sha256(json.dumps(ids).encode()).hexdigest(),
             "output_tokens":len(ids),"requested_device":"Vulkan0","full_offload":True,
             "stdout":f"{stem}.stdout.txt","stderr":f"{stem}.stderr.txt"}

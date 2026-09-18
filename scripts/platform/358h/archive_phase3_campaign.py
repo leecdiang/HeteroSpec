@@ -13,9 +13,9 @@ def sha(p):
 def add(src,dst):
  dst.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(src,dst)
 def main():
- ap=argparse.ArgumentParser(); ap.add_argument('--full',type=Path,required=True); ap.add_argument('--small',type=Path,required=True); ap.add_argument('--out',type=Path,required=True); a=ap.parse_args()
- if a.out.exists(): raise RuntimeError('archive destination already exists')
- a.out.mkdir(parents=True)
+ ap=argparse.ArgumentParser(); ap.add_argument('--full',type=Path,required=True); ap.add_argument('--small',type=Path,required=True); ap.add_argument('--out',type=Path,required=True); ap.add_argument('--refresh',action='store_true'); a=ap.parse_args()
+ if a.out.exists() and not a.refresh: raise RuntimeError('archive destination already exists')
+ a.out.mkdir(parents=True,exist_ok=True)
  groups={'formal_full':a.full,'formal_small_gate':a.small,'analysis':ROOT/'analysis','protocol':ROOT/'benchmarks/358h_threshold_validation','runner':ROOT/'scripts/platform/358h','reports':ROOT/'reports/358h','final_status':ROOT/'work/358h'}
  selected={
   'formal_full':['FORMAL_PHASE3_STATUS.json','schedule.json','session.json','warmup.json','observations.jsonl','observations.resolved.json'],
@@ -36,7 +36,7 @@ def main():
    src=d.with_name(d.name+suffix)
    if src.exists(): add(src,a.out/label/(src.name))
  files=[]
- for p in sorted(x for x in a.out.rglob('*') if x.is_file()):
+ for p in sorted(x for x in a.out.rglob('*') if x.is_file() and x.name != 'manifest.json'):
   files.append({'path':p.relative_to(a.out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)})
  manifest={'schema':'heterospec.358h.phase3.archive_manifest.v1','created_at_utc':datetime.now(timezone.utc).isoformat(),'formal_data':{'full_observations':270,'small_gate_observations':54,'full_cpu_exact':'90/90','full_npu_exact':'90/90','small_cpu_exact':'18/18','small_npu_exact':'18/18'},'entry_count':len(files),'files':files}
  (a.out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8',newline='\n')

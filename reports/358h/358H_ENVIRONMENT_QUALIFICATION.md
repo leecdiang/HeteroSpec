@@ -105,5 +105,5 @@ The machine-side PASS below was superseded by `reports/358h/358H_POWER_STATE_DEV
 
 **358H PHASE-0 QUALIFICATION: PASS**
 
-Formal Phase 1 remains prohibited until the completed preregistration, deterministic Phase-2 gate, Phase-3 entry rule, and non-formal dry run are frozen and committed.
+This was the Phase-0 stop condition at the time of qualification. Those prerequisites were subsequently frozen before formal data, and Phases 1–3 completed. The final scientific and repository status is recorded in `358H_PLATFORM_CLOSEOUT.md`, `358H_FORMAL_EXECUTION_AMENDMENT.md`, and `358H_REPOSITORY_CLOSEOUT_AUDIT.md`.
 

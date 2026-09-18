@@ -1,0 +1,80 @@
+{
+  "schema": "heterospec.358h.phase3_execution_addendum.v1",
+  "status": "FROZEN",
+  "scope": "Execution-only clarification for Phase 3; no scientific model, task, k, seed, correctness, output-cap, repetition, or estimator choice is changed.",
+  "phase1_phase2_source_commit": "4b655522225f73aa3aba64e7ae6141081d8270af",
+  "formal_phase3_data_seen_before_addendum": false,
+  "formal_phase3_runs_before_addendum": 0,
+  "conditions": [
+    "TARGET_BASELINE",
+    "CPU_DRAFT_K2",
+    "NPU_DRAFT_K2"
+  ],
+  "pairing_and_order": {
+    "baseline_policy": "One TARGET_BASELINE observation is shared by the CPU and NPU paired comparisons for the same task and repetition.",
+    "formal_unit": "task_id x repetition",
+    "condition_order": "For every formal unit, independently shuffle all three conditions using Python random.Random with the already-frozen condition-order seed; persist the complete schedule before the first formal generation.",
+    "small_gate_condition_order_seed": 20260912,
+    "humaneval30_condition_order_seed": 20260909,
+    "device_randomization": "CPU_DRAFT_K2 and NPU_DRAFT_K2 participate in the same three-condition shuffle; neither device is always first.",
+    "small_gate_interpretation": "Each draft-device path must independently achieve 18/18 token-exact pairs. The shared baseline is compared independently with each device output."
+  },
+  "session_and_warmup": {
+    "process_policy": "Use one orchestrating process per campaign stage. Load the target once and load each eligible draft runtime once; do not reload inside a measured generation.",
+    "warmup": "Before each stage, perform one complete NON_FORMAL INVALID_FOR_CLAIMS generation for each condition in the order TARGET_BASELINE, CPU_DRAFT_K2, NPU_DRAFT_K2. Warm-up uses a task outside both frozen formal task sets and is excluded from every estimator.",
+    "state_reset": "Reset target and draft KV/state to an empty sequence before every condition observation. Reuse compiled models and allocated runtime objects, but never reuse prompt or generated KV state across observations.",
+    "cache_policy": "Reuse only the already-qualified NPU compilation cache. Compilation, model loading, and cache construction are outside all measured boundaries."
+  },
+  "runtime_and_algorithm": {
+    "target_backend": "Frozen llama.cpp b10839 commit 0cae43063cf15170e91a2ff4d034da0ecef4a1b2, Qwen3-8B Q8_0, explicit Vulkan0, all model and KV layers offloaded as in the Phase-1/2 target qualification.",
+    "draft_backend": "The frozen common OpenVINO INT4 IR is compiled explicitly to CPU or NPU. AUTO, MULTI, HETERO and fallback are forbidden.",
+    "speculative_algorithm": "Reuse the repository/llama.cpp draft-simple greedy k=2 semantics: autoregressive draft proposal; one ordered target verification of proposed positions; accept the matching prefix; at first mismatch commit the target correction token; when both proposals match, follow the existing target bonus-token behavior; repeat to the frozen termination condition.",
+    "verification_backend": "The same explicit Vulkan0 target context performs greedy verification. Verification uses the serialized correctness-admissible path; no unqualified batched shortcut is allowed.",
+    "generated_output_cap": 128,
+    "decode_seed": 123,
+    "k": 2
+  },
+  "timing_and_accounting": {
+    "synchronization": "All device calls are synchronous. Each interval ends only after the corresponding runtime call has completed.",
+    "end_to_end_boundary": "Host perf_counter_ns immediately before the first decode/proposal operation after prompt prefill and immediately after the final generated token is committed. Model load, compilation, prompt tokenization and warm-up are excluded; prompt prefill is recorded separately and excluded from the primary decode speedup to preserve the frozen generated-token comparison.",
+    "baseline_boundary": "The same post-prefill-to-final-commit host boundary as speculative conditions.",
+    "draft_time": "Measured synchronous OpenVINO proposal calls only.",
+    "verification_time": "Measured synchronous target verification/decode calls only.",
+    "orchestration_handoff": "Derived residual only: end_to_end - draft_time - verification_time. Label DERIVED, never directly measured.",
+    "acceptance": "Count every proposed draft token and the ordered matching prefix. A round accepting zero, one, or two draft tokens is classified by the number of matching draft tokens before the first mismatch.",
+    "committed_progress_C": "For each round, count all output tokens committed by that round, including target correction or qualified bonus behavior. Report arithmetic mean committed output tokens per round and its distribution.",
+    "ttft": "Record only when the boundary can be applied identically across all three conditions; otherwise mark NOT_ADMISSIBLE."
+  },
+  "correctness": {
+    "comparison": "Generated token IDs only; prompt excluded; first divergence is FAIL.",
+    "small_gate_pass": "18/18 exact independently for CPU_DRAFT_K2 and NPU_DRAFT_K2.",
+    "full_admission": "Any divergent HumanEval30 pair makes that device path DIAGNOSTIC_ONLY for speed claims.",
+    "no_substitution": "Semantic similarity or Python functional correctness cannot replace token-exact comparison."
+  },
+  "failure_policy": {
+    "retain": "Retain stdout, stderr, partial JSON, schedule position and environment evidence for every failure.",
+    "retry": "No automatic retry enters the authoritative slot. A retry is permitted only for an externally documented interruption unrelated to model output; both attempts remain archived and the retry is flagged.",
+    "runtime_failure": "A device/runtime failure stops that path. Do not tune, fall back, change precision or change device.",
+    "wrong_device": "Any binding mismatch fails closed before formal generation and produces no admissible timing."
+  },
+  "affinity_and_binding": {
+    "cpu_draft_process_affinity": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "npu_host_affinity": "system default, unchanged from Phase 1",
+    "target_gpu": "Vulkan0 / Intel Arc B390; require runtime log evidence of 37/37 model layers and all KV layers on Vulkan0 for every session.",
+    "cpu_draft": "Require requested_device=CPU and OpenVINO EXECUTION_DEVICES=[CPU] in each session manifest.",
+    "npu_draft": "Require requested_device=NPU and OpenVINO EXECUTION_DEVICES=[NPU] in each session manifest.",
+    "forbidden": ["AUTO", "MULTI", "HETERO", "silent fallback"]
+  },
+  "energy": {
+    "cpu_end_to_end": "NOT_CLAIMED: no frozen whole-system boundary exists.",
+    "npu_end_to_end": "NOT_ADMISSIBLE"
+  },
+  "dry_run": {
+    "required": true,
+    "formal": false,
+    "claim_status": "NON_FORMAL / INVALID_FOR_CLAIMS",
+    "task_policy": "Use a HumanEval task outside the six-task gate and HumanEval30 membership.",
+    "parameter_selection_forbidden": true
+  }
+}
+

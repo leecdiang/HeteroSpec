@@ -13,8 +13,8 @@
 - Audit branch: `paper/audit-round1-20260918`
 - Auditor: ChatGPT / GPT-5.6 Sol using the connected GitHub repository tools
 - Current phase: hardware experiments CLOSED; paper scientific-audit phase
-- Audit scope completed: Round 1 — repository-wide final-status + stale-document audit
-- Audit scope not yet completed: platform-deep provenance audits, analysis/raw recomputation, dedicated statistics audit, correctness-contract audit, energy-boundary audit, final thesis freeze
+- Audit scope completed: Rounds 1–5 — repository status plus deep M4 / RTX 5070 Ti Laptop / B570 / 358H evidence-chain audits
+- Audit scope not yet completed: unified formula audit, dedicated statistics/CI audit, correctness-contract audit, energy-boundary audit, cross-platform claim audit, adversarial reviewer audit, final thesis/contribution freeze
 - No new hardware experiment was designed or run in this round.
 - No preregistration, raw artifact, historical result report, or experiment data was modified.
 
@@ -463,9 +463,16 @@ These were true at report time and form provenance. They should not be rewritten
 - Current handoff term: **serialized fallback verification factor / `V2_serialized`**.
 - Revisit in Round 4 and Round 8.
 
-### Trace depth still pending
+### Trace depth after Rounds 2–5
 
-Round 1 established report-level traceability for headline results. It did **not** independently recompute all analysis CSV/JSON outputs or hash raw artifacts. Platform rounds must extend each headline evidence row to analysis script, preregistration, raw artifact, and source commit where applicable.
+Platform-deep tracing is now complete for the headline claims.
+
+- **M4:** strongest provenance. HumanEval raw `results.json`, preregistration, manifest, analysis script, prompt summary, telemetry hash metadata, and representative 24Q raw JSON were all inspected. Headline aggregations were independently recomputed from raw records.
+- **RTX 5070 Ti Laptop:** headline HumanEval statistics were independently recomputed from the committed pair-level CSV and match the summary exactly. Important limitation: the authoritative ubatch=1 and aborted ubatch=2 run JSON files are documented as local/ignored; the repository retains their derived pair table, summary, manifest, mechanism CSVs, and numerical diagnosis. Raw-trace Git completeness is therefore weaker than M4/B570/358H.
+- **B570:** the complete serialized-fallback archive is committed, including preflight, manifests, HumanEval30 raw/processed records, V2 records, telemetry, stdout/stderr, and remote-disconnect checks. Processed headline values match the reviewer-facing final status.
+- **358H:** headline values were independently recomputed from the committed 180-row prompt summary. The 34-entry archive manifest reports 34/34 validated entries and zero size/SHA failures; an independently validated recovery tarball is retained.
+
+No platform-deep audit found a numerical discrepancy that changes a headline platform conclusion. The substantive corrections are terminology, evidence strength, and metric semantics rather than headline values.
 
 ## 18. Paper outline candidate
 
@@ -513,6 +520,97 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - Reason: 358H replay-only and proposal-only cannot be separated without changing execution; extra variables would exceed measured evidence.
 - Revisit: Round 6.
 
+## 19A. Stage-A deep-audit addendum — Rounds 2–5
+
+### M4 deep audit
+
+**Verdict: SUPPORT, with metric/energy wording tightened.**
+
+- HumanEval30 raw archive contains 360 runs: 90 each for baseline, fixed-k2, p_min=0.8, and p_min=0.9.
+- The preregistration object embedded in the authoritative result is JSON-identical to `benchmarks/m4_code_conditioned_30q/preregistration.json`; the frozen HumanEval IDs independently reproduce from `random.Random(20260908).sample(range(164), 30)`.
+- Independent raw recomputation:
+  - fixed k2: 1.387352x, 30/30 prompts faster, 90/90 exact, mean acceptance 0.90070, accepted draft tokens/round 1.79833;
+  - p_min=0.8: 1.362377x, 90/90 exact;
+  - p_min=0.9: 1.395596x, 90/90 exact.
+- Fixed-k2 package-energy efficiency ratio is 1.01295x, but the reported CI [0.98957, 1.03407] crosses 1.0. The preregistered energy gate is a point-estimate gate, so this is not a protocol failure; paper wording must be **energy-neutral within uncertainty**, not a significant energy win.
+- HumanEval summary script uses **100,000** prompt-bootstrap resamples with seed 20260910. This differs from the 10,000 resamples used by the representative 24Q study.
+- Representative 24Q raw recomputation: 72/72 exact; prompt GM 0.841965x; median 0.846050x; 1/24 faster; package-efficiency ratio 0.677507x; mean package J/token 1.206251 baseline vs 1.729272 k2.
+- Representative repetition-level GMs are 0.909834 / 0.818999 / 0.801008, so session drift exists, but the prompt-level estimator and CI remain decisively below 1.
+- The representative summarizer correctly reduces three paired repetitions within prompt before bootstrapping prompts; no repetition-level pseudoreplication was found.
+- Corrected synthetic ceiling was preregistered but not executed. Older exploratory synthetic data remain diagnostic only.
+- Exactness is generated token-ID equality; HumanEval functions were not executed.
+
+### RTX 5070 Ti Laptop deep audit
+
+**Verdict: SUPPORT, with a raw-provenance limitation.**
+
+- Exact serialized HumanEval pair table independently recomputes to:
+  - CPU→RTX: 0.403937x, median 0.399304x, 90/90 exact, 0/30 faster, weighted acceptance 0.913067, accepted-draft-tokens/round 1.821156;
+  - RTX→RTX: 0.650079x, median 0.637317x, 90/90 exact, 0/30 faster, weighted acceptance 0.912070, accepted-draft-tokens/round 1.819172.
+- Statistics use prompt as unit, three repetition-paired ratios per prompt, then 10,000 prompt bootstrap resamples with seed 20260910.
+- Fast CUDA `ubatch=2` verification proxy is 1.0090x at context depth 0 and 0.9831x at 256; exact `ubatch=1` proxy is 2.4310x and 2.1370x.
+- HumanEval/106 divergence reproduces 3/3 at captured index 190; baseline/serialized choose token 2790 while batched chooses 2629.
+- Same-commit diagnostic score difference `score(2790)-score(2629)` is +0.080948 baseline/serialized and -0.126457 batched, identical across three independent processes. This supports a batch-shape-dependent numerical argmax flip, not a kernel-specific or universal CUDA claim.
+- **Repository limitation:** `logs/windows-humaneval-replication-30q-ub1.json`, the aborted primary JSON, and some mechanism raw logs are documented as local/ignored. The committed pair CSV/summary/manifest and mechanism CSVs allow headline recomputation, but raw per-run Git provenance is incomplete relative to M4/B570/358H.
+- HumanEval follow-up has no admissible energy ratio; 1 Hz process-window telemetry includes model loading and lacks the required decode-window/CPU-package boundary.
+
+### B570 deep audit
+
+**Verdict: SUPPORT the negative/correctness-blocked conclusion; strengthen terminology correction.**
+
+- Formal v2 preregistration correctly stops after the six-prompt correctness failure. No formal V2 or HumanEval30 performance result is admissible from that run.
+- A later diagnostic extension was explicitly frozen as post-gate diagnostic-only and did not alter the formal failure.
+- Fast-path diagnostic: 45/90 exact pairs, 15/30 wholly exact prompts, 0.5383x raw speedup, 0/30 faster, V2_raw=1.2426/1.6373 at 512/2048.
+- The unique serialized fallback candidate was frozen before its full validation; global performance was preregistered as admissible only if all 90 pairs were exact.
+- Full fallback result: 60/90 exact pairs, 20/30 wholly exact prompts, global admissible=false; diagnostic speedup 0.308682x, CI [0.292690, 0.324604], 0/30 faster; exact-subset descriptive speedup 0.302574x.
+- Arc-board energy efficiency ratio 0.302276x, CI [0.284553, 0.320160]; baseline mean 5.601993 vs fallback 18.849895 board J/token. Boundary is Arc B570 board only.
+- Historical field/report name `V2_exact`=1.982668/1.991707 is scientifically misleading at full-workload scope. Paper-facing name remains **`V2_serialized` / serialized ubatch=1 verification proxy**.
+- Complete committed archive exists for `exact-fallback-v1-20260912-222617`, including raw HumanEval30 records, V2 data, telemetry, stdout/stderr, manifests, and remote-disconnect evidence.
+- Principle frozen for paper: **serialized is an execution property; exactness is an empirical workload-level correctness property.**
+
+### 358H deep audit
+
+**Verdict: SUPPORT, and directly strengthen the unified accounting semantics.**
+
+- Independent recomputation from the 180-row committed prompt summary:
+  - CPU draft: 0.7339146x, median 0.771737x, 90/90 exact, 0/30 faster;
+  - NPU draft: 0.3516632x, median 0.367999x, 90/90 exact, 0/30 faster.
+- The estimator is median of three paired speedups within each HumanEval prompt, then geometric mean across 30 prompt medians; CI uses 10,000 prompt bootstrap resamples, seed 20260919.
+- CPU arithmetic-mean decomposition over 90 requests independently recomputes to 13253.126 ms total = 1673.507 ms draft replay+proposal + 11574.811 ms target verification + 4.808 ms residual.
+- NPU recomputes to 27543.780 ms total = 16071.082 ms draft replay+proposal + 11467.641 ms verification + 5.057 ms residual.
+- Runner inspection confirms each OpenVINO proposal call invokes `LLMPipeline.generate` on the **entire committed prefix**; replay and proposal are therefore truly combined in the measured draft interval and cannot be separated retrospectively without changing execution.
+- 358H provides the cleanest direct `C`: committed output tokens / speculative rounds, including correction/bonus behavior:
+  - CPU C=2.463117 from 11,520 committed tokens / 4,677 rounds;
+  - NPU C=2.458387 from 11,520 / 4,686.
+- This is **not the same metric** as historical M4/RTX `accepted_per_round`, which counts accepted draft tokens/round.
+- Phase-3 archive manifest records 34 entries; recovery bundle validation reports 34/34 entries validated and zero failures. Recovery tarball: 694239 bytes, SHA256 `2fa6197864b1c6fc7af1c6da31f24ccf224e3dc0933bc1534840117eaee08511`.
+- Formal-execution amendment discloses brief interactive monitoring and a retrospectively documented host-state snapshot. Repetition stability and baseline chronology show no discontinuity capable of moving either CI across 1; this remains a disclosed protocol limitation rather than grounds for sample removal.
+- Historical Transformers source commit is unrecoverable. Reconstructed source remains STRONGLY_SUPPORTED, never PROVEN exact historical identity.
+
+
+### D-20260918-05 — M4 primary energy wording
+- Old risk: treat fixed-k2 package efficiency 1.013x as an energy win.
+- New: describe fixed-k2 as **energy-neutral within uncertainty**; only the point estimate is favorable.
+- Reason: package-efficiency 95% CI [0.990, 1.034] crosses 1.0.
+- The preregistered gate used the point estimate, so this is a wording/statistical-strength correction, not a protocol failure.
+
+### D-20260918-06 — cross-platform committed-work metric
+- Old risk: use historical `accepted_per_round` as `C`.
+- New: `C` means all committed output tokens per speculative round, including target correction/bonus behavior. M4/RTX accepted-draft-tokens/round remain separately named proxies/descriptors unless committed progress can be reconstructed.
+- Reason: 358H directly records both quantities and demonstrates they are definitionally distinct.
+
+### D-20260918-07 — Windows raw provenance level
+- Old: treat all platform evidence chains as equally complete.
+- New: Windows HumanEval/mechanism headline values remain supported and recomputable from committed derived tables, but raw per-run Git provenance is one tier weaker because authoritative JSON logs are documented as local/ignored.
+- Reason: repository inspection.
+
+### D-20260918-08 — serialized does not imply exact
+- Old risk: call a serialized fallback “exact” by construction.
+- New: serialization is an execution-path property; exactness is established only by the frozen workload correctness gate.
+- Reason: B570 ubatch=1 fallback is only 60/90 exact despite prior 18/18 six-prompt gate.
+- Consequence: paper-facing `V2_serialized` terminology is mandatory.
+
+
 ## 20. Audit log
 
 ### Round 1 — 2026-09-18 — repository-wide final-status audit
@@ -558,6 +656,37 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
   - exact common meaning of admissible V2 in partially exact B570 case;
   - novelty/literature positioning;
   - whether runtime co-design is necessary for the final contribution.
+
+### Round 2 — 2026-09-18 — M4 deep evidence-chain audit
+
+- Traced preregistration → frozen selection → raw results → analysis script → prompt summaries → report.
+- Independently recomputed HumanEval and representative 24Q headline statistics.
+- No headline discrepancy found.
+- Tightened energy wording and bootstrap-resample count.
+- Clarified that `accepted_per_round` is not the unified `C`.
+
+### Round 3 — 2026-09-18 — RTX 5070 Ti Laptop deep audit
+
+- Independently recomputed exact-control HumanEval statistics from the committed pair-level CSV.
+- Verified verification-cost controls and stable numerical sign flip.
+- No headline discrepancy found.
+- Added raw-trace Git provenance limitation for local/ignored run JSON files.
+
+### Round 4 — 2026-09-18 — Arc B570 deep audit
+
+- Verified formal-v2 stop rule, post-gate diagnostic status, one-candidate fallback preregistration, full fallback processed result, and archive contents.
+- No headline discrepancy found.
+- Confirmed that `V2_exact` must not be inherited as a paper-facing global-exact label.
+- Confirmed all fallback timing/energy remains diagnostic because 60/90, not 90/90, pairs are exact.
+
+### Round 5 — 2026-09-18 — 358H deep audit
+
+- Independently recomputed prompt-level performance, exactness, decomposition, and committed-work accounting.
+- Inspected runner implementation to verify whole-prefix OpenVINO replay semantics.
+- Verified 34-entry manifest and recovery-bundle integrity metadata.
+- No headline discrepancy found.
+- Elevated direct `C` semantics and state-interface cost as measured evidence for the unified framework.
+
 
 ## 21. Next audit queue
 

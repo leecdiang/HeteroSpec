@@ -59,4 +59,3 @@ The runner records total end-to-end decode time, OpenVINO replay/draft time, tar
 `formal_phase3_data_seen_before_runner_freeze = false`
 
 Formal HumanEval was not started.
-

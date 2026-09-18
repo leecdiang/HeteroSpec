@@ -43,4 +43,3 @@ After every round, the orchestrator records and asserts:
 5. proposed, accepted and per-round C counters reconcile.
 
 Any violation aborts qualification and forbids formal Phase-3 measurement.
-

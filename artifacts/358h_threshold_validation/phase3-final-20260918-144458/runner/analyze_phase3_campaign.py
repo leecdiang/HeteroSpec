@@ -64,4 +64,3 @@ def main():
  (a.analysis_dir/'358h_phase3_summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
  print(json.dumps(summary,indent=2))
 if __name__=='__main__': main()
-

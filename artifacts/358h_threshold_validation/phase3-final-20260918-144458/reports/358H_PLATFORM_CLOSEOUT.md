@@ -23,4 +23,3 @@ Acceptance was high (CPU 75.31%; NPU 75.13%) and committed work was about 2.46 o
 ## Future work
 
 A future state-reuse or idealized-replay control could test whether the NPU result is limited by this OpenVINO/adapter state interface. It is not part of this closed study and must be separately preregistered before any data collection.
-

@@ -60,4 +60,3 @@ No end-to-end energy claim is made. CPU package energy was qualified only for Ph
 - Processed summary: `analysis/358h_phase3_summary.json`.
 - Per-prompt and per-round records: `analysis/358h_phase3_prompt_summary.csv` and `analysis/358h_phase3_rounds.csv`.
 - Authoritative raw archive: `artifacts/358h_threshold_validation/phase3-final-20260918-144458/`.
-

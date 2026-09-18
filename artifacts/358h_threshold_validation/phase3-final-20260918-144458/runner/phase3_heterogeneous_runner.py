@@ -229,4 +229,3 @@ def main():
     print(json.dumps({"device":a.device,"exact":result["exact"],"rounds":len(result["rounds"]),"binding":result["execution_devices"]},indent=2))
     return 0 if result["exact"] else 2
 if __name__=="__main__": raise SystemExit(main())
-

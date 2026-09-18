@@ -32,4 +32,3 @@ def main():
  a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
  print(json.dumps({'pass':result['pass'],'cases':len(cases)},indent=2));return 0 if result['pass'] else 2
 if __name__=='__main__':raise SystemExit(main())
-

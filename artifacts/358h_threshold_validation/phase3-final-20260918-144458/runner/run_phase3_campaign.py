@@ -187,4 +187,3 @@ def main() -> int:
     print(json.dumps(status["exact_counts"],indent=2)); return 0 if all(v["exact"]==v["total"] for v in status["exact_counts"].values()) else 2
 
 if __name__=="__main__": raise SystemExit(main())
-

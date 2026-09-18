@@ -2,9 +2,11 @@
 
 ## Final class
 
-**CORRECTNESS-ADMISSIBLE / NOT PROFITABLE — CLOSED**
+**CORRECTNESS-ADMISSIBLE / NOT PROFITABLE — SCIENTIFIC EXECUTION CLOSED**
 
 The Core Ultra X7 358H Phase-0 environment, Phase-1 isolated draft characterization, Phase-2 threshold analysis, and Phase-3 heterogeneous end-to-end validation are complete. The platform is closed under the frozen protocol; no parameter sweep, runtime tuning, model substitution, or follow-up timing campaign was performed after formal data began.
+
+Repository integration and transport integrity are tracked separately in `358H_REPOSITORY_CLOSEOUT_AUDIT.md`. They do not change the measured result, but must pass before the pull request is merged.
 
 ## Final finding
 
@@ -18,6 +20,9 @@ Acceptance was high (CPU 75.31%; NPU 75.13%) and committed work was about 2.46 o
 - Full-prefix replay is part of the real system cost and remains included in the primary metric.
 - OpenVINO's full-prefix generation call cannot separate replay time from proposal time without altering the measured execution; only their combined cost is reported.
 - End-to-end energy: CPU **NOT CLAIMED**; NPU **NOT ADMISSIBLE**.
+- The primary timing boundary begins after prompt prefill; it is post-prefill decode end-to-end time rather than whole-request latency.
+- HumanEval functional pass@k is not claimed; exactness is relative to the frozen target-only generated token sequence.
+- Brief interactive monitoring and the retrospectively documented formal-start host state are disclosed in `358H_FORMAL_EXECUTION_AMENDMENT.md`.
 - The historical upstream Transformers revision of the canonical draft GGUF remains a documented provenance limitation. The frozen IR uses the previously qualified STRONGLY_SUPPORTED reconstructed source; this was not changed for Phase 3.
 
 ## Future work

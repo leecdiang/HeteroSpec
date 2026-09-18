@@ -13,8 +13,8 @@
 - Audit branch: `paper/audit-round1-20260918`
 - Auditor: ChatGPT / GPT-5.6 Sol using the connected GitHub repository tools
 - Current phase: hardware experiments CLOSED; paper scientific-audit phase
-- Audit scope completed: Rounds 1–5 — repository status plus deep M4 / RTX 5070 Ti Laptop / B570 / 358H evidence-chain audits
-- Audit scope not yet completed: unified formula audit, dedicated statistics/CI audit, correctness-contract audit, energy-boundary audit, cross-platform claim audit, adversarial reviewer audit, final thesis/contribution freeze
+- Audit scope completed: Rounds 1–7 — repository/platform evidence-chain audits, unified formula/mechanism audit, and statistics/CI audit
+- Audit scope not yet completed: correctness-contract audit, energy-boundary audit, cross-platform claim audit, adversarial reviewer audit, final thesis/contribution freeze
 - No new hardware experiment was designed or run in this round.
 - No preregistration, raw artifact, historical result report, or experiment data was modified.
 
@@ -85,6 +85,26 @@ Discovery was repeated at Stage A as required.
 - Dedicated scientific reproducibility/evidence-audit Skill: **none exposed**.
 - Document/research capabilities exist, but none supersede repository evidence.
 - Stage-A authority therefore remains: frozen definitions + repository evidence + evidence ledger + claim taxonomy.
+
+### 0.2 Tool / Skill rediscovery — Stage C (unified mechanism/formula)
+
+Rediscovery was repeated before Round 6.
+
+- Available Skill catalog was re-listed; no new scientific-analysis Skill appeared.
+- Full instructions were re-read for **Experiment Analysis** and **System Design**.
+- Both remain artifact-template workflows. They can structure later documentation but cannot establish a cost identity, determine which variables are actually measured, or justify causal/mechanistic claims.
+- No dedicated mechanism-model or performance-model plugin was exposed.
+- Round-6 authority therefore remained the frozen runtime semantics, measured decompositions, mechanism controls, and algebraic consistency with end-to-end observations.
+
+### 0.3 Tool / Skill rediscovery — Stage B (statistics / confidence intervals)
+
+Rediscovery was repeated before Round 7.
+
+- Available Skills were re-listed; relevant candidates remained **Experiment Analysis** and **Analytics Dashboard**, both presentation/artifact aids rather than statistical authorities.
+- Full Experiment Analysis instructions were re-read.
+- No dedicated bootstrap/CI/statistical-validation Skill or plugin was exposed.
+- Statistical audit therefore used direct inspection of repository analysis code plus independent deterministic recomputation of the frozen prompt-level vectors.
+- This rediscovery did not authorize changing any preregistered estimator or historical report.
 
 ## 1. Project status
 
@@ -173,52 +193,105 @@ Status is provisional until the platform-deep and statistics audits finish.
 
 ## 5. Unified analytical framework
 
-### 5.1 Candidate minimal model
+### 5.1 Final accounting distinction after Round 6
 
-For one speculative round:
+Round 6 found that the earlier draft of this handoff used one symbol too broadly. A target-forward microbenchmark such as `PP2/PP1` does **not** necessarily include all target-side work performed by a complete speculative round. In particular, correction/bonus decoding and state actions may occur outside the measured proposal-verification block.
+
+The paper must therefore separate **realized round accounting** from a **microbenchmark batching proxy**.
+
+#### End-to-end realized accounting
+
+For one realized speculative round:
 
 ```text
-S =
+S_round =
     T_b * C
-    -------------------------------
-    T_d(real) + V_k(admissible)*T_b + T_x
+    -------------------------------------------
+    T_d(real) + T_target,round(real) + T_x
 ```
 
-Break-even:
+Normalized by one matched baseline target-token cost `T_b`:
 
 ```text
-C >
-    T_d(real)/T_b
-    + V_k(admissible)
-    + T_x/T_b
+S_round = C / [D_real + R_target + X]
+```
+
+with break-even:
+
+```text
+C > D_real + R_target + X
 ```
 
 Definitions:
 
-- `T_b`: target-only baseline cost per output token within the matched timing boundary.
-- `T_d(real)`: measured realized draft-subsystem cost in the actual end-to-end state interface. It may include proposal generation plus state reconstruction/prefix replay.
-- `V_k(admissible)`: target-verification factor only for a path that satisfies the frozen correctness contract. If no tested path is admissible, this quantity is unavailable for a valid optimization claim.
-- `T_x`: residual transfer, synchronization, scheduling, orchestration, bookkeeping, correction, etc., not already included in the first two terms.
-- `C`: realized committed output tokens per speculative round. Do not silently substitute accepted draft tokens/round for `C`.
+- `T_b`: matched target-only baseline cost per output token within the same timing boundary.
+- `T_d(real)`: realized draft-subsystem cost per speculative round through the actual state interface. It can include replay/reconstruction when the runtime performs it.
+- `T_target,round(real)`: **complete realized target-side cost per speculative round**, including the target work actually executed for proposal verification and any correction/bonus behavior included by that runtime.
+- `T_x`: measured/derived residual not already included above.
+- `C`: all output tokens committed by the round, including target correction/bonus behavior.
+- `D_real=T_d(real)/T_b`, `R_target=T_target,round(real)/T_b`, and `X=T_x/T_b`.
 
-### 5.2 Round-1 audit judgment on the formula
+This is an accounting identity when all components are measured under the same boundary. It is not a claim that every platform exposes every term directly.
 
-- **PROVISIONALLY SUPPORTED as the minimal unifying accounting model.**
-- It matches the repository's pre-existing verification-amortization framework.
-- 358H directly strengthens the requirement that `T_d` be the realized stateful subsystem cost rather than isolated draft tok/s.
-- No evidence in Round 1 requires adding a separately measurable `T_rollback` or `T_reconstruction` term.
-- On 358H, replay-only and proposal-only are explicitly not separable without changing execution; therefore the paper should keep their measured combined cost rather than inventing a decomposition.
-- Full mechanism/formula audit remains Round 6.
+#### Target-forward microbenchmark proxy
 
-### 5.3 Platform mapping
+Separately define:
 
-| Regime | `T_d(real)` | `V_k(admissible)` | `C` / acceptance | Outcome |
-|---|---|---|---|---|
-| M4 HumanEval k=2 | sufficiently small in measured runtime; persistent/tight state handling is plausible contributor | near 1 for tested exact width-2 path | high; accepted/round 1.798, mean acceptance 90.1% | 1.387x exact profitable |
-| RTX CUDA HumanEval | draft/orchestration nonzero | raw batched near 1 but inadmissible; exact ubatch=1 ~2.14–2.43 | >91% acceptance | exact controls negative |
-| B570 | not fully decisive because no universally exact end-to-end path | fast 1.24–1.64 raw; serialized ~1.98–1.99 but not globally exact | correctness blocks optimization claim | no admissible optimization result |
-| 358H CPU | modest share of measured time | target verification dominates 87.34% | C=2.463; 75.31% acceptance | 0.734x |
-| 358H NPU | dominant realized replay+proposal 58.35% | verification still material 41.63% | C=2.458; 75.13% acceptance | 0.352x |
+```text
+V_k^micro(n,e) =
+    T_target_forward(k,n,e)
+    -----------------------
+    T_target_decode(1,n)
+```
+
+This is a **batching-efficiency / verification-opportunity proxy**. It is useful for diagnosing whether a backend can evaluate a width-`k` causal block for near one target step.
+
+Correctness filtering still applies:
+
+- a fast execution path that fails the frozen token-exact gate is not an admissible optimization path;
+- if no tested path passes the workload-level correctness contract, there is no correctness-admissible end-to-end optimization result.
+
+However, `V_k^micro` must **not** be substituted for `R_target` unless the measured microbenchmark is shown to include all target work in the realized round.
+
+### 5.2 Why the distinction is necessary
+
+- **M4 / Metal:** `V_2^micro≈1.02–1.08` demonstrates cheap exact width-two target-forward batching, but it does not by itself measure the entire speculative target-side round.
+- **RTX / CUDA:** batched `V_2^micro≈0.98–1.01` is physically cheap but correctness-blocked; serialized `V_2^micro≈2.14–2.43` is an exact control. These values diagnose the verification-path change; they are not complete end-to-end round accounting.
+- **B570 / Vulkan:** the historical serialized `PP2/PP1≈1.98–1.99` is a diagnostic microbenchmark and the path is not globally token-exact on HumanEval30.
+- **358H:** Phase 3 directly measures the complete target-side interval and therefore provides the cleanest realization of `R_target`.
+
+Using arithmetic totals for the 358H campaign:
+
+| Path | `C` | `D_real` | `R_target` | `X` | `C/(D+R+X)` | Aggregate baseline/spec ratio |
+|---|---:|---:|---:|---:|---:|---:|
+| CPU draft | 2.4631 | 0.4304 | 2.9767 | 0.00124 | 0.7227 | 0.7227 |
+| NPU draft | 2.4584 | 4.1251 | 2.9435 | 0.00130 | 0.3477 | 0.3477 |
+
+These aggregate identities use arithmetic totals/means and therefore are **not expected to equal** the paper's prompt-level geometric-mean speedups (0.734x and 0.352x). Aggregation level must always be stated.
+
+### 5.3 Committed work versus accepted draft tokens
+
+Round 6 strengthens the distinction between acceptance and committed progress.
+
+- 358H records `C` directly from round traces: 2.4631 CPU and 2.4584 NPU.
+- Historical M4/RTX fields named `accepted_per_round` count accepted **draft** tokens/round and are not `C`.
+- M4 raw HumanEval records allow a boundary-affected reconstructed quantity `output_tokens_runtime / verification_rounds`:
+  - fixed k2 weighted ≈2.8264 output tokens/reported verification round;
+  - p_min=.8 ≈2.6764;
+  - p_min=.9 ≈2.6059.
+- Because initial/final runtime effects make `output_tokens - accepted_tokens - rounds` vary by 0–2, these M4 values are **reconstructed effective progress**, not promoted to the same direct-measurement status as 358H `C`.
+- The fact that p_min conditions have higher acceptance but lower reconstructed effective progress is additional evidence that acceptance rate alone cannot stand in for committed progress.
+
+### 5.4 Formula complexity decision
+
+Keep `T_d(real)` aggregated. Do not invent separately measured replay, reconstruction, rollback, transfer, or correction terms where the frozen runtime did not expose them.
+
+The unified contribution is therefore an **accounting discipline**:
+1. measure realized draft-state cost,
+2. measure the complete realized target-side round cost when available,
+3. use microbenchmark `V_k^micro` only as a mechanism proxy,
+4. enforce correctness before admitting a path,
+5. compare cost against realized committed progress `C`.
 
 ## 6. Platform regime map
 
@@ -611,6 +684,25 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - Consequence: paper-facing `V2_serialized` terminology is mandatory.
 
 
+### D-20260918-09 — separate micro verification proxy from realized target-round cost
+- Old: the framework wrote `V_k(admissible)*T_b` directly as the target term in the end-to-end break-even equation.
+- New: the end-to-end equation uses `T_target,round(real)` / `R_target`; `V_k^micro=PPk/PP1` is a separate target-forward batching proxy.
+- Reason: target-forward microbenchmarks do not necessarily include correction/bonus and other target-side work. 358H directly demonstrates a complete target-side per-round cost near three baseline-token equivalents.
+- Consequence: M4/RTX/B570 V2 values remain valuable mechanism evidence but are not silently substituted into the accounting identity.
+
+### D-20260918-10 — aggregation level of the cost identity
+- Old risk: expect arithmetic decomposition plugged into the formula to reproduce the prompt-level geometric-mean speedup.
+- New: realized cost accounting is evaluated at the same aggregation level as its inputs. For 358H, arithmetic totals exactly reproduce the aggregate baseline/speculative time ratio; prompt-GM remains the preregistered headline estimator.
+- Reason: ratio-of-totals and geometric mean of per-prompt paired ratios are different estimands.
+
+### D-20260918-11 — B570 historical CI reproducibility
+- Old: treat the exact-fallback bootstrap CI as fully bit-reproducible from retained repository evidence.
+- New: point estimates and prompt vectors are exactly reproducible, but the historical fallback CI is **not bit-reproducible** from the retained prompt CSV plus the documented 10,000-resample / seed-20260910 protocol using the repository's other explicit bootstrap implementations.
+- Evidence: retained prompt vector reproduces speed GM 0.3086821108 and board-energy ratio 0.3022757554 exactly. Independent Python-random prompt bootstrap gives approximately [0.292296, 0.324557] and [0.284136, 0.320095], versus historical [0.292690, 0.324604] and [0.284553, 0.320160].
+- Repository trace: PR #7 and the still-present `windows/b570-backend-control` branch preserve the derived outputs and protocol but no analysis script that generated these fallback CIs.
+- Scientific impact: none on direction or admissibility; all intervals are far below 1 and the whole fallback performance result is diagnostic because correctness is 60/90.
+- Paper policy: do not rewrite the historical report. If a B570 diagnostic CI is printed in the paper, either label it as the historical archived CI or use a separately documented paper-level reanalysis; never claim bit-level reconstruction that the archive does not support.
+
 ## 20. Audit log
 
 ### Round 1 — 2026-09-18 — repository-wide final-status audit
@@ -688,25 +780,43 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - Elevated direct `C` semantics and state-interface cost as measured evidence for the unified framework.
 
 
+### Round 6 — 2026-09-18 — unified formula / mechanism audit
+
+- Re-discovered Stage-C Skills/tools; no scientific modeling plugin superseded repository evidence.
+- Audited the verification-amortization note against M4/RTX/B570 microbenchmarks and the 358H realized decomposition.
+- Found and corrected a symbol-level conflation between target-forward `PPk/PP1` and complete realized target-side round cost.
+- The minimal accounting thesis survives, but the paper must use `R_target` for end-to-end cost and reserve `V_k^micro` for mechanism diagnosis.
+- Verified the revised identity exactly on 358H arithmetic totals.
+- Reconstructed M4 effective output progress per reported verification round as a diagnostic only; did not promote it to direct `C`.
+
+### Round 7 — 2026-09-18 — statistics / CI / aggregation audit
+
+- Re-discovered Stage-B Skills/tools; no dedicated statistical-validation plugin was available.
+- Independently reproduced headline point estimates and bootstrap CIs for:
+  - M4 HumanEval fixed k2 / p_min conditions;
+  - M4 representative 24Q;
+  - Windows CPU→RTX and RTX→RTX exact controls;
+  - 358H CPU and NPU Phase3.
+- Verified all headline studies use HumanEval/Spec-Bench prompt as the bootstrap unit after reducing repetitions within prompt; no headline pseudoreplication was found.
+- Protocol-specific within-prompt estimators differ (geometric mean for M4/RTX, median for 358H) and must not be silently homogenized.
+- Bootstrap implementations/resample counts also differ by frozen study; this is acceptable when reported, but the manuscript should make the differences explicit.
+- B570 exact-fallback point estimates reproduce exactly; historical fallback CI is not bit-reconstructable because its analysis implementation was not retained. Discrepancy is small and does not affect any conclusion.
+- Statistical CIs primarily reflect prompt-sampling uncertainty conditional on each campaign. They do not capture full between-session/thermal/runtime-state uncertainty; M4 representative repetition drift makes this limitation particularly important.
+- No statistical finding changes the sign or correctness-admissibility of any headline platform result.
+
 ## 21. Next audit queue
 
 Bounded order:
 
-1. **Round 2 — M4**
-   - preregistration → selection → authoritative results → analysis script → CI → exactness → energy boundary → corrected synthetic deviation.
-2. **Round 3 — RTX 5070 Ti Laptop**
-   - 60Q/root-cause/HumanEval/V2/raw-vs-exact/divergence/energy/capacity provenance.
-3. **Round 4 — B570**
-   - formal stop rule vs later diagnostics; exact-pair definitions; serialized terminology; archive integrity.
-4. **Round 5 — 358H**
-   - Phase0 provenance; Phase1 isolated throughput; Phase2 prediction; Phase3 recomputation; 34-entry archive integrity; replay/state interpretation.
-5. **Round 6 — unified formula/mechanism audit.**
-6. **Round 7 — statistics / confidence interval / aggregation audit.**
-7. **Round 8 — correctness-contract audit.**
-8. **Round 9 — energy-boundary audit.**
-9. **Round 10 — cross-platform claim audit.**
-10. **Round 11 — reviewer/adversarial audit.**
-11. **Round 12 — final thesis + contribution freeze.**
+Completed: Rounds 1–7.
+
+Remaining bounded order:
+
+1. **Round 8 — correctness-contract audit.**
+2. **Round 9 — energy-boundary audit.**
+3. **Round 10 — cross-platform claim audit.**
+4. **Round 11 — reviewer/adversarial audit.**
+5. **Round 12 — final thesis + contribution freeze.**
 
 Before every major stage, repeat Skill/Plugin/tool discovery and record any newly available relevant capability here.
 

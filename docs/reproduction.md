@@ -43,19 +43,20 @@ B570 is closed. Qualification, the formal correctness gate, the full post-gate d
 
 The B570 archive uses Git text conversion disabled for paper-critical files. The closeout audit verified committed Git-object bytes against manifest size/SHA256 entries. The serialized fallback remained non-universal on the full HumanEval30 selection, so its overall timing is diagnostic only.
 
-## 358H planned study
+## 358H evidence
 
-No 358H result exists yet. The repository now contains an onboarding protocol rather than a fabricated executable recipe:
+The 358H Phase 0–3 scientific campaign is complete. Audit entry points are:
 
-- platform config: `configs/platform_358h.yaml`
-- runbook: `docs/358H_RUNBOOK.md`
-- preregistration template: `benchmarks/358h_threshold_validation/preregistration_v1.json`
-- planned report index: `reports/358h/README.md`
-- future script location: `scripts/platform/358h/README.md`
+- environment/provenance qualification: `reports/358h/358H_ENVIRONMENT_QUALIFICATION.md`
+- frozen preregistration and execution addendum: `benchmarks/358h_threshold_validation/`
+- Phase-3 result and mechanism decomposition: `reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md`
+- formal execution disclosure: `reports/358h/358H_FORMAL_EXECUTION_AMENDMENT.md`
+- repository transport audit: `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`
+- byte-complete evidence bundle: `artifacts/358h_threshold_validation/phase3-final-20260918-144458/358h_phase3_complete_evidence.tar.gz`
 
-The experimenter must first qualify the exact Intel/OpenVINO device names, runtime versions, model representation, and telemetry interfaces on the physical machine. All `FILL_*` fields in the preregistration template must be completed and committed **before formal measurements begin**.
+The bundle is gzip-compressed tar, 694239 bytes, SHA256 `2fa6197864b1c6fc7af1c6da31f24ccf224e3dc0933bc1534840117eaee08511`. Extract it and validate the 34 files against the enclosed `manifest.json`. The separately visible approximately-80-KiB copies of the largest JSON/CSV files were truncated by the initial Git transport and are non-authoritative previews.
 
-The planned sequence is CPU/iGPU/NPU draft latency characterization -> predictive GO/BORDERLINE/NO-GO threshold analysis -> frozen end-to-end `k=2` validation only for plausible paths. Do not infer a result from vendor TOPS or configuration files.
+Re-running requires the independently obtained frozen model artifacts, the recorded llama.cpp/OpenVINO builds, explicit Vulkan0 target binding, explicit CPU/NPU draft binding, and a newly frozen formal host-state record. The primary Phase-3 metric excludes prompt prefill. Do not interpret token exactness as HumanEval functional correctness or package telemetry as NPU energy.
 
 ## Interpretation constraints
 

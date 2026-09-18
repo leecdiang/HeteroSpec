@@ -1,6 +1,6 @@
 # Repository status
 
-Status as of 2026-09-13, based on `main` after Arc B570 backend-control closure, archival repair, and README consolidation.
+Status as of 2026-09-18 on the 358H closeout branch. The 358H scientific campaign is complete; merge remains gated on final branch reconciliation and review.
 
 ## Completed and merged
 
@@ -15,23 +15,20 @@ Status as of 2026-09-13, based on `main` after Arc B570 backend-control closure,
 
 The authoritative M4 evidence map is `reports/m4/M4_EXPERIMENT_INDEX.md`. The Windows closure is `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md`. The B570 closure is `reports/b570/B570_PLATFORM_CLOSEOUT.md`. Paper-critical raw archives are under `artifacts/` and governed by `docs/data_policy.md`.
 
+## Completed on the 358H closeout branch
+
+- Core Ultra X7 358H Phase 0–3: frozen canonical/reconstructed draft provenance, explicit CPU/GPU/NPU qualification, isolated CPU/NPU draft characterization, predictive break-even gate, and formal HumanEval30 end-to-end validation.
+- Phase-3 result: CPU draft 0.734x [0.693, 0.771] and NPU draft 0.352x [0.333, 0.369], with 90/90 token-exact pairs per path and 0/30 prompts faster.
+- A byte-complete compressed evidence artifact preserves all 34 original manifest entries. The earlier approximately-80-KiB text transfers are non-authoritative previews; see `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`.
+
 ## Pending or deliberately incomplete
 
-- **Core Ultra X7 358H measurements have not been run or reported.** The platform is reserved for predictive draft-cost threshold validation across CPU, Xe3-class iGPU, and NPU. The onboarding and execution guide is `docs/358H_RUNBOOK.md`; the draft preregistration template is `benchmarks/358h_threshold_validation/preregistration_v1.json`.
 - The M4 HumanEval preregistration's **corrected synthetic ceiling** has no completion artifact matching its frozen design (conditional probabilities 0.6/0.7/0.8/0.9/0.95/1.0 mapped to `p,p^2`, five repetitions, 128 output tokens, seed 20260911). The tracked earlier synthetic crossover is a different exploratory diagnostic and does not satisfy this item. This is a preregistration deviation/status gap, not a completed result; no new M4 experiment is authorized by the current closeout.
 - HumanEval generated code was not functionally executed; “exact” means paired greedy token-ID equality.
 
-## 358H onboarding status
+## 358H closeout status
 
-The repository now defines the intended 358H study at the protocol level but deliberately does **not** invent unqualified runtime commands. Before formal measurement, the experimenter must complete Phase 0 qualification and fill all `FILL_*` fields in `benchmarks/358h_threshold_validation/preregistration_v1.json`, then commit that frozen preregistration before collecting formal data.
-
-The planned sequence is:
-
-1. explicit CPU / iGPU / NPU qualification;
-2. same-draft-model latency characterization;
-3. predictive break-even GO / BORDERLINE / NO-GO classification;
-4. end-to-end `k=2` validation only for plausible paths;
-5. archival closeout without post-result parameter search.
+The preregistered sequence completed without post-result parameter search. CPU and NPU used the same frozen OpenVINO draft semantics; the target was explicitly bound to Vulkan0. The scientific execution is closed as correctness-admissible and not profitable. Formal-start host-state and interactive-monitoring disclosures are in `reports/358h/358H_FORMAL_EXECUTION_AMENDMENT.md`; repository transport recovery is in `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`.
 
 ## Data boundaries
 
@@ -47,4 +44,4 @@ Model weights, downloaded benchmark datasets, caches, virtual environments, cred
 
 ## Remote and branch policy
 
-Private GitHub repository: `https://github.com/leecdiang/HeteroSpec`. Completed 275HX/RTX, M4, and B570 platform results are merged to `main`. Future 358H work should use a dedicated branch, preserve preregistration-before-result ordering, and be reviewed before merging.
+Private GitHub repository: `https://github.com/leecdiang/HeteroSpec`. Completed 275HX/RTX, M4, and B570 platform results are merged to `main`. The completed 358H result remains on its dedicated closeout branch pending reconciliation with `main` and final review. Any follow-up optimization study must use a new preregistration rather than extending the closed campaign.

@@ -1,27 +1,28 @@
 {
-  "schema": "heterospec.358h.phase0_gate.v2",
-  "formal_measurement": false,
+  "schema_version": 5,
+  "platform": "Intel Core Ultra X7 358H",
+  "scope": [
+    "CPU draft",
+    "NPU draft"
+  ],
   "status": "PASS",
   "qualification_pass": true,
-  "source_equivalence": "STRONGLY_SUPPORTED",
-  "historical_provenance_limitation": "Exact upstream Transformers source revision was not historically recorded; see reports/358h/358H_PROVENANCE_AMENDMENT.md.",
-  "frozen_manifest": "runs/358h/qualification/phase0_frozen_manifest.json",
-  "passed": [
-    "canonical historical GGUF immutable and hashed",
-    "historical provenance limitation transparently amended",
-    "immutable reconstructed source independently qualified",
-    "conversion fully reproducible and package-frozen",
-    "IR and NPU cache artifacts hashed",
-    "CPU requested -> CPU executes",
-    "GPU requested -> GPU.0 executes",
-    "NPU requested -> NPU executes",
-    "NPU bounded smoke succeeds through the planned 8192-token context ceiling",
-    "AUTO, MULTI, HETERO, and silent fallback excluded",
-    "no formal performance data collected"
-  ],
-  "blocked_or_failed": [],
-  "formal_phase1_authorized": false,
-  "phase1_authorization_condition": "Freeze and commit benchmarks/358h_threshold_validation/preregistration_v1.json after this PASS.",
-  "timing_data_collected": false
+  "qualification_scope": "core latency and break-even study",
+  "energy_admissibility": {
+    "cpu_package": {
+      "admissible": true,
+      "boundary": "RAPL_Package0_PKG package power via Windows Energy Meter direct PDH API",
+      "claim_limit": "CPU package energy only; not wall/system energy and not an isolated CPU-core domain. If only the isolated representative gate passes, the energy-only workload must remain pinned to CPUs 0-11 and the collector to CPUs 12-15."
+    },
+    "npu": {
+      "admissible": false,
+      "reason": "The latest minimal SocWatch qualification failed the unchanged 1% overhead gate; package RAPL does not isolate NPU energy."
+    },
+    "symmetric_cpu_vs_npu_energy_comparison": false
+  },
+  "formal_measurement_authorized": true,
+  "authorization_basis": "Phase-0 PASS plus frozen preregistration content commit d17fd4392dec23a886c08c53cd62c401eace28ae; formal execution remains operator-triggered and was not started in this task.",
+  "replacement_manifest": "runs/358h/qualification_ac_20260918/phase0_ac_manifest.json",
+  "formal_data_collected": false
 }
 

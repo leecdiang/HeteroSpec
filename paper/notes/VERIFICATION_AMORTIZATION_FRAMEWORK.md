@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This note defines one cost vocabulary for the completed M4 and Windows studies. It separates an algorithm's nominal batching opportunity from the execution path that remains admissible after correctness is enforced.
+This note defines one cost vocabulary for the completed M4, Windows/CUDA, B570, and 358H studies. It separates an algorithm's nominal batching opportunity from the execution path that remains admissible after correctness is enforced.
 
 ## Exact verification amortization factor
 
@@ -55,6 +55,21 @@ The break-even condition is
 `C > T_d(k)/T_b + V_k(e) + T_x(e)/T_b`.
 
 This equation explains why acceptance rate by itself is insufficient. Acceptance changes `C`, but profitability also requires small normalized draft cost, a low **correctness-admissible** `V_k`, and a small residual. Repository fields named `accepted_per_round` count accepted draft tokens as parsed from llama.cpp and are not silently substituted for `C`; a correction/bonus token and end effects depend on the runtime. End-to-end observed speedup remains authoritative.
+
+## 358H realization: isolated draft speed is not system draft cost
+
+The 358H study adds a direct realization test of the model. Its frozen OpenVINO Qwen3-0.6B draft was characterized in isolation on CPU and NPU, and both devices then entered the same exact `k=2` adapter with an explicit Vulkan0 Qwen3-8B target. Acceptance remained high (CPU 75.31%, NPU 75.13%) and realized committed work was approximately `C=2.46`, yet post-prefill decode speedup was 0.734x on CPU and 0.352x on NPU.
+
+The measured 90-request means expose why:
+
+| 358H path | Draft replay + proposal | Target verification | Residual | Observed speedup |
+|---|---:|---:|---:|---:|
+| CPU draft | 12.63% | 87.34% | 0.04% | 0.734x |
+| NPU draft | 58.35% | 41.63% | 0.02% | 0.352x |
+
+The OpenVINO adapter's synchronous proposal call reconstructs the complete committed prefix. Consequently its measured `T_d(k)` is not the isolated two-token generation cost: it includes runtime state reconstruction that grows with the prefix. For NPU this term dominates the system even though isolated draft throughput is favorable. Replay-only and proposal-only cannot be separated without changing the measured execution, so their combined cost is retained.
+
+This result strengthens the framework: `T_d(k)` must be measured at the actual state interface used by the end-to-end speculative loop. A device TOPS figure or isolated steady-state tokens/s cannot substitute for that quantity.
 
 ## Correctness-constrained execution path
 

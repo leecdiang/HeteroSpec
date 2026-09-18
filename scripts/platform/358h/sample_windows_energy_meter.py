@@ -56,6 +56,10 @@ def main() -> int:
     parser.add_argument("--period-ms", type=int, default=1000)
     parser.add_argument("--duration-seconds", type=float, default=20.0)
     parser.add_argument("--affinity-cpus", default="", help="Optional comma-separated logical CPU list.")
+    parser.add_argument("--stop-file", type=Path,
+                        help="Optional graceful-stop sentinel; checked between qualified 1000-ms samples.")
+    parser.add_argument("--formal-measurement", action="store_true",
+                        help="Mark output formal. The calling frozen Track-E runner owns admissibility.")
     args = parser.parse_args()
     if args.period_ms < 1000:
         parser.error("Windows Energy Meter provider is qualified only at periods >=1000 ms")
@@ -80,6 +84,8 @@ def main() -> int:
             process.cpu_affinity(requested_affinity)
         cpu_start = process.cpu_times()
         while time.perf_counter() < deadline:
+            if args.stop_file and args.stop_file.exists():
+                break
             before = time.perf_counter_ns()
             check(pdh.PdhCollectQueryData(query), "PdhCollectQueryData")
             after = time.perf_counter_ns()
@@ -115,10 +121,11 @@ def main() -> int:
         writer.writerows(rows)
     valid = [row for row in rows if row.get("package_power_w") is not None and row["package_power_w"] >= 0]
     cpu_seconds = (cpu_end.user - cpu_start.user) + (cpu_end.system - cpu_start.system)
+    elapsed_seconds = max(0.0, time.perf_counter() - (deadline - args.duration_seconds))
     payload = {
         "schema": "heterospec.358h.windows_energy_meter.v1",
-        "formal_measurement": False,
-        "invalid_for_claims": True,
+        "formal_measurement": args.formal_measurement,
+        "invalid_for_claims": not args.formal_measurement,
         "source": "Windows PDH Energy Meter provider backed by RAPL_Package0_PKG",
         "physical_boundary": "CPU package; not wall/system energy and not an isolated NPU domain",
         "counter_paths": counters,
@@ -128,7 +135,9 @@ def main() -> int:
         "rows": len(rows),
         "valid_power_rows": len(valid),
         "collector_process_cpu_seconds": cpu_seconds,
-        "collector_cpu_fraction_of_wall": cpu_seconds / args.duration_seconds,
+        "collector_cpu_fraction_of_wall": cpu_seconds / elapsed_seconds if elapsed_seconds else None,
+        "elapsed_seconds": elapsed_seconds,
+        "stop_file": str(args.stop_file.resolve()) if args.stop_file else None,
         "requested_affinity_cpus": requested_affinity or None,
         "effective_affinity_cpus": process.cpu_affinity(),
         "max_collection_call_ms": max(row["collection_call_ns"] for row in rows) / 1e6,

@@ -2,32 +2,34 @@
 
 Status date: 2026-09-18.
 
+Authoritative scientific control file: `PAPER_FRAMEWORK_HANDOFF.md`.
+
 Legend:
-- READY — evidence is sufficiently closed to draft now.
-- PROVISIONAL — draftable, but wording/numbers depend on pending 358H merge/closeout.
-- HOLD — do not freeze until pending evidence closes.
+- READY — evidence is sufficiently closed to draft.
+- AUDIT — draftable only with explicit ledger/provenance checks still pending.
+- HOLD — do not freeze.
 
 | Section | Status | Notes |
 |---|---|---|
-| Introduction | READY | Frame around correctness-constrained profitability, not "heterogeneous always helps". |
+| Introduction | AUDIT | Main question is stable; final headline ordering waits for cross-platform claim audit. |
 | Background: speculative decoding | READY | Algorithmic explanation is stable. |
-| Cost / break-even model | READY | Use tracked verification-amortization framework. |
-| Correctness contract | READY | Token-ID equality, generated tokens only. |
-| Methodology: M4 | READY | Closed platform. |
-| Methodology: RTX 5070 Ti Laptop | READY | Closed platform; preserve Laptop designation. |
-| Methodology: B570 | READY | Closed platform. |
-| Methodology: 358H | PROVISIONAL | Environment + Phase-1/2/runner design can be drafted from experiment branch; Phase 3 still pending. |
-| M4 results | READY | Include representative negative + code-conditioned positive. |
-| RTX results | READY | Include raw-vs-exact verification distinction. |
-| B570 results | READY | Keep diagnostic/correctness-admissible distinction. |
-| 358H results | HOLD | Formal Phase 3 not started at audited branch head. |
-| Cross-platform final table | HOLD | Wait for 358H. |
-| Discussion | PROVISIONAL | Main mechanism is stable; 358H may strengthen or redirect system-overhead argument. |
-| Related work | READY | Requires literature pass but does not depend on 358H outcome. |
-| Limitations | READY/PROVISIONAL | Existing limitations are stable; add final 358H limitations later. |
-| Abstract | HOLD | Write after headline result ordering is final. |
-| Conclusion | HOLD | Wait for Phase 3. |
-| Appendix | PROVISIONAL | Can be assembled incrementally. |
+| Cost / break-even model | AUDIT | Minimal formula is provisionally supported; full formula audit is Round 6. |
+| Correctness contract | AUDIT | Token-ID equality is stable; dedicated contract audit remains Round 8. |
+| Methodology: M4 | AUDIT | Platform closed; deep provenance/statistics audit pending. |
+| Methodology: RTX 5070 Ti Laptop | AUDIT | Platform closed; preserve Laptop designation. |
+| Methodology: B570 | AUDIT | Platform closed; serialized `V2_exact` terminology needs correction in paper-facing text. |
+| Methodology: 358H | AUDIT | Phase 0–3 closed and merged; source-provenance limitation must remain explicit. |
+| M4 results | AUDIT | Include representative negative + preregistered code-conditioned positive. |
+| RTX results | AUDIT | Include raw-vs-admissible verification distinction. |
+| B570 results | AUDIT | No correctness-admissible optimization result; timing/energy diagnostic. |
+| 358H results | AUDIT | CPU 0.734x, NPU 0.352x; both exact; verification/state-interface mechanisms. |
+| Cross-platform final table | AUDIT | Can be drafted from ledger, but final wording waits for Round 10. |
+| Discussion | HOLD | Wait for formula, stats, correctness, energy, and cross-platform audits. |
+| Related work | AUDIT | Requires literature/novelty pass. |
+| Limitations | READY | Existing boundaries are explicit; refine after dedicated audits. |
+| Abstract | HOLD | Freeze after final thesis/contribution ordering. |
+| Conclusion | HOLD | Freeze after Round 12. |
+| Appendix | AUDIT | Can be assembled incrementally from provenance material. |
 
 ## Internal evidence discipline
 
@@ -35,8 +37,10 @@ For every table/figure intended for the paper, maintain:
 - source report / analysis file;
 - source commit;
 - exact aggregation script;
-- whether the result is primary, secondary, diagnostic, or post-hoc descriptive;
+- primary / secondary / diagnostic / post-hoc classification;
 - correctness status;
 - energy sensor boundary if applicable.
 
-Do not copy a number from chat history into the manuscript without checking the tracked source.
+Do not convert a diagnostic result into a primary optimization claim.
+Do not use `V2_exact` for the B570 serialized fallback as a global statement while full-workload exactness is 60/90.
+Do not use isolated NPU throughput as the 358H end-to-end draft cost.

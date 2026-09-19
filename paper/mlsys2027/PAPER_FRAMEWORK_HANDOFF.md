@@ -13,8 +13,8 @@
 - Audit branch: `paper/audit-round1-20260918`
 - Auditor: ChatGPT / GPT-5.6 Sol using the connected GitHub repository tools
 - Current phase: hardware experiments CLOSED; paper scientific-audit phase
-- Audit scope completed: Rounds 1–7 — repository/platform evidence-chain audits, unified formula/mechanism audit, and statistics/CI audit
-- Audit scope not yet completed: correctness-contract audit, energy-boundary audit, cross-platform claim audit, adversarial reviewer audit, final thesis/contribution freeze
+- Audit scope completed: **Rounds 1–12 — FULL SCIENTIFIC AUDIT COMPLETE**
+- Audit scope not yet completed: manuscript prose / final figure production / any separately preregistered future runtime co-design study
 - No new hardware experiment was designed or run in this round.
 - No preregistration, raw artifact, historical result report, or experiment data was modified.
 
@@ -106,6 +106,19 @@ Rediscovery was repeated before Round 7.
 - Statistical audit therefore used direct inspection of repository analysis code plus independent deterministic recomputation of the frozen prompt-level vectors.
 - This rediscovery did not authorize changing any preregistered estimator or historical report.
 
+### 0.4 Tool / Skill rediscovery — Stages D/E/F/G
+
+Rediscovery was repeated before the final runtime-design, synthesis, figure-plan, and adversarial-review stages.
+
+- The Skill catalog was re-listed.
+- Full instructions were re-read for **System Design**, **Experiment Analysis**, and **Design Report**.
+- All three remain artifact-template workflows. They may help later document production but do not determine scientific validity, novelty, figure truthfulness, or reviewer severity.
+- No dedicated scientific peer-review, figure-validation, or causal-inference Skill was exposed.
+- Stage D therefore remained a bounded future-design audit only; no runtime implementation or new experiment was authorized.
+- Stage E synthesis used the frozen evidence ledger plus a current literature check.
+- Stage F figure planning was constrained to quantities already audited; no plot is allowed to imply cross-platform hardware ranking.
+- Stage G adversarial review used the repository evidence, protocol deviations, provenance limitations, statistical audit, and current related-work check rather than a template-generated score.
+
 ## 1. Project status
 
 ### Hardware study status
@@ -127,9 +140,9 @@ Rediscovery was repeated before Round 7.
 
 ### Paper status
 
-- Scientific framework audit in progress.
-- Final title: **not frozen**.
-- Final contribution count/order: **not frozen**.
+- Scientific framework audit **COMPLETE through Round 12**; handoff is frozen for manuscript drafting unless new evidence appears.
+- Final title: not frozen; title wording may change without changing scientific claims.
+- Final contribution count/order: **FROZEN by Round 12** (see Section 4).
 - Manuscript prose: intentionally not produced by this audit.
 - The previous paper workspace was created before 358H Phase 3 merged and contains stale provisional language; living status docs are being synchronized separately on this audit branch.
 
@@ -147,50 +160,57 @@ Secondary decompositions:
 
 Do **not** reduce the paper question to “does heterogeneous speculative decoding work?” The repository supports regime analysis, not a universal binary verdict.
 
-## 3. Current leading thesis
+## 3. Final frozen thesis
 
-**Tentative; not frozen.**
+**FROZEN by Round 12.**
 
-A correctness-constrained speculative path is profitable only when the realized committed work per round is large enough to amortize **all** of:
+> On the tested consumer systems, speculative decoding is profitable only when a **correctness-admissible execution path** and the **realized stateful draft interface** keep total per-round cost below the progress actually committed by that round. Acceptance rate and isolated draft throughput are insufficient summaries because the usable verification path can change after exactness filtering, and runtime state reconstruction can dominate a nominally fast draft device.
 
-1. the actual stateful draft-subsystem cost,
-2. the target-verification cost of an execution path that satisfies the frozen correctness contract,
-3. residual transfer/synchronization/runtime cost.
+The evidence supports four distinct regimes rather than a universal platform ranking:
 
-The four completed platforms expose different failure/success regimes:
+1. **Profitable + exact:** M4 / llama.cpp Metal on the separately preregistered HumanEval code-conditioned fixed-k2 workload, 1.387x [1.351, 1.422], 90/90 exact.
+2. **Exact but unprofitable:** representative M4 24Q, RTX serialized controls, and 358H CPU/NPU.
+3. **Physically fast but correctness-inadmissible:** RTX CUDA batched ubatch=2; B570 fast Vulkan path.
+4. **State-interface bound:** 358H NPU, where full committed-prefix replay + proposal dominates realized draft cost despite favorable isolated NPU steady-state throughput.
 
-- M4 HumanEval: admissible verification is near-one-target-step and workload predictability produces enough committed work → profitable exact regime.
-- RTX 5070 Ti Laptop: a cheap raw batched verification path exists but fails the token-exact gate; the tested exact route becomes near-serialized → negative.
-- B570: serialization increases verification cost and still does not establish universal exactness → no admissible optimization result.
-- 358H CPU: exact but target-verification dominated → negative.
-- 358H NPU: exact but the realized draft subsystem reconstructs/replays committed prefix inside the proposal call → isolated NPU throughput does not translate to end-to-end profitability.
+The thesis is explicitly **not**:
+- “heterogeneous speculative decoding is new”;
+- “acceptance is not enough” as a standalone novelty claim;
+- “M4 wins because of unified memory”;
+- “CUDA/Vulkan is broken”;
+- “NPU hardware is unsuitable”.
 
-This thesis is stronger than “high acceptance is not enough,” but must remain bounded to the tested runtimes/configurations.
+The strongest systems claim is the **correctness-constrained realized-cost discipline** backed by cross-platform mechanism evidence.
+## 4. Final frozen contributions
 
-## 4. Candidate contributions
+Contribution order is frozen for manuscript drafting.
 
-Status is provisional until the platform-deep and statistics audits finish.
+1. **Auditable cross-platform characterization of speculative-decoding regimes on four consumer systems.**
+   - Four closed campaigns preserve positive, negative, correctness-blocked, and state-interface-bound outcomes.
+   - The comparison is mechanism triangulation across heterogeneous stacks, not a controlled hardware leaderboard.
+   - Bounded novelty: the contribution is the disciplined comparative evidence, **not** the existence of heterogeneous speculative decoding.
 
-1. **Cross-platform correctness-constrained profitability study.**
-   - Evidence: four closed consumer platforms, frozen/archived studies.
-   - Risk: platform/software stacks are heterogeneous; this is mechanism triangulation, not a controlled hardware-only causal comparison.
+2. **Correctness-constrained realized-cost accounting.**
+   - Separates complete realized round costs `D_real + R_target + X` from the target-forward microbenchmark proxy `V_k^micro`.
+   - Separates committed progress `C` from historical accepted-draft-tokens/round.
+   - Treat as an accounting/diagnostic framework, not a new universal predictive theory; prior work already contains SD performance models and theoretical bounds.
 
-2. **Minimal break-even framework using realized draft cost, correctness-admissible verification, residual cost, and committed work.**
-   - Evidence: existing verification-amortization note + 358H decomposition.
-   - Risk: must not introduce unmeasured latent variables merely for elegance.
+3. **Empirical evidence that correctness filtering can change the usable verification path.**
+   - RTX: near-one-step batched verification is physically available but fails the frozen token-exact gate; the tested exact control is near-serialized and negative.
+   - B570: serialization itself still does not guarantee global exactness.
+   - Claim remains runtime/configuration/workload bounded.
 
-3. **Empirical separation of raw verification speed from correctness-admissible verification.**
-   - Evidence: RTX CUDA; complementary B570 behavior.
-   - Risk: B570 serialized path is not universally exact and must not be labeled globally exact.
+4. **Empirical evidence that the realized state interface can erase isolated draft-device advantage.**
+   - 358H NPU proposal calls reconstruct the complete committed prefix; replay+proposal is 58.35% of measured speculative time.
+   - CPU remains target-verification dominated.
+   - This is a statement about the qualified OpenVINO/adapter interface, not NPU compute capability in general.
 
-4. **Empirical separation of isolated draft throughput from realized stateful draft-subsystem cost.**
-   - Evidence: 358H NPU.
-   - Risk: current evidence identifies the tested OpenVINO/adapter state interface, not NPUs in general.
+5. **A preregistered workload-conditioned positive regime retained alongside a representative negative result.**
+   - M4 HumanEval fixed-k2 demonstrates an exact profitable regime.
+   - M4 representative 24Q remains negative.
+   - This supports selective/runtime-aware deployment rather than a platform-wide win claim.
 
-5. **Workload-conditioned positive regime rather than cherry-picked universal success.**
-   - Evidence: M4 representative 24Q negative coexists with preregistered HumanEval30 positive.
-   - Risk: reviewer may challenge HumanEval functional relevance because generated code was not executed.
-
+Artifact/provenance quality is a supporting strength, not a standalone scientific novelty claim.
 ## 5. Unified analytical framework
 
 ### 5.1 Final accounting distinction after Round 6
@@ -804,21 +824,199 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - No statistical finding changes the sign or correctness-admissibility of any headline platform result.
 - B570 audit lesson: report the bootstrap unit, seed, resample count, estimator, **and deterministic input ordering** when bit-level CI reproducibility matters.
 
+## 22. Round 8 — correctness-contract audit
+
+**Verdict: contract is scientifically usable, but must be bound to runtime/config/path/workload rather than platform name.**
+
+Common paper-level meaning:
+- deterministic greedy generation;
+- compare generated target-model token IDs under the frozen run's normalization;
+- prompt/prefix excluded;
+- first genuine generated-token divergence fails that pair/path;
+- functional HumanEval execution is not part of the correctness claim.
+
+Platform-specific findings:
+- **M4:** early MLX-LM 4-bit native speculation failed exactness on frozen question 469. This historical failure does not apply to the later llama.cpp Metal Q8_0 paper path, which is 72/72 exact on representative 24Q and 90/90 on HumanEval fixed-k2.
+- **RTX CUDA:** default batched path is correctness-blocked; serialized ubatch=1 controls are 90/90 exact. The stable argmax sign flip supports a path-specific numerical explanation, not a universal backend verdict.
+- **B570 Vulkan:** normalization explicitly removes prompt/prefix ambiguity and treats parser ambiguity as configuration error. Fast path is 45/90 exact; serialized fallback is 60/90. A six-prompt 18/18 gate did not generalize, proving that small-gate exactness cannot be promoted to workload-global exactness.
+- **358H:** CPU and NPU both pass 90/90 generated-token equality against the same shared Vulkan target baseline.
+
+Paper rule:
+- never write “M4/CUDA/Vulkan is exact/non-exact” without the qualified runtime/path;
+- never use “exact” as a synonym for serialized;
+- never equate token equality with functional code correctness.
+
+## 23. Round 9 — energy-boundary audit
+
+**Verdict: energy is valid only within each sensor boundary; no cross-platform absolute ranking is admissible.**
+
+| Platform/path | Admissible boundary | Result allowed | Forbidden interpretation |
+|---|---|---|---|
+| M4 llama.cpp | Silemetry CPU+GPU+ANE package aggregate; separate DRAM excluded | 24Q package efficiency 0.678x; HumanEval fixed-k2 1.013x [0.990,1.034] = energy-neutral within uncertainty; p_min=.9 secondary 1.041x [1.018,1.065] | whole-device/wall energy; direct numeric comparison with RTX/B570 |
+| RTX 5070 Ti Laptop formal power | NVIDIA board and Intel CPU package are separate component domains | baseline/custom/native component J/token within matched run | summing the two domains as calibrated whole-system energy; using HumanEval serialized follow-up as formal energy evidence |
+| B570 fallback | Arc B570 adapter-board power only | diagnostic board ratio 0.3023x [0.2846,0.3202] | whole-system or CPU-inclusive energy; admissible optimization result |
+| 358H Phase 3 | none for end-to-end system | **no end-to-end energy claim** | CPU-vs-NPU Phase3 energy comparison; inferring NPU energy from package RAPL |
+
+Energy must be secondary/appendix material because boundaries differ materially.
+
+## 24. Round 10 — cross-platform claim and novelty audit
+
+### Claims that survive
+
+- Correctness filtering can remove the physically cheapest verification path.
+- Realized stateful draft cost can differ radically from isolated draft throughput.
+- High acceptance does not determine profitability by itself.
+- Consumer speculative decoding exhibits distinct regimes under different runtime/workload conditions.
+- A code-conditioned profitable M4 regime exists without implying representative M4 profitability.
+
+### Claims downgraded or forbidden after literature check
+
+Current related work already includes:
+- **Dovetail (2024):** CPU/GPU heterogeneous speculative decoding.
+- **DuoDecoding (2025):** hardware-aware heterogeneous CPU/GPU speculative decoding.
+- **Mirror Speculative Decoding (2025):** explicit heterogeneous GPU/NPU mapping.
+- **Speculative Decoding: Performance or Illusion? (2025/26):** systematic production-engine performance characterization and theoretical upper-bound analysis.
+- **Speculation at a Distance (2026):** closed-form conditions for distributed/edge-cloud speculative decoding.
+
+Therefore:
+- heterogeneous SD itself is not novel;
+- a generic “acceptance/draft/verification cost determines speedup” formula is not safe as a novelty claim;
+- the paper should position its framework as an **audited realized-cost/correctness accounting discipline** attached to cross-platform evidence.
+
+External literature audit does not alter any repository measurement.
+
+## 25. Stage D — runtime/software co-design audit
+
+No implementation is added to the current paper evidence.
+
+Evidence-derived future designs:
+1. persistent draft state / KV reuse for 358H-like adapters;
+2. correctness-qualified verification-path selection;
+3. workload-aware speculation controller for M4-like regime switching;
+4. adaptive proposal budget only in a separately preregistered study.
+
+Round-12 decision: **none is required to make the current empirical characterization scientifically valid**, but a measured runtime intervention would materially strengthen the paper's algorithmic/systems novelty. Without it, the paper should be sold as a rigorous systems characterization/mechanism paper, not as a new speculative-decoding runtime.
+
+## 26. Stage F — final figure policy
+
+Recommended main-paper figures:
+
+1. **Correctness-constrained realized-cost schematic** — visually separate `D_real`, complete `R_target`, residual `X`, committed progress `C`, and `V_k^micro` as a diagnostic inset.
+2. **Regime map, not leaderboard** — M4 24Q, M4 HumanEval, RTX exact controls, B570 correctness-blocked, 358H CPU/NPU. Encode correctness status separately from speed.
+3. **Verification-path figure** — M4/RTX/B570 `V_2^micro` with explicit path and correctness markers; never imply matched context/hardware.
+4. **358H decomposition** — CPU vs NPU realized draft / target / residual stacked cost.
+5. **M4 workload contrast** — representative 24Q negative vs preregistered HumanEval positive with CIs.
+
+Appendix only:
+- energy small multiples, each with its sensor boundary;
+- detailed provenance / protocol deviations;
+- B570 diagnostic distributions.
+
+Do **not** plot accepted-draft-tokens/round and direct `C` on one unlabeled common axis.
+
+## 27. Round 11 — adversarial reviewer audit
+
+Highest-severity attacks and frozen responses:
+
+1. **“Heterogeneous SD already exists.” — HIGH**
+   - Agree. Do not claim algorithmic firstness. Differentiate by correctness-constrained, realized-cost, cross-platform empirical characterization.
+
+2. **“The cross-platform comparison is confounded.” — HIGH**
+   - Agree. Claim repeated mechanism regimes, not hardware causality or ranking. Keep within-platform controls as causal evidence.
+
+3. **“The accounting equation is tautological / not a new model.” — HIGH**
+   - Treat it as an accounting discipline and diagnostic vocabulary. Novelty must come from audited evidence and distinctions, not algebra alone.
+
+4. **“HumanEval success is cherry-picked after representative failure.” — HIGH**
+   - Show chronology, separate preregistration, frozen 30-ID selection, no post-run prompt removal, and retain the representative 24Q failure prominently. Call it an existence proof / conditioned regime.
+
+5. **“HumanEval code was never executed.” — HIGH**
+   - State explicitly. HumanEval is used as a structured generation distribution; exactness is token equality, not pass@k.
+
+6. **“Strict token exactness is an arbitrary contract.” — MEDIUM-HIGH**
+   - Motivate it as deterministic greedy reference equivalence for this study. Do not claim other approximate-quality contracts are invalid; classify them as a different research question.
+
+7. **“M4 itself showed a numerical exactness failure.” — HIGH if omitted**
+   - Disclose that the failure was the earlier MLX-LM 4-bit path. The final llama.cpp Q8_0 path is a different qualified runtime and passes its frozen gates.
+
+8. **“B570 fallback is called exact even though 30/90 pairs mismatch.” — HIGH**
+   - Paper-facing terminology is `serialized fallback` / `V2_serialized`. Historical `V2_exact` wording remains provenance only.
+
+9. **“358H NPU loss is a bad adapter, not an NPU result.” — HIGH**
+   - Agree with the bounded interpretation. This is precisely a state-interface result. Do not generalize to NPU hardware.
+
+10. **“M4 CI ignores session/thermal uncertainty.” — MEDIUM-HIGH**
+    - Prompt bootstrap captures prompt sampling, not full system-state uncertainty. Report 24Q repetition drift and the fanless/session limitation.
+
+11. **“Windows raw logs are incomplete in Git.” — MEDIUM**
+    - Derived pair tables, summaries, manifests and mechanism evidence are committed and independently recomputed; disclose raw per-run JSON provenance is weaker than M4/B570/358H.
+
+12. **“Energy numbers are incomparable.” — HIGH**
+    - Agree; use separate sensor-boundary panels and no global J/token ranking.
+
+13. **“Only Qwen3 8B/0.6B and four systems.” — HIGH**
+    - Bound generalization to the tested model family/runtimes. Do not claim universal hardware law.
+
+14. **“No new runtime optimization is implemented.” — HIGH for a systems venue**
+    - Frame as characterization/mechanism study. A future state-reuse intervention is high-value strengthening work but is not retroactively part of the closed evidence.
+
+15. **“358H source provenance is reconstructed.” — MEDIUM**
+    - Retain STRONGLY_SUPPORTED classification; never claim recovered historical identity.
+
+Final adversarial verdict: **scientifically coherent and defensible if claims remain bounded; novelty risk, not result validity, is the dominant paper risk.**
+
+## 28. Round 12 — final thesis / contribution freeze
+
+### Frozen scientific story
+
+The paper is **not** “heterogeneous speculative decoding works/doesn't work.”
+
+It is:
+
+> **A correctness-constrained, realized-cost characterization of when speculative decoding pays on consumer systems.** The same nominal draft-target idea spans profitable, exact-but-negative, fast-but-inadmissible, and state-interface-bound regimes because the usable verification path and actual runtime state costs matter as much as acceptance.
+
+### Frozen evidence hierarchy
+
+**Primary**
+- M4 representative 24Q.
+- M4 preregistered HumanEval fixed-k2.
+- RTX exact serialized HumanEval controls.
+- 358H CPU/NPU Phase3 exact end-to-end results.
+
+**Mechanism-supported**
+- M4 target-forward batching microbench.
+- RTX raw-vs-serialized verification controls and stable numerical divergence.
+- 358H measured decomposition and full-prefix proposal semantics.
+
+**Diagnostic only**
+- B570 fast and serialized fallback performance/energy.
+- M4 older synthetic acceptance curve and discovery pilots.
+- RTX small native/root-cause diagnostics where not the frozen final control.
+
+### Final paper readiness
+
+- Hardware campaigns: CLOSED.
+- Rounds 1–12 audit: COMPLETE.
+- Headline statistics: independently reproduced.
+- B570 CIs: reproduced bit-for-bit after replaying retained input order.
+- Correctness terminology: frozen.
+- Energy boundaries: frozen.
+- Unified cost vocabulary: corrected.
+- Contribution order: frozen.
+- Remaining work is manuscript/figure production and optional future co-design, not unresolved interpretation of existing hardware data.
+
+
 ## 21. Next audit queue
 
-Bounded order:
+**All requested audit rounds are complete.**
 
-Completed: Rounds 1–7.
+Next workflow, only when requested:
+1. synchronize `OUTLINE.md` / writing status with the frozen thesis;
+2. draft manuscript sections from this handoff;
+3. produce figures under Section 26 constraints;
+4. optionally design a separately preregistered runtime co-design study.
 
-Remaining bounded order:
-
-1. **Round 8 — correctness-contract audit.**
-2. **Round 9 — energy-boundary audit.**
-3. **Round 10 — cross-platform claim audit.**
-4. **Round 11 — reviewer/adversarial audit.**
-5. **Round 12 — final thesis + contribution freeze.**
-
-Before every major stage, repeat Skill/Plugin/tool discovery and record any newly available relevant capability here.
+No additional hardware experiment is authorized by this audit.
 
 ---
 

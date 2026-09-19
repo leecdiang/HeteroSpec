@@ -11,140 +11,163 @@
 - Audited main HEAD: `8de9642b3d27830ec182f3571974069d5b88d405`
 - Head meaning: merge commit for PR #12, `358H: close Phase-3 heterogeneous validation`
 - Audit branch: `paper/audit-round1-20260918`
+- Open audit PR: #13, `Paper: complete MLSys 2027 scientific audit (Rounds 1–12)`
 - Auditor: ChatGPT / GPT-5.6 Sol using the connected GitHub repository tools
-- Current phase: hardware experiments CLOSED; paper scientific-audit phase
-- Audit scope completed: **Rounds 1–12 — FULL SCIENTIFIC AUDIT COMPLETE**
-- Audit scope not yet completed: manuscript prose / final figure production / any separately preregistered future runtime co-design study
-- No new hardware experiment was designed or run in this round.
-- No preregistration, raw artifact, historical result report, or experiment data was modified.
+- Current phase: hardware experiments **CLOSED**; paper scientific-audit / handoff maintenance phase
+- Historical audit scope completed on this branch: **Rounds 1–12 — FULL SCIENTIFIC AUDIT COMPLETE**
+- Current bounded action: **Round 1 revalidation on 2026-09-19** after mandatory Skill/Plugin rediscovery
+- Audit scope not yet authorized by this turn: manuscript prose, final figure production, or a new runtime/software experiment
+- No new hardware experiment was designed or run.
+- No preregistration, raw artifact, historical result report, or frozen experiment data was modified.
 
-### 0.1 Tool / Skill / Plugin discovery record — Stage A
+### 0.1 Tool / Skill / Plugin discovery record — Stage A revalidation (2026-09-19)
 
-Discovery was repeated at Stage A as required.
+Discovery was repeated before the repository-wide revalidation, as required. The current environment is **not identical** to the earlier audit environment: the Data Analytics skill family is now exposed, including dedicated analysis-validation and data-quality workflows. This changes the audit tooling record but **does not change scientific authority**: frozen experiment definitions and repository evidence remain controlling.
 
-#### Available Skills and advertised descriptions
+#### All currently visible installed Skills and advertised descriptions
 
-| Skill | Advertised description |
-|---|---|
-| Analytics Dashboard | Spreadsheet template for acquisition, engagement, retention, revenue, conversion funnel KPIs. |
-| Business Review | Presentation template for business performance, KPIs, segments, priorities, decisions, outlook. |
-| Design Report | Document template for executive summary, findings, implications, recommendations, appendix. |
-| Experiment Analysis | Document template for hypotheses, methodology, results, interpretation, limitations, next steps. |
-| Financial Budget | Spreadsheet template for actuals, budget, forecasts, variances, runway, departmental plans. |
-| Investment Committee Memo | Document template for investment thesis, transaction details, financial analysis, risks, recommendation. |
-| Legal Memorandum | Document template for issue, brief answer, facts, analysis, conclusion. |
-| Market Trends Report | Presentation template for market/industry trends, evidence, implications, responses. |
-| Minimal Letterhead | Document template for professional business letters. |
-| Operating Calendar | Spreadsheet template for annual/monthly operating milestones, launches, deadlines, recurring events. |
-| Operating Review | Presentation template for weekly scorecards, functional updates, risks, decisions, actions. |
-| Project Kickoff | Presentation template for goals, scope, roles, milestones, risks, working model. |
-| Project Tracker | Spreadsheet template for workstreams, tasks, owners, status, priority, dates, Gantt. |
-| Sales Pipeline | Spreadsheet template for opportunities, stages, owners, deal sizes, probabilities, forecasts, next steps, risks. |
-| Simple Dark Mode | General dark-mode presentation template. |
-| Simple Light Mode | General light-mode presentation template. |
-| Strategy Memorandum | Document template for strategic context, choices, rationale, risks, milestones, recommendation. |
-| System Design | Document template for architecture, requirements, components, data flows, APIs, tradeoffs, operations. |
-| Team Alignment | Presentation template for offsites/planning, goals, priorities, decisions, actions. |
-| Three-Statement Forecast | Spreadsheet template for integrated income statement, balance sheet, cash flow forecast. |
-| Template Creator | Create/update reusable artifact-template skills from reference artifacts. |
-| Presentation router | Routes explicitly selected presentation artifact requests to the preinstalled presentation capability. |
-| PDF router | Routes explicitly selected PDF artifact requests to the preinstalled PDF capability. |
-| Document router | Routes explicitly selected document artifact requests to the preinstalled document capability. |
-| Plugin Management | Inspect/manage plugin permissions, dependencies, connections/removal. |
-| Spreadsheet router | Routes explicitly selected spreadsheet artifact requests to the preinstalled spreadsheet capability. |
+| Skill | URI / family | Advertised description / role |
+|---|---|---|
+| analyze-data-quality | `skills://plugins/data-analytics/analyze-data-quality` | Investigate freshness, grain, missingness, duplicates, broken joins, schema drift, and conflicting structured-data results. |
+| build-dashboard | `skills://plugins/data-analytics/build-dashboard` | Build/update source-backed interactive dashboards. |
+| build-report | `skills://plugins/data-analytics/build-report` | Build polished analytical reports supported by inspectable evidence. |
+| convert-to-doc | `skills://plugins/data-analytics/convert-to-doc` | Convert an existing Data app into DOCX / Google Doc. |
+| convert-to-slides | `skills://plugins/data-analytics/convert-to-slides` | Convert an existing Data app into PowerPoint / Google Slides. |
+| create-data-context | `skills://plugins/data-analytics/create-data-context` | Create/update reusable analytical context, conventions, definitions, and preferences. |
+| design-kpis | `skills://plugins/data-analytics/design-kpis` | Design KPI definitions, targets, guardrails, and measurement plans. |
+| gather-business-context | `skills://plugins/data-analytics/gather-business-context` | Gather business context from connected/provided sources before analysis. |
+| index | `skills://plugins/data-analytics/index` | Router/index for Data analysis, diagnostics, data quality, sizing, dashboards, reports, charts, notebooks, and reusable context. |
+| jupyter-notebooks | `skills://plugins/data-analytics/jupyter-notebooks` | Create/edit/validate reproducible SQL/Python notebooks and audit trails. |
+| kpi-reporting | `skills://plugins/data-analytics/kpi-reporting` | Prepare KPI readouts, scorecards, WBR/MBR/QBR summaries. |
+| market-sizing | `skills://plugins/data-analytics/market-sizing` | Estimate TAM/SAM/SOM and opportunity size with transparent assumptions. |
+| metric-diagnostics | `skills://plugins/data-analytics/metric-diagnostics` | Diagnose metric changes, anomalies, gaps, and discrepancies. |
+| product-business-analysis | `skills://plugins/data-analytics/product-business-analysis` | Support product/business decisions with metric-backed evidence. |
+| publish-artifact-to-sites | `skills://plugins/data-analytics/publish-artifact-to-sites` | Publish an existing Data report/dashboard to Sites. |
+| report-to-pdf | `skills://plugins/data-analytics/report-to-pdf` | Create PDF from an existing Data report/dashboard. |
+| schedule-refresh-jobs | `skills://plugins/data-analytics/schedule-refresh-jobs` | Schedule recurring refresh for existing Data artifacts. |
+| share-artifact-summary | `skills://plugins/data-analytics/share-artifact-summary` | Share a concise summary of a Data report/dashboard/chart. |
+| validate-data | `skills://plugins/data-analytics/validate-data` | Validate methodology, sources, calculations, visuals, conclusions, and supported repairs. |
+| visualize-data | `skills://plugins/data-analytics/visualize-data` | Design/build/revise/verify quantitative charts and figures for durable artifacts. |
+| Analytics Dashboard template | `skills://plugins/openai-templates/artifact-template-analytics-dashboard` | Spreadsheet template for acquisition, engagement, retention, revenue, and conversion KPIs. |
+| Business Review template | `skills://plugins/openai-templates/artifact-template-business-review` | Presentation template for business performance, KPIs, priorities, and decisions. |
+| Design Report template | `skills://plugins/openai-templates/artifact-template-design-report` | Document template for findings, implications, recommendations, and appendix. |
+| Experiment Analysis template | `skills://plugins/openai-templates/artifact-template-experiment-analysis` | Document template for hypotheses, methodology, results, interpretation, limitations, next steps. |
+| Financial Budget template | `skills://plugins/openai-templates/artifact-template-financial-budget` | Spreadsheet template for actuals, budget, scenarios, variances, and runway. |
+| Investment Committee Memo template | `skills://plugins/openai-templates/artifact-template-investment-committee-memo` | Document template for investment thesis, analysis, risks, and recommendation. |
+| Legal Memorandum template | `skills://plugins/openai-templates/artifact-template-legal-memorandum` | Document template for issue, answer, facts, analysis, conclusion. |
+| Market Trends Report template | `skills://plugins/openai-templates/artifact-template-market-trends-report` | Presentation template for market/industry trends and supporting evidence. |
+| Minimal Letterhead template | `skills://plugins/openai-templates/artifact-template-minimal-letterhead` | Document template for professional business letters. |
+| Operating Calendar template | `skills://plugins/openai-templates/artifact-template-operating-calendar` | Spreadsheet template for milestones, campaigns, launches, deadlines. |
+| Operating Review template | `skills://plugins/openai-templates/artifact-template-operating-review` | Presentation template for operating scorecards, risks, decisions, actions. |
+| Project Kickoff template | `skills://plugins/openai-templates/artifact-template-project-kickoff` | Presentation template for goals, scope, roles, milestones, and risks. |
+| Project Tracker template | `skills://plugins/openai-templates/artifact-template-project-tracker` | Spreadsheet template for workstreams, tasks, owners, dates, status, and Gantt. |
+| Sales Pipeline template | `skills://plugins/openai-templates/artifact-template-sales-pipeline` | Spreadsheet template for opportunities, stages, probabilities, forecasts, risks. |
+| Simple Dark Mode template | `skills://plugins/openai-templates/artifact-template-simple-dark-mode` | General dark-mode presentation template. |
+| Simple Light Mode template | `skills://plugins/openai-templates/artifact-template-simple-light-mode` | General light-mode presentation template. |
+| Strategy Memorandum template | `skills://plugins/openai-templates/artifact-template-strategy-memorandum` | Document template for strategic choices, rationale, risks, and milestones. |
+| System Design template | `skills://plugins/openai-templates/artifact-template-system-design` | Document template for architecture, requirements, components, flows, APIs, and tradeoffs. |
+| Team Alignment template | `skills://plugins/openai-templates/artifact-template-team-alignment` | Presentation template for goals, priorities, decisions, and action items. |
+| Three-Statement Forecast template | `skills://plugins/openai-templates/artifact-template-three-statement-forecast` | Spreadsheet template for integrated income statement, balance sheet, cash flow. |
+| Template Creator | `skills://plugins/template-creator/template-creator` | Create/update reusable artifact-template skills from reference artifacts. |
+| Presentation router | `skills://plugins/presentations-router/presentation` | Route explicitly selected presentation tasks. |
+| PDF router | `skills://plugins/pdf-router/pdf` | Route explicitly selected PDF tasks. |
+| Document router | `skills://plugins/documents-router/document` | Route explicitly selected document tasks. |
+| Plugin Management | `skills://plugins/plugin-management/plugin-management` | Discover/manage plugins, permissions, connections, and dependencies. |
+| Spreadsheet router | `skills://plugins/spreadsheets-router/spreadsheet` | Route explicitly selected spreadsheet tasks. |
 
-#### Candidate Skill inspection
+#### Candidate Skill instructions inspected for this Stage A revalidation
 
-1. **Experiment Analysis**
+1. **validate-data**
+   - URI: `skills://plugins/data-analytics/validate-data/skill.md`
+   - Instructions read in full; deep-review reference also inspected.
+   - Why applicable: this is an explicit scientific-analysis audit. The workflow requires recovering the question/evidence, checking methodology/data fitness, independently verifying consequential calculations when needed, separating causal mechanisms from supported associations, and reporting unresolved verification honestly.
+   - Used for: **Round 1 revalidation workflow discipline only**. This round is status/staleness-focused, so no wholesale recomputation was repeated.
+   - Cannot solve: Git provenance by itself, raw artifact SHA identity by itself, preregistration authority, cross-platform causal attribution, novelty, or scientific claims unsupported by repository evidence.
+   - Boundary: it is an audit workflow aid, not a scientific authority that can override frozen definitions or repository evidence.
+
+2. **analyze-data-quality**
+   - URI: `skills://plugins/data-analytics/analyze-data-quality/skill.md`
+   - Instructions read in full.
+   - Why applicable: useful for targeted checks of source freshness, grain, completeness, duplicate/conflicting outputs, and lineage risks in processed/raw structured experiment data.
+   - Used for: **scoped companion methodology**. No new broad raw-data profile was launched in Round 1 because the bounded task is repository final status/stale documents.
+   - Cannot solve: claim admissibility, causal interpretation, Git commit provenance, paper novelty, or whether an execution path satisfies the frozen correctness contract without the underlying experiment evidence.
+
+3. **Experiment Analysis template**
    - URI: `skills://plugins/openai-templates/artifact-template-experiment-analysis/skill.md`
-   - Full instructions inspected in Round 1.
-   - Relevant idea: hypothesis/method/result/interpretation/limitation structure.
-   - Round use: **evaluated but not invoked as a template**. The Skill is an artifact-generation workflow, not a scientific-audit engine, and this task requires a repository Markdown ledger.
+   - Instructions read in full.
+   - Why considered: its hypothesis/method/result/limitation structure is relevant to experiment organization.
+   - Used for: **not invoked as an artifact template**. The task requires a repository Markdown scientific ledger, not a styled document.
    - Cannot solve: Git provenance, SHA/integrity validation, raw→analysis→report lineage, cross-platform causality, bootstrap correctness, novelty.
 
-2. **System Design**
+4. **System Design template**
    - URI: `skills://plugins/openai-templates/artifact-template-system-design/skill.md`
-   - Full instructions inspected in Round 1.
-   - Stage fit: reserve for Stage D runtime/software co-design after the hardware audit is scientifically frozen.
-   - Round use: **not used for Stage A conclusions**.
-   - Cannot solve: retrospective scientific validity, correctness-admissibility, experimental provenance, causal attribution.
+   - Instructions read in full.
+   - Stage fit: Stage D runtime/software co-design only, after hardware evidence is frozen.
+   - Used for Round 1: **not used for scientific conclusions**.
+   - Cannot solve: retrospective scientific validity, experimental provenance, correctness-admissibility, causal attribution.
 
-3. **Design Report**
-   - URI: `skills://plugins/openai-templates/artifact-template-design-report/skill.md`
-   - Full instructions inspected in Round 1.
-   - Stage fit: possible later reporting/layout aid only.
-   - Round use: **not invoked**.
-   - Cannot solve: experiment validation, evidence authority, statistical correctness, provenance.
+#### Plugin / repository / statistics / research capability discovery
 
-#### Plugin / tool capability status
+- **GitHub connector:** installed, connected, and used directly for private repository read/write operations.
+- Repository access: push and pull are available; `main` was not modified.
+- Plugin directory search was repeated for scientific/reproducibility/statistics/academic-paper/figure capabilities.
+- **Scite:** available in directory but not installed; potentially useful in Stage E for literature/citation-context checks. Not needed for Round 1 repository status.
+- **Wolfram:** available in directory but not installed; potentially useful in Stage B for independent mathematical/statistical verification. Not needed for Round 1 status audit.
+- **Hugging Face:** available in directory but not installed; potentially useful for model/dataset metadata checks if a future provenance question requires it.
+- General Python statistical computation remains available for deterministic recomputation, but no Round-1 headline recomputation was necessary because this bounded pass verified repository status and living-document consistency.
+- Document/report/figure skills are presentation aids and do not supersede repository evidence.
 
-- GitHub connector: **available and connected** to private repository `leecdiang/HeteroSpec`; read and write permissions confirmed.
-- Repository tools used in Round 1: repo metadata, commit search, PR inspection, branch creation, file read/write.
-- Dedicated statistics/CI/bootstrap Skill or plugin: **none exposed in the current environment**.
-- General Python statistical computation is available, but no recomputation was required in Round 1; Stage B/Round 7 must rediscover tools before use.
-- Dedicated scientific reproducibility/evidence-audit Skill: **none exposed**.
-- Document/research capabilities exist, but none supersede repository evidence.
-- Stage-A authority therefore remains: frozen definitions + repository evidence + evidence ledger + claim taxonomy.
+**Stage-A authority for scientific truth remains:** frozen experiment definitions + repository evidence + claim taxonomy + evidence ledger + explicit uncertainty/limitations.
 
-### 0.2 Tool / Skill rediscovery — Stage C (unified mechanism/formula)
+### 0.2 Historical Stage C rediscovery — unified mechanism/formula
 
-Rediscovery was repeated before Round 6.
+- Skill discovery was repeated before Round 6 in the prior audit sequence.
+- The audit concluded that no template or plugin could establish a cost identity or measured-variable semantics independently of runtime evidence.
+- Round-6 authority therefore remained frozen runtime semantics, measured decompositions, mechanism controls, and algebraic consistency with end-to-end observations.
+- The key scientific correction from that round is preserved in Section 5: `V_k^micro` is a target-forward batching proxy and must not be silently substituted for complete realized target-side round cost.
 
-- Available Skill catalog was re-listed; no new scientific-analysis Skill appeared.
-- Full instructions were re-read for **Experiment Analysis** and **System Design**.
-- Both remain artifact-template workflows. They can structure later documentation but cannot establish a cost identity, determine which variables are actually measured, or justify causal/mechanistic claims.
-- No dedicated mechanism-model or performance-model plugin was exposed.
-- Round-6 authority therefore remained the frozen runtime semantics, measured decompositions, mechanism controls, and algebraic consistency with end-to-end observations.
+### 0.3 Historical Stage B rediscovery — statistics / confidence intervals
 
-### 0.3 Tool / Skill rediscovery — Stage B (statistics / confidence intervals)
+- Skill discovery was repeated before Round 7 in the prior audit sequence.
+- Statistical validation used repository analysis code plus independent deterministic recomputation of frozen prompt-level vectors.
+- The current environment now exposes `validate-data` and `analyze-data-quality`, but this does **not** invalidate or alter the earlier numerical audit; those skills would be workflow aids if Round 7 were rerun.
+- No preregistered estimator or historical report is changed by current tool availability.
 
-Rediscovery was repeated before Round 7.
+### 0.4 Historical Stages D/E/F/G rediscovery
 
-- Available Skills were re-listed; relevant candidates remained **Experiment Analysis** and **Analytics Dashboard**, both presentation/artifact aids rather than statistical authorities.
-- Full Experiment Analysis instructions were re-read.
-- No dedicated bootstrap/CI/statistical-validation Skill or plugin was exposed.
-- Statistical audit therefore used direct inspection of repository analysis code plus independent deterministic recomputation of the frozen prompt-level vectors.
-- This rediscovery did not authorize changing any preregistered estimator or historical report.
-
-### 0.4 Tool / Skill rediscovery — Stages D/E/F/G
-
-Rediscovery was repeated before the final runtime-design, synthesis, figure-plan, and adversarial-review stages.
-
-- The Skill catalog was re-listed.
-- Full instructions were re-read for **System Design**, **Experiment Analysis**, and **Design Report**.
-- All three remain artifact-template workflows. They may help later document production but do not determine scientific validity, novelty, figure truthfulness, or reviewer severity.
-- No dedicated scientific peer-review, figure-validation, or causal-inference Skill was exposed.
-- Stage D therefore remained a bounded future-design audit only; no runtime implementation or new experiment was authorized.
-- Stage E synthesis used the frozen evidence ledger plus a current literature check.
-- Stage F figure planning was constrained to quantities already audited; no plot is allowed to imply cross-platform hardware ranking.
-- Stage G adversarial review used the repository evidence, protocol deviations, provenance limitations, statistical audit, and current related-work check rather than a template-generated score.
+- Previous rediscovery before runtime-design, synthesis, figure-plan, and adversarial-review stages found no tool that superseded repository evidence.
+- Stage D remained a bounded future-design audit; no implementation was added.
+- Stage E synthesis used the evidence ledger plus literature review.
+- Stage F figure planning was limited to audited quantities and avoids cross-platform hardware ranking.
+- Stage G adversarial review used repository evidence, protocol deviations, provenance limitations, statistics, and related work rather than template-generated scoring.
+- If any of Stages D/E/F/G are reopened, discovery must be repeated again because the environment has changed since those historical passes.
 
 ## 1. Project status
 
 ### Hardware study status
 
-**CLOSED** under the currently frozen hardware campaigns.
+**CLOSED** under the frozen campaigns.
 
-| Platform | Final status | Round-1 bounded interpretation |
+| Platform | Final status | Bounded interpretation |
 |---|---|---|
-| MacBook Air M4 / Metal | CLOSED | Representative 24Q negative; separately preregistered HumanEval30 fixed-k=2 exact profitable regime exists. Workload-conditioned, not general. |
-| Core Ultra 9 275HX + RTX 5070 Ti Laptop / CUDA | CLOSED | Heterogeneous and exact same-GPU HumanEval controls are negative. Cheap batched raw verification exists but is not correctness-admissible under the frozen token-exact contract. |
+| MacBook Air M4 / llama.cpp Metal | CLOSED | Representative frozen Spec-Bench 24Q negative; separately preregistered HumanEval30 fixed-k=2 exact profitable regime exists. Workload-conditioned, not general. |
+| Core Ultra 9 275HX + RTX 5070 Ti Laptop / CUDA | CLOSED | CPU→RTX and exact same-GPU HumanEval controls are negative. Cheap batched raw verification exists but is not correctness-admissible under the frozen token-exact contract. |
 | Core i5-13400 + Arc B570 / Vulkan | CLOSED | Fast path fails correctness; serialized fallback improves exactness but remains non-universal. No tested B570 path is a correctness-admissible optimization result. |
-| Core Ultra X7 358H + Arc B390 target + CPU/NPU OpenVINO draft | CLOSED | CPU and NPU paths are token-exact but unprofitable; CPU is verification-bound, NPU is realized state/replay+proposal bound. |
+| Core Ultra X7 358H + Arc B390 target + CPU/NPU OpenVINO draft | CLOSED | CPU and NPU paths are token-exact but unprofitable; CPU is target-verification-bound, NPU is realized state/replay+proposal bound. |
 
 ### Software/runtime study status
 
-- Not started as a new formal contribution.
-- Runtime design opportunities are recorded only as evidence-derived future work.
-- No state-reuse implementation, profitability controller, adaptive-k controller, or correctness-aware path selector is currently a measured paper contribution.
+- No new formal runtime/software contribution has been started.
+- Runtime design opportunities are evidence-derived future work only.
+- Persistent draft state, rollback/reuse, profitability controller, adaptive-k, correctness-aware path selection, and device selection are **not measured paper contributions** in the closed hardware study.
 
 ### Paper status
 
-- Scientific framework audit **COMPLETE through Round 12**; handoff is frozen for manuscript drafting unless new evidence appears.
-- Final title: not frozen; title wording may change without changing scientific claims.
-- Final contribution count/order: **FROZEN by Round 12** (see Section 4).
-- Manuscript prose: intentionally not produced by this audit.
-- The previous paper workspace was created before 358H Phase 3 merged and contains stale provisional language; living status docs are being synchronized separately on this audit branch.
+- The existing audit branch completed Rounds 1–12 and froze the scientific thesis/contribution ordering for drafting.
+- This 2026-09-19 action is only a **Round 1 repository-status revalidation** and does not reopen or overturn later rounds.
+- Final title remains unfrozen; wording may change without changing scientific claims.
+- Manuscript prose has intentionally not been produced by this audit task.
+- `main` still contains several stale pre-Phase3 paper-control documents; the audit branch already carries the synchronized replacements.
 
 ## 2. Research question candidates
 
@@ -152,74 +175,65 @@ Primary candidate:
 
 > Under what correctness, verification-amortization, realized draft-state cost, and workload conditions does speculative decoding become profitable on consumer hardware?
 
-Secondary decompositions:
+Supporting questions:
 
 - When does a physically fast target-verification path remain usable after the frozen correctness contract is applied?
 - When does isolated draft-device throughput fail to predict realized end-to-end draft cost?
-- How much committed work per speculative round is needed to amortize draft + admissible verification + residual runtime cost?
+- How much committed work per speculative round is required to amortize realized draft + complete target-side + residual runtime cost?
 
-Do **not** reduce the paper question to “does heterogeneous speculative decoding work?” The repository supports regime analysis, not a universal binary verdict.
+Do not reduce the paper question to “does heterogeneous speculative decoding work?”. The evidence supports **regime characterization**, not a universal binary verdict.
 
-## 3. Final frozen thesis
+## 3. Current leading / frozen scientific thesis
 
-**FROZEN by Round 12.**
+Frozen by the prior Round-12 audit; unchanged by the current Round-1 revalidation:
 
 > On the tested consumer systems, speculative decoding is profitable only when a **correctness-admissible execution path** and the **realized stateful draft interface** keep total per-round cost below the progress actually committed by that round. Acceptance rate and isolated draft throughput are insufficient summaries because the usable verification path can change after exactness filtering, and runtime state reconstruction can dominate a nominally fast draft device.
 
-The evidence supports four distinct regimes rather than a universal platform ranking:
+Four observed regimes:
 
-1. **Profitable + exact:** M4 / llama.cpp Metal on the separately preregistered HumanEval code-conditioned fixed-k2 workload, 1.387x [1.351, 1.422], 90/90 exact.
-2. **Exact but unprofitable:** representative M4 24Q, RTX serialized controls, and 358H CPU/NPU.
-3. **Physically fast but correctness-inadmissible:** RTX CUDA batched ubatch=2; B570 fast Vulkan path.
-4. **State-interface bound:** 358H NPU, where full committed-prefix replay + proposal dominates realized draft cost despite favorable isolated NPU steady-state throughput.
+1. **Profitable + exact:** M4 / llama.cpp Metal, separately preregistered HumanEval code-conditioned fixed-k=2, 1.387x [1.351, 1.422], 90/90 exact.
+2. **Exact but unprofitable:** M4 representative 24Q, RTX serialized HumanEval controls, 358H CPU/NPU.
+3. **Physically fast but correctness-inadmissible:** RTX CUDA batched `ubatch=2`; B570 fast Vulkan path.
+4. **State-interface bound:** 358H NPU, where full committed-prefix replay + proposal dominates realized draft cost despite favorable isolated NPU throughput.
 
 The thesis is explicitly **not**:
-- “heterogeneous speculative decoding is new”;
-- “acceptance is not enough” as a standalone novelty claim;
-- “M4 wins because of unified memory”;
-- “CUDA/Vulkan is broken”;
-- “NPU hardware is unsuitable”.
+- heterogeneous speculative decoding is new;
+- acceptance is not enough as a standalone novelty claim;
+- M4 wins because of unified memory;
+- CUDA/Vulkan is broken;
+- NPU hardware is unsuitable.
 
-The strongest systems claim is the **correctness-constrained realized-cost discipline** backed by cross-platform mechanism evidence.
-## 4. Final frozen contributions
+## 4. Candidate / frozen contributions
 
-Contribution order is frozen for manuscript drafting.
+Contribution order frozen by the prior Round 12; current revalidation found no status evidence requiring a change.
 
 1. **Auditable cross-platform characterization of speculative-decoding regimes on four consumer systems.**
-   - Four closed campaigns preserve positive, negative, correctness-blocked, and state-interface-bound outcomes.
-   - The comparison is mechanism triangulation across heterogeneous stacks, not a controlled hardware leaderboard.
-   - Bounded novelty: the contribution is the disciplined comparative evidence, **not** the existence of heterogeneous speculative decoding.
+   - positive, negative, correctness-blocked, and state-interface-bound outcomes are all retained;
+   - mechanism triangulation, not a controlled hardware leaderboard.
 
 2. **Correctness-constrained realized-cost accounting.**
-   - Separates complete realized round costs `D_real + R_target + X` from the target-forward microbenchmark proxy `V_k^micro`.
-   - Separates committed progress `C` from historical accepted-draft-tokens/round.
-   - Treat as an accounting/diagnostic framework, not a new universal predictive theory; prior work already contains SD performance models and theoretical bounds.
+   - distinguish complete realized round cost `D_real + R_target + X` from target-forward microbenchmark proxy `V_k^micro`;
+   - distinguish committed progress `C` from accepted draft tokens/round;
+   - treat as accounting/diagnostic discipline, not a universal new theory.
 
-3. **Empirical evidence that correctness filtering can change the usable verification path.**
-   - RTX: near-one-step batched verification is physically available but fails the frozen token-exact gate; the tested exact control is near-serialized and negative.
-   - B570: serialization itself still does not guarantee global exactness.
-   - Claim remains runtime/configuration/workload bounded.
+3. **Empirical evidence that correctness filtering changes the usable verification path.**
+   - RTX: near-one-step batched verification is physically available but violates the frozen exactness contract; the tested exact control is near-serialized and negative;
+   - B570: serialization itself does not guarantee global exactness.
 
 4. **Empirical evidence that the realized state interface can erase isolated draft-device advantage.**
-   - 358H NPU proposal calls reconstruct the complete committed prefix; replay+proposal is 58.35% of measured speculative time.
+   - 358H NPU proposal calls reconstruct the complete committed prefix; replay+proposal is 58.35% of measured speculative time;
    - CPU remains target-verification dominated.
-   - This is a statement about the qualified OpenVINO/adapter interface, not NPU compute capability in general.
 
 5. **A preregistered workload-conditioned positive regime retained alongside a representative negative result.**
-   - M4 HumanEval fixed-k2 demonstrates an exact profitable regime.
-   - M4 representative 24Q remains negative.
-   - This supports selective/runtime-aware deployment rather than a platform-wide win claim.
+   - M4 HumanEval fixed-k2 positive;
+   - M4 representative 24Q negative;
+   - supports selective/runtime-aware deployment rather than a platform-wide win claim.
 
-Artifact/provenance quality is a supporting strength, not a standalone scientific novelty claim.
+Artifact/provenance quality is a supporting strength, not a standalone novelty claim.
+
 ## 5. Unified analytical framework
 
-### 5.1 Final accounting distinction after Round 6
-
-Round 6 found that the earlier draft of this handoff used one symbol too broadly. A target-forward microbenchmark such as `PP2/PP1` does **not** necessarily include all target-side work performed by a complete speculative round. In particular, correction/bonus decoding and state actions may occur outside the measured proposal-verification block.
-
-The paper must therefore separate **realized round accounting** from a **microbenchmark batching proxy**.
-
-#### End-to-end realized accounting
+### 5.1 Realized round accounting
 
 For one realized speculative round:
 
@@ -230,13 +244,13 @@ S_round =
     T_d(real) + T_target,round(real) + T_x
 ```
 
-Normalized by one matched baseline target-token cost `T_b`:
+Normalize by matched baseline target-token cost `T_b`:
 
 ```text
 S_round = C / [D_real + R_target + X]
 ```
 
-with break-even:
+Break-even:
 
 ```text
 C > D_real + R_target + X
@@ -244,18 +258,18 @@ C > D_real + R_target + X
 
 Definitions:
 
-- `T_b`: matched target-only baseline cost per output token within the same timing boundary.
-- `T_d(real)`: realized draft-subsystem cost per speculative round through the actual state interface. It can include replay/reconstruction when the runtime performs it.
-- `T_target,round(real)`: **complete realized target-side cost per speculative round**, including the target work actually executed for proposal verification and any correction/bonus behavior included by that runtime.
-- `T_x`: measured/derived residual not already included above.
-- `C`: all output tokens committed by the round, including target correction/bonus behavior.
-- `D_real=T_d(real)/T_b`, `R_target=T_target,round(real)/T_b`, and `X=T_x/T_b`.
+- `T_b`: matched target-only baseline cost per output token under the same timing boundary.
+- `T_d(real)`: realized draft-subsystem cost through the actual state interface; may include replay/reconstruction when execution does so.
+- `T_target,round(real)`: complete realized target-side cost per speculative round, including verification and any target correction/bonus behavior inside the measured runtime boundary.
+- `T_x`: residual cost not already included above.
+- `C`: all output tokens committed by the round, including correction/bonus behavior.
+- `D_real=T_d(real)/T_b`, `R_target=T_target,round(real)/T_b`, `X=T_x/T_b`.
 
-This is an accounting identity when all components are measured under the same boundary. It is not a claim that every platform exposes every term directly.
+This is an accounting identity when components share a boundary; it does not imply every platform exposes every term independently.
 
-#### Target-forward microbenchmark proxy
+### 5.2 Target-forward microbenchmark proxy
 
-Separately define:
+Separately:
 
 ```text
 V_k^micro(n,e) =
@@ -264,230 +278,217 @@ V_k^micro(n,e) =
     T_target_decode(1,n)
 ```
 
-This is a **batching-efficiency / verification-opportunity proxy**. It is useful for diagnosing whether a backend can evaluate a width-`k` causal block for near one target step.
+Interpretation:
+- mechanism / batching-efficiency proxy;
+- still subject to correctness filtering;
+- **not** automatically equal to complete realized `R_target`;
+- a physically fast path failing exactness is not an admissible optimization path.
 
-Correctness filtering still applies:
+Platform interpretation:
+- M4: `V_2^micro≈1.02–1.08` demonstrates cheap exact width-two target-forward batching.
+- RTX: batched `V_2^micro≈0.98–1.01` is cheap but correctness-blocked; serialized exact control `≈2.14–2.43`.
+- B570: historical serialized `PP2/PP1≈1.98–1.99` is diagnostic and not globally exact on HumanEval30.
+- 358H: Phase 3 directly measures the complete target-side interval and provides the cleanest realization of `R_target`.
 
-- a fast execution path that fails the frozen token-exact gate is not an admissible optimization path;
-- if no tested path passes the workload-level correctness contract, there is no correctness-admissible end-to-end optimization result.
-
-However, `V_k^micro` must **not** be substituted for `R_target` unless the measured microbenchmark is shown to include all target work in the realized round.
-
-### 5.2 Why the distinction is necessary
-
-- **M4 / Metal:** `V_2^micro≈1.02–1.08` demonstrates cheap exact width-two target-forward batching, but it does not by itself measure the entire speculative target-side round.
-- **RTX / CUDA:** batched `V_2^micro≈0.98–1.01` is physically cheap but correctness-blocked; serialized `V_2^micro≈2.14–2.43` is an exact control. These values diagnose the verification-path change; they are not complete end-to-end round accounting.
-- **B570 / Vulkan:** the historical serialized `PP2/PP1≈1.98–1.99` is a diagnostic microbenchmark and the path is not globally token-exact on HumanEval30.
-- **358H:** Phase 3 directly measures the complete target-side interval and therefore provides the cleanest realization of `R_target`.
-
-Using arithmetic totals for the 358H campaign:
+358H aggregate accounting check:
 
 | Path | `C` | `D_real` | `R_target` | `X` | `C/(D+R+X)` | Aggregate baseline/spec ratio |
 |---|---:|---:|---:|---:|---:|---:|
 | CPU draft | 2.4631 | 0.4304 | 2.9767 | 0.00124 | 0.7227 | 0.7227 |
 | NPU draft | 2.4584 | 4.1251 | 2.9435 | 0.00130 | 0.3477 | 0.3477 |
 
-These aggregate identities use arithmetic totals/means and therefore are **not expected to equal** the paper's prompt-level geometric-mean speedups (0.734x and 0.352x). Aggregation level must always be stated.
+These ratio-of-totals values are not expected to equal prompt-level geometric-mean headline speedups 0.734x/0.352x; aggregation level must be explicit.
 
 ### 5.3 Committed work versus accepted draft tokens
 
-Round 6 strengthens the distinction between acceptance and committed progress.
+- 358H records `C` directly: 2.4631 CPU and 2.4584 NPU.
+- Historical M4/RTX `accepted_per_round` fields count accepted **draft** tokens/round and are not `C`.
+- M4 effective output progress reconstructed from runtime counters is descriptive only; do not promote it to the same measurement status as direct 358H `C`.
+- High acceptance therefore cannot substitute for committed progress in the accounting model.
 
-- 358H records `C` directly from round traces: 2.4631 CPU and 2.4584 NPU.
-- Historical M4/RTX fields named `accepted_per_round` count accepted **draft** tokens/round and are not `C`.
-- M4 raw HumanEval records allow a boundary-affected reconstructed quantity `output_tokens_runtime / verification_rounds`:
-  - fixed k2 weighted ≈2.8264 output tokens/reported verification round;
-  - p_min=.8 ≈2.6764;
-  - p_min=.9 ≈2.6059.
-- Because initial/final runtime effects make `output_tokens - accepted_tokens - rounds` vary by 0–2, these M4 values are **reconstructed effective progress**, not promoted to the same direct-measurement status as 358H `C`.
-- The fact that p_min conditions have higher acceptance but lower reconstructed effective progress is additional evidence that acceptance rate alone cannot stand in for committed progress.
+### 5.4 Formula complexity rule
 
-### 5.4 Formula complexity decision
-
-Keep `T_d(real)` aggregated. Do not invent separately measured replay, reconstruction, rollback, transfer, or correction terms where the frozen runtime did not expose them.
-
-The unified contribution is therefore an **accounting discipline**:
-1. measure realized draft-state cost,
-2. measure the complete realized target-side round cost when available,
-3. use microbenchmark `V_k^micro` only as a mechanism proxy,
-4. enforce correctness before admitting a path,
-5. compare cost against realized committed progress `C`.
+Keep `T_d(real)` aggregated unless frozen evidence exposes a finer term without changing execution. Do not invent separately measured replay, rollback, reconstruction, transfer, or correction terms for platforms where they were not measured.
 
 ## 6. Platform regime map
 
 ### M4 / Metal
 
-- Frozen representative Spec-Bench 24Q: 0.842x, 95% CI [0.809, 0.877], 72/72 exact, 1/24 prompts faster.
-- Package energy ratio 0.678x; baseline 1.206 vs k2 1.729 package J/output-token.
-- Separate preregistered HumanEval30 primary fixed-k=2: 1.387x [1.351, 1.422], 30/30 faster, 90/90 exact, 90.1% mean acceptance, 1.798 accepted draft tokens/round.
-- HumanEval fixed-k=2 package efficiency 1.013x [0.990, 1.034]: energy-neutral within uncertainty.
-- Registered p_min=0.9 secondary package efficiency 1.041x [1.018, 1.065].
+- Representative frozen Spec-Bench 24Q: **0.842x**, 95% CI **[0.809, 0.877]**, 72/72 exact, 1/24 prompts faster.
+- Package efficiency ratio: 0.678x; baseline 1.206 vs k2 1.729 package J/output-token.
+- Separately preregistered HumanEval30 fixed-k=2: **1.387x [1.351, 1.422]**, 30/30 faster, 90/90 exact, mean acceptance ≈90.1%, accepted draft tokens/round ≈1.798.
+- HumanEval fixed-k2 package efficiency 1.013x [0.990, 1.034]: **energy-neutral within uncertainty**.
+- Registered p_min=0.9 secondary package efficiency: 1.041x [1.018, 1.065].
 - Safe interpretation: profitable exact **code-conditioned** regime exists; representative workload did not generalize it.
-- Corrected synthetic ceiling from preregistration: NOT EXECUTED; older exploratory synthetic data cannot substitute.
+- Corrected synthetic ceiling from preregistration: **NOT EXECUTED**; older exploratory synthetic data cannot substitute.
 
 ### RTX 5070 Ti Laptop / CUDA
 
 - Platform closed.
 - 60Q pilot negative across k; 0–1/60 prompts faster depending on k.
 - HumanEval exact serialized controls:
-  - CPU→RTX: 0.404x [0.390, 0.418], 90/90 exact, 0/30 faster, 91.31% acceptance.
-  - RTX→RTX: 0.650x [0.629, 0.673], 90/90 exact, 0/30 faster, 91.21% acceptance.
-- Raw CUDA ubatch=2 V2 ≈ 0.983–1.009 but fails frozen exactness on stable HumanEval/106 reproduction.
-- Exact ubatch=1 V2 ≈ 2.137–2.431.
-- Logit ordering flip reproduced at the first divergence; this supports batch-shape-dependent numerical argmax change, not a universal CUDA defect.
-- Safe interpretation: transfer matters but does not solely explain the negative result; correctness filtering removes the fast verification path in this frozen configuration.
+  - CPU→RTX: **0.404x [0.390, 0.418]**, 90/90 exact, 0/30 faster, 91.31% acceptance.
+  - RTX→RTX: **0.650x [0.629, 0.673]**, 90/90 exact, 0/30 faster, 91.21% acceptance.
+- Raw CUDA `ubatch=2` `V_2^micro≈0.983–1.009` but frozen exactness fails on a stable HumanEval/106 reproduction.
+- Exact `ubatch=1` `V_2^micro≈2.137–2.431`.
+- Stable logit ordering flip supports a batch-shape-dependent numerical argmax change, not a universal CUDA defect.
+- Safe interpretation: transfer is not the sole cause; correctness filtering removes the fast verification path in this frozen configuration.
 
 ### Arc B570 / Vulkan
 
 - Platform closed after one preregistered serialized fallback candidate.
 - Fast path: 45/90 exact pairs; speedup 0.5383x diagnostic; V2(512)=1.2426, V2(2048)=1.6373.
-- Serialized fallback: 60/90 exact pairs; 20/30 wholly exact prompts; speedup 0.3087x [0.2927, 0.3246] diagnostic; 0/30 faster.
-- Serialized verification proxy: 1.9827 at 512 and 1.9917 at 2048.
-- Board-energy efficiency ratio 0.3023x [0.2846, 0.3202]; boundary is Arc B570 adapter board only.
-- **Terminology warning:** historical reports label the serialized proxy `V2_exact`, but full-workload correctness is not universal. Paper-facing terminology should be `V2_serialized` / serialized fallback verification factor unless a later correctness audit justifies a narrower exact qualifier.
+- Serialized fallback: 60/90 exact pairs; 20/30 wholly exact prompts; speedup **0.3087x [0.2927, 0.3246]** diagnostic; 0/30 faster.
+- Serialized verification proxy: 1.9827 at 512; 1.9917 at 2048.
+- Board-energy efficiency ratio 0.3023x [0.2846, 0.3202]; Arc B570 board boundary only.
+- Historical reports use `V2_exact`; paper-facing term is **serialized fallback verification factor / `V2_serialized`** unless an explicitly bounded exact subset is named.
 - Safe interpretation: no tested B570 path qualifies as a correctness-admissible optimization result.
 
-### 358H CPU / NPU + B390 Vulkan target
+### Core Ultra X7 358H + Arc B390 target + CPU/NPU OpenVINO draft
 
-- Phase 0–3 scientific execution complete and merged to main.
+- Phase 0–3 scientific execution complete and merged to `main`.
 - Stage-A gate: CPU 18/18 exact; NPU 18/18 exact.
 - HumanEval30:
-  - CPU: 0.734x [0.693, 0.771], 90/90 exact, 0/30 faster.
-  - NPU: 0.352x [0.333, 0.369], 90/90 exact, 0/30 faster.
+  - CPU: **0.734x [0.693, 0.771]**, 90/90 exact, 0/30 faster.
+  - NPU: **0.352x [0.333, 0.369]**, 90/90 exact, 0/30 faster.
 - Acceptance / committed work:
   - CPU 75.31%, C=2.463.
   - NPU 75.13%, C=2.458.
 - Decomposition:
   - CPU: replay+proposal 12.63%, target verification 87.34%, residual 0.04%.
   - NPU: replay+proposal 58.35%, target verification 41.63%, residual 0.02%.
-- End-to-end energy is not claimed; NPU is not admissible.
-- Reconstructed draft source identity remains STRONGLY_SUPPORTED, not proven exact upstream identity.
+- End-to-end energy is not claimed; NPU energy is not admissible.
+- Reconstructed draft source identity remains **STRONGLY_SUPPORTED**, not proven exact upstream identity.
 - Safe interpretation: current OpenVINO/state interface erases isolated NPU draft-throughput advantage through full-prefix replay+proposal; do not generalize to NPUs.
 
 ## 7. Claim taxonomy
 
-| Claim ID | Candidate wording | Status | Platforms | Key evidence | Limitation / reviewer risk | Suggested paper placement |
+| Claim ID | Candidate wording | Status | Platforms | Quantitative support | Limitation / reviewer risk | Paper placement |
 |---|---|---|---|---|---|---|
 | C-M4-01 | A preregistered exact profitable fixed-k=2 regime exists on M4 for the frozen HumanEval code-conditioned workload. | PRIMARY | M4 | 1.387x [1.351,1.422], 90/90 exact, 30/30 faster | workload-conditioned; no functional pass@k | Results |
-| C-M4-02 | The representative frozen 24Q M4 study is negative. | PRIMARY | M4 | 0.842x [0.809,0.877], 72/72 exact | workload mix differs from HumanEval | Results / limitation against cherry-picking |
-| C-XP-01 | Acceptance alone is insufficient to predict profitability. | MECHANISM_SUPPORTED | M4, RTX, 358H; B570 diagnostic | high acceptance coexists with positive and negative outcomes | observational cross-platform evidence, not isolated causal proof | Intro / Discussion |
-| C-RTX-01 | In the frozen llama.cpp/CUDA/Q8_0 configuration, the fast batched path can change greedy argmax and therefore is not admissible under the token-exact contract. | MECHANISM_SUPPORTED | RTX | stable HumanEval/106 divergence + logit-order sign flip | one stable case/configuration; do not generalize to CUDA | Results |
-| C-RTX-02 | The tested exact CUDA fallback raises width-2 verification cost to roughly 2.14–2.43 target decodes. | MECHANISM_SUPPORTED | RTX | ubatch=1 V2 controls | microbenchmark depths differ from M4 | Results / framework |
-| C-B570-01 | The single serialized B570 fallback is not universally token-exact on HumanEval30. | DIAGNOSTIC | B570 | 60/90 pairs, 20/30 prompts | later post-gate phase | Results / limitation |
-| C-B570-02 | B570 has no tested correctness-admissible optimization result. | SECONDARY | B570 | fast + serialized correctness failures | backend/config bounded | Results |
-| C-358H-01 | CPU and NPU 358H paths are token-exact but unprofitable in the frozen Phase-3 workload. | PRIMARY | 358H | CPU 0.734x; NPU 0.352x; both 90/90 exact | post-prefill timing, not whole-request latency | Results |
-| C-358H-02 | Realized stateful draft cost, not isolated draft throughput, dominates the tested NPU path. | MECHANISM_SUPPORTED | 358H NPU | replay+proposal 58.35% | replay/proposal not separable; implementation-specific | Framework / Discussion |
-| C-XP-02 | Verification amortization must be correctness-filtered. | MECHANISM_SUPPORTED | M4, RTX, B570 | cheap exact vs cheap inadmissible paths | strict token-exact contract may be challenged as strong | Framework |
-| C-M4-CAUSE-UM | Unified memory is the cause of M4 profitability. | PLAUSIBLE_NOT_CAUSAL | M4 | compatible with system behavior | no isolated control | Do not state causally |
-| C-CUDA-BROKEN | CUDA is broken for speculative decoding. | FORBIDDEN_OVERCLAIM | RTX | not supported | frozen single config/case evidence only | Never |
-| C-NPU-SLOW | NPU compute is too slow for speculative decoding. | FORBIDDEN_OVERCLAIM | 358H | contradicted by isolated-throughput framing | measured issue is stateful interface cost | Never |
-| C-HE-FUNC | Token-exact HumanEval outputs establish functional HumanEval correctness/pass@k. | FORBIDDEN_OVERCLAIM | all HumanEval studies | generated code not executed | invalid metric substitution | Never |
-| C-ENERGY-RANK | Absolute J/token can rank all platforms directly. | FORBIDDEN_OVERCLAIM | all | sensor boundaries differ | incomparable energy domains | Never |
-| C-M4-GENERAL | Speculative decoding generally works on M4. | FORBIDDEN_OVERCLAIM | M4 | 24Q is negative | workload-conditioned positive only | Never |
+| C-M4-02 | The representative frozen 24Q M4 study is negative. | PRIMARY | M4 | 0.842x [0.809,0.877], 72/72 exact | workload differs from HumanEval | Results / anti-cherry-pick context |
+| C-XP-01 | Acceptance alone is insufficient to predict profitability. | MECHANISM_SUPPORTED | M4, RTX, 358H; B570 diagnostic | high acceptance coexists with positive/negative outcomes | cross-platform association; not single isolated cause | Intro / Discussion |
+| C-RTX-01 | In the frozen llama.cpp/CUDA/Q8_0 configuration, the fast batched path can change greedy argmax and is not admissible under the token-exact contract. | MECHANISM_SUPPORTED | RTX | stable HumanEval/106 divergence + logit-order sign flip | bounded config/case | Results |
+| C-RTX-02 | The tested exact CUDA fallback raises width-2 target-forward cost to roughly 2.14–2.43 target decodes. | MECHANISM_SUPPORTED | RTX | ubatch=1 controls | microbenchmark, not full round cost | Results / Framework |
+| C-B570-01 | The single serialized B570 fallback is not universally token-exact on HumanEval30. | DIAGNOSTIC | B570 | 60/90 pairs; 20/30 prompts exact | post-gate diagnostic phase | Results / Limitation |
+| C-B570-02 | B570 has no tested correctness-admissible optimization result. | SECONDARY | B570 | fast and serialized correctness failures | backend/config bounded | Results |
+| C-358H-01 | CPU and NPU 358H paths are token-exact but unprofitable in frozen Phase 3. | PRIMARY | 358H | 0.734x / 0.352x; both 90/90 exact | post-prefill timing | Results |
+| C-358H-02 | Realized stateful draft cost dominates the tested NPU path despite favorable isolated draft throughput. | MECHANISM_SUPPORTED | 358H NPU | replay+proposal 58.35% | replay/proposal inseparable; interface-specific | Framework / Discussion |
+| C-XP-02 | Verification amortization must be correctness-filtered. | MECHANISM_SUPPORTED | M4, RTX, B570 | cheap exact vs cheap inadmissible paths | strict token-exact contract is a study choice | Framework |
+| C-M4-CAUSE-UM | Unified memory is the cause of M4 profitability. | PLAUSIBLE_NOT_CAUSAL | M4 | compatible but not isolated | no causal control | Never causal wording |
+| C-CUDA-BROKEN | CUDA is broken for speculative decoding. | FORBIDDEN_OVERCLAIM | RTX | not supported | single frozen stack/configuration | Never |
+| C-NPU-SLOW | NPU compute is too slow for speculative decoding. | FORBIDDEN_OVERCLAIM | 358H | contradicted by isolated-throughput evidence | measured issue is realized state interface | Never |
+| C-HE-FUNC | Token-exact HumanEval outputs establish functional HumanEval correctness/pass@k. | FORBIDDEN_OVERCLAIM | HumanEval studies | generated code not executed | invalid metric substitution | Never |
+| C-ENERGY-RANK | Absolute J/token ranks all platforms directly. | FORBIDDEN_OVERCLAIM | all | sensor boundaries differ | incomparable domains | Never |
+| C-M4-GENERAL | Speculative decoding generally works on M4. | FORBIDDEN_OVERCLAIM | M4 | representative 24Q negative | positive is workload-conditioned | Never |
 
 ## 8. Evidence ledger
 
-Round-1 level is deliberately headline/report-level. Rows marked **TRACE-PENDING** require analysis-script/prereg/raw validation in platform-specific rounds.
+Headline evidence has already been traced more deeply in historical Rounds 2–7. This table is the paper-facing compact ledger; source reports remain unchanged historical evidence.
 
-| Evidence ID | Platform / experiment | Class | Metric / value | CI / reps | Correctness | Workload / model / runtime | Source report | Analysis / script / prereg / raw status | Energy boundary | Paper use |
-|---|---|---|---|---|---|---|---|---|---|---|
-| E-M4-24Q-01 | M4 representative confirmatory | PRIMARY | speedup 0.842x | CI [0.809,0.877], 24 prompts ×3 | 72/72 exact | Spec-Bench 24Q; Qwen3-8B/0.6B Q8_0; llama.cpp Metal k=2 | `reports/m4/M4_CONFIRMATORY_VALIDATION.md` | index traces selection/result commits; deeper raw audit Round 2 | Silemetry package aggregate excludes separate DRAM | representative negative |
-| E-M4-HE30-01 | M4 HumanEval30 | PRIMARY | speedup 1.387x | CI [1.351,1.422], 30×3 | 90/90 exact | HumanEval30; same Q8_0 pair; Metal k=2 | `reports/m4/M4_HUMANEVAL_CODE_CONDITIONED.md` | analysis `m4_humaneval_summary.json`; script and prereg/raw paths explicitly listed; verify Round 2/7 | package efficiency 1.013x [0.990,1.034] | positive conditioned regime |
-| E-M4-HE30-02 | M4 HumanEval p_min=.9 secondary | SECONDARY | package efficiency 1.041x | CI [1.018,1.065] | 90/90 exact | same workload | same report | prereg listed; verify Round 2/7 | package | secondary energy result |
-| E-RTX-HE30-CPU-01 | RTX HumanEval CPU→RTX exact control | SECONDARY | 0.404x | CI [0.390,0.418], 30×3 | 90/90 exact | HumanEval30; Q8_0; llama.cpp CUDA ubatch=1 | `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md` + replication report | TRACE-PENDING Round 3 | not primary energy result | exact negative control |
-| E-RTX-HE30-GPU-01 | RTX HumanEval RTX→RTX exact control | SECONDARY | 0.650x | CI [0.629,0.673], 30×3 | 90/90 exact | same | same | TRACE-PENDING Round 3 | not primary energy result | exact negative control |
-| E-RTX-V2-RAW-01 | RTX raw CUDA verification | DIAGNOSTIC | V2 1.009@0, 0.983@256 | mechanism control | correctness-blocked | llama.cpp/CUDA ubatch=2 | `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md` via final report | TRACE-PENDING Round 3 | n/a | raw vs admissible |
-| E-RTX-V2-ADM-01 | RTX serialized exact verification | MECHANISM_SUPPORTED | V2 2.431@0, 2.137@256 | mechanism control | exact control | llama.cpp/CUDA ubatch=1 | same + final report | TRACE-PENDING Round 3 | n/a | admissible verification penalty |
-| E-RTX-DIV-01 | RTX divergence min-repro | MECHANISM_SUPPORTED | score margin +0.080948 → -0.126457; token 2790→2629 | 3/3 independent processes | shows divergence | HumanEval/106 frozen capture | `reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md` via final report | TRACE-PENDING Round 3 | n/a | numerical mechanism |
-| E-B570-FAST-01 | B570 fast path | DIAGNOSTIC | speedup 0.5383; V2 1.2426/1.6373 | full diagnostic 90 pairs | 45/90 exact | HumanEval30; Vulkan | `reports/b570/B570_FAST_VS_EXACT_FALLBACK.md` | deeper prereg/raw audit Round 4 | board efficiency 0.6961 | correctness-blocked diagnostic |
-| E-B570-SERIAL-01 | B570 serialized fallback | DIAGNOSTIC | speedup 0.3087; verification 1.9827/1.9917 | CI [0.2927,0.3246] | 60/90 exact; not universal | HumanEval30; Vulkan n_ubatch=1 | `reports/b570/B570_EXACT_FALLBACK_VALIDATION.md` | deeper prereg/raw audit Round 4 | board J/token 5.602→18.850; efficiency 0.3023 [0.2846,0.3202] | serialized fallback boundary |
-| E-358H-P3-CPU-01 | 358H Phase3 CPU draft | PRIMARY | 0.734x | CI [0.693,0.771], 30×3 | 90/90 exact; gate 18/18 | HumanEval30; Vulkan0 target + OpenVINO CPU draft | `reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md` | processed paths listed; raw archive 34-entry bundle; deep audit Round 5/7 | no end-to-end energy claim | exact negative CPU |
-| E-358H-P3-NPU-01 | 358H Phase3 NPU draft | PRIMARY | 0.352x | CI [0.333,0.369], 30×3 | 90/90 exact; gate 18/18 | same target + OpenVINO NPU draft | same | processed/raw paths listed; deep audit Round 5/7 | NPU energy NOT_ADMISSIBLE | exact negative NPU |
-| E-358H-DECOMP-CPU-01 | 358H CPU decomposition | MECHANISM_SUPPORTED | replay+proposal 12.63%; verify 87.34%; residual 0.04% | arithmetic mean of 90 requests | exact path | Phase3 | same | analysis path listed; recompute Round 5 | n/a | verification-bound mechanism |
-| E-358H-DECOMP-NPU-01 | 358H NPU decomposition | MECHANISM_SUPPORTED | replay+proposal 58.35%; verify 41.63%; residual 0.02% | arithmetic mean of 90 requests | exact path | Phase3 | same | analysis path listed; recompute Round 5 | n/a | state-interface mechanism |
-| E-358H-ARCHIVE-01 | 358H archive integrity | SECONDARY | 34/34 manifest entries verified, zero failures | one closeout archive | n/a | Phase3 archive | `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md` | compressed bundle SHA256 `2fa619...8511`; direct Git objects verified before merge | n/a | reproducibility |
+| Evidence ID | Platform / experiment | Class | Metric / value | CI / repetitions | Correctness | Workload / runtime | Source report / evidence path | Energy boundary / caveat | Paper use |
+|---|---|---|---|---|---|---|---|---|---|
+| E-M4-24Q-01 | M4 representative confirmation | PRIMARY | speedup 0.842x | [0.809,0.877], 24 prompts ×3 | 72/72 exact | Spec-Bench 24Q; Qwen3-8B/0.6B Q8_0; Metal k=2 | `reports/m4/M4_CONFIRMATORY_VALIDATION.md`; indexed in `M4_EXPERIMENT_INDEX.md` | Silemetry package aggregate; separate DRAM excluded | representative negative |
+| E-M4-HE30-01 | M4 HumanEval30 fixed-k2 | PRIMARY | 1.387x | [1.351,1.422], 30×3 | 90/90 exact | HumanEval30; same Q8_0 pair; Metal | `reports/m4/M4_HUMANEVAL_CODE_CONDITIONED.md`; authoritative archive `artifacts/m4_humaneval_code_conditioned/` | package efficiency 1.013x [0.990,1.034], neutral within uncertainty | conditioned positive regime |
+| E-M4-HE30-02 | M4 p_min=.9 secondary | SECONDARY | package efficiency 1.041x | [1.018,1.065] | 90/90 exact | same | same prereg/report/archive | package only | secondary energy result |
+| E-RTX-HE30-CPU-01 | CPU→RTX exact serialized | SECONDARY | 0.404x | [0.390,0.418], 30×3 | 90/90 exact | HumanEval30; llama.cpp CUDA ubatch=1 | `reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.md`, final platform report | not primary energy evidence; raw per-run Git provenance weaker | exact negative control |
+| E-RTX-HE30-GPU-01 | RTX→RTX exact serialized | SECONDARY | 0.650x | [0.629,0.673], 30×3 | 90/90 exact | same | same | not primary energy evidence | exact negative control |
+| E-RTX-V2-RAW-01 | RTX raw CUDA verification | DIAGNOSTIC | 1.009@0; 0.983@256 | mechanism control | correctness-blocked | CUDA ubatch=2 | `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md` | n/a | raw-vs-admissible path |
+| E-RTX-V2-ADM-01 | RTX serialized exact verification | MECHANISM_SUPPORTED | 2.431@0; 2.137@256 | mechanism control | exact control | CUDA ubatch=1 | same | n/a | admissible verification penalty |
+| E-RTX-DIV-01 | RTX divergence min-repro | MECHANISM_SUPPORTED | margin +0.080948 → -0.126457; token 2790→2629 | 3/3 independent processes | demonstrates divergence | HumanEval/106 | `reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md` | bounded config/case | numerical mechanism |
+| E-B570-FAST-01 | B570 fast path | DIAGNOSTIC | speedup 0.5383; V2 1.2426/1.6373 | 90 pairs | 45/90 exact | HumanEval30; Vulkan | `reports/b570/B570_FAST_VS_EXACT_FALLBACK.md` | board efficiency 0.6961; diagnostic | correctness-blocked |
+| E-B570-SERIAL-01 | B570 serialized fallback | DIAGNOSTIC | 0.3087; V2 1.9827/1.9917 | [0.2927,0.3246] | 60/90 exact | HumanEval30; Vulkan n_ubatch=1 | `reports/b570/B570_EXACT_FALLBACK_VALIDATION.md` | board efficiency 0.3023 [0.2846,0.3202]; diagnostic | serialized fallback boundary |
+| E-358H-P3-CPU-01 | 358H CPU draft | PRIMARY | 0.734x | [0.693,0.771], 30×3 | 90/90 exact; gate 18/18 | Vulkan0 target + OpenVINO CPU draft | `reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md` | no end-to-end energy claim | exact negative CPU |
+| E-358H-P3-NPU-01 | 358H NPU draft | PRIMARY | 0.352x | [0.333,0.369], 30×3 | 90/90 exact; gate 18/18 | Vulkan0 target + OpenVINO NPU draft | same | NPU energy NOT_ADMISSIBLE | exact negative NPU |
+| E-358H-DECOMP-CPU-01 | 358H CPU decomposition | MECHANISM_SUPPORTED | replay+proposal 12.63%; verify 87.34%; residual 0.04% | arithmetic mean of 90 requests | exact | Phase3 | same + analysis outputs | n/a | verification-bound mechanism |
+| E-358H-DECOMP-NPU-01 | 358H NPU decomposition | MECHANISM_SUPPORTED | replay+proposal 58.35%; verify 41.63%; residual 0.02% | arithmetic mean of 90 requests | exact | Phase3 | same + analysis outputs | n/a | state-interface mechanism |
+| E-358H-ARCHIVE-01 | 358H archive integrity | SECONDARY | 34/34 manifest entries verified; zero failures | closeout archive | n/a | Phase3 archive | `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`; tar SHA256 `2fa619...8511` | n/a | reproducibility |
 
 ## 9. Cross-platform comparison table
 
-| Platform regime | Correctness-admissible end-to-end result? | Profitability | Main bottleneck supported by evidence | Important caveat |
+| Regime | Correctness-admissible end-to-end result? | Profitability | Main supported bottleneck / enabling condition | Critical caveat |
 |---|---|---|---|---|
-| M4 24Q k=2 | Yes | No, 0.842x | insufficient committed work / workload dependence despite cheap exact V2 | not evidence that M4 speculation never works |
-| M4 HumanEval k=2 | Yes | Yes, 1.387x | successful regime: cheap exact verification + predictable workload | no functional HumanEval execution |
-| RTX CUDA HumanEval | Yes only via serialized control | No, 0.404x / 0.650x | admissible verification near-serialized; draft/integration overhead remains | fast raw path exists but is correctness-blocked |
-| B570 Vulkan | No universally exact tested path | No admissible optimization claim | correctness failure; serialization costs ~2× and still non-universal | timing/energy are diagnostic |
-| 358H CPU | Yes | No, 0.734x | target verification 87.34% | post-prefill boundary |
-| 358H NPU | Yes | No, 0.352x | realized prefix replay+proposal 58.35% | current OpenVINO/state interface, not NPU universal |
+| M4 24Q k=2 | Yes | No, 0.842x | workload/committed-progress insufficient despite cheap exact batching | not evidence M4 speculation never works |
+| M4 HumanEval k=2 | Yes | Yes, 1.387x | cheap exact verification + favorable code-conditioned workload | no functional HumanEval execution |
+| RTX CUDA HumanEval | Yes only via serialized controls | No, 0.404x / 0.650x | correctness-admissible verification near-serialized; draft/integration overhead remains | fast raw path exists but is correctness-blocked |
+| B570 Vulkan | No universally exact tested path | No admissible optimization claim | correctness failure; serialization ~2× and still non-universal | timing/energy are diagnostic |
+| 358H CPU | Yes | No, 0.734x | target verification 87.34% | post-prefill timing boundary |
+| 358H NPU | Yes | No, 0.352x | realized prefix replay+proposal 58.35% | current OpenVINO/state interface; not universal NPU claim |
 
-Cross-platform comparison is **mechanism comparison**, not a controlled hardware ranking. Runtime, backend, quantization/execution, memory organization, and scheduling differ.
+Cross-platform comparison is **mechanism comparison**, not a controlled hardware ranking. Hardware, runtime, backend, quantization/execution, memory organization, and scheduling differ.
 
 ## 10. Figure plan
 
-No final figures produced in Round 1.
+No final figure is produced by this audit.
 
-| Figure ID | Question answered | Source data | Axes / structure | Platforms | Evidence class | Section | Risk |
-|---|---|---|---|---|---|---|---|
-| F1 | What must be amortized for speculation to profit? | framework + measured decomposition | conceptual equation / cost blocks | all | framework | Background/model | avoid implying every term independently measured everywhere |
-| F2 | What regimes exist across platforms? | headline prompt-level results | categorical regime map, not leaderboard | all | mixed primary/diagnostic clearly encoded | Results overview | do not rank incompatible configs as pure hardware comparison |
-| F3 | How does raw V2 differ from admissible verification? | M4/RTX/B570 mechanism controls | V2 by path + correctness marker | M4, RTX, B570 | mechanism/diagnostic | Mechanism | B570 serialized not universal exact |
-| F4 | Why is high acceptance insufficient? | HumanEval acceptance/C + speedup | acceptance or C vs speedup | M4, RTX, 358H | mixed | Mechanism | only plot matched definitions; accepted/round ≠ C |
-| F5 | Why does NPU isolated speed not survive end to end? | 358H Phase1 + Phase3 decomposition | isolated draft vs realized replay+proposal/system share | 358H | primary/mechanism | 358H | avoid causal claim beyond state interface |
-| F6 | What dominates request time on 358H? | Phase3 summary | stacked decomposition CPU/NPU | 358H | primary/mechanism | Results | arithmetic means vs prompt GM must be labeled |
-| F7 | What do energy results say within each sensor boundary? | platform energy summaries | small multiples by platform | M4/RTX/B570 only if clearly separated | primary/diagnostic | Appendix/limitations | never make one absolute cross-platform energy ranking |
+| Figure ID | Question answered | Source data | Structure | Platforms | Evidence class | Risk / caveat |
+|---|---|---|---|---|---|---|
+| F1 | What must be amortized for speculation to profit? | framework + 358H decomposition | cost blocks `D_real`, `R_target`, `X`, `C`; `V_k^micro` inset | all | framework | do not imply every term independently measured everywhere |
+| F2 | What distinct regimes exist? | headline prompt-level results | categorical regime map, not leaderboard | all | mixed, visibly encoded | do not imply pure hardware comparison |
+| F3 | How does raw target batching differ from admissible verification? | M4/RTX/B570 controls | `V_2^micro` by path + correctness marker | M4, RTX, B570 | mechanism/diagnostic | B570 serialized path not universally exact |
+| F4 | Why is acceptance insufficient? | acceptance/C + speedup | relationship plot only where definitions match | M4, RTX, 358H | mixed | accepted-draft/round ≠ direct C |
+| F5 | Why does isolated NPU draft speed not survive end to end? | 358H Phase1 + Phase3 | isolated vs realized draft/state cost | 358H | primary/mechanism | interface-specific, not NPU hardware verdict |
+| F6 | What dominates 358H request time? | Phase3 decomposition | CPU vs NPU stacked costs | 358H | primary/mechanism | arithmetic means vs prompt-GM labeled |
+| F7 | What do energy measurements say within each sensor boundary? | platform energy summaries | separate small multiples | M4/RTX/B570 | primary/diagnostic | never one absolute ranking |
 
 ## 11. Table plan
 
 | Table ID | Purpose | Required provenance |
 |---|---|---|
 | T1 | Platform/runtime/model/correctness-contract matrix | frozen configs + final reports |
-| T2 | Cross-platform headline outcomes with explicit evidence class and correctness status | Evidence ledger rows + prompt-level CI audit |
-| T3 | Mechanism quantities: raw/admissible V2, C/acceptance, realized draft/state cost, residual | mechanism reports + scripts; leave N/A where not comparable |
+| T2 | Headline outcomes with evidence class and correctness status | evidence ledger + statistics audit |
+| T3 | Mechanism quantities: raw/admissible V2, C/acceptance, realized draft/state cost, residual | mechanism reports/scripts; N/A when not comparable |
 | T4 | Energy sensor boundaries and permitted claims | telemetry protocols/reports; never merge domains |
 
 ## 12. Runtime/software design opportunities
 
-These are **future study opportunities**, not current contributions.
+Future study only; not current contributions.
 
-| Opportunity | Measured bottleneck addressed | Platform evidence | Expected benefit | Difficulty | New experiment required? | Scope risk | Needed for current MLSys claim? |
+| Opportunity | Measured bottleneck addressed | Platform evidence | Expected benefit | Difficulty | New experiment required? | Scope risk | Needed for current scientific validity? |
 |---|---|---|---|---|---|---|---|
-| correctness-aware verification path selection | cheap raw path may fail exactness | RTX, B570 | avoid counting inadmissible speed; select cheapest verified path | medium | yes for implementation claim | medium | no |
-| persistent draft state / rollback / reuse | full-prefix replay dominates realized draft cost | 358H NPU | reduce `T_d(real)` | high | yes, separately preregistered | high | no; could strengthen future systems contribution |
-| online profitability controller | M4 workload dependence | M4 24Q vs HumanEval | avoid speculation on negative prompts/regimes | medium | yes | medium | no |
-| adaptive k | deeper k can hurt verification/acceptance | M4/RTX pilot/mechanism | trade C vs verification/draft cost | medium | yes | medium-high | no |
-| CPU/NPU/iGPU draft selection | isolated fastest device may differ by workload/state interface | RTX draft characterization + 358H | choose realized-cost-minimizing device | high | yes | high | no |
+| correctness-aware verification path selection | cheap raw path may fail exactness | RTX, B570 | choose cheapest path satisfying correctness | medium | yes | medium | no |
+| persistent draft state / rollback / reuse | full-prefix replay dominates realized draft cost | 358H NPU | reduce `T_d(real)` | high | yes, separately preregistered | high | no |
+| online profitability controller | workload-conditioned M4 result | M4 24Q vs HumanEval | disable speculation in negative regimes | medium | yes | medium | no |
+| adaptive k | deeper k can hurt acceptance/verification | M4/RTX pilots | trade committed progress against cost | medium | yes | medium-high | no |
+| CPU/NPU/iGPU draft selection | isolated fastest device may not minimize realized cost | RTX characterization + 358H | choose device by realized cost | high | yes | high | no |
 
 ## 13. Reviewer attack list
 
-| Concern | Severity | Evidence available now | Response direction | Extra experiment needed by default? | Must state limitation? |
+| Concern | Severity | Evidence available | Response | Extra experiment by default? | Explicit limitation? |
 |---|---|---|---|---|---|
-| Only four platforms; can this generalize? | HIGH | four distinct stacks expose repeated accounting constraints | claim mechanism/regimes, not universal hardware law | no | yes |
-| Cross-platform stacks differ; causality confounded | HIGH | explicit bounded wording and mechanism-specific controls | separate within-platform evidence from cross-platform synthesis | no | yes |
-| M4 HumanEval looks cherry-picked after 24Q failed | HIGH | separate preregistration, frozen 30 IDs, 24Q retained negative | present both results and chronology; workload-conditioned claim | no | yes |
-| Why HumanEval if code was not executed? | HIGH | exact-token contract only | state that workload is a structured generation distribution, not functional benchmark result | no | yes |
-| Token-exact contract may be unnecessarily strict | MEDIUM-HIGH | contract is frozen and makes path admissibility explicit | motivate deterministic greedy equivalence; discuss looser contracts as future work | no | yes |
-| CUDA divergence may be one near-tie edge case | HIGH | stable 3/3 capture plus HumanEval gate impact | claim only frozen configuration; do not universalize | no | yes |
-| B570 fallback called exact despite 60/90 | HIGH | direct contradiction in terminology vs correctness count | rename paper-facing factor `V2_serialized`; preserve historical report | no | yes |
-| 358H replay may be an inefficient adapter, not NPU limitation | HIGH | report explicitly measures current state interface | agree; paper claim is state-interface cost, not NPU hardware weakness | no | yes |
-| Should state reuse be implemented before publication? | MEDIUM-HIGH | negative result identifies a concrete requirement | depends on final paper contribution target; current study can stand as characterization if claims remain bounded | maybe, but not automatic | yes |
-| Energy domains differ | HIGH | boundaries documented per platform | no absolute cross-platform J/token ranking | no | yes |
-| Why not a production speculative runtime? | MEDIUM | native/control paths exist on RTX; platform study is implementation-bounded | frame as correctness/runtime mechanism study | possibly related-work discussion | yes |
-| Models are small / mostly Qwen3 | HIGH | model pair consistency helps mechanism comparison | bound generalization; do not claim model-family universality | no by default | yes |
-| Is this only an engineering benchmark paper? | HIGH | formula + repeated bottleneck regimes + correctness/state-interface mechanisms | contribution must be systems principle + auditable evidence, not leaderboard | no | yes |
-| 358H prediction vs observation discrepancy undermines model | MEDIUM | discrepancy is explained by omitted realized replay/state cost | use it as validation of `T_d(real)` requirement | no | yes |
+| Only four platforms; can this generalize? | HIGH | four distinct stacks show repeated accounting constraints | claim regimes/mechanisms, not universal hardware law | no | yes |
+| Cross-platform stacks differ; causality confounded | HIGH | bounded language + within-platform controls | separate within-platform mechanism evidence from cross-platform synthesis | no | yes |
+| M4 HumanEval looks cherry-picked after 24Q failed | HIGH | separate preregistration, frozen IDs, negative 24Q retained | present chronology and both outcomes | no | yes |
+| Why HumanEval if code not executed? | HIGH | exact-token contract only | state HumanEval is a structured generation distribution here, not pass@k evidence | no | yes |
+| Token-exact contract is too strict | MEDIUM-HIGH | frozen deterministic-greedy equivalence contract | motivate as study contract; looser quality contracts are different work | no | yes |
+| CUDA divergence may be a near-tie edge case | HIGH | stable 3/3 capture + gate impact | claim only frozen configuration/path | no | yes |
+| B570 fallback called exact despite 60/90 | HIGH | direct mismatch between historical label and full workload | use `V2_serialized`; historical wording remains provenance | no | yes |
+| 358H replay is a bad adapter, not NPU weakness | HIGH | state-interface semantics measured directly | agree with bounded interpretation; do not generalize to NPU hardware | no | yes |
+| Should state reuse be implemented? | MEDIUM-HIGH | measured NPU bottleneck gives a clear design requirement | optional future strengthening, not retroactive evidence | maybe later | yes |
+| Energy boundaries are incomparable | HIGH | boundaries documented | no global J/token ranking | no | yes |
+| Why not a production speculative runtime? | MEDIUM | native/control evidence exists but study is implementation-bounded | frame as mechanism/characterization study | no by default | yes |
+| Models are mostly Qwen3 8B/0.6B | HIGH | model consistency helps mechanism comparison | bound generalization | no by default | yes |
+| Is this only an engineering benchmark paper? | HIGH | accounting + correctness/state-interface mechanisms | sell systems principle + auditable evidence, not leaderboard | no | yes |
+| 358H prediction vs observation discrepancy undermines model | MEDIUM | omitted realized replay/state cost explains gap | use as validation for measuring `T_d(real)` | no | yes |
+| No new runtime optimization is implemented | HIGH for MLSys novelty | characterization is scientifically coherent | do not claim runtime invention; optional co-design can strengthen future version | not for validity | yes |
+| 358H source provenance is reconstructed | MEDIUM | qualification/provenance amendment | retain `STRONGLY_SUPPORTED`; never proven exact identity | no | yes |
 
 ## 14. Known limitations
 
 1. HumanEval generated code was not executed for functional pass@k; “exact” means generated token-ID equality.
-2. Energy boundaries differ by platform and cannot be compared as one calibrated domain.
+2. Energy boundaries differ by platform and cannot be treated as one calibrated domain.
 3. M4 unified memory is not isolated as a causal factor.
 4. CUDA batch-shape argmax flip is a bounded frozen-configuration observation, not “CUDA is broken.”
 5. B570 results are frozen backend/configuration results; serialized fallback is not universally exact.
 6. 358H NPU result is an end-to-end result of the current OpenVINO/state interface, not a universal NPU verdict.
-7. 358H reconstructed draft source is STRONGLY_SUPPORTED, not proven exact upstream source identity.
+7. 358H reconstructed draft source is `STRONGLY_SUPPORTED`, not proven exact upstream source identity.
 8. M4 preregistered corrected synthetic ceiling was not completed.
 9. Cross-platform comparisons change hardware and software simultaneously; causal attribution must remain within-platform unless an isolated control exists.
 10. 358H primary timing is post-prefill decode end-to-end time, not whole-request user-perceived latency.
 11. RTX/NVIDIA and Intel CPU component energy domains are separate and are not summed as whole-system energy.
 12. B570 board energy excludes CPU/wall/whole-system energy.
+13. Windows HumanEval/mechanism headline values are recomputable from committed derived tables, but raw per-run Git provenance is weaker than M4/B570/358H because some authoritative run JSONs were documented as local/ignored.
+14. Prompt-bootstrap CIs represent prompt-sampling uncertainty conditional on each frozen campaign; they do not capture all between-session/thermal/runtime-state uncertainty.
 
 ## 15. Forbidden / unsafe claims
 
@@ -502,522 +503,309 @@ Never publish the following without new evidence:
 - “The NPU is too slow / lacks compute.”
 - “NPUs are unsuitable for speculative decoding.”
 - “HumanEval exactness means functional correctness.”
-- “Energy efficiency can be ranked directly across M4, RTX, B570, and 358H from the current J/token values.”
+- “Energy efficiency can be ranked directly across M4, RTX, B570, and 358H from current J/token values.”
 - “358H reconstructed source exactly equals the lost historical upstream source.”
 - “The corrected M4 synthetic ceiling was completed.”
 - “High acceptance guarantees speedup.”
 - “Isolated draft tok/s is the system draft cost.”
+- “`V_k^micro` is automatically the complete realized target-side cost.”
 
 ## 16. Open scientific questions
 
-- Does the minimal formula remain quantitatively consistent after independent recomputation of all headline aggregations?
-- What is the most defensible common definition of `V_k(admissible)` when correctness is prompt-dependent rather than universal (B570)?
-- Can M4's realized draft cost be decomposed enough to compare state handling with 358H without inventing unavailable instrumentation?
-- How should `C` be reported cross-platform when some historical reports emphasize accepted draft tokens/round rather than committed tokens?
-- Is the central novelty strongest as profitability accounting, correctness-constrained verification, state-interface cost, or the combined regime map?
-- Does final MLSys framing require a new runtime co-design implementation, or is the evidence-backed characterization sufficiently systems-oriented?
-- Which prior speculative-decoding/runtime papers already formalize equivalent break-even terms? Literature audit not yet performed.
-- Are all prompt-bootstrap implementations consistent in unit-of-analysis, geometric aggregation, and paired resampling? Round 7.
+Questions remaining after the completed audit are paper-scope / future-study questions, not unresolved status of the closed hardware campaigns:
+
+- Is the strongest MLSys novelty the combined correctness-constrained realized-cost regime characterization, or does a separately measured runtime intervention materially improve acceptance prospects?
+- If runtime co-design is started later, can persistent draft state reduce 358H-like `T_d(real)` without altering correctness or moving bottlenecks elsewhere?
+- Under a looser non-token-exact quality contract, would the physically fast RTX/B570 paths become admissible, and how should quality loss be measured? This is a different study and must not be retrofitted onto current results.
+- How broadly do the observed regimes generalize beyond Qwen3 and the tested runtimes? No universal model-family or hardware law is claimed.
+- How should future work define a cross-platform committed-progress quantity when old runtimes expose only accepted draft tokens rather than full round commits?
 
 ## 17. Missing evidence / inconsistencies
 
-### Living docs that were stale at Round-1 start
+### 17.1 Living documents stale on `main` at the current Round-1 revalidation
 
 1. `REPO_STATUS.md`
-   - says status is on the 358H closeout branch and merge is pending;
-   - says 358H result remains on dedicated branch pending review;
-   - contradicted by main HEAD `8de9642...` and merged PR #12.
+   - still says status is on the 358H closeout branch / merge pending;
+   - contradicted by `main` HEAD `8de9642...` and merged PR #12.
 
 2. `paper/mlsys2027/EVIDENCE_AUDIT_2026-09-18.md`
-   - records old main head `7327495...`;
+   - records old `main` head `7327495...`;
    - treats 358H Phase3 as provisional/not started.
 
 3. `paper/mlsys2027/WRITING_STATUS.md`
-   - keeps 358H results HOLD and cross-platform table HOLD because Phase3 was pending.
+   - keeps 358H results and cross-platform table on HOLD because Phase3 was pending.
 
 4. `paper/mlsys2027/README.md`
    - instructs keeping 358H provisional until Phase3 completes/merges.
 
 5. `paper/mlsys2027/OUTLINE.md`
-   - contains multiple “358H pending final Phase3” placeholders.
-   - Round-1 decision: flag but do not substantially rewrite the outline yet; final structure belongs after thesis/contribution audit.
+   - contains pre-Phase3 placeholders and old model terminology.
 
-### Historical reports with now-outdated process statements — preserve, do not rewrite
+**Current branch state:** PR #13 / `paper/audit-round1-20260918` already contains synchronized replacements for these living docs. This revalidation therefore does not create another competing repair branch.
 
-- `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md` says PR #12 was READY FOR REVIEW and not auto-merged.
+### 17.2 Historical reports with now-outdated process statements — preserve
+
+- `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md` contains pre-merge process wording.
 - `reports/358h/358H_PLATFORM_CLOSEOUT.md` says repository integration gates must pass before merge.
 
-These were true at report time and form provenance. They should not be rewritten merely because the PR later merged.
+These statements were true at report time and are provenance. Do not rewrite historical reports merely because PR #12 later merged.
 
-### Scientific terminology inconsistency
+### 17.3 Scientific terminology inconsistency
 
-- `reports/b570/B570_EXACT_FALLBACK_VALIDATION.md` and `B570_PLATFORM_CLOSEOUT.md` use `V2_exact` while the same validation reports only 60/90 exact pairs.
-- Paper-facing terminology must not inherit that label uncritically.
-- Current handoff term: **serialized fallback verification factor / `V2_serialized`**.
-- Revisit in Round 4 and Round 8.
+- Historical B570 reports use `V2_exact` although the same fallback validates only 60/90 pairs across HumanEval30.
+- Paper-facing term remains **`V2_serialized` / serialized fallback verification factor**.
+- Historical report wording is preserved for provenance.
 
-### Trace depth after Rounds 2–5
+### 17.4 Tooling provenance inconsistency discovered 2026-09-19
 
-Platform-deep tracing is now complete for the headline claims.
+- Old handoff wording said no dedicated scientific validation/data-quality Skill was exposed.
+- Current environment exposes `validate-data` and `analyze-data-quality`.
+- This is a **tooling metadata change only**. It does not retroactively change any numerical audit, preregistration, or claim status.
 
-- **M4:** strongest provenance. HumanEval raw `results.json`, preregistration, manifest, analysis script, prompt summary, telemetry hash metadata, and representative 24Q raw JSON were all inspected. Headline aggregations were independently recomputed from raw records.
-- **RTX 5070 Ti Laptop:** headline HumanEval statistics were independently recomputed from the committed pair-level CSV and match the summary exactly. Important limitation: the authoritative ubatch=1 and aborted ubatch=2 run JSON files are documented as local/ignored; the repository retains their derived pair table, summary, manifest, mechanism CSVs, and numerical diagnosis. Raw-trace Git completeness is therefore weaker than M4/B570/358H.
-- **B570:** the complete serialized-fallback archive is committed, including preflight, manifests, HumanEval30 raw/processed records, V2 records, telemetry, stdout/stderr, and remote-disconnect checks. Processed headline values match the reviewer-facing final status.
-- **358H:** headline values were independently recomputed from the committed 180-row prompt summary. The 34-entry archive manifest reports 34/34 validated entries and zero size/SHA failures; an independently validated recovery tarball is retained.
+### 17.5 Evidence depth summary after historical Rounds 2–7
 
-No platform-deep audit found a numerical discrepancy that changes a headline platform conclusion. The substantive corrections are terminology, evidence strength, and metric semantics rather than headline values.
+- **M4:** strongest provenance; raw HumanEval results, preregistration, manifest, analysis script, prompt summary, telemetry metadata, and representative 24Q raw JSON were audited; headline aggregates independently recomputed.
+- **RTX 5070 Ti Laptop:** headline statistics independently recomputed from committed pair-level CSV; raw per-run JSON provenance is weaker because some logs remain local/ignored, while committed derived tables/manifests/mechanism captures support the headline claims.
+- **B570:** complete serialized-fallback archive committed; formal stop rule and later diagnostic status audited; CI reproducibility restored bit-for-bit by replaying retained first-seen prompt order.
+- **358H:** headline values independently recomputed from committed prompt summary; runner semantics inspected; 34-entry archive and recovery bundle integrity audited.
+
+No deep audit found a numerical discrepancy that changes a headline platform conclusion.
 
 ## 18. Paper outline candidate
 
-Do not treat the existing `OUTLINE.md` as frozen.
+Do not treat prose or final title as frozen. Scientific order currently supported:
 
-Candidate scientific order:
-
-1. Research question / empirical puzzle.
-2. Correctness contract and admissible execution path.
-3. Minimal profitability model.
-4. Experimental methodology and evidence classes.
-5. M4: workload-conditioned positive and representative negative.
+1. Empirical puzzle / research question.
+2. Correctness contract and admissible execution paths.
+3. Realized-cost accounting and `V_k^micro` distinction.
+4. Methodology and evidence classes.
+5. M4: representative negative + preregistered workload-conditioned positive.
 6. RTX: raw-fast vs exact-expensive verification.
 7. B570: serialization does not guarantee admissibility.
 8. 358H: exact-but-negative verification/state-interface regimes.
 9. Cross-platform regime map and system implications.
 10. Limitations / related work / conclusion.
 
-Do not write prose from this outline until Round 12 thesis/contribution freeze.
+No manuscript prose is authorized by this Round-1 revalidation.
 
 ## 19. Decision log
 
 ### D-20260918-01 — 358H final status
-- Old: 358H pending/provisional in paper workspace.
-- New: Phase 0–3 scientific execution CLOSED and merged to main.
-- Reason: PR #12 merged; main HEAD `8de9642...`; Phase3 report and platform closeout present on main.
-- Evidence: PR #12, root README, `358H_PHASE3_END_TO_END_VALIDATION.md`, `358H_PLATFORM_CLOSEOUT.md`.
+- Old: 358H pending/provisional in the original paper workspace.
+- New: Phase 0–3 scientific execution **CLOSED** and merged to `main`.
+- Evidence: merged PR #12; main HEAD `8de9642...`; Phase3 validation and platform closeout.
 
 ### D-20260918-02 — B570 verification terminology
-- Old: historical report label `V2_exact` for serialized fallback.
-- New: paper framework uses `V2_serialized` / serialized fallback verification factor unless a bounded exact subset is explicitly named.
-- Reason: full validation is only 60/90 exact pairs; global performance admissible=false.
-- Evidence: `B570_EXACT_FALLBACK_VALIDATION.md`, `B570_FAST_VS_EXACT_FALLBACK.md`.
-- Historical reports are not rewritten.
+- Old: historical `V2_exact` label for serialized fallback.
+- New: paper uses `V2_serialized` / serialized fallback verification factor unless an explicitly bounded exact subset is named.
+- Reason: full validation is only 60/90 exact pairs.
 
 ### D-20260918-03 — realized draft cost
-- Old risk: use isolated draft throughput as proxy for `T_d`.
-- New: unified framework uses `T_d(real)`, measured through the actual end-to-end state interface.
-- Reason: 358H NPU isolated throughput advantage is erased by full-prefix replay+proposal, 58.35% of measured speculative time.
-- Evidence: `358H_PHASE3_END_TO_END_VALIDATION.md`, verification-amortization framework.
+- Old risk: isolated draft throughput used as proxy for `T_d`.
+- New: framework uses `T_d(real)` through actual state interface.
+- Reason: 358H NPU isolated throughput advantage is erased by full-prefix replay+proposal, 58.35% of speculative time.
 
 ### D-20260918-04 — formula complexity
-- Old candidate: possibly split `T_d(real)` into proposal/replay/rollback/reconstruction.
-- New: keep a minimal aggregate `T_d(real)` for now.
-- Reason: 358H replay-only and proposal-only cannot be separated without changing execution; extra variables would exceed measured evidence.
-- Revisit: Round 6.
-
-## 19A. Stage-A deep-audit addendum — Rounds 2–5
-
-### M4 deep audit
-
-**Verdict: SUPPORT, with metric/energy wording tightened.**
-
-- HumanEval30 raw archive contains 360 runs: 90 each for baseline, fixed-k2, p_min=0.8, and p_min=0.9.
-- The preregistration object embedded in the authoritative result is JSON-identical to `benchmarks/m4_code_conditioned_30q/preregistration.json`; the frozen HumanEval IDs independently reproduce from `random.Random(20260908).sample(range(164), 30)`.
-- Independent raw recomputation:
-  - fixed k2: 1.387352x, 30/30 prompts faster, 90/90 exact, mean acceptance 0.90070, accepted draft tokens/round 1.79833;
-  - p_min=0.8: 1.362377x, 90/90 exact;
-  - p_min=0.9: 1.395596x, 90/90 exact.
-- Fixed-k2 package-energy efficiency ratio is 1.01295x, but the reported CI [0.98957, 1.03407] crosses 1.0. The preregistered energy gate is a point-estimate gate, so this is not a protocol failure; paper wording must be **energy-neutral within uncertainty**, not a significant energy win.
-- HumanEval summary script uses **100,000** prompt-bootstrap resamples with seed 20260910. This differs from the 10,000 resamples used by the representative 24Q study.
-- Representative 24Q raw recomputation: 72/72 exact; prompt GM 0.841965x; median 0.846050x; 1/24 faster; package-efficiency ratio 0.677507x; mean package J/token 1.206251 baseline vs 1.729272 k2.
-- Representative repetition-level GMs are 0.909834 / 0.818999 / 0.801008, so session drift exists, but the prompt-level estimator and CI remain decisively below 1.
-- The representative summarizer correctly reduces three paired repetitions within prompt before bootstrapping prompts; no repetition-level pseudoreplication was found.
-- Corrected synthetic ceiling was preregistered but not executed. Older exploratory synthetic data remain diagnostic only.
-- Exactness is generated token-ID equality; HumanEval functions were not executed.
-
-### RTX 5070 Ti Laptop deep audit
-
-**Verdict: SUPPORT, with a raw-provenance limitation.**
-
-- Exact serialized HumanEval pair table independently recomputes to:
-  - CPU→RTX: 0.403937x, median 0.399304x, 90/90 exact, 0/30 faster, weighted acceptance 0.913067, accepted-draft-tokens/round 1.821156;
-  - RTX→RTX: 0.650079x, median 0.637317x, 90/90 exact, 0/30 faster, weighted acceptance 0.912070, accepted-draft-tokens/round 1.819172.
-- Statistics use prompt as unit, three repetition-paired ratios per prompt, then 10,000 prompt bootstrap resamples with seed 20260910.
-- Fast CUDA `ubatch=2` verification proxy is 1.0090x at context depth 0 and 0.9831x at 256; exact `ubatch=1` proxy is 2.4310x and 2.1370x.
-- HumanEval/106 divergence reproduces 3/3 at captured index 190; baseline/serialized choose token 2790 while batched chooses 2629.
-- Same-commit diagnostic score difference `score(2790)-score(2629)` is +0.080948 baseline/serialized and -0.126457 batched, identical across three independent processes. This supports a batch-shape-dependent numerical argmax flip, not a kernel-specific or universal CUDA claim.
-- **Repository limitation:** `logs/windows-humaneval-replication-30q-ub1.json`, the aborted primary JSON, and some mechanism raw logs are documented as local/ignored. The committed pair CSV/summary/manifest and mechanism CSVs allow headline recomputation, but raw per-run Git provenance is incomplete relative to M4/B570/358H.
-- HumanEval follow-up has no admissible energy ratio; 1 Hz process-window telemetry includes model loading and lacks the required decode-window/CPU-package boundary.
-
-### B570 deep audit
-
-**Verdict: SUPPORT the negative/correctness-blocked conclusion; strengthen terminology correction.**
-
-- Formal v2 preregistration correctly stops after the six-prompt correctness failure. No formal V2 or HumanEval30 performance result is admissible from that run.
-- A later diagnostic extension was explicitly frozen as post-gate diagnostic-only and did not alter the formal failure.
-- Fast-path diagnostic: 45/90 exact pairs, 15/30 wholly exact prompts, 0.5383x raw speedup, 0/30 faster, V2_raw=1.2426/1.6373 at 512/2048.
-- The unique serialized fallback candidate was frozen before its full validation; global performance was preregistered as admissible only if all 90 pairs were exact.
-- Full fallback result: 60/90 exact pairs, 20/30 wholly exact prompts, global admissible=false; diagnostic speedup 0.308682x, CI [0.292690, 0.324604], 0/30 faster; exact-subset descriptive speedup 0.302574x.
-- Arc-board energy efficiency ratio 0.302276x, CI [0.284553, 0.320160]; baseline mean 5.601993 vs fallback 18.849895 board J/token. Boundary is Arc B570 board only.
-- Historical field/report name `V2_exact`=1.982668/1.991707 is scientifically misleading at full-workload scope. Paper-facing name remains **`V2_serialized` / serialized ubatch=1 verification proxy**.
-- Complete committed archive exists for `exact-fallback-v1-20260912-222617`, including raw HumanEval30 records, V2 data, telemetry, stdout/stderr, manifests, and remote-disconnect evidence.
-- Principle frozen for paper: **serialized is an execution property; exactness is an empirical workload-level correctness property.**
-
-### 358H deep audit
-
-**Verdict: SUPPORT, and directly strengthen the unified accounting semantics.**
-
-- Independent recomputation from the 180-row committed prompt summary:
-  - CPU draft: 0.7339146x, median 0.771737x, 90/90 exact, 0/30 faster;
-  - NPU draft: 0.3516632x, median 0.367999x, 90/90 exact, 0/30 faster.
-- The estimator is median of three paired speedups within each HumanEval prompt, then geometric mean across 30 prompt medians; CI uses 10,000 prompt bootstrap resamples, seed 20260919.
-- CPU arithmetic-mean decomposition over 90 requests independently recomputes to 13253.126 ms total = 1673.507 ms draft replay+proposal + 11574.811 ms target verification + 4.808 ms residual.
-- NPU recomputes to 27543.780 ms total = 16071.082 ms draft replay+proposal + 11467.641 ms verification + 5.057 ms residual.
-- Runner inspection confirms each OpenVINO proposal call invokes `LLMPipeline.generate` on the **entire committed prefix**; replay and proposal are therefore truly combined in the measured draft interval and cannot be separated retrospectively without changing execution.
-- 358H provides the cleanest direct `C`: committed output tokens / speculative rounds, including correction/bonus behavior:
-  - CPU C=2.463117 from 11,520 committed tokens / 4,677 rounds;
-  - NPU C=2.458387 from 11,520 / 4,686.
-- This is **not the same metric** as historical M4/RTX `accepted_per_round`, which counts accepted draft tokens/round.
-- Phase-3 archive manifest records 34 entries; recovery bundle validation reports 34/34 entries validated and zero failures. Recovery tarball: 694239 bytes, SHA256 `2fa6197864b1c6fc7af1c6da31f24ccf224e3dc0933bc1534840117eaee08511`.
-- Formal-execution amendment discloses brief interactive monitoring and a retrospectively documented host-state snapshot. Repetition stability and baseline chronology show no discontinuity capable of moving either CI across 1; this remains a disclosed protocol limitation rather than grounds for sample removal.
-- Historical Transformers source commit is unrecoverable. Reconstructed source remains STRONGLY_SUPPORTED, never PROVEN exact historical identity.
-
+- Old candidate: split proposal/replay/rollback/reconstruction.
+- New: keep aggregate `T_d(real)` unless measured evidence exposes finer terms.
+- Reason: replay-only/proposal-only cannot be separated in frozen 358H execution without changing inference.
 
 ### D-20260918-05 — M4 primary energy wording
 - Old risk: treat fixed-k2 package efficiency 1.013x as an energy win.
-- New: describe fixed-k2 as **energy-neutral within uncertainty**; only the point estimate is favorable.
-- Reason: package-efficiency 95% CI [0.990, 1.034] crosses 1.0.
-- The preregistered gate used the point estimate, so this is a wording/statistical-strength correction, not a protocol failure.
+- New: **energy-neutral within uncertainty**.
+- Reason: 95% CI [0.990, 1.034] crosses 1.
 
-### D-20260918-06 — cross-platform committed-work metric
-- Old risk: use historical `accepted_per_round` as `C`.
-- New: `C` means all committed output tokens per speculative round, including target correction/bonus behavior. M4/RTX accepted-draft-tokens/round remain separately named proxies/descriptors unless committed progress can be reconstructed.
-- Reason: 358H directly records both quantities and demonstrates they are definitionally distinct.
+### D-20260918-06 — committed-work metric
+- Old risk: use `accepted_per_round` as `C`.
+- New: `C` means all output tokens committed per speculative round, including target correction/bonus behavior.
+- Reason: 358H records both notions and they are definitionally distinct.
 
 ### D-20260918-07 — Windows raw provenance level
-- Old: treat all platform evidence chains as equally complete.
-- New: Windows HumanEval/mechanism headline values remain supported and recomputable from committed derived tables, but raw per-run Git provenance is one tier weaker because authoritative JSON logs are documented as local/ignored.
-- Reason: repository inspection.
+- Old: imply equal raw provenance across all platforms.
+- New: Windows headline values remain supported/recomputable, but raw per-run Git provenance is one tier weaker than M4/B570/358H.
 
 ### D-20260918-08 — serialized does not imply exact
-- Old risk: call a serialized fallback “exact” by construction.
-- New: serialization is an execution-path property; exactness is established only by the frozen workload correctness gate.
-- Reason: B570 ubatch=1 fallback is only 60/90 exact despite prior 18/18 six-prompt gate.
-- Consequence: paper-facing `V2_serialized` terminology is mandatory.
-
+- Old risk: call a serialized path exact by construction.
+- New: serialization is execution-path property; exactness is an empirical workload-level correctness property.
+- Reason: B570 ubatch=1 fallback is 60/90 exact despite passing an earlier 18/18 six-prompt gate.
 
 ### D-20260918-09 — separate micro verification proxy from realized target-round cost
-- Old: the framework wrote `V_k(admissible)*T_b` directly as the target term in the end-to-end break-even equation.
-- New: the end-to-end equation uses `T_target,round(real)` / `R_target`; `V_k^micro=PPk/PP1` is a separate target-forward batching proxy.
-- Reason: target-forward microbenchmarks do not necessarily include correction/bonus and other target-side work. 358H directly demonstrates a complete target-side per-round cost near three baseline-token equivalents.
-- Consequence: M4/RTX/B570 V2 values remain valuable mechanism evidence but are not silently substituted into the accounting identity.
+- Old: `V_k(admissible)*T_b` used directly as end-to-end target term.
+- New: end-to-end equation uses `T_target,round(real)` / `R_target`; `V_k^micro` is a separate target-forward batching proxy.
+- Reason: microbenchmarks do not necessarily include correction/bonus and other target-side round work.
 
-### D-20260918-10 — aggregation level of the cost identity
-- Old risk: expect arithmetic decomposition plugged into the formula to reproduce the prompt-level geometric-mean speedup.
-- New: realized cost accounting is evaluated at the same aggregation level as its inputs. For 358H, arithmetic totals exactly reproduce the aggregate baseline/speculative time ratio; prompt-GM remains the preregistered headline estimator.
-- Reason: ratio-of-totals and geometric mean of per-prompt paired ratios are different estimands.
+### D-20260918-10 — aggregation level of cost identity
+- Old risk: expect arithmetic decomposition to reproduce prompt-level geometric-mean speedup.
+- New: accounting identity must be evaluated at the same aggregation level as inputs.
 
-### D-20260918-11 — B570 historical CI reproducibility — SUPERSEDED DURING ROUND 7
-- Provisional observation: re-bootstrapping the numerically sorted prompt CSV gave a slightly different finite-sample CI.
-- Resolution: this was **not** a historical-analysis error. Commit `15e3bd19...` retains `scripts/platform/b570/finalize_b570_exact_fallback.py`, which builds prompt dictionaries in first-seen randomized execution order and then applies Python `random.Random(20260910)` for 10,000 resamples.
-- Replaying that exact retained input order reproduces the archived speed CI **[0.2926903625835106, 0.3246036952205638]** and energy CI **[0.28455311861341115, 0.3201604335732349]** bit-for-bit.
-- Lesson: a finite fixed-seed bootstrap is numerically sensitive to input ordering even though the underlying empirical prompt distribution is the same. The raw pair archive preserves the required order, so B570 CI provenance is complete.
-- Scientific impact: none; the final Round-7 verdict is full reproduction, not a reproducibility gap.
+### D-20260918-11 — B570 CI input-order question resolved
+- Provisional concern: numerically sorting prompts changed finite fixed-seed bootstrap endpoints slightly.
+- Resolution: retained finalizer uses first-seen randomized execution order; replaying it reproduces archived speed and energy CIs bit-for-bit.
+- Scientific impact: none.
+
+### D-20260919-01 — Stage-A Skill discovery refresh
+- Old: handoff stated no dedicated scientific validation/data-quality Skill was exposed.
+- New: current environment exposes `validate-data` and `analyze-data-quality`; both were inspected and adopted as workflow aids.
+- Reason: mandatory rediscovery shows the available capability set changed.
+- Scientific effect: **none**. Skills do not override frozen experiments, Git provenance, preregistration, or repository evidence.
+- Additional discovered but uninstalled plugins: Scite (Stage E candidate), Wolfram (Stage B candidate), Hugging Face (provenance candidate). None was required for this Round 1.
 
 ## 20. Audit log
 
 ### Round 1 — 2026-09-18 — repository-wide final-status audit
 
-- main HEAD: `8de9642b3d27830ec182f3571974069d5b88d405`
-- Recent merge verified: PR #12 `358H: close Phase-3 heterogeneous validation`, merged=true.
-- Files/directories inspected:
-  - `README.md`
-  - `REPO_STATUS.md`
-  - `paper/mlsys2027/` listing
-  - `paper/notes/` listing
-  - `paper/mlsys2027/EVIDENCE_AUDIT_2026-09-18.md`
-  - `paper/mlsys2027/WRITING_STATUS.md`
-  - `paper/mlsys2027/OUTLINE.md`
-  - `paper/mlsys2027/README.md`
-  - `paper/notes/CROSS_PLATFORM_MECHANISM.md`
-  - `paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md`
-  - `reports/m4/M4_EXPERIMENT_INDEX.md`
-  - `reports/m4/M4_HUMANEVAL_CODE_CONDITIONED.md`
-  - `reports/m4/M4_CONFIRMATORY_VALIDATION.md`
-  - `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md`
-  - `reports/b570/B570_PLATFORM_CLOSEOUT.md`
-  - `reports/b570/B570_EXACT_FALLBACK_VALIDATION.md`
-  - `reports/b570/B570_FAST_VS_EXACT_FALLBACK.md`
-  - `reports/358h/` listing
-  - `reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md`
-  - `reports/358h/358H_PLATFORM_CLOSEOUT.md`
-  - `reports/358h/358H_PROVENANCE_AMENDMENT.md`
-  - `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`
+- Main HEAD: `8de9642b3d27830ec182f3571974069d5b88d405`.
+- PR #12 verified merged: `358H: close Phase-3 heterogeneous validation`.
+- Inspected root status/docs, paper workspace, paper notes, and final platform reports.
 - Findings:
-  - four platform campaigns are scientifically closed;
-  - 358H is merged, making several living paper/status docs stale;
-  - root README is already synchronized;
-  - B570 `V2_exact` terminology is too strong for 60/90 full-workload exactness;
-  - candidate unified formula remains viable if `T_d` means realized stateful subsystem cost and `V_k` is correctness-filtered.
-- Changed conclusions:
-  - 358H moved from provisional to final closed evidence;
-  - state-interface cost becomes a first-class measured mechanism;
-  - B570 serialized factor must be renamed in paper-facing material.
-- Unresolved:
-  - platform-deep raw/provenance checks;
-  - aggregation/CI consistency;
-  - exact common meaning of admissible V2 in partially exact B570 case;
-  - novelty/literature positioning;
-  - whether runtime co-design is necessary for the final contribution.
+  - four hardware campaigns scientifically closed;
+  - 358H merged, making several paper-control documents stale;
+  - root README synchronized;
+  - B570 `V2_exact` terminology too strong at workload scope;
+  - candidate unified formula viable only if draft cost is realized stateful cost and verification is correctness constrained.
+- Changed conclusions at that time:
+  - 358H provisional → final closed evidence;
+  - state-interface cost elevated to first-class mechanism;
+  - B570 serialized factor renamed for paper use.
 
 ### Round 2 — 2026-09-18 — M4 deep evidence-chain audit
 
 - Traced preregistration → frozen selection → raw results → analysis script → prompt summaries → report.
 - Independently recomputed HumanEval and representative 24Q headline statistics.
 - No headline discrepancy found.
-- Tightened energy wording and bootstrap-resample count.
-- Clarified that `accepted_per_round` is not the unified `C`.
+- Tightened energy wording and bootstrap-resample reporting.
+- Clarified `accepted_per_round` ≠ unified `C`.
 
 ### Round 3 — 2026-09-18 — RTX 5070 Ti Laptop deep audit
 
-- Independently recomputed exact-control HumanEval statistics from the committed pair-level CSV.
-- Verified verification-cost controls and stable numerical sign flip.
+- Independently recomputed exact-control HumanEval statistics from committed pair-level data.
+- Verified verification-cost controls and stable numerical argmax sign flip.
 - No headline discrepancy found.
 - Added raw-trace Git provenance limitation for local/ignored run JSON files.
 
 ### Round 4 — 2026-09-18 — Arc B570 deep audit
 
-- Verified formal-v2 stop rule, post-gate diagnostic status, one-candidate fallback preregistration, full fallback processed result, and archive contents.
+- Verified formal-v2 stop rule, diagnostic-only extension, serialized fallback preregistration, full processed result, archive.
 - No headline discrepancy found.
-- Confirmed that `V2_exact` must not be inherited as a paper-facing global-exact label.
-- Confirmed all fallback timing/energy remains diagnostic because 60/90, not 90/90, pairs are exact.
+- Confirmed `V2_exact` must not be inherited as a global paper label.
+- Fallback timing/energy remains diagnostic because full-workload exactness is 60/90, not 90/90.
 
 ### Round 5 — 2026-09-18 — 358H deep audit
 
 - Independently recomputed prompt-level performance, exactness, decomposition, and committed-work accounting.
-- Inspected runner implementation to verify whole-prefix OpenVINO replay semantics.
+- Inspected runner implementation: OpenVINO proposal call replays the entire committed prefix.
 - Verified 34-entry manifest and recovery-bundle integrity metadata.
 - No headline discrepancy found.
-- Elevated direct `C` semantics and state-interface cost as measured evidence for the unified framework.
-
+- Elevated direct `C` semantics and state-interface cost as measured evidence.
 
 ### Round 6 — 2026-09-18 — unified formula / mechanism audit
 
-- Re-discovered Stage-C Skills/tools; no scientific modeling plugin superseded repository evidence.
-- Audited the verification-amortization note against M4/RTX/B570 microbenchmarks and the 358H realized decomposition.
-- Found and corrected a symbol-level conflation between target-forward `PPk/PP1` and complete realized target-side round cost.
-- The minimal accounting thesis survives, but the paper must use `R_target` for end-to-end cost and reserve `V_k^micro` for mechanism diagnosis.
-- Verified the revised identity exactly on 358H arithmetic totals.
-- Reconstructed M4 effective output progress per reported verification round as a diagnostic only; did not promote it to direct `C`.
+- Corrected conflation between target-forward `PPk/PP1` and complete realized target-side round cost.
+- Final accounting uses `R_target`; `V_k^micro` is mechanism diagnosis.
+- Revised identity verified exactly on 358H arithmetic totals.
+- M4 effective progress reconstruction retained as descriptive only, not direct `C`.
 
 ### Round 7 — 2026-09-18 — statistics / CI / aggregation audit
 
-- Re-discovered Stage-B Skills/tools; no dedicated statistical-validation plugin was available.
-- Independently reproduced headline point estimates and bootstrap CIs for:
-  - M4 HumanEval fixed k2 / p_min conditions;
-  - M4 representative 24Q;
-  - Windows CPU→RTX and RTX→RTX exact controls;
-  - 358H CPU and NPU Phase3.
-- Verified all headline studies use HumanEval/Spec-Bench prompt as the bootstrap unit after reducing repetitions within prompt; no headline pseudoreplication was found.
-- Protocol-specific within-prompt estimators differ (geometric mean for M4/RTX, median for 358H) and must not be silently homogenized.
-- Bootstrap implementations/resample counts also differ by frozen study; this is acceptable when reported, but the manuscript should make the differences explicit.
-- B570 exact-fallback point estimates **and CIs** reproduce exactly after replaying the retained finalizer's first-seen prompt order. The finalizer script is preserved in commit `15e3bd19...`; no B570 CI reproducibility gap remains.
-- Statistical CIs primarily reflect prompt-sampling uncertainty conditional on each campaign. They do not capture full between-session/thermal/runtime-state uncertainty; M4 representative repetition drift makes this limitation particularly important.
-- No statistical finding changes the sign or correctness-admissibility of any headline platform result.
-- B570 audit lesson: report the bootstrap unit, seed, resample count, estimator, **and deterministic input ordering** when bit-level CI reproducibility matters.
+- Independently reproduced headline point estimates and bootstrap CIs for M4 HumanEval, M4 24Q, Windows exact HumanEval controls, and 358H CPU/NPU.
+- Prompt is the bootstrap unit after within-prompt repetition reduction; no headline pseudoreplication found.
+- Within-prompt estimators and resample counts differ by frozen study and must remain explicit.
+- B570 exact-fallback CIs reproduced bit-for-bit when retained first-seen prompt order is replayed.
+- CIs primarily reflect prompt sampling conditional on each campaign, not full system-state uncertainty.
+- No statistical finding changes any headline sign or correctness-admissibility class.
 
-## 22. Round 8 — correctness-contract audit
+### Round 8 — 2026-09-18 — correctness-contract audit
 
-**Verdict: contract is scientifically usable, but must be bound to runtime/config/path/workload rather than platform name.**
+- Common paper meaning: deterministic greedy generated-token equality under frozen normalization; prompt/prefix excluded; first genuine generated-token divergence fails the pair/path.
+- M4 final llama.cpp Q8_0 path is exact in frozen studies; earlier MLX-LM 4-bit failure remains historical evidence, not a contradiction.
+- RTX default batched path correctness-blocked; serialized controls exact.
+- B570 fast 45/90; serialized 60/90; small gate exactness does not imply workload-global exactness.
+- 358H CPU/NPU each 90/90 exact.
+- Functional HumanEval correctness is not claimed.
 
-Common paper-level meaning:
-- deterministic greedy generation;
-- compare generated target-model token IDs under the frozen run's normalization;
-- prompt/prefix excluded;
-- first genuine generated-token divergence fails that pair/path;
-- functional HumanEval execution is not part of the correctness claim.
+### Round 9 — 2026-09-18 — energy-boundary audit
 
-Platform-specific findings:
-- **M4:** early MLX-LM 4-bit native speculation failed exactness on frozen question 469. This historical failure does not apply to the later llama.cpp Metal Q8_0 paper path, which is 72/72 exact on representative 24Q and 90/90 on HumanEval fixed-k2.
-- **RTX CUDA:** default batched path is correctness-blocked; serialized ubatch=1 controls are 90/90 exact. The stable argmax sign flip supports a path-specific numerical explanation, not a universal backend verdict.
-- **B570 Vulkan:** normalization explicitly removes prompt/prefix ambiguity and treats parser ambiguity as configuration error. Fast path is 45/90 exact; serialized fallback is 60/90. A six-prompt 18/18 gate did not generalize, proving that small-gate exactness cannot be promoted to workload-global exactness.
-- **358H:** CPU and NPU both pass 90/90 generated-token equality against the same shared Vulkan target baseline.
+- M4: Silemetry CPU+GPU+ANE package aggregate; separate DRAM excluded.
+- RTX: NVIDIA board and Intel CPU package are separate domains and are not summed as calibrated whole-system energy.
+- B570: Arc B570 board only.
+- 358H: no end-to-end energy claim.
+- Energy is secondary/appendix material; no cross-platform absolute ranking.
 
-Paper rule:
-- never write “M4/CUDA/Vulkan is exact/non-exact” without the qualified runtime/path;
-- never use “exact” as a synonym for serialized;
-- never equate token equality with functional code correctness.
+### Round 10 — 2026-09-18/19 — cross-platform claim / novelty audit
 
-## 23. Round 9 — energy-boundary audit
+- Surviving claims: correctness filtering can remove physically cheap verification; realized stateful draft cost can diverge from isolated throughput; acceptance alone does not determine profitability; distinct regimes exist under tested conditions.
+- Related work already includes heterogeneous speculative decoding and performance modeling; heterogeneous SD itself and generic cost algebra are not safe novelty claims.
+- Final framing: audited correctness-constrained realized-cost cross-platform characterization.
 
-**Verdict: energy is valid only within each sensor boundary; no cross-platform absolute ranking is admissible.**
+### Stage D — runtime/software co-design audit
 
-| Platform/path | Admissible boundary | Result allowed | Forbidden interpretation |
-|---|---|---|---|
-| M4 llama.cpp | Silemetry CPU+GPU+ANE package aggregate; separate DRAM excluded | 24Q package efficiency 0.678x; HumanEval fixed-k2 1.013x [0.990,1.034] = energy-neutral within uncertainty; p_min=.9 secondary 1.041x [1.018,1.065] | whole-device/wall energy; direct numeric comparison with RTX/B570 |
-| RTX 5070 Ti Laptop formal power | NVIDIA board and Intel CPU package are separate component domains | baseline/custom/native component J/token within matched run | summing the two domains as calibrated whole-system energy; using HumanEval serialized follow-up as formal energy evidence |
-| B570 fallback | Arc B570 adapter-board power only | diagnostic board ratio 0.3023x [0.2846,0.3202] | whole-system or CPU-inclusive energy; admissible optimization result |
-| 358H Phase 3 | none for end-to-end system | **no end-to-end energy claim** | CPU-vs-NPU Phase3 energy comparison; inferring NPU energy from package RAPL |
+- No implementation added.
+- Evidence-derived opportunities: persistent draft state, correctness-aware verification selection, workload-aware profitability control, adaptive proposal budget, realized-cost device selection.
+- None is required to make current evidence scientifically valid; measured intervention could strengthen future systems novelty.
 
-Energy must be secondary/appendix material because boundaries differ materially.
+### Stage F — figure-policy audit
 
-## 24. Round 10 — cross-platform claim and novelty audit
+- Main figures should show realized-cost accounting, regime map, verification-path admissibility, 358H decomposition, M4 workload contrast.
+- Energy only as sensor-boundary-separated small multiples.
+- Never mix accepted draft tokens/round with direct `C` on an unlabeled common axis.
 
-### Claims that survive
+### Round 11 — adversarial reviewer audit
 
-- Correctness filtering can remove the physically cheapest verification path.
-- Realized stateful draft cost can differ radically from isolated draft throughput.
-- High acceptance does not determine profitability by itself.
-- Consumer speculative decoding exhibits distinct regimes under different runtime/workload conditions.
-- A code-conditioned profitable M4 regime exists without implying representative M4 profitability.
+- Highest risks: novelty, confounded cross-platform comparison, HumanEval interpretation/cherry-picking, exactness contract, B570 terminology, 358H adapter/interface confound, energy comparability, model/platform scope, no runtime intervention.
+- Final adversarial verdict: scientifically coherent if claims stay bounded; novelty risk dominates result-validity risk.
 
-### Claims downgraded or forbidden after literature check
+### Round 12 — final thesis / contribution freeze
 
-Current related work already includes:
-- **Dovetail (2024):** CPU/GPU heterogeneous speculative decoding.
-- **DuoDecoding (2025):** hardware-aware heterogeneous CPU/GPU speculative decoding.
-- **Mirror Speculative Decoding (2025):** explicit heterogeneous GPU/NPU mapping.
-- **Speculative Decoding: Performance or Illusion? (2025/26):** systematic production-engine performance characterization and theoretical upper-bound analysis.
-- **Speculation at a Distance (2026):** closed-form conditions for distributed/edge-cloud speculative decoding.
+- Scientific story frozen as correctness-constrained realized-cost characterization of when speculative decoding pays on tested consumer systems.
+- Evidence hierarchy frozen: primary M4 24Q + M4 HumanEval + RTX exact controls + 358H Phase3; mechanism-supported M4/RTX/358H controls; B570 and exploratory controls diagnostic where specified.
+- Hardware campaigns closed; headline statistics reproduced; correctness/energy terminology frozen.
+- Remaining work: manuscript/figures and optional separately scoped co-design, not unresolved interpretation of existing hardware data.
 
-Therefore:
-- heterogeneous SD itself is not novel;
-- a generic “acceptance/draft/verification cost determines speedup” formula is not safe as a novelty claim;
-- the paper should position its framework as an **audited realized-cost/correctness accounting discipline** attached to cross-platform evidence.
+### Round 1 revalidation — 2026-09-19 — repository-wide final-status / stale-document re-audit
 
-External literature audit does not alter any repository measurement.
+- Main HEAD rechecked: `8de9642b3d27830ec182f3571974069d5b88d405`; unchanged from the audited Phase3 merge.
+- PR #12 rechecked: merged=true; 358H Phase3 is on `main`.
+- Existing audit PR #13 discovered/rechecked:
+  - head branch `paper/audit-round1-20260918`;
+  - base `main` at `8de9642...`;
+  - branch was 12 commits ahead / 0 behind before this update;
+  - it already contained the synchronized living-doc repairs and Rounds 1–12 handoff.
+- Repository/status files inspected in this bounded pass:
+  - `README.md` on main;
+  - `REPO_STATUS.md` on main and audit branch;
+  - `paper/mlsys2027/` listing;
+  - `paper/notes/` listing;
+  - `paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md` on audit branch;
+  - main `EVIDENCE_AUDIT_2026-09-18.md`, `WRITING_STATUS.md`, `README.md`, `OUTLINE.md`;
+  - audit-branch synchronized evidence/status docs;
+  - `reports/m4/M4_EXPERIMENT_INDEX.md`;
+  - `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md`;
+  - `reports/b570/B570_PLATFORM_CLOSEOUT.md`;
+  - `reports/358h/358H_PLATFORM_CLOSEOUT.md`;
+  - recent commits and PR #12/#13 metadata.
+- Findings:
+  - **no new headline result/status drift** across the four platforms;
+  - root README remains synchronized with final platform states;
+  - the stale living docs still present on `main` are already corrected in PR #13, so no duplicate repair branch was created;
+  - historical closeout reports with pre-merge process statements remain intentionally untouched;
+  - current Skill availability changed materially: Data Analytics now exposes `validate-data` and `analyze-data-quality`, so old “no dedicated validation skill” wording was stale.
+- Scientific conclusion changes from this revalidation: **none**.
+- Tooling/process change: Stage-A capability record refreshed; `validate-data` and `analyze-data-quality` are now recognized as audit workflow aids, subordinate to frozen definitions/repository evidence.
+- No new raw-data sweep was performed because Round 1 is intentionally status/staleness-bounded and deep platform audits already exist on this branch.
+- No new experiment, parameter search, preregistration edit, raw-data edit, or historical-report rewrite was performed.
 
-## 25. Stage D — runtime/software co-design audit
+## 21. Next audit / work queue
 
-No implementation is added to the current paper evidence.
+All originally requested audit rounds are complete on this branch. Current recommended sequence, only when explicitly requested:
 
-Evidence-derived future designs:
-1. persistent draft state / KV reuse for 358H-like adapters;
-2. correctness-qualified verification-path selection;
-3. workload-aware speculation controller for M4-like regime switching;
-4. adaptive proposal budget only in a separately preregistered study.
+1. Re-run Skill/Plugin discovery for the next major stage.
+2. Use this handoff as the scientific authority for manuscript drafting.
+3. Produce figures only under the Section 10/Stage-F comparability constraints.
+4. If runtime/software co-design is pursued, create a new scoped branch and preregistration; do not extend the closed hardware campaigns post hoc.
+5. Before final submission/release, perform one final reviewer/adversarial re-audit and repository/publication hygiene pass.
 
-Round-12 decision: **none is required to make the current empirical characterization scientifically valid**, but a measured runtime intervention would materially strengthen the paper's algorithmic/systems novelty. Without it, the paper should be sold as a rigorous systems characterization/mechanism paper, not as a new speculative-decoding runtime.
-
-## 26. Stage F — final figure policy
-
-Recommended main-paper figures:
-
-1. **Correctness-constrained realized-cost schematic** — visually separate `D_real`, complete `R_target`, residual `X`, committed progress `C`, and `V_k^micro` as a diagnostic inset.
-2. **Regime map, not leaderboard** — M4 24Q, M4 HumanEval, RTX exact controls, B570 correctness-blocked, 358H CPU/NPU. Encode correctness status separately from speed.
-3. **Verification-path figure** — M4/RTX/B570 `V_2^micro` with explicit path and correctness markers; never imply matched context/hardware.
-4. **358H decomposition** — CPU vs NPU realized draft / target / residual stacked cost.
-5. **M4 workload contrast** — representative 24Q negative vs preregistered HumanEval positive with CIs.
-
-Appendix only:
-- energy small multiples, each with its sensor boundary;
-- detailed provenance / protocol deviations;
-- B570 diagnostic distributions.
-
-Do **not** plot accepted-draft-tokens/round and direct `C` on one unlabeled common axis.
-
-## 27. Round 11 — adversarial reviewer audit
-
-Highest-severity attacks and frozen responses:
-
-1. **“Heterogeneous SD already exists.” — HIGH**
-   - Agree. Do not claim algorithmic firstness. Differentiate by correctness-constrained, realized-cost, cross-platform empirical characterization.
-
-2. **“The cross-platform comparison is confounded.” — HIGH**
-   - Agree. Claim repeated mechanism regimes, not hardware causality or ranking. Keep within-platform controls as causal evidence.
-
-3. **“The accounting equation is tautological / not a new model.” — HIGH**
-   - Treat it as an accounting discipline and diagnostic vocabulary. Novelty must come from audited evidence and distinctions, not algebra alone.
-
-4. **“HumanEval success is cherry-picked after representative failure.” — HIGH**
-   - Show chronology, separate preregistration, frozen 30-ID selection, no post-run prompt removal, and retain the representative 24Q failure prominently. Call it an existence proof / conditioned regime.
-
-5. **“HumanEval code was never executed.” — HIGH**
-   - State explicitly. HumanEval is used as a structured generation distribution; exactness is token equality, not pass@k.
-
-6. **“Strict token exactness is an arbitrary contract.” — MEDIUM-HIGH**
-   - Motivate it as deterministic greedy reference equivalence for this study. Do not claim other approximate-quality contracts are invalid; classify them as a different research question.
-
-7. **“M4 itself showed a numerical exactness failure.” — HIGH if omitted**
-   - Disclose that the failure was the earlier MLX-LM 4-bit path. The final llama.cpp Q8_0 path is a different qualified runtime and passes its frozen gates.
-
-8. **“B570 fallback is called exact even though 30/90 pairs mismatch.” — HIGH**
-   - Paper-facing terminology is `serialized fallback` / `V2_serialized`. Historical `V2_exact` wording remains provenance only.
-
-9. **“358H NPU loss is a bad adapter, not an NPU result.” — HIGH**
-   - Agree with the bounded interpretation. This is precisely a state-interface result. Do not generalize to NPU hardware.
-
-10. **“M4 CI ignores session/thermal uncertainty.” — MEDIUM-HIGH**
-    - Prompt bootstrap captures prompt sampling, not full system-state uncertainty. Report 24Q repetition drift and the fanless/session limitation.
-
-11. **“Windows raw logs are incomplete in Git.” — MEDIUM**
-    - Derived pair tables, summaries, manifests and mechanism evidence are committed and independently recomputed; disclose raw per-run JSON provenance is weaker than M4/B570/358H.
-
-12. **“Energy numbers are incomparable.” — HIGH**
-    - Agree; use separate sensor-boundary panels and no global J/token ranking.
-
-13. **“Only Qwen3 8B/0.6B and four systems.” — HIGH**
-    - Bound generalization to the tested model family/runtimes. Do not claim universal hardware law.
-
-14. **“No new runtime optimization is implemented.” — HIGH for a systems venue**
-    - Frame as characterization/mechanism study. A future state-reuse intervention is high-value strengthening work but is not retroactively part of the closed evidence.
-
-15. **“358H source provenance is reconstructed.” — MEDIUM**
-    - Retain STRONGLY_SUPPORTED classification; never claim recovered historical identity.
-
-Final adversarial verdict: **scientifically coherent and defensible if claims remain bounded; novelty risk, not result validity, is the dominant paper risk.**
-
-## 28. Round 12 — final thesis / contribution freeze
-
-### Frozen scientific story
-
-The paper is **not** “heterogeneous speculative decoding works/doesn't work.”
-
-It is:
-
-> **A correctness-constrained, realized-cost characterization of when speculative decoding pays on consumer systems.** The same nominal draft-target idea spans profitable, exact-but-negative, fast-but-inadmissible, and state-interface-bound regimes because the usable verification path and actual runtime state costs matter as much as acceptance.
-
-### Frozen evidence hierarchy
-
-**Primary**
-- M4 representative 24Q.
-- M4 preregistered HumanEval fixed-k2.
-- RTX exact serialized HumanEval controls.
-- 358H CPU/NPU Phase3 exact end-to-end results.
-
-**Mechanism-supported**
-- M4 target-forward batching microbench.
-- RTX raw-vs-serialized verification controls and stable numerical divergence.
-- 358H measured decomposition and full-prefix proposal semantics.
-
-**Diagnostic only**
-- B570 fast and serialized fallback performance/energy.
-- M4 older synthetic acceptance curve and discovery pilots.
-- RTX small native/root-cause diagnostics where not the frozen final control.
-
-### Final paper readiness
-
-- Hardware campaigns: CLOSED.
-- Rounds 1–12 audit: COMPLETE.
-- Headline statistics: independently reproduced.
-- B570 CIs: reproduced bit-for-bit after replaying retained input order.
-- Correctness terminology: frozen.
-- Energy boundaries: frozen.
-- Unified cost vocabulary: corrected.
-- Contribution order: frozen.
-- Remaining work is manuscript/figure production and optional future co-design, not unresolved interpretation of existing hardware data.
-
-
-## 21. Next audit queue
-
-**All requested audit rounds are complete.**
-
-Next workflow, only when requested:
-1. synchronize `OUTLINE.md` / writing status with the frozen thesis;
-2. draft manuscript sections from this handoff;
-3. produce figures under Section 26 constraints;
-4. optionally design a separately preregistered runtime co-design study.
-
-No additional hardware experiment is authorized by this audit.
+No additional hardware experiment is authorized by this handoff.
 
 ---
 
-Scientific stop rule for this handoff: if later evidence contradicts this Round-1 synthesis, update the ledger and Decision log. Do not preserve a preferred paper story at the expense of repository evidence.
+Scientific stop rule: if later repository evidence contradicts any frozen synthesis here, update the Evidence Ledger and Decision Log explicitly. Do not preserve a preferred paper story at the expense of evidence.

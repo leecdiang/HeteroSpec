@@ -6,7 +6,7 @@
 
 ## 0. Handoff metadata
 
-- Last updated: 2026-09-18
+- Last updated: 2026-09-19
 - Audited branch base: `main`
 - Audited main HEAD: `8de9642b3d27830ec182f3571974069d5b88d405`
 - Head meaning: merge commit for PR #12, `358H: close Phase-3 heterogeneous validation`
@@ -695,13 +695,12 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - New: realized cost accounting is evaluated at the same aggregation level as its inputs. For 358H, arithmetic totals exactly reproduce the aggregate baseline/speculative time ratio; prompt-GM remains the preregistered headline estimator.
 - Reason: ratio-of-totals and geometric mean of per-prompt paired ratios are different estimands.
 
-### D-20260918-11 — B570 historical CI reproducibility
-- Old: treat the exact-fallback bootstrap CI as fully bit-reproducible from retained repository evidence.
-- New: point estimates and prompt vectors are exactly reproducible, but the historical fallback CI is **not bit-reproducible** from the retained prompt CSV plus the documented 10,000-resample / seed-20260910 protocol using the repository's other explicit bootstrap implementations.
-- Evidence: retained prompt vector reproduces speed GM 0.3086821108 and board-energy ratio 0.3022757554 exactly. Independent Python-random prompt bootstrap gives approximately [0.292296, 0.324557] and [0.284136, 0.320095], versus historical [0.292690, 0.324604] and [0.284553, 0.320160].
-- Repository trace: PR #7 and the still-present `windows/b570-backend-control` branch preserve the derived outputs and protocol but no analysis script that generated these fallback CIs.
-- Scientific impact: none on direction or admissibility; all intervals are far below 1 and the whole fallback performance result is diagnostic because correctness is 60/90.
-- Paper policy: do not rewrite the historical report. If a B570 diagnostic CI is printed in the paper, either label it as the historical archived CI or use a separately documented paper-level reanalysis; never claim bit-level reconstruction that the archive does not support.
+### D-20260918-11 — B570 historical CI reproducibility — SUPERSEDED DURING ROUND 7
+- Provisional observation: re-bootstrapping the numerically sorted prompt CSV gave a slightly different finite-sample CI.
+- Resolution: this was **not** a historical-analysis error. Commit `15e3bd19...` retains `scripts/platform/b570/finalize_b570_exact_fallback.py`, which builds prompt dictionaries in first-seen randomized execution order and then applies Python `random.Random(20260910)` for 10,000 resamples.
+- Replaying that exact retained input order reproduces the archived speed CI **[0.2926903625835106, 0.3246036952205638]** and energy CI **[0.28455311861341115, 0.3201604335732349]** bit-for-bit.
+- Lesson: a finite fixed-seed bootstrap is numerically sensitive to input ordering even though the underlying empirical prompt distribution is the same. The raw pair archive preserves the required order, so B570 CI provenance is complete.
+- Scientific impact: none; the final Round-7 verdict is full reproduction, not a reproducibility gap.
 
 ## 20. Audit log
 
@@ -800,9 +799,10 @@ Do not write prose from this outline until Round 12 thesis/contribution freeze.
 - Verified all headline studies use HumanEval/Spec-Bench prompt as the bootstrap unit after reducing repetitions within prompt; no headline pseudoreplication was found.
 - Protocol-specific within-prompt estimators differ (geometric mean for M4/RTX, median for 358H) and must not be silently homogenized.
 - Bootstrap implementations/resample counts also differ by frozen study; this is acceptable when reported, but the manuscript should make the differences explicit.
-- B570 exact-fallback point estimates reproduce exactly; historical fallback CI is not bit-reconstructable because its analysis implementation was not retained. Discrepancy is small and does not affect any conclusion.
+- B570 exact-fallback point estimates **and CIs** reproduce exactly after replaying the retained finalizer's first-seen prompt order. The finalizer script is preserved in commit `15e3bd19...`; no B570 CI reproducibility gap remains.
 - Statistical CIs primarily reflect prompt-sampling uncertainty conditional on each campaign. They do not capture full between-session/thermal/runtime-state uncertainty; M4 representative repetition drift makes this limitation particularly important.
 - No statistical finding changes the sign or correctness-admissibility of any headline platform result.
+- B570 audit lesson: report the bootstrap unit, seed, resample count, estimator, **and deterministic input ordering** when bit-level CI reproducibility matters.
 
 ## 21. Next audit queue
 

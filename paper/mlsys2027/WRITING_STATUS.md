@@ -1,46 +1,61 @@
 # MLSys 2027 writing status
 
-Status date: 2026-09-18.
+Status date: 2026-09-19.
 
 Authoritative scientific control file: `PAPER_FRAMEWORK_HANDOFF.md`.
 
+Scientific audit status: **ROUNDS 1–12 COMPLETE**.
+
 Legend:
-- READY — evidence is sufficiently closed to draft.
-- AUDIT — draftable only with explicit ledger/provenance checks still pending.
-- HOLD — do not freeze.
+- READY — scientifically closed enough to draft from the handoff.
+- FUTURE — not part of current evidence; requires a new preregistered study if pursued.
 
 | Section | Status | Notes |
 |---|---|---|
-| Introduction | AUDIT | Main question is stable; final headline ordering waits for cross-platform claim audit. |
-| Background: speculative decoding | READY | Algorithmic explanation is stable. |
-| Cost / break-even model | AUDIT | Minimal formula is provisionally supported; full formula audit is Round 6. |
-| Correctness contract | AUDIT | Token-ID equality is stable; dedicated contract audit remains Round 8. |
-| Methodology: M4 | AUDIT | Platform closed; deep provenance/statistics audit pending. |
-| Methodology: RTX 5070 Ti Laptop | AUDIT | Platform closed; preserve Laptop designation. |
-| Methodology: B570 | AUDIT | Platform closed; serialized `V2_exact` terminology needs correction in paper-facing text. |
-| Methodology: 358H | AUDIT | Phase 0–3 closed and merged; source-provenance limitation must remain explicit. |
-| M4 results | AUDIT | Include representative negative + preregistered code-conditioned positive. |
-| RTX results | AUDIT | Include raw-vs-admissible verification distinction. |
-| B570 results | AUDIT | No correctness-admissible optimization result; timing/energy diagnostic. |
-| 358H results | AUDIT | CPU 0.734x, NPU 0.352x; both exact; verification/state-interface mechanisms. |
-| Cross-platform final table | AUDIT | Can be drafted from ledger, but final wording waits for Round 10. |
-| Discussion | HOLD | Wait for formula, stats, correctness, energy, and cross-platform audits. |
-| Related work | AUDIT | Requires literature/novelty pass. |
-| Limitations | READY | Existing boundaries are explicit; refine after dedicated audits. |
-| Abstract | HOLD | Freeze after final thesis/contribution ordering. |
-| Conclusion | HOLD | Freeze after Round 12. |
-| Appendix | AUDIT | Can be assembled incrementally from provenance material. |
+| Introduction | READY | Final thesis and contribution order frozen. |
+| Background: speculative decoding | READY | Explain algorithm without claiming heterogeneous SD novelty. |
+| Realized-cost accounting | READY | Use corrected `D_real + R_target + X`; keep `V_k^micro` separate. |
+| Correctness contract | READY | Bind claims to runtime/config/path/workload; token exactness != functional HumanEval correctness. |
+| Methodology: M4 | READY | Distinguish historical MLX-LM 4-bit failure from final llama.cpp Q8_0 path. |
+| Methodology: RTX 5070 Ti Laptop | READY | Preserve “Laptop”; disclose weaker raw per-run Git provenance. |
+| Methodology: B570 | READY | Use `V2_serialized`; no admissible optimization result. |
+| Methodology: 358H | READY | Phase 0–3 closed; STRONGLY_SUPPORTED source reconstruction limitation stays explicit. |
+| M4 results | READY | Representative negative + preregistered code-conditioned positive. |
+| RTX results | READY | Raw-fast vs correctness-admissible serialized distinction. |
+| B570 results | READY | Timing/energy diagnostic only. |
+| 358H results | READY | CPU 0.734x, NPU 0.352x; exact; measured verification/state-interface mechanisms. |
+| Cross-platform regime map | READY | Mechanism/regime map only; no hardware leaderboard. |
+| Energy | READY | Boundary-separated only; no global J/token ranking. |
+| Discussion | READY | State reuse / path selection / workload-aware policy are implications, not measured contributions. |
+| Related work | READY | Must include Dovetail, DuoDecoding, Mirror-SD and systematic SD performance-modeling work; no firstness claim. |
+| Limitations | READY | Reviewer attack list is frozen in handoff. |
+| Abstract | READY | Draft only from frozen thesis. |
+| Conclusion | READY | Draft only from frozen thesis. |
+| Appendix | READY | Provenance, exactness, bootstrap, telemetry and deviations can be assembled from ledger. |
+| New runtime state-reuse implementation | FUTURE | Separate preregistration and measurements required; not necessary to reinterpret current data. |
 
-## Internal evidence discipline
+## Non-negotiable evidence discipline
 
-For every table/figure intended for the paper, maintain:
-- source report / analysis file;
-- source commit;
-- exact aggregation script;
-- primary / secondary / diagnostic / post-hoc classification;
-- correctness status;
-- energy sensor boundary if applicable.
+For every manuscript table/figure:
+- cite the exact source report / analysis file;
+- retain source commit / archive reference;
+- record aggregation script and estimator;
+- mark primary / secondary / mechanism / diagnostic evidence;
+- state correctness status;
+- state energy sensor boundary where applicable.
 
-Do not convert a diagnostic result into a primary optimization claim.
-Do not use `V2_exact` for the B570 serialized fallback as a global statement while full-workload exactness is 60/90.
-Do not use isolated NPU throughput as the 358H end-to-end draft cost.
+Do not:
+- convert diagnostics into primary optimization claims;
+- call B570 serialized fallback globally exact;
+- use target-forward `V_k^micro` as full realized target-round cost;
+- use accepted draft tokens/round as direct `C`;
+- use isolated NPU tok/s as realized draft cost;
+- imply HumanEval token exactness is functional pass@k;
+- rank M4/RTX/B570 energy as a common calibrated domain;
+- claim heterogeneous speculative decoding or a generic cost formula as first work.
+
+## Ready-to-write scientific thesis
+
+A correctness-admissible speculative path is profitable only when the realized stateful draft interface and complete target-side round cost remain below the progress actually committed per round. The four consumer systems expose profitable, exact-but-negative, fast-but-inadmissible, and state-interface-bound regimes.
+
+See `PAPER_FRAMEWORK_HANDOFF.md` Sections 22–28 for the final audit and reviewer constraints.

@@ -2,92 +2,130 @@
 
 ## Purpose
 
-This note defines one cost vocabulary for the completed M4, Windows/CUDA, B570, and 358H studies. It separates an algorithm's nominal batching opportunity from the execution path that remains admissible after correctness is enforced.
+This note defines the audited cost vocabulary for the completed M4, RTX 5070 Ti Laptop/CUDA, Arc B570/Vulkan, and Core Ultra X7 358H studies. The central rule is to keep three concepts separate:
 
-## Exact verification amortization factor
+1. **realized end-to-end round cost**;
+2. **target-forward microbenchmark batching opportunity**;
+3. **correctness admissibility**.
 
-For target context depth `n` and proposal width `k`, define
+A fast microbenchmark is not automatically a usable optimization path, and a target-forward PP2/PP1 ratio is not automatically the complete target-side cost of a speculative round.
 
-`V_k(n) = T_target_verify(k, n) / T_target_decode(1, n)`.
+## 1. Realized speculative-round accounting
 
-`V_k` is the **exact verification amortization factor** only when the measured verification path passes the study's output-equivalence gate. Values near one mean that a `k`-token causal block can be checked for approximately the cost of one autoregressive target step. Values near `k` mean that verification is effectively serialized.
+For a speculative round, let:
 
-Define the correctness-constrained factor
+- `T_b`: matched target-only baseline cost per committed output token;
+- `T_d(real)`: realized draft-subsystem cost through the actual runtime state interface;
+- `T_target,round(real)`: complete realized target-side work for the round, including proposal verification and any correction/bonus target work that lies inside the runtime's round semantics;
+- `T_x`: residual transfer, synchronization, scheduling, orchestration, bookkeeping, or other cost not already included;
+- `C`: **all committed output tokens per speculative round**, including correction/bonus behavior.
 
-`V_k^exact(n) = min V_k(n, e)` over execution paths `e` that pass the frozen correctness gate.
+Then, at one consistent aggregation level,
 
-This definition prevents a fast but output-divergent kernel path from being counted as usable amortization. If no tested path is exact, `V_k^exact` is unavailable, not the minimum timing observed.
+`speedup = T_b * C / [T_d(real) + T_target,round(real) + T_x]`.
 
-The tracked kernel-level proxies are:
+Normalize by `T_b`:
 
-| Platform/backend | Context | Path | Correctness status | `V_2` |
+- `D_real = T_d(real) / T_b`
+- `R_target = T_target,round(real) / T_b`
+- `X = T_x / T_b`
+
+so
+
+`speedup = C / [D_real + R_target + X]`
+
+and break-even is
+
+`C > D_real + R_target + X`.
+
+This is an accounting identity when every term is measured under the same boundary. It is not a claim that every platform exposes every term separately.
+
+## 2. Target-forward microbenchmark proxy
+
+For target context/depth `n`, proposal width `k`, and execution path `e`, define
+
+`V_k^micro(n,e) = T_target_forward(k,n,e) / T_target_decode(1,n)`.
+
+This measures whether the backend can evaluate a width-`k` causal block for near the cost of one target decode. It is a **mechanism proxy**, not an end-to-end decomposition.
+
+Tracked values:
+
+| Platform/backend | Context/depth | Path | Workload correctness status | `V_2^micro` |
 |---|---:|---|---|---:|
-| M4 llama.cpp/Metal | 512 | synchronized causal batch | exact in the surrounding llama.cpp gate | 1.022 |
-| M4 llama.cpp/Metal | 2,048 | synchronized causal batch | exact in the surrounding llama.cpp gate | 1.076 |
-| M4 llama.cpp/Metal | 8,192 | synchronized causal batch | exact in the surrounding llama.cpp gate | 1.032 |
-| Windows llama.cpp/CUDA | 0 | batched `ubatch=2` | correctness-blocked on the frozen HumanEval replication | 1.009 |
-| Windows llama.cpp/CUDA | 256 | batched `ubatch=2` | correctness-blocked on the frozen HumanEval replication | 0.983 |
-| Windows llama.cpp/CUDA | 0 | serialized `ubatch=1` | exact control | 2.431 |
-| Windows llama.cpp/CUDA | 256 | serialized `ubatch=1` | exact control | 2.137 |
+| M4 / Metal | 512 | synchronized causal batch | exact in tested surrounding gate | 1.022 |
+| M4 / Metal | 2,048 | synchronized causal batch | exact in tested surrounding gate | 1.076 |
+| M4 / Metal | 8,192 | synchronized causal batch | exact in tested surrounding gate | 1.032 |
+| RTX 5070 Ti Laptop / CUDA | 0 | batched `ubatch=2` | correctness-blocked on frozen HumanEval replication | 1.009 |
+| RTX 5070 Ti Laptop / CUDA | 256 | batched `ubatch=2` | correctness-blocked | 0.983 |
+| RTX 5070 Ti Laptop / CUDA | 0 | serialized `ubatch=1` | exact control | 2.431 |
+| RTX 5070 Ti Laptop / CUDA | 256 | serialized `ubatch=1` | exact control | 2.137 |
+| Arc B570 / Vulkan | 512 | serialized `ubatch=1` | **not globally exact** on HumanEval30 | 1.983 |
+| Arc B570 / Vulkan | 2,048 | serialized `ubatch=1` | **not globally exact** on HumanEval30 | 1.992 |
 
-These ratios are target-forward microbenchmarks, not end-to-end decompositions. The M4 table uses prefix lengths 512/2,048/8,192; the Windows table uses depths 0/256, so rows should not be treated as matched hardware measurements.
+Paper-facing B570 terminology is `V2_serialized`, not `V2_exact`.
 
-## Unified round cost model
+### Why `V_k^micro` is not `R_target`
 
-For one speculative round, let:
+The microbenchmark normally measures a target-forward block. A realized speculative round may additionally require target correction/bonus decode, initial-target behavior, rollback/state actions, or other target work. Therefore:
 
-- `T_b`: baseline target time per output token;
-- `T_d(k)`: time to produce `k` draft candidates, including any repeated draft prefill;
-- `T_v(k,e)`: target verification time on execution path `e`;
-- `T_x(e)`: transfer, synchronization, scheduling, Python/KV bookkeeping, correction, and other residual cost;
-- `C`: output tokens committed by the round under the actual acceptance sequence.
+- use `V_k^micro` to diagnose batching opportunity;
+- use `R_target` for complete end-to-end round accounting when it is measured;
+- never silently substitute one for the other.
 
-Then
+## 3. Correctness filtering
 
-`T_spec/token = [T_d(k) + T_v(k,e) + T_x(e)] / C`
+Correctness is a gate on optimization claims, not a timing adjustment.
 
-and
+1. Freeze model/runtime/workload/greedy settings.
+2. Compare generated target-model token IDs under the frozen normalization.
+3. A path that fails the workload-level token-exact contract is excluded from correctness-admissible performance claims.
+4. Serialization is not synonymous with exactness; B570 demonstrates this directly.
+5. HumanEval token equality is not functional pass@k.
 
-`speedup = T_b * C / [T_d(k) + V_k(e) * T_b + T_x(e)]`.
+On RTX/CUDA, the cheap batched path is physically real but fails the exactness gate; the tested exact control has much larger `V_2^micro`. On B570, even the serialized candidate remains only 60/90 exact pairs, so there is no globally admissible optimization result.
 
-The break-even condition is
+## 4. 358H: direct realized accounting
 
-`C > T_d(k)/T_b + V_k(e) + T_x(e)/T_b`.
+358H provides the cleanest measured realization because the formal runner records draft time, complete target-verification time, residual, and committed progress `C`.
 
-This equation explains why acceptance rate by itself is insufficient. Acceptance changes `C`, but profitability also requires small normalized draft cost, a low **correctness-admissible** `V_k`, and a small residual. Repository fields named `accepted_per_round` count accepted draft tokens as parsed from llama.cpp and are not silently substituted for `C`; a correction/bonus token and end effects depend on the runtime. End-to-end observed speedup remains authoritative.
+Using campaign arithmetic totals:
 
-## 358H realization: isolated draft speed is not system draft cost
+| Path | `C` | `D_real` | `R_target` | `X` | Aggregate ratio `C/(D+R+X)` |
+|---|---:|---:|---:|---:|---:|
+| CPU draft | 2.4631 | 0.4304 | 2.9767 | 0.00124 | 0.7227 |
+| NPU draft | 2.4584 | 4.1251 | 2.9435 | 0.00130 | 0.3477 |
 
-The 358H study adds a direct realization test of the model. Its frozen OpenVINO Qwen3-0.6B draft was characterized in isolation on CPU and NPU, and both devices then entered the same exact `k=2` adapter with an explicit Vulkan0 Qwen3-8B target. Acceptance remained high (CPU 75.31%, NPU 75.13%) and realized committed work was approximately `C=2.46`, yet post-prefill decode speedup was 0.734x on CPU and 0.352x on NPU.
+These are ratio-of-aggregate-cost identities. They are not expected to equal the preregistered prompt-level geometric-mean headline speedups (0.734x and 0.352x), because the estimands differ.
 
-The measured 90-request means expose why:
+The NPU path directly demonstrates why isolated draft throughput is not `T_d(real)`: each OpenVINO proposal call runs `LLMPipeline.generate` on the entire committed prefix, so replay/reconstruction plus proposal dominates the realized NPU draft interval.
 
-| 358H path | Draft replay + proposal | Target verification | Residual | Observed speedup |
-|---|---:|---:|---:|---:|
-| CPU draft | 12.63% | 87.34% | 0.04% | 0.734x |
-| NPU draft | 58.35% | 41.63% | 0.02% | 0.352x |
+## 5. Committed progress versus acceptance
 
-The OpenVINO adapter's synchronous proposal call reconstructs the complete committed prefix. Consequently its measured `T_d(k)` is not the isolated two-token generation cost: it includes runtime state reconstruction that grows with the prefix. For NPU this term dominates the system even though isolated draft throughput is favorable. Replay-only and proposal-only cannot be separated without changing the measured execution, so their combined cost is retained.
+Acceptance changes profitability only through the work it ultimately helps commit.
 
-This result strengthens the framework: `T_d(k)` must be measured at the actual state interface used by the end-to-end speculative loop. A device TOPS figure or isolated steady-state tokens/s cannot substitute for that quantity.
+- 358H directly measures `C`: 2.4631 CPU and 2.4584 NPU.
+- Historical M4/RTX `accepted_per_round` counts accepted **draft** tokens/round and is not `C`.
+- M4 HumanEval permits a boundary-affected reconstructed effective progress `output_tokens_runtime / verification_rounds`: approximately 2.826 fixed-k2, 2.676 at p_min=.8, and 2.606 at p_min=.9.
+- Because initial/final effects vary, those M4 values remain diagnostic and are not promoted to the same evidentiary status as 358H's direct round traces.
 
-## Correctness-constrained execution path
+This also shows why a higher acceptance rate does not necessarily imply larger realized committed progress under a different proposal policy.
 
-The admissible path is selected in this order:
+## 6. Platform interpretation
 
-1. Freeze model files, prompt set, greedy settings, proposal width, and runtime/build.
-2. Compare paired baseline and speculative output token IDs.
-3. Exclude a failing execution path from performance claims, even if it is faster.
-4. Measure the cheapest tested exact alternative and report its `V_k^exact`.
-5. Evaluate end-to-end cost and energy without mixing sensor boundaries.
+- **M4:** cheap exact width-two target-forward batching creates an opportunity; profitability is workload-conditioned. Representative 24Q remains negative while preregistered HumanEval fixed-k2 is positive.
+- **RTX 5070 Ti Laptop:** a cheap raw batched target-forward path exists, but the frozen token-exact gate excludes it. The tested exact serialized control is decisively negative.
+- **B570:** serialization raises target-forward cost and still does not establish universal token exactness; all fallback timing/energy remains diagnostic.
+- **358H CPU:** exact but target-side work dominates.
+- **358H NPU:** exact but full-prefix replay+proposal dominates the realized draft subsystem.
 
-On Windows, step 3 excludes batched `ubatch=2`; `ubatch=1` restores exactness but raises `V_2^exact` above two. On M4, the tested llama.cpp/Metal path retains exact output while keeping `V_2` near one. This is the central cross-platform constraint.
+## 7. What this framework does not claim
 
-## What the framework does not claim
+- It does not identify unified memory as the cause of the M4 result.
+- It does not claim CUDA or Vulkan is generally numerically incorrect.
+- It does not claim NPUs are intrinsically unsuitable for speculative decoding.
+- It does not equate isolated accelerator tok/s or TOPS with realized draft cost.
+- It does not force unmeasured replay/rollback/transfer terms into platforms that did not expose them.
+- It does not use B570 diagnostic performance as an admissible optimization result.
+- It does not compare prompt-bootstrap CIs as if they captured full session/thermal/runtime-state uncertainty.
 
-- A kernel-level `V_k` does not determine speedup without draft, residual, and realized commit behavior.
-- Token equality does not establish HumanEval functional correctness.
-- The data do not isolate unified memory, GPU architecture, a particular CUDA kernel, or quantization as a single cause.
-- The Windows numerical capture identifies a batch-shape-dependent argmax flip on one stable case; it does not prove a universal CUDA failure.
-
-Primary sources within the repository are `reports/m4/M4_SPECULATION_MECHANISM_DIAGNOSIS.md`, `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`, and `reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md`.
+Primary evidence remains the frozen platform reports, preregistrations, scripts, and archived results referenced by `paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md`.

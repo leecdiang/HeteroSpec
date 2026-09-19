@@ -2,62 +2,45 @@
 
 Audit date: **2026-09-18**.
 
-This audit distinguishes the repository's merged `main` state from later 358H work that exists on an unmerged experiment branch. It is a writing-control document, not a new scientific result.
+This file is a compact status audit for the paper workspace. The detailed scientific ledger and decision log are now maintained in `PAPER_FRAMEWORK_HANDOFF.md`, which is authoritative if this file and the handoff ever diverge.
 
 ## Repository state checked
 
-### `main`
+Current `main` head:
 
-Observed head at audit time:
+`8de9642b3d27830ec182f3571974069d5b88d405`
 
-`7327495d181c91844cf7d031cfcb7384433b2089`
+This is the merge commit for PR #12, `358H: close Phase-3 heterogeneous validation`.
 
-The head is the merge of the 358H experiment-environment preparation PR. The merged repository contains completed M4, RTX 5070 Ti Laptop, and Arc B570 evidence, plus 358H environment qualification. The root README and `REPO_STATUS.md` still describe 358H as pending because later Phase-1/2/runner work has not yet been merged.
+The four hardware campaigns are now scientifically closed and merged.
 
-### Active 358H experiment branch
-
-Branch:
-
-`codex/358h-phase1-results`
-
-Observed head at audit time:
-
-`0ff44e06ec517da63541f1d2230c56029a9cb5a2`
-
-Relative to current `main`, this branch is ahead and contains the later 358H Phase-1/2 evidence, Phase-3 protocol/freeze material, runner qualification, analysis outputs, and run artifacts.
-
-Important writing rule:
-
-> Treat 358H results from this branch as **provisional evidence during drafting** until the formal Phase-3 campaign closes and the authoritative result is merged/reviewed.
-
-## Completed-platform evidence already suitable for drafting
+## Completed-platform evidence suitable for drafting
 
 ### M4 / llama.cpp Metal
 
 Safe established evidence includes:
-- exact `k=2` verification near one target decode at tested prefix lengths;
-- representative frozen Spec-Bench 24Q result: negative overall;
-- preregistered HumanEval30 fixed-`k=2`: 1.387x geometric-mean speedup, 95% CI [1.351, 1.422], 30/30 prompts faster, 90/90 exact pairs;
-- fixed-`k=2` package-energy result is neutral within uncertainty;
+- exact tested llama.cpp/Metal verification cells;
+- representative frozen Spec-Bench 24Q: 0.842x [0.809, 0.877], 72/72 exact;
+- preregistered HumanEval30 fixed-k=2: 1.387x [1.351, 1.422], 30/30 prompts faster, 90/90 exact;
+- fixed-k=2 package energy neutral within uncertainty;
 - workload dependence must remain explicit.
 
-Primary writing sources:
+Primary sources:
 - `reports/m4/M4_HUMANEVAL_CODE_CONDITIONED.md`
 - `reports/m4/M4_CONFIRMATORY_VALIDATION.md`
 - `reports/m4/M4_SPECULATION_MECHANISM_DIAGNOSIS.md`
-- `paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md`
+- `reports/m4/M4_EXPERIMENT_INDEX.md`
 
 ### Windows / Core Ultra 9 275HX + RTX 5070 Ti Laptop
 
 Safe established evidence includes:
-- CPU-assisted and exact same-GPU controls are negative on the frozen HumanEval follow-up;
-- fast CUDA two-token target batching is near one target-decode cost but is correctness-blocked on a stable frozen case;
-- serialized `ubatch=1` restores exactness on the tested CUDA control but raises verification cost to roughly 2.14--2.43 single-token decodes;
-- HumanEval exact controls: CPU-to-RTX 0.404x, RTX-to-RTX 0.650x;
-- power/energy measurements use separate NVIDIA board and Intel CPU-package domains and must not be summed as whole-system energy;
-- the GPU is **RTX 5070 Ti Laptop**, not a desktop RTX 5070 Ti.
+- exact serialized HumanEval controls are negative: CPU→RTX 0.404x [0.390, 0.418], RTX→RTX 0.650x [0.629, 0.673];
+- fast CUDA two-token target batching is near one target-decode cost but is correctness-blocked in the frozen replication;
+- serialized `ubatch=1` restores exactness in the tested control and raises verification cost to roughly 2.14–2.43 target decodes;
+- component energy domains are separate and are not whole-system energy;
+- always preserve the **RTX 5070 Ti Laptop** designation.
 
-Primary writing sources:
+Primary sources:
 - `reports/5070ti/FINAL_5070TI_PLATFORM_REPORT.md`
 - `reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.md`
 - `reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`
@@ -66,94 +49,70 @@ Primary writing sources:
 ### Arc B570 / Vulkan
 
 Safe established evidence includes:
-- fast Vulkan speculative path is not universally token-exact on the frozen HumanEval30 set;
-- fast diagnostic path: 45/90 exact pairs and 15/30 wholly exact prompts;
-- serialized fallback improves exactness but remains non-universal on the full set: 60/90 exact pairs and 20/30 wholly exact prompts;
-- serialized verification factor is approximately 1.98--1.99;
-- overall serialized timing is diagnostic only, about 0.309x geometric-mean speedup with 0/30 prompts faster;
-- Arc-board energy efficiency is worse than baseline;
-- B570 archive repair was completed and the platform is closed.
+- fast path is correctness-blocked: 45/90 exact pairs;
+- serialized fallback improves exactness but remains non-universal: 60/90 exact pairs, 20/30 exact prompts;
+- serialized verification factor is approximately 1.98–1.99;
+- serialized timing is diagnostic only: 0.3087x [0.2927, 0.3246], 0/30 faster;
+- board-energy efficiency is worse than baseline;
+- no tested B570 path is a correctness-admissible optimization result.
 
-Primary writing sources:
+Terminology rule:
+- do not use historical `V2_exact` wording as a global paper claim for the serialized fallback;
+- prefer `V2_serialized` / serialized fallback verification factor unless a bounded exact subset is explicitly named.
+
+Primary sources:
 - `reports/b570/B570_EXACT_FALLBACK_VALIDATION.md`
 - `reports/b570/B570_FAST_VS_EXACT_FALLBACK.md`
-- `reports/b570/B570_CROSS_PLATFORM_SUMMARY.md`
 - `reports/b570/B570_PLATFORM_CLOSEOUT.md`
 
-## 358H evidence currently available but not yet final
+### Core Ultra X7 358H
 
-### Merged environment qualification
+Phase 3 is now final and merged.
 
-`reports/358h/358H_ENVIRONMENT_QUALIFICATION.md` on `main` establishes:
-- explicit CPU/GPU/NPU OpenVINO execution qualification;
-- frozen Qwen3-0.6B OpenVINO representation and provenance limitation;
-- explicit B390/NPU driver/runtime metadata;
-- no formal Phase-1 result in that merged qualification document.
+Safe established evidence includes:
+- Stage-A gate: CPU 18/18 exact; NPU 18/18 exact;
+- HumanEval30: CPU 0.734x [0.693, 0.771], 90/90 exact, 0/30 faster;
+- HumanEval30: NPU 0.352x [0.333, 0.369], 90/90 exact, 0/30 faster;
+- CPU acceptance 75.31%, C=2.463; NPU acceptance 75.13%, C=2.458;
+- CPU time dominated by target verification (87.34%);
+- NPU time dominated by synchronous full-prefix replay plus proposal (58.35%);
+- residual Python/orchestration is ~0.02–0.04%, not the primary mechanism;
+- end-to-end energy is not claimed;
+- reconstructed source remains `STRONGLY_SUPPORTED`, not proven exact historical identity;
+- 34/34 archive manifest entries were verified before merge.
 
-### Later branch evidence
+Primary sources:
+- `reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md`
+- `reports/358h/358H_PLATFORM_CLOSEOUT.md`
+- `reports/358h/358H_PROVENANCE_AMENDMENT.md`
+- `reports/358h/358H_REPOSITORY_CLOSEOUT_AUDIT.md`
 
-The active 358H branch records:
-- Phase 1 CPU/NPU draft characterization complete;
-- Phase 2 target baseline / exact verification / threshold analysis complete;
-- CPU and NPU classified BORDERLINE;
-- custom heterogeneous runner qualified;
-- runner records end-to-end timing, draft/replay aggregate time, target verification, residual, proposals, accepted tokens, committed work `C`, token IDs, and per-round state positions;
-- runner uses full committed-prefix replay for the OpenVINO draft path;
-- formal Phase-3 HumanEval data had not started at the checked branch head.
+## Evidence gaps that must remain visible
 
-The qualified-runner report states:
-- target: llama.cpp b10839, Vulkan0, persistent target KV;
-- draft: same frozen OpenVINO INT4 IR on explicit CPU or NPU;
-- full committed-prefix replay remains inside `draft_time`;
-- semantics/reference/state tests pass;
-- `formal_phase3_data_seen_before_runner_freeze = false`.
-
-The frozen campaign-driver record specifies:
-- small gate tasks: 6 tasks x 3 repetitions;
-- full HumanEval30 set: 30 tasks x 3 repetitions;
-- conditions: target baseline, CPU draft k=2, NPU draft k=2;
-- output cap 128;
-- k=2;
-- no runner instrumentation amendment because replay-only vs proposal-only timing cannot be separated without changing inference; end-to-end timing remains authoritative.
-
-## Evidence gaps that must remain visible in the paper
-
-1. **358H Phase 3 is not final yet.**
-   Do not write a final end-to-end CPU/NPU conclusion until the formal campaign completes.
-
-2. **M4 corrected synthetic ceiling was not completed under the preregistered design.**
-   The older exploratory synthetic run must not be relabeled as that preregistered experiment.
-
-3. **HumanEval generated code was not functionally executed in the existing cross-platform exactness studies.**
-   "Exact" means token-ID equality, not task correctness.
-
-4. **Energy boundaries differ across platforms.**
-   M4 package, NVIDIA board, Intel CPU package, and Arc-board measurements are not one calibrated common power domain.
-
-5. **Cross-platform causal attribution is limited.**
-   Runtime, backend, hardware architecture, memory organization, quantization/execution details, and scheduling differ. Do not claim unified memory, CUDA, Vulkan, or any one kernel is the sole cause.
-
-6. **358H model-source provenance has a documented reconstruction limitation.**
-   Preserve the repository's `STRONGLY_SUPPORTED` wording; do not upgrade it to exact proven source identity.
+1. M4 corrected synthetic ceiling was not completed under the preregistered design.
+2. HumanEval generated code was not functionally executed.
+3. Energy boundaries differ across platforms.
+4. Cross-platform causal attribution is limited because hardware and software stacks change together.
+5. 358H source reconstruction has a documented provenance limitation.
+6. Report-level traceability is established, but platform-specific rounds must still audit processed analysis, scripts, preregistration, and raw artifacts for headline claims.
 
 ## Drafting readiness
 
-Ready now:
-- Introduction
-- Background / speculative decoding mechanics
-- Correctness contract
-- Verification-amortization model
-- Experimental methodology
-- M4 results
-- RTX 5070 Ti Laptop results
-- B570 results
-- Most related discussion on correctness-constrained execution paths
+Scientifically draftable now:
+- Introduction framing;
+- correctness contract;
+- minimal profitability model;
+- methodology;
+- all four platform result sections;
+- cross-platform regime table;
+- limitations.
 
-Wait for 358H Phase 3 before freezing:
-- final title
-- abstract
-- 358H results subsection
-- cross-platform final table
-- discussion emphasis
-- conclusion
-- headline contribution count/order
+Still not frozen:
+- final title;
+- abstract;
+- final contribution order/count;
+- final discussion emphasis;
+- conclusion;
+- whether a new runtime/software contribution is necessary.
+
+Do not copy numbers from chat history into the manuscript without checking repository evidence and the handoff ledger.

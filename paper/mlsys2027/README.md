@@ -6,48 +6,55 @@ This directory is the controlled writing workspace for the HeteroSpec paper. It 
 
 ## Authoritative control file
 
-`PAPER_FRAMEWORK_HANDOFF.md` is the scientific framework handoff / evidence ledger / decision log and is the single source of truth for paper claims.
+`PAPER_FRAMEWORK_HANDOFF.md` is the scientific framework handoff / evidence ledger / claim taxonomy / decision log and is the single source of truth for paper claims.
 
-If an older outline/status note conflicts with the handoff or repository evidence, update the living note rather than weakening the evidence.
+If any outline, compact status note, generated summary, or historical report wording conflicts with the handoff, first determine whether the conflict is historical provenance or a living-document error. Preserve historical experiment records; repair living paper-control documents instead of weakening repository evidence.
+
+## Current status
+
+- Four hardware campaigns: **scientifically CLOSED**.
+- 358H Phase 3: complete and merged.
+- Scientific audit Rounds 1–12: complete and merged through PR #13.
+- Terminal revalidation: maintained on `paper/final-audit-20260919` until reviewed.
+- Scientific thesis and contribution ordering: frozen for drafting, subject only to explicit evidence-driven revision.
+- Exact title wording: not frozen.
+- Runtime/software co-design: future work; not a current measured contribution.
 
 ## Current writing policy
 
-- Write from tracked repository evidence; do not backfill missing measurements from prose or memory.
-- Preserve the strict token-exact correctness contract used by the experiments.
-- Keep diagnostic and correctness-admissible results visibly distinct.
-- Do not compare energy numbers across incompatible sensor boundaries as if they measured the same thing.
-- Do not attribute cross-platform effects to one hardware feature unless the repository contains an isolated control.
-- The 358H Phase-3 campaign is complete and merged; it is no longer provisional.
-- Use **RTX 5070 Ti Laptop** everywhere; do not shorten it to desktop-like “RTX 5070 Ti” when the distinction matters.
+- Write from tracked repository evidence; never backfill missing measurements from prose, memory, or chat history.
+- Preserve the strict greedy token-ID equality contract used by the experiments.
+- Keep PRIMARY, SECONDARY, DIAGNOSTIC, POST_HOC_DESCRIPTIVE, and MECHANISM_SUPPORTED evidence visibly distinct.
+- Use complete realized target-round cost (`R_target`) for end-to-end accounting; use `V_k^micro` only as a target-forward batching/mechanism proxy.
+- Keep committed progress `C` distinct from accepted draft tokens/round.
+- Do not compare energy values across incompatible sensor boundaries as if they measured one common calibrated system domain.
+- Do not attribute cross-platform effects to one hardware feature without an isolated control.
+- Use **RTX 5070 Ti Laptop** everywhere; do not shorten the tested device to desktop-like “RTX 5070 Ti”.
 - Do not call the B570 serialized fallback globally exact while its full-workload result is 60/90 exact pairs.
 - Do not treat isolated draft-device tok/s as realized speculative draft cost when the runtime reconstructs state.
+- HumanEval generated code was not functionally executed; exactness is generated token-ID equality, not pass@k.
 
 ## Files
 
-- `PAPER_FRAMEWORK_HANDOFF.md` — authoritative scientific ledger, claim taxonomy, decision log, audit queue.
+- `PAPER_FRAMEWORK_HANDOFF.md` — authoritative scientific ledger, claims, evidence, decisions, reviewer risks, figure/table plan, and audit history.
 - `FORMAT_REQUIREMENTS.md` — MLSys 2027 submission constraints.
-- `EVIDENCE_AUDIT_2026-09-18.md` — compact repository evidence/status audit.
-- `OUTLINE.md` — initial paper structure; contains pre-Phase3 placeholders and is not frozen.
-- `WRITING_STATUS.md` — section-level drafting/audit gates.
+- `EVIDENCE_AUDIT_2026-09-18.md` — compact evidence/status audit, revalidated 2026-09-19.
+- `OUTLINE.md` — post-audit paper structure; scientific ordering is stable, exact title/prose are not.
+- `WRITING_STATUS.md` — section-level drafting readiness.
 - `template/README.md` — instructions for importing the official style unchanged.
 
-## Current thesis candidate
+## Frozen scientific direction
 
-A concise working thesis is:
+> On the tested consumer systems, speculative decoding pays only when the execution path that survives the chosen correctness contract and the realized stateful runtime costs fit within the progress committed by a speculative round. The paper characterizes correctness-admissible execution paths and realized costs across consumer runtimes; it does not claim that heterogeneous speculative decoding, acceptance/cost accounting, numerical nondeterminism, or state reuse are themselves new ideas.
 
-> Speculative decoding on consumer hardware is profitable only when the execution path that satisfies the chosen correctness contract also amortizes target verification and the realized stateful draft cost; faster drafting or high acceptance alone is insufficient when verification, state reconstruction, or runtime integration dominates.
+This is a bounded systems result across the tested runtimes, workloads, quantizations, models, and devices—not a universal statement about Metal, CUDA, Vulkan, NPUs, or speculative decoding.
 
-This is a bounded systems result across the tested runtimes, workloads, quantizations, and devices—not a universal statement about Metal, CUDA, Vulkan, NPUs, or speculative decoding.
+## Next paper-production steps
 
-## Immediate next steps
+1. Draft manuscript sections from `PAPER_FRAMEWORK_HANDOFF.md` and `OUTLINE.md`; do not reconstruct scientific claims from older reports alone.
+2. Build main-paper figures under the handoff's comparability constraints: realized-cost schematic, M4 workload contrast, verification-path admissibility, and 358H isolated-vs-realized/state decomposition.
+3. Keep energy as boundary-separated secondary/appendix evidence; never make a cross-platform absolute J/token leaderboard.
+4. Run a final source/citation/anonymization/reviewer audit on the exact submission candidate.
+5. If a runtime/software co-design study is pursued, create a separate branch and preregistration; do not extend the closed hardware campaigns post hoc.
 
-Follow the bounded audit queue in `PAPER_FRAMEWORK_HANDOFF.md`:
-1. M4 deep audit.
-2. RTX 5070 Ti Laptop deep audit.
-3. B570 deep audit.
-4. 358H deep audit.
-5. Unified formula/mechanism audit.
-6. Statistics, correctness, energy, cross-platform, reviewer audits.
-7. Freeze thesis/contributions only after those checks.
-
-Do not start runtime implementation, final-title freeze, arXiv release, or manuscript-prose expansion from this status file.
+Do not start a new hardware experiment, post-hoc parameter sweep, preregistration rewrite, or public release merely to make the paper story cleaner.

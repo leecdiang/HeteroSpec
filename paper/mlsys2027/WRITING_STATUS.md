@@ -66,3 +66,7 @@ Use `PAPER_FRAMEWORK_HANDOFF.md` directly for claim taxonomy, evidence ledger, r
 **Manuscript v0.1 — hardware-complete / runtime-reserved** is now built in `manuscript/`. The READY table above remains the scientific-readiness record. All hardware sections, a stable hardware conclusion, five figures, three main tables, two appendix tables, references, and a separate appendix have been drafted. Section 6 is explicitly a proposed interface/evaluation reservation with results pending. No experiment or measured runtime intervention was added.
 
 The title, abstract and final conclusion are provisional; author review is still required. The authoritative handoff has not been replaced or edited. See `MANUSCRIPT_STATUS.md` for the final page allocation, QA, limitations and delivery details.
+
+## Narrative refactor v0.2 — 2026-09-20
+
+The author-directed narrative now begins with variation in integrated gains across the tested consumer workloads/stacks, then diagnoses correctness-path and state-interface failures. This supersedes the old top-level framing above, not its scientific claims. The evidence ledger, all numeric values/estimators/classifications, and the scientific handoff remain unchanged. The original 228 numerical checks were rerun successfully. Section 6 is now the standalone hardware synthesis; Section 7 is proposed runtime co-design with results pending. Independent figure candidates have not been replaced or edited. See `NARRATIVE_REFACTOR_V02.md` and `MANUSCRIPT_STATUS.md`.

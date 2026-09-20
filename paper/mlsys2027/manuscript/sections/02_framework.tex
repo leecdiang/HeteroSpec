@@ -1,9 +1,14 @@
-\section{Correctness Contract and Realized-Cost Accounting}
+\section{Experimental Question and Measurement Discipline}
 \label{sec:framework}
+We investigate the gap between favorable component measurements and integrated decode outcomes. Acceptance describes candidate agreement, isolated draft throughput describes one execution boundary, and target-forward batching describes another. None alone measures the complete speculative loop. We use an output contract and an accounting lens to make those boundaries explicit before comparing the frozen campaigns.
+
 \subsection{A path-qualified output contract}
 A greedy speculative round proposes a draft sequence, verifies it with the target, and commits the matching prefix followed by a correction or bonus token when the remaining output budget permits. Rejected candidate state must be removed or reconstructed consistently. Our contract requires generated token IDs to equal the matched target-only greedy output under the frozen configuration. It is an empirical property of a model, runtime, execution path, and workload, not a property inferred from the algorithm name.
 
 We call a tested path \emph{admissible} only within the workload scope for which that contract passes. A failed pair blocks a workload-global optimization claim even if the timing is favorable. A small qualification probe establishes eligibility for broader testing, not universal equivalence. We retain blocked-path timings as diagnostics with their correctness status visible. This deliberate contract is stricter than an approximate-quality deployment objective; HumanEval token equality does not establish functional correctness or pass@$k$.
+
+\subsection{Evidence classes}
+\textbf{Primary} results answer a frozen workload question after its correctness gate. \textbf{Secondary} results are registered variants or explicitly bounded follow-up controls. \textbf{Mechanism-supported} claims use path controls or timed regions. \textbf{Diagnostic} values describe correctness-blocked or otherwise restricted paths. These labels describe permitted inference, not just measurement precision. In particular, the exact RTX serialized controls are secondary evidence; they do not replace its blocked primary fast path. B570 follow-ups remain diagnostic after the formal stop.
 
 \subsection{Complete round costs}
 Let $T_b$ be the matched target-only cost per output token. The realized draft time $T_d^{\mathrm{real}}$ denotes the realized draft-subsystem time per round, including any prefix replay performed by its interface. The complete target time $T_{\mathrm{target,round}}^{\mathrm{real}}$ includes all measured target-side round work: candidate evaluation and any correction, bonus, or rollback work inside that region. Residual synchronization, transfer, orchestration, and bookkeeping time not included in either region is $T_x$. Let $C$ count \emph{all} committed output tokens. With consistent timing and aggregation boundaries,
@@ -20,5 +25,4 @@ For context $n$ and path $e$, define
 \begin{equation}
 \microv(n,e)=\frac{T_{\mathrm{target\ forward}}(k,n,e)}{T_{\mathrm{target\ decode}}(1,n)}.
 \end{equation}
-This microbenchmark asks whether a target can process a causal block near the cost of a single decode. It omits draft generation and can omit target correction/bonus and state-management work. Consequently $\microv$ is not automatically $\rtarget$. Figure~\ref{fig:framework} separates the opportunity measured by the proxy from the costs paid by a qualified speculative round.
-\input{figures/01_framework.tex}
+This microbenchmark asks whether a target can process a causal block near the cost of a single decode. It omits draft generation and can omit target correction/bonus and state-management work. Consequently $\microv$ is not automatically $\rtarget$. Likewise, isolated draft throughput cannot substitute for realized stateful draft cost. These distinctions guide diagnosis after the observed outcomes; they do not supply a universal explanation for those outcomes.

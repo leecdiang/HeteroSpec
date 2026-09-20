@@ -11,7 +11,10 @@ for fn in ['main','appendix']:
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert not re.search(r'RTX 5070 Ti(?! Laptop)', text), 'Missing Laptop identity'
+ assert 'v0.2' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.2.pdf' if fn=='main' else 'appendix-v0.2.pdf')
+ assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
+ assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
  # PDF actions/links must not point to identifying local or artifact paths.
  for page in r.pages:
@@ -50,7 +53,7 @@ report['overclaim_search_hits']=hits
 hp=ROOT/'build/hardware-only/hardware-only.pdf'
 if hp.exists():
  haux=hp.with_suffix('.aux').read_text();htext='\n'.join(p.extract_text() for p in PdfReader(hp).pages)
- assert '6.1 Requirements traced' not in htext and 'implementation and measured results pending' not in htext
+ assert 'Requirements traced to closed measurements' not in htext and 'implementation and measured results pending' not in htext
  assert 'sec:runtime' not in haux and '??' not in htext
  report['hardware_only']={'total_pages':len(PdfReader(hp).pages),'main_pages':int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',haux).group(1)),'runtime_section_removed':True,'no_undefined_references':True,'sha256':hashlib.sha256(hp.read_bytes()).hexdigest()}
 (E/'PDF_QA.json').write_text(json.dumps(report,indent=2)+'\n')

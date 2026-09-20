@@ -1,72 +1,68 @@
-# Manuscript v0.1 — hardware-complete / runtime-reserved
+# Manuscript v0.2 — narrative refactor / hardware-complete / runtime-reserved
 
-Completed: 2026-09-20. Branch: `paper/mlsys2027-manuscript-v0.1`.
+Completed: 2026-09-20. Branch: `paper/mlsys2027-narrative-v0.2`.
 
-Baseline: `62d1c134b096882c37ce58c1d0ac140236acd9c3` (current main when construction began). Baseline date, recent merged PRs, and authoritative input hashes are in `evidence/BASELINE.json`. The scientific control document `PAPER_FRAMEWORK_HANDOFF.md` and frozen experiment evidence are unchanged. Use `git rev-parse HEAD` for the complete delivery revision; the PR contains the logical construction commits.
+Baseline main: `1a11361f8526ec361e20dd6878d6e67352fb7bbd`. This includes manuscript v0.1 and independently audited publication-figure candidates. `evidence/NARRATIVE_V02_BASELINE.json` records the baseline and protected hashes before editing. Historical completion details remain in `MANUSCRIPT_V01_STATUS.md` and the unchanged v0.1 PDFs. Use `git rev-parse HEAD` for the delivery revision.
 
-## Deliverables and format
+## Narrative and deliverables
 
-- Main: `manuscript/output/manuscript-v0.1.pdf`, **9 main-text pages + 1 reference page**.
-- Separate appendix: `manuscript/output/appendix-v0.1.pdf`, **2 pages**.
-- Source and build instructions: `manuscript/README.md`.
-- Official submission package: unchanged MLSys package linked by the 2027 Research Track CFP, preserved with its ZIP, source URL and SHA-256 manifest in `manuscript/vendor/`.
-- Anonymous review format, two columns, complete bibliography author lists. No margin, type-size, spacing, column-geometry, or style-internal changes.
-- Title and abstract are explicitly provisional. Section 5.5 is the stable hardware-study conclusion; Section 9 remains provisional pending the software decision.
+Working title, still provisional: **Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs**.
 
-## Section allocation
+The paper now begins with variation in integrated gains across the tested consumer workloads and stacks, asks why favorable local indicators fail to translate reliably, then diagnoses correctness-path and state-interface failures. These are bounded measured mechanisms, not an exhaustive theory. M4's observed workload-conditioned contrast stands independently of those mechanisms.
 
-The planning budget totals ten pages; the compiled body currently occupies nine. Page ranges include intervening floats and are not additive. The runtime text occupies approximately 1.5 pages of column area across pages 6–8; hardware Figures 4–5 occupy substantial space on page 7. No measurements are implied by the reserved space.
+- `manuscript/output/manuscript-v0.2.pdf`: **9 main-text pages + 1 reference page**.
+- `manuscript/output/appendix-v0.2.pdf`: **2 separate appendix pages**.
+- `manuscript/README.md`: reproducible build and review boundaries.
+- `NARRATIVE_REFACTOR_V02.md`: changes, title alternatives, figure coordination, updated claim-placement map and manual causal-wording review.
 
-| Section | Ten-page planning allocation | Current compiled location |
-|---|---:|---|
-| 1. Introduction, including title/abstract overhead | 0.85 | p. 1 |
-| 2. Correctness contract and realized-cost accounting | 1.05 | p. 2 |
-| 3. Experimental methodology and evidence classes | 1.25 | pp. 2–3 |
-| 4. Correctness changes the usable execution path | 1.10 | pp. 3–4 |
-| 5. Hardware results and stable synthesis | 2.40 | pp. 5–6; associated Figures 4–5 on p. 7 |
-| 6. Runtime co-design, proposed/results pending | 1.75 | pp. 6–8 |
-| 7. Related work | 0.70 | pp. 8–9 |
-| 8. Limitations | 0.65 | p. 9 |
-| 9. Provisional final conclusion | 0.25 | p. 9 |
-| References, outside main-page budget | excluded | p. 10 |
-| Appendix, separate artifact | excluded | 2 pages |
+The official submission style and all its hashes remain unchanged. No margin, type-size, spacing, or geometry adjustment was made. Both review PDFs are anonymous. Title, abstract, and final paper conclusion remain provisional; the hardware conclusion is complete.
 
-## Figures and tables
+## Section and page allocation
 
-All five figures are native vector sources. Figure order follows first use, so admissibility precedes the M4 contrast.
+Ranges include floats and are not additive. The runtime section retains approximately 1.5 pages of text across pp. 6–8 within the reserved 1.5–2-page planning budget. Hardware figures occupy substantial space on p. 7. The complete main body remains below the ten-page ceiling.
 
-| Figure | Scientific question | Source |
-|---|---|---|
-| 1 | What must be counted after the correctness gate? | `figures/01_framework.tex` |
-| 2 | How does correctness change usable verification paths? | `figures/03_verification.tex` |
-| 3 | Is the positive M4 result representative? | `figures/02_m4.tex` |
-| 4 | Why does isolated NPU throughput not survive integration on 358H? | `figures/04_358h.tex` |
-| 5 | Which regimes survive the evidence distinctions? | `figures/05_regimes.tex` |
+| Section | Current compiled location |
+|---|---|
+| 1. Introduction | pp. 1–2 |
+| 2. Experimental question and measurement discipline | p. 2 |
+| 3. Experimental methodology and platforms | p. 3 |
+| 4. Gains do not translate uniformly | p. 4, final line on p. 5 |
+| 5. Why favorable local indicators fail | pp. 5–6; state figure on p. 7 |
+| 6. Hardware-study synthesis | p. 6; regime figure on p. 7 |
+| 7. Runtime co-design from measured failure modes | pp. 6–8 |
+| 8. Related work | p. 9 |
+| 9. Limitations | p. 9 |
+| 10. Conclusion | p. 9 |
+| References, excluded from main-page budget | p. 10 |
+| Appendix, separate artifact | 2 pages |
 
-Main tables: Table 1 platform/model/runtime/backend/evidence scope (contract in caption); Table 2 verification/admissibility mechanisms; Table 3 speedup/CI/exactness/faster-prompt/evidence-class headlines. Appendix Table 1 records frozen estimators and bootstrap conventions; Appendix Table 2 separates sensor boundaries and allowed energy claims. There is no global energy ranking. Internal evidence pointers accompany the generated tables and claim ledger.
+## Figure and table status
 
-## Evidence and citation status
+Four existing vector manuscript figures are included: M4 observed contrast (Figure 1), correctness-path diagnosis (Figure 2), 358H isolated versus realized cost (Figure 3), and descriptive regime synthesis (Figure 4). The old accounting schematic remains an unchanged, unused source; definitions and equations remain in Section 2. Independent candidate figures under `paper/mlsys2027/figures/` have not been edited or substituted. Final visual selection belongs to the separate figure Work; this pass coordinates roles and adjusts two captions only.
 
-`evidence/MANUSCRIPT_EVIDENCE_LEDGER.md` contains 17 grouped claim records, including exact quantitative values and settings, estimators, correctness status, evidence class, report/analysis/script/archive pointers, source commits, hashes, and caveats. `published_values.json` drives numeric macros and figure coordinates. Headline numbers have evidence entries.
+Three main tables cover platforms, headline outcomes, and verification mechanisms, respectively. Two appendix tables cover frozen statistical policies and sensor boundaries. All table values and captions, numeric macros, and plot coordinate files are byte-identical to the baseline. No energy ranking was added.
 
-`evidence/NUMERICAL_QA.json`: **228 comparisons passed**, including independent reconstruction of headline estimators, campaign-specific bootstrap conventions, token equality, energy boundaries, direct 358H round accounting, source hashes and official-style hashes. Frozen B570 insertion order and differing bootstrap endpoint conventions are preserved. Arithmetic accounting ratios are explicitly distinguished from prompt-geometric-mean headline speedups.
+## Evidence and wording checks
 
-`evidence/LITERATURE_AUDIT.md`: **13 references**, inspected primary publications/preprints or official publication pages, complete author lists (including all 58 HumanEval authors). Two historical titles were updated to the inspected current versions with their identity changes documented. No unresolved citation-identity or cited-mechanism gap was found. This targeted positioning is not an exhaustive literature review or a claim of firstness.
+- **228/228 existing numerical checks rerun and passed** using the unchanged validator. The numerical report is byte-identical to the baseline.
+- The frozen evidence ledger, machine-readable exact values, source provenance, datasets, estimators, correctness/evidence classes, preregistration status and closeout claims are unchanged.
+- Additional narrative checks pass for **71 protected file entries**, every one of the **57 prior prose numeric macros**, and the change scope. This count includes a few files covered by both hash and asset checks; it is not a count of unique experimental datasets.
+- The ledger's historical v0.1 location map is preserved with the authoritative records. Its v0.2 location crosswalk is in `NARRATIVE_REFACTOR_V02.md`.
+- All 13 bibliography entries and complete author lists are unchanged. No new source or citation gap was introduced by the refactor.
+- Manual causal-wording review retained M4 session uncertainty, bounded CUDA divergence, B570 diagnostic status, complete target-side costs, inseparable replay-plus-proposal, and the absence of a measured runtime intervention. “Integrated” remains post-prefill decode execution, not whole-request user latency. No universal or exhaustive explanation is claimed.
 
-No unresolved numerical contradiction or unsupported scientific wording was found in the final pass. Remaining editorial decisions are the provisional title/abstract, final contribution list and conclusion after the software decision, and author review of positioning. The known evidence qualifications remain explicit: M4 workload dependence and unexecuted corrected ceiling; secondary RTX serialized controls and bounded numerical divergence; diagnostic B570 fallback; 358H STRONGLY_SUPPORTED source reconstruction and inseparable replay-plus-proposal cost; distinct energy boundaries and weaker Windows raw per-run provenance.
+No unresolved factual or causal wording defect was identified. Remaining editorial decisions are the final title/abstract, figure selection in the separate figure Work, and the runtime decision. Detailed dispositions of the two benign forbidden-word search matches are recorded in the narrative note.
 
-## Runtime section and independent hardware story
+## Runtime reservation and hardware-only coherence
 
-Section 6 visibly states **proposed design only; implementation and measured results pending**. It contains measured requirements, a minimal request-scoped persistent-state/checkpoint/reconcile interface proposal, correctness-qualified path selection, an optional realized-cost profitability guard, and prospective evaluation questions. Adaptive width and device selection are deferred. There are no fabricated implementation claims, latency/speedup/energy values, correctness results, or ablations.
+Section 7 visibly states **proposed design only; implementation and measured results pending**. Its requirements follow diagnosed failures: draft-state persistence and reconciliation, correctness-qualified verification, and an optional profitability guard whose overhead must be measured. No implementation, speed, energy, correctness, or ablation result was added.
 
-The hardware story is independently coherent. `make hardware-only` removes Section 6 and produces an **8-main-page + 1-reference-page** verification PDF, with no undefined references. The introduction, all four platform results, stable synthesis, related-work positioning, limitations and conclusion remain present. This alternate build is a local coherence check, not an additional submission deliverable.
+`make hardware-only` removes Section 7 and produces **8 main pages + 1 reference page** with no undefined references. The observation-to-diagnosis argument, independent hardware synthesis, related work, limitations and conclusion remain coherent. This local verification PDF is not a separate delivery artifact.
 
-## Final quality control
+## Final PDF review
 
-`evidence/PDF_QA.json` records final deliverable hashes, PDF metadata, font inventory, page count, section starts, bibliography checks, and the alternate-build result. Both delivered PDFs use embedded Type 1 fonts. There are no overfull boxes, undefined citations/references, usernames, identifying repository links, local paths, institutional identities, or acknowledgments in the review PDFs. The anonymous institution/contact placeholders and review notice are supplied by the unchanged official style; no submission has occurred.
+Both delivered PDFs compile successfully and match the checked build bytes. Automated checks confirm anonymous metadata/text/links, embedded Type 1 fonts, complete reference authors, page count, and absence of overfull boxes or undefined references/citations. A line-wrap false positive in the old RTX identity check was fixed to accept whitespace before “Laptop”; the full hardware identity is still required. The official style's harmless empty-anchor warning remains.
 
-Final PDFs were rendered after all manuscript edits. All ten main-PDF pages and both appendix pages were visually inspected at 110 dpi on 2026-09-20: text, mathematical notation, plot marks and axes, table cells, captions, references and page boundaries are legible and unclipped. The alternate hardware-only build was also rendered; its synthesis/related-work transition, conclusion and references were inspected. The final page of its body has spare space, which is acceptable for this internal removal check.
+After the final prose edits, all ten main-PDF pages and both appendix pages were rendered at 1,400 pixels on the long edge and visually inspected. Text, equations, tables, figure labels, captions, references and section transitions are legible and unclipped. The hardware-only PDF was rendered at 1,100 pixels; the hardware-synthesis/related-work transition, figures, limitations and conclusion were inspected. Its final main page has spare space, appropriate for an internal removal check. Final artifact hashes are in `evidence/PDF_QA.json`.
 
-Manual forbidden-word review found two benign matches: “proves correctness” occurs only in an explicit denial of universal proof in the proposed registry paragraph; “first-token cost” is a measurement boundary in Figure 4. No forbidden firstness, universal CUDA failure, weak-NPU explanation, or unified-memory causal claim remains.
-
-Repository visibility remains private. This work opens one draft PR only; it does not merge, publish, upload to arXiv, or submit to MLSys. Internal evidence files retain private provenance and are not anonymous review artifacts.
+This work opens one Draft PR. It does not rerun experiments, merge, submit, upload to arXiv, or change repository visibility. Internal provenance files are not anonymous review artifacts.

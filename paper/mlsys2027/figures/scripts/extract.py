@@ -7,7 +7,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parents[1]
 ROOT = HERE.parents[2]
 DATA = HERE / 'data'
-SOURCE_COMMIT = '62d1c134b096882c37ce58c1d0ac140236acd9c3'
+SOURCE_COMMIT = '1a11361f8526ec361e20dd6878d6e67352fb7bbd'
 BFAST = 'artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/'
 BSER = 'artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/'
 RTX = 'artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json'
@@ -143,6 +143,27 @@ def main():
     assert bs['global_admissible'] is False and bf['original_correctness']=='FAIL'
     for r in regimes: read(r['source'])
     write('figure5_regimes.csv',regimes)
+    # Overview: heterogeneous indicators retain their own units and evidence scopes.
+    overview=[]
+    for w in [workloads[1],workloads[0]]:
+        cells=[r['v2_micro'] for r in micro if r['path']=='M4 Metal']
+        overview.append(dict(case=w['workload'],signal='M4 target-forward proxy',
+            local_low=min(cells),local_high=max(cells),local_unit='baseline target-decode steps',
+            speedup=w['speedup'],ci_low=w['ci_low'],ci_high=w['ci_high'],
+            exact=f"{w['exact_pairs']}/{w['pairs']}",status='qualified',
+            source_local='work/m4/llama_verify_q8_synced.csv',source_outcome=w['source']))
+    cells=[r['v2_micro'] for r in micro if r['path']=='RTX batched']
+    overview.append(dict(case='RTX batched',signal='Batched target-forward proxy',
+        local_low=min(cells),local_high=max(cells),local_unit='baseline target-decode steps',
+        speedup='not_admissible',ci_low='not_applicable',ci_high='not_applicable',exact='gate failed',
+        status='blocked',source_local=RTX,source_outcome='reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md'))
+    npu=next(r for r in realized if r['device']=='NPU')
+    ci={r['device']:r['tokens_s'] for r in iso if r['context']==8192}
+    overview.append(dict(case='358H NPU',signal='Isolated steady-state drafting at 8192 tokens',
+        local_low=ci['CPU'],local_high=ci['NPU'],local_unit='tokens/s (CPU, NPU)',
+        speedup=npu['headline_speedup'],ci_low=npu['ci_low'],ci_high=npu['ci_high'],exact='90/90',status='qualified',
+        source_local='analysis/358h_draft_device_summary.csv',source_outcome='analysis/358h_phase3_prompt_summary.csv'))
+    write('figure1_overview.csv',overview)
     # Deliberately reject the historical blocked-preflight scaffold.
     empty=list(csv.DictReader(read('analysis/358h_phase3_prompt_level.csv').splitlines()))
     assert len(empty)==0

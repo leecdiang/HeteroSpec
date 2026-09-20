@@ -1,51 +1,43 @@
-# Independent MLSys 2027 figure candidates
+# MLSys 2027 figure narrative refactor — v0.3
 
-These five candidates were constructed from repository evidence at
-`62d1c134b096882c37ce58c1d0ac140236acd9c3`. The paused manuscript and its Figure 1–5 assets were unavailable. No manuscript prose was accessed or changed.
+**PUBLICATION-CANDIDATE:** four main figures and one appendix inventory, based on current main `1a11361f8526ec361e20dd6878d6e67352fb7bbd`. The manuscript checkpoint and previous candidates are now available and were directly compared. Scientific inputs are closed and unchanged; no experiments or manuscript prose were modified.
 
-**Status: PUBLICATION-CANDIDATE at the tested native insertion widths.** This is not a claim of final manuscript integration or author approval.
+The figure story is: favorable local measurements do not translate robustly into realized gain in the tested cases; correctness filtering and stateful runtime costs diagnose two observed failures. M4's opposite workload-study regimes are a first-class observation, without workload-only causal attribution.
 
-The user-requested numbering takes precedence over the older outline: Figure 2 is verification-path admissibility; Figure 3 is the M4 workload contrast.
+| Role | Decision | Vector PDF | Vector SVG | Width |
+|---|---|---|---|---|
+| 1 · empirical puzzle | REDESIGN BOTH | [PDF](pdf/figure1.pdf) | [SVG](svg/figure1.svg) | 6.75 in |
+| 2 · correctness diagnosis | TAKE NEW | [PDF](pdf/figure2.pdf) | [SVG](svg/figure2.svg) | 6.75 in |
+| 3 · M4 contrast | HYBRID | [PDF](pdf/figure3.pdf) | [SVG](svg/figure3.svg) | 3.25 in |
+| 4 · stateful integration | TAKE NEW | [PDF](pdf/figure4.pdf) | [SVG](svg/figure4.svg) | 6.75 in |
+| A1 · regime inventory (legacy asset 5) | TAKE NEW, appendix only | [PDF](pdf/figure5.pdf) | [SVG](svg/figure5.svg) | 6.75 in |
 
-| Figure | Vector PDF | Vector SVG | Native width |
-|---|---|---|---|
-| 1 · correctness and realized accounting | [PDF](pdf/figure1.pdf) | [SVG](svg/figure1.svg) | 3.25 in |
-| 2 · verification-path admissibility | [PDF](pdf/figure2.pdf) | [SVG](svg/figure2.svg) | 6.75 in |
-| 3 · M4 workload contrast | [PDF](pdf/figure3.pdf) | [SVG](svg/figure3.svg) | 3.25 in |
-| 4 · 358H isolated vs realized | [PDF](pdf/figure4.pdf) | [SVG](svg/figure4.svg) | 6.75 in |
-| 5 · categorical regime map | [PDF](pdf/figure5.pdf) | [SVG](svg/figure5.svg) | 6.75 in |
+## Review first
+
+- [Captioned figure-story proof](qa/figure_story_proof.pdf): read the selected sequence without manuscript prose; final physical widths.
+- [Actual OLD/NEW comparisons](comparison/OLD_NEW_COMPARISON.pdf): OLD against both prior v0.2 and selected v0.3; ten equal-width pages.
+- [OLD native-width proof](comparison/OLD_NATIVE_WIDTH.pdf): retains original single/double-column sizes. OLD Figures 1/5 are explicitly enlarged only in equal-width comparisons.
+- [Actual decisions and tradeoffs](FIGURE_REVIEW.md), [manifest and hashes](FIGURE_MANIFEST.md), [caption suggestions](FIGURE_CAPTION_SUGGESTIONS.md), [integration kit](integration/FIGURE_INTEGRATION.md).
 
 ## Reproduce from a repository checkout
 
-Python 3.12 with matplotlib 3.10.8, numpy 2.3.5, pandas 2.2.3, Pillow,
-pypdf and PyMuPDF was used. Notebook generation additionally uses nbformat and IPython.
-Poppler `pdftoppm` renders the final PDFs. STIXGeneral/STIX fonts ship with Matplotlib.
+Python 3.12; matplotlib 3.10.8, numpy 2.3.5, pandas 2.2.3, Pillow, pypdf and PyMuPDF. Notebook generation additionally uses nbformat and IPython. Poppler renders previews; `pdflatex` with geometry/times/graphicx/amsmath/amssymb/caption builds the optional captioned story proof. STIX fonts ship with Matplotlib.
 
 ```bash
 python paper/mlsys2027/figures/scripts/extract.py
-python paper/mlsys2027/figures/scripts/validate.py
 python paper/mlsys2027/figures/scripts/plot.py
 python paper/mlsys2027/figures/scripts/render_qa.py
+python paper/mlsys2027/figures/scripts/compare.py
+python paper/mlsys2027/figures/scripts/validate_comparison.py
+python paper/mlsys2027/figures/scripts/build_story_proof.py
 python paper/mlsys2027/figures/scripts/build_notebook.py
 python paper/mlsys2027/figures/scripts/build_manifest.py
 ```
 
-`plot.py` invokes the independent numerical validator after **each** figure.
-It checks input hashes, output size, vector-only marks and text bounds. Final visual review remains required after any changes.
+`plot.py` independently validates each figure immediately after rendering. Its validator imports no extraction or plotting helpers, and replays frozen timing medians, bootstrap protocols and paired decompositions. `validate_comparison.py` reconciles original TeX plotting values and checks actual placed PDF widths. Extraction retains original units, grains and evidence classes; header-only historical scaffolds and contaminated B570 diagnostics remain excluded.
 
-`figure_audit.ipynb` is a reproducible audit companion, with executed cells and saved outputs. In this authoring environment, both Jupyter TCP and IPC sockets were unavailable; `build_notebook.py` executes its plain Python cells sequentially in a fresh namespace and captures displays. The notebook remains standard nbformat and can be run in Jupyter. A Jupyter-kernel execution is not claimed for this environment. The generated HTML notebook preview was not browser-inspected because a browser binary was unavailable; its embedded figure images were separately inspected. This does not affect the numerical or final-figure visual passes.
+`figure_audit.ipynb` remains an executed audit companion, not a source of publication screenshots. Its plain Python cells run top-to-bottom in a fresh namespace with display capture; no Jupyter-kernel execution is claimed. PDF/SVG are authoritative, PNGs preview-only. Generated comparison PNGs and intermediate vector crops can be reproduced from `compare.py` and need not be committed.
 
-PDF/SVG files are authoritative. `qa/*png` are previews only. The proof PDF preserves the actual paper insertion sizes; print at 100%, not fit-to-page.
+Source commit, SHA256 and Git blob IDs are retained for all 40 consumed sources in `data/source_lock.json`. The new overview is extracted to `data/figure1_overview.csv`; all other plotting tables preserve the closed values. Comparison source/crop provenance and prior candidate hashes are in `comparison/comparison_lock.json`; prior v0.2 PDFs are retained under `comparison/prior_v02/`.
 
-## Evidence and review
-
-- [Figure manifest](FIGURE_MANIFEST.md): per-figure claim, sources, exact values, estimators, evidence status, caveats and final SHA256.
-- [Source lock](data/source_lock.json): exact source commit, SHA256, Git blob SHA1 and bytes for all consumed inputs.
-- [Caption suggestions](FIGURE_CAPTION_SUGGESTIONS.md): proposed captions only; no manuscript edits.
-- [Figure review](FIGURE_REVIEW.md): provisional design decisions, missing old assets and required integration procedure.
-- [Visual QA](qa/VISUAL_QA.md): actual-size/grayscale checks and fixes.
-- [Insertion proof](qa/insertion_proof.pdf): two native-width proof sheets, not a mock manuscript.
-
-The official [MLSys 2027 CFP](https://mlsys.org/Conferences/2027/CallForResearchPapers) points to the [2025 style package](https://media.mlsys.org/Conferences/MLSYS2025/mlsys2025style.zip). Its `mlsys2025.sty` sets `textwidth=6.75in` and `columnsep=0.25in`, giving a 3.25-in single column. The Times-based style motivates the compatible STIX typography; no manuscript layout is inferred.
-
-Integration stays on a dedicated branch. If the manuscript checkpoint appears, rebase onto its exact checkpoint SHA, preserve that workspace's prose, and compare actual OLD/NEW assets before selecting replacements. Do not merge automatically.
+The actual manuscript style sets text width 6.75 in and column gap 0.25 in. [Visual QA](qa/VISUAL_QA.md) documents native-size color/grayscale inspection. Print proofs at 100%. The old title, prose and float layout remain untouched; [integration notes](integration/FIGURE_INTEGRATION.md) identify references that the narrative owner must reconcile. No automatic merge.

@@ -1,36 +1,21 @@
-# Final-size visual QA
+# Paper-size color and grayscale QA — v0.3
 
-**Figure status: PUBLICATION-CANDIDATE.** Checked on 2026-09-20. All five standalone vector candidates pass within this scope; manuscript integration and actual OLD/NEW comparison remain pending.
+Status: **PASS / PUBLICATION-CANDIDATE** for four selected main assets and one appendix asset. This is not a claim of integrated manuscript pagination or author acceptance.
 
-## Width and typography
+The committed manuscript PDF and TeX figure sources were inspected directly. Selected vector PDFs were rendered by Poppler at 96 and 180 dpi, in color and grayscale, at their native insertion widths. All selected color/grayscale artwork and the three native-width proof pages were inspected. Same-width OLD/SELECTED comparison sheets were inspected in color; grayscale status checks used the native-size grayscale outputs. OLD native manuscript pages were inspected as well. Physical sizes are encoded in the PDFs; screen zoom is not a claim of calibrated physical display size.
 
-The official MLSys style defines 6.75-in text width and 0.25-in column separation. Figures 1/3 are 3.25 in; Figures 2/4/5 are 6.75 in. PDFs retain exact widths without tight-crop resizing. Text uses STIXGeneral and STIX math, compatible with the style's Times typography, at 8–13 pt. PDFs embed TrueType fonts. SVG text is converted to paths for portable rendering.
+| Asset | Width × height | Color | Grayscale | Specific check |
+|---|---|---|---|---|
+| Figure 1 | 6.75 × 3.63 in | PASS | PASS | Four aligned cases; no common metric axis; M4 shared micro-study qualifier visible; blocked RTX has no speedup. Filled/open + text distinguish qualification. |
+| Figure 2 | 6.75 × 3.58 in | PASS | PASS | Ranges/cells and explicit statuses readable; filled/open and circle/square redundant with text/line style. Context and proxy limitations visible. |
+| Figure 3 | 3.25 × 2.40 in | PASS | PASS | Compact hybrid: two forest rows, asymmetric CIs, direct estimates/exactness and clear 1× line. Functional-correctness caveat retained in caption. |
+| Figure 4 | 6.75 × 3.75 in | PASS | PASS | Totals, baseline and separate prompt-GM headlines readable; true-width residuals labeled; component hatching and CPU/NPU shapes survive grayscale. |
+| Figure 5 / A1 | 6.75 × 4.10 in | PASS | PASS | Categorical positions, explicit status and evidence classes; neither B570 diagnostic appears qualified. Appendix-only placement avoids a repeated main overview. |
 
-## Inspections performed
+No text extends outside exported canvas bounds. PDF resources are vector-only; text uses embedded STIX TrueType fonts and SVG glyph paths. White background, restrained blue/gray, no gradients, shadows, vendor colors, or color-only status distinctions.
 
-| Figure | Width × height (in) | Color | Grayscale at final width | Stronger-conclusion check | Result |
-|---|---|---|---|---|---|
-| 1 | 3.25 × 4.05 | Render inspected | Native-width proof inspected | Detached proxy; full C and R_target; not claimed as novel theory | PASS |
-| 2 | 6.75 × 3.58 | Render inspected | Native-width proof inspected | Open/filled and status text prevent promoting cheap blocked paths; contexts explicit | PASS |
-| 3 | 3.25 × 2.90 | Render inspected | Final 96-dpi grayscale image inspected | Separate studies, 1× reference, CIs and exactness retained; no paired-workload inference | PASS |
-| 4 | 6.75 × 3.75 | Render inspected | Native-width proof inspected | Absolute totals; hatch/text redundancy; distinct mean/GM estimands; no replay-only claim | PASS |
-| 5 | 6.75 × 4.10 | Render inspected | Native-width proof inspected | Categorical columns; blocked profitability omitted; no continuous score or leaderboard | PASS |
+The additional five-page `figure_story_proof.pdf` places the selected artwork with its proposed captions at the same physical widths. All five grayscale pages were inspected; no clipping, overlap or overfull TeX boxes were found. This is a figure-only narrative proof, not rebuilt manuscript pagination.
 
-Each final PDF was rendered by Poppler at 96 and 180 dpi. Grayscale inspection used the native-width proof sheets and the final Figure 3 render after its last label/ref-line refinement. Large renders were also checked for marker, glyph and line defects. PNGs are previews only.
+The actual old Figure 4 already uses absolute time. The choice of NEW is based on its visible totals, baseline, intervals and estimator labels, not an invented old normalization defect. OLD Figures 1/5 are enlarged only on equal-width comparison sheets, explicitly labeled; the native OLD proof retains 3.25-in width. The independently checked comparison geometry confirms all 20 panel placements use the intended equal widths.
 
-Observed issues and repairs:
-
-- Figure 2 axis label was too close to its legend note: plot moved upward; distinct footer lines restored.
-- Figure 3 axis label/footnote collision: canvas and lower margin increased; title/interval text masked against the 1× reference and reference height bounded.
-- Initial Nimbus Roman OTF embedding produced Poppler font-type warnings: replaced with STIXGeneral TrueType and regenerated all assets. Final renders have no such warnings.
-
-The small Figure 4 residual segments keep their true widths and are stated numerically; they are not enlarged into misleading visible proportions. Overlapping nearby Figure 2 context markers are accompanied by exact min/max labels and the full cell table. These are design choices, not missing data.
-
-## Checks not claimed
-
-- No inspection of the unavailable manuscript, its current captions or its original figures.
-- No final submission-page fit or author review.
-- No printer-dependent physical hardcopy test; the proof PDF preserves physical dimensions for a 100% print check.
-- No browser visual inspection of the companion notebook HTML: browser executable unavailable. The notebook is schema-validated and its plain Python cells executed sequentially; embedded figure outputs were visually inspected through the final-figure workflow. Jupyter TCP/IPC kernel startup was unavailable in this environment.
-
-Numerical logs are separate: `figure1_validation.json` through `figure5_validation.json`. A visual pass does not substitute for numerical validation.
+Reviewer-overreach pass: overview values are heterogeneous summaries; micro cost is not complete target work; exactness is workload/path-scoped; M4 studies do not identify workload-only causality; post-prefill time is not whole-request latency; replay-only time is unmeasured; appendix rows are not universal causal categories. Caption suggestions carry these limits. No new scientific claim is introduced by the redesign.

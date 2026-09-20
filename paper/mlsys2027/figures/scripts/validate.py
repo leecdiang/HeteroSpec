@@ -15,12 +15,39 @@ def close(a,b,tol=1e-11):
 def geomean(x): return float(np.exp(np.mean(np.log(np.array(x,dtype=float)))))
 
 def f1():
-    s=(ROOT/'paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md').read_text()
-    for x in ['D_real','R_target','T_b','T_x','all committed','V_k^micro']:
-        assert x in s,x
-    return ['Concept checked against frozen framework; C includes correction/bonus output.',
-            'Costs normalized by matched baseline T_b at a consistent aggregation boundary.',
-            'Micro proxy is visually detached; no measured or novel-theory claim.']
+    p=data('figure1_overview.csv')
+    assert len(p)==4 and p.case.nunique()==4
+    for idx,r in p.iterrows():
+        if idx<2:
+            src=frame(r.source_outcome)
+            vals=src['fixed_k2_speedup' if idx==0 else 'speedup']
+            close(geomean(vals),float(r.speedup))
+            summary=j('analysis/m4_humaneval_summary.json')['conditions']['fixed_k2'] if idx==0 else j('analysis/m4_confirmatory_summary.json')
+            close([float(r.ci_low),float(r.ci_high)],summary['prompt_bootstrap_95_ci' if idx==0 else 'bootstrap_95_ci'])
+            raw=frame(r.source_local)
+            ratios=[raw[(raw.prefix_tokens==n)&(raw.verify_tokens==2)].elapsed_us.median()/
+                    raw[(raw.prefix_tokens==n)&(raw.verify_tokens==1)].elapsed_us.median() for n in (512,2048,8192)]
+            close([min(ratios),max(ratios)],[r.local_low,r.local_high])
+            assert r.status=='qualified' and r.exact==('90/90' if idx==0 else '72/72')
+        elif idx==2:
+            raw=j(r.source_local)['depths']
+            ratios=[statistics.median(v['batched_ubatch2']['pp2']['samples_ns'])/
+                    statistics.median(v['batched_ubatch2']['pp1']['samples_ns']) for v in raw.values()]
+            close([min(ratios),max(ratios)],[r.local_low,r.local_high])
+            assert r.status=='blocked' and r.speedup=='not_admissible'
+            assert 'not lossless for the stable HumanEval/106 case' in (ROOT/r.source_outcome).read_text()
+        else:
+            iso=frame(r.source_local).query('context==8192').set_index('device')
+            close([iso.loc['CPU','median_tokens_s'],iso.loc['NPU','median_tokens_s']],[r.local_low,r.local_high])
+            raw=frame(r.source_outcome).query("condition=='NPU_DRAFT_K2'")
+            assert len(raw)==90 and raw.exact.all()
+            close(geomean(raw.groupby('task_id',sort=False).speedup.median()),float(r.speedup))
+            close([float(r.ci_low),float(r.ci_high)],j('analysis/358h_phase3_summary.json')['performance']['NPU']['bootstrap_ci95'])
+            assert r.status=='qualified' and r.exact=='90/90'
+    return ['Four heterogeneous cases recomputed from original source rows, not rounded labels.',
+            'M4 micro values are shared-path diagnostics, not measured separately on each workload.',
+            'RTX blocked outcome has no invented speedup; isolated NPU signal keeps tok/s units.',
+            'Overview point estimates defer uncertainty to Figures 3/4; no common quantitative axis or workload-only causality.']
 
 def f2():
     p=data('figure2_micro_cells.csv')

@@ -1,32 +1,45 @@
 [
   {
     "figure": 1,
-    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "placement": "main",
+    "decision": "REDESIGN BOTH",
+    "source_commit": "1a11361f8526ec361e20dd6878d6e67352fb7bbd",
     "status": "PUBLICATION-CANDIDATE",
-    "question": "What must be qualified and measured before claiming speculative speedup?",
-    "claim": "Correctness admissibility precedes complete realized-cost accounting; the micro proxy is separate.",
+    "question": "Do favorable local measurements reliably indicate realized gain in the tested cases?",
+    "claim": "Favorable target batching and isolated drafting coexist with profitable, exact-negative and correctness-blocked outcomes.",
     "sources": [
-      "paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md",
-      "paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md"
+      "work/m4/llama_verify_q8_synced.csv",
+      "analysis/m4_confirmatory_prompt_summary.csv",
+      "analysis/m4_humaneval_prompt_summary.csv",
+      "analysis/m4_confirmatory_summary.json",
+      "analysis/m4_humaneval_summary.json",
+      "artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json",
+      "reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md",
+      "analysis/358h_draft_device_summary.csv",
+      "analysis/358h_phase3_prompt_summary.csv",
+      "analysis/358h_phase3_summary.json"
     ],
-    "tables": [],
-    "estimator": "Conceptual accounting identity at one consistent boundary: S=C/(D_real+R_target+X); costs normalized by T_b.",
-    "evidence": "FRAMEWORK / MECHANISM",
-    "correctness": "Conceptual gate; no new measured qualification result.",
-    "caveats": "C is all committed output, not accepted draft tokens. No claim of a new theory or that every platform exposes all costs.",
+    "tables": [
+      "figure1_overview.csv"
+    ],
+    "estimator": "Categorical overview. Micro ranges are ratio-of-medians ranges across contexts, not CIs. Isolated values are median tok/s at 8192 tokens. Outcome speedups are campaign prompt GMs; uncertainty and full estimators are in Figures 3/4.",
+    "evidence": "PRIMARY outcomes; MECHANISM_SUPPORTED / diagnostic local signals. Heterogeneous measurements are not placed on one numerical axis.",
+    "correctness": "M4 HumanEval 90/90 and 24Q 72/72 exact; RTX batched gate fails; 358H NPU 90/90 exact.",
+    "caveats": "M4 local proxy is shared-path evidence from a separate micro study, not workload-specific measurement. Opposite regimes do not isolate workload-only causality. The 8192-token example is contextualized by all three contexts in Figure 4. Post-prefill speedups are not whole-request latency. No universal theory or hardware leaderboard.",
     "extraction_script": "scripts/extract.py",
     "plot_script": "scripts/plot.py:figure1",
-    "tested_insertion_width_in": 3.25,
-    "height_in": 4.05,
+    "tested_insertion_width_in": 6.75,
+    "height_in": 3.63,
     "grayscale_qa": "PASS; qa/VISUAL_QA.md",
     "numerical_qa": {
       "figure": 1,
       "status": "NUMERICAL_PASS",
       "independent_of_extractor": true,
       "findings": [
-        "Concept checked against frozen framework; C includes correction/bonus output.",
-        "Costs normalized by matched baseline T_b at a consistent aggregation boundary.",
-        "Micro proxy is visually detached; no measured or novel-theory claim."
+        "Four heterogeneous cases recomputed from original source rows, not rounded labels.",
+        "M4 micro values are shared-path diagnostics, not measured separately on each workload.",
+        "RTX blocked outcome has no invented speedup; isolated NPU signal keeps tok/s units.",
+        "Overview point estimates defer uncertainty to Figures 3/4; no common quantitative axis or workload-only causality."
       ],
       "outputs_checked": true,
       "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
@@ -34,17 +47,19 @@
     "outputs": [
       {
         "path": "pdf/figure1.pdf",
-        "sha256": "1d6aef54f5e391a8a02832e55959e9bf5ec379de7f8bdd7d4276df24b0986a40"
+        "sha256": "42be723f84994697a8456c3706bff3db7e29a631ef7e3794999357c313ac9b17"
       },
       {
         "path": "svg/figure1.svg",
-        "sha256": "3f9325fc2a5e12fd68eb3280743d55c5adad2a28d3ab496a0d249acdfc2c5785"
+        "sha256": "9b66b7c5302bdd255a1c64b172ccd23e4240a8d246ac7c1c3e579bc53447a439"
       }
     ]
   },
   {
     "figure": 2,
-    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "placement": "main",
+    "decision": "TAKE NEW",
+    "source_commit": "1a11361f8526ec361e20dd6878d6e67352fb7bbd",
     "status": "PUBLICATION-CANDIDATE",
     "question": "Does the physically cheapest target-forward path remain usable after correctness qualification?",
     "claim": "Cheap physical target batching may be blocked; serialization alone does not imply exactness.",
@@ -95,10 +110,12 @@
   },
   {
     "figure": 3,
-    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "placement": "main",
+    "decision": "HYBRID",
+    "source_commit": "1a11361f8526ec361e20dd6878d6e67352fb7bbd",
     "status": "PUBLICATION-CANDIDATE",
-    "question": "Is the observed M4 profitable regime representative across the two frozen workloads?",
-    "claim": "Representative 24Q remains negative beside separately preregistered positive HumanEval30 fixed-k2.",
+    "question": "Can the same tested M4 platform/runtime exhibit opposite profitability regimes?",
+    "claim": "The same tested Metal stack exhibits opposite regimes in two separate frozen studies; this is an observation, not a workload-only causal effect.",
     "sources": [
       "analysis/m4_confirmatory_prompt_summary.csv",
       "analysis/m4_confirmatory_summary.json",
@@ -118,7 +135,7 @@
     "extraction_script": "scripts/extract.py",
     "plot_script": "scripts/plot.py:figure3",
     "tested_insertion_width_in": 3.25,
-    "height_in": 2.9,
+    "height_in": 2.4,
     "grayscale_qa": "PASS; qa/VISUAL_QA.md",
     "numerical_qa": {
       "figure": 3,
@@ -136,17 +153,19 @@
     "outputs": [
       {
         "path": "pdf/figure3.pdf",
-        "sha256": "b3a99935f62fd65edf9f4736d07e72ac6ad26c628f37bf1c454fdcb8947c6760"
+        "sha256": "f520c3edc6c285a16bfe90d0c0d9444bcd88bde9f6049efff33f696cda7ed940"
       },
       {
         "path": "svg/figure3.svg",
-        "sha256": "a253c0bf70099806a4f270f8a21a7a520c37c6a3a5c73f8d5706009a7c04e5fb"
+        "sha256": "78f78e74656684506cfa78093248d672ee5ec365beb258065b1454065a4ce7d0"
       }
     ]
   },
   {
     "figure": 4,
-    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "placement": "main",
+    "decision": "TAKE NEW",
+    "source_commit": "1a11361f8526ec361e20dd6878d6e67352fb7bbd",
     "status": "PUBLICATION-CANDIDATE",
     "question": "Why can isolated NPU drafting look favorable while the qualified realized path is much slower?",
     "claim": "The measured OpenVINO state interface incurs large replay-plus-proposal cost; CPU remains target-side dominated.",
@@ -203,7 +222,9 @@
   },
   {
     "figure": 5,
-    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "placement": "appendix A1",
+    "decision": "TAKE NEW",
+    "source_commit": "1a11361f8526ec361e20dd6878d6e67352fb7bbd",
     "status": "PUBLICATION-CANDIDATE",
     "question": "Which correctness/profitability regimes are supported by the tested cases?",
     "claim": "Observed regimes differ by path, workload and realized interface, rather than defining a hardware ranking.",

@@ -4,13 +4,19 @@ from pathlib import Path
 import csv, hashlib, json
 
 HERE=Path(__file__).resolve().parents[1]
-SHA='62d1c134b096882c37ce58c1d0ac140236acd9c3'
+SHA='1a11361f8526ec361e20dd6878d6e67352fb7bbd'
 SPECS={
-1:dict(question='What must be qualified and measured before claiming speculative speedup?',claim='Correctness admissibility precedes complete realized-cost accounting; the micro proxy is separate.',
-    sources=['paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md','paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md'],tables=[],
-    estimator='Conceptual accounting identity at one consistent boundary: S=C/(D_real+R_target+X); costs normalized by T_b.',
-    evidence='FRAMEWORK / MECHANISM',correctness='Conceptual gate; no new measured qualification result.',
-    caveats='C is all committed output, not accepted draft tokens. No claim of a new theory or that every platform exposes all costs.'),
+1:dict(question='Do favorable local measurements reliably indicate realized gain in the tested cases?',
+    claim='Favorable target batching and isolated drafting coexist with profitable, exact-negative and correctness-blocked outcomes.',
+    sources=['work/m4/llama_verify_q8_synced.csv','analysis/m4_confirmatory_prompt_summary.csv',
+    'analysis/m4_humaneval_prompt_summary.csv','analysis/m4_confirmatory_summary.json','analysis/m4_humaneval_summary.json',
+    'artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json',
+    'reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md','analysis/358h_draft_device_summary.csv',
+    'analysis/358h_phase3_prompt_summary.csv','analysis/358h_phase3_summary.json'],tables=['figure1_overview.csv'],
+    estimator='Categorical overview. Micro ranges are ratio-of-medians ranges across contexts, not CIs. Isolated values are median tok/s at 8192 tokens. Outcome speedups are campaign prompt GMs; uncertainty and full estimators are in Figures 3/4.',
+    evidence='PRIMARY outcomes; MECHANISM_SUPPORTED / diagnostic local signals. Heterogeneous measurements are not placed on one numerical axis.',
+    correctness='M4 HumanEval 90/90 and 24Q 72/72 exact; RTX batched gate fails; 358H NPU 90/90 exact.',
+    caveats='M4 local proxy is shared-path evidence from a separate micro study, not workload-specific measurement. Opposite regimes do not isolate workload-only causality. The 8192-token example is contextualized by all three contexts in Figure 4. Post-prefill speedups are not whole-request latency. No universal theory or hardware leaderboard.'),
 2:dict(question='Does the physically cheapest target-forward path remain usable after correctness qualification?',claim='Cheap physical target batching may be blocked; serialization alone does not imply exactness.',
     sources=['work/m4/llama_verify_q8_synced.csv','artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json',
     'reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv','reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md',
@@ -21,7 +27,7 @@ SPECS={
     evidence='MECHANISM_SUPPORTED for qualified M4/RTX serialized; DIAGNOSTIC for RTX batched and both B570 timing paths.',
     correctness='M4 tested cells exact; RTX batched blocked; RTX serialized exact secondary control; B570 fast 45/90 and serialized 60/90, both globally inadmissible.',
     caveats='Contexts/stacks are not fully matched. V2_micro is not complete R_target or speedup. Formal B570 V2 was NOT RUN; contaminated earlier serialized values are excluded.'),
-3:dict(question='Is the observed M4 profitable regime representative across the two frozen workloads?',claim='Representative 24Q remains negative beside separately preregistered positive HumanEval30 fixed-k2.',
+3:dict(question='Can the same tested M4 platform/runtime exhibit opposite profitability regimes?',claim='The same tested Metal stack exhibits opposite regimes in two separate frozen studies; this is an observation, not a workload-only causal effect.',
     sources=['analysis/m4_confirmatory_prompt_summary.csv','analysis/m4_confirmatory_summary.json','analysis/m4_humaneval_prompt_summary.csv',
     'analysis/m4_humaneval_summary.json','scripts/summarize_m4_confirmatory.py','scripts/summarize_m4_humaneval.py',
     'benchmarks/m4_code_conditioned_30q/preregistration.json'],tables=['figure3_workloads.csv'],
@@ -58,9 +64,9 @@ def table_text(rows,columns):
 def main():
     lock=json.loads((HERE/'data/source_lock.json').read_text());lockmap={x['path']:x for x in lock}
     allfig=[];lines=['# MLSys 2027 candidate figure manifest','',
-        '**Status: PUBLICATION-CANDIDATE** for the five standalone candidates at tested widths; OLD/NEW asset selection and manuscript integration remain pending.','',
-        f'Scientific source commit: `{SHA}`. Branch: `paper/mlsys2027-figure-redesign-v0.2`. No manuscript checkpoint was available.','',
-        'Figure IDs follow the user request (F2 paths; F3 M4). All 40 source files were verified against exact Git blob IDs and retain SHA256 in `data/source_lock.json`.','',
+        '**Status: PUBLICATION-CANDIDATE.** Four selected main figures plus appendix candidate A1 (legacy asset Figure 5). Actual OLD/NEW comparison completed; manuscript prose and float integration intentionally remain unchanged.','',
+        f'Scientific source commit: `{SHA}`. Branch: `paper/mlsys2027-figures-v0.3`. This base includes manuscript v0.1 and the independently audited v0.2 candidates.','',
+        'Figure IDs follow the actual manuscript roles (F2 paths; F3 M4), not the numeric prefixes of its TeX filenames. All 40 sources are pinned to current main in `data/source_lock.json`. Closed scientific inputs are unchanged from v0.2; only WRITING_STATUS.md changed. Comparison provenance is in `comparison/comparison_lock.json`.','',
         'Skills discovered and read in this environment: visualize-data (primary plotting discipline), validate-data (independent per-figure pass), analyze-data-quality (input audit), jupyter-notebooks (audit companion), and PDF (export/render QA). No System Design skill was available. Scientific authority remains the repository.','',
         'Common extraction: `scripts/extract.py`. Common vector renderer: `scripts/plot.py` (`figure1`–`figure5`). Independent numerical pass: `scripts/validate.py --figure N --require-outputs`. Native-size rendering: `scripts/render_qa.py`.','',
         'Typography: embedded STIXGeneral/STIX; white background; no gradients/shadows/vendor colors. PNG files are preview-only. PDF/SVG are authoritative.','']
@@ -72,12 +78,12 @@ def main():
         for ext in ('pdf','svg'):
             p=HERE/f'{ext}/figure{i}.{ext}';h=hashlib.sha256(p.read_bytes()).hexdigest()
             outputs.append(dict(path=str(p.relative_to(HERE)),sha256=h));hashes.append((h,str(p.relative_to(HERE))))
-        item=dict(figure=i,source_commit=SHA,status='PUBLICATION-CANDIDATE',**spec,
+        item=dict(figure=i,placement='appendix A1' if i==5 else 'main',decision='REDESIGN BOTH' if i==1 else ('HYBRID' if i==3 else 'TAKE NEW'),source_commit=SHA,status='PUBLICATION-CANDIDATE',**spec,
             extraction_script='scripts/extract.py',plot_script=f'scripts/plot.py:figure{i}',
             tested_insertion_width_in=render['width_in'],height_in=render['height_in'],
             grayscale_qa='PASS; qa/VISUAL_QA.md',numerical_qa=validation,outputs=outputs)
         allfig.append(item)
-        lines += [f'## Figure {i}','',f"**Question:** {spec['question']}",'',f"**Manuscript claim:** {spec['claim']}",'',
+        lines += [f'## Figure {i}'+(' — appendix A1' if i==5 else ' — main'),' ',f"**Selection:** {item['decision']}. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.",'',f"**Question:** {spec['question']}",'',f"**Manuscript claim:** {spec['claim']}",'',
             f"**Evidence class:** {spec['evidence']}",'',f"**Correctness:** {spec['correctness']}",'',
             f"**Estimator / CI:** {spec['estimator']}",'',f"**Caveats:** {spec['caveats']}",'',
             f"**Extraction / rendering:** `scripts/extract.py`; `scripts/plot.py:figure{i}`. Numerical pass: `qa/figure{i}_validation.json`.",'',
@@ -89,7 +95,8 @@ def main():
         if not spec['tables']:lines+=['No measured numeric values; symbolic accounting and gate semantics only.','']
         for fn in spec['tables']:
             rows=list(csv.DictReader((HERE/'data'/fn).read_text().splitlines()))
-            cols={'figure2_micro_cells.csv':['path','context','pp1_ms','pp2_ms','v2_micro','repetitions','status'],
+            cols={'figure1_overview.csv':['case','local_low','local_high','local_unit','speedup','ci_low','ci_high','exact','status'],
+                'figure2_micro_cells.csv':['path','context','pp1_ms','pp2_ms','v2_micro','repetitions','status'],
                 'figure3_workloads.csv':['workload','speedup','ci_low','ci_high','prompts','pairs','exact_pairs'],
                 'figure4_isolated.csv':['device','context','tokens_s','ci_low','ci_high'],
                 'figure4_realized.csv':['device','total_s','draft_s','target_s','residual_s','draft_pct','target_pct','residual_pct','headline_speedup','aggregate_speedup'],

@@ -60,3 +60,9 @@ Do not:
 A speculative path is profitable under this study only when the path that remains admissible after the frozen correctness contract and the realized stateful draft/target costs fit within the output progress committed per round. The tested systems expose profitable, exact-but-negative, fast-but-inadmissible, and state-interface-bound regimes.
 
 Use `PAPER_FRAMEWORK_HANDOFF.md` directly for claim taxonomy, evidence ledger, related-work novelty boundaries, figure plan, reviewer attacks, decisions, and the terminal audit log.
+
+## Manuscript construction update — 2026-09-20
+
+**Manuscript v0.1 — hardware-complete / runtime-reserved** is now built in `manuscript/`. The READY table above remains the scientific-readiness record. All hardware sections, a stable hardware conclusion, five figures, three main tables, two appendix tables, references, and a separate appendix have been drafted. Section 6 is explicitly a proposed interface/evaluation reservation with results pending. No experiment or measured runtime intervention was added.
+
+The title, abstract and final conclusion are provisional; author review is still required. The authoritative handoff has not been replaced or edited. See `MANUSCRIPT_STATUS.md` for the final page allocation, QA, limitations and delivery details.

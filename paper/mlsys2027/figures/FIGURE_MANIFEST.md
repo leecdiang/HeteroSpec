@@ -1,10 +1,10 @@
 # MLSys 2027 candidate figure manifest
 
-**Status: PUBLICATION-CANDIDATE** for the five standalone candidates at tested widths; OLD/NEW asset selection and manuscript integration remain pending.
+**Status: PUBLICATION-CANDIDATE.** Four selected main figures plus appendix candidate A1 (legacy asset Figure 5). Actual OLD/NEW comparison completed; manuscript prose and float integration intentionally remain unchanged.
 
-Scientific source commit: `62d1c134b096882c37ce58c1d0ac140236acd9c3`. Branch: `paper/mlsys2027-figure-redesign-v0.2`. No manuscript checkpoint was available.
+Scientific source commit: `1a11361f8526ec361e20dd6878d6e67352fb7bbd`. Branch: `paper/mlsys2027-figures-v0.3`. This base includes manuscript v0.1 and the independently audited v0.2 candidates.
 
-Figure IDs follow the user request (F2 paths; F3 M4). All 40 source files were verified against exact Git blob IDs and retain SHA256 in `data/source_lock.json`.
+Figure IDs follow the actual manuscript roles (F2 paths; F3 M4), not the numeric prefixes of its TeX filenames. All 40 sources are pinned to current main in `data/source_lock.json`. Closed scientific inputs are unchanged from v0.2; only WRITING_STATUS.md changed. Comparison provenance is in `comparison/comparison_lock.json`.
 
 Skills discovered and read in this environment: visualize-data (primary plotting discipline), validate-data (independent per-figure pass), analyze-data-quality (input audit), jupyter-notebooks (audit companion), and PDF (export/render QA). No System Design skill was available. Scientific authority remains the repository.
 
@@ -12,39 +12,58 @@ Common extraction: `scripts/extract.py`. Common vector renderer: `scripts/plot.p
 
 Typography: embedded STIXGeneral/STIX; white background; no gradients/shadows/vendor colors. PNG files are preview-only. PDF/SVG are authoritative.
 
-## Figure 1
+## Figure 1 — main
+ 
+**Selection:** REDESIGN BOTH. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.
 
-**Question:** What must be qualified and measured before claiming speculative speedup?
+**Question:** Do favorable local measurements reliably indicate realized gain in the tested cases?
 
-**Manuscript claim:** Correctness admissibility precedes complete realized-cost accounting; the micro proxy is separate.
+**Manuscript claim:** Favorable target batching and isolated drafting coexist with profitable, exact-negative and correctness-blocked outcomes.
 
-**Evidence class:** FRAMEWORK / MECHANISM
+**Evidence class:** PRIMARY outcomes; MECHANISM_SUPPORTED / diagnostic local signals. Heterogeneous measurements are not placed on one numerical axis.
 
-**Correctness:** Conceptual gate; no new measured qualification result.
+**Correctness:** M4 HumanEval 90/90 and 24Q 72/72 exact; RTX batched gate fails; 358H NPU 90/90 exact.
 
-**Estimator / CI:** Conceptual accounting identity at one consistent boundary: S=C/(D_real+R_target+X); costs normalized by T_b.
+**Estimator / CI:** Categorical overview. Micro ranges are ratio-of-medians ranges across contexts, not CIs. Isolated values are median tok/s at 8192 tokens. Outcome speedups are campaign prompt GMs; uncertainty and full estimators are in Figures 3/4.
 
-**Caveats:** C is all committed output, not accepted draft tokens. No claim of a new theory or that every platform exposes all costs.
+**Caveats:** M4 local proxy is shared-path evidence from a separate micro study, not workload-specific measurement. Opposite regimes do not isolate workload-only causality. The 8192-token example is contextualized by all three contexts in Figure 4. Post-prefill speedups are not whole-request latency. No universal theory or hardware leaderboard.
 
 **Extraction / rendering:** `scripts/extract.py`; `scripts/plot.py:figure1`. Numerical pass: `qa/figure1_validation.json`.
 
-**Insertion test:** 3.25 × 4.05 in. Color and grayscale PASS; see `qa/VISUAL_QA.md`.
+**Insertion test:** 6.75 × 3.63 in. Color and grayscale PASS; see `qa/VISUAL_QA.md`.
 
 ### Source files
 
-- [`paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md)
-- [`paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md)
+- [`work/m4/llama_verify_q8_synced.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/work/m4/llama_verify_q8_synced.csv)
+- [`analysis/m4_confirmatory_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_confirmatory_prompt_summary.csv)
+- [`analysis/m4_humaneval_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_humaneval_prompt_summary.csv)
+- [`analysis/m4_confirmatory_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_confirmatory_summary.json)
+- [`analysis/m4_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_humaneval_summary.json)
+- [`artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json)
+- [`reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md)
+- [`analysis/358h_draft_device_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_draft_device_summary.csv)
+- [`analysis/358h_phase3_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_prompt_summary.csv)
+- [`analysis/358h_phase3_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_summary.json)
 
 ### Plotted values
 
-No measured numeric values; symbolic accounting and gate semantics only.
+Full precision and references: [`data/figure1_overview.csv`](data/figure1_overview.csv).
+
+| case | local_low | local_high | local_unit | speedup | ci_low | ci_high | exact | status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Preregistered HumanEval30 | 1.02218185 | 1.07612561 | baseline target-decode steps | 1.38735234 | 1.35057448 | 1.42162539 | 90/90 | qualified |
+| Representative 24Q | 1.02218185 | 1.07612561 | baseline target-decode steps | 0.841965102 | 0.808693455 | 0.876765035 | 72/72 | qualified |
+| RTX batched | 0.983147983 | 1.00903043 | baseline target-decode steps | not_admissible | not_applicable | not_applicable | gate failed | blocked |
+| 358H NPU | 30.8070621 | 48.0830269 | tokens/s (CPU, NPU) | 0.351663239 | 0.332594836 | 0.36894873 | 90/90 | qualified |
 
 ### Final outputs and SHA256
 
-- [pdf/figure1.pdf](pdf/figure1.pdf): `1d6aef54f5e391a8a02832e55959e9bf5ec379de7f8bdd7d4276df24b0986a40`
-- [svg/figure1.svg](svg/figure1.svg): `3f9325fc2a5e12fd68eb3280743d55c5adad2a28d3ab496a0d249acdfc2c5785`
+- [pdf/figure1.pdf](pdf/figure1.pdf): `42be723f84994697a8456c3706bff3db7e29a631ef7e3794999357c313ac9b17`
+- [svg/figure1.svg](svg/figure1.svg): `9b66b7c5302bdd255a1c64b172ccd23e4240a8d246ac7c1c3e579bc53447a439`
 
-## Figure 2
+## Figure 2 — main
+ 
+**Selection:** TAKE NEW. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.
 
 **Question:** Does the physically cheapest target-forward path remain usable after correctness qualification?
 
@@ -64,14 +83,14 @@ No measured numeric values; symbolic accounting and gate semantics only.
 
 ### Source files
 
-- [`work/m4/llama_verify_q8_synced.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/work/m4/llama_verify_q8_synced.csv)
-- [`artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json)
-- [`reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv)
-- [`reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md)
-- [`artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/v2_raw.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/v2_raw.json)
-- [`artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/v2_exact.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/v2_exact.json)
-- [`analysis/b570_exact_fallback_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/b570_exact_fallback_summary.json)
-- [`reports/b570/B570_VERIFICATION_MECHANISM.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/b570/B570_VERIFICATION_MECHANISM.md)
+- [`work/m4/llama_verify_q8_synced.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/work/m4/llama_verify_q8_synced.csv)
+- [`artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json)
+- [`reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv)
+- [`reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md)
+- [`artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/v2_raw.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/v2_raw.json)
+- [`artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/v2_exact.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/v2_exact.json)
+- [`analysis/b570_exact_fallback_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/b570_exact_fallback_summary.json)
+- [`reports/b570/B570_VERIFICATION_MECHANISM.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/b570/B570_VERIFICATION_MECHANISM.md)
 
 ### Plotted values
 
@@ -96,11 +115,13 @@ Full precision and references: [`data/figure2_micro_cells.csv`](data/figure2_mic
 - [pdf/figure2.pdf](pdf/figure2.pdf): `c62e822b347929109e1258c023f7b330a239f93094afc32e4d911bd1d42bf500`
 - [svg/figure2.svg](svg/figure2.svg): `16f3ed7ecfe734d2bc7078ce38038569f6e2f9c333f57571bb3c61e0e1a05f80`
 
-## Figure 3
+## Figure 3 — main
+ 
+**Selection:** HYBRID. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.
 
-**Question:** Is the observed M4 profitable regime representative across the two frozen workloads?
+**Question:** Can the same tested M4 platform/runtime exhibit opposite profitability regimes?
 
-**Manuscript claim:** Representative 24Q remains negative beside separately preregistered positive HumanEval30 fixed-k2.
+**Manuscript claim:** The same tested Metal stack exhibits opposite regimes in two separate frozen studies; this is an observation, not a workload-only causal effect.
 
 **Evidence class:** PRIMARY (both workloads)
 
@@ -112,17 +133,17 @@ Full precision and references: [`data/figure2_micro_cells.csv`](data/figure2_mic
 
 **Extraction / rendering:** `scripts/extract.py`; `scripts/plot.py:figure3`. Numerical pass: `qa/figure3_validation.json`.
 
-**Insertion test:** 3.25 × 2.90 in. Color and grayscale PASS; see `qa/VISUAL_QA.md`.
+**Insertion test:** 3.25 × 2.40 in. Color and grayscale PASS; see `qa/VISUAL_QA.md`.
 
 ### Source files
 
-- [`analysis/m4_confirmatory_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_confirmatory_prompt_summary.csv)
-- [`analysis/m4_confirmatory_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_confirmatory_summary.json)
-- [`analysis/m4_humaneval_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_humaneval_prompt_summary.csv)
-- [`analysis/m4_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_humaneval_summary.json)
-- [`scripts/summarize_m4_confirmatory.py`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/scripts/summarize_m4_confirmatory.py)
-- [`scripts/summarize_m4_humaneval.py`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/scripts/summarize_m4_humaneval.py)
-- [`benchmarks/m4_code_conditioned_30q/preregistration.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/benchmarks/m4_code_conditioned_30q/preregistration.json)
+- [`analysis/m4_confirmatory_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_confirmatory_prompt_summary.csv)
+- [`analysis/m4_confirmatory_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_confirmatory_summary.json)
+- [`analysis/m4_humaneval_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_humaneval_prompt_summary.csv)
+- [`analysis/m4_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_humaneval_summary.json)
+- [`scripts/summarize_m4_confirmatory.py`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/scripts/summarize_m4_confirmatory.py)
+- [`scripts/summarize_m4_humaneval.py`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/scripts/summarize_m4_humaneval.py)
+- [`benchmarks/m4_code_conditioned_30q/preregistration.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/benchmarks/m4_code_conditioned_30q/preregistration.json)
 
 ### Plotted values
 
@@ -135,10 +156,12 @@ Full precision and references: [`data/figure3_workloads.csv`](data/figure3_workl
 
 ### Final outputs and SHA256
 
-- [pdf/figure3.pdf](pdf/figure3.pdf): `b3a99935f62fd65edf9f4736d07e72ac6ad26c628f37bf1c454fdcb8947c6760`
-- [svg/figure3.svg](svg/figure3.svg): `a253c0bf70099806a4f270f8a21a7a520c37c6a3a5c73f8d5706009a7c04e5fb`
+- [pdf/figure3.pdf](pdf/figure3.pdf): `f520c3edc6c285a16bfe90d0c0d9444bcd88bde9f6049efff33f696cda7ed940`
+- [svg/figure3.svg](svg/figure3.svg): `78f78e74656684506cfa78093248d672ee5ec365beb258065b1454065a4ce7d0`
 
-## Figure 4
+## Figure 4 — main
+ 
+**Selection:** TAKE NEW. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.
 
 **Question:** Why can isolated NPU drafting look favorable while the qualified realized path is much slower?
 
@@ -158,17 +181,17 @@ Full precision and references: [`data/figure3_workloads.csv`](data/figure3_workl
 
 ### Source files
 
-- [`analysis/358h_draft_device_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_draft_device_summary.csv)
-- [`analysis/358h_draft_device_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_draft_device_summary.json)
-- [`analysis/358h_threshold_input_cpu.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_threshold_input_cpu.json)
-- [`analysis/358h_threshold_input_npu.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_threshold_input_npu.json)
-- [`analysis/358h_phase3_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_phase3_prompt_summary.csv)
-- [`analysis/358h_phase3_decomposition.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_phase3_decomposition.csv)
-- [`analysis/358h_phase3_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_phase3_summary.json)
-- [`scripts/platform/358h/process_phase1_phase2_results.py`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/scripts/platform/358h/process_phase1_phase2_results.py)
-- [`scripts/platform/358h/analyze_phase3_campaign.py`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/scripts/platform/358h/analyze_phase3_campaign.py)
-- [`scripts/platform/358h/phase3_heterogeneous_runner.py`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/scripts/platform/358h/phase3_heterogeneous_runner.py)
-- [`reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md)
+- [`analysis/358h_draft_device_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_draft_device_summary.csv)
+- [`analysis/358h_draft_device_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_draft_device_summary.json)
+- [`analysis/358h_threshold_input_cpu.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_threshold_input_cpu.json)
+- [`analysis/358h_threshold_input_npu.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_threshold_input_npu.json)
+- [`analysis/358h_phase3_prompt_summary.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_prompt_summary.csv)
+- [`analysis/358h_phase3_decomposition.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_decomposition.csv)
+- [`analysis/358h_phase3_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_summary.json)
+- [`scripts/platform/358h/process_phase1_phase2_results.py`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/scripts/platform/358h/process_phase1_phase2_results.py)
+- [`scripts/platform/358h/analyze_phase3_campaign.py`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/scripts/platform/358h/analyze_phase3_campaign.py)
+- [`scripts/platform/358h/phase3_heterogeneous_runner.py`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/scripts/platform/358h/phase3_heterogeneous_runner.py)
+- [`reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md)
 
 ### Plotted values
 
@@ -195,7 +218,9 @@ Full precision and references: [`data/figure4_realized.csv`](data/figure4_realiz
 - [pdf/figure4.pdf](pdf/figure4.pdf): `c9332f4b43e79ea545ffbb04e05661c369d7a846dbc52d869eb4df0735a26b4b`
 - [svg/figure4.svg](svg/figure4.svg): `bfb29bd0177adc451cf17dd911b972916d3ffe00e3bea2f37ca7778869fcefcc`
 
-## Figure 5
+## Figure 5 — appendix A1
+ 
+**Selection:** TAKE NEW. See actual OLD/NEW comparison in `FIGURE_REVIEW.md`.
 
 **Question:** Which correctness/profitability regimes are supported by the tested cases?
 
@@ -215,16 +240,16 @@ Full precision and references: [`data/figure4_realized.csv`](data/figure4_realiz
 
 ### Source files
 
-- [`paper/notes/CROSS_PLATFORM_MECHANISM.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/paper/notes/CROSS_PLATFORM_MECHANISM.md)
-- [`paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md)
-- [`analysis/m4_confirmatory_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_confirmatory_summary.json)
-- [`analysis/m4_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/m4_humaneval_summary.json)
-- [`reports/5070ti/windows_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/5070ti/windows_humaneval_summary.json)
-- [`reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.csv`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.csv)
-- [`reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md)
-- [`artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/diagnostic_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/diagnostic_summary.json)
-- [`analysis/b570_exact_fallback_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/b570_exact_fallback_summary.json)
-- [`analysis/358h_phase3_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/62d1c134b096882c37ce58c1d0ac140236acd9c3/analysis/358h_phase3_summary.json)
+- [`paper/notes/CROSS_PLATFORM_MECHANISM.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/paper/notes/CROSS_PLATFORM_MECHANISM.md)
+- [`paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md)
+- [`analysis/m4_confirmatory_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_confirmatory_summary.json)
+- [`analysis/m4_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/m4_humaneval_summary.json)
+- [`reports/5070ti/windows_humaneval_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/windows_humaneval_summary.json)
+- [`reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.csv`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.csv)
+- [`reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md)
+- [`artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/diagnostic_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/diagnostic_summary.json)
+- [`analysis/b570_exact_fallback_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/b570_exact_fallback_summary.json)
+- [`analysis/358h_phase3_summary.json`](https://github.com/leecdiang/HeteroSpec/blob/1a11361f8526ec361e20dd6878d6e67352fb7bbd/analysis/358h_phase3_summary.json)
 
 ### Plotted values
 

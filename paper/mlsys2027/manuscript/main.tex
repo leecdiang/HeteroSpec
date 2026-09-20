@@ -8,7 +8,8 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
 \hypersetup{pdfauthor={Anonymous Authors},pdftitle={Correctness-Admissible Paths and Realized Costs in Consumer Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.1},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
@@ -21,18 +22,19 @@
 \input{tables/values.tex}
 \mlsystitlerunning{Correctness-Admissible Paths and Realized Costs}
 \begin{document}
-\twocolumn[
-\mlsystitle{Correctness-Admissible Paths and Realized Costs\\in Consumer Speculative Decoding}
+\twocolumn[{
+\mlsystitle{Correctness-Admissible Paths and Realized Costs in Consumer Speculative Decoding}
 \begin{mlsysauthorlist}
 \mlsysauthor{Anonymous Authors}{anon}
 \end{mlsysauthorlist}
 \mlsysaffiliation{anon}{Anonymous Institution}
+\mlsyscorrespondingauthor{Anonymous Author}{anon.email@domain.com}
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
 Speculative decoding saves time only when the execution path satisfies the required output contract and its realized costs fit within the progress it commits. We characterize four consumer systems under greedy token equivalence, separating target-forward microbenchmarks from complete round costs and isolated draft throughput from stateful draft execution. On MacBook Air M4, a representative workload is exact but slower, whereas a separately preregistered HumanEval workload achieves \MHEspeed$\times$ speedup (95\% CI [\MHElo, \MHEhi]) with \MHEexact/\MHEpairs\ exact pairs. On RTX 5070 Ti Laptop and Arc B570, correctness excludes fast verification paths; serialization restores equality in the tested RTX controls but does not establish workload-global equality on B570. Core Ultra X7 358H CPU and NPU draft paths are exact yet unprofitable, with complete target-side work and full-prefix replay plus proposal dominating their respective costs. These observations identify correctness-admissible execution and the realized state interface as necessary measurement boundaries for this study, without asserting a hardware ranking or a measured runtime optimization.
 \end{abstract}
-]
+}]
 \printAffiliationsAndNotice{}
 % Provisional title and abstract; final conclusion awaits the software decision.
 \noindent\textit{Manuscript v0.1---hardware-complete / runtime-reserved. Title and abstract provisional.}

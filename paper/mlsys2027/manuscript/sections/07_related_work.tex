@@ -1,0 +1,13 @@
+\section{Related Work}
+\label{sec:related}
+\paragraph{Performance and cost accounting.}
+Speculative decoding amortizes target computation while preserving a target sampling distribution under its algorithmic assumptions \citep{leviathan2023}. \citet{illusion} systematically study speculative methods in vLLM, including verification dominance and workload/batch effects. \citet{specllm} control shared runtime policies and express speedup through committed work and conditional execution cost. \citet{distance} derive profitability conditions for edge--cloud execution. We neither introduce performance characterization nor claim a novel cost/commit identity. Our focus is the measured cost of the paths remaining after a strict greedy-reference gate and the stateful interface actually used on consumer systems.
+
+\paragraph{Heterogeneous execution.}
+Dovetail places drafting on a GPU and target verification on a CPU \citep{dovetail}; DuoDecoding studies CPU/GPU placement with hardware-aware draft budgets \citep{duodecoding}. Mirror-SD explicitly considers GPU/NPU mapping and complementary speculative pipelines \citep{mirror}. Heterogeneous speculative execution is therefore established prior art. Our negative heterogeneous outcome characterizes the qualified interface and does not contradict acceleration under other placements or runtimes.
+
+\paragraph{Correctness and numerical reproducibility.}
+\citet{batchcorrect} analyze batch speculative-decoding synchronization errors and distinguish them from residual numerical mismatches. Their current paper revises the earlier \emph{Batch Speculative Decoding Done Right} preprint. \citet{numerics} study numerical sources of output variation across system configurations; LLM-42 uses verified speculation to enforce deterministic inference \citep{llm42}. Our CUDA observation is not a new numerical phenomenon, and we do not equate it with ragged-batch synchronization bugs. We measure its consequence for an admissible target path, with B570 showing why serialization alone cannot certify the intended workload.
+
+\paragraph{State and memory reuse.}
+Draft-side state management also has prior art. \citet{compactmemory} maintain incrementally updated compressed draft KV memory for long contexts. Such designs differ from the full-prefix replay interface measured here, but preclude treating state reuse itself as a new idea. Our evidence identifies a realized replay-plus-proposal cost in a consumer OpenVINO NPU path. Any later co-design contribution must be established by its own measured behavior rather than by adopting persistence as an architectural label.

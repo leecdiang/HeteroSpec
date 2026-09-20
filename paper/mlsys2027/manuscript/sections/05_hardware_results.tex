@@ -1,0 +1,37 @@
+\section{Hardware Results by Regime}
+\label{sec:results}
+\input{tables/02_headlines.tex}
+\subsection{M4: workload-conditioned profitability}
+\input{figures/02_m4.tex}
+The representative frozen M4 sample produces \MRepSpeed$\times$ speedup (95\% CI [\MRepLo, \MRepHi]), with \MRepExact/\MRepPairs\ exact pairs and only \MRepFaster/\MRepN\ prompts faster. The separately preregistered HumanEval fixed-$k=2$ study produces \MHEspeed$\times$ [\MHElo, \MHEhi], with \MHEexact/\MHEpairs\ exact pairs and \MHEfaster/\MHEprompts\ prompts faster. Figure~\ref{fig:m4} retains both; the positive code-conditioned result does not replace or pool with the negative representative result.
+
+This establishes existence of an exact profitable workload regime on the measured M4 stack. It does not establish general M4 profitability or isolate unified memory as its cause. The workloads and session conditions differ, and the earlier discovery effect size is not promoted as a confirmatory estimate. Historical MLX failures also do not negate the final qualified Q8\_0 Metal result.
+
+For primary fixed-$k=2$ HumanEval, the package-efficiency ratio (baseline/speculative J per output token) is \MHEenergy$\times$ [\MHEenergyLo, \MHEenergyHi]. The interval includes one: energy is neutral within uncertainty. The registered $p_{\min}=0.9$ condition has secondary energy evidence, discussed separately in the appendix. The preregistered corrected synthetic ceiling was not executed. We retain that deviation rather than treating the earlier synthetic diagnostic as its replacement.
+
+\subsection{RTX 5070 Ti Laptop: exact controls remain negative}
+The serialized CPU-to-RTX control reaches \RTXcpuSpeed$\times$ [\RTXcpuLo, \RTXcpuHi], while the same-GPU draft control reaches \RTXgpuSpeed$\times$ [\RTXgpuLo, \RTXgpuHi]. Both are \RTXexact/90\ exact and accelerate zero of 30 prompts. The higher speed of same-GPU placement shows that placement and associated integration costs matter, but its continued loss rules out transfer as the sole explanation.
+
+These controls are deliberately secondary. They qualify a slower path after the native fast attempt failed; they are not a rescued primary success. The verification microbenchmark explains lost batching opportunity, while the complete end-to-end controls include drafting and integration. We cannot recover a full $\rtarget$ decomposition by substituting the forward-only ratio into Equation~\ref{eq:normalized}.
+
+\subsection{Arc B570: correctness-blocked diagnostics}
+Neither the fast path nor the serialized fallback supports a workload-global admissible optimization result. The latter's diagnostic speedup is \BSpeed$\times$ [\BLo, \BHi], with zero of 30 prompts faster. That interval describes timing on a partially mismatching path; its precision does not turn it into an admissible speed claim. The formal failure and stop rule remain the platform result. Board-energy observations likewise remain diagnostic and boundary-limited.
+
+This negative control matters because it prevents an attractive simplification: selecting serialized verification is not by itself a sufficient correctness policy. Qualification must cover the actual path and intended workload. Exact subsets may be descriptively useful, but conditioning on those subsets after the run cannot establish global performance.
+
+\subsection{Core Ultra X7 358H: realized state changes the cost}
+\input{figures/04_358h.tex}
+The closed Phase-3 heterogeneous runner is exact on both CPU and NPU drafting: \HExact/90\ pairs per path, with zero of 30 prompts faster. CPU achieves \HcpuSpeed$\times$ [\HcpuLo, \HcpuHi]; NPU achieves \HnpuSpeed$\times$ [\HnpuLo, \HnpuHi]. The direct round records show mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, approximately 2.46. This is complete committed output, not the accepted-draft counter used in older native records.
+
+The target maintains persistent state, evaluates proposals, removes invalid candidate state when needed, and decodes correction or bonus output. Its complete measured region accounts for \HcpuTarget\% of CPU-path speculative time. The NPU path instead spends \HnpuDraft\% in the synchronous OpenVINO call that replays the full committed prefix and generates a proposal. Replay and proposal are inseparable within this measurement; we do not invent a replay-only value. Residual orchestration occupies only \HcpuResidual\% and \HnpuResidual\%, so it cannot explain the main loss.
+
+Figure~\ref{fig:state} separates isolated steady-state throughput from this realized request decomposition. The isolated NPU draft can outperform the CPU at the tested contexts, but this advantage does not survive the qualified state interface. The conclusion concerns that implementation, not insufficient NPU compute capability. A state-persistent intervention has not been implemented or measured.
+
+Using arithmetic totals at a common boundary reconstructs Equation~\ref{eq:normalized}. CPU has $(\dreal,\rtarget,X)=(\HcpuD,\HcpuR,\HcpuX)$ and aggregate speedup \HcpuAggregate$\times$; NPU has $(\HnpuD,\HnpuR,\HnpuX)$ and \HnpuAggregate$\times$. These agree with the ratios of total baseline/speculative times. They intentionally differ from the primary prompt-level geometric means in Table~\ref{tab:headlines}.
+
+The earlier Phase-2 screen combined isolated drafting and a target-forward proxy under favorable residual-cost assumptions. It was an eligibility screen, not a validated end-to-end prediction. Phase 3 shows why those proxies must be replaced with complete target-side work and realized stateful draft cost. No end-to-end Phase-3 energy result is claimed, and source reconstruction retains its \texttt{STRONGLY\_SUPPORTED} qualification.
+
+\subsection{Stable hardware-study conclusion}
+\label{sec:hardwareconclusion}
+\input{figures/05_regimes.tex}
+The tested systems expose four useful regimes: profitable and exact, exact but unprofitable, physically cheap but correctness-inadmissible, and state-interface-bound. Figure~\ref{fig:regimes} maps them categorically; regimes can overlap and are not hardware ranks. Correctness determines which measured paths can support an optimization claim, then realized costs determine whether their committed progress pays. This conclusion requires neither a successful future prototype nor extrapolation from one workload to an entire device family.

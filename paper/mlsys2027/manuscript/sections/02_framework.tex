@@ -1,0 +1,24 @@
+\section{Correctness Contract and Realized-Cost Accounting}
+\label{sec:framework}
+\subsection{A path-qualified output contract}
+A greedy speculative round proposes a draft sequence, verifies it with the target, and commits the matching prefix followed by a correction or bonus token when the remaining output budget permits. Rejected candidate state must be removed or reconstructed consistently. Our contract requires generated token IDs to equal the matched target-only greedy output under the frozen configuration. It is an empirical property of a model, runtime, execution path, and workload, not a property inferred from the algorithm name.
+
+We call a tested path \emph{admissible} only within the workload scope for which that contract passes. A failed pair blocks a workload-global optimization claim even if the timing is favorable. A small qualification probe establishes eligibility for broader testing, not universal equivalence. We retain blocked-path timings as diagnostics with their correctness status visible. This deliberate contract is stricter than an approximate-quality deployment objective; HumanEval token equality does not establish functional correctness or pass@$k$.
+
+\subsection{Complete round costs}
+Let $T_b$ be the matched target-only cost per output token. Let $T_d^{\mathrm{real}}$ denote the realized draft-subsystem time per round, including any prefix replay performed by its interface. Let $T_{\mathrm{target,round}}^{\mathrm{real}}$ include all measured target-side round work: candidate evaluation and any correction, bonus, or rollback work inside that region. Residual synchronization, transfer, orchestration, and bookkeeping time not included in either region is $T_x$. Let $C$ count \emph{all} committed output tokens. With consistent timing and aggregation boundaries,
+\begin{align}
+S &= \frac{T_b C}{T_d^{\mathrm{real}}+T_{\mathrm{target,round}}^{\mathrm{real}}+T_x}\label{eq:physical}\\
+  &= \frac{C}{\dreal+\rtarget+X},\label{eq:normalized}
+\end{align}
+where each denominator term is normalized by $T_b$. Break-even requires $C>\dreal+\rtarget+X$. These identities organize measurements; they are not a new profitability theory. Cost/commit decompositions already appear in runtime-controlled studies \citep{specllm}.
+
+At an aggregate level, round means and matched total-time/token accounting must use the same weights. A ratio of total times need not equal a geometric mean of prompt speedups. Likewise, accepted draft tokens per round omit correction or bonus output and cannot automatically be used as $C$. We do not infer unmeasured replay-only, transfer-only, or correction-only components by subtraction from incompatible experiments.
+
+\subsection{A separate target-forward proxy}
+For context $n$ and path $e$, define
+\begin{equation}
+\microv(n,e)=\frac{T_{\mathrm{target\ forward}}(k,n,e)}{T_{\mathrm{target\ decode}}(1,n)}.
+\end{equation}
+This microbenchmark asks whether a target can process a causal block near the cost of a single decode. It omits draft generation and can omit target correction/bonus and state-management work. Consequently $\microv$ is not automatically $\rtarget$. Figure~\ref{fig:framework} separates the opportunity measured by the proxy from the costs paid by a qualified speculative round.
+\input{figures/01_framework.tex}

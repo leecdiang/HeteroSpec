@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{xurl}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage{mlsys2025}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Correctness-Admissible Paths and Realized Costs},pdfsubject={MLSys 2027 separate appendix v0.1}}
+\input{tables/values.tex}
+\mlsystitlerunning{Supplement: Correctness-Admissible Paths and Realized Costs}
+\begin{document}
+\twocolumn[{
+\mlsystitle{Supplement: Correctness-Admissible Paths and Realized Costs}
+\begin{mlsysauthorlist}\mlsysauthor{Anonymous Authors}{anon}\end{mlsysauthorlist}
+\mlsysaffiliation{anon}{Anonymous Institution}
+\mlsyscorrespondingauthor{Anonymous Author}{anon.email@domain.com}
+\vskip 0.3in
+}]
+\printAffiliationsAndNotice{}
+\appendix
+\section{Supplement Scope}
+This separate appendix accompanies manuscript v0.1, hardware-complete / runtime-reserved. It supplies statistical and measurement-boundary details without introducing a new result or a runtime implementation. All scientific limitations also appear in the main text. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+
+\section{Frozen Estimators}
+Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
+
+\begin{table*}[t]
+\caption{Frozen statistical policies. GM = geometric mean. Indices below are zero-based order statistics of sorted bootstrap draws; NumPy quantiles use the original analyzer's convention.}
+\label{tab:statistics}
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.1in}>{\raggedright\arraybackslash}p{1.1in}>{\raggedright\arraybackslash}p{1.0in}>{\raggedright\arraybackslash}p{.9in}>{\raggedright\arraybackslash}p{1.65in}}
+\toprule
+Campaign & Within prompt & Resamples & Seed & CI endpoints / generator \\
+\midrule
+M4 24Q & GM of 3 ratios & 10,000 & 20260907 & [249,9749]; Python Random \\
+M4 HumanEval & GM of 3 ratios & 100,000 & 20260910 & [2500,97499]; Python Random \\
+RTX HumanEval & GM of 3 ratios & 10,000 & 20260910 & [249,9749]; Python Random \\
+B570 fallback & GM of 3 ratios & 10,000 & 20260910 & [250,9750]; Python Random \\
+358H Phase 3 & Median of 3 ratios & 10,000 & 20260919 & Quantiles .025/.975; NumPy default\_rng \\
+\bottomrule
+\end{tabular}
+\end{table*}
+The B570 finalizer builds its prompt vector in the insertion order of the archived pair records. Sorting by task ID changes the finite fixed-seed bootstrap endpoints even though it leaves the underlying estimator unchanged. Exact replay retains that original order. The M4 HumanEval lower endpoint uses a different order statistic from M4 24Q and RTX; those frozen conventions are retained. None of these prompt intervals captures the full distribution of possible thermal, session or runtime states.
+
+\section{Energy Boundaries and Allowed Claims}
+\input{tables/04_energy.tex}
+Ratios above one favor speculation within the named boundary. For M4 fixed-$k=2$, the package ratio is \MHEenergy\ [\MHEenergyLo, \MHEenergyHi], neutral within uncertainty. The registered $p_{\min}=0.9$ secondary condition has a package-efficiency ratio 1.041 [1.018, 1.065]. This is not a replacement for the primary condition and does not establish a material additional speed gain. B570 serialized board efficiency is 0.302 [0.285, 0.320]; correctness failure restricts it to diagnosis. No between-platform energy ranking is valid.
+
+\section{Round Accounting and State Semantics}
+The 358H target keeps its low-level context across rounds. Candidate evaluation, invalid-suffix rollback when needed, and correction or bonus decoding belong to the complete target-side timing region. Every OpenVINO proposal call receives the entire committed prefix. Its synchronous timing combines reconstruction and proposal; neither term can be isolated from this experiment without changing the measured execution.
+
+The CPU path records 11,520 committed output tokens over 4,677 rounds; the NPU path records 11,520 over 4,686 rounds. Their directly measured $C$ values are \HcpuC\ and \HnpuC. Using the arithmetic baseline time per output token and arithmetic component totals yields CPU $(D,R,X)=(\HcpuD,\HcpuR,\HcpuX)$ and NPU $(\HnpuD,\HnpuR,\HnpuX)$. The resulting ratios \HcpuAggregate\ and \HnpuAggregate\ match ratios of total times, not the prompt-GM headline estimator.
+
+Historical M4/RTX accepted-draft counters exclude correction or bonus output and have output-boundary effects. They are not substituted for the directly recorded 358H committed-progress metric. Likewise, target-forward PP2/PP1 ratios are never presented as complete realized target-round cost.
+
+\section{Deviations and Provenance Boundaries}
+The M4 corrected synthetic ceiling was preregistered but not executed. Earlier synthetic acceptance diagnostics are not a substitute. The representative and separately preregistered code workloads stay distinct. Early MLX precision/correctness failures are qualification history, not failures of the final Metal Q8\_0 path.
+
+The B570 formal v2 correctness failure triggered its stop rule. A later six-prompt serialized probe passed 18/18 pairs, but full-workload serialization yielded only 60/90. Earlier remote-interaction-contaminated verification observations are excluded from the plotted final serialized cells. A legacy ``exact'' field label in historical artifacts does not establish workload-global equality.
+
+Windows follow-up derived tables and numerical captures support the manuscript, but historical raw per-run provenance is weaker. The CUDA score capture came from a separate same-commit instrumented build and does not replace formal measurements. The 358H source reconstruction remains \texttt{STRONGLY\_SUPPORTED}, not proven exact historical upstream identity. Its completed Phase-3 records supersede the blocked-preflight empty scaffold. These are retained qualifications, not unresolved invitations to alter frozen experiments.
+\end{document}

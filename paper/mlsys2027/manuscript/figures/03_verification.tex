@@ -1,0 +1,12 @@
+% Evidence: M4-MICRO, RTX-MICRO, B570-FAST/SERIAL.
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.84\textwidth,height=2.25in,xmin=.8,xmax=2.6,ymin=-.5,ymax=4.5,y dir=reverse,ytick={0,1,2,3,4},yticklabels={M4 Metal,RTX batched,RTX serialized,B570 fast,B570 serialized},xlabel={Target-forward proxy $\vTwo$ (baseline-step units)},xtick={1,1.5,2,2.5},xmajorgrids,axis on top]
+\addplot[black,dashed,forget plot] coordinates {(1,-.5)(1,4.5)};
+\input{figures/03_coordinates.tex}
+\end{axis}
+\end{tikzpicture}
+\caption{How does correctness change usable verification? Filled marks: paths exact on the frozen reported workloads; open marks: correctness-blocked paths (including B570 serialized). Each mark is one context cell; nearby cells can overlap. M4 contexts: 512/2048/8192; RTX 5070 Ti Laptop depths: 0/256; B570 contexts: 512/2048. Contexts, runtimes, and controls differ: this is not a hardware ranking. The plotted proxy is not complete $\rtarget$.}
+\label{fig:verification}
+\end{figure*}

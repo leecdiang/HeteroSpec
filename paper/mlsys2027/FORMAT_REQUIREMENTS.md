@@ -1,6 +1,6 @@
 # MLSys 2027 submission-format requirements
 
-Checked against the official **MLSys 2027 Call for Research Papers** on 2026-09-18.
+Checked against the official **MLSys 2027 Call for Research Papers** on 2026-09-20 (reverified during manuscript v0.1 construction).
 
 Official CFP:
 - https://mlsys.org/Conferences/2027/CallForResearchPapers
@@ -73,3 +73,7 @@ Before submission:
 - [ ] No accidental local file paths, usernames, hostnames, GitHub account names, or institution names remain in the review PDF.
 - [ ] No result is sourced only from an unmerged/unstable experiment branch without being marked provisional during drafting.
 - [ ] Every quantitative claim has a repository evidence pointer in the internal evidence ledger.
+
+## v0.1 verification
+
+The current official CFP still links `https://media.mlsys.org/Conferences/MLSYS2025/mlsys2025style.zip`. The untouched ZIP, extracted package and SHA-256 manifest are now in `manuscript/vendor/`; `vendor/SOURCE.md` records the source. The compiled review PDF has 9 main pages and 1 reference page; its 2-page appendix is a separate file. All 13 references retain complete author lists. This is a draft for author review, not a submitted paper. See `MANUSCRIPT_STATUS.md` and `evidence/PDF_QA.json` for the exact checked artifacts.

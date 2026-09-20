@@ -1,0 +1,13 @@
+% Evidence: M4-24, M4-HE. Coordinates generated from full-precision summaries.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.95\columnwidth,height=2.0in,xmin=.65,xmax=1.52,ymin=-.5,ymax=1.5,ytick={0,1},yticklabels={24Q,HumanEval},xlabel={Paired decode speedup},xtick={.8,1,1.2,1.4},grid=major,axis on top]
+\addplot[black,dashed] coordinates {(1,-.5)(1,1.5)};
+\addplot+[only marks,mark=*,blue!70!black,error bars/.cd,x dir=both,x explicit]
+ table[x=mean,y=row,x error minus expr=\thisrow{mean}-\thisrow{low},x error plus expr=\thisrow{high}-\thisrow{mean}] {figures/02_m4_data.dat};
+\end{axis}
+\end{tikzpicture}
+\caption{Is the M4 positive result representative? The frozen 24Q result is negative (72/72 exact); separately preregistered HumanEval is positive (90/90 exact). Bars are campaign-specific 95\% prompt-bootstrap intervals. Both use the qualified Metal path.}
+\label{fig:m4}
+\end{figure}

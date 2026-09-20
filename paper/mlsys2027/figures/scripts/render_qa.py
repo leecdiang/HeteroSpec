@@ -16,7 +16,7 @@ def main():
             im.convert('L').save(HERE/f'qa/figure{i}_{dpi}dpi_gray.png')
     # Letter-size proof sheets preserve native physical dimensions; not a manuscript mock-up.
     proof=fitz.open()
-    layouts=[[(2,63,54),(4,63,337)],[(5,63,36),(1,63,332),(3,315,332)]]
+    layouts=[[(1,63,46),(2,63,336)],[(3,63,45),(4,63,293)],[(5,63,70)]]
     for layout in layouts:
         page=proof.new_page(width=612,height=792)
         for i,x,y in layout:
@@ -27,6 +27,6 @@ def main():
     for p in range(len(proof)):
         pix=proof[p].get_pixmap(matrix=fitz.Matrix(96/72,96/72),colorspace=fitz.csGRAY)
         pix.save(HERE/f'qa/insertion_proof_page{p+1}_gray.png')
-    print('Rendered all five candidates in color and grayscale at 96/180 dpi; two native-size proof pages.')
+    print('Rendered all five candidates in color and grayscale at 96/180 dpi; three native-size proof pages.')
 
 if __name__=='__main__':main()

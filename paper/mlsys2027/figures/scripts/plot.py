@@ -56,33 +56,36 @@ def save(f,i):
     subprocess.run([sys.executable,str(HERE/'scripts/validate.py'),'--figure',str(i),'--require-outputs'],check=True)
 
 def figure1():
-    f,a=canvas(3.25,4.05)
-    box(a,.39,3.61,2.47,.31)
-    text(a,1.625,3.765,'Candidate execution path',ha='center',fontweight='bold',fontsize=10)
-    arrow(a,(1.625,3.6),(1.625,3.37))
-    box(a,.39,2.95,2.47,.42)
-    text(a,1.625,3.19,'Correctness gate',ha='center',fontweight='bold',fontsize=10)
-    text(a,1.625,3.045,'Frozen workload · greedy token equality',ha='center',fontsize=8.5)
-    arrow(a,(1.625,2.94),(1.625,2.61))
-    text(a,1.71,2.78,'pass',fontsize=8.5,color=BLUE)
-    a.plot([2.865,3.02,3.02],[3.15,3.15,2.74],color=GREY,lw=.7,ls='--')
-    text(a,2.97,2.56,'fail:\nexclude',ha='center',fontsize=8,color=GREY)
-    box(a,.39,2.36,2.30,.26)
-    text(a,1.54,2.49,'Admissible path',ha='center',fontweight='bold',color=BLUE,fontsize=10)
-    arrow(a,(1.54,2.35),(1.54,2.13))
-    text(a,.16,2.01,'Measure realized work per round',fontweight='bold',fontsize=9.5)
-    items=[(r'$D_{\mathrm{real}}$','Draft through its actual state interface'),
-           (r'$R_{\mathrm{target}}$','Complete target-side round work'),
-           (r'$X$','Residual cost, without double counting'),
-           (r'$C$','All output tokens committed per round')]
-    for (sym,label),y in zip(items,[1.77,1.53,1.29,1.05]):
-        text(a,.18,y,sym,fontsize=11,color=BLUE)
-        text(a,.93,y,label,fontsize=8.5)
-    a.plot([.16,3.08],[.865,.865],color=RULE,lw=.6)
-    text(a,1.625,.705,r'$S = C\,/\,(D_{\mathrm{real}} + R_{\mathrm{target}} + X)$',ha='center',fontsize=13)
-    text(a,1.625,.485,r'Costs normalized by $T_b$; one consistent boundary.',ha='center',fontsize=8.5)
-    box(a,.13,.065,2.99,.28,linestyle='--')
-    text(a,1.625,.205,r'Separate proxy: $V_k^{\mathrm{micro}}$ is not complete $R_{\mathrm{target}}$.',ha='center',fontsize=8.5)
+    d=df('figure1_overview.csv');f,a=canvas(6.75,3.63)
+    text(a,.10,3.43,'Local opportunity does not ensure end-to-end gain',fontsize=12,fontweight='bold')
+    text(a,.10,3.10,'Observed case',fontsize=10,fontweight='bold')
+    text(a,2.06,3.10,'Favorable local measurement',fontsize=10,fontweight='bold')
+    text(a,4.64,3.10,'Realized outcome',fontsize=10,fontweight='bold')
+    a.plot([.10,6.65],[2.94,2.94],color=INK,lw=.7)
+    for idx,(_,r) in enumerate(d.iterrows()):
+        y=2.62-idx*.59
+        qualified=r.status=='qualified';color=BLUE if qualified else GREY
+        case=['M4 · HumanEval30','M4 · representative 24Q','RTX 5070 Ti Laptop','358H · NPU draft'][idx]
+        sub=['Preregistered, fixed k = 2','Frozen representative study','CUDA batched verification','Qualified Phase-3 path'][idx]
+        text(a,.10,y+.06,case,fontsize=10,fontweight='bold')
+        text(a,.10,y-.13,sub,fontsize=8.7,color=GREY)
+        if idx<3:
+            text(a,2.06,y+.06,rf'$V_2^{{\mathrm{{micro}}}}$ = {r.local_low:.3f}–{r.local_high:.3f}',fontsize=10)
+            text(a,2.06,y-.14,'Shared Metal path; separate micro study' if idx<2 else 'Near one target-decode step',fontsize=8.6,color=GREY)
+        else:
+            text(a,2.06,y+.06,f'{r.local_high:.2f} vs {r.local_low:.2f} tokens/s',fontsize=10)
+            text(a,2.06,y-.14,'NPU vs CPU · isolated, 8,192 tokens',fontsize=8.6,color=GREY)
+        arrow(a,(4.29,y+.015),(4.52,y+.015))
+        a.plot(4.68,y+.06,marker='o' if qualified else 's',ms=5,
+               mec=color,mfc=color if qualified else 'white',mew=1)
+        outcome=['Exact + profitable','Exact + negative','Correctness blocked','Exact + negative'][idx]
+        text(a,4.82,y+.06,outcome,fontsize=10,fontweight='bold',color=color)
+        detail='No admissible speedup' if not qualified else f"{float(r.speedup):.3f}× · {r.exact} exact"
+        text(a,4.82,y-.14,detail,fontsize=9)
+        if idx<3:a.plot([.10,6.65],[y-.31,y-.31],color=RULE,lw=.5)
+    a.plot([.10,6.65],[.50,.50],color=INK,lw=.6)
+    text(a,.10,.34,'Categorical cases, not a hardware ranking. Filled = qualified; open = blocked. Details and CIs: Figures 2–4.',fontsize=8.6)
+    text(a,.10,.13,r'Micro cost ≠ complete target work; isolated throughput ≠ stateful cost. Speedups cover post-prefill decode.',fontsize=8.6)
     save(f,1)
 
 def figure2():
@@ -123,8 +126,8 @@ def figure2():
     save(f,2)
 
 def figure3():
-    d=df('figure3_workloads.csv');f=plt.figure(figsize=(3.25,2.9))
-    ax=f.add_axes([.13,.32,.81,.48]);clean(ax);ax.spines['left'].set_visible(False)
+    d=df('figure3_workloads.csv');f=plt.figure(figsize=(3.25,2.4))
+    ax=f.add_axes([.13,.245,.81,.55]);clean(ax);ax.spines['left'].set_visible(False)
     ax.set(xlim=(.72,1.50),ylim=(-.4,1.45),xticks=[.8,1,1.2,1.4]);ax.set_yticks([])
     ax.plot([1,1],[-.35,1.12],color=GREY,ls='--',lw=.8,zorder=0)
     for y,(_,r) in zip([1,0],d.iterrows()):
@@ -135,8 +138,7 @@ def figure3():
         ax.text(1.485,y-.23,f'{int(r.exact_pairs)}/{int(r.pairs)} exact',ha='right',fontsize=8.5)
     ax.set_xlabel('Decode speedup (baseline / speculative)',labelpad=7)
     f.text(.025,.948,'M4 Metal: two frozen workload studies',fontweight='bold',fontsize=10)
-    f.text(.025,.075,'95% prompt-bootstrap CIs; separate workload studies.',fontsize=8.5)
-    f.text(.025,.026,'Exact = token equality, not functional HumanEval pass@k.',fontsize=8.3)
+    f.text(.025,.029,'95% prompt-bootstrap CIs; separate workload studies.',fontsize=8.5)
     save(f,3)
 
 def figure4():

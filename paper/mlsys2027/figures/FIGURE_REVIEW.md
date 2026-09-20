@@ -1,49 +1,73 @@
-# Figure review — independent candidates
+# Actual figure comparison and narrative selection — v0.3
 
-## Comparison boundary
+Base: `1a11361f8526ec361e20dd6878d6e67352fb7bbd`. Branch: `paper/mlsys2027-figures-v0.3`. This review supersedes the provisional v0.2 recommendations. Experiments are closed; no experiment was rerun. No manuscript prose, figure wrapper, or scientific source was changed.
 
-**Actual OLD-versus-NEW asset comparison is unavailable.** The manuscript and its five draft figure sources were not on the starting repository commit. No old asset, layout or pixel-level quality is inferred from the prompt. Historical report figures are different artifacts and were not substituted for those missing manuscript figures.
+The main sequence establishes an observation before diagnosing two measured failures of translation from local opportunity to realized gain. Correctness and state-interface cost are bounded diagnoses, not a universal thesis or exhaustive theory. M4 workload dependence remains a first-class observation.
 
-The choices below are **provisional design recommendations**, using the user's description of the old concept. They are not final asset selections and do not assert that NEW is visually superior to an unseen OLD. All five NEW assets independently passed the stated candidate QA.
+## Actual decisions
 
-| Figure | Provisional design choice | Reason | What remains to compare |
+| Role | OLD manuscript source | Decision | Selected placement |
 |---|---|---|---|
-| 1 | **HYBRID** | Preserve the specified correctness-gate sequence and accounting identity; use the candidate's separated micro-proxy strip, complete target term and explicit C definition if they improve the actual draft. | Old spacing, final caption footprint and actual manuscript typography. |
-| 2 | **TAKE NEW** | The new path-row range plot directly joins measured physical cost to qualification status. Filled/open marks, circle/square shapes and text preserve the distinction in grayscale. Context differences and proxy scope remain visible. | Compare the old asset before replacing it; retain old elements if clearer at its actual insertion size. |
-| 3 | **KEEP OLD** | Keep the existing simple forest-plot concept. No new scientific encoding is needed. The independent candidate is a verified fallback and reference for exact bounds/labels. | This is a concept-level preference only. The old file itself is not selected or validated. |
-| 4 | **TAKE NEW** | Absolute stacked seconds preserve 13.25 vs 27.54 seconds; a separate shared baseline and clearly labeled prompt-GM speedups prevent the composition plot from concealing total cost or mixing estimands. | Caption and two-panel fit beside actual Results prose. |
-| 5 | **TAKE NEW** | An aligned categorical regime matrix provides explicit admissibility and profitability dimensions. Blocked paths receive no profitability coordinate; evidence labels and mechanism rows replace disconnected boxes without inventing continuous scores. | Whether the actual old design achieves equivalent semantics more compactly. |
+| 1 · empirical puzzle | `01_framework.tex` | **REDESIGN BOTH** | Main, 6.75 in. Replace both accounting-first designs with a categorical local-measurement/outcome overview. |
+| 2 · correctness diagnosis | `03_verification.tex` | **TAKE NEW** | Main, 6.75 in. Retain v0.2 path rows, explicit context and qualification, redundant status encoding. |
+| 3 · same-platform contrast | `02_m4.tex` | **HYBRID** | Main, 3.25 in. OLD forest-plot economy plus NEW exact estimates, intervals and exactness counts; height reduced from 2.90 to 2.40 in. |
+| 4 · stateful integration | `04_358h.tex` | **TAKE NEW** | Main, 6.75 in. Both versions already use absolute time; NEW adds baseline, totals, CIs and separately labeled prompt-GM speedups. |
+| 5 · regime inventory | `05_regimes.tex` | **TAKE NEW — APPENDIX** | Appendix A1, 6.75 in. Keep the complete inventory; remove it from the recommended main sequence to avoid duplicating Figure 1. Asset ID remains `figure5` for provenance. |
 
-## What the visual audit asks the manuscript to weaken or clarify
+Four main figures are recommended, not five. Synthesis is carried by the Figure 4 caption and optional appendix inventory; no extra diagram is needed merely to preserve the previous count.
 
-These are evidence-based recommendations, **not findings that the unavailable manuscript contains the offending wording**.
+## Comparison protocol and evidence
 
-1. Replace unqualified “verification cost” with **target-forward V_2^micro proxy** when citing Figure 2. Do not equate it to complete R_target.
-2. Keep B570 serialization **diagnostic and globally inadmissible**. Its archived `V2_exact` field is a historical name, not an exactness guarantee. Do not rescue the failed formal run with later diagnostics.
-3. Describe M4 as a **workload-conditioned observed contrast**. The two studies do not isolate workload causality from all session effects, and HumanEval exactness does not establish pass@k.
-4. Call Figure 4 durations **post-prefill decode seconds per request**, not whole-request latency. Avoid deriving headline 0.734×/0.352× from the displayed arithmetic mean durations; the corresponding aggregate ratios are about 0.723×/0.348×.
-5. Attribute the 358H NPU loss to the **measured state interface**. Replay-plus-proposal is indivisible, and no measured persistent-state intervention is supplied. Do not claim replay-only time or intrinsically slow NPU compute.
-6. The smallest-context isolated NPU median is only slightly higher and its CI overlaps CPU. Say the **median advantage grows at longer tested contexts**, not that NPU is significantly faster at every context.
-7. Avoid a hardware ranking, universal backend defect, unified-memory causal explanation or novel-accounting-theory claim.
+[OLD_NEW_COMPARISON.pdf](comparison/OLD_NEW_COMPARISON.pdf) contains ten pages: OLD versus committed v0.2 candidate, then OLD versus selected v0.3 asset, for each figure. Every pair has the same physical width, independently verified from the placed PDF forms. Print at 100%, without fitting to the proof page.
 
-## Completed checks
+[OLD_NATIVE_WIDTH.pdf](comparison/OLD_NATIVE_WIDTH.pdf) preserves the five OLD artworks at their actual checkpoint widths. OLD Figures 1 and 5 were single-column; the equal-width comparison enlarges them by 2.077× to the proposed double-column width. This is labeled explicitly and is not presented as their original typography.
 
-- Exact input identity: 40 consumed repository files reconciled to their Git blob IDs at the source commit; SHA256 lock retained.
-- Figure 2: eleven cells independently recomputed from timing samples, without using prompt-stated numbers.
-- Figure 3: both frozen bootstrap protocols replayed, including input order and distinct endpoint conventions.
-- Figure 4: six isolated cells reconciled; all 180 Phase-3 paired records, row sums, means, shares and prompt-bootstrap CIs replayed. Phase-1 throughput summaries have corroborating retained TPOT samples; separate original throughput arrays were unavailable.
-- Figure 5: eight classifications checked; both RTX controls verified from 90 exact pairs each; B570 fast mismatch counts and serialized global inadmissibility retained.
-- All five vector PDFs: correct native width; no embedded raster chart; exported text bounds checked; color and grayscale renders visually inspected.
-- Fixed observed axis/footnote collisions. Switched from Nimbus OTF to embedded STIX TrueType to eliminate Poppler font warnings.
+OLD is an exact vector crop of the committed `manuscript/output/manuscript-v0.1.pdf`, not a recreation from pixels. Crop coordinates, source pages, filenames and hashes are in [comparison_lock.json](comparison/comparison_lock.json). Captions were read directly from TeX and assessed below; artwork crops omit captions. The checked-in template sets text width 6.75 in and column gap 0.25 in, giving 3.25 in per column. Numeric TeX filename prefixes differ from actual manuscript numbering; the role mapping above follows the compiled PDF.
 
-## Integration gate
+Color and grayscale were inspected at final physical sizes. [comparison_validation.json](qa/comparison_validation.json) reconciles OLD/NEW source numbers: M4 estimates/CIs and 358H values agree at full precision; all eleven micro cells agree to the OLD source precision (B570 fast uses four decimals). No correction to the closed scientific results is proposed.
 
-The branch listing was checked again during delivery preparation. No manuscript-checkpoint branch was present; `main` still pointed to `62d1c134b096882c37ce58c1d0ac140236acd9c3`.
+## Figure 1 — REDESIGN BOTH
 
-When that checkpoint is available:
+OLD is the more compact accounting explanation: its single-column gate, denominator and dashed proxy box are clear. The prior candidate adds definitions and a failed-gate branch, at a greater vertical cost. Neither establishes the new empirical story.
 
-1. Record its exact SHA and rebase this candidate branch onto it.
-2. Render OLD and NEW at the same actual manuscript insertion widths and with proposed captions.
-3. Replace the provisional choices above with actual **KEEP OLD / TAKE NEW / HYBRID** asset decisions; do not assume NEW wins.
-4. Re-run numerical checks and inspect the final integrated PDF, including grayscale.
-5. Obtain author review through the PR. **Do not merge automatically.**
+The replacement uses four annotated categorical cases. M4's shared-path micro evidence is explicitly from a separate study; it is not presented as measured separately on HumanEval and 24Q. Both M4 outcomes appear. RTX has no admissible speedup value. The NPU row contrasts isolated tok/s with a separately qualified speedup without equating their units. Figures 2–4 carry uncertainty and detailed conditions. Accounting remains in the untouched framework subsection; a second main accounting diagram is unnecessary.
+
+Tradeoff: the overview takes double-column space and repeats selected outcomes. It earns that space by presenting the puzzle before its diagnoses; moving the full regime inventory to the appendix prevents a second overview in the main paper.
+
+## Figure 2 — TAKE NEW
+
+OLD is compact (about 2.14 in high, excluding caption), already uses open/filled markers, and correctly warns in its caption about unmatched contexts and the incomplete proxy. Those strengths are retained. Its nearby cells overlap, serialized paths have no distinct shape, and B570 serialized qualification depends heavily on caption/table lookup.
+
+NEW uses 3.58 in of height to show context, numeric range and status on each row. Filled/open markers, circle/square shapes and solid/dashed range segments remain distinct in grayscale. Ranges span contexts, not confidence intervals. B570 60/90 remains visibly inadmissible; RTX serialization is labeled an exact secondary control. The added height is justified by a self-contained correctness diagnosis. Neither version establishes a hardware ranking or full target-side cost.
+
+## Figure 3 — HYBRID
+
+OLD already has the right forest plot and clear 1× reference. Its compactness is valuable. The prior candidate adds exact counts and direct numerical intervals but expands to 2.90 in. The selected hybrid reduces height to 2.40 in, retains those useful annotations and moves the token-equality/pass@k caveat from the artwork into the caption. The simple forest structure, single quantitative axis and clear 1× line are preserved; heavy grid lines are unnecessary.
+
+The revised caption asks whether the tested platform/runtime exposes opposite regimes. It does not imply a statistically paired between-workload comparison or workload-only causality. Workloads and session conditions differ; both frozen campaigns remain primary evidence.
+
+## Figure 4 — TAKE NEW
+
+Actual OLD inspection resolves the previous uncertainty: OLD already uses absolute stacked times. It does not hide total-duration differences with 100% normalization. Its connected throughput points show the widening median device gap, and its two panels are compact (about 2.72 in high).
+
+NEW is selected for its explicit 13.25 s / 27.54 s totals, 9.58 s baseline and separately labeled 0.734× / 0.352× prompt-GM headlines. Isolated CIs and exactness counts are explicit. CPU/NPU marker shapes and component hatching survive grayscale. NEW costs 3.75 in of height; this central mechanism merits that information density.
+
+The bars are arithmetic mean post-prefill seconds/request, not whole-request latency. Their ratios must not reconstruct prompt-GM headlines. Replay and proposal share one timer. Tiny residuals retain their true width and are labeled in milliseconds, not enlarged. The evidence supports the measured state-interface diagnosis, not an intrinsic NPU defect or an unmeasured persistent-state remedy.
+
+## Figure 5 / appendix A1 — TAKE NEW
+
+OLD's four boxes are readable in one column, but categories overlap (NPU appears twice), B570 serialized appears only in the caption, and mechanisms and outcome regimes are mixed. NEW separates correctness/profitability categorically, retains evidence classes, and includes both B570 diagnostic paths.
+
+With the new Figure 1, this inventory is unnecessary in the main sequence. Select it only for the appendix. Mechanism rows organize tested cases; they are not an exhaustive taxonomy, continuous correctness score, or newly established causal mechanism. An empty cell is not evidence of impossibility.
+
+## Claims to bound during subsequent prose integration
+
+1. Lead with the tested failure of favorable local indicators to translate robustly into realized gain. Two diagnosed mechanisms do not establish a universal or exhaustive theory.
+2. Describe opposite regimes in two separate M4 studies, without workload-only causality or unified-memory attribution.
+3. Scope correctness blocking to the frozen RTX/B570 paths and workloads; do not generalize to all CUDA/Vulkan implementations.
+4. Attribute the NPU cost to measured replay plus proposal in the current OpenVINO interface. Replay-only time and a state-persistent intervention are unmeasured.
+5. Qualify E2E as post-prefill decode under the campaign boundary. Whole-request latency and energy gains are not established.
+
+## Integration boundary
+
+This branch supplies selected assets, caption suggestions, a figure-only inclusion file, comparison proofs and validated provenance. It does not silently substitute a new concept for `fig:framework`: existing prose refers to accounting. The manuscript owner must relocate the overview and reconcile old framework/regime references during the narrative rewrite. [Integration notes](integration/FIGURE_INTEGRATION.md) identify the locations. No automatic merge is performed.

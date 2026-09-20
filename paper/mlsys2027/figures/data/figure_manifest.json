@@ -1,0 +1,259 @@
+[
+  {
+    "figure": 1,
+    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "status": "PUBLICATION-CANDIDATE",
+    "question": "What must be qualified and measured before claiming speculative speedup?",
+    "claim": "Correctness admissibility precedes complete realized-cost accounting; the micro proxy is separate.",
+    "sources": [
+      "paper/notes/VERIFICATION_AMORTIZATION_FRAMEWORK.md",
+      "paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md"
+    ],
+    "tables": [],
+    "estimator": "Conceptual accounting identity at one consistent boundary: S=C/(D_real+R_target+X); costs normalized by T_b.",
+    "evidence": "FRAMEWORK / MECHANISM",
+    "correctness": "Conceptual gate; no new measured qualification result.",
+    "caveats": "C is all committed output, not accepted draft tokens. No claim of a new theory or that every platform exposes all costs.",
+    "extraction_script": "scripts/extract.py",
+    "plot_script": "scripts/plot.py:figure1",
+    "tested_insertion_width_in": 3.25,
+    "height_in": 4.05,
+    "grayscale_qa": "PASS; qa/VISUAL_QA.md",
+    "numerical_qa": {
+      "figure": 1,
+      "status": "NUMERICAL_PASS",
+      "independent_of_extractor": true,
+      "findings": [
+        "Concept checked against frozen framework; C includes correction/bonus output.",
+        "Costs normalized by matched baseline T_b at a consistent aggregation boundary.",
+        "Micro proxy is visually detached; no measured or novel-theory claim."
+      ],
+      "outputs_checked": true,
+      "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
+    },
+    "outputs": [
+      {
+        "path": "pdf/figure1.pdf",
+        "sha256": "1d6aef54f5e391a8a02832e55959e9bf5ec379de7f8bdd7d4276df24b0986a40"
+      },
+      {
+        "path": "svg/figure1.svg",
+        "sha256": "3f9325fc2a5e12fd68eb3280743d55c5adad2a28d3ab496a0d249acdfc2c5785"
+      }
+    ]
+  },
+  {
+    "figure": 2,
+    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "status": "PUBLICATION-CANDIDATE",
+    "question": "Does the physically cheapest target-forward path remain usable after correctness qualification?",
+    "claim": "Cheap physical target batching may be blocked; serialization alone does not imply exactness.",
+    "sources": [
+      "work/m4/llama_verify_q8_synced.csv",
+      "artifacts/windows_verification_mechanism/windows-exact-verification-microbench.json",
+      "reports/5070ti/WINDOWS_EXACT_VERIFICATION_COST.csv",
+      "reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md",
+      "artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/v2_raw.json",
+      "artifacts/b570_backend_control/exact-fallback-v1-20260912-222617/exact_fallback/processed/v2_exact.json",
+      "analysis/b570_exact_fallback_summary.json",
+      "reports/b570/B570_VERIFICATION_MECHANISM.md"
+    ],
+    "tables": [
+      "figure2_micro_cells.csv"
+    ],
+    "estimator": "Ratio of median PP2 to median PP1 (7 M4 or 20 RTX/B570 repetitions per cell). Range endpoints span tested contexts; no CI is drawn.",
+    "evidence": "MECHANISM_SUPPORTED for qualified M4/RTX serialized; DIAGNOSTIC for RTX batched and both B570 timing paths.",
+    "correctness": "M4 tested cells exact; RTX batched blocked; RTX serialized exact secondary control; B570 fast 45/90 and serialized 60/90, both globally inadmissible.",
+    "caveats": "Contexts/stacks are not fully matched. V2_micro is not complete R_target or speedup. Formal B570 V2 was NOT RUN; contaminated earlier serialized values are excluded.",
+    "extraction_script": "scripts/extract.py",
+    "plot_script": "scripts/plot.py:figure2",
+    "tested_insertion_width_in": 6.75,
+    "height_in": 3.58,
+    "grayscale_qa": "PASS; qa/VISUAL_QA.md",
+    "numerical_qa": {
+      "figure": 2,
+      "status": "NUMERICAL_PASS",
+      "independent_of_extractor": true,
+      "findings": [
+        "All 11 cells replayed from timing samples with independent NumPy medians.",
+        "All RTX cells reconcile to committed CSV; B570 serialized remains 60/90, not admissible.",
+        "Ranges span tested contexts, not CIs; contexts differ across stacks."
+      ],
+      "outputs_checked": true,
+      "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
+    },
+    "outputs": [
+      {
+        "path": "pdf/figure2.pdf",
+        "sha256": "c62e822b347929109e1258c023f7b330a239f93094afc32e4d911bd1d42bf500"
+      },
+      {
+        "path": "svg/figure2.svg",
+        "sha256": "16f3ed7ecfe734d2bc7078ce38038569f6e2f9c333f57571bb3c61e0e1a05f80"
+      }
+    ]
+  },
+  {
+    "figure": 3,
+    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "status": "PUBLICATION-CANDIDATE",
+    "question": "Is the observed M4 profitable regime representative across the two frozen workloads?",
+    "claim": "Representative 24Q remains negative beside separately preregistered positive HumanEval30 fixed-k2.",
+    "sources": [
+      "analysis/m4_confirmatory_prompt_summary.csv",
+      "analysis/m4_confirmatory_summary.json",
+      "analysis/m4_humaneval_prompt_summary.csv",
+      "analysis/m4_humaneval_summary.json",
+      "scripts/summarize_m4_confirmatory.py",
+      "scripts/summarize_m4_humaneval.py",
+      "benchmarks/m4_code_conditioned_30q/preregistration.json"
+    ],
+    "tables": [
+      "figure3_workloads.csv"
+    ],
+    "estimator": "Across-prompt GM of within-prompt GMs of 3 paired ratios. 95% prompt bootstrap: 24Q Python RNG seed 20260907, 10,000 draws, sorted indices 249/9749; HumanEval seed 20260910, 100,000 draws, indices 2500/97499. Original input order preserved.",
+    "evidence": "PRIMARY (both workloads)",
+    "correctness": "24Q 72/72; HumanEval fixed-k2 90/90 exact token-ID pairs.",
+    "caveats": "Not statistically paired between workloads. CIs condition on campaign and omit full session/thermal uncertainty. Exactness is not functional pass@k. No unified-memory causal claim.",
+    "extraction_script": "scripts/extract.py",
+    "plot_script": "scripts/plot.py:figure3",
+    "tested_insertion_width_in": 3.25,
+    "height_in": 2.9,
+    "grayscale_qa": "PASS; qa/VISUAL_QA.md",
+    "numerical_qa": {
+      "figure": 3,
+      "status": "NUMERICAL_PASS",
+      "independent_of_extractor": true,
+      "findings": [
+        "Replayed 10,000 (24Q) and 100,000 (HumanEval) frozen prompt bootstrap draws.",
+        "Campaign-specific seeds, input order and endpoint conventions preserved.",
+        "Two independent workload studies; no between-workload paired inference.",
+        "Exactness counts reconciled to frozen summary/report evidence; raw token arrays not replayed in this pass."
+      ],
+      "outputs_checked": true,
+      "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
+    },
+    "outputs": [
+      {
+        "path": "pdf/figure3.pdf",
+        "sha256": "b3a99935f62fd65edf9f4736d07e72ac6ad26c628f37bf1c454fdcb8947c6760"
+      },
+      {
+        "path": "svg/figure3.svg",
+        "sha256": "a253c0bf70099806a4f270f8a21a7a520c37c6a3a5c73f8d5706009a7c04e5fb"
+      }
+    ]
+  },
+  {
+    "figure": 4,
+    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "status": "PUBLICATION-CANDIDATE",
+    "question": "Why can isolated NPU drafting look favorable while the qualified realized path is much slower?",
+    "claim": "The measured OpenVINO state interface incurs large replay-plus-proposal cost; CPU remains target-side dominated.",
+    "sources": [
+      "analysis/358h_draft_device_summary.csv",
+      "analysis/358h_draft_device_summary.json",
+      "analysis/358h_threshold_input_cpu.json",
+      "analysis/358h_threshold_input_npu.json",
+      "analysis/358h_phase3_prompt_summary.csv",
+      "analysis/358h_phase3_decomposition.csv",
+      "analysis/358h_phase3_summary.json",
+      "scripts/platform/358h/process_phase1_phase2_results.py",
+      "scripts/platform/358h/analyze_phase3_campaign.py",
+      "scripts/platform/358h/phase3_heterogeneous_runner.py",
+      "reports/358h/358H_PHASE3_END_TO_END_VALIDATION.md"
+    ],
+    "tables": [
+      "figure4_isolated.csv",
+      "figure4_realized.csv"
+    ],
+    "estimator": "A: isolated median steady-state tok/s, n=5, 95% bootstrap CI (10,000 NumPy draws; seed 20260921+context). B: arithmetic mean seconds/request, 90 rows/device; shares are ratio of total component time to total speculative time. Headline speedup: GM of 30 within-prompt median paired ratios, 10,000 NumPy prompt-bootstrap draws, seed 20260919.",
+    "evidence": "PRIMARY Phase-3 outcome + MECHANISM_SUPPORTED decomposition; formal Phase-1 isolated characterization.",
+    "correctness": "CPU and NPU each 90/90 exact in Phase 3. Phase-1 throughput is a separate measurement boundary.",
+    "caveats": "Post-prefill decode, not whole-request latency. Replay/proposal inseparable. Absolute bars preserve total-duration difference. Aggregate ratios differ from prompt-GM speedups. Phase-1 medians/CIs checked against summaries and retained TPOT vectors; separately tracked raw throughput arrays unavailable. No energy or persistent-state intervention claim.",
+    "extraction_script": "scripts/extract.py",
+    "plot_script": "scripts/plot.py:figure4",
+    "tested_insertion_width_in": 6.75,
+    "height_in": 3.75,
+    "grayscale_qa": "PASS; qa/VISUAL_QA.md",
+    "numerical_qa": {
+      "figure": 4,
+      "status": "NUMERICAL_PASS",
+      "independent_of_extractor": true,
+      "findings": [
+        "Phase-1 six medians/CIs reconcile to CSV/JSON and retained TPOT samples (relative tolerance 1e-6).",
+        "Phase-3 all 180 paired ratios, component sums, arithmetic means, shares and 10k prompt-bootstrap CIs replayed.",
+        "Timing excludes initial prompt prefill; total-time ratios intentionally differ from headline prompt GMs.",
+        "Runner full-prefix proposal and complete target region inspected; replay-only is unmeasured.",
+        "Phase-1 raw throughput arrays unavailable separately; reciprocal TPOT replay is corroborative."
+      ],
+      "outputs_checked": true,
+      "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
+    },
+    "outputs": [
+      {
+        "path": "pdf/figure4.pdf",
+        "sha256": "c9332f4b43e79ea545ffbb04e05661c369d7a846dbc52d869eb4df0735a26b4b"
+      },
+      {
+        "path": "svg/figure4.svg",
+        "sha256": "bfb29bd0177adc451cf17dd911b972916d3ffe00e3bea2f37ca7778869fcefcc"
+      }
+    ]
+  },
+  {
+    "figure": 5,
+    "source_commit": "62d1c134b096882c37ce58c1d0ac140236acd9c3",
+    "status": "PUBLICATION-CANDIDATE",
+    "question": "Which correctness/profitability regimes are supported by the tested cases?",
+    "claim": "Observed regimes differ by path, workload and realized interface, rather than defining a hardware ranking.",
+    "sources": [
+      "paper/notes/CROSS_PLATFORM_MECHANISM.md",
+      "paper/mlsys2027/PAPER_FRAMEWORK_HANDOFF.md",
+      "analysis/m4_confirmatory_summary.json",
+      "analysis/m4_humaneval_summary.json",
+      "reports/5070ti/windows_humaneval_summary.json",
+      "reports/5070ti/HUMANEVAL_LLAMA_REPLICATION.csv",
+      "reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md",
+      "artifacts/b570_backend_control/diagnostic-v1-20260912-170834/raw/diagnostic_summary.json",
+      "analysis/b570_exact_fallback_summary.json",
+      "analysis/358h_phase3_summary.json"
+    ],
+    "tables": [
+      "figure5_regimes.csv",
+      "figure4_realized.csv"
+    ],
+    "estimator": "Categorical classification; no numerical coordinates or CI. 358H percentages use the same total-time denominator as Figure 4.",
+    "evidence": "Mixed, explicitly labeled P/S/M/D; 358H outcome/mechanism labels are P/M.",
+    "correctness": "Five qualified case groups; three blocked groups. RTX serialized group includes two separately exact controls. Neither B570 group is qualified.",
+    "caveats": "Blocked paths have no admissible profitability estimate. Blank cells mean no case shown. Cross-platform hardware/software/workloads co-vary. Mechanism rows are not an exhaustive taxonomy or continuous measure.",
+    "extraction_script": "scripts/extract.py",
+    "plot_script": "scripts/plot.py:figure5",
+    "tested_insertion_width_in": 6.75,
+    "height_in": 4.1,
+    "grayscale_qa": "PASS; qa/VISUAL_QA.md",
+    "numerical_qa": {
+      "figure": 5,
+      "status": "NUMERICAL_PASS",
+      "independent_of_extractor": true,
+      "findings": [
+        "All eight cases classified under frozen workload-level token equivalence.",
+        "B570 fast 45/90 recomputed from per-prompt mismatch counts; serialized 60/90 remains blocked.",
+        "Both RTX secondary controls verified from 90 paired rows each; negative and exact.",
+        "Blocked paths have no profitability coordinate; table cells are categorical, not continuous axes."
+      ],
+      "outputs_checked": true,
+      "visual_qa": "See VISUAL_QA.md; requires human/model image inspection"
+    },
+    "outputs": [
+      {
+        "path": "pdf/figure5.pdf",
+        "sha256": "eecacdd535731d3673eff9b45c523a34beb97c85ef6b74a5c1bf3d3a5996c84a"
+      },
+      {
+        "path": "svg/figure5.svg",
+        "sha256": "2009a7912ba57506cb56a0d8f469dc57f7ee309ea2ae281d15f228afb751ed8a"
+      }
+    ]
+  }
+]

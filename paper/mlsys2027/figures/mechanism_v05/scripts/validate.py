@@ -102,7 +102,7 @@ def main():
         for phrase in ['Local opportunity','Path qualification','Stateful realization','Realized outcome',
                        'Chosen token-ID contract','admissible path','blocked / diagnostic only',
                        'realized draft cost','complete target work','residual cost','committed output',
-                       'Qualified integrated','post-prefill decode','Observed regimes:',
+                       'Qualified integrated' if which=='a' else 'Qualified post-prefill decode','post-prefill decode','Observed regimes:',
                        'profitable','exact but negative','configuration-scoped and non-exhaustive']:
             assert phrase in actual,(which,phrase)
         for phrase in [r'Acceptance is not $C$',r'$\microv$ is not complete $\rtarget$',
@@ -134,7 +134,8 @@ def main():
             assert 'ratio of arithmetic totals of speculative post-prefill time' in prooftext
             assert 'not a CI' in prooftext
         else:
-            assert 'RTX batched / B570:' in actual and '358H NPU:' in actual
+            assert 'RTX batched / B570 diagnostics: qualification failure.' in actual and '358H NPU:' in actual
+            assert 'isolated advantage does not survive the tested stateful integration' in actual
             assert 'opposite observed outcomes' in actual and 'Neither diagnosis assigned' in actual
             assert not re.search(r'\d+\.\d+',actual),actual
         outputs[which]=dict(status='PASS',width_in=page.rect.width/72,height_in=page.rect.height/72,

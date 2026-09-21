@@ -81,3 +81,7 @@ The current official CFP still links `https://media.mlsys.org/Conferences/MLSYS2
 ## Narrative v0.2 verification
 
 The existing official format is unchanged. After selected-figure integration on 2026-09-21, the v0.2 output has 10 main pages plus 1 reference page and a separate 3-page appendix. All figures retain their validated native widths; no template or font-size modification was made. The old v0.1 PDFs remain unchanged. Current file hashes and page boundaries are in `evidence/PDF_QA.json`; current allocation and visual review are in `MANUSCRIPT_STATUS.md`.
+
+## Narrative freeze v0.3 verification
+
+The existing official format remains unchanged. The checked v0.3 manuscript has 10 body pages plus 1 reference page; its separate appendix has 3 pages. Four main figures retain their validated native widths. Old versioned PDFs are preserved. Current artifact checks and hashes are in `evidence/PDF_QA.json`, and the current layout/inspection record is `MANUSCRIPT_STATUS.md`. This integration does not constitute submission or new policy verification.

@@ -5,6 +5,8 @@ import hashlib
 import importlib.util
 import json
 import math
+import csv
+import re
 import subprocess
 from pypdf import PdfReader
 
@@ -41,29 +43,97 @@ for i in range(1,6):
     results[str(i)]={'status':'PASS','findings':findings,'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
                      'native_width_in':expected_width,'native_height_in':float(page.mediabox.height)/72}
 
-# Verify actual PDF form placements, not merely the requested LaTeX widths.
+# Verify the style variants against the same independently replayed frozen data.
+freeze=json.loads((EVID/'NARRATIVE_V03_BASELINE.json').read_text())
+def rows(name):return list(csv.DictReader((FIG/'data'/name).read_text().splitlines()))
+def close(a,b):assert math.isclose(float(a),float(b),rel_tol=1e-12,abs_tol=1e-12),(a,b)
+style_checks={}
+for asset in ('m4','verification','state'):
+    receipt=json.loads((FIG/f'style_v04/qa/{asset}_render.json').read_text())
+    source=FIG/f'style_v04/pdf/{asset}.pdf'
+    expected=freeze['protected_figure_tree_sha256'][str(source.relative_to(ROOT))]
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==expected==receipt['output_sha256']['pdf']
+    assert receipt['out_of_bounds_text']==[]
+    for path,sha in receipt['inputs'].items():
+        assert hashlib.sha256((FIG/path).read_bytes()).hexdigest()==sha
+    if asset=='m4':
+        for artist,row in zip(receipt['artists'],rows('figure3_workloads.csv')):
+            close(artist['estimate'],row['speedup'])
+            close(artist['ci'][0],row['ci_low']);close(artist['ci'][1],row['ci_high'])
+    elif asset=='verification':
+        data=rows('figure2_micro_cells.csv')
+        for artist in receipt['artists']:
+            values=[float(r['v2_micro']) for r in data if r['path']==artist['path']]
+            assert len(values)==len(artist['points'])
+            for x,y in zip(artist['points'],values):close(x,y)
+            close(artist['range'][0],min(values));close(artist['range'][1],max(values))
+            assert artist['filled']==(artist['path'] in ('M4 Metal','RTX serialized'))
+            if artist['path'].startswith('B570'):assert 'inadmissible' in artist['status']
+    else:
+        isolated=rows('figure4_isolated.csv');realized=rows('figure4_realized.csv')
+        for artist in receipt['artists']:
+            if artist['kind']=='isolated':
+                data=sorted([r for r in isolated if r['device']==artist['device']],key=lambda r:int(r['context']))
+                for i,row in enumerate(data):
+                    close(artist['values'][i],row['tokens_s'])
+                    close(artist['cis'][i][0],row['ci_low']);close(artist['cis'][i][1],row['ci_high'])
+            elif artist['kind']=='realized':
+                row=next(r for r in realized if r['device']==artist['device']);x=0
+                for component,key in zip(artist['components'],('draft_s','target_s','residual_s')):
+                    close(component['x'],x);close(component['width'],row[key]);x+=float(row[key])
+                close(x,row['total_s'])
+            elif artist['kind']=='baseline':
+                for row in realized:close(artist['x'],row['baseline_s'])
+    style_checks[asset]={'status':'PASS','sha256':expected,'native_width_in':receipt['width_in'],'native_height_in':receipt['height_in']}
+
+# The selected final schematic is the already selected B asset, not a new quantitative analysis.
+for path,sha in freeze['selected_schematic_sha256'].items():
+    assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha,path
+schematic=PdfReader(FIG/'mechanism_v05/mechanism.pdf')
+assert abs(float(schematic.pages[0].mediabox.width)/72-6.75)<1e-4
+text=schematic.pages[0].extract_text()
+assert 'Neither diagnosis assigned' in text and 'post-prefill' in text
+assert 'does not survive the tested' in text and 'stateful integration.' in text
+
+# The appendix retains the original rounded ranges and all 11 source cells.
+lookup=(HERE/'tables/06_verification_lookup.tex').read_text()
+for interval in ('1.02--1.08','0.98--1.01','2.14--2.43','1.24--1.64','1.98--1.99'):
+    assert interval in lookup and interval in (HERE/'tables/03_mechanism.tex').read_text()
+parsed=re.findall(r'^([^&\n]+) & (\d+) & ([\d.]+) & (.+?) \\\\$',lookup,re.M)
+source_rows=rows('figure2_micro_cells.csv')
+assert len(parsed)==len(source_rows)==11
+for (path,context,value,status),row in zip(parsed,source_rows):
+    assert path==row['path'] and context==row['context']
+    assert value==f"{float(row['v2_micro']):.6f}"
+    if path.startswith('B570'):assert 'diagnostic, inadmissible' in status
+    if path=='RTX batched':assert status=='Correctness-blocked; diagnostic'
+    if path=='RTX serialized':assert status=='Exact secondary control'
+inventory=FIG/'style_v04/tables/appendix_table.tex'
+assert hashlib.sha256(inventory.read_bytes()).hexdigest()==freeze['protected_figure_tree_sha256'][str(inventory.relative_to(ROOT))]
+assert len(re.findall(r'^.* & .* \\\\$',inventory.read_text(),re.M))==9  # header and eight cases
+
+# Verify actual PDF form placement, including widths, not just requested TeX sizes.
 placements=[]
+selected={'m4':3.25,'verification':6.75,'state':6.75,'mechanism':6.75}
 for name in ('main','appendix'):
     pdf=PdfReader(HERE/'build'/f'{name}.pdf')
     for number,page in enumerate(pdf.pages,1):
         xobjects=page['/Resources'].get('/XObject',{})
         def visit(operator,operands,cm,tm):
             if operator!=b'Do' or operands[0] not in xobjects:return
-            form=xobjects[operands[0]].get_object()
-            filename=str(form.get('/PTEX.FileName',''))
-            if '/figures/pdf/figure' not in filename:return
+            form=xobjects[operands[0]].get_object();filename=str(form.get('/PTEX.FileName',''))
+            if not filename.endswith('.pdf'):return
             asset=Path(filename).stem
+            assert name=='main' and asset in selected,(name,filename)
             bbox=form['/BBox'];matrix=form.get('/Matrix',[1,0,0,1,0,0])
             width=(float(bbox[2])-float(bbox[0]))*math.hypot(cm[0],cm[1])*float(matrix[0])/72
-            expected=3.25 if asset=='figure3' else 6.75
-            assert abs(width-expected)<0.002,(asset,width,expected)
-            assert (name=='appendix')==(asset=='figure5'),(name,asset)
+            assert abs(width-selected[asset])<0.002,(asset,width)
             placements.append({'pdf':name,'page':number,'asset':asset,'actual_width_in':width})
         page.extract_text(visitor_operand_before=visit)
-assert len(placements)==5,placements
-assert {p['asset'] for p in placements if p['pdf']=='main'}=={'figure1','figure2','figure3','figure4'}
-report={'status':'PASS','integration_main':integration['main_head'],'source_records':len(source_lock),
-        'historically_checked_narrative_documents':historical_documents,'figures':results,
-        'actual_placements':placements,'assets_regenerated':False}
-(EVID/'NARRATIVE_FIGURE_QA.json').write_text(json.dumps(report,indent=2)+'\n')
-print('Figure integration PASS: five independent numerical replays, immutable assets, and five native-width PDF placements.')
+assert len(placements)==4 and {p['asset'] for p in placements}==set(selected),placements
+report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source_head':freeze['mechanism_source_head'],
+        'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
+        'original_five_figure_replays':results,'active_style_checks':style_checks,'actual_placements':placements,
+        'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
+(EVID/'NARRATIVE_FIGURE_V03_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+print('Figure v0.3 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

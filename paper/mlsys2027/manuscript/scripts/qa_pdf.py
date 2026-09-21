@@ -11,8 +11,8 @@ for fn in ['main','appendix']:
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert 'v0.2' in metadata.get('/Subject',''),metadata
- output=ROOT/'output'/('manuscript-v0.2.pdf' if fn=='main' else 'appendix-v0.2.pdf')
+ assert 'v0.3' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.3.pdf' if fn=='main' else 'appendix-v0.3.pdf')
  assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
  assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
@@ -47,13 +47,15 @@ report['main_text_pages']=mainpage
 report['references_pages']=report['pdfs']['main']['pages']-mainpage
 report['section_start_pages']={k:int(v) for k,v in re.findall(r'\\newlabel\{(sec:[^}]+)\}\{\{[^}]*\}\{(\d+)\}',aux)}
 figures={k:{'number':n,'page':int(p)} for k,n,p in re.findall(r'\\newlabel\{(fig:[^}]+)\}\{\{([^}]+)\}\{(\d+)\}',aux)}
-assert set(figures)=={'fig:overview','fig:m4','fig:verification','fig:state'},figures
-assert figures['fig:overview']['number']=='1'
-assert 'fig:framework' not in aux and 'fig:regimes' not in aux
+assert set(figures)=={'fig:translation','fig:m4','fig:verification','fig:state'},figures
+assert {k:v['number'] for k,v in figures.items()}=={'fig:m4':'1','fig:translation':'2','fig:verification':'3','fig:state':'4'}
+assert all(label not in aux for label in ('fig:framework','fig:overview','fig:regimes','tab:mechanism'))
 appendix_aux=(ROOT/'build/appendix.aux').read_text()
-assert r'\newlabel{fig:regimes}{{A1}' in appendix_aux
+assert 'fig:regimes' not in appendix_aux
+assert r'\newlabel{tab:verificationlookup}{{A3}' in appendix_aux
+assert r'\newlabel{tab:regimes}{{A4}' in appendix_aux
 report['main_figures']=figures
-report['appendix_figure']={'label':'fig:regimes','number':'A1'}
+report['appendix_tables']={k:{'number':n,'page':int(p)} for k,n,p in re.findall(r'\\newlabel\{(tab:[^}]+)\}\{\{([^}]+)\}\{(\d+)\}',appendix_aux)}
 # All 13 cited entries have complete authors, including 58 HumanEval authors.
 bib=(ROOT/'references.bib').read_text();authors=re.findall(r'author=\{([^}]+)\}',bib);assert len(authors)==13;assert all('others' not in a and 'et al' not in a for a in authors)
 assert len(authors[-2].split(' and '))==58

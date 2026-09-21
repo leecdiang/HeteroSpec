@@ -1,13 +1,13 @@
-\section{Why Favorable Local Indicators Fail}
+\section{From Local Opportunity to Realized Gain}
 \label{sec:diagnoses}
-The outcome overview motivates two diagnoses supported by path controls and direct timing. They apply to the identified configurations, not to every platform or every negative result. We do not force the M4 contrast into either explanation.
+The observed outcomes motivate two diagnoses supported by path controls and direct timing. Figure~\ref{fig:translation} locates the execution-path qualification and stateful-realization boundaries. These diagnoses apply to identified configurations and do not constitute an exhaustive theory. The M4 contrast remains an independent empirical observation; neither diagnosis is assigned to it.
+\input{figures/06_translation.tex}
 
-\subsection{Correctness changes the usable execution path}
+\subsection{Execution-path qualification}
 \label{sec:admissibility}
 \input{figures/03_verification.tex}
-\input{tables/03_mechanism.tex}
 \paragraph{Cheap physical batching is not sufficient.}
-The final M4 Metal path combines exact frozen-workload outputs with a target-forward proxy near one baseline step. Across its tested contexts, $\vTwo$ is approximately 1.02--1.08. This is a batching opportunity, not a complete round decomposition, and does not by itself explain whether a workload is profitable.
+The final M4 Metal path combines exact frozen-workload outputs with a target-forward proxy near one baseline step. Across its tested contexts, $\vTwo$ is approximately 1.02--1.08. This is a shared-path reference from a separate micro study, not evidence for either diagnosed mechanism or a complete round decomposition. It does not explain the M4 outcome contrast.
 
 On RTX 5070 Ti Laptop, the batched CUDA target also has near-one-step two-token forward cost: $\vTwo=\RTXrawZero$ and $\RTXrawDepth$ at the two measured depths. The intended fast HumanEval execution nevertheless fails the frozen token-equivalence gate. Its timings cannot support an admissible optimization claim. The serialized control changes the micro-batch to one and raises the measured proxy to $\RTXserZero$ and $\RTXserDepth$; the full frozen exact-control workload passes. Figure~\ref{fig:verification} therefore relates a physical opportunity to its empirically qualified status, rather than ranking GPUs.
 
@@ -18,8 +18,6 @@ The frozen CUDA reproducer repeats the HumanEval/106 divergence in three of thre
 
 The evidence supports stable batch-shape-dependent greedy argmax divergence in this llama.cpp/CUDA/Q8\_0 configuration. It does not identify a universal CUDA failure or a specific responsible kernel. Floating-point and batch-dependent output differences are established research topics \citep{numerics,llm42}; the systems consequence here is that the cheap path is removed from the set admitted by the study's contract.
 
-% Queue the double-column state figure at the preceding paragraph boundary.
-\input{figures/04_358h.tex}
 \paragraph{Serialization does not establish exactness.}
 B570 provides a complementary boundary. Its formal v2 correctness gate fails, so the preregistered stop rule prevents a formal verification/performance claim from that execution. Later fast-path diagnostics yield \BFastExact/90\ exact pairs. The unique serialized fallback improves this to \BExact/90, with \BExactPrompts/30\ wholly exact prompts, but still fails workload-global equality. Its $\vTwo$ is approximately \BvShort--\BvLong\ and remains diagnostic.
 
@@ -27,8 +25,9 @@ A smaller serialized probe had passed before the full workload exposed mismatche
 
 This negative control matters because it prevents an attractive simplification: selecting serialized verification is not by itself a sufficient correctness policy. Qualification must cover the actual path and intended workload. Exact subsets may be descriptively useful, but conditioning on those subsets after the run cannot establish global performance.
 
-\subsection{Isolated drafting versus stateful integration}
+\subsection{Stateful realization}
 \label{sec:state}
+\input{figures/04_358h.tex}
 On Core Ultra X7 358H, the isolated NPU draft has higher median steady-state throughput than CPU at the tested contexts, with a larger advantage at longer contexts. This local indicator does not survive integration: both qualified paths are exact but unprofitable, and the NPU path is slower. The measured regions reveal different costs on the two paths. The direct round records show mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, approximately 2.46. This is complete committed output, not the accepted-draft counter used in older native records.
 
 The target maintains persistent state, evaluates proposals, removes invalid candidate state when needed, and decodes correction or bonus output. Its complete measured region accounts for \HcpuTarget\% of CPU-path speculative time. The NPU path instead spends \HnpuDraft\% in the synchronous OpenVINO call that replays the full committed prefix and generates a proposal. Replay and proposal are inseparable within this measurement; we do not invent a replay-only value. Residual orchestration occupies only \HcpuResidual\% and \HnpuResidual\%, so it cannot explain the main loss.

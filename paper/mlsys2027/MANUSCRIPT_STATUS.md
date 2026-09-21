@@ -1,3 +1,65 @@
+# Initial manuscript v0.3 — collaboration freeze
+
+**INITIAL DRAFT FROZEN FOR OVERLEAF COLLABORATION** — 2026-09-22.
+
+This is the current status. The v0.2 record below is historical and is superseded where it describes active figures, page counts, validator invocation, or unresolved integration decisions.
+
+- Starting main: `9014e4b8a89031cfa26fc2c03180181bee124d86`. Fetched, checked out main, confirmed this exact HEAD and a clean working tree before creating the requested integration branch.
+- Branch: `paper/mlsys2027-initial-draft-v0.3`.
+- Integration branch HEAD at the artifact-freeze checkpoint: `8ea0be7ae0e18e733e12405b136f58460473dfba`. The follow-up documentation commit records this already-built artifact revision. Resolve the delivery HEAD with `git rev-parse paper/mlsys2027-initial-draft-v0.3`; the Draft PR head identifies the final documentation revision.
+- Delivery target: Draft PR against `main`; no automatic merge.
+- Hardware evidence: closed and unchanged. Cross-platform synthesis: retrospective; campaign primary outcomes were frozen independently. Later controls retain their bounded evidence classes.
+- Runtime/software: full Section 7 retained, proposed and unmeasured, including requirements, persistent-state interface, qualified path selection, and evaluation questions. Future evaluation must be a new frozen study. No implementation or result is claimed.
+
+## Current artifacts and displays
+
+| Artifact | Pagination |
+|---|---|
+| `manuscript/output/manuscript-v0.3.pdf` | 10 body pages + 1 reference page |
+| `manuscript/output/appendix-v0.3.pdf` | 3 separate pages |
+| `manuscript/build/hardware-only/hardware-only.pdf` | 8 body pages + 1 reference page; verification build only |
+| `manuscript/output/overleaf-initial-draft-v0.3.zip` | 35 required source/dependency files; clean local compilation verified |
+
+| Main figure | Semantic label | Asset relative to `figures/` | Page / width |
+|---|---|---|---|
+| 1: M4 independent observed contrast | `fig:m4` | `style_v04/pdf/m4.pdf` | 4 / 3.25 in |
+| 2: measured translation boundaries | `fig:translation` | `mechanism_v05/mechanism.pdf` | 5 / 6.75 in |
+| 3: verification-path qualification | `fig:verification` | `style_v04/pdf/verification.pdf` | 6 / 6.75 in |
+| 4: isolated versus realized 358H cost | `fig:state` | `style_v04/pdf/state.pdf` | 7 / 6.75 in |
+
+All assets are unchanged from the specified main, including Candidate B after PR #24. Only the manuscript mechanism caption adopts “does not survive the tested stateful integration.” The source `mechanism_v05/caption.tex` is untouched.
+
+Main tables remain platform scope (Table 1, p. 3) and headline outcomes (Table 2, p. 5). The old overview is inactive; the old verification table is removed from the main flow and reproduced in appendix A3, retaining its five rounded ranges and qualification labels plus all 11 underlying context cells. Historical sources remain in place.
+
+| Appendix display | Contents | Page |
+|---|---|---|
+| A1 | Frozen statistical policies | 2 |
+| A2 | Sensor boundaries and allowed energy interpretations | 2 |
+| A3 | Verification context lookup and original rounded ranges | 3 |
+| A4 | Eight-case regime inventory, including unchanged 358H P/M labels | 3 |
+
+The inventory uses the unchanged v0.4 booktabs source instead of the old graphical inventory. No active `fig:overview`, `fig:regimes`, or main-paper `tab:mechanism` reference remains.
+
+## Verification and visual review
+
+The ordinary `make check` passes: **228/228 numerical checks**, all five independent historical figure replays, the three active quantitative style receipts, the final schematic hash, four actual native-width placements, all 11 lookup cells, and eight inventory cases. Narrative checks preserve 260 protected-file entries (including overlapping checks), all 57 prior prose numerical macros, the complete figure tree, and the scientific ledger. Raw/processed records, scientific closeouts, original numerical validator, official template and bibliography are unchanged.
+
+Both delivery PDFs pass anonymity checks on text, metadata and links; all fonts, including nested figure resources, are embedded. All 13 references retain full author lists. There are no overfull boxes or undefined references/citations. The official style's harmless empty-anchor warning remains. QA records and hashes are under `evidence/`.
+
+Every page of the final full manuscript (11) and appendix (3) was rendered and visually inspected at 1,500 pixels on the long edge, preserving publication geometry. Figure placement checks confirm the actual 3.25/6.75-inch sizes. The verification page was also inspected in grayscale at 96 dpi: open/filled status marks, shapes and labels remain distinguishable. Hardware-only pp. 7–9 were additionally inspected for the synthesis, related work, limitations, conclusion and references.
+
+All figures and captions are readable and unclipped. Consecutive wide floats occupy pp. 5–7 within the relevant results/diagnosis sequence, without an unintended blank page or drift into an unrelated later section. M4 is a normal top-of-page float on the page where its results begin. The final body page leaves the right column unused before the separate reference page; appendix p. 3 uses normal vertically centered table-float spacing. These are retained initial-draft whitespace, not a reason to shrink artwork, alter the official template, or compress runtime.
+
+## Overleaf handoff and freeze scope
+
+**Ready to become the shared Overleaf initial draft: yes.** Upload the source ZIP as a new project, use pdfLaTeX / TeX Live 2025, and select `main.tex`; select `appendix.tex` for the separate supplement. The bundle has been compiled in an independent directory. Its page counts and every page's extracted text match the reviewed PDFs, and its selected figures, inventory body, and style files retain their original bytes. No Overleaf project, upload, invitation, or submission was performed.
+
+**Coherent without future software results: yes.** The observed outcomes, two configuration-scoped diagnoses, and standalone hardware synthesis do not depend on the proposed intervention. The full runtime reservation remains in the collaboration version. The hardware-only build is a coherence check, not a scope reduction.
+
+The freeze covers the hardware story, scientific boundaries, figure language and manuscript structure. It is not a final submission, a final title/abstract, or a completed runtime contribution. `NARRATIVE_INTEGRATION_V03.md` records the integration decisions and validation boundaries.
+
+---
+
 # Manuscript v0.2 — narrative and selected publication figures
 
 Integration completed: 2026-09-21. For the subsequent internal review and conservative revision, see the follow-up at the end of this record. Integration branch: `paper/mlsys2027-narrative-v0.2`.

@@ -4,10 +4,11 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{array}
+\usepackage{tabularx}
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.2}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.3}}
 \input{tables/values.tex}
 \mlsystitlerunning{Supplement: Speculative Decoding Across Consumer Systems}
 \begin{document}
@@ -20,9 +21,9 @@
 }]
 \printAffiliationsAndNotice{}
 \appendix
-\renewcommand{\thefigure}{A\arabic{figure}}
+\renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies manuscript v0.2, hardware-complete / runtime-reserved. It supplies statistical and measurement-boundary details without introducing a new result or a runtime implementation. All scientific limitations also appear in the main text. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies manuscript v0.3, hardware-complete / runtime-reserved. It supplies statistical and measurement-boundary details without introducing a new result or a runtime implementation. All scientific limitations also appear in the main text. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
@@ -62,7 +63,11 @@ The M4 corrected synthetic ceiling was preregistered but not executed. Earlier s
 The B570 formal v2 correctness failure triggered its stop rule. A later six-prompt serialized probe passed 18/18 pairs, but full-workload serialization yielded only 60/90. Earlier remote-interaction-contaminated verification observations are excluded from the plotted final serialized cells. A legacy ``exact'' field label in historical artifacts does not establish workload-global equality.
 
 Windows follow-up derived tables and numerical captures support the manuscript, but historical raw per-run provenance is weaker. The CUDA score capture came from a separate same-commit instrumented build and does not replace formal measurements. The 358H source reconstruction remains \texttt{STRONGLY\_SUPPORTED}, not proven exact historical upstream identity. Its completed Phase-3 records supersede the blocked-preflight empty scaffold. These are retained qualifications, not unresolved invitations to alter frozen experiments.
+\section{Verification Context Lookup}
+Table~\ref{tab:verificationlookup} retains all context cells behind the main verification figure. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
+\input{tables/06_verification_lookup.tex}
+
 \section{Evidence Inventory}
-Figure~\ref{fig:regimes} collects the tested regimes and their evidence classes. It organizes the closed observations without adding a causal claim or exhaustive taxonomy. RTX denotes RTX 5070 Ti Laptop throughout the inventory. Fractions count token-ID equality, not functional evaluation.
-\input{figures/05_regimes.tex}
+Table~\ref{tab:regimes} collects the observed regimes and evidence classes. These are case descriptions, not a hardware ranking, population-wide failure rate, or exhaustive taxonomy. M4's separate-session studies establish opposite observed outcomes; neither diagnosed mechanism is assigned to that contrast.
+\input{tables/05_regimes.tex}
 \end{document}

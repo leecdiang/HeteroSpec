@@ -2,13 +2,13 @@ STYLE := $(CURDIR)/vendor/official/mlsys2025style
 export TEXINPUTS := $(STYLE)//:
 export BSTINPUTS := $(STYLE)//:
 PYTHON ?= python3
-.PHONY: all assets check clean hardware-only
+.PHONY: all assets check clean hardware-only overleaf
 all: assets
 	mkdir -p build output
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build appendix.tex
-	cp build/main.pdf output/manuscript-v0.2.pdf
-	cp build/appendix.pdf output/appendix-v0.2.pdf
+	cp build/main.pdf output/manuscript-v0.3.pdf
+	cp build/appendix.pdf output/appendix-v0.3.pdf
 assets:
 	$(PYTHON) scripts/build_assets.py
 check:
@@ -24,3 +24,6 @@ hardware-only: assets
 	pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build/hardware-only -jobname=hardware-only '\def\HardwareOnly{1}\input{main.tex}'
 clean:
 	latexmk -C -outdir=build main.tex appendix.tex
+
+overleaf:
+	$(PYTHON) scripts/package_overleaf.py

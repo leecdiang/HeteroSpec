@@ -1,0 +1,125 @@
+{
+  "source_commit": "974e84540b5193b416e20920629260ff320f759d",
+  "m4": {
+    "representative": {
+      "speedup": 0.8419651017595143,
+      "ci95": [
+        0.8086934553836356,
+        0.8767650352539212
+      ],
+      "exact_pairs": 72,
+      "pairs": 72
+    },
+    "humaneval": {
+      "speedup": 1.3873523375548336,
+      "ci95": [
+        1.3505744794957149,
+        1.421625385088532
+      ],
+      "exact_pairs": 90,
+      "pairs": 90
+    },
+    "status": "PRIMARY; qualified within each separate frozen study",
+    "contrast": "Observed opposite regimes; not assigned to either diagnosis; not workload-only causality",
+    "v2_micro": {
+      "512": 1.0221818546851145,
+      "2048": 1.0761256101952625,
+      "8192": 1.0322635228699184
+    }
+  },
+  "rtx": {
+    "batched_ubatch2": {
+      "cells": {
+        "0": 1.0090304299186035,
+        "256": 0.9831479829424705
+      },
+      "range": [
+        0.9831479829424705,
+        1.0090304299186035
+      ],
+      "status": "correctness-blocked diagnostic"
+    },
+    "serialized_ubatch1": {
+      "cells": {
+        "0": 2.43099575218514,
+        "256": 2.137011311768208
+      },
+      "range": [
+        2.137011311768208,
+        2.43099575218514
+      ],
+      "status": "qualified exact secondary control"
+    },
+    "serialized_controls": {
+      "cpu_k2": {
+        "exact_pairs": 90,
+        "pairs": 90,
+        "evidence_class": "SECONDARY"
+      },
+      "rtx_k2": {
+        "exact_pairs": 90,
+        "pairs": 90,
+        "evidence_class": "SECONDARY"
+      }
+    }
+  },
+  "b570": {
+    "fast": {
+      "exact_pairs": 45,
+      "pairs": 90,
+      "globally_admissible": false
+    },
+    "serialized": {
+      "exact_pairs": 60,
+      "total_pairs": 90,
+      "exact_prompts": 20,
+      "total_prompts": 30,
+      "global_admissible": false
+    },
+    "status": "DIAGNOSTIC; globally inadmissible in both paths"
+  },
+  "state": {
+    "CPU": {
+      "isolated_8192_tokens_s": 30.80706214904785,
+      "isolated_ci95": [
+        30.343034744262695,
+        31.361581802368164
+      ],
+      "speedup": 0.7339145857381156,
+      "ci95": [
+        0.6929203953714822,
+        0.7710895949279227
+      ],
+      "exact_pairs": 90,
+      "pairs": 90,
+      "draft_pct": 12.627262959581135,
+      "target_pct": 87.33646143018281,
+      "total_mean_s": 13.253125697777778,
+      "status": "PRIMARY exact negative; MECHANISM_SUPPORTED timed regions"
+    },
+    "NPU": {
+      "isolated_8192_tokens_s": 48.08302688598633,
+      "isolated_ci95": [
+        47.103416442871094,
+        48.4038200378418
+      ],
+      "speedup": 0.35166323938180594,
+      "ci95": [
+        0.33259483634282594,
+        0.36894872997722167
+      ],
+      "exact_pairs": 90,
+      "pairs": 90,
+      "draft_pct": 58.347407635076294,
+      "target_pct": 41.63423254735317,
+      "total_mean_s": 27.543780096666666,
+      "status": "PRIMARY exact negative; MECHANISM_SUPPORTED timed regions"
+    }
+  },
+  "boundaries": {
+    "timing": "integrated post-prefill decode; excludes loading and initial prefill",
+    "micro": "target-forward proxy, not complete R_target; context range is not a CI",
+    "state": "Replay and proposal are inseparable within one synchronous OpenVINO call",
+    "mechanism": "configuration-scoped and non-exhaustive; not a new theoretical model"
+  }
+}

@@ -86,16 +86,19 @@ for asset in ('m4','verification','state'):
                 for row in realized:close(artist['x'],row['baseline_s'])
     style_checks[asset]={'status':'PASS','sha256':expected,'native_width_in':receipt['width_in'],'native_height_in':receipt['height_in']}
 
-# The imported schematic is the already selected B asset, not a new quantitative analysis.
-for path,sha in freeze['imported_schematic_sha256'].items():
+# The selected final schematic is the already selected B asset, not a new quantitative analysis.
+for path,sha in freeze['selected_schematic_sha256'].items():
     assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha,path
-schematic=PdfReader(HERE/'figures/translation-v05.pdf')
+schematic=PdfReader(FIG/'mechanism_v05/mechanism.pdf')
 assert abs(float(schematic.pages[0].mediabox.width)/72-6.75)<1e-4
 text=schematic.pages[0].extract_text()
 assert 'Neither diagnosis assigned' in text and 'post-prefill' in text
+assert 'does not survive the tested' in text and 'stateful integration.' in text
 
-# The appendix replaces the rounded main lookup with all 11 source cells.
+# The appendix retains the original rounded ranges and all 11 source cells.
 lookup=(HERE/'tables/06_verification_lookup.tex').read_text()
+for interval in ('1.02--1.08','0.98--1.01','2.14--2.43','1.24--1.64','1.98--1.99'):
+    assert interval in lookup and interval in (HERE/'tables/03_mechanism.tex').read_text()
 parsed=re.findall(r'^([^&\n]+) & (\d+) & ([\d.]+) & (.+?) \\\\$',lookup,re.M)
 source_rows=rows('figure2_micro_cells.csv')
 assert len(parsed)==len(source_rows)==11
@@ -111,7 +114,7 @@ assert len(re.findall(r'^.* & .* \\\\$',inventory.read_text(),re.M))==9  # heade
 
 # Verify actual PDF form placement, including widths, not just requested TeX sizes.
 placements=[]
-selected={'m4':3.25,'verification':6.75,'state':6.75,'translation-v05':6.75}
+selected={'m4':3.25,'verification':6.75,'state':6.75,'mechanism':6.75}
 for name in ('main','appendix'):
     pdf=PdfReader(HERE/'build'/f'{name}.pdf')
     for number,page in enumerate(pdf.pages,1):
@@ -133,4 +136,4 @@ report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source
         'original_five_figure_replays':results,'active_style_checks':style_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
 (EVID/'NARRATIVE_FIGURE_V03_QA.json').write_text(json.dumps(report,indent=2)+'\n')
-print('Figure v0.3 PASS: frozen numerical replays, three style variants, imported schematic, four native-width placements, and appendix tables.')
+print('Figure v0.3 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

@@ -23,7 +23,7 @@ for path, expected in integration['protected_sha256'].items():
     assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest() == expected, path
     checks.append(path)
 
-for path, expected in {**freeze['protected_figure_tree_sha256'], **freeze['imported_schematic_sha256']}.items():
+for path, expected in {**freeze['protected_figure_tree_sha256'], **freeze['selected_schematic_sha256']}.items():
     assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest() == expected, path
     checks.append(path)
 

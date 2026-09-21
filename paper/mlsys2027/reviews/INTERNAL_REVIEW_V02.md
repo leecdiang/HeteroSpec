@@ -242,3 +242,53 @@ The initial reviews above describe the exact starting HEAD, not the later edited
 ### Cross-lens concurrence before revision
 
 After saving their independent reviews, A, B and C each explicitly approved the seven-item conservative plan: bounded four-case framing; explicit retrospective synthesis; post-prefill timing; an abstract M4 session cue; observational state-interface wording; accounting as method with a positive measured-boundary contribution statement; and an M4 heading naming separate studies. B and C preferred the empirical opening question “How do favorable local indicators compare with gains in integrated post-prefill decode?” A required preservation of the existing distinction between native decode counters and the 358H enclosing loop. The implementation follows these constraints. None of the approvals resolves the larger novelty or submission-scope decisions.
+
+
+## Implemented conservative revision and remaining decisions
+
+The complete initial review was written and committed first at `b9a700c` on `codex/mlsys2027-review-v02`, branched directly from the requested starting HEAD. Only then were the unanimously supported prose edits applied. The original title, all tables, all equations, full pending runtime section and bibliography are retained.
+
+| Review request | Applied change | Remaining issue |
+|---|---|---|
+| Retrospective synthesis | Abstract identifies retrospective case studies; §3.1 explicitly distinguishes independent campaign freezes from the later synthesis and bounded controls. | A longer anonymous chronology is optional; no registration status was changed. |
+| Scope and reliability | Abstract, introduction, synthesis, related work and conclusion use bounded observed-case claims instead of a predictor-reliability claim. | Final title and sufficiency of the contribution remain author decisions. |
+| Timing boundary | High-level and returning latency mentions use post-prefill decode; Figure 1's manuscript wrapper caption is aligned. | The immutable artwork retains its existing wording and its explicit post-prefill footnote. Native counters versus enclosing-loop instrumentation remains explicit. |
+| M4 contrast | Abstract names separate sessions; §4.1 heading names two separate studies. | No causal workload effect is inferred or estimated. |
+| State-cost interpretation | High-level “interface erases” shorthand becomes the observed failure of an isolated advantage to survive the tested integration. | Persistence feasibility and benefit remain unmeasured. |
+| Contribution hierarchy | Introduction presents accounting as measurement method; Related Work positively identifies the measured verification-path and state-interface boundaries. | The editors do not claim that wording alone resolves novelty or impact. |
+| Structural presentation | No tables, figures or runtime subsections removed. | Table 3 duplication, generic caveat repetition, runtime scope and final title remain open. |
+
+No file under `paper/mlsys2027/figures/` was touched. The sole figure-related source change is one timing phrase in `manuscript/figures/00_overview.tex`, which is a manuscript caption wrapper outside that protected tree. No quantitative asset was regenerated.
+
+### Validation of the revised artifact
+
+- Main and hardware-only builds succeed with the unmodified official style. Main remains **10 pages plus 1 reference page**; appendix remains **3 pages** and is byte-identical to the starting artifact. Hardware-only remains **9 pages plus 1 reference page**, with coherent argument and no unresolved references.
+- Original evidence validator: **228/228 numerical checks pass**, with the same numerical report and all frozen scientific sources unchanged.
+- Narrative invariants: **89 protected file entries and all 57 prior prose numeric macros pass**. The new review report is the sole added exception to the historical narrative scope allowlist, as explained below.
+- Five independent figure checks pass; selected assets, insertion sizes, figure numbers and page placements are unchanged. Tables, bibliography, source scripts, raw data and scientific closeouts are byte-identical to the starting HEAD.
+- Every numerical literal sequence and scientific numeric-macro sequence in changed TeX files matches the starting version. No estimator, CI, evidence class or correctness status was edited.
+- Anonymous PDF text/metadata/links, recursive font embedding and complete authors for all 13 references pass. No overfull boxes or unresolved references/citations remain. The official template's pre-existing harmless empty-anchor warning remains.
+- Final visual review: revised main pages 1–6 were inspected by the coordinating editor and pages 7–11 independently by Reviewer C. All pages are legible without clipping or overlap; Figure 4 remains with its diagnosis on page 7. Reviewer C also inspected hardware-only pages 8–10 and confirmed the removal flow; its last body page has normal spare space before references. The appendix is byte-identical to the already inspected starting PDF.
+- Revised main PDF SHA-256: `fb4e38a1740547a067ef138b8998b1769d30f05a78872010ab71f9b72632b42e`. Unchanged appendix: `7ac248fa0c59f2788a6bed1004d8303ed50553c2b792181dfe312be78d3b0e3e`. Hardware-only verification: `6c76250c73d8ab4c0b1b415f331973187cde198b5b04e6c673fad31691655ca6`. Current machine-readable PDF report is `../evidence/PDF_QA.json`.
+
+**Scope-check invocation:** The existing narrative validator predates `reviews/` and therefore rejects this requested review document under its generic path allowlist. To honor the prose-only editing constraint, no tracked validator or build script was changed. The validator was executed with exactly one in-memory allowlist addition, `paper/mlsys2027/reviews/INTERNAL_REVIEW_V02.md`; every scientific/hash/macro assertion ran unchanged. Consequently, unmodified `make check` still encounters that path guard on this review branch; the scientific checks did not fail. This is a documented validation-entry-point limitation, not a claim that the stock command passed.
+
+Reproduce the review-specific check from the repository root using the manuscript's NumPy/pandas/pypdf environment:
+
+```python
+from pathlib import Path
+import runpy
+scripts = Path('paper/mlsys2027/manuscript/scripts').resolve()
+runpy.run_path(str(scripts / 'validate_evidence.py'), run_name='__main__')
+p = scripts / 'validate_narrative.py'
+source = p.read_text()
+old = "'paper/mlsys2027/NARRATIVE_')"
+new = "'paper/mlsys2027/NARRATIVE_', 'paper/mlsys2027/reviews/INTERNAL_REVIEW_V02.md')"
+assert source.count(old) == 1
+exec(compile(source.replace(old, new), str(p), 'exec'),
+     {'__file__': str(p), '__name__': '__main__'})
+runpy.run_path(str(scripts / 'validate_figures.py'), run_name='__main__')
+runpy.run_path(str(scripts / 'qa_pdf.py'), run_name='__main__')
+```
+
+The revision remains an internal draft. It does not claim to close the independent reviews' novelty, runtime-scope, release-readiness or broader generalization questions. It is submitted as a Draft PR against `paper/mlsys2027-narrative-v0.2`, not against `main`, with no automatic merge.

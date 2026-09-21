@@ -2,6 +2,8 @@
 \label{sec:methods}
 \input{tables/01_platforms.tex}
 \subsection{Frozen systems and workloads}
+The cross-platform synthesis is retrospective: campaign-level primary outcomes were frozen independently. Later path controls and mechanism analyses retain their stated secondary, mechanism-supported, or diagnostic scope; they do not form a jointly preregistered cross-platform experiment.
+
 Table~\ref{tab:platforms} summarizes the completed campaigns. Final comparisons process one request at a time (sequence batch one). The final target is Qwen3-8B Q8\_0; the native draft is Qwen3-0.6B Q8\_0. The 358H heterogeneous adapter instead uses the qualified symmetric INT4 OpenVINO draft. We retain this quantization difference rather than describing the stacks as identical. Earlier M4 MLX-LM precision/correctness failures belong to qualification history and are distinct from the final llama.cpp Metal path.
 
 The M4 representative sample freezes \MRepN\ previously unseen Spec-Bench prompts \citep{specbench}, with four from each of six workload groups and prior diagnostic IDs excluded. It uses three randomized paired repetitions. A separate preregistration freezes \MHEprompts\ HumanEval IDs \citep{humaneval} before prompt download or inspection; fixed $k=2$ is the primary condition. The registered confidence-threshold conditions remain secondary. The subsequent HumanEval comparisons retain the frozen code-workload scope, three paired repetitions, greedy decoding, and a 128-token cap. They do not execute generated code.

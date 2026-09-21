@@ -1,6 +1,6 @@
 # Manuscript v0.2 — narrative and selected publication figures
 
-Completed: 2026-09-21. Branch: `paper/mlsys2027-narrative-v0.2`.
+Integration completed: 2026-09-21. For the subsequent internal review and conservative revision, see the follow-up at the end of this record. Integration branch: `paper/mlsys2027-narrative-v0.2`.
 
 The narrative pass started from main `1a11361f8526ec361e20dd6878d6e67352fb7bbd` and was checkpointed at `249c31c986da180bfae2e3f5881c300ae220edfa`. Current main `575f7d3c2991bdf00915fa213a644cb9deeb0673`, including publication-figure source `6cf4924a796ce12ef9c52cb4ef0527cff0937702`, was then merged at `37d2f32dfe6fc180d1c0856f049ec2f10ca22ac8`. No narrative work was discarded. The two `NARRATIVE_*BASELINE.json` evidence records preserve those phases and their protected hashes. Use `git rev-parse HEAD` for the delivery revision.
 
@@ -79,3 +79,15 @@ Both delivered PDFs compile successfully and match the checked build bytes. Auto
 All **11 main-PDF pages and 3 appendix pages** were rendered at 1,400 pixels on the long edge and visually inspected after final integration. Text, equations, tables, figure labels, captions, references and section transitions are legible and unclipped. All ten hardware-only pages were rendered at 1,100 pixels; pages 7–10 covering the state figure, hardware synthesis, related work, limitations, conclusion and references were inspected (earlier content matches the main PDF). Final artifact hashes are in `evidence/PDF_QA.json`.
 
 This work opens one Draft PR. It does not rerun experiments, merge the PR, submit, upload to arXiv, or change repository visibility. Internal provenance files are not anonymous review artifacts.
+
+## Independent internal review and conservative revision — 2026-09-21
+
+The next pass reviewed PR #18 at exact HEAD `afda6a192f3e9359eb5f5d7d24d3313bf59ef2f3` using three independent experimental-rigor, systems-contribution and presentation reviewers. Their complete initial reviews, meta-review and revision disposition are in `reviews/INTERNAL_REVIEW_V02.md`; the review was committed before any manuscript edit. The follow-up branch is `codex/mlsys2027-review-v02` and its Draft PR targets the narrative branch, not main.
+
+Unanimously supported prose corrections make the retrospective synthesis explicit, distinguish independently frozen primary outcomes and later bounded controls, align prominent latency wording with post-prefill decode, name separate M4 sessions in the abstract, soften isolated state-cost causality, and present accounting as a method. All numerical results, estimators, evidence classes, correctness statuses, tables, bibliography, scientific records and the selected figure tree remain unchanged. The overview's manuscript caption wrapper changes one timing phrase; the publication artwork is untouched.
+
+The resulting main PDF remains 10 body pages plus 1 reference page, the unchanged appendix remains 3 pages, and removing runtime leaves 9 body pages plus references. The original 228 numerical checks, five figure checks, protected-source checks, numeric-macro coverage and anonymous PDF checks pass. The historical narrative path allowlist required one explicit in-memory exception for the new review file; no validator was edited, and unmodified `make check` still needs that path exception. The review report records the reproducible invocation and final hashes.
+
+The prior integration pass's absence of identified wording defects is a historical assessment, superseded by this review's concrete corrections and remaining concerns. The paper still requires author decisions on incremental novelty, runtime submission scope, mechanism-table duplication, caveat consolidation and the final title. Conservative copyediting does not make it submission-ready.
+
+All 11 revised main-PDF pages were visually inspected after the final build, split between the coordinating editor (pp. 1–6) and Reviewer C (pp. 7–11). The state figure, synthesis/runtime transition, conclusion and references remain correctly placed. Reviewer C additionally inspected the changed hardware-only ending; the byte-identical appendix retains its complete prior inspection.

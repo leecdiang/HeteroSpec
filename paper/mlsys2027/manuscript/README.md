@@ -7,6 +7,7 @@ Provisional title: **Speculative Decoding Across Consumer Systems: Gains, Failur
 - Frozen scientific control: `../PAPER_FRAMEWORK_HANDOFF.md` (unchanged).
 - Claim ledger, machine-readable values, numerical checks, PDF checks, and literature audit: `../evidence/`.
 - Narrative hierarchy, scope, title alternatives and figure coordination: `../NARRATIVE_REFACTOR_V02.md`.
+- Final selected assets, captions and placement: `../NARRATIVE_FIGURE_INTEGRATION.md`.
 - Completion and page plan: `../MANUSCRIPT_STATUS.md`.
 
 ## Build
@@ -21,11 +22,13 @@ make hardware-only
 make check
 ```
 
-`make all` needs Python 3's standard library. `make check` additionally needs NumPy and pypdf; select an environment with `make check PYTHON=/path/to/python3`. It independently replays campaign estimators and bootstrap conventions, checks source/style hashes, and verifies compiled PDF anonymity, font embedding, bibliography author completeness, and the main-page boundary. It never reruns an experiment or modifies frozen evidence. Figure coordinates and numeric TeX macros regenerate from the repository; quantitative edits belong in neither generated file.
+`make all` needs Python 3's standard library. `make check` additionally needs NumPy, pandas and pypdf; select an environment with `make check PYTHON=/path/to/python3`. It independently replays the 228 campaign checks and five selected-figure checks, preserves frozen bootstrap conventions, checks source/style/asset hashes and actual figure insertion widths, and verifies compiled PDF anonymity, font embedding, bibliography author completeness, and the main-page boundary. It never reruns an experiment or modifies frozen evidence. Figure coordinates and numeric TeX macros regenerate from the repository; quantitative edits belong in neither generated file.
 
 `make hardware-only` excludes Section 7 at compile time. Its local verification PDF is `build/hardware-only/hardware-only.pdf`; the primary delivered version retains the reserved section. There are no references that require that section for the hardware story. Build intermediates and alternative verification PDFs are ignored. Both v0.2 deliverables are tracked; the prior v0.1 PDFs remain available unchanged.
 
-Four included publication figures are native vector TikZ/PGFPlots sources under `figures/`. Quantitative coordinates are generated from the ledger sources. Main tables cover platforms, headline outcomes, and verification/admissibility, in that order. Separate appendix tables cover frozen statistics and sensor boundaries. The old accounting schematic remains as an unused source. Independent figure candidates are not integrated; see `../NARRATIVE_REFACTOR_V02.md` for role coordination and the current placement map for the unchanged evidence ledger.
+Four selected vector PDF figures are included from `../figures/pdf/`: overview (asset 1), M4 (asset 3, single column), verification (asset 2), and stateful cost (asset 4), in manuscript appearance order. Asset 5 is Figure A1 in the separate appendix only. The selected assets remain byte-identical to main `575f7d3c2991bdf00915fa213a644cb9deeb0673`; the build never regenerates them. Thin LaTeX wrappers under `figures/` provide qualified captions and semantic labels. Main tables cover platforms, headline outcomes, and verification/admissibility, in that order. Separate appendix tables cover frozen statistics and sensor boundaries. Historical coordinate files and the unused accounting schematic remain unchanged. See `../NARRATIVE_REFACTOR_V02.md` for the current placement map of the unchanged evidence ledger.
+
+The checked final main PDF has 10 body pages and 1 reference page; the separate appendix has 3 pages. The runtime-removed verification build has 9 body pages and 1 reference page.
 
 ## Review boundary
 

@@ -80,4 +80,4 @@ The current official CFP still links `https://media.mlsys.org/Conferences/MLSYS2
 
 ## Narrative v0.2 verification
 
-The existing official format is unchanged. The v0.2 output again has 9 main pages plus 1 reference page and a separate 2-page appendix. The old v0.1 PDFs remain unchanged. Current file hashes and page boundaries are in `evidence/PDF_QA.json`; current allocation and visual review are in `MANUSCRIPT_STATUS.md`.
+The existing official format is unchanged. After selected-figure integration on 2026-09-21, the v0.2 output has 10 main pages plus 1 reference page and a separate 3-page appendix. All figures retain their validated native widths; no template or font-size modification was made. The old v0.1 PDFs remain unchanged. Current file hashes and page boundaries are in `evidence/PDF_QA.json`; current allocation and visual review are in `MANUSCRIPT_STATUS.md`.

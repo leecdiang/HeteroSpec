@@ -27,18 +27,19 @@ The working title remains provisional: **Speculative Decoding Across Consumer Sy
 
 Other considered directions were **Speculative Decoding Across Consumer AI Systems** (too little indication of the observed puzzle) and **When Speculative-Decoding Gains Survive Consumer Runtime Stacks** (useful question, but can suggest a general predictive criterion the study does not establish). The chosen title describes observations and diagnosis without implying a completed intervention. The project name is omitted from the anonymous review PDF. No final submission title has been frozen.
 
-## Figure coordination, not visual replacement
+## Final figure integration after the narrative checkpoint
 
-The independent assets under `paper/mlsys2027/figures/` remain byte-identical. No candidate is declared a final selection. This refactor retains the existing manuscript's visual encodings and quantitative coordinates, changes two captions, and orders figures by the new argument:
+The prose-only pass was checkpointed at `249c31c986da180bfae2e3f5881c300ae220edfa` before merging current main `575f7d3c2991bdf00915fa213a644cb9deeb0673`. The author's subsequent figure-integration instruction supersedes the checkpoint's temporary figure selection. Four selected publication PDFs now appear in the main paper, with the evidence inventory in the separate appendix. Asset filenames are unchanged; appearance order determines manuscript numbering.
 
-| Current number | Existing source | Narrative role | Independent candidate identity |
-|---|---|---|---|
-| 1 | `manuscript/figures/02_m4.tex` | Opening empirical contrast on one platform | Candidate 3 |
-| 2 | `manuscript/figures/03_verification.tex` | Correctness-path diagnosis | Candidate 2 |
-| 3 | `manuscript/figures/04_358h.tex` | Isolated-versus-realized stateful diagnosis | Candidate 4 |
-| 4 | `manuscript/figures/05_regimes.tex` | Descriptive synthesis, non-exhaustive and non-ranking | Candidate 5 |
+| Final number | Selected asset | Narrative role |
+|---|---|---|
+| 1 | `figure1.pdf` | Opening empirical puzzle |
+| 2 | `figure3.pdf` | M4 contrast from two separate frozen studies |
+| 3 | `figure2.pdf` | Correctness-path diagnosis |
+| 4 | `figure4.pdf` | Isolated-versus-realized stateful diagnosis |
+| A1 | `figure5.pdf` | Appendix evidence inventory, non-exhaustive and non-ranking |
 
-The old accounting schematic `manuscript/figures/01_framework.tex` is retained unchanged as a source but is not included in v0.2. Equations and all definitions remain in Section 2. Four main figures are deliberate for this narrative pass: Figure 1 and the outcome table establish the puzzle without inventing a new combined performance ranking. A later figure Work can add an outcome-overview Figure 1 and retain a separate M4 figure if the integrated design warrants five figures. That future selection must compare actual assets at insertion size; the independent candidates' old conceptual numbering is not a requirement on this manuscript.
+The entire selected figure tree remains byte-identical to integration main. The old accounting schematic remains an unused historical source; equations and definitions remain in Section 2. Captions preserve the supplied qualifications and use semantic references. Exact source commits, placement and native-size checks, caption changes and layout decisions are recorded in `NARRATIVE_FIGURE_INTEGRATION.md`.
 
 Table order now follows the argument: platforms (Table 1), headline outcomes (Table 2), mechanism (Table 3). Table cells and captions are unchanged. The appendix's two tables are unchanged.
 
@@ -48,12 +49,12 @@ The authoritative ledger and its original v0.1 placement map are preserved byte-
 
 | Frozen claim IDs | v0.2 placement |
 |---|---|
-| M4-24, M4-HE | Abstract; introduction; Section 4.1; Figure 1; Table 2; appendix energy |
-| M4-MICRO, RTX-MICRO, B570-FAST, B570-SERIAL | Section 5.1; Figure 2; Table 3 |
+| M4-24, M4-HE | Abstract; introduction; Section 4.1; Figures 1–2; Table 2; appendix energy |
+| M4-MICRO, RTX-MICRO, B570-FAST, B570-SERIAL | Section 5.1; Figure 3; Table 3 |
 | RTX-DIVERGENCE | Section 5.1 numerical capture |
 | RTX-cpu_k2, RTX-rtx_k2 | Section 4.2; Table 2; qualification in Section 5.1 |
-| 358H-CPU, 358H-NPU | Abstract/introduction; Sections 4.2 and 5.2; Figures 3–4; Table 2; appendix accounting |
-| 358H-ISOLATED | Section 5.2; Figure 3 |
+| 358H-CPU, 358H-NPU | Abstract/introduction; Sections 4.2 and 5.2; Figures 1 and 4; Table 2; Figure A1; appendix accounting |
+| 358H-ISOLATED | Section 5.2; Figure 4 |
 | *-PROTOCOL | Sections 2–3; Table 1; appendix |
 | M4-SECONDARY, M4-HE, B570-SERIAL | Section 4 energy qualifications; appendix energy |
 
@@ -67,12 +68,14 @@ The authoritative ledger and its original v0.1 placement map are preserved byte-
 - “First-token cost” in the state figure is a timing boundary, not a novelty claim. “Proves correctness” occurs only in an explicit denial of universal proof for the proposed registry. No new firstness claim is made.
 - No measured runtime intervention, universal predictor, exhaustive causal explanation, hardware ranking, common energy ranking, or whole-request latency result is claimed.
 
-Remaining editorial decisions are the final title/abstract, final figure selection in the separate figure Work, and the runtime decision. No unresolved factual or causal wording defect was identified in this pass. These editorial choices do not prevent the hardware paper from standing alone.
+Remaining editorial decisions are the final title/abstract and the runtime decision. Figure selection and integration are complete. No unresolved factual or causal wording defect was identified in this pass. These editorial choices do not prevent the hardware paper from standing alone.
 
 ## Validation records
 
 - `evidence/NARRATIVE_V02_BASELINE.json`: main HEAD and hashes recorded before editing.
 - `evidence/NUMERICAL_QA.json`: original 228 comparisons rerun; identical results and byte-identical report.
-- `evidence/NARRATIVE_V02_QA.json`: immutable scientific files, independent candidates, table/coordinate values, complete prior numeric-macro coverage, and change-scope check.
+- `evidence/NARRATIVE_V02_QA.json`: immutable scientific files, selected publication-figure tree, table/coordinate values, complete prior numeric-macro coverage, and change-scope check.
+- `evidence/NARRATIVE_FIGURE_INTEGRATION_BASELINE.json`: merged main, figure source, narrative checkpoint and selected-tree hashes.
+- `evidence/NARRATIVE_FIGURE_QA.json`: five independent figure checks and actual PDF insertion widths/locations.
 - `evidence/PDF_QA.json`: current compiled artifacts, anonymity, fonts, references, page counts and runtime-removed build.
 - `MANUSCRIPT_STATUS.md`: final page allocation and visual inspection record. Historical v0.1 status is retained separately.

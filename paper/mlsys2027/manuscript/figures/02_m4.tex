@@ -1,13 +1,7 @@
-% Evidence: M4-24, M4-HE. Coordinates generated from full-precision summaries.
+% Selected immutable publication asset from PR #17; caption adapted from the integration kit.
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[width=.95\columnwidth,height=2.0in,xmin=.65,xmax=1.52,ymin=-.5,ymax=1.5,ytick={0,1},yticklabels={24Q,HumanEval},xlabel={Paired decode speedup},xtick={.8,1,1.2,1.4},grid=major,axis on top]
-\addplot[black,dashed] coordinates {(1,-.5)(1,1.5)};
-\addplot+[only marks,mark=*,blue!70!black,error bars/.cd,x dir=both,x explicit]
- table[x=mean,y=row,x error minus expr=\thisrow{mean}-\thisrow{low},x error plus expr=\thisrow{high}-\thisrow{mean}] {figures/02_m4_data.dat};
-\end{axis}
-\end{tikzpicture}
-\caption{Does profitability carry across workloads on the same M4? Frozen 24Q is negative (72/72 exact); separately preregistered HumanEval is positive (90/90 exact). Bars are campaign-specific 95\% prompt-bootstrap intervals. Both use the qualified Metal path. Workload and session conditions differ, so the contrast does not isolate workload causality.}
+\includegraphics[width=\columnwidth]{../figures/pdf/figure3.pdf}
+\caption{\textbf{Opposite profitability regimes on the same tested M4 stack}. Representative 24Q yields 0.842$\times$ [0.809, 0.877], while the separately preregistered HumanEval30 fixed-$k=2$ study yields 1.387$\times$ [1.351, 1.422]. Points are campaign prompt geometric means of paired decode speedups; intervals are campaign-specific 95\% prompt-bootstrap intervals. The dashed line marks parity. Both paths satisfy token equality (72/72 and 90/90 pairs), which is not functional HumanEval pass@$k$. These are separate studies, not a paired between-workload comparison; differing workloads and session conditions do not isolate workload-only causality.}
 \label{fig:m4}
 \end{figure}

@@ -70,3 +70,9 @@ The title, abstract and final conclusion are provisional; author review is still
 ## Narrative refactor v0.2 — 2026-09-20
 
 The author-directed narrative now begins with variation in integrated gains across the tested consumer workloads/stacks, then diagnoses correctness-path and state-interface failures. This supersedes the old top-level framing above, not its scientific claims. The evidence ledger, all numeric values/estimators/classifications, and the scientific handoff remain unchanged. The original 228 numerical checks were rerun successfully. Section 6 is now the standalone hardware synthesis; Section 7 is proposed runtime co-design with results pending. Independent figure candidates have not been replaced or edited. See `NARRATIVE_REFACTOR_V02.md` and `MANUSCRIPT_STATUS.md`.
+
+## Selected publication figures integrated — 2026-09-21
+
+The coherent narrative checkpoint was committed before merging current main `575f7d3c2991bdf00915fa213a644cb9deeb0673` with publication-figure source `6cf4924a796ce12ef9c52cb4ef0527cff0937702`. Four selected PDFs now appear in the main paper: overview, M4, verification, and stateful cost. The regime inventory is Figure A1 in the separate appendix. No selected asset was regenerated or edited. This completes and supersedes the prior temporary figure-coordination status.
+
+Final lengths are 10 main pages plus 1 reference page and 3 separate appendix pages. All pages were visually inspected, all 228 existing numerical checks and five independent figure checks passed, and anonymous review-artifact checks passed. Removing the proposed runtime section leaves a coherent 9-page hardware paper plus references. See `NARRATIVE_FIGURE_INTEGRATION.md` and `MANUSCRIPT_STATUS.md` for final placement, qualifiers and layout decisions. Title/abstract and runtime results remain provisional; no experiment or measured intervention was added.

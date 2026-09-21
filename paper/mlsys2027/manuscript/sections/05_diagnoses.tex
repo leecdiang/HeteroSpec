@@ -18,6 +18,8 @@ The frozen CUDA reproducer repeats the HumanEval/106 divergence in three of thre
 
 The evidence supports stable batch-shape-dependent greedy argmax divergence in this llama.cpp/CUDA/Q8\_0 configuration. It does not identify a universal CUDA failure or a specific responsible kernel. Floating-point and batch-dependent output differences are established research topics \citep{numerics,llm42}; the systems consequence here is that the cheap path is removed from the set admitted by the study's contract.
 
+% Queue the double-column state figure at the preceding paragraph boundary.
+\input{figures/04_358h.tex}
 \paragraph{Serialization does not establish exactness.}
 B570 provides a complementary boundary. Its formal v2 correctness gate fails, so the preregistered stop rule prevents a formal verification/performance claim from that execution. Later fast-path diagnostics yield \BFastExact/90\ exact pairs. The unique serialized fallback improves this to \BExact/90, with \BExactPrompts/30\ wholly exact prompts, but still fails workload-global equality. Its $\vTwo$ is approximately \BvShort--\BvLong\ and remains diagnostic.
 
@@ -27,7 +29,6 @@ This negative control matters because it prevents an attractive simplification: 
 
 \subsection{Isolated drafting versus stateful integration}
 \label{sec:state}
-\input{figures/04_358h.tex}
 On Core Ultra X7 358H, the isolated NPU draft has higher median steady-state throughput than CPU at the tested contexts, with a larger advantage at longer contexts. This local indicator does not survive integration: both qualified paths are exact but unprofitable, and the NPU path is slower. The measured regions reveal different costs on the two paths. The direct round records show mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, approximately 2.46. This is complete committed output, not the accepted-draft counter used in older native records.
 
 The target maintains persistent state, evaluates proposals, removes invalid candidate state when needed, and decodes correction or bonus output. Its complete measured region accounts for \HcpuTarget\% of CPU-path speculative time. The NPU path instead spends \HnpuDraft\% in the synchronous OpenVINO call that replays the full committed prefix and generates a proposal. Replay and proposal are inseparable within this measurement; we do not invent a replay-only value. Residual orchestration occupies only \HcpuResidual\% and \HnpuResidual\%, so it cannot explain the main loss.

@@ -14,6 +14,7 @@ assets:
 check:
 	$(PYTHON) scripts/validate_evidence.py
 	$(PYTHON) scripts/validate_narrative.py
+	$(PYTHON) scripts/validate_figures.py
 	$(PYTHON) scripts/qa_pdf.py
 hardware-only: assets
 	mkdir -p build/hardware-only

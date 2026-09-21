@@ -60,7 +60,7 @@ def drawing(which):
         t.append(node(281,y,label,size=8.3,leading=10))
     t.append(r'\draw[rule] (247,85) -- (359,85);'+'\n')
     t.append(r'\draw[ink,-{Stealth[length=3bp,width=2.4bp]}] (366,53) -- (378,53);'+'\n')
-    t += [node(380,32,r'Qualified integrated\\post-prefill decode',103,size=8.8,leading=10.5),
+    t += [node(380,32,r'Qualified integrated\\post-prefill decode' if which=='a' else r'Qualified\\post-prefill decode',103,size=8.8,leading=10.5),
           node(380,65,r'Observed regimes:\\[2bp]profitable\\exact but negative',103,size=8.5,leading=10)]
     if which=='a':
         lo,hi=E['rtx']['batched_ubatch2']['range']; s=E['b570']['serialized']; h=E['state']; m=E['m4']
@@ -68,8 +68,8 @@ def drawing(which):
         t.append(node(242,119,rf'358H NPU, 8192-token context:\\{h["NPU"]["isolated_8192_tokens_s"]:.2f} vs CPU {h["CPU"]["isolated_8192_tokens_s"]:.2f} tok/s;\\{h["NPU"]["draft_pct"]:.2f}\% replay + proposal;\\{h["NPU"]["speedup"]:.3f}$\times$ prompt-GM speedup.',130,size=8,leading=9.5))
         t.append(node(380,119,rf'M4: separate Metal studies\\24Q: {m["representative"]["speedup"]:.3f}$\times$; HE30: {m["humaneval"]["speedup"]:.3f}$\times$.\\Observed contrast;\\neither diagnosis assigned.',103,size=8,leading=9.5))
     else:
-        t.append(node(119,119,r'RTX batched / B570:\\qualification failure.',108,size=8,leading=9.5))
-        t.append(node(242,119,r'358H NPU: isolated advantage\\lost at the measured state interface.',130,size=8,leading=9.5))
+        t.append(node(119,119,r'RTX batched / B570\\diagnostics: qualification failure.',108,size=8,leading=9.5))
+        t.append(node(242,119,r'358H NPU: isolated advantage\\does not survive the tested\\stateful integration.',130,size=8,leading=9.5))
         t.append(node(380,119,r'M4: separate Metal studies;\\opposite observed outcomes.\\Neither diagnosis assigned.',103,size=8,leading=9.5))
     # One bounded-scope qualifier, with no implication of an exhaustive performance theory.
     footer=height-10

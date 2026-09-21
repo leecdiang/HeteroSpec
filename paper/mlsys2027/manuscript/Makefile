@@ -7,8 +7,8 @@ all: assets
 	mkdir -p build output
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build appendix.tex
-	cp build/main.pdf output/manuscript-v0.2.pdf
-	cp build/appendix.pdf output/appendix-v0.2.pdf
+	cp build/main.pdf output/manuscript-v0.3.pdf
+	cp build/appendix.pdf output/appendix-v0.3.pdf
 assets:
 	$(PYTHON) scripts/build_assets.py
 check:

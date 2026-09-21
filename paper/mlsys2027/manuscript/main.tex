@@ -11,14 +11,14 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs},pdfsubject={MLSys 2027 research manuscript v0.2},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs},pdfsubject={MLSys 2027 research manuscript v0.3},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
 \newcommand{\vTwo}{V_2^{\mathrm{micro}}}
 \newcommand{\dreal}{D_{\mathrm{real}}}
 \newcommand{\rtarget}{R_{\mathrm{target}}}
-\newcommand{\pending}{\textbf{Internal v0.2: proposed design only; implementation and measured results pending.}}
+\newcommand{\pending}{\textbf{Internal v0.3: proposed design only; implementation and measured results pending.}}
 \input{tables/values.tex}
 \mlsystitlerunning{Speculative Decoding Across Consumer Systems}
 \begin{document}
@@ -32,12 +32,12 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-How do favorable local indicators compare with gains in integrated post-prefill decode? We retrospectively synthesize four consumer hardware/runtime case studies under greedy token equivalence. On the same MacBook Air M4 in separate sessions, a representative workload is exact but reaches only \MRepSpeed$\times$ speedup (95\% CI [\MRepLo, \MRepHi]), whereas a separately preregistered HumanEval workload is exact and reaches \MHEspeed$\times$ [\MHElo, \MHEhi] with \MHEexact/\MHEpairs\ exact pairs. We diagnose two concrete failures of local promise: correctness qualification excludes cheap verification paths on RTX 5070 Ti Laptop and Arc B570, while a favorable isolated NPU draft advantage does not survive the tested 358H stateful integration. The exact 358H CPU and NPU paths reach only \HcpuSpeed$\times$ and \HnpuSpeed$\times$, with complete target-side work and replay plus proposal dominating their respective costs. Favorable local indicators therefore do not by themselves establish gains in the tested configurations; the two diagnoses explain important failures without constituting an exhaustive theory or a measured runtime intervention.
+What prevents favorable local indicators from translating into gains in integrated post-prefill speculative decode on the tested consumer configurations? We retrospectively synthesize four consumer hardware/runtime case studies under greedy token equivalence. On the same MacBook Air M4 in separate sessions, a representative workload is exact but reaches only \MRepSpeed$\times$ speedup (95\% CI [\MRepLo, \MRepHi]), whereas a separately preregistered HumanEval workload is exact and reaches \MHEspeed$\times$ [\MHElo, \MHEhi] with \MHEexact/\MHEpairs\ exact pairs. We diagnose two concrete failures of local promise: correctness qualification excludes cheap verification paths on RTX 5070 Ti Laptop and Arc B570, while a favorable isolated NPU draft advantage does not survive the tested 358H stateful integration. The exact 358H CPU and NPU paths reach only \HcpuSpeed$\times$ and \HnpuSpeed$\times$, with complete target-side work and replay plus proposal dominating their respective costs. Favorable local indicators therefore do not by themselves establish gains in the tested configurations; the two diagnoses explain important failures without constituting an exhaustive theory or a measured runtime intervention.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 % Provisional title and abstract; final conclusion awaits the software decision.
-\noindent\textit{Manuscript v0.2---hardware-complete / runtime-reserved. Title and abstract provisional.}
+\noindent\textit{Manuscript v0.3---hardware-complete / runtime-reserved. Title and abstract provisional.}
 \input{sections/01_introduction}
 \input{sections/02_framework}
 \input{sections/03_methodology}

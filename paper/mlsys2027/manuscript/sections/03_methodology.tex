@@ -1,4 +1,4 @@
-\section{Experimental Methodology and Evidence Classes}
+\section{Experimental Methodology and Platforms}
 \label{sec:methods}
 \input{tables/01_platforms.tex}
 \subsection{Frozen systems and workloads}
@@ -8,9 +8,7 @@ The M4 representative sample freezes \MRepN\ previously unseen Spec-Bench prompt
 
 Primary timing compares matched decode regions, excluding model loading and initial prompt prefill. In the native campaigns we use the frozen runtime decode counters; 358H explicitly times the complete post-prefill speculative loop. Replaying the committed prefix \emph{inside} that loop remains charged to drafting. Thus the measurements are conditional decode costs, not whole-request latency including startup. Target-forward controls have their own narrower timing boundary. Different runtime versions, quantization, and device paths prevent a hardware-only causal comparison.
 
-\subsection{Evidence classes and uncertainty}
-\textbf{Primary} results answer a frozen workload question after its correctness gate. \textbf{Secondary} results are registered variants or explicitly bounded follow-up controls. \textbf{Mechanism-supported} claims use path controls or timed regions. \textbf{Diagnostic} values describe correctness-blocked or otherwise restricted paths. These labels describe permitted inference, not just measurement precision. In particular, the exact RTX serialized controls are secondary evidence; they do not replace its blocked primary fast path. B570 follow-ups remain diagnostic after the formal stop.
-
+\subsection{Statistical estimators and uncertainty}
 For each prompt we reduce its three paired baseline/speculative ratios, then report the geometric mean across prompts. M4 and RTX use a within-prompt geometric mean, as does the B570 diagnostic analysis; 358H uses a within-prompt median. Intervals are 95\% prompt bootstraps. M4 HumanEval uses 100,000 resamples; the other reported campaigns use 10,000. Frozen seeds and endpoint conventions are given in the separate appendix. We preserve campaign-specific estimators and finite-bootstrap input order rather than harmonizing them after observing outcomes.
 
 These intervals quantify prompt sampling conditional on the campaign. They do not encompass all session, temperature, or runtime-state uncertainty. Randomized adjacent pairing reduces drift but does not remove it. We therefore keep the representative and code-conditioned M4 studies separate, including their differing session conditions.

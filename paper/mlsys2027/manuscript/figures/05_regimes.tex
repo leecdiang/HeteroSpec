@@ -1,11 +1,7 @@
-\begin{figure}[t]
+% Selected immutable publication asset from PR #17; caption adapted from the integration kit.
+\begin{figure*}[t]
 \centering
-\begin{tikzpicture}[box/.style={draw,align=left,text width=2.8in,inner sep=6pt}]
-\node[box] (a) {\textbf{Profitable + exact}\\M4 HumanEval: primary};
-\node[box,below=0.10in of a] (b) {\textbf{Exact but unprofitable}\\M4 24Q; 358H CPU/NPU: primary\\RTX serialized controls: secondary};
-\node[box,below=0.10in of b] (c) {\textbf{Physically cheap, inadmissible}\\RTX batched; B570 fast: diagnostic};
-\node[box,below=0.10in of c] (d) {\textbf{State-interface-bound}\\358H NPU: measured mechanism};
-\end{tikzpicture}
-\caption{Which regimes survive the evidence distinctions? Categories summarize mechanisms, not an ordering of devices. NPU also belongs to the exact-negative regime. B570 serialized remains correctness-blocked diagnostic evidence, despite its slower execution.}
+\includegraphics[width=\textwidth]{../figures/pdf/figure5.pdf}
+\caption{\textbf{Evidence inventory across tested regimes}. Categorical columns distinguish globally blocked paths from exact negative and profitable regimes. Rows annotate observed constraints rather than define an exhaustive taxonomy. Both B570 paths remain diagnostic and globally inadmissible. RTX serialized controls are secondary evidence; 358H outcome and decomposition support primary and mechanism claims, respectively. Empty cells indicate no displayed case, not impossibility. No hardware ordering or continuous correctness metric is implied.}
 \label{fig:regimes}
-\end{figure}
+\end{figure*}

@@ -77,3 +77,7 @@ Before submission:
 ## v0.1 verification
 
 The current official CFP still links `https://media.mlsys.org/Conferences/MLSYS2025/mlsys2025style.zip`. The untouched ZIP, extracted package and SHA-256 manifest are now in `manuscript/vendor/`; `vendor/SOURCE.md` records the source. The compiled review PDF has 9 main pages and 1 reference page; its 2-page appendix is a separate file. All 13 references retain complete author lists. This is a draft for author review, not a submitted paper. See `MANUSCRIPT_STATUS.md` and `evidence/PDF_QA.json` for the exact checked artifacts.
+
+## Narrative v0.2 verification
+
+The existing official format is unchanged. After selected-figure integration on 2026-09-21, the v0.2 output has 10 main pages plus 1 reference page and a separate 3-page appendix. All figures retain their validated native widths; no template or font-size modification was made. The old v0.1 PDFs remain unchanged. Current file hashes and page boundaries are in `evidence/PDF_QA.json`; current allocation and visual review are in `MANUSCRIPT_STATUS.md`.

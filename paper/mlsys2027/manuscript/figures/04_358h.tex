@@ -1,17 +1,7 @@
-% Evidence: 358H-ISOLATED and 358H-CPU/NPU; boundaries deliberately separate.
+% Selected immutable publication asset from PR #17; caption adapted from the integration kit.
 \begin{figure*}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[name=left,width=3.05in,height=2.25in,xmode=log,log basis x=2,xtick={512,2048,8192},xticklabels={512,2048,8192},xlabel={Isolated draft context (tokens)},ylabel={Steady-state draft tokens/s},ymin=0,ymax=115,legend style={at={(.5,1.02)},anchor=south,legend columns=2},grid=major]
-\addplot+[blue!70!black,mark=*] table[x=context,y=CPU] {figures/04_isolated.dat};\addlegendentry{CPU}
-\addplot+[orange!80!black,mark=square*] table[x=context,y=NPU] {figures/04_isolated.dat};\addlegendentry{NPU}
-\end{axis}
-\begin{axis}[at={(left.east)},anchor=west,xshift=.70in,width=3.05in,height=2.25in,ybar stacked,bar width=22pt,symbolic x coords={CPU,NPU},xtick=data,xlabel={Realized Phase-3 draft path},ylabel={Seconds / request},ymin=0,ymax=32,legend style={at={(.5,1.02)},anchor=south,legend columns=1},ymajorgrids]
-\addplot+[fill=orange!65,draw=black] table[x=device,y=draft] {figures/04_realized.dat};\addlegendentry{Replay + proposal}
-\addplot+[fill=blue!45,draw=black] table[x=device,y=target] {figures/04_realized.dat};\addlegendentry{Complete target side}
-\addplot+[fill=black,draw=black] table[x=device,y=residual] {figures/04_realized.dat};\addlegendentry{Residual}
-\end{axis}
-\end{tikzpicture}
-\caption{Why does isolated NPU speed not survive integration on 358H? Left: median isolated steady-state draft throughput (five repetitions/cell), excluding the first-token cost. Right: arithmetic mean complete post-prefill request time over 90 observations/path. CPU time is target-side dominated (\HcpuTarget\%); NPU time is replay-plus-proposal dominated (\HnpuDraft\%). Residuals are only \HcpuResidual\%/\HnpuResidual\% and visually negligible. Separate boundaries preclude interpreting left-panel throughput as realized draft cost.}
+\includegraphics[width=\textwidth]{../figures/pdf/figure4.pdf}
+\caption{\textbf{Isolated draft advantage does not survive the measured stateful integration}. (A) Phase-1 median steady-state draft throughput and 95\% repetition-bootstrap intervals, five repetitions per cell; the NPU median advantage grows across the tested contexts. (B) Phase-3 arithmetic mean post-prefill seconds per request over 90 observations per path, all exact. CPU and NPU totals are 13.25 s and 27.54 s against a 9.58 s mean baseline. The CPU path is target-side dominated (87.34\%); the NPU path spends 58.35\% in the measured replay-plus-proposal call. The 0.734$\times$ and 0.352$\times$ headlines use the separate prompt-GM estimator and are not ratios of the arithmetic mean bars. Replay and proposal share one timed OpenVINO call; replay-only time is not measured. Initial prompt prefill is excluded. This diagnoses the tested runtime interface, not intrinsic NPU capability or a measured benefit from a state-persistent intervention. Together with Figure~\ref{fig:verification}, it identifies two measured reasons local opportunity need not become realized gain; the M4 contrast remains a separate empirical observation.}
 \label{fig:state}
 \end{figure*}

@@ -11,19 +11,19 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Correctness-Admissible Paths and Realized Costs in Consumer Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.1},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs},pdfsubject={MLSys 2027 research manuscript v0.2},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
 \newcommand{\vTwo}{V_2^{\mathrm{micro}}}
 \newcommand{\dreal}{D_{\mathrm{real}}}
 \newcommand{\rtarget}{R_{\mathrm{target}}}
-\newcommand{\pending}{\textbf{Internal v0.1: proposed design only; implementation and measured results pending.}}
+\newcommand{\pending}{\textbf{Internal v0.2: proposed design only; implementation and measured results pending.}}
 \input{tables/values.tex}
-\mlsystitlerunning{Correctness-Admissible Paths and Realized Costs}
+\mlsystitlerunning{Speculative Decoding Across Consumer Systems}
 \begin{document}
 \twocolumn[{
-\mlsystitle{Correctness-Admissible Paths and Realized Costs in Consumer Speculative Decoding}
+\mlsystitle{Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs}
 \begin{mlsysauthorlist}
 \mlsysauthor{Anonymous Authors}{anon}
 \end{mlsysauthorlist}
@@ -32,21 +32,22 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-Speculative decoding saves time only when the execution path satisfies the required output contract and its realized costs fit within the progress it commits. We characterize four consumer systems under greedy token equivalence, separating target-forward microbenchmarks from complete round costs and isolated draft throughput from stateful draft execution. On MacBook Air M4, a representative workload is exact but slower, whereas a separately preregistered HumanEval workload achieves \MHEspeed$\times$ speedup (95\% CI [\MHElo, \MHEhi]) with \MHEexact/\MHEpairs\ exact pairs. On RTX 5070 Ti Laptop and Arc B570, correctness excludes fast verification paths; serialization restores equality in the tested RTX controls but does not establish workload-global equality on B570. Core Ultra X7 358H CPU and NPU draft paths are exact yet unprofitable, with complete target-side work and full-prefix replay plus proposal dominating their respective costs. These observations identify correctness-admissible execution and the realized state interface as necessary measurement boundaries for this study, without asserting a hardware ranking or a measured runtime optimization.
+Favorable local indicators make speculative decoding promising, but how reliably do they translate into integrated gains on consumer systems? We characterize four frozen hardware/runtime configurations under greedy token equivalence, comparing decode execution after initial prompt prefill. On the same MacBook Air M4, a representative workload is exact but reaches only \MRepSpeed$\times$ speedup (95\% CI [\MRepLo, \MRepHi]), whereas a separately preregistered HumanEval workload is exact and reaches \MHEspeed$\times$ [\MHElo, \MHEhi] with \MHEexact/\MHEpairs\ exact pairs. We diagnose two concrete failures of local promise: correctness qualification excludes cheap verification paths on RTX 5070 Ti Laptop and Arc B570, while the realized 358H state interface erases a favorable isolated NPU draft advantage. The exact 358H CPU and NPU paths reach only \HcpuSpeed$\times$ and \HnpuSpeed$\times$, with complete target-side work and replay plus proposal dominating their respective costs. Favorable local indicators therefore do not reliably predict gains across these tested configurations; the two diagnoses explain important failures without constituting an exhaustive theory or a measured runtime intervention.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 % Provisional title and abstract; final conclusion awaits the software decision.
-\noindent\textit{Manuscript v0.1---hardware-complete / runtime-reserved. Title and abstract provisional.}
+\noindent\textit{Manuscript v0.2---hardware-complete / runtime-reserved. Title and abstract provisional.}
 \input{sections/01_introduction}
 \input{sections/02_framework}
 \input{sections/03_methodology}
-\input{sections/04_admissibility}
-\input{sections/05_hardware_results}
-\ifruntime\input{sections/06_runtime_codesign}\fi
-\input{sections/07_related_work}
-\input{sections/08_limitations}
-\input{sections/09_conclusion}
+\input{sections/04_outcomes}
+\input{sections/05_diagnoses}
+\input{sections/06_synthesis}
+\ifruntime\input{sections/07_runtime_codesign}\fi
+\input{sections/08_related_work}
+\input{sections/09_limitations}
+\input{sections/10_conclusion}
 \label{maintextend}
 \clearpage
 \bibliographystyle{mlsys2025}

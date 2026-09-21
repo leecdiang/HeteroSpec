@@ -11,7 +11,10 @@ for fn in ['main','appendix']:
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert not re.search(r'RTX 5070 Ti(?! Laptop)', text), 'Missing Laptop identity'
+ assert 'v0.2' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.2.pdf' if fn=='main' else 'appendix-v0.2.pdf')
+ assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
+ assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
  # PDF actions/links must not point to identifying local or artifact paths.
  for page in r.pages:
@@ -19,12 +22,23 @@ for fn in ['main','appendix']:
    action=a.get_object().get('/A',{});uri=str(action.get('/URI',''))
    assert not re.search(r'leecdiang|/Users/|HeteroSpec|file:',uri,re.I),uri
  fonts={}
- for page in r.pages:
-  for f in page['/Resources'].get('/Font',{}).values():
-   f=f.get_object();sub=str(f.get('/Subtype'));desc=f.get('/FontDescriptor');name=str(f.get('/BaseFont'))
-   assert sub=='/Type1',(name,sub)
-   assert desc is not None and '/FontFile' in desc.get_object(),(name,'not embedded Type1')
+ seen=set()
+ def scan_resources(resources):
+  resources=resources.get_object()
+  for f in resources.get('/Font',{}).values():
+   f=f.get_object();sub=str(f.get('/Subtype'));name=str(f.get('/BaseFont'))
+   assert sub in ('/Type1','/TrueType','/Type0'),(name,sub)
+   physical=[v.get_object() for v in f['/DescendantFonts']] if sub=='/Type0' else [f]
+   for font in physical:
+    desc=font.get('/FontDescriptor')
+    assert desc is not None and any(k in desc.get_object() for k in ('/FontFile','/FontFile2','/FontFile3')),(name,'font not embedded')
    fonts[name]=sub
+  for obj in resources.get('/XObject',{}).values():
+   key=(getattr(obj,'idnum',None),getattr(obj,'generation',None))
+   if key in seen:continue
+   seen.add(key);obj=obj.get_object()
+   if obj.get('/Subtype')=='/Form' and '/Resources' in obj:scan_resources(obj['/Resources'])
+ for page in r.pages:scan_resources(page['/Resources'])
  log=(ROOT/'build'/f'{fn}.log').read_text()
  assert not re.search(r'Overfull|undefined references|Citation .* undefined|LaTeX Error|AUTHORERR',log),fn
  report['pdfs'][fn]={'pages':len(r.pages),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'metadata':metadata,'fonts':fonts,'anonymous_scan':'PASS','overfull_boxes':0,'undefined_references':0}
@@ -32,6 +46,14 @@ aux=(ROOT/'build/main.aux').read_text();mainpage=int(re.search(r'\\newlabel\{mai
 report['main_text_pages']=mainpage
 report['references_pages']=report['pdfs']['main']['pages']-mainpage
 report['section_start_pages']={k:int(v) for k,v in re.findall(r'\\newlabel\{(sec:[^}]+)\}\{\{[^}]*\}\{(\d+)\}',aux)}
+figures={k:{'number':n,'page':int(p)} for k,n,p in re.findall(r'\\newlabel\{(fig:[^}]+)\}\{\{([^}]+)\}\{(\d+)\}',aux)}
+assert set(figures)=={'fig:overview','fig:m4','fig:verification','fig:state'},figures
+assert figures['fig:overview']['number']=='1'
+assert 'fig:framework' not in aux and 'fig:regimes' not in aux
+appendix_aux=(ROOT/'build/appendix.aux').read_text()
+assert r'\newlabel{fig:regimes}{{A1}' in appendix_aux
+report['main_figures']=figures
+report['appendix_figure']={'label':'fig:regimes','number':'A1'}
 # All 13 cited entries have complete authors, including 58 HumanEval authors.
 bib=(ROOT/'references.bib').read_text();authors=re.findall(r'author=\{([^}]+)\}',bib);assert len(authors)==13;assert all('others' not in a and 'et al' not in a for a in authors)
 assert len(authors[-2].split(' and '))==58
@@ -50,7 +72,7 @@ report['overclaim_search_hits']=hits
 hp=ROOT/'build/hardware-only/hardware-only.pdf'
 if hp.exists():
  haux=hp.with_suffix('.aux').read_text();htext='\n'.join(p.extract_text() for p in PdfReader(hp).pages)
- assert '6.1 Requirements traced' not in htext and 'implementation and measured results pending' not in htext
+ assert 'Requirements traced to closed measurements' not in htext and 'implementation and measured results pending' not in htext
  assert 'sec:runtime' not in haux and '??' not in htext
  report['hardware_only']={'total_pages':len(PdfReader(hp).pages),'main_pages':int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',haux).group(1)),'runtime_section_removed':True,'no_undefined_references':True,'sha256':hashlib.sha256(hp.read_bytes()).hexdigest()}
 (E/'PDF_QA.json').write_text(json.dumps(report,indent=2)+'\n')

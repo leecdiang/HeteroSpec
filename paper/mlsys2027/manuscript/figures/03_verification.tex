@@ -1,12 +1,7 @@
-% Evidence: M4-MICRO, RTX-MICRO, B570-FAST/SERIAL.
+% Selected immutable publication asset from PR #17; caption adapted from the integration kit.
 \begin{figure*}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[width=.84\textwidth,height=2.25in,xmin=.8,xmax=2.6,ymin=-.5,ymax=4.5,y dir=reverse,ytick={0,1,2,3,4},yticklabels={M4 Metal,RTX batched,RTX serialized,B570 fast,B570 serialized},xlabel={Target-forward proxy $\vTwo$ (baseline-step units)},xtick={1,1.5,2,2.5},xmajorgrids,axis on top]
-\addplot[black,dashed,forget plot] coordinates {(1,-.5)(1,4.5)};
-\input{figures/03_coordinates.tex}
-\end{axis}
-\end{tikzpicture}
-\caption{How does correctness change usable verification? Filled marks: paths exact on the frozen reported workloads; open marks: correctness-blocked paths (including B570 serialized). Each mark is one context cell; nearby cells can overlap. M4 contexts: 512/2048/8192; RTX 5070 Ti Laptop depths: 0/256; B570 contexts: 512/2048. Contexts, runtimes, and controls differ: this is not a hardware ranking. The plotted proxy is not complete $\rtarget$.}
+\includegraphics[width=\textwidth]{../figures/pdf/figure2.pdf}
+\caption{\textbf{Correctness qualification changes which verification path is usable}. Each mark is one measured context cell; range segments span those cells, not confidence intervals. Filled markers indicate qualified tested paths; open markers indicate blocked or diagnostic paths. Serialization yields an exact secondary RTX control, but the B570 serialized diagnostic remains globally inadmissible despite improving observed exactness from 45/90 to 60/90 pairs. Contexts and runtime stacks are not fully matched. The target-forward proxy $V_2^{\mathrm{micro}}$ is not complete realized target-side cost $R_{\mathrm{target}}$ or an end-to-end speedup. Qualification is scoped to the frozen workload and execution path, not a device family.}
 \label{fig:verification}
 \end{figure*}

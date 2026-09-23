@@ -107,6 +107,15 @@ def r0_gate(name: str, state: dict[str, Any], cap: dict[str, Any]) -> tuple[bool
     return ok, reasons
 
 
+def qualified(registry: dict[str, Any], name: str) -> bool:
+    return registry.get(name, {}).get("status") == "QUALIFIED"
+
+
+def append_once(items: list[str], name: str) -> None:
+    if name not in items:
+        items.append(name)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--small", nargs="+", type=Path, required=True, help="small-gate qualification_summary.json files")
@@ -132,50 +141,69 @@ def main() -> int:
         small_ok = r1_qualified(small, name)
         full_ok = r1_qualified(full, name)
         feasibility_ok, feasibility_reasons = r0_gate(name, r0_state, r0_cap)
-        qualified = small_ok and full_ok and feasibility_ok
+        path_ok = small_ok and full_ok and feasibility_ok
         registry[name] = {
             "r0_feasibility": "PASS" if feasibility_ok else "FAIL",
             "r0_notes": feasibility_reasons,
             "small_gate": "PASS" if small_ok else "FAIL_OR_MISSING",
             "full_gate": "PASS" if full_ok else "FAIL_OR_MISSING",
-            "status": "QUALIFIED" if qualified else "BLOCKED",
-            "formal_performance_allowed": bool(qualified),
+            "status": "QUALIFIED" if path_ok else "BLOCKED",
+            "formal_performance_allowed": bool(path_ok),
         }
 
+    # Minimal R2: only controls needed to identify a qualified intervention are
+    # retained. A same-frontend replay condition has no formal value when the
+    # corresponding persistent intervention is unavailable/blocked.
     formal = ["TARGET_UB1"]
-    for name in [
-        "LEGACY_CPU_UB1",
-        "OPTIMUM_REPLAY_CPU_UB1",
-        "PERSIST_CPU_UB1",
-        "LEGACY_NPU_UB1",
-        "OPTIMUM_REPLAY_NPU_UB1",
-        "PERSIST_NPU_UB1",
-    ]:
-        if registry.get(name, {}).get("status") == "QUALIFIED":
-            formal.append(name)
+    selection_reasons: dict[str, str] = {"TARGET_UB1": "shared system reference"}
 
-    target_ub2_ok = registry.get("TARGET_UB2", {}).get("status") == "QUALIFIED"
+    for device in ("CPU", "NPU"):
+        persist = f"PERSIST_{device}_UB1"
+        replay = f"OPTIMUM_REPLAY_{device}_UB1"
+        legacy = f"LEGACY_{device}_UB1"
+        if qualified(registry, persist):
+            if not qualified(registry, replay):
+                raise RuntimeError(
+                    f"{persist} qualified without its same-frontend replay control {replay}; "
+                    "state-reuse effect is not identifiable"
+                )
+            if qualified(registry, legacy):
+                append_once(formal, legacy)
+                selection_reasons[legacy] = "qualified contemporaneous bridge to closed replay mechanism"
+            append_once(formal, replay)
+            selection_reasons[replay] = f"same-frontend {device} replay control for persistent-state effect"
+            append_once(formal, persist)
+            selection_reasons[persist] = f"qualified {device} persistent-state intervention"
+
+    target_ub2_ok = qualified(registry, "TARGET_UB2")
     persist_pair_ok = (
         target_ub2_ok
-        and registry.get("PERSIST_NPU_UB1", {}).get("status") == "QUALIFIED"
-        and registry.get("PERSIST_NPU_UB2", {}).get("status") == "QUALIFIED"
+        and qualified(registry, "PERSIST_NPU_UB1")
+        and qualified(registry, "PERSIST_NPU_UB2")
     )
     legacy_pair_ok = (
         target_ub2_ok
-        and registry.get("LEGACY_NPU_UB1", {}).get("status") == "QUALIFIED"
-        and registry.get("LEGACY_NPU_UB2", {}).get("status") == "QUALIFIED"
+        and qualified(registry, "LEGACY_NPU_UB1")
+        and qualified(registry, "LEGACY_NPU_UB2")
     )
     if persist_pair_ok:
-        formal.append("PERSIST_NPU_UB2")
+        append_once(formal, "PERSIST_NPU_UB1")
+        append_once(formal, "PERSIST_NPU_UB2")
+        selection_reasons["PERSIST_NPU_UB2"] = "qualified same-policy NPU UB2 target-verification intervention"
         ub2_rule = "state-policy-matched PERSIST_NPU UB1/UB2 pair promoted"
     elif legacy_pair_ok:
-        formal.append("LEGACY_NPU_UB2")
+        append_once(formal, "LEGACY_NPU_UB1")
+        append_once(formal, "LEGACY_NPU_UB2")
+        selection_reasons["LEGACY_NPU_UB1"] = selection_reasons.get(
+            "LEGACY_NPU_UB1", "UB1 control for qualified legacy NPU UB2 target-path fallback"
+        )
+        selection_reasons["LEGACY_NPU_UB2"] = "qualified legacy NPU UB2 target-path fallback"
         ub2_rule = "persistent NPU UB2 unavailable/blocked; state-policy-matched LEGACY_NPU UB1/UB2 pair promoted"
     else:
         ub2_rule = "no correctness-qualified state-policy-matched NPU UB1/UB2 pair; no UB2 formal timing"
 
     out = {
-        "schema": "heterospec.358h.runtime.qualification_registry.v2",
+        "schema": "heterospec.358h.runtime.qualification_registry.v3",
         "status": "FROZEN_FOR_R2",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "selection_uses_performance_timing": False,
@@ -183,6 +211,8 @@ def main() -> int:
         "freeze_source_commit": small_commit,
         "registry": registry,
         "formal_conditions": formal,
+        "formal_condition_reasons": selection_reasons,
+        "formal_scope_rule": "retain only the target reference and controls required to identify qualified state/target interventions",
         "target_ub2_role": "correctness gate only; not a target-only performance condition",
         "ub2_selection_rule_result": ub2_rule,
         "r0": {
@@ -201,7 +231,12 @@ def main() -> int:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"formal_conditions": formal, "ub2": ub2_rule, "freeze": small_freeze}, indent=2))
+    print(json.dumps({
+        "formal_conditions": formal,
+        "formal_condition_reasons": selection_reasons,
+        "ub2": ub2_rule,
+        "freeze": small_freeze,
+    }, indent=2))
     return 0
 
 

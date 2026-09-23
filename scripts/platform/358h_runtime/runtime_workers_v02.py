@@ -59,6 +59,8 @@ def draft_worker_entry(conn: Connection, affinity: list[int]) -> None:
                     "logical_state_length": a.logical_state_length()}
         if active != path or active_request != req:
             raise RuntimeError(f"active request/path mismatch: {active_request}/{active} != {req}/{path}")
+        if op in {"PROPOSE", "RECONCILE"} and not isinstance(msg.get("round_id"), int):
+            raise RuntimeError("round-scoped Draft RPC omitted round_id")
         if op == "PROPOSE":
             if payload["width"] <= 0:
                 raise RuntimeError("width=0 PROPOSE RPC is prohibited")

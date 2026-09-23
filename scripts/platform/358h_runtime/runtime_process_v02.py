@@ -90,7 +90,7 @@ class RPCClient:
         if not isinstance(response, dict) or any(response.get(k) != v for k, v in {
             "version": VERSION, "rpc_id": rid, "request_id": request_id,
             "observation_id": observation_id, "path_id": path_id,
-            "operation": op, "worker_role": self.role,
+            "operation": op, "round_id": round_id, "worker_role": self.role,
         }.items()):
             raise RPCError(f"stale/mismatched {self.role} response to {op} rpc={rid}: {response!r}")
         if not isinstance(response.get("worker_pid"), int):
@@ -145,6 +145,7 @@ class RemoteDraftAdapter:
         self.worker_begin_ns = self.worker_checkpoint_ns = 0
         self.worker_propose_ns = self.worker_reconcile_ns = self.worker_finish_ns = 0
         self.r0_alias_probe = False
+        self.round_id = 0
 
     def _call(self, op: str, payload: dict[str, Any], round_id: int | None = None):
         result, meter = self.client.call(op, request_id=self.request_id,
@@ -157,6 +158,7 @@ class RemoteDraftAdapter:
         return result, meter
 
     def begin(self, committed_prefix):
+        self.round_id = 0
         r, m = self._call("BEGIN", {"committed_prefix": list(map(int, committed_prefix))})
         self.worker_begin_ns += r["worker_begin_ns"]
         return m["realized_ns"], r.get("metadata", {})
@@ -165,7 +167,8 @@ class RemoteDraftAdapter:
         if width <= 0:
             raise AssertionError("width=0 must not cross Draft RPC")
         r, m = self._call("PROPOSE", {"committed_prefix": list(map(int, committed_prefix)),
-                                      "width": int(width), "r0_alias_probe": self.r0_alias_probe})
+                                      "width": int(width), "r0_alias_probe": self.r0_alias_probe},
+                           round_id=self.round_id)
         self.worker_checkpoint_ns += r["worker_checkpoint_ns"]
         self.worker_propose_ns += r["worker_propose_ns"]
         return Proposal(tokens=r["tokens"],
@@ -179,7 +182,8 @@ class RemoteDraftAdapter:
             "committed_prefix_before": list(map(int, committed_prefix_before)),
             "proposals": list(map(int, proposals)), "accepted": int(accepted),
             "committed_this_round": list(map(int, committed_this_round)),
-        })
+        }, round_id=self.round_id)
+        self.round_id += 1
         self.worker_reconcile_ns += r["worker_reconcile_ns"]
         return m["realized_ns"], r.get("metadata", {})
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Build the frozen R2 path registry from R1 exactness outcomes only.
+"""Build the frozen R2 path registry from R0 feasibility and R1 exactness only.
 
 This script deliberately never reads R1 timing fields. Formal condition selection
-is therefore a pure function of feasibility/exactness and the predeclared scope.
+is therefore a pure function of predeclared path scope, implementation feasibility
+and correctness qualification.
 """
 from __future__ import annotations
 
@@ -31,6 +32,8 @@ def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, di
         status = json.loads(status_path.read_text(encoding="utf-8"))
         if status.get("stage") != expected_stage or not status.get("complete"):
             raise RuntimeError(f"{path}: expected complete R1 {expected_stage} status")
+        if status.get("timing_used_for_promotion") is not False:
+            raise RuntimeError(f"{path}: R1 does not prove timing-independent qualification")
         for name, row in data.items():
             if name == "TARGET_UB1":
                 continue
@@ -46,9 +49,51 @@ def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, di
     return merged, provenance
 
 
-def is_qualified(table: dict[str, dict], name: str) -> bool:
+def r1_qualified(table: dict[str, dict], name: str) -> bool:
     row = table.get(name)
     return bool(row and row.get("status") == "QUALIFIED")
+
+
+def exact_device_binding(cap: dict[str, Any], device: str) -> tuple[bool, str]:
+    row = cap.get("optimum", {}).get(device, {})
+    if row.get("load_status") != "PASS":
+        return False, f"Optimum {device} load_status={row.get('load_status', 'MISSING')}"
+    actual = row.get("execution_devices")
+    if actual != [device]:
+        return False, f"Optimum {device} execution_devices={actual!r}"
+    return True, "PASS"
+
+
+def r0_gate(name: str, state: dict[str, Any], cap: dict[str, Any]) -> tuple[bool, list[str]]:
+    reasons: list[str] = []
+    ok = True
+
+    ub2 = name.endswith("_UB2") or name == "TARGET_UB2"
+    if ub2:
+        target_ok = bool(state.get("target", {}).get("UB2", {}).get("pass"))
+        if not target_ok:
+            ok = False
+            reasons.append("R0 TARGET_UB2 state test failed or missing")
+
+    if name.startswith("OPTIMUM_REPLAY_") or name.startswith("PERSIST_"):
+        device = "NPU" if "_NPU_" in name else "CPU"
+        bind_ok, why = exact_device_binding(cap, device)
+        if not bind_ok:
+            ok = False
+            reasons.append(why)
+
+    if name.startswith("PERSIST_"):
+        device = "NPU" if "_NPU_" in name else "CPU"
+        state_ok = bool(state.get("draft", {}).get(device, {}).get("pass"))
+        if not state_ok:
+            ok = False
+            reasons.append(f"R0 persistent {device} forced state test failed or unavailable")
+
+    # Legacy replay binding is revalidated by the frozen LLMPipeline constructor
+    # itself in R1/R2; the NPU path uses the closed cache-binding evidence.
+    if not reasons:
+        reasons.append("PASS")
+    return ok, reasons
 
 
 def main() -> int:
@@ -70,19 +115,22 @@ def main() -> int:
     names = sorted(set(small) | set(full))
     registry: dict[str, Any] = {}
     for name in names:
-        small_ok = is_qualified(small, name)
-        full_ok = is_qualified(full, name)
+        small_ok = r1_qualified(small, name)
+        full_ok = r1_qualified(full, name)
+        feasibility_ok, feasibility_reasons = r0_gate(name, r0_state, r0_cap)
+        qualified = small_ok and full_ok and feasibility_ok
         registry[name] = {
+            "r0_feasibility": "PASS" if feasibility_ok else "FAIL",
+            "r0_notes": feasibility_reasons,
             "small_gate": "PASS" if small_ok else "FAIL_OR_MISSING",
             "full_gate": "PASS" if full_ok else "FAIL_OR_MISSING",
-            "status": "QUALIFIED" if small_ok and full_ok else "BLOCKED",
-            "formal_performance_allowed": bool(small_ok and full_ok),
+            "status": "QUALIFIED" if qualified else "BLOCKED",
+            "formal_performance_allowed": bool(qualified),
         }
 
-    # Formal scope is fixed here and depends only on exactness/feasibility.
-    # UB2 is evaluated on the NPU branch because the state-interface diagnosis is
-    # the runtime study's primary intervention target. CPU persistent UB1 remains
-    # a negative/control path for the 'draft cost alone may not suffice' question.
+    # Formal scope is fixed and depends only on feasibility/exactness. Keep the
+    # UB1 controls needed to identify frontend and persistence effects whenever
+    # they qualify. Missing paths are retained as blocked registry entries.
     formal = ["TARGET_UB1"]
     for name in [
         "LEGACY_CPU_UB1",
@@ -95,22 +143,38 @@ def main() -> int:
         if registry.get(name, {}).get("status") == "QUALIFIED":
             formal.append(name)
 
-    if registry.get("PERSIST_NPU_UB2", {}).get("status") == "QUALIFIED":
+    # TARGET_UB2 is a correctness gate, not a formal target-only timing condition:
+    # target-only decoding submits one token per llama_decode and therefore does
+    # not exercise a two-token verification microbatch. The target-path effect is
+    # estimated by comparing the same speculative state policy at UB1 vs UB2.
+    target_ub2_ok = registry.get("TARGET_UB2", {}).get("status") == "QUALIFIED"
+    persist_pair_ok = (
+        target_ub2_ok
+        and registry.get("PERSIST_NPU_UB1", {}).get("status") == "QUALIFIED"
+        and registry.get("PERSIST_NPU_UB2", {}).get("status") == "QUALIFIED"
+    )
+    legacy_pair_ok = (
+        target_ub2_ok
+        and registry.get("LEGACY_NPU_UB1", {}).get("status") == "QUALIFIED"
+        and registry.get("LEGACY_NPU_UB2", {}).get("status") == "QUALIFIED"
+    )
+    if persist_pair_ok:
         formal.append("PERSIST_NPU_UB2")
-        ub2_rule = "PERSIST_NPU_UB2 promoted"
-    elif registry.get("LEGACY_NPU_UB2", {}).get("status") == "QUALIFIED":
+        ub2_rule = "state-policy-matched PERSIST_NPU UB1/UB2 pair promoted"
+    elif legacy_pair_ok:
         formal.append("LEGACY_NPU_UB2")
-        ub2_rule = "persistent NPU UB2 unavailable/blocked; qualified legacy NPU UB2 target-path fallback promoted"
+        ub2_rule = "persistent NPU UB2 unavailable/blocked; state-policy-matched LEGACY_NPU UB1/UB2 pair promoted"
     else:
-        ub2_rule = "no NPU UB2 path qualified; no UB2 formal timing"
+        ub2_rule = "no correctness-qualified state-policy-matched NPU UB1/UB2 pair; no UB2 formal timing"
 
     out = {
-        "schema": "heterospec.358h.runtime.qualification_registry.v0",
+        "schema": "heterospec.358h.runtime.qualification_registry.v1",
         "status": "FROZEN_FOR_R2",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "selection_uses_performance_timing": False,
         "registry": registry,
         "formal_conditions": formal,
+        "target_ub2_role": "correctness gate only; not a target-only performance condition",
         "ub2_selection_rule_result": ub2_rule,
         "r0": {
             "state_tests": str(args.r0_state_tests),
@@ -123,6 +187,7 @@ def main() -> int:
         "interpretation": {
             "blocked": "diagnostic only; never timed for an admissible R2 speed claim",
             "missing": "not silently substituted by another device/frontend",
+            "ub2": "must have R0 target state pass, R1 TARGET_UB2 exactness, and a jointly qualified same-policy NPU UB1/UB2 pair",
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

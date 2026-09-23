@@ -5,6 +5,7 @@ import ctypes as C
 import hashlib
 import sys
 from pathlib import Path
+from typing import Iterable
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -116,7 +117,7 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
         cp.no_perf = False
         self.ctx = api.ll.llama_init_from_model(self.model, cp)
         if not self.ctx:
-            raise RuntimeError("llama context init failed")
+            raise RuntimeError(f"llama context init failed for n_ubatch={ubatch}")
 
         self.mem = api.ll.llama_get_memory(self.ctx)
         self.history: list[int] = []
@@ -147,18 +148,42 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
 
 
 class RuntimeTargetPool:
-    """Load Qwen3-8B once and expose independent UB1/UB2 contexts."""
+    """Load Qwen3-8B once and create only the target contexts a stage needs."""
 
-    def __init__(self, api: LlamaAPI, *, device: str = "Vulkan0", n_ctx: int = 4096):
+    def __init__(
+        self,
+        api: LlamaAPI,
+        *,
+        ubatches: Iterable[int] = (1, 2),
+        device: str = "Vulkan0",
+        n_ctx: int = 4096,
+    ):
+        requested = tuple(sorted(set(int(x) for x in ubatches)))
+        if not requested:
+            raise ValueError("at least one target ubatch is required")
+        if any(x not in (1, 2) for x in requested):
+            raise ValueError(f"unsupported target ubatches: {requested}")
         self.api = api
         self.host = RuntimeTargetModel(api, device=device)
         self.targets = {
-            1: RuntimeLlamaTarget(api, ubatch=1, device=device, n_ctx=n_ctx, shared_model=self.host),
-            2: RuntimeLlamaTarget(api, ubatch=2, device=device, n_ctx=n_ctx, shared_model=self.host),
+            ubatch: RuntimeLlamaTarget(
+                api,
+                ubatch=ubatch,
+                device=device,
+                n_ctx=n_ctx,
+                shared_model=self.host,
+            )
+            for ubatch in requested
         }
 
     def __getitem__(self, ubatch: int) -> RuntimeLlamaTarget:
-        return self.targets[int(ubatch)]
+        key = int(ubatch)
+        if key not in self.targets:
+            raise KeyError(f"target UB{key} was not instantiated for this stage")
+        return self.targets[key]
+
+    def binding_records(self) -> dict[str, dict]:
+        return {f"UB{k}": v.binding_record() for k, v in sorted(self.targets.items())}
 
 
 __all__ = [

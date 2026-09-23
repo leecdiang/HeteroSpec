@@ -73,13 +73,7 @@ class RuntimeTargetModel:
 
 
 class RuntimeLlamaTarget(LegacyLlamaTarget):
-    """Closed Phase-3 target semantics with prospective `n_ubatch` only.
-
-    Tokenization, verification, ordered acceptance, rollback, correction, bonus
-    and baseline methods are inherited from the frozen Phase-3 implementation.
-    Multiple instances may share one RuntimeTargetModel while keeping completely
-    separate llama contexts/KV state.
-    """
+    """Closed Phase-3 target semantics with prospective `n_ubatch` only."""
 
     def __init__(
         self,
@@ -148,39 +142,43 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
 
 
 class RuntimeTargetPool:
-    """Load Qwen3-8B once and create only the target contexts a stage needs."""
+    """Load target weights once and lazily create only requested UB1/UB2 contexts."""
 
     def __init__(
         self,
         api: LlamaAPI,
         *,
-        ubatches: Iterable[int] = (1, 2),
+        ubatches: Iterable[int] = (1,),
         device: str = "Vulkan0",
         n_ctx: int = 4096,
     ):
         requested = tuple(sorted(set(int(x) for x in ubatches)))
-        if not requested:
-            raise ValueError("at least one target ubatch is required")
         if any(x not in (1, 2) for x in requested):
             raise ValueError(f"unsupported target ubatches: {requested}")
         self.api = api
+        self.device = device
+        self.n_ctx = int(n_ctx)
         self.host = RuntimeTargetModel(api, device=device)
-        self.targets = {
-            ubatch: RuntimeLlamaTarget(
-                api,
-                ubatch=ubatch,
-                device=device,
-                n_ctx=n_ctx,
+        self.targets: dict[int, RuntimeLlamaTarget] = {}
+        for ubatch in requested:
+            self._create(ubatch)
+
+    def _create(self, ubatch: int) -> RuntimeLlamaTarget:
+        key = int(ubatch)
+        if key not in (1, 2):
+            raise KeyError(f"unsupported target UB{key}")
+        if key not in self.targets:
+            self.targets[key] = RuntimeLlamaTarget(
+                self.api,
+                ubatch=key,
+                device=self.device,
+                n_ctx=self.n_ctx,
                 shared_model=self.host,
             )
-            for ubatch in requested
-        }
+        return self.targets[key]
 
     def __getitem__(self, ubatch: int) -> RuntimeLlamaTarget:
-        key = int(ubatch)
-        if key not in self.targets:
-            raise KeyError(f"target UB{key} was not instantiated for this stage")
-        return self.targets[key]
+        return self._create(int(ubatch))
 
     def binding_records(self) -> dict[str, dict]:
         return {f"UB{k}": v.binding_record() for k, v in sorted(self.targets.items())}

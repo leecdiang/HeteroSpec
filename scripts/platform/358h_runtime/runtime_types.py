@@ -45,7 +45,13 @@ class TimingBreakdown:
 
     def reconcile_total(self) -> None:
         charged = self.draft_total_ns + self.target_verification_ns
-        self.runtime_residual_ns = max(0, self.end_to_end_ns - charged)
+        residual = self.end_to_end_ns - charged
+        if residual < 0:
+            raise AssertionError(
+                f"timing components double-count enclosing decode window: "
+                f"charged={charged}ns > end_to_end={self.end_to_end_ns}ns"
+            )
+        self.runtime_residual_ns = residual
 
 
 @dataclass
@@ -126,8 +132,8 @@ class DraftCapabilities:
 class DraftAdapter(Protocol):
     """Request-scoped draft interface used by the prospective runtime study.
 
-    `begin` is deliberately inside the measured post-target-prefill window.  A
-    persistent implementation may prefill the draft exactly once here.  A replay
+    `begin` is deliberately inside the measured post-target-prefill window. A
+    persistent implementation may prefill the draft exactly once here. A replay
     implementation may make begin a no-op and pay full-prefix reconstruction in
     every `propose` call.
     """

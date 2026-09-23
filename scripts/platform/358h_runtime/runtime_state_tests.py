@@ -13,7 +13,7 @@ from pathlib import Path
 
 from runtime_draft import OptimumPersistentDraft, OptimumReplayDraft
 from runtime_runner import run_speculative
-from runtime_target import LlamaAPI, RuntimeLlamaTarget
+from runtime_target import LlamaAPI, RuntimeLlamaTarget, RuntimeTargetModel
 
 PROMPT = "Write a Python function that returns the square of an integer."
 FORMATTED = (
@@ -36,9 +36,7 @@ def forced_committed(proposals: list[int], accepted: int, vocab_size: int) -> li
     return list(proposals[:accepted]) + [mismatch]
 
 
-def target_state_cases(ubatch: int) -> dict:
-    api = LlamaAPI()
-    target = RuntimeLlamaTarget(api, ubatch=ubatch)
+def target_state_cases(target: RuntimeLlamaTarget, ubatch: int) -> dict:
     prompt = target.tokenize(FORMATTED, True)
     target.reset_prefill(prompt)
     baseline = target.baseline(12)
@@ -78,7 +76,7 @@ def target_state_cases(ubatch: int) -> dict:
 
 
 class ProposalForbidden:
-    """Proxy that makes a width-zero draft call an immediate test failure."""
+    """Proxy that makes any draft proposal at the one-token boundary fail R0."""
 
     def __init__(self, inner):
         self.inner = inner
@@ -101,9 +99,7 @@ class ProposalForbidden:
         return self.inner.finish()
 
 
-def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
-    api = LlamaAPI()
-    tokenizer_target = RuntimeLlamaTarget(api, ubatch=1)
+def persistent_vs_replay(device: str, tokenizer_target: RuntimeLlamaTarget, target_ubatch: int) -> dict:
     prompt = tokenizer_target.tokenize(FORMATTED, True)
     vocab_size = tokenizer_target.n_vocab
 
@@ -169,11 +165,9 @@ def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
         }
     )
 
-    # Output-budget boundary: with an output cap of one, the runtime should
-    # commit the mandatory initial target-only token and terminate without ever
-    # invoking the draft proposal API.
-    boundary_target = RuntimeLlamaTarget(api, ubatch=1)
-    boundary = run_speculative(boundary_target, ProposalForbidden(persistent), prompt, 1)
+    # Output-budget boundary: reuse the already loaded UB1 target. The runtime
+    # must commit one target-only token and terminate without calling propose().
+    boundary = run_speculative(tokenizer_target, ProposalForbidden(persistent), prompt, 1)
     boundary_ok = len(boundary["tokens"]) == 1 and boundary["proposed"] == 0 and len(boundary["rounds"]) == 1
     records.append(
         {
@@ -204,7 +198,7 @@ def main() -> int:
     args = ap.parse_args()
 
     result = {
-        "schema": "heterospec.358h.runtime.r0_state_tests.v1",
+        "schema": "heterospec.358h.runtime.r0_state_tests.v2",
         "formal": False,
         "claim_status": "NON_FORMAL / INVALID_FOR_PERFORMANCE_CLAIMS",
         "target": {},
@@ -212,23 +206,40 @@ def main() -> int:
         "failures": [],
     }
 
-    for ubatch in (1, 2):
-        try:
-            result["target"][f"UB{ubatch}"] = target_state_cases(ubatch)
-        except Exception as exc:
-            result["target"][f"UB{ubatch}"] = {"pass": False, "error": repr(exc)}
-            result["failures"].append(f"TARGET_UB{ubatch}: {exc!r}")
+    api = LlamaAPI()
+    host = RuntimeTargetModel(api)
+    target_ub1 = None
+    try:
+        target_ub1 = RuntimeLlamaTarget(api, ubatch=1, shared_model=host)
+        result["target"]["UB1"] = target_state_cases(target_ub1, 1)
+    except Exception as exc:
+        result["target"]["UB1"] = {"pass": False, "error": repr(exc)}
+        result["failures"].append(f"TARGET_UB1: {exc!r}")
 
-    for device in args.devices:
-        try:
-            result["draft"][device] = persistent_vs_replay(device, 1)
-        except Exception as exc:
+    try:
+        target_ub2 = RuntimeLlamaTarget(api, ubatch=2, shared_model=host)
+        result["target"]["UB2"] = target_state_cases(target_ub2, 2)
+    except Exception as exc:
+        result["target"]["UB2"] = {"pass": False, "error": repr(exc)}
+        result["failures"].append(f"TARGET_UB2: {exc!r}")
+
+    if target_ub1 is None:
+        for device in args.devices:
             result["draft"][device] = {
                 "pass": False,
-                "status": "IMPLEMENTATION_UNAVAILABLE_OR_STATE_TEST_FAIL",
-                "error": repr(exc),
+                "status": "NOT_TESTABLE_WITHOUT_TARGET_UB1",
             }
-            result["failures"].append(f"{device}: {exc!r}")
+    else:
+        for device in args.devices:
+            try:
+                result["draft"][device] = persistent_vs_replay(device, target_ub1, 1)
+            except Exception as exc:
+                result["draft"][device] = {
+                    "pass": False,
+                    "status": "IMPLEMENTATION_UNAVAILABLE_OR_STATE_TEST_FAIL",
+                    "error": repr(exc),
+                }
+                result["failures"].append(f"{device}: {exc!r}")
 
     result["pass"] = all(v.get("pass", False) for v in result["target"].values()) and all(
         v.get("pass", False) for v in result["draft"].values()

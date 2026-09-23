@@ -122,18 +122,33 @@ def main() -> int:
     ap.add_argument("--full", nargs="+", type=Path, required=True, help="full-gate qualification_summary.json files")
     ap.add_argument("--r0-state-tests", type=Path, required=True)
     ap.add_argument("--r0-capability", type=Path, required=True)
+    ap.add_argument("--r0-process-isolation", type=Path, required=True)
+    ap.add_argument("--r0-status", type=Path, required=True)
+    ap.add_argument("--freeze-manifest", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
 
     r0_state = json.loads(args.r0_state_tests.read_text(encoding="utf-8"))
     r0_cap = json.loads(args.r0_capability.read_text(encoding="utf-8"))
+    r0_status = json.loads(args.r0_status.read_text(encoding="utf-8"))
+    r0_process = json.loads(args.r0_process_isolation.read_text(encoding="utf-8"))
+    freeze = json.loads(args.freeze_manifest.read_text(encoding="utf-8"))
     if r0_state.get("formal") is not False or r0_cap.get("formal") is not False:
         raise RuntimeError("R0 inputs must be explicitly non-formal")
+    if (r0_status.get("status") != "R0_V02_PASS" or r0_process.get("multi_worker", {}).get("status") != "PASS"
+            or r0_status.get("source_commit") != freeze.get("source_commit")):
+        raise RuntimeError("registry R0 provenance does not match passing final v0.2 R0")
+    for key, path in (("capability", args.r0_capability), ("state_tests", args.r0_state_tests),
+                      ("process_isolation", args.r0_process_isolation), ("status", args.r0_status)):
+        if freeze.get("r0", {}).get(key + "_sha256") != sha256(path):
+            raise RuntimeError(f"registry R0 {key} differs from source freeze")
 
     small, small_prov, small_freeze, small_commit = load_summaries(args.small, "small")
     full, full_prov, full_freeze, full_commit = load_summaries(args.full, "full")
     if small_freeze != full_freeze or small_commit != full_commit:
         raise RuntimeError("small/full R1 gates came from different source/environment freezes")
+    if small_freeze != sha256(args.freeze_manifest) or small_commit != freeze["source_commit"]:
+        raise RuntimeError("R1 source freeze differs from registry source freeze")
 
     names = sorted(set(small) | set(full))
     registry: dict[str, Any] = {}
@@ -220,6 +235,10 @@ def main() -> int:
             "state_tests_sha256": sha256(args.r0_state_tests),
             "capability": str(args.r0_capability),
             "capability_sha256": sha256(args.r0_capability),
+            "process_isolation": str(args.r0_process_isolation),
+            "process_isolation_sha256": sha256(args.r0_process_isolation),
+            "status": str(args.r0_status),
+            "status_sha256": sha256(args.r0_status),
         },
         "r1_small": small_prov,
         "r1_full": full_prov,

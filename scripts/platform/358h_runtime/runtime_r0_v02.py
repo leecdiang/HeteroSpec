@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import multiprocessing as mp
 import os
 import subprocess
 import shutil
@@ -16,8 +15,8 @@ from pathlib import Path
 
 import psutil
 
-from runtime_process_v02 import RPCClient, apply_affinity, assert_no_duplicate_omp, inventory
-from runtime_workers_v02 import draft_worker_entry, target_worker_entry
+from runtime_process_v02 import apply_affinity, assert_no_duplicate_omp, inventory
+from runtime_session_v02 import RuntimeProcessSession as ProcessSession
 
 HERE = Path(__file__).resolve().parent
 LEGACY_BINDING = Path.home() / "Documents/ChatGPT/HeteroSpec/runs/358h/qualification_ac_20260918/npu_cache_binding_ctx8192.json"
@@ -27,48 +26,6 @@ FORMATTED = ("<|im_start|>user\nWrite a Python function that returns the square 
 
 def write_json(path: Path, value) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-
-class ProcessSession:
-    def __init__(self, mask: list[int], groups: tuple[str, ...] = ("default",)):
-        ctx = mp.get_context("spawn")
-        driver_end, target_driver_end = ctx.Pipe(duplex=True)
-        target_draft_ends = {}
-        draft_ends = {}
-        self.drafts = {}
-        for group in groups:
-            target_draft_ends[group], draft_ends[group] = ctx.Pipe(duplex=True)
-            self.drafts[group] = ctx.Process(target=draft_worker_entry,
-                                             args=(draft_ends[group], mask), name=f"HeteroSpecDraft-{group}")
-        self.target = ctx.Process(target=target_worker_entry,
-                                  args=(target_driver_end, target_draft_ends, mask),
-                                  name="HeteroSpecTarget")
-        for proc in self.drafts.values():
-            proc.start()
-        self.target.start()
-        target_driver_end.close()
-        for conn in target_draft_ends.values():
-            conn.close()
-        for conn in draft_ends.values():
-            conn.close()
-        self.draft = next(iter(self.drafts.values())) if len(self.drafts) == 1 else None
-        self.client = RPCClient(driver_end, "target", self.target)
-        self.start_method = ctx.get_start_method()
-
-    def call(self, op: str, **kwargs):
-        return self.client.call(op, **kwargs)[0]
-
-    def close(self) -> dict:
-        status = {"shutdown_rpc": False, "target_exitcode": None, "draft_exitcodes": {}}
-        try:
-            status["shutdown_rpc"] = bool(self.call("SHUTDOWN").get("shutdown"))
-        except Exception as exc:
-            status["shutdown_error"] = repr(exc)
-        for proc in (self.target, *self.drafts.values()):
-            proc.join(timeout=10)
-        status["target_exitcode"] = self.target.exitcode
-        status["draft_exitcodes"] = {group: proc.exitcode for group, proc in self.drafts.items()}
-        return status
 
 
 def probe_legacy_device(out: Path, mask: list[int], device: str) -> dict:
@@ -124,19 +81,13 @@ def probe_multi_worker(mask: list[int]) -> dict:
     verdict = {"status": "BLOCKED"}
     session = ProcessSession(mask, groups=("optimum_cpu", "legacy_cpu"))
     try:
-        session.call("PING")
-        session.call("DRAFT_INIT", payload={"group": "optimum_cpu", "paths": [
-            "OPTIMUM_REPLAY_CPU_UB1", "PERSIST_CPU_UB1"]})
-        session.call("DRAFT_INIT", payload={"group": "legacy_cpu", "paths": [
-            "LEGACY_CPU_UB1"]})
-        session.call("INIT")
-        info = session.call("INFO")
-        baseline = session.call("RUN", payload={"path": "TARGET_UB1",
-            "formatted_prompt": FORMATTED, "output_cap": 4})["result"]
+        initialized = session.initialize(["OPTIMUM_REPLAY_CPU_UB1", "PERSIST_CPU_UB1",
+                                          "LEGACY_CPU_UB1"])
+        info = initialized["process_info"]
+        baseline = session.run("TARGET_UB1", FORMATTED, 4, "r0-multi-target")["result"]
         paths = {}
         for path in ("OPTIMUM_REPLAY_CPU_UB1", "LEGACY_CPU_UB1"):
-            row = session.call("RUN", payload={"path": path,
-                "formatted_prompt": FORMATTED, "output_cap": 4})["result"]
+            row = session.run(path, FORMATTED, 4, "r0-multi-" + path)["result"]
             paths[path] = {"exact": row["tokens"] == baseline["tokens"],
                            "draft_rpc_calls": row["timing_v02"]["draft_rpc_calls"]}
         drafts = info["drafts"]

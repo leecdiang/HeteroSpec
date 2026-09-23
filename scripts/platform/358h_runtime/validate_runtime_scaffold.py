@@ -50,12 +50,19 @@ def main() -> int:
         failures.append("protocol base commit differs from scaffold validator base")
 
     v02 = json.loads(REQUIRED[4].read_text(encoding="utf-8"))
-    if v02.get("formal_data_seen") is not False or v02.get("r0_v02", {}).get("stop_after_r0") is not True:
-        failures.append("v0.2 protocol must remain pre-formal and R0-only")
+    gates = v02.get("stage_gates", {})
+    if (v02.get("formal_data_seen") is not False
+            or v02.get("status") != "READY_FOR_FREEZE_R1_R2_SOURCE"
+            or gates != {"r0_reviewed": True, "r1_authorized": True, "r2_authorized": False}
+            or v02.get("r0_v02", {}).get("stop_after_r0") is not False):
+        failures.append("v0.2 protocol stage gates are not ready for freeze/R1-only")
 
     # Spawn re-imports entrypoint modules in every child. A top-level backend
     # import in any neutral module would recreate the v0.1 OpenMP collision.
-    neutral = ("runtime_r0_v02.py", "runtime_process_v02.py", "runtime_workers_v02.py", "runtime_factory.py")
+    neutral = ("runtime_r0_v02.py", "runtime_process_v02.py", "runtime_session_v02.py",
+               "runtime_workers_v02.py", "runtime_factory.py", "runtime_freeze.py",
+               "create_runtime_freeze.py", "run_runtime_qualification.py", "run_runtime_campaign.py",
+               "plan_runtime_qualification.py", "freeze_runtime_registry.py")
     forbidden = ("runtime_target", "runtime_draft", "runtime_shared_draft", "openvino", "openvino_genai", "optimum", "phase3_heterogeneous_runner")
     for filename in neutral:
         tree = ast.parse((HERE / filename).read_text(encoding="utf-8"))
@@ -68,6 +75,18 @@ def main() -> int:
                 continue
             if any(name.startswith(forbidden) for name in names):
                 failures.append(f"top-level backend import in {filename}: {names}")
+
+    from runtime_freeze import FROZEN_RELATIVE_FILES
+    unfrozen = sorted(str(p.relative_to(ROOT)).replace("\\", "/") for p in HERE.glob("*.py")
+                      if str(p.relative_to(ROOT)).replace("\\", "/") not in FROZEN_RELATIVE_FILES)
+    if unfrozen:
+        failures.append(f"runtime Python files omitted from source freeze: {unfrozen}")
+    neutral_import = subprocess.run([sys.executable, "-B", "-c",
+        "import sys, run_runtime_qualification, run_runtime_campaign; "
+        "assert not any(n.startswith(('openvino', 'optimum', 'runtime_target', 'runtime_draft', 'runtime_shared_draft')) for n in sys.modules)"],
+        cwd=HERE, text=True, capture_output=True)
+    if neutral_import.returncode:
+        failures.append("R1/R2 parent import graph loads inference backend: " + neutral_import.stderr)
 
     unit = subprocess.run(
         [sys.executable, str(HERE / "runtime_logic_unit_tests.py")],

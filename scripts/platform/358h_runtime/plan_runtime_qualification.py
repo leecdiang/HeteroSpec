@@ -35,22 +35,30 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--r0-capability", type=Path, required=True)
     ap.add_argument("--r0-state-tests", type=Path, required=True)
+    ap.add_argument("--r0-process-isolation", type=Path, required=True)
+    ap.add_argument("--r0-status", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
 
     cap = json.loads(args.r0_capability.read_text(encoding="utf-8"))
     state = json.loads(args.r0_state_tests.read_text(encoding="utf-8"))
+    process = json.loads(args.r0_process_isolation.read_text(encoding="utf-8"))
+    status = json.loads(args.r0_status.read_text(encoding="utf-8"))
     if cap.get("formal") is not False or state.get("formal") is not False:
         raise RuntimeError("planner inputs must be explicitly non-formal R0 artifacts")
+    if (status.get("status") != "R0_V02_PASS" or status.get("formal_data_seen") is not False
+            or status.get("process_checks_pass") is not True
+            or process.get("multi_worker", {}).get("status") != "PASS"):
+        raise RuntimeError("planner requires passing v0.2 process-isolated R0 evidence")
 
     groups: dict[str, list[str]] = {}
     reasons: dict[str, Any] = {}
 
     cpu: list[str] = []
-    if device_available(cap, "CPU"):
+    if device_available(cap, "CPU") and state.get("draft", {}).get("legacy_cpu", {}).get("status") == "AVAILABLE_R0":
         cpu.append("LEGACY_CPU_UB1")
         reasons["LEGACY_CPU_UB1"] = "CPU available; frozen legacy constructor revalidates binding"
-    if exact_optimum_binding(cap, "CPU"):
+    if exact_optimum_binding(cap, "CPU") and state.get("draft", {}).get("CPU", {}).get("replay_repeat_exact") is True:
         cpu.append("OPTIMUM_REPLAY_CPU_UB1")
         reasons["OPTIMUM_REPLAY_CPU_UB1"] = "R0 Optimum execution_devices == ['CPU']"
         if persistent_pass(state, "CPU"):
@@ -66,7 +74,7 @@ def main() -> int:
 
     npu_legacy: list[str] = []
     npu_present = device_available(cap, "NPU")
-    if npu_present:
+    if npu_present and state.get("draft", {}).get("legacy_npu", {}).get("status") == "AVAILABLE_R0":
         npu_legacy.append("LEGACY_NPU_UB1")
         reasons["LEGACY_NPU_UB1"] = "NPU available; frozen GenAI constructor revalidates closed static-profile binding"
         if target_ub2_pass(state):
@@ -117,6 +125,9 @@ def main() -> int:
         "inputs": {
             "r0_capability": str(args.r0_capability),
             "r0_state_tests": str(args.r0_state_tests),
+            "r0_process_isolation": str(args.r0_process_isolation),
+            "r0_status": str(args.r0_status),
+            "source_commit": status["source_commit"],
         },
         "groups": groups,
         "path_reasons": reasons,

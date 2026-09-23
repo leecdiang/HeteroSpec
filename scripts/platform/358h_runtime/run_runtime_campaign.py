@@ -1,111 +1,24 @@
 #!/usr/bin/env python3
-"""Formal R2 paired runtime campaign for 358H.
-
-Conditions come only from a frozen qualification registry. The driver never
-selects paths from observed performance. Model load/compile and non-formal
-warm-up occur before formal_data_started; the primary per-request timing starts
-after target prompt prefill and includes every runtime-specific draft cost.
-"""
+"""Future R2 entrypoint; formal timing is measured inside the v0.2 target worker."""
 from __future__ import annotations
 
 import argparse
-import gzip
-import hashlib
 import json
 import os
-import platform
 import random
-import sys
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
-import openvino as ov
 import psutil
 
-from runtime_factory import create_draft_adapters, parse_path
+from run_runtime_qualification import (DATASET_SHA256, FULL, OUTPUT_CAP, assert_host_gate,
+    formatted_prompt, load_tasks, sha256, utc, write_json)
+from runtime_factory import parse_path
 from runtime_freeze import verify_freeze_manifest
-from runtime_runner import run_speculative, run_target_only
-from runtime_target import LlamaAPI, RuntimeTargetPool
+from runtime_process_v02 import apply_affinity
+from runtime_session_v02 import RuntimeProcessSession, draft_groups, prepare_legacy_npu_cache
 from runtime_types import first_divergence
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
-DATASET = ROOT / "datasets" / "humaneval" / "HumanEval.jsonl.gz"
-DATASET_SHA256 = "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef"
-FULL = [3, 10, 19, 20, 28, 32, 44, 47, 48, 50, 54, 57, 62, 64, 68, 70, 89, 90, 101, 104, 105, 106, 107, 111, 119, 123, 126, 128, 129, 162]
-WARMUP = 0
-OUTPUT_CAP = 128
 SEED = 20260925
-
-
-def utc() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for block in iter(lambda: f.read(8 << 20), b""):
-            h.update(block)
-    return h.hexdigest()
-
-
-def write_json(path: Path, obj: Any) -> None:
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
-
-
-def load_tasks() -> dict[int, dict]:
-    if sha256(DATASET) != DATASET_SHA256:
-        raise RuntimeError("HumanEval dataset hash mismatch")
-    out = {}
-    with gzip.open(DATASET, "rt", encoding="utf-8") as f:
-        for line in f:
-            row = json.loads(line)
-            out[int(row["task_id"].split("/")[-1])] = row
-    return out
-
-
-def prompt_for(row: dict) -> str:
-    return (
-        "Complete the following Python function. Return only the completed Python code, "
-        "without Markdown fences.\n\n" + row["prompt"]
-    )
-
-
-def formatted_prompt(prompt: str) -> str:
-    return (
-        f"<|im_start|>user\n{prompt}<|im_end|>\n"
-        f"<|im_start|>assistant\n<think>\n\n</think>\n\n"
-    )
-
-
-def current_affinity() -> list[int]:
-    try:
-        return sorted(psutil.Process().cpu_affinity())
-    except Exception:
-        return list(range(os.cpu_count() or 1))
-
-
-def set_affinity(chosen: list[int]) -> list[int]:
-    try:
-        os.sched_setaffinity(0, chosen)
-    except AttributeError:
-        psutil.Process().cpu_affinity(chosen)
-    actual = current_affinity()
-    if actual != sorted(chosen):
-        raise RuntimeError(f"process affinity drift: requested {chosen}, got {actual}")
-    return actual
-
-
-def assert_host_gate() -> None:
-    battery = psutil.sensors_battery()
-    if battery is None or battery.power_plugged is not True:
-        raise RuntimeError("AC power must be positively online")
-    if (os.environ.get("SESSIONNAME") or "").upper().startswith("RDP"):
-        raise RuntimeError("RDP session is forbidden")
 
 
 def main() -> int:
@@ -114,68 +27,30 @@ def main() -> int:
     ap.add_argument("--freeze-manifest", type=Path, required=True)
     ap.add_argument("--output-dir", type=Path, required=True)
     args = ap.parse_args()
-
     assert_host_gate()
     freeze = verify_freeze_manifest(args.freeze_manifest)
     freeze_sha = sha256(args.freeze_manifest)
     registry = json.loads(args.registry.read_text(encoding="utf-8"))
-    if registry.get("status") != "FROZEN_FOR_R2":
-        raise RuntimeError("qualification registry is not frozen for R2")
-    if registry.get("selection_uses_performance_timing") is not False:
-        raise RuntimeError("registry does not prove timing-independent path selection")
-    if registry.get("freeze_manifest_sha256") != freeze_sha:
-        raise RuntimeError("registry and R2 were not bound to the same freeze manifest")
-    if registry.get("freeze_source_commit") != freeze.get("source_commit"):
-        raise RuntimeError("registry and R2 source commits differ")
-    for key in ("state_tests_sha256", "capability_sha256"):
+    if registry.get("status") != "FROZEN_FOR_R2" or registry.get("selection_uses_performance_timing") is not False:
+        raise RuntimeError("registry is not frozen with timing-independent selection")
+    if registry.get("freeze_manifest_sha256") != freeze_sha or registry.get("freeze_source_commit") != freeze["source_commit"]:
+        raise RuntimeError("registry and source/environment freeze differ")
+    for key in ("state_tests_sha256", "capability_sha256", "process_isolation_sha256", "status_sha256"):
         if registry.get("r0", {}).get(key) != freeze.get("r0", {}).get(key):
             raise RuntimeError(f"registry uses different R0 provenance: {key}")
-
     conditions = list(registry.get("formal_conditions", []))
     if not conditions or conditions[0] != "TARGET_UB1" or len(conditions) != len(set(conditions)):
-        raise RuntimeError(f"invalid formal condition set: {conditions}")
-
-    specs = {name: parse_path(name) for name in conditions}
-    required_ubatches = sorted({int(spec["ubatch"]) for spec in specs.values()})
+        raise RuntimeError("invalid formal condition set")
+    for name in conditions:
+        parse_path(name)
     tasks = load_tasks()
     args.output_dir.mkdir(parents=True, exist_ok=False)
-
-    fixed_affinity = current_affinity()
-    if not fixed_affinity:
-        raise RuntimeError("could not determine a non-empty process affinity")
-    set_affinity(fixed_affinity)
-
-    api = LlamaAPI()
-    targets = RuntimeTargetPool(api, ubatches=required_ubatches)
-    adapters, engines, legacy_engines = create_draft_adapters(specs)
-
-    init = {
-        "schema": "heterospec.358h.runtime.r2_session.v3",
-        "registry": str(args.registry),
-        "registry_sha256": sha256(args.registry),
-        "freeze_manifest": str(args.freeze_manifest),
-        "freeze_manifest_sha256": freeze_sha,
-        "freeze_source_commit": freeze["source_commit"],
-        "conditions": conditions,
-        "python": sys.version,
-        "platform": platform.platform(),
-        "openvino": ov.get_version(),
-        "target_bindings": targets.binding_records(),
-        "draft_paths": {
-            name: None if specs[name]["kind"] == "TARGET" else adapters[name].capabilities.__dict__
-            for name in conditions
-        },
-        "engine_topology": {
-            "optimum_compiled_engines": sorted(engines),
-            "legacy_genai_engines": sorted(legacy_engines),
-        },
-        "process_affinity_policy": "one identical session affinity for every formal condition",
-        "process_affinity": fixed_affinity,
-        "accounting_boundary": "post target-prompt-prefill; runtime-specific draft begin/checkpoint/propose/reconcile/finish all included",
-        "energy": "NOT_CLAIMED",
-    }
-    write_json(args.output_dir / "session.json", init)
-
+    if any(p.startswith("LEGACY_NPU_") for p in conditions):
+        write_json(args.output_dir / "legacy_npu_cache.json", prepare_legacy_npu_cache(args.output_dir))
+    mask = sorted(psutil.Process().cpu_affinity())
+    apply_affinity(mask)
+    groups = draft_groups(conditions)
+    session = RuntimeProcessSession(mask, tuple(groups))
     schedule = []
     for task_id in FULL:
         for rep in range(3):
@@ -183,113 +58,93 @@ def main() -> int:
             random.Random(SEED + task_id * 1009 + rep).shuffle(order)
             schedule.append({"task_id": task_id, "repetition": rep, "conditions": order})
     write_json(args.output_dir / "schedule.json", schedule)
-
-    warm_prompt = prompt_for(tasks[WARMUP])
-    warm_pt = targets[1].tokenize(formatted_prompt(warm_prompt), True)
-    warm = []
-    for name in conditions:
-        spec = specs[name]
-        set_affinity(fixed_affinity)
-        if spec["kind"] == "TARGET":
-            r = run_target_only(targets[spec["ubatch"]], warm_pt, 8)
-        else:
-            r = run_speculative(targets[spec["ubatch"]], adapters[name], warm_pt, 8)
-        warm.append({"path": name, "tokens": r["tokens"], "claim_status": "NON_FORMAL / INVALID_FOR_CLAIMS"})
-    write_json(args.output_dir / "warmup.json", warm)
-
-    status = {
-        "schema": "heterospec.358h.runtime.r2_status.v3",
-        "formal": True,
-        "formal_data_started": True,
-        "formal_data_started_at_utc": utc(),
-        "registry_sha256": sha256(args.registry),
-        "freeze_manifest_sha256": freeze_sha,
-        "freeze_source_commit": freeze["source_commit"],
-        "dataset_sha256": DATASET_SHA256,
-        "conditions": conditions,
-        "fixed_process_affinity": fixed_affinity,
-        "expected_observations": len(FULL) * 3 * len(conditions),
-        "completed_observations": 0,
-        "complete": False,
-    }
-    write_json(args.output_dir / "R2_STATUS.json", status)
-
-    rows = []
-    raw_path = args.output_dir / "observations.jsonl"
-    for unit in schedule:
-        task_id = unit["task_id"]
-        rep = unit["repetition"]
-        prompt = prompt_for(tasks[task_id])
-        pt = targets[1].tokenize(formatted_prompt(prompt), True)
-        for name in unit["conditions"]:
-            spec = specs[name]
-            affinity = set_affinity(fixed_affinity)
-            started = utc()
-            if spec["kind"] == "TARGET":
-                r = run_target_only(targets[spec["ubatch"]], pt, OUTPUT_CAP)
-            else:
-                r = run_speculative(targets[spec["ubatch"]], adapters[name], pt, OUTPUT_CAP)
-            row = {
-                "schema": "heterospec.358h.runtime.r2_observation.v3",
-                "formal": True,
-                "task_id": f"HumanEval/{task_id}",
-                "repetition": rep,
-                "path": name,
-                "started_at_utc": started,
-                "ended_at_utc": utc(),
-                "prompt_token_count": len(pt),
-                "generated_token_ids": r["tokens"],
-                "output_token_count": len(r["tokens"]),
-                "timing": r["timing"],
-                "rounds": r["rounds"],
-                "proposed": r["proposed"],
-                "accepted": r["accepted"],
-                "committed": r["committed"],
-                "process_affinity": affinity,
-                "target_binding": targets[spec["ubatch"]].binding_record(),
-                "draft_capabilities": r.get("draft_capabilities"),
-                "exact_vs_reference": None,
-                "first_divergence": None,
-                "errors": [],
-                "warnings": [],
-            }
-            rows.append(row)
-            with raw_path.open("a", encoding="utf-8", newline="\n") as f:
-                f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
-                f.flush()
-                os.fsync(f.fileno())
-            status["completed_observations"] += 1
-            status["last_observation"] = {"task_id": task_id, "repetition": rep, "path": name}
-            write_json(args.output_dir / "R2_STATUS.json", status)
-
-    refs = {
-        (r["task_id"], r["repetition"]): r["generated_token_ids"]
-        for r in rows if r["path"] == "TARGET_UB1"
-    }
-    if len(refs) != 90:
-        raise RuntimeError(f"expected 90 target references, got {len(refs)}")
-
-    exact_counts = {}
-    for row in rows:
-        ref = refs[(row["task_id"], row["repetition"])]
-        row["exact_vs_reference"] = row["generated_token_ids"] == ref
-        row["first_divergence"] = first_divergence(ref, row["generated_token_ids"])
-    for name in conditions:
-        subset = [r for r in rows if r["path"] == name]
-        exact = sum(bool(r["exact_vs_reference"]) for r in subset)
-        exact_counts[name] = {
-            "exact": exact,
-            "total": len(subset),
-            "performance_admissible": exact == len(subset) == 90,
-        }
-
-    write_json(args.output_dir / "observations.resolved.json", rows)
-    status["complete"] = True
-    status["completed_at_utc"] = utc()
-    status["exact_counts"] = exact_counts
-    write_json(args.output_dir / "R2_STATUS.json", status)
-    print(json.dumps(exact_counts, indent=2))
-    return 0 if all(x["performance_admissible"] for x in exact_counts.values()) else 2
+    try:
+        init = session.initialize(conditions)
+        info = init["process_info"]
+        if not info["target"]["target_import_clean"] or any(
+                not d["draft_import_clean"] for d in info["drafts"].values()):
+            raise RuntimeError("backend import boundary violated")
+        if info["target"]["affinity"] != mask or any(
+                d["affinity"] != mask for d in info["drafts"].values()):
+            raise RuntimeError("worker affinity mismatch")
+        session_info = {"schema": "heterospec.358h.runtime.r2_session.v0.2",
+            "registry": str(args.registry), "registry_sha256": sha256(args.registry),
+            "freeze_manifest_sha256": freeze_sha, "freeze_source_commit": freeze["source_commit"],
+            "conditions": conditions, "session_affinity_mask": mask,
+            "process_start_method": session.start_method, "process_info": info,
+            "target_bindings": init["target_init"]["bindings"],
+            "draft_init": init["draft_init"],
+            "accounting_boundary": "post target prefill in target worker; all draft RPC included",
+            "energy": "NOT_CLAIMED"}
+        write_json(args.output_dir / "session.json", session_info)
+        warm = []
+        for name in conditions:
+            outcome = session.run(name, formatted_prompt(tasks[0]), 8, f"warmup-{name}")
+            warm.append({"path": name, "tokens": outcome["result"]["tokens"],
+                         "claim_status": "NON_FORMAL / INVALID_FOR_CLAIMS"})
+        write_json(args.output_dir / "warmup.json", warm)
+        status = {"schema": "heterospec.358h.runtime.r2_status.v0.2", "formal": True,
+            "formal_data_started": True, "formal_data_started_at_utc": utc(),
+            "registry_sha256": sha256(args.registry), "freeze_manifest_sha256": freeze_sha,
+            "freeze_source_commit": freeze["source_commit"], "dataset_sha256": DATASET_SHA256,
+            "conditions": conditions, "fixed_process_affinity": mask,
+            "expected_observations": len(FULL) * 3 * len(conditions),
+            "completed_observations": 0, "complete": False}
+        write_json(args.output_dir / "R2_STATUS.json", status)
+        rows = []
+        for unit in schedule:
+            task_id, rep = unit["task_id"], unit["repetition"]
+            formatted = formatted_prompt(tasks[task_id])
+            for name in unit["conditions"]:
+                observation_id = f"r2-HumanEval-{task_id}-rep-{rep}-{name}"
+                started = utc()
+                outcome = session.run(name, formatted, OUTPUT_CAP, observation_id)
+                r = outcome["result"]
+                spec = parse_path(name)
+                timing = r["timing_v02"]
+                if sum(timing[k] for k in ("draft_total_realized_ns", "target_verification_ns", "runtime_residual_ns")) != timing["end_to_end_ns"]:
+                    raise RuntimeError("v0.2 primary timing invariant violated")
+                row = {"schema": "heterospec.358h.runtime.r2_observation.v0.2",
+                    "formal": True, "task_id": f"HumanEval/{task_id}", "repetition": rep,
+                    "path": name, "observation_id": observation_id,
+                    "started_at_utc": started, "ended_at_utc": utc(),
+                    "prompt_token_count": outcome["prompt_tokens"],
+                    "generated_token_ids": r["tokens"], "output_token_count": len(r["tokens"]),
+                    "timing": timing, "harness_roundtrip_ns_diagnostic": outcome["harness_roundtrip_ns"],
+                    "rounds": r["rounds"], "proposed": r["proposed"], "accepted": r["accepted"],
+                    "committed": r["committed"], "process_affinity": mask,
+                    "target_binding": init["target_init"]["bindings"][f"UB{spec['ubatch']}"],
+                    "draft_capabilities": r.get("draft_capabilities"),
+                    "exact_vs_reference": None, "first_divergence": None,
+                    "errors": [], "warnings": []}
+                rows.append(row)
+                with (args.output_dir / "observations.jsonl").open("a", encoding="utf-8", newline="\n") as f:
+                    f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+                    f.flush(); os.fsync(f.fileno())
+                status["completed_observations"] += 1
+                status["last_observation"] = observation_id
+                write_json(args.output_dir / "R2_STATUS.json", status)
+        refs = {(r["task_id"], r["repetition"]): r["generated_token_ids"]
+                for r in rows if r["path"] == "TARGET_UB1"}
+        if len(refs) != 90:
+            raise RuntimeError("R2 lacks 90 contemporary target references")
+        counts = {}
+        for row in rows:
+            ref = refs[(row["task_id"], row["repetition"])]
+            row["exact_vs_reference"] = row["generated_token_ids"] == ref
+            row["first_divergence"] = first_divergence(ref, row["generated_token_ids"])
+        for name in conditions:
+            subset = [r for r in rows if r["path"] == name]
+            exact = sum(r["exact_vs_reference"] for r in subset)
+            counts[name] = {"exact": exact, "total": len(subset),
+                            "performance_admissible": exact == len(subset) == 90}
+        write_json(args.output_dir / "observations.resolved.json", rows)
+        status.update(complete=True, completed_at_utc=utc(), exact_counts=counts)
+        write_json(args.output_dir / "R2_STATUS.json", status)
+        print(json.dumps(counts, indent=2))
+        return 0 if all(x["performance_admissible"] for x in counts.values()) else 2
+    finally:
+        write_json(args.output_dir / "process_shutdown.json", session.close())
 
 
 if __name__ == "__main__":

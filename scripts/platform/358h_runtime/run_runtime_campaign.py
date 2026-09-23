@@ -24,6 +24,7 @@ import openvino as ov
 import psutil
 
 from runtime_factory import create_draft_adapters, parse_path
+from runtime_freeze import verify_freeze_manifest
 from runtime_runner import run_speculative, run_target_only
 from runtime_target import LlamaAPI, RuntimeTargetPool
 from runtime_types import first_divergence
@@ -110,15 +111,26 @@ def assert_host_gate() -> None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--registry", type=Path, required=True)
+    ap.add_argument("--freeze-manifest", type=Path, required=True)
     ap.add_argument("--output-dir", type=Path, required=True)
     args = ap.parse_args()
 
     assert_host_gate()
+    freeze = verify_freeze_manifest(args.freeze_manifest)
+    freeze_sha = sha256(args.freeze_manifest)
     registry = json.loads(args.registry.read_text(encoding="utf-8"))
     if registry.get("status") != "FROZEN_FOR_R2":
         raise RuntimeError("qualification registry is not frozen for R2")
     if registry.get("selection_uses_performance_timing") is not False:
         raise RuntimeError("registry does not prove timing-independent path selection")
+    if registry.get("freeze_manifest_sha256") != freeze_sha:
+        raise RuntimeError("registry and R2 were not bound to the same freeze manifest")
+    if registry.get("freeze_source_commit") != freeze.get("source_commit"):
+        raise RuntimeError("registry and R2 source commits differ")
+    for key in ("state_tests_sha256", "capability_sha256"):
+        if registry.get("r0", {}).get(key) != freeze.get("r0", {}).get(key):
+            raise RuntimeError(f"registry uses different R0 provenance: {key}")
+
     conditions = list(registry.get("formal_conditions", []))
     if not conditions or conditions[0] != "TARGET_UB1" or len(conditions) != len(set(conditions)):
         raise RuntimeError(f"invalid formal condition set: {conditions}")
@@ -127,23 +139,22 @@ def main() -> int:
     tasks = load_tasks()
     args.output_dir.mkdir(parents=True, exist_ok=False)
 
-    # Freeze one host-allocation mask for the complete paired campaign. The old
-    # hardware study used a CPU-only affinity asymmetry for its own protocol; R2
-    # makes no energy claim and must not confound runtime policy with host cores.
     fixed_affinity = current_affinity()
     if not fixed_affinity:
         raise RuntimeError("could not determine a non-empty process affinity")
     set_affinity(fixed_affinity)
 
-    # All heavy initialization happens before formal_data_started.
     api = LlamaAPI()
     targets = RuntimeTargetPool(api)
     adapters, engines, legacy_engines = create_draft_adapters(specs)
 
     init = {
-        "schema": "heterospec.358h.runtime.r2_session.v1",
+        "schema": "heterospec.358h.runtime.r2_session.v2",
         "registry": str(args.registry),
         "registry_sha256": sha256(args.registry),
+        "freeze_manifest": str(args.freeze_manifest),
+        "freeze_manifest_sha256": freeze_sha,
+        "freeze_source_commit": freeze["source_commit"],
         "conditions": conditions,
         "python": sys.version,
         "platform": platform.platform(),
@@ -172,7 +183,6 @@ def main() -> int:
             schedule.append({"task_id": task_id, "repetition": rep, "conditions": order})
     write_json(args.output_dir / "schedule.json", schedule)
 
-    # Mandatory non-formal warm-up on HumanEval/0 only.
     warm_prompt = prompt_for(tasks[WARMUP])
     warm_pt = targets[1].tokenize(formatted_prompt(warm_prompt), True)
     warm = []
@@ -187,11 +197,13 @@ def main() -> int:
     write_json(args.output_dir / "warmup.json", warm)
 
     status = {
-        "schema": "heterospec.358h.runtime.r2_status.v1",
+        "schema": "heterospec.358h.runtime.r2_status.v2",
         "formal": True,
         "formal_data_started": True,
         "formal_data_started_at_utc": utc(),
         "registry_sha256": sha256(args.registry),
+        "freeze_manifest_sha256": freeze_sha,
+        "freeze_source_commit": freeze["source_commit"],
         "dataset_sha256": DATASET_SHA256,
         "conditions": conditions,
         "fixed_process_affinity": fixed_affinity,
@@ -217,7 +229,7 @@ def main() -> int:
             else:
                 r = run_speculative(targets[spec["ubatch"]], adapters[name], pt, OUTPUT_CAP)
             row = {
-                "schema": "heterospec.358h.runtime.r2_observation.v1",
+                "schema": "heterospec.358h.runtime.r2_observation.v2",
                 "formal": True,
                 "task_id": f"HumanEval/{task_id}",
                 "repetition": rep,

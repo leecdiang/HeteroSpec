@@ -35,10 +35,15 @@ def main() -> int:
             failures.append(f"missing required file: {path.relative_to(ROOT)}")
 
     protocol = json.loads(REQUIRED[0].read_text(encoding="utf-8"))
-    if protocol.get("formal_performance_stage") != "R2":
-        failures.append("protocol does not declare R2 as formal performance stage")
-    if protocol.get("energy") not in ("OUT_OF_SCOPE", "NOT_CLAIMED"):
-        failures.append("protocol unexpectedly enables energy")
+    r2 = protocol.get("stages", {}).get("R2", {})
+    if r2.get("claim_status") != "FORMAL_PROSPECTIVE_RUNTIME_STUDY":
+        failures.append("protocol does not declare R2 as the formal prospective runtime study")
+    if protocol.get("fixed_semantics", {}).get("energy") != "NOT_CLAIMED":
+        failures.append("protocol unexpectedly enables an energy claim")
+    if protocol.get("formal_data_seen") is not False:
+        failures.append("preexecution protocol says formal data has already been seen")
+    if protocol.get("created_from_main") != BASE:
+        failures.append("protocol base commit differs from scaffold validator base")
 
     unit = subprocess.run(
         [sys.executable, str(HERE / "runtime_logic_unit_tests.py")],

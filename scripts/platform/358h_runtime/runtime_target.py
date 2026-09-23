@@ -42,13 +42,42 @@ def assert_frozen_legacy_runner() -> None:
         )
 
 
-class RuntimeLlamaTarget(LegacyLlamaTarget):
-    """Closed Phase-3 target semantics with one prospective execution knob.
+class RuntimeTargetModel:
+    """One pinned target model shared by independent UB1/UB2 contexts."""
 
-    The only intended semantic difference from LegacyLlamaTarget construction is
-    `n_ubatch`.  All tokenization, verification, ordered acceptance, rollback,
-    correction, bonus and baseline methods are inherited byte-for-byte from the
-    frozen runner implementation.
+    def __init__(
+        self,
+        api: LlamaAPI,
+        *,
+        model_path: Path = TARGET,
+        device: str = "Vulkan0",
+    ):
+        assert_frozen_legacy_runner()
+        self.api = api
+        self.model_path = model_path
+        self.device = device
+        dev = api.gg.ggml_backend_dev_by_name(device.encode())
+        if not dev:
+            raise RuntimeError(f"llama.cpp device unavailable: {device}")
+        self._devices = (C.c_void_p * 2)(dev, None)
+        mp = api.ll.llama_model_default_params()
+        mp.devices = C.cast(self._devices, C.POINTER(C.c_void_p))
+        mp.n_gpu_layers = -1
+        mp.main_gpu = 0
+        self.model = api.ll.llama_model_load_from_file(str(model_path).encode(), mp)
+        if not self.model:
+            raise RuntimeError("llama model load failed")
+        self.vocab = api.ll.llama_model_get_vocab(self.model)
+        self.n_vocab = api.ll.llama_vocab_n_tokens(self.vocab)
+
+
+class RuntimeLlamaTarget(LegacyLlamaTarget):
+    """Closed Phase-3 target semantics with prospective `n_ubatch` only.
+
+    Tokenization, verification, ordered acceptance, rollback, correction, bonus
+    and baseline methods are inherited from the frozen Phase-3 implementation.
+    Multiple instances may share one RuntimeTargetModel while keeping completely
+    separate llama contexts/KV state.
     """
 
     def __init__(
@@ -59,24 +88,23 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
         model_path: Path = TARGET,
         device: str = "Vulkan0",
         n_ctx: int = 4096,
+        shared_model: RuntimeTargetModel | None = None,
     ):
         assert_frozen_legacy_runner()
         if ubatch not in (1, 2):
             raise ValueError("prospective target study permits only n_ubatch=1 or 2")
+        host = shared_model or RuntimeTargetModel(api, model_path=model_path, device=device)
+        if host.api is not api:
+            raise ValueError("shared target model belongs to a different LlamaAPI instance")
+        if host.device != device:
+            raise ValueError(f"shared target device mismatch: {host.device} != {device}")
 
         self.a = api
-        dev = api.gg.ggml_backend_dev_by_name(device.encode())
-        if not dev:
-            raise RuntimeError(f"llama.cpp device unavailable: {device}")
-        self._devices = (C.c_void_p * 2)(dev, None)
-
-        mp = api.ll.llama_model_default_params()
-        mp.devices = C.cast(self._devices, C.POINTER(C.c_void_p))
-        mp.n_gpu_layers = -1
-        mp.main_gpu = 0
-        self.model = api.ll.llama_model_load_from_file(str(model_path).encode(), mp)
-        if not self.model:
-            raise RuntimeError("llama model load failed")
+        self._host = host
+        self._devices = host._devices
+        self.model = host.model
+        self.vocab = host.vocab
+        self.n_vocab = host.n_vocab
 
         cp = api.ll.llama_context_default_params()
         cp.n_ctx = n_ctx
@@ -90,8 +118,6 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
         if not self.ctx:
             raise RuntimeError("llama context init failed")
 
-        self.vocab = api.ll.llama_model_get_vocab(self.model)
-        self.n_vocab = api.ll.llama_vocab_n_tokens(self.vocab)
         self.mem = api.ll.llama_get_memory(self.ctx)
         self.history: list[int] = []
         self._logits = None
@@ -116,12 +142,30 @@ class RuntimeLlamaTarget(LegacyLlamaTarget):
             "target_n_ubatch": self.ubatch,
             "expected_target_placement": "37/37 model layers and 36/36 KV layers on Vulkan0; session stderr remains authoritative",
             "legacy_semantics_runner_sha256": LEGACY_RUNNER_SHA256,
+            "shared_target_model": True,
         }
+
+
+class RuntimeTargetPool:
+    """Load Qwen3-8B once and expose independent UB1/UB2 contexts."""
+
+    def __init__(self, api: LlamaAPI, *, device: str = "Vulkan0", n_ctx: int = 4096):
+        self.api = api
+        self.host = RuntimeTargetModel(api, device=device)
+        self.targets = {
+            1: RuntimeLlamaTarget(api, ubatch=1, device=device, n_ctx=n_ctx, shared_model=self.host),
+            2: RuntimeLlamaTarget(api, ubatch=2, device=device, n_ctx=n_ctx, shared_model=self.host),
+        }
+
+    def __getitem__(self, ubatch: int) -> RuntimeLlamaTarget:
+        return self.targets[int(ubatch)]
 
 
 __all__ = [
     "LlamaAPI",
     "RuntimeLlamaTarget",
+    "RuntimeTargetModel",
+    "RuntimeTargetPool",
     "TARGET",
     "assert_frozen_legacy_runner",
 ]

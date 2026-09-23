@@ -136,6 +136,7 @@ def main() -> int:
         raise RuntimeError(f"invalid formal condition set: {conditions}")
 
     specs = {name: parse_path(name) for name in conditions}
+    required_ubatches = sorted({int(spec["ubatch"]) for spec in specs.values()})
     tasks = load_tasks()
     args.output_dir.mkdir(parents=True, exist_ok=False)
 
@@ -145,11 +146,11 @@ def main() -> int:
     set_affinity(fixed_affinity)
 
     api = LlamaAPI()
-    targets = RuntimeTargetPool(api)
+    targets = RuntimeTargetPool(api, ubatches=required_ubatches)
     adapters, engines, legacy_engines = create_draft_adapters(specs)
 
     init = {
-        "schema": "heterospec.358h.runtime.r2_session.v2",
+        "schema": "heterospec.358h.runtime.r2_session.v3",
         "registry": str(args.registry),
         "registry_sha256": sha256(args.registry),
         "freeze_manifest": str(args.freeze_manifest),
@@ -159,7 +160,7 @@ def main() -> int:
         "python": sys.version,
         "platform": platform.platform(),
         "openvino": ov.get_version(),
-        "target_bindings": {"UB1": targets[1].binding_record(), "UB2": targets[2].binding_record()},
+        "target_bindings": targets.binding_records(),
         "draft_paths": {
             name: None if specs[name]["kind"] == "TARGET" else adapters[name].capabilities.__dict__
             for name in conditions
@@ -197,7 +198,7 @@ def main() -> int:
     write_json(args.output_dir / "warmup.json", warm)
 
     status = {
-        "schema": "heterospec.358h.runtime.r2_status.v2",
+        "schema": "heterospec.358h.runtime.r2_status.v3",
         "formal": True,
         "formal_data_started": True,
         "formal_data_started_at_utc": utc(),
@@ -229,7 +230,7 @@ def main() -> int:
             else:
                 r = run_speculative(targets[spec["ubatch"]], adapters[name], pt, OUTPUT_CAP)
             row = {
-                "schema": "heterospec.358h.runtime.r2_observation.v2",
+                "schema": "heterospec.358h.runtime.r2_observation.v3",
                 "formal": True,
                 "task_id": f"HumanEval/{task_id}",
                 "repetition": rep,

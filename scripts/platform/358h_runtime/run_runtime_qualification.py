@@ -2,7 +2,7 @@
 """R1 correctness qualification for prospective 358H runtime paths.
 
 All timings produced here are QUALIFICATION_ONLY and invalid for headline
-performance claims.  The only promotion signal is exact token equality against
+performance claims. The only promotion signal is exact token equality against
 the shared TARGET_UB1 reference.
 """
 from __future__ import annotations
@@ -13,14 +13,13 @@ import hashlib
 import json
 import os
 import random
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import psutil
 
-from runtime_draft import LegacyGenAIReplayDraft, OptimumPersistentDraft, OptimumReplayDraft
+from runtime_factory import create_draft_adapters, parse_path
 from runtime_runner import run_speculative, run_target_only
 from runtime_target import LlamaAPI, RuntimeTargetPool
 from runtime_types import first_divergence
@@ -92,34 +91,6 @@ def formatted_prompt(prompt: str) -> str:
     )
 
 
-def parse_path(name: str) -> dict[str, Any]:
-    if name == "TARGET_UB1":
-        return {"name": name, "ubatch": 1, "kind": "TARGET", "device": None}
-    if name == "TARGET_UB2":
-        return {"name": name, "ubatch": 2, "kind": "TARGET", "device": None}
-    ubatch = 2 if name.endswith("_UB2") else 1
-    device = "NPU" if "_NPU_" in name else "CPU"
-    if name.startswith("LEGACY_"):
-        kind = "LEGACY"
-    elif name.startswith("OPTIMUM_REPLAY_"):
-        kind = "OPTIMUM_REPLAY"
-    elif name.startswith("PERSIST_"):
-        kind = "PERSIST"
-    else:
-        raise ValueError(name)
-    return {"name": name, "ubatch": ubatch, "kind": kind, "device": device}
-
-
-def make_draft(spec: dict[str, Any]):
-    if spec["kind"] == "LEGACY":
-        return LegacyGenAIReplayDraft(spec["device"], spec["ubatch"])
-    if spec["kind"] == "OPTIMUM_REPLAY":
-        return OptimumReplayDraft(spec["device"], spec["ubatch"])
-    if spec["kind"] == "PERSIST":
-        return OptimumPersistentDraft(spec["device"], spec["ubatch"])
-    return None
-
-
 def assert_host_gate() -> None:
     battery = psutil.sensors_battery()
     if battery is None or battery.power_plugged is not True:
@@ -153,22 +124,31 @@ def main() -> int:
     specs = {"TARGET_UB1": parse_path("TARGET_UB1")}
     specs.update({name: parse_path(name) for name in args.paths})
 
-    # R0 must decide feasibility. R1 refuses to silently drop a requested path.
-    drafts = {}
+    # R0 decides which paths may be requested. R1 refuses to silently drop a
+    # requested path and constructs the same shared-engine topology used by R2.
+    try:
+        drafts, optimum_engines, legacy_engines = create_draft_adapters(specs)
+    except Exception as exc:
+        write_json(args.output_dir / "path_initialization.json", {
+            "status": "FAIL",
+            "error": repr(exc),
+            "requested_paths": args.paths,
+        })
+        raise
+
     init_records = {}
     for name, spec in specs.items():
-        try:
-            drafts[name] = make_draft(spec)
-            init_records[name] = {
-                "status": "PASS",
-                "target_ubatch": spec["ubatch"],
-                "draft_device": spec["device"],
-                "draft_capabilities": None if drafts[name] is None else drafts[name].capabilities.__dict__,
-            }
-        except Exception as exc:
-            init_records[name] = {"status": "FAIL", "error": repr(exc)}
-            write_json(args.output_dir / "path_initialization.json", init_records)
-            raise
+        init_records[name] = {
+            "status": "PASS",
+            "target_ubatch": spec["ubatch"],
+            "draft_device": spec["device"],
+            "draft_capabilities": None if spec["kind"] == "TARGET" else drafts[name].capabilities.__dict__,
+        }
+    init_records["_engine_topology"] = {
+        "optimum_compiled_engines": sorted(optimum_engines),
+        "legacy_genai_engines": sorted(legacy_engines),
+        "rule": "at most one physical draft engine per frontend/device in this process",
+    }
     write_json(args.output_dir / "path_initialization.json", init_records)
 
     conditions = list(specs)
@@ -181,7 +161,7 @@ def main() -> int:
     write_json(args.output_dir / "schedule.json", schedule)
 
     status = {
-        "schema": "heterospec.358h.runtime.r1_status.v0",
+        "schema": "heterospec.358h.runtime.r1_status.v1",
         "formal": False,
         "claim_status": "QUALIFICATION_ONLY / TIMINGS INVALID_FOR_HEADLINE_CLAIMS",
         "stage": args.stage,
@@ -194,10 +174,10 @@ def main() -> int:
         "output_cap": OUTPUT_CAP,
         "k": 2,
         "promotion_rule": "all pairs exact against TARGET_UB1; any mismatch blocks that complete path",
+        "timing_used_for_promotion": False,
     }
     write_json(args.output_dir / "R1_STATUS.json", status)
 
-    # Non-formal warm-up outside both qualification sets.
     warm_prompt = prompt_for(tasks[WARMUP])
     warm_pt = targets[1].tokenize(formatted_prompt(warm_prompt), True)
     warm = []
@@ -227,7 +207,7 @@ def main() -> int:
             else:
                 r = run_speculative(tgt, drafts[name], pt, OUTPUT_CAP)
             row = {
-                "schema": "heterospec.358h.runtime.r1_observation.v0",
+                "schema": "heterospec.358h.runtime.r1_observation.v1",
                 "formal": False,
                 "claim_status": "QUALIFICATION_ONLY / TIMINGS INVALID_FOR_HEADLINE_CLAIMS",
                 "stage": args.stage,

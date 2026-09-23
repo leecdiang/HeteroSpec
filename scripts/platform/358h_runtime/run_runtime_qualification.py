@@ -38,13 +38,11 @@ ALLOWED_PATHS = {
     "TARGET_UB2",
     "LEGACY_CPU_UB1",
     "LEGACY_NPU_UB1",
-    "LEGACY_CPU_UB2",
     "LEGACY_NPU_UB2",
     "OPTIMUM_REPLAY_CPU_UB1",
     "OPTIMUM_REPLAY_NPU_UB1",
     "PERSIST_CPU_UB1",
     "PERSIST_NPU_UB1",
-    "PERSIST_CPU_UB2",
     "PERSIST_NPU_UB2",
 }
 
@@ -110,7 +108,7 @@ def main() -> int:
 
     bad = sorted(set(args.paths) - ALLOWED_PATHS)
     if bad:
-        raise ValueError(f"unknown candidate paths: {bad}")
+        raise ValueError(f"unknown or out-of-scope v0.1 candidate paths: {bad}")
     if len(args.paths) != len(set(args.paths)):
         raise ValueError("duplicate path names")
     assert_host_gate()

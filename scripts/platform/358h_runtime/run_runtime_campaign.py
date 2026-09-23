@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Formal R2 paired runtime campaign for 358H.
 
-Conditions come only from a frozen qualification registry.  The driver never
-selects paths from observed performance.  Model load/compile and non-formal
+Conditions come only from a frozen qualification registry. The driver never
+selects paths from observed performance. Model load/compile and non-formal
 warm-up occur before formal_data_started; the primary per-request timing starts
 after target prompt prefill and includes every runtime-specific draft cost.
 """
@@ -23,9 +23,8 @@ from typing import Any
 import openvino as ov
 import psutil
 
-from runtime_draft import LegacyGenAIReplayDraft, OptimumDraftEngine
+from runtime_factory import create_draft_adapters, parse_path
 from runtime_runner import run_speculative, run_target_only
-from runtime_shared_draft import SharedOptimumPersistentDraft, SharedOptimumReplayDraft
 from runtime_target import LlamaAPI, RuntimeTargetPool
 from runtime_types import first_divergence
 
@@ -37,8 +36,6 @@ FULL = [3, 10, 19, 20, 28, 32, 44, 47, 48, 50, 54, 57, 62, 64, 68, 70, 89, 90, 1
 WARMUP = 0
 OUTPUT_CAP = 128
 SEED = 20260925
-CPU_AFFINITY = list(range(12))
-ALL_AFFINITY = list(range(os.cpu_count() or 16))
 
 
 def utc() -> str:
@@ -84,29 +81,22 @@ def formatted_prompt(prompt: str) -> str:
     )
 
 
-def parse_path(name: str) -> dict[str, Any]:
-    if name == "TARGET_UB1":
-        return {"name": name, "kind": "TARGET", "device": None, "ubatch": 1}
-    ubatch = 2 if name.endswith("_UB2") else 1
-    device = "NPU" if "_NPU_" in name else "CPU"
-    if name.startswith("LEGACY_"):
-        kind = "LEGACY"
-    elif name.startswith("OPTIMUM_REPLAY_"):
-        kind = "OPTIMUM_REPLAY"
-    elif name.startswith("PERSIST_"):
-        kind = "PERSIST"
-    else:
-        raise ValueError(f"unsupported frozen path {name}")
-    return {"name": name, "kind": kind, "device": device, "ubatch": ubatch}
+def current_affinity() -> list[int]:
+    try:
+        return sorted(psutil.Process().cpu_affinity())
+    except Exception:
+        return list(range(os.cpu_count() or 1))
 
 
-def set_affinity(path_name: str) -> list[int]:
-    chosen = CPU_AFFINITY if "_CPU_" in path_name else ALL_AFFINITY
+def set_affinity(chosen: list[int]) -> list[int]:
     try:
         os.sched_setaffinity(0, chosen)
     except AttributeError:
         psutil.Process().cpu_affinity(chosen)
-    return chosen
+    actual = current_affinity()
+    if actual != sorted(chosen):
+        raise RuntimeError(f"process affinity drift: requested {chosen}, got {actual}")
+    return actual
 
 
 def assert_host_gate() -> None:
@@ -115,43 +105,6 @@ def assert_host_gate() -> None:
         raise RuntimeError("AC power must be positively online")
     if (os.environ.get("SESSIONNAME") or "").upper().startswith("RDP"):
         raise RuntimeError("RDP session is forbidden")
-
-
-def create_adapters(specs: dict[str, dict[str, Any]]):
-    """Create minimum resident draft engines needed by the frozen condition set."""
-    adapters: dict[str, Any] = {}
-
-    # One legacy LLMPipeline per device can serve both target UB1/UB2 because
-    # draft semantics are independent of the target physical microbatch.
-    legacy_by_device = {}
-    for device in ("CPU", "NPU"):
-        names = [n for n, s in specs.items() if s["kind"] == "LEGACY" and s["device"] == device]
-        if names:
-            legacy = LegacyGenAIReplayDraft(device, 1)
-            legacy_by_device[device] = legacy
-            for name in names:
-                adapters[name] = legacy
-
-    # Replay and persistent policies share the same compiled Optimum engine per
-    # device. They are never used concurrently; each observation finishes/resets
-    # before another policy touches the engine.
-    engines = {}
-    for device in ("CPU", "NPU"):
-        names = [
-            n for n, s in specs.items()
-            if s["device"] == device and s["kind"] in ("OPTIMUM_REPLAY", "PERSIST")
-        ]
-        if not names:
-            continue
-        engine = OptimumDraftEngine(device)
-        engines[device] = engine
-        for name in names:
-            spec = specs[name]
-            if spec["kind"] == "OPTIMUM_REPLAY":
-                adapters[name] = SharedOptimumReplayDraft(engine, spec["ubatch"])
-            else:
-                adapters[name] = SharedOptimumPersistentDraft(engine, spec["ubatch"])
-    return adapters, engines, legacy_by_device
 
 
 def main() -> int:
@@ -174,13 +127,21 @@ def main() -> int:
     tasks = load_tasks()
     args.output_dir.mkdir(parents=True, exist_ok=False)
 
+    # Freeze one host-allocation mask for the complete paired campaign. The old
+    # hardware study used a CPU-only affinity asymmetry for its own protocol; R2
+    # makes no energy claim and must not confound runtime policy with host cores.
+    fixed_affinity = current_affinity()
+    if not fixed_affinity:
+        raise RuntimeError("could not determine a non-empty process affinity")
+    set_affinity(fixed_affinity)
+
     # All heavy initialization happens before formal_data_started.
     api = LlamaAPI()
     targets = RuntimeTargetPool(api)
-    adapters, engines, legacy = create_adapters(specs)
+    adapters, engines, legacy_engines = create_draft_adapters(specs)
 
     init = {
-        "schema": "heterospec.358h.runtime.r2_session.v0",
+        "schema": "heterospec.358h.runtime.r2_session.v1",
         "registry": str(args.registry),
         "registry_sha256": sha256(args.registry),
         "conditions": conditions,
@@ -192,6 +153,12 @@ def main() -> int:
             name: None if specs[name]["kind"] == "TARGET" else adapters[name].capabilities.__dict__
             for name in conditions
         },
+        "engine_topology": {
+            "optimum_compiled_engines": sorted(engines),
+            "legacy_genai_engines": sorted(legacy_engines),
+        },
+        "process_affinity_policy": "one identical session affinity for every formal condition",
+        "process_affinity": fixed_affinity,
         "accounting_boundary": "post target-prompt-prefill; runtime-specific draft begin/checkpoint/propose/reconcile/finish all included",
         "energy": "NOT_CLAIMED",
     }
@@ -211,22 +178,23 @@ def main() -> int:
     warm = []
     for name in conditions:
         spec = specs[name]
-        set_affinity(name)
+        set_affinity(fixed_affinity)
         if spec["kind"] == "TARGET":
-            r = run_target_only(targets[1], warm_pt, 8)
+            r = run_target_only(targets[spec["ubatch"]], warm_pt, 8)
         else:
             r = run_speculative(targets[spec["ubatch"]], adapters[name], warm_pt, 8)
         warm.append({"path": name, "tokens": r["tokens"], "claim_status": "NON_FORMAL / INVALID_FOR_CLAIMS"})
     write_json(args.output_dir / "warmup.json", warm)
 
     status = {
-        "schema": "heterospec.358h.runtime.r2_status.v0",
+        "schema": "heterospec.358h.runtime.r2_status.v1",
         "formal": True,
         "formal_data_started": True,
         "formal_data_started_at_utc": utc(),
         "registry_sha256": sha256(args.registry),
         "dataset_sha256": DATASET_SHA256,
         "conditions": conditions,
+        "fixed_process_affinity": fixed_affinity,
         "expected_observations": len(FULL) * 3 * len(conditions),
         "completed_observations": 0,
         "complete": False,
@@ -242,14 +210,14 @@ def main() -> int:
         pt = targets[1].tokenize(formatted_prompt(prompt), True)
         for name in unit["conditions"]:
             spec = specs[name]
-            affinity = set_affinity(name)
+            affinity = set_affinity(fixed_affinity)
             started = utc()
             if spec["kind"] == "TARGET":
-                r = run_target_only(targets[1], pt, OUTPUT_CAP)
+                r = run_target_only(targets[spec["ubatch"]], pt, OUTPUT_CAP)
             else:
                 r = run_speculative(targets[spec["ubatch"]], adapters[name], pt, OUTPUT_CAP)
             row = {
-                "schema": "heterospec.358h.runtime.r2_observation.v0",
+                "schema": "heterospec.358h.runtime.r2_observation.v1",
                 "formal": True,
                 "task_id": f"HumanEval/{task_id}",
                 "repetition": rep,

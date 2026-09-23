@@ -10,14 +10,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from runtime_draft import OpenVINODraftReplay, OptimumDraftEngine
-from runtime_shared_draft import (
-    SharedLegacyGenAIReplayDraft,
-    SharedOptimumPersistentDraft,
-    SharedOptimumReplayDraft,
-)
-
-
 def parse_path(name: str) -> dict[str, Any]:
     if name in ("TARGET_UB1", "TARGET_UB2"):
         return {
@@ -52,6 +44,15 @@ def create_draft_adapters(specs: dict[str, dict[str, Any]]):
     Returns `(adapters, optimum_engines, legacy_engines)`.  A caller must execute
     observations serially; wrappers sharing an engine must never be interleaved.
     """
+    # Worker-local imports: parsing a path in the campaign/target process must
+    # never initialize OpenVINO, Optimum, or a draft backend.
+    from runtime_draft import OpenVINODraftReplay, OptimumDraftEngine
+    from runtime_shared_draft import (
+        SharedLegacyGenAIReplayDraft,
+        SharedOptimumPersistentDraft,
+        SharedOptimumReplayDraft,
+    )
+
     adapters: dict[str, Any] = {}
     optimum_engines: dict[str, OptimumDraftEngine] = {}
     legacy_engines: dict[str, Any] = {}

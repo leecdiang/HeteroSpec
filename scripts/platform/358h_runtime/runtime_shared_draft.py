@@ -133,7 +133,7 @@ class SharedOptimumReplayDraft(OptimumReplayDraft):
                 # Only advance enough state to obtain the next proposal token.
                 # Replay discards this state after the call.
                 next_token, past = self.engine.forward(
-                    [token], past_key_values=None if self.engine.stateful else past
+                    [token], past_key_values=past
                 )
         elapsed = _ns() - start
         return Proposal(
@@ -192,8 +192,10 @@ class SharedOptimumPersistentDraft(OptimumPersistentDraft):
 
     def _advance_stateful(self, tokens: Sequence[int]) -> int | None:
         next_token = self._next_token
+        marker = self._marker
         for token in map(int, tokens):
-            next_token, _ = self.engine.forward([token], past_key_values=None)
+            next_token, marker = self.engine.forward([token], past_key_values=marker)
+        self._marker = marker
         return int(next_token) if next_token is not None else None
 
     def propose(self, committed_prefix: Sequence[int], width: int) -> Proposal:
@@ -213,6 +215,7 @@ class SharedOptimumPersistentDraft(OptimumPersistentDraft):
             timing.checkpoint_bytes = sum(arr.nbytes for _, arr in snap)
             self._checkpoint = (snap, bookkeeping)
             next_token = self._next_token
+            marker = self._marker
             out: list[int] = []
             start = _ns()
             for i in range(int(width)):
@@ -221,11 +224,11 @@ class SharedOptimumPersistentDraft(OptimumPersistentDraft):
                 token = int(next_token)
                 out.append(token)
                 if i + 1 < int(width):
-                    next_token, _ = self.engine.forward([token], past_key_values=None)
+                    next_token, marker = self.engine.forward([token], past_key_values=marker)
                     self._proposal_materialized += 1
             timing.propose_ns = _ns() - start
             self._proposal_next = int(next_token) if next_token is not None else None
-            self._proposal_past = None
+            self._proposal_past = marker
         else:
             # External PKV returned by the frontend is treated as the committed
             # checkpoint only if R0 proves proposal inference does not mutate it.
@@ -305,7 +308,8 @@ class SharedOptimumPersistentDraft(OptimumPersistentDraft):
         if self.engine.stateful:
             next_token = self._advance_stateful(suffix_to_apply)
             self._next_token = next_token
-            self._marker = None
+            # Optimum's stateful marker is required on every continuation.
+            # Passing None here silently resets VariableState and changes tokens.
         else:
             past = self._past
             next_token = self._next_token

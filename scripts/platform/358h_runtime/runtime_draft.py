@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import os
 import sys
 import time
 from pathlib import Path
@@ -12,13 +13,10 @@ import openvino as ov
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-LEGACY_DIR = ROOT / "scripts" / "platform" / "358h"
-if str(LEGACY_DIR) not in sys.path:
-    sys.path.insert(0, str(LEGACY_DIR))
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from phase3_heterogeneous_runner import DRAFT_IR, OpenVINODraftReplay  # noqa: E402
+from runtime_legacy_draft_v02 import DRAFT_IR, OpenVINODraftReplay  # noqa: E402
 from runtime_types import (  # noqa: E402
     DraftCapabilities,
     DraftStepTiming,
@@ -165,12 +163,9 @@ class OptimumDraftEngine:
 
     @staticmethod
     def _write_state_tensor(state, tensor) -> None:
-        try:
-            state.state = tensor
-            return
-        except Exception:
-            pass
-        state.set_state(tensor)
+        # This OpenVINO 2026.3 binding exposes a read/write `state` property,
+        # but no set_state() method. R0 reads back every restored tensor.
+        state.state = tensor
 
     def snapshot_internal_state(self) -> tuple[list[tuple[str, np.ndarray]], dict[str, Any], int]:
         """Deep-copy internal VariableState and the Optimum bookkeeping needed to restore it."""
@@ -201,9 +196,21 @@ class OptimumDraftEngine:
         if len(states) != len(snapshot):
             raise RuntimeError("VariableState cardinality changed between checkpoint and restore")
         transferred = 0
-        for state, (_, arr) in zip(states, snapshot):
+        for state, (saved_name, arr) in zip(states, snapshot):
+            name = getattr(state, "name", None)
+            if name is None:
+                name = state.get_name()
+            if str(name) != saved_name:
+                raise RuntimeError(f"VariableState restore order drift: {name} != {saved_name}")
             transferred += int(arr.nbytes)
             self._write_state_tensor(state, ov.Tensor(arr))
+            if os.environ.get("HETEROSPEC_R0_VERIFY_RESTORE") == "1":
+                restored = np.array(self._read_state_tensor(state).data, copy=True)
+                if restored.shape != arr.shape or restored.dtype != arr.dtype or restored.tobytes() != arr.tobytes():
+                    raise RuntimeError(
+                        f"VariableState restore readback mismatch: {saved_name}; "
+                        f"saved={arr.shape}/{arr.dtype} restored={restored.shape}/{restored.dtype}"
+                    )
         if bookkeeping.get("_past_length") is not None:
             self.model._past_length = copy.deepcopy(bookkeeping["_past_length"])
         if "next_beam_idx" in bookkeeping:
@@ -472,6 +479,7 @@ class OptimumPersistentDraft:
             "accepted": int(accepted),
             "committed": committed,
             "state_kind": self.engine.state_kind,
+            "checkpoint_restored": bool(proposals and accepted < len(proposals)),
         }
 
     def logical_state_length(self) -> int | None:

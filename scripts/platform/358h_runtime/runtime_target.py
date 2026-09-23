@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ctypes as C
+import ast
 import hashlib
 import sys
 from pathlib import Path
@@ -10,12 +11,10 @@ from typing import Iterable
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 LEGACY_DIR = ROOT / "scripts" / "platform" / "358h"
-if str(LEGACY_DIR) not in sys.path:
-    sys.path.insert(0, str(LEGACY_DIR))
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from phase3_heterogeneous_runner import (  # noqa: E402
+from runtime_legacy_target_v02 import (  # noqa: E402
     LlamaAPI,
     LlamaTarget as LegacyLlamaTarget,
     TARGET,
@@ -24,6 +23,8 @@ from runtime_types import PathIdentity  # noqa: E402
 
 LEGACY_RUNNER = LEGACY_DIR / "phase3_heterogeneous_runner.py"
 LEGACY_RUNNER_SHA256 = "1d11e42d008f981ee6a91ac7bfeb478f11c060d51e79b9e060fe04ece70153e8"
+LEGACY_RUNNER_MAIN_BLOB = "ce0fe27a34e2c162962c7a2eef834a3b758596e7"
+TARGET_EXTRACTION = HERE / "runtime_legacy_target_v02.py"
 
 
 def sha256(path: Path) -> str:
@@ -35,12 +36,31 @@ def sha256(path: Path) -> str:
 
 
 def assert_frozen_legacy_runner() -> None:
-    actual = sha256(LEGACY_RUNNER)
-    if actual != LEGACY_RUNNER_SHA256:
+    raw = LEGACY_RUNNER.read_bytes()
+    actual = hashlib.sha256(raw).hexdigest()
+    # The main Git blob ends in an extra CRLF after the final Python newline.
+    # The closed runner's frozen SHA256 was taken from the otherwise identical
+    # 16003-byte Windows file without that terminal CRLF.  Require BOTH the
+    # exact main Git blob and the exact historical SHA after removing only
+    # those two bytes; this does not permit any executable source difference.
+    canonical_main_copy = (
+        raw.endswith(b"\n\r\n")
+        and hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+        == LEGACY_RUNNER_MAIN_BLOB
+        and hashlib.sha256(raw[:-2]).hexdigest() == LEGACY_RUNNER_SHA256
+    )
+    if actual != LEGACY_RUNNER_SHA256 and not canonical_main_copy:
         raise RuntimeError(
             f"closed Phase-3 runner changed: {actual} != {LEGACY_RUNNER_SHA256}; "
             "do not silently inherit modified target semantics"
         )
+    names = {"Batch", "ModelParams", "ContextParams", "LlamaAPI", "LlamaTarget"}
+    def classes(path: Path):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        return {n.name: ast.dump(n, include_attributes=False) for n in tree.body
+                if isinstance(n, ast.ClassDef) and n.name in names}
+    if classes(LEGACY_RUNNER) != classes(TARGET_EXTRACTION):
+        raise RuntimeError("target-only extraction differs from frozen Phase-3 C API classes")
 
 
 class RuntimeTargetModel:

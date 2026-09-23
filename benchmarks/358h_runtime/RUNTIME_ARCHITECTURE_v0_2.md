@@ -1,0 +1,13 @@
+# HeteroSpec 358H runtime v0.2: process isolation
+
+The campaign/qualification driver has no backend imports. It uses explicit Windows `spawn` and one synchronous `Pipe` to a target worker. A second `Pipe` connects that target worker to a draft worker. The target worker owns the pinned llama.cpp model, UB1/UB2 contexts, speculative orchestration, committed-token ledger, and primary timer. The draft worker owns the frozen OpenVINO or GenAI draft engine, request state, checkpoints, and reconciliation. No VariableState or PKV tensor crosses IPC; only token IDs and small metadata do.
+
+The target worker starts the primary timer after target prompt prefill. It charges every synchronous Draft RPC from immediately before send until the response is received and identity-checked. The driver-to-target request round trip is harness diagnostic data outside the primary timer. Model loading and worker startup are session setup. Target-only runs entirely inside the target worker without draft calls.
+
+One Optimum draft worker per device holds one compiled engine. `OPTIMUM_REPLAY` and `PERSIST` are serial policies over that engine, with the same BEGIN, PROPOSE, RECONCILE, FINISH command topology. The replay policy pays full-prefix work in PROPOSE; the persistent policy keeps a deep VariableState checkpoint and reconciles inside the draft worker. A policy switch requires FINISH/RESET and never reloads the model. GenAI may use another draft worker because it is a different frontend.
+
+Every command carries protocol version, monotone RPC ID, request ID, observation ID, path ID, operation, and round ID where relevant. Responses echo identities, worker PID/role, and OK or a structured exception. Mismatch, stale response, worker death, missing state, or silent fallback is a hard failure. Both workers receive the same fixed session CPU-affinity mask. `KMP_DUPLICATE_LIB_OK` and equivalent duplicate-runtime workarounds are forbidden.
+
+v0.2 timing names separate **realized** target-worker RPC durations from **worker-internal** diagnostic compute. Primary accounting is exactly `draft_total_realized_ns + target_verification_ns + runtime_residual_ns = end_to_end_ns`; worker timings are contained inside realized RPC time and never added again. Serialization, IPC, and scheduling delay are included. A fake worker with injected delay is a mandatory preflight proof.
+
+This revision changes topology and accounting only. The frozen model/IR, llama.cpp commit, prompt, k=2, output cap, acceptance, correction/bonus, HumanEval, candidate scope, bootstrap, energy exclusion, and profitability-guard scope stay as in v0.1. R0 is non-formal; R1/R2 require a later source/environment freeze and explicit instruction.

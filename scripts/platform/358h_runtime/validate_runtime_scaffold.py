@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import ast
 import subprocess
 import sys
 from pathlib import Path
@@ -16,6 +17,9 @@ REQUIRED = [
     ROOT / "benchmarks" / "358h_runtime" / "RUNTIME_ARCHITECTURE.md",
     ROOT / "benchmarks" / "358h_runtime" / "WORK_HANDOFF.md",
     ROOT / "benchmarks" / "358h_runtime" / "R0_API_DECISION_TABLE.md",
+    ROOT / "benchmarks" / "358h_runtime" / "runtime_protocol_v0_2.json",
+    ROOT / "benchmarks" / "358h_runtime" / "RUNTIME_ARCHITECTURE_v0_2.md",
+    ROOT / "benchmarks" / "358h_runtime" / "V01_TO_V02_TRANSITION.md",
 ]
 
 
@@ -45,6 +49,26 @@ def main() -> int:
     if protocol.get("created_from_main") != BASE:
         failures.append("protocol base commit differs from scaffold validator base")
 
+    v02 = json.loads(REQUIRED[4].read_text(encoding="utf-8"))
+    if v02.get("formal_data_seen") is not False or v02.get("r0_v02", {}).get("stop_after_r0") is not True:
+        failures.append("v0.2 protocol must remain pre-formal and R0-only")
+
+    # Spawn re-imports entrypoint modules in every child. A top-level backend
+    # import in any neutral module would recreate the v0.1 OpenMP collision.
+    neutral = ("runtime_r0_v02.py", "runtime_process_v02.py", "runtime_workers_v02.py", "runtime_factory.py")
+    forbidden = ("runtime_target", "runtime_draft", "runtime_shared_draft", "openvino", "openvino_genai", "optimum", "phase3_heterogeneous_runner")
+    for filename in neutral:
+        tree = ast.parse((HERE / filename).read_text(encoding="utf-8"))
+        for node in tree.body:
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                names = [node.module or ""]
+            else:
+                continue
+            if any(name.startswith(forbidden) for name in names):
+                failures.append(f"top-level backend import in {filename}: {names}")
+
     unit = subprocess.run(
         [sys.executable, str(HERE / "runtime_logic_unit_tests.py")],
         cwd=ROOT,
@@ -53,6 +77,12 @@ def main() -> int:
     )
     if unit.returncode != 0:
         failures.append("runtime_logic_unit_tests.py failed:\n" + unit.stdout + unit.stderr)
+    process_unit = subprocess.run(
+        [sys.executable, str(HERE / "runtime_process_unit_tests_v02.py")],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if process_unit.returncode != 0:
+        failures.append("runtime_process_unit_tests_v02.py failed:\n" + process_unit.stdout + process_unit.stderr)
 
     result = {
         "base": BASE,
@@ -61,6 +91,7 @@ def main() -> int:
         "allowed_prefixes": list(ALLOWED_PREFIXES),
         "escaped_files": escaped,
         "logic_unit_tests_returncode": unit.returncode,
+        "process_unit_tests_returncode": process_unit.returncode,
         "pass": not failures,
         "failures": failures,
     }

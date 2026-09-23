@@ -93,6 +93,7 @@ def run_speculative(
             draft_reconcile_ns=int(reconcile_ns),
             checkpoint_bytes=0,
             state_transfer_bytes=int(reconcile_meta.get("state_transfer_bytes", 0)),
+            checkpoint_restored=False,
             draft_logical_state_length=draft.logical_state_length(),
             target_state_position=target.state_position(),
             fallback_events=list(reconcile_meta.get("fallback_events", [])),
@@ -141,6 +142,8 @@ def run_speculative(
         reconcile_ns, reconcile_meta = draft.reconcile(
             committed_prefix, proposals, accepted, committed
         )
+        if draft.capabilities.supports_checkpoint and "checkpoint_restored" not in reconcile_meta:
+            raise AssertionError("checkpoint-capable draft omitted restore evidence")
         timing.draft_reconcile_ns += int(reconcile_ns)
         out.extend(map(int, committed))
 
@@ -171,6 +174,7 @@ def run_speculative(
                     proposal.timing.state_transfer_bytes
                     + reconcile_meta.get("state_transfer_bytes", 0)
                 ),
+                checkpoint_restored=bool(reconcile_meta.get("checkpoint_restored", False)),
                 draft_logical_state_length=draft_len,
                 target_state_position=target_pos,
                 fallback_events=list(reconcile_meta.get("fallback_events", [])),

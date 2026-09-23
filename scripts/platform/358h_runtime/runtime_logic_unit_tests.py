@@ -106,7 +106,9 @@ class FakeDraft:
         if list(map(int, committed_prefix_before)) != self.logical:
             raise AssertionError("fake draft logical drift before reconcile")
         self.logical.extend(map(int, committed_this_round))
-        return 5, {"state_transfer_bytes": 64 if proposals and accepted == 0 else 0}
+        restored = bool(len(proposals) > 1 and accepted == 0)
+        return 5, {"state_transfer_bytes": 64 if restored else 0,
+                   "checkpoint_restored": restored}
 
     def logical_state_length(self):
         return len(self.logical)
@@ -148,6 +150,8 @@ def test_mixed_acceptance_and_c() -> None:
     assert_equal(result["accepted"], 2, "accepted total")
     assert_equal(result["committed"], 6, "committed total")
     assert_equal(result["target_state_position"], 3 + 6 - 1, "target final state")
+    assert_equal([r["checkpoint_restored"] for r in result["rounds"]],
+                 [False, False, True, False], "checkpoint restore events")
 
 
 def test_full_accept_bonus() -> None:

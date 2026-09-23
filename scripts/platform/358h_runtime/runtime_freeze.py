@@ -20,6 +20,7 @@ FROZEN_RELATIVE_FILES = [
     "scripts/platform/358h_runtime/runtime_shared_draft.py",
     "scripts/platform/358h_runtime/runtime_factory.py",
     "scripts/platform/358h_runtime/runtime_runner.py",
+    "scripts/platform/358h_runtime/runtime_policy.py",
     "scripts/platform/358h_runtime/probe_openvino_state.py",
     "scripts/platform/358h_runtime/runtime_state_tests.py",
     "scripts/platform/358h_runtime/run_runtime_qualification.py",
@@ -115,7 +116,6 @@ def verify_freeze_manifest(path: Path) -> dict[str, Any]:
     if sha256(dataset) != DATASET_SHA256 or manifest.get("dataset_sha256") != DATASET_SHA256:
         raise RuntimeError("HumanEval dataset changed after runtime freeze")
 
-    # Reuse the closed campaign's authoritative model/artifact hash list.
     legacy_dir = ROOT / "scripts" / "platform" / "358h"
     if str(legacy_dir) not in sys.path:
         sys.path.insert(0, str(legacy_dir))

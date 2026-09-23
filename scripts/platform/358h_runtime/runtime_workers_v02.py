@@ -128,10 +128,11 @@ def _target_forced_cases(target) -> dict:
             "prompt_token_count": len(prompt)}
 
 
-def target_worker_entry(driver_conn: Connection, draft_conn: Connection, affinity: list[int]) -> None:
+def target_worker_entry(driver_conn: Connection, draft_conns: dict[str, Connection], affinity: list[int]) -> None:
     assert_no_duplicate_omp()
     apply_affinity(affinity)
-    draft_client = RPCClient(draft_conn, "draft")
+    draft_clients = {group: RPCClient(conn, "draft") for group, conn in draft_conns.items()}
+    path_clients = {}
     targets = None
     caps = {}
     request_seq = 0
@@ -142,11 +143,21 @@ def target_worker_entry(driver_conn: Connection, draft_conn: Connection, affinit
         if op == "PING":
             return {"pong": True}
         if op == "INFO":
-            d, _ = draft_client.call("INFO")
-            return {"target": inventory("target"), "draft": d}
+            drafts = {group: client.call("INFO")[0] for group, client in draft_clients.items()}
+            return {"target": inventory("target"), "drafts": drafts,
+                    "draft": next(iter(drafts.values())) if len(drafts) == 1 else None}
         if op == "DRAFT_INIT":
-            r, _ = draft_client.call("INIT", payload={"paths": payload["paths"]})
+            group = payload.get("group")
+            if group is None and len(draft_clients) == 1:
+                group = next(iter(draft_clients))
+            if group not in draft_clients:
+                raise RuntimeError(f"unknown draft worker group: {group}")
+            paths = payload["paths"]
+            if any(p in path_clients for p in paths):
+                raise RuntimeError("draft path initialized in multiple workers")
+            r, _ = draft_clients[group].call("INIT", payload={"paths": paths})
             caps.update(r["capabilities"])
+            path_clients.update({p: draft_clients[group] for p in paths})
             return r
         if op == "INIT":
             if targets is not None:
@@ -155,13 +166,11 @@ def target_worker_entry(driver_conn: Connection, draft_conn: Connection, affinit
             targets = RuntimeTargetPool(LlamaAPI(), ubatches=(1, 2))
             return {"bindings": targets.binding_records()}
         if op == "RESET":
-            r, _ = draft_client.call("RESET")
-            return {"reset": r["reset"]}
+            rows = {group: client.call("RESET")[0] for group, client in draft_clients.items()}
+            return {"reset": all(r["reset"] for r in rows.values())}
         if op == "SHUTDOWN":
-            try:
-                draft_client.call("SHUTDOWN")
-            finally:
-                return {"shutdown": True}
+            rows = {group: client.call("SHUTDOWN")[0] for group, client in draft_clients.items()}
+            return {"shutdown": all(r["shutdown"] for r in rows.values())}
         if targets is None:
             raise RuntimeError("target worker not initialized")
         if op == "TARGET_TEST":
@@ -185,7 +194,7 @@ def target_worker_entry(driver_conn: Connection, draft_conn: Connection, affinit
                     if spec["name"] not in caps:
                         raise RuntimeError("draft path not initialized")
                     request_seq += 1
-                    adapter = RemoteDraftAdapter(draft_client, spec["name"], caps[spec["name"]],
+                    adapter = RemoteDraftAdapter(path_clients[spec["name"]], spec["name"], caps[spec["name"]],
                                                  f"request-{request_seq}")
                     result = run_speculative(target, adapter, prompt, int(payload["output_cap"]))
                     result["timing_v02"] = adapter.accounting(result["timing"])
@@ -198,7 +207,7 @@ def target_worker_entry(driver_conn: Connection, draft_conn: Connection, affinit
             if spec["name"] not in caps:
                 raise RuntimeError("draft path not initialized")
             request_seq += 1
-            adapter = RemoteDraftAdapter(draft_client, spec["name"], caps[spec["name"]],
+            adapter = RemoteDraftAdapter(path_clients[spec["name"]], spec["name"], caps[spec["name"]],
                                          f"forced-{request_seq}")
             adapter.r0_alias_probe = spec["kind"] == "PERSIST"
             committed = list(prompt)

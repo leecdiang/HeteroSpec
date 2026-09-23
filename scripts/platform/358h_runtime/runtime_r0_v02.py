@@ -30,19 +30,28 @@ def write_json(path: Path, value) -> None:
 
 
 class ProcessSession:
-    def __init__(self, mask: list[int]):
+    def __init__(self, mask: list[int], groups: tuple[str, ...] = ("default",)):
         ctx = mp.get_context("spawn")
         driver_end, target_driver_end = ctx.Pipe(duplex=True)
-        target_draft_end, draft_end = ctx.Pipe(duplex=True)
-        self.draft = ctx.Process(target=draft_worker_entry, args=(draft_end, mask), name="HeteroSpecDraft")
+        target_draft_ends = {}
+        draft_ends = {}
+        self.drafts = {}
+        for group in groups:
+            target_draft_ends[group], draft_ends[group] = ctx.Pipe(duplex=True)
+            self.drafts[group] = ctx.Process(target=draft_worker_entry,
+                                             args=(draft_ends[group], mask), name=f"HeteroSpecDraft-{group}")
         self.target = ctx.Process(target=target_worker_entry,
-                                  args=(target_driver_end, target_draft_end, mask),
+                                  args=(target_driver_end, target_draft_ends, mask),
                                   name="HeteroSpecTarget")
-        self.draft.start()
+        for proc in self.drafts.values():
+            proc.start()
         self.target.start()
         target_driver_end.close()
-        target_draft_end.close()
-        draft_end.close()
+        for conn in target_draft_ends.values():
+            conn.close()
+        for conn in draft_ends.values():
+            conn.close()
+        self.draft = next(iter(self.drafts.values())) if len(self.drafts) == 1 else None
         self.client = RPCClient(driver_end, "target", self.target)
         self.start_method = ctx.get_start_method()
 
@@ -50,15 +59,15 @@ class ProcessSession:
         return self.client.call(op, **kwargs)[0]
 
     def close(self) -> dict:
-        status = {"shutdown_rpc": False, "target_exitcode": None, "draft_exitcode": None}
+        status = {"shutdown_rpc": False, "target_exitcode": None, "draft_exitcodes": {}}
         try:
             status["shutdown_rpc"] = bool(self.call("SHUTDOWN").get("shutdown"))
         except Exception as exc:
             status["shutdown_error"] = repr(exc)
-        for proc in (self.target, self.draft):
+        for proc in (self.target, *self.drafts.values()):
             proc.join(timeout=10)
         status["target_exitcode"] = self.target.exitcode
-        status["draft_exitcode"] = self.draft.exitcode
+        status["draft_exitcodes"] = {group: proc.exitcode for group, proc in self.drafts.items()}
         return status
 
 
@@ -107,6 +116,48 @@ def probe_legacy_device(out: Path, mask: list[int], device: str) -> dict:
         verdict["reason"] = str(exc)[:4000]
     finally:
         verdict["shutdown"] = session.close()
+    return verdict
+
+
+def probe_multi_worker(mask: list[int]) -> dict:
+    """Exercise path routing while Optimum and GenAI own separate draft processes."""
+    verdict = {"status": "BLOCKED"}
+    session = ProcessSession(mask, groups=("optimum_cpu", "legacy_cpu"))
+    try:
+        session.call("PING")
+        session.call("DRAFT_INIT", payload={"group": "optimum_cpu", "paths": [
+            "OPTIMUM_REPLAY_CPU_UB1", "PERSIST_CPU_UB1"]})
+        session.call("DRAFT_INIT", payload={"group": "legacy_cpu", "paths": [
+            "LEGACY_CPU_UB1"]})
+        session.call("INIT")
+        info = session.call("INFO")
+        baseline = session.call("RUN", payload={"path": "TARGET_UB1",
+            "formatted_prompt": FORMATTED, "output_cap": 4})["result"]
+        paths = {}
+        for path in ("OPTIMUM_REPLAY_CPU_UB1", "LEGACY_CPU_UB1"):
+            row = session.call("RUN", payload={"path": path,
+                "formatted_prompt": FORMATTED, "output_cap": 4})["result"]
+            paths[path] = {"exact": row["tokens"] == baseline["tokens"],
+                           "draft_rpc_calls": row["timing_v02"]["draft_rpc_calls"]}
+        drafts = info["drafts"]
+        verdict.update({"target": info["target"], "drafts": drafts, "paths": paths,
+                        "distinct_pids": len({os.getpid(), info["target"]["pid"],
+                                              *(v["pid"] for v in drafts.values())}) == 4,
+                        "affinity_equal": info["target"]["affinity"] == mask and all(
+                            v["affinity"] == mask for v in drafts.values()),
+                        "import_clean": info["target"]["target_import_clean"] and all(
+                            v["draft_import_clean"] for v in drafts.values()),
+                        "reset_rpc": session.call("RESET")["reset"]})
+        verdict["status"] = ("PASS" if verdict["distinct_pids"] and verdict["affinity_equal"]
+                             and verdict["import_clean"] and verdict["reset_rpc"]
+                             and all(p["exact"] and p["draft_rpc_calls"] > 0 for p in paths.values())
+                             else "BLOCKED")
+    except Exception as exc:
+        verdict["error"] = repr(exc)
+    finally:
+        verdict["shutdown"] = session.close()
+        if not verdict["shutdown"]["shutdown_rpc"]:
+            verdict["status"] = "BLOCKED"
     return verdict
 
 
@@ -259,6 +310,10 @@ def run(out: Path) -> int:
             state["draft"][key] = legacy
             result["stages"][key] = legacy["status"]
             process[key + "_worker"] = legacy.get("process")
+        process["multi_worker"] = probe_multi_worker(mask)
+        result["stages"]["multi_worker"] = process["multi_worker"]["status"]
+        if process["multi_worker"]["status"] != "PASS":
+            result["status"] = "R0_V02_BLOCKED"
     except Exception as exc:
         result["errors"].append({"type": type(exc).__name__, "message": repr(exc), "stage": "legacy_probe"})
         result["status"] = "R0_V02_BLOCKED"

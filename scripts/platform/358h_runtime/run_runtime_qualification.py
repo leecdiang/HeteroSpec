@@ -20,6 +20,7 @@ from typing import Any
 import psutil
 
 from runtime_factory import create_draft_adapters, parse_path
+from runtime_freeze import verify_freeze_manifest
 from runtime_runner import run_speculative, run_target_only
 from runtime_target import LlamaAPI, RuntimeTargetPool
 from runtime_types import first_divergence
@@ -103,6 +104,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", choices=["small", "full"], required=True)
     ap.add_argument("--paths", nargs="+", required=True, help="R0-feasible candidate paths only")
+    ap.add_argument("--freeze-manifest", type=Path, required=True)
     ap.add_argument("--output-dir", type=Path, required=True)
     args = ap.parse_args()
 
@@ -112,6 +114,7 @@ def main() -> int:
     if len(args.paths) != len(set(args.paths)):
         raise ValueError("duplicate path names")
     assert_host_gate()
+    freeze = verify_freeze_manifest(args.freeze_manifest)
 
     tasks = load_tasks()
     task_ids = SMALL if args.stage == "small" else FULL
@@ -124,8 +127,6 @@ def main() -> int:
     specs = {"TARGET_UB1": parse_path("TARGET_UB1")}
     specs.update({name: parse_path(name) for name in args.paths})
 
-    # R0 decides which paths may be requested. R1 refuses to silently drop a
-    # requested path and constructs the same shared-engine topology used by R2.
     try:
         drafts, optimum_engines, legacy_engines = create_draft_adapters(specs)
     except Exception as exc:
@@ -161,7 +162,7 @@ def main() -> int:
     write_json(args.output_dir / "schedule.json", schedule)
 
     status = {
-        "schema": "heterospec.358h.runtime.r1_status.v1",
+        "schema": "heterospec.358h.runtime.r1_status.v2",
         "formal": False,
         "claim_status": "QUALIFICATION_ONLY / TIMINGS INVALID_FOR_HEADLINE_CLAIMS",
         "stage": args.stage,
@@ -175,6 +176,9 @@ def main() -> int:
         "k": 2,
         "promotion_rule": "all pairs exact against TARGET_UB1; any mismatch blocks that complete path",
         "timing_used_for_promotion": False,
+        "freeze_manifest": str(args.freeze_manifest),
+        "freeze_manifest_sha256": sha256(args.freeze_manifest),
+        "freeze_source_commit": freeze["source_commit"],
     }
     write_json(args.output_dir / "R1_STATUS.json", status)
 
@@ -207,7 +211,7 @@ def main() -> int:
             else:
                 r = run_speculative(tgt, drafts[name], pt, OUTPUT_CAP)
             row = {
-                "schema": "heterospec.358h.runtime.r1_observation.v1",
+                "schema": "heterospec.358h.runtime.r1_observation.v2",
                 "formal": False,
                 "claim_status": "QUALIFICATION_ONLY / TIMINGS INVALID_FOR_HEADLINE_CLAIMS",
                 "stage": args.stage,
@@ -239,8 +243,7 @@ def main() -> int:
 
     refs = {
         (r["task_id"], r["repetition"]): r["generated_token_ids"]
-        for r in rows
-        if r["path"] == "TARGET_UB1"
+        for r in rows if r["path"] == "TARGET_UB1"
     }
     if len(refs) != expected_pairs:
         raise RuntimeError(f"expected {expected_pairs} TARGET_UB1 references, got {len(refs)}")

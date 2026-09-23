@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import time
 from dataclasses import asdict
-from typing import Sequence
 
 from runtime_types import (
     DraftAdapter,
+    DraftStepTiming,
+    Proposal,
     RoundRecord,
     TimingBreakdown,
     accepted_prefix_length,
@@ -47,7 +48,7 @@ def run_speculative(
 ) -> dict:
     """Run one request under the prospective runtime accounting boundary.
 
-    Only target prompt prefill is excluded.  Draft begin/prefill, checkpoint,
+    Only target prompt prefill is excluded. Draft begin/prefill, checkpoint,
     proposal, reconcile, fallback and finish/reset are all inside end_to_end_ns.
     """
     if output_tokens <= 0:
@@ -73,9 +74,7 @@ def run_speculative(
     timing.target_verification_ns += target_ns
     first = first[:output_tokens]
 
-    reconcile_ns, reconcile_meta = draft.reconcile(
-        prompt_tokens, [], 0, first
-    )
+    reconcile_ns, reconcile_meta = draft.reconcile(prompt_tokens, [], 0, first)
     timing.draft_reconcile_ns += int(reconcile_ns)
     out.extend(first)
     rounds.append(
@@ -111,7 +110,14 @@ def run_speculative(
         width = min(2, max(0, remaining - 1))
         committed_prefix = prompt_tokens + out
 
-        proposal = draft.propose(committed_prefix, width)
+        # The frozen Phase-3 runner did not call the draft when only one output
+        # token remained. Keep that semantic boundary: a width-0 proposal must be
+        # a true no-op, not a hidden full-prefix replay or a backend call with
+        # max_new_tokens=0.
+        if width:
+            proposal = draft.propose(committed_prefix, width)
+        else:
+            proposal = Proposal(tokens=[], timing=DraftStepTiming(), metadata={"zero_width_noop": True})
         proposals = list(map(int, proposal.tokens))
         if len(proposals) != width:
             raise AssertionError(f"draft returned {len(proposals)} tokens for requested width {width}")

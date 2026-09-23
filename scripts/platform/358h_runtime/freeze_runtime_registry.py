@@ -23,9 +23,11 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, dict], list[dict]]:
+def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, dict], list[dict], str, str]:
     merged: dict[str, dict] = {}
     provenance = []
+    freeze_sha: str | None = None
+    freeze_commit: str | None = None
     for path in paths:
         data = json.loads(path.read_text(encoding="utf-8"))
         status_path = path.parent / "R1_STATUS.json"
@@ -34,6 +36,14 @@ def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, di
             raise RuntimeError(f"{path}: expected complete R1 {expected_stage} status")
         if status.get("timing_used_for_promotion") is not False:
             raise RuntimeError(f"{path}: R1 does not prove timing-independent qualification")
+        this_freeze = status.get("freeze_manifest_sha256")
+        this_commit = status.get("freeze_source_commit")
+        if not this_freeze or not this_commit:
+            raise RuntimeError(f"{path}: R1 status lacks freeze provenance")
+        if freeze_sha is None:
+            freeze_sha, freeze_commit = this_freeze, this_commit
+        elif this_freeze != freeze_sha or this_commit != freeze_commit:
+            raise RuntimeError(f"{path}: R1 results were produced from different source/environment freezes")
         for name, row in data.items():
             if name == "TARGET_UB1":
                 continue
@@ -45,8 +55,11 @@ def load_summaries(paths: list[Path], expected_stage: str) -> tuple[dict[str, di
             "summary_sha256": sha256(path),
             "status": str(status_path),
             "status_sha256": sha256(status_path),
+            "freeze_manifest_sha256": this_freeze,
+            "freeze_source_commit": this_commit,
         })
-    return merged, provenance
+    assert freeze_sha is not None and freeze_commit is not None
+    return merged, provenance, freeze_sha, freeze_commit
 
 
 def r1_qualified(table: dict[str, dict], name: str) -> bool:
@@ -89,8 +102,6 @@ def r0_gate(name: str, state: dict[str, Any], cap: dict[str, Any]) -> tuple[bool
             ok = False
             reasons.append(f"R0 persistent {device} forced state test failed or unavailable")
 
-    # Legacy replay binding is revalidated by the frozen LLMPipeline constructor
-    # itself in R1/R2; the NPU path uses the closed cache-binding evidence.
     if not reasons:
         reasons.append("PASS")
     return ok, reasons
@@ -110,8 +121,11 @@ def main() -> int:
     if r0_state.get("formal") is not False or r0_cap.get("formal") is not False:
         raise RuntimeError("R0 inputs must be explicitly non-formal")
 
-    small, small_prov = load_summaries(args.small, "small")
-    full, full_prov = load_summaries(args.full, "full")
+    small, small_prov, small_freeze, small_commit = load_summaries(args.small, "small")
+    full, full_prov, full_freeze, full_commit = load_summaries(args.full, "full")
+    if small_freeze != full_freeze or small_commit != full_commit:
+        raise RuntimeError("small/full R1 gates came from different source/environment freezes")
+
     names = sorted(set(small) | set(full))
     registry: dict[str, Any] = {}
     for name in names:
@@ -128,9 +142,6 @@ def main() -> int:
             "formal_performance_allowed": bool(qualified),
         }
 
-    # Formal scope is fixed and depends only on feasibility/exactness. Keep the
-    # UB1 controls needed to identify frontend and persistence effects whenever
-    # they qualify. Missing paths are retained as blocked registry entries.
     formal = ["TARGET_UB1"]
     for name in [
         "LEGACY_CPU_UB1",
@@ -143,10 +154,6 @@ def main() -> int:
         if registry.get(name, {}).get("status") == "QUALIFIED":
             formal.append(name)
 
-    # TARGET_UB2 is a correctness gate, not a formal target-only timing condition:
-    # target-only decoding submits one token per llama_decode and therefore does
-    # not exercise a two-token verification microbatch. The target-path effect is
-    # estimated by comparing the same speculative state policy at UB1 vs UB2.
     target_ub2_ok = registry.get("TARGET_UB2", {}).get("status") == "QUALIFIED"
     persist_pair_ok = (
         target_ub2_ok
@@ -168,10 +175,12 @@ def main() -> int:
         ub2_rule = "no correctness-qualified state-policy-matched NPU UB1/UB2 pair; no UB2 formal timing"
 
     out = {
-        "schema": "heterospec.358h.runtime.qualification_registry.v1",
+        "schema": "heterospec.358h.runtime.qualification_registry.v2",
         "status": "FROZEN_FOR_R2",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "selection_uses_performance_timing": False,
+        "freeze_manifest_sha256": small_freeze,
+        "freeze_source_commit": small_commit,
         "registry": registry,
         "formal_conditions": formal,
         "target_ub2_role": "correctness gate only; not a target-only performance condition",
@@ -192,7 +201,7 @@ def main() -> int:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"formal_conditions": formal, "ub2": ub2_rule}, indent=2))
+    print(json.dumps({"formal_conditions": formal, "ub2": ub2_rule, "freeze": small_freeze}, indent=2))
     return 0
 
 

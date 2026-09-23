@@ -23,6 +23,7 @@ FROZEN_RELATIVE_FILES = [
     "scripts/platform/358h_runtime/runtime_policy.py",
     "scripts/platform/358h_runtime/probe_openvino_state.py",
     "scripts/platform/358h_runtime/runtime_state_tests.py",
+    "scripts/platform/358h_runtime/plan_runtime_qualification.py",
     "scripts/platform/358h_runtime/run_runtime_qualification.py",
     "scripts/platform/358h_runtime/freeze_runtime_registry.py",
     "scripts/platform/358h_runtime/run_runtime_campaign.py",

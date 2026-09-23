@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """R0-only forced state-machine tests for the prospective 358H runtime.
 
-No timings emitted by this file are valid performance evidence.  The purpose is
+No timings emitted by this file are valid performance evidence. The purpose is
 semantic qualification: persistent state must be indistinguishable from a
 same-frontend full-prefix replay oracle after every forced reconcile pattern.
 """
@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 
 from runtime_draft import OptimumPersistentDraft, OptimumReplayDraft
+from runtime_runner import run_speculative
 from runtime_target import LlamaAPI, RuntimeLlamaTarget
 
 PROMPT = "Write a Python function that returns the square of an integer."
@@ -76,6 +77,30 @@ def target_state_cases(ubatch: int) -> dict:
     return {"ubatch": ubatch, "cases": cases, "pass": all(x["pass"] for x in cases)}
 
 
+class ProposalForbidden:
+    """Proxy that makes a width-zero draft call an immediate test failure."""
+
+    def __init__(self, inner):
+        self.inner = inner
+        self.identity = inner.identity
+        self.capabilities = inner.capabilities
+
+    def begin(self, committed_prefix):
+        return self.inner.begin(committed_prefix)
+
+    def propose(self, committed_prefix, width):
+        raise AssertionError(f"draft.propose must not be called at one-token output boundary; width={width}")
+
+    def reconcile(self, committed_prefix_before, proposals, accepted, committed_this_round):
+        return self.inner.reconcile(committed_prefix_before, proposals, accepted, committed_this_round)
+
+    def logical_state_length(self):
+        return self.inner.logical_state_length()
+
+    def finish(self):
+        return self.inner.finish()
+
+
 def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
     api = LlamaAPI()
     tokenizer_target = RuntimeLlamaTarget(api, ubatch=1)
@@ -103,7 +128,7 @@ def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
                 f"{pp.tokens} != {op.tokens}"
             )
         committed = forced_committed(pp.tokens, forced_accept, vocab_size)
-        p_ns, p_meta = persistent.reconcile(logical, pp.tokens, forced_accept, committed)
+        _, p_meta = persistent.reconcile(logical, pp.tokens, forced_accept, committed)
         oracle.reconcile(logical, op.tokens, forced_accept, committed)
         logical.extend(committed)
         ok = persistent.logical_state_length() == len(logical)
@@ -127,7 +152,6 @@ def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
     persistent.finish()
     oracle.finish()
 
-    # Cross-request leakage/reset check.
     persistent.begin(prompt)
     oracle.begin(prompt)
     pp = persistent.propose(prompt, 2)
@@ -144,6 +168,24 @@ def persistent_vs_replay(device: str, target_ubatch: int) -> dict:
             "pass": reset_ok,
         }
     )
+
+    # Output-budget boundary: with an output cap of one, the runtime should
+    # commit the mandatory initial target-only token and terminate without ever
+    # invoking the draft proposal API.
+    boundary_target = RuntimeLlamaTarget(api, ubatch=1)
+    boundary = run_speculative(boundary_target, ProposalForbidden(persistent), prompt, 1)
+    boundary_ok = len(boundary["tokens"]) == 1 and boundary["proposed"] == 0 and len(boundary["rounds"]) == 1
+    records.append(
+        {
+            "round": "output_cap_one_no_draft_proposal",
+            "generated": boundary["tokens"],
+            "proposed": boundary["proposed"],
+            "round_count": len(boundary["rounds"]),
+            "pass": boundary_ok,
+        }
+    )
+    if not boundary_ok:
+        raise AssertionError(records[-1])
 
     return {
         "device": device,
@@ -162,7 +204,7 @@ def main() -> int:
     args = ap.parse_args()
 
     result = {
-        "schema": "heterospec.358h.runtime.r0_state_tests.v0",
+        "schema": "heterospec.358h.runtime.r0_state_tests.v1",
         "formal": False,
         "claim_status": "NON_FORMAL / INVALID_FOR_PERFORMANCE_CLAIMS",
         "target": {},

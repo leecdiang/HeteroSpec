@@ -86,6 +86,7 @@ class RoundRecord:
     draft_reconcile_ns: int
     checkpoint_bytes: int
     state_transfer_bytes: int
+    checkpoint_restored: bool
     draft_logical_state_length: int | None
     target_state_position: int | None
     fallback_events: list[str] = field(default_factory=list)

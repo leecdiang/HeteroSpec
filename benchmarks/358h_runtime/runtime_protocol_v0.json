@@ -1,0 +1,186 @@
+{
+  "schema": "heterospec.358h.runtime.protocol.v0",
+  "status": "DRAFT_FOR_PREEXECUTION_FREEZE",
+  "created_from_main": "b80bdbc67f6e19829245ad732390cd6aef941675",
+  "formal_data_seen": false,
+  "study_role": "prospective software/runtime intervention study; never reinterpret or reopen the closed 358H hardware campaign",
+  "immutable_prior_campaign": {
+    "status": "SCIENTIFIC EXECUTION CLOSED",
+    "phase3_freeze_commit": "18072058fa28f06c5e0a8c80549990b7c48b207a",
+    "legacy_runner_sha256": "1d11e42d008f981ee6a91ac7bfeb478f11c060d51e79b9e060fe04ece70153e8",
+    "target_model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "draft_gguf_sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+    "draft_ir_xml_sha256": "fc8ad94dbecfc0c45cf3db4f0624344d2bea2cdd6997e0b45ca52d4f7baa1103",
+    "draft_ir_bin_sha256": "2e129cffb1a7239007a3df27e0f3f7bb12f65a40e5c9b1e24a250d952da47837"
+  },
+  "fixed_semantics": {
+    "target": "Qwen3-8B Q8_0 on explicit llama.cpp Vulkan0",
+    "draft": "same frozen Qwen3-0.6B OpenVINO INT4 IR",
+    "greedy": true,
+    "k": 2,
+    "output_cap": 128,
+    "acceptance": "ordered prefix; stop at first mismatch",
+    "correction": "one target token at first mismatch",
+    "bonus": "one target token after complete draft acceptance",
+    "prompt_format": "byte-identical to closed 358H Phase-3 formatter",
+    "primary_timing_boundary": "post target-prompt-prefill decode; all runtime-specific draft initialization, checkpoint, proposal, reconciliation, fallback, and cleanup are inside the measured boundary",
+    "energy": "NOT_CLAIMED"
+  },
+  "research_questions": {
+    "rq1": "Can persistent/reconcilable draft state reduce realized draft-subsystem cost relative to full committed-prefix replay without changing token semantics?",
+    "rq2": "Can a physically wider target verification path (n_ubatch=2) pass the active exact-output contract and reduce target-side realized cost?",
+    "rq3": "After counting every state-management and target-side cost, does a correctness-qualified combined runtime path improve post-prefill decode time relative to target-only?",
+    "rq4": "If a component improves but the whole path remains unprofitable, can the runtime expose that outcome without relabeling it as a system speedup?"
+  },
+  "stages": {
+    "R0": {
+      "claim_status": "NON_FORMAL / INVALID_FOR_PERFORMANCE_CLAIMS",
+      "purpose": "capability discovery and forced state-machine qualification",
+      "required": [
+        "explicit CPU/NPU binding probe",
+        "OpenVINO model I/O and query_state capability inventory",
+        "same-frontend replay oracle",
+        "persistent adapter begin/propose/reconcile/reset tests",
+        "forced 0/1/2 accepted-token cases",
+        "repeated rejection",
+        "alternating acceptance",
+        "request reset and cross-request leakage test",
+        "output-boundary test",
+        "target UB1 and UB2 binding/state tests"
+      ]
+    },
+    "R1": {
+      "claim_status": "QUALIFICATION_ONLY / TIMINGS INVALID_FOR_HEADLINE_CLAIMS",
+      "purpose": "correctness qualification of complete candidate execution paths before performance promotion",
+      "small_gate": {
+        "task_ids": [3, 10, 19, 20, 106, 129],
+        "repetitions": 3,
+        "output_cap": 128,
+        "pass_rule": "all paired generated token-ID sequences exactly equal the shared UB1 target-only reference"
+      },
+      "full_gate": {
+        "task_ids": [3, 10, 19, 20, 28, 32, 44, 47, 48, 50, 54, 57, 62, 64, 68, 70, 89, 90, 101, 104, 105, 106, 107, 111, 119, 123, 126, 128, 129, 162],
+        "repetitions": 3,
+        "output_cap": 128,
+        "pass_rule": "90/90 exact pairs; one mismatch blocks the path from performance promotion"
+      }
+    },
+    "R2": {
+      "claim_status": "FORMAL_PROSPECTIVE_RUNTIME_STUDY",
+      "purpose": "paired component and end-to-end comparison of only R1-qualified paths",
+      "workload": "HumanEval30",
+      "repetitions": 3,
+      "output_cap": 128,
+      "condition_selection": "deterministic from R0/R1 feasibility and exactness only; never from observed performance",
+      "schedule": "within each task/repetition block, randomize all eligible conditions using a frozen seed",
+      "warmup": "HumanEval/0 only; non-formal and excluded from estimators"
+    }
+  },
+  "candidate_path_families": {
+    "target_reference": {
+      "name": "TARGET_UB1",
+      "target_n_ubatch": 1,
+      "draft": null,
+      "always_formal_if_environment_passes": true
+    },
+    "legacy_replay": {
+      "draft_frontend": "OpenVINO GenAI LLMPipeline",
+      "state_policy": "full committed-prefix replay every proposal",
+      "target_n_ubatch": 1,
+      "devices": ["CPU", "NPU"],
+      "role": "contemporaneous bridge to the closed Phase-3 mechanism"
+    },
+    "same_frontend_replay": {
+      "draft_frontend": "state-capable OpenVINO/Optimum adapter selected and frozen in R0",
+      "state_policy": "full committed-prefix replay every proposal",
+      "target_n_ubatch": 1,
+      "devices": ["CPU", "NPU"],
+      "role": "control for frontend changes when estimating state-reuse benefit"
+    },
+    "persistent_ub1": {
+      "draft_frontend": "same as same_frontend_replay",
+      "state_policy": "persistent checkpoint/propose/reconcile",
+      "target_n_ubatch": 1,
+      "devices": ["CPU", "NPU"]
+    },
+    "persistent_ub2": {
+      "draft_frontend": "same as same_frontend_replay",
+      "state_policy": "persistent checkpoint/propose/reconcile",
+      "target_n_ubatch": 2,
+      "devices": ["CPU", "NPU"],
+      "promotion": "only if the complete device/frontend/state/UB2 path passes R1 90/90 exactness"
+    },
+    "legacy_replay_ub2_fallback": {
+      "draft_frontend": "OpenVINO GenAI LLMPipeline",
+      "state_policy": "full committed-prefix replay every proposal",
+      "target_n_ubatch": 2,
+      "devices": ["CPU", "NPU"],
+      "promotion": "may be qualified only when persistent state is unavailable and UB2 remains a scientifically useful independent intervention"
+    }
+  },
+  "hard_block_rules": [
+    "any generated-token mismatch against the active target-only reference",
+    "requested execution device differs from actual execution device",
+    "AUTO, MULTI, HETERO, or silent CPU inference fallback for a single-device claim",
+    "persistent path performs hidden full-prefix replay after begin",
+    "draft logical history differs from committed orchestrator history after reconcile",
+    "target KV/logical history differs from committed orchestrator history",
+    "cross-request state leakage",
+    "unrecorded fallback or recovery",
+    "runtime-specific setup/checkpoint/reconcile/cleanup moved outside the primary measured decode boundary",
+    "formal condition chosen using R1 or R2 timing performance"
+  ],
+  "timing_accounting": [
+    "draft_begin_ns",
+    "draft_checkpoint_ns",
+    "draft_propose_ns",
+    "draft_reconcile_ns",
+    "draft_finish_ns",
+    "target_verification_ns",
+    "runtime_residual_ns",
+    "end_to_end_ns"
+  ],
+  "state_accounting": [
+    "prefix_before",
+    "proposed_tokens",
+    "accepted_draft_tokens",
+    "committed_tokens_C",
+    "correction_or_bonus",
+    "checkpoint_bytes",
+    "state_transfer_bytes",
+    "fallback_events",
+    "draft_logical_state_length",
+    "target_state_position",
+    "qualification_id"
+  ],
+  "estimators": {
+    "primary_system": "for each prompt take the median paired target-only/runtime speedup across repetitions; report geometric mean across 30 prompts",
+    "primary_component": "same-frontend replay versus persistent realized draft-subsystem time using prompt-level paired ratios",
+    "bootstrap": {
+      "unit": "HumanEval prompt",
+      "resamples": 10000,
+      "seed": 20260923,
+      "interval": [0.025, 0.975]
+    },
+    "secondary": [
+      "median prompt speedup",
+      "faster prompts / 30",
+      "target verification ratio UB2/UB1 where jointly qualified",
+      "component arithmetic means and fractions",
+      "weighted draft acceptance",
+      "mean committed tokens per speculative round C",
+      "checkpoint/state-transfer bytes versus prefix length"
+    ]
+  },
+  "interpretation_rules": [
+    "reduced draft cost with total speedup <= 1 is component improvement without overall profitability",
+    "a correctness-blocked path retains diagnostic timing only",
+    "an unavailable NPU state API is IMPLEMENTATION UNAVAILABLE, not a reason to substitute CPU/AUTO/replay and call it persistent NPU",
+    "no result changes the scientific status of the closed hardware campaign",
+    "no energy conclusion is permitted"
+  ],
+  "deferred": {
+    "profitability_guard": "architecture hook may be implemented, but no formal adaptive-policy claim is made in R2; a measured guard requires a separately frozen R3 protocol",
+    "not_in_scope": ["k sweep", "model sweep", "adaptive width", "adaptive device placement", "concurrency/QPS sweep", "new workload search", "post-data parameter tuning"]
+  }
+}

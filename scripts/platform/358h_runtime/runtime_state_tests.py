@@ -11,8 +11,9 @@ import argparse
 import json
 from pathlib import Path
 
-from runtime_draft import OptimumPersistentDraft, OptimumReplayDraft
+from runtime_draft import OptimumDraftEngine
 from runtime_runner import run_speculative
+from runtime_shared_draft import SharedOptimumPersistentDraft, SharedOptimumReplayDraft
 from runtime_target import LlamaAPI, RuntimeLlamaTarget, RuntimeTargetModel
 
 PROMPT = "Write a Python function that returns the square of an integer."
@@ -102,82 +103,95 @@ class ProposalForbidden:
 def persistent_vs_replay(device: str, tokenizer_target: RuntimeLlamaTarget, target_ubatch: int) -> dict:
     prompt = tokenizer_target.tokenize(FORMATTED, True)
     vocab_size = tokenizer_target.n_vocab
-
-    persistent = OptimumPersistentDraft(device, target_ubatch=target_ubatch)
-    oracle = OptimumReplayDraft(device, target_ubatch=target_ubatch)
-    persistent.begin(prompt)
-    oracle.begin(prompt)
-    logical = list(prompt)
     patterns = [0, 1, 2, 0, 2, 1, 0]
-    records = []
-    first_proposal = None
 
+    # One physical compiled engine per device. Stateful policies cannot be
+    # interleaved on that engine, so run the complete persistent forced trace,
+    # reset, then replay the identical committed ledger with the replay oracle.
+    engine = OptimumDraftEngine(device)
+    persistent = SharedOptimumPersistentDraft(engine, target_ubatch=target_ubatch)
+    oracle = SharedOptimumReplayDraft(engine, target_ubatch=target_ubatch)
+
+    persistent.begin(prompt)
+    logical = list(prompt)
+    persistent_trace = []
     for round_id, forced_accept in enumerate(patterns):
         pp = persistent.propose(logical, 2)
-        op = oracle.propose(logical, 2)
-        proposal_equal = pp.tokens == op.tokens
-        if first_proposal is None:
-            first_proposal = list(pp.tokens)
-        if not proposal_equal:
-            raise AssertionError(
-                f"persistent proposal diverged from full replay oracle on {device} round {round_id}: "
-                f"{pp.tokens} != {op.tokens}"
-            )
         committed = forced_committed(pp.tokens, forced_accept, vocab_size)
         _, p_meta = persistent.reconcile(logical, pp.tokens, forced_accept, committed)
-        oracle.reconcile(logical, op.tokens, forced_accept, committed)
         logical.extend(committed)
         ok = persistent.logical_state_length() == len(logical)
-        records.append(
-            {
-                "round": round_id,
-                "forced_accept": forced_accept,
-                "proposal": pp.tokens,
-                "oracle_proposal": op.tokens,
-                "proposal_equal": proposal_equal,
-                "committed": committed,
-                "persistent_logical_length": persistent.logical_state_length(),
-                "expected_logical_length": len(logical),
-                "state_transfer_bytes": p_meta.get("state_transfer_bytes", 0),
-                "pass": ok,
-            }
+        row = {
+            "round": round_id,
+            "forced_accept": forced_accept,
+            "proposal": list(pp.tokens),
+            "committed": committed,
+            "persistent_logical_length": persistent.logical_state_length(),
+            "expected_logical_length": len(logical),
+            "state_transfer_bytes": p_meta.get("state_transfer_bytes", 0),
+            "pass": ok,
+        }
+        persistent_trace.append(row)
+        if not ok:
+            raise AssertionError(row)
+    persistent.finish()
+
+    oracle.begin(prompt)
+    oracle_logical = list(prompt)
+    records = []
+    for expected in persistent_trace:
+        op = oracle.propose(oracle_logical, 2)
+        proposal_equal = list(op.tokens) == expected["proposal"]
+        committed = list(expected["committed"])
+        oracle.reconcile(
+            oracle_logical,
+            op.tokens,
+            int(expected["forced_accept"]),
+            committed,
         )
+        oracle_logical.extend(committed)
+        ok = (
+            proposal_equal
+            and oracle.logical_state_length() == len(oracle_logical)
+            and expected["pass"]
+        )
+        records.append({
+            **expected,
+            "oracle_proposal": list(op.tokens),
+            "proposal_equal": proposal_equal,
+            "oracle_logical_length": oracle.logical_state_length(),
+            "pass": ok,
+        })
         if not ok:
             raise AssertionError(records[-1])
-
-    persistent.finish()
     oracle.finish()
 
+    first_proposal = persistent_trace[0]["proposal"]
     persistent.begin(prompt)
-    oracle.begin(prompt)
     pp = persistent.propose(prompt, 2)
-    op = oracle.propose(prompt, 2)
-    reset_ok = pp.tokens == op.tokens == first_proposal
+    persistent_reset_ok = list(pp.tokens) == first_proposal
     persistent.finish()
+    oracle.begin(prompt)
+    op = oracle.propose(prompt, 2)
+    oracle_reset_ok = list(op.tokens) == first_proposal
     oracle.finish()
-    records.append(
-        {
-            "round": "reset_repeat",
-            "persistent": pp.tokens,
-            "oracle": op.tokens,
-            "first_proposal": first_proposal,
-            "pass": reset_ok,
-        }
-    )
+    records.append({
+        "round": "reset_repeat",
+        "persistent": list(pp.tokens),
+        "oracle": list(op.tokens),
+        "first_proposal": first_proposal,
+        "pass": persistent_reset_ok and oracle_reset_ok,
+    })
 
-    # Output-budget boundary: reuse the already loaded UB1 target. The runtime
-    # must commit one target-only token and terminate without calling propose().
     boundary = run_speculative(tokenizer_target, ProposalForbidden(persistent), prompt, 1)
     boundary_ok = len(boundary["tokens"]) == 1 and boundary["proposed"] == 0 and len(boundary["rounds"]) == 1
-    records.append(
-        {
-            "round": "output_cap_one_no_draft_proposal",
-            "generated": boundary["tokens"],
-            "proposed": boundary["proposed"],
-            "round_count": len(boundary["rounds"]),
-            "pass": boundary_ok,
-        }
-    )
+    records.append({
+        "round": "output_cap_one_no_draft_proposal",
+        "generated": boundary["tokens"],
+        "proposed": boundary["proposed"],
+        "round_count": len(boundary["rounds"]),
+        "pass": boundary_ok,
+    })
     if not boundary_ok:
         raise AssertionError(records[-1])
 
@@ -186,6 +200,7 @@ def persistent_vs_replay(device: str, tokenizer_target: RuntimeLlamaTarget, targ
         "target_ubatch": target_ubatch,
         "persistent_capabilities": persistent.capabilities.__dict__,
         "oracle_capabilities": oracle.capabilities.__dict__,
+        "engine_execution_devices": engine.execution_devices,
         "records": records,
         "pass": all(x["pass"] for x in records),
     }
@@ -198,7 +213,7 @@ def main() -> int:
     args = ap.parse_args()
 
     result = {
-        "schema": "heterospec.358h.runtime.r0_state_tests.v2",
+        "schema": "heterospec.358h.runtime.r0_state_tests.v3",
         "formal": False,
         "claim_status": "NON_FORMAL / INVALID_FOR_PERFORMANCE_CLAIMS",
         "target": {},
@@ -225,10 +240,7 @@ def main() -> int:
 
     if target_ub1 is None:
         for device in args.devices:
-            result["draft"][device] = {
-                "pass": False,
-                "status": "NOT_TESTABLE_WITHOUT_TARGET_UB1",
-            }
+            result["draft"][device] = {"pass": False, "status": "NOT_TESTABLE_WITHOUT_TARGET_UB1"}
     else:
         for device in args.devices:
             try:

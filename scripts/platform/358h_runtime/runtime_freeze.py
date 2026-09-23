@@ -21,6 +21,7 @@ FROZEN_RELATIVE_FILES = [
     "scripts/platform/358h_runtime/runtime_factory.py",
     "scripts/platform/358h_runtime/runtime_runner.py",
     "scripts/platform/358h_runtime/runtime_policy.py",
+    "scripts/platform/358h_runtime/runtime_logic_unit_tests.py",
     "scripts/platform/358h_runtime/probe_openvino_state.py",
     "scripts/platform/358h_runtime/runtime_state_tests.py",
     "scripts/platform/358h_runtime/plan_runtime_qualification.py",

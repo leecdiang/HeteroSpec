@@ -26,6 +26,7 @@ CODE = [
     "scripts/platform/m4_runtime/build_runtime_runner.py",
     "scripts/platform/m4_runtime/prepare_prompts.py",
     "scripts/platform/m4_runtime/run_runtime_study.py",
+    "scripts/platform/m4_runtime/unattended_pipeline.py",
     "scripts/platform/m4_runtime/analyze_runtime_study.py",
     "scripts/platform/m4_runtime/runtime_policy.py",
     "scripts/platform/m4_runtime/runtime_logic_unit_tests.py",

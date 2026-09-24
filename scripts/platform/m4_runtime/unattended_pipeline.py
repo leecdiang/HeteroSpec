@@ -64,12 +64,20 @@ def environment():
             "macos_build": output("sw_vers", "-buildVersion")}
 
 
-def sleep_event_count():
+def sleep_events_between(started, finished):
     result = subprocess.run(["pmset", "-g", "log"], cwd=ROOT, text=True,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30)
     if result.returncode:
         raise RuntimeError("Could not audit macOS sleep log")
-    return len(re.findall(r"Entering Sleep", result.stdout, re.IGNORECASE))
+    pattern = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}) Sleep\s+Entering Sleep", re.IGNORECASE)
+    events = []
+    for line in result.stdout.splitlines():
+        match = pattern.match(line)
+        if match:
+            event = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S %z")
+            if started.replace(microsecond=0) <= event <= finished:
+                events.append(line)
+    return events
 
 
 def preflight():
@@ -92,7 +100,7 @@ def preflight():
     return environment()
 
 
-def audit_attempt(stage, attempt_id, expected, sleep_before):
+def audit_attempt(stage, attempt_id, expected):
     directory = RUNS / stage / attempt_id
     completion = json.loads((directory / "completion.json").read_text())
     raw = directory / "observations.jsonl"
@@ -109,8 +117,6 @@ def audit_attempt(stage, attempt_id, expected, sleep_before):
         modes = re.findall(r"^\s*lowpowermode\s+(\d+)\s*$", state["power_settings"], re.MULTILINE)
         if not modes or any(value != "0" for value in modes):
             raise RuntimeError(f"{stage} had Low Power Mode enabled")
-    if sleep_event_count() != sleep_before:
-        raise RuntimeError(f"macOS sleep log changed during {stage}")
     return {"observations": expected, "sha256": sha(raw)}
 
 
@@ -148,10 +154,7 @@ def main():
             try:
                 state["preflight_environment"] = preflight()
                 write_json(status_path, state)
-                sleep_before = sleep_event_count()
-
                 def run_stage(name, command, audit=None):
-                    nonlocal sleep_before
                     environment()
                     if assertion.poll() is not None:
                         raise RuntimeError("macOS wake assertion is no longer active")
@@ -159,16 +162,17 @@ def main():
                     state["current_stage"] = name
                     state["stages"][name] = {"status": "RUNNING", "started_utc": utc()}
                     write_json(status_path, state)
+                    started = datetime.now(timezone.utc)
                     log_line(f"START {name}: {' '.join(map(str, command))}")
                     result = subprocess.run(command, cwd=ROOT, stdin=subprocess.DEVNULL,
                                             stdout=log, stderr=subprocess.STDOUT)
                     if result.returncode:
                         raise RuntimeError(f"{name} exited {result.returncode}")
-                    details = audit(sleep_before) if audit else {}
+                    details = audit() if audit else {}
                     environment()
-                    if sleep_event_count() != sleep_before:
-                        raise RuntimeError(f"macOS sleep log changed during {name}")
-                    sleep_before = sleep_event_count()
+                    sleep_events = sleep_events_between(started, datetime.now(timezone.utc))
+                    if sleep_events:
+                        raise RuntimeError(f"macOS slept during {name}: {sleep_events[0]}")
                     state["stages"][name] = {"status": "COMPLETE", "completed_utc": utc(), **details}
                     write_json(status_path, state)
                     log_line(f"COMPLETE {name}")
@@ -178,10 +182,10 @@ def main():
                 qualification = run_id + "-qualification"
                 formal = run_id + "-formal"
                 run_stage("baseline", [str(PYTHON), "-u", str(STUDY), "baselines", "--attempt", baseline],
-                          lambda count: audit_attempt("calibration_baselines", baseline, 240, count))
+                          lambda: audit_attempt("calibration_baselines", baseline, 240))
                 run_stage("candidates", [str(PYTHON), "-u", str(STUDY), "candidates", "--attempt", candidate,
                                          "--baseline-attempt", baseline],
-                          lambda count: audit_attempt("calibration_candidates", candidate, 1080, count))
+                          lambda: audit_attempt("calibration_candidates", candidate, 1080))
                 run_stage("freeze", [str(PYTHON), "-u", str(STUDY), "freeze", "--baseline-attempt", baseline,
                                      "--candidate-attempt", candidate])
                 if json.loads((BASE / "CALIBRATION_FREEZE.json").read_text())["status"] != "CALIBRATION_FROZEN":
@@ -192,7 +196,7 @@ def main():
                 if output("git", "status", "--porcelain"):
                     raise RuntimeError("Tree dirty after calibration freeze commit")
                 run_stage("qualification", [str(PYTHON), "-u", str(STUDY), "qualify", "--attempt", qualification],
-                          lambda count: audit_attempt("qualification", qualification, 144, count))
+                          lambda: audit_attempt("qualification", qualification, 144))
                 if json.loads((BASE / "QUALIFICATION_REPORT.json").read_text())["status"] != "PASS":
                     raise RuntimeError("Qualification did not pass")
                 subprocess.run(["git", "add", "benchmarks/m4_runtime/QUALIFICATION_REPORT.json"], cwd=ROOT, check=True)
@@ -201,7 +205,7 @@ def main():
                 if output("git", "status", "--porcelain"):
                     raise RuntimeError("Tree dirty before formal measurement")
                 run_stage("formal", [str(PYTHON), "-u", str(STUDY), "formal", "--attempt", formal],
-                          lambda count: audit_attempt("formal", formal, 540, count))
+                          lambda: audit_attempt("formal", formal, 540))
                 run_stage("analysis", [str(PYTHON), "-u",
                                        str(ROOT / "scripts/platform/m4_runtime/analyze_runtime_study.py"),
                                        "--attempt", formal])

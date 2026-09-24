@@ -217,6 +217,21 @@ def main() -> int:
     else:
         ub2_rule = "no correctness-qualified state-policy-matched NPU UB1/UB2 pair; no UB2 formal timing"
 
+    identifiable_effects = {
+        "state_reuse_cpu": ({"formal_paths": ["OPTIMUM_REPLAY_CPU_UB1", "PERSIST_CPU_UB1"],
+                             "required_correctness_gates": []}
+                            if qualified(registry, "OPTIMUM_REPLAY_CPU_UB1")
+                            and qualified(registry, "PERSIST_CPU_UB1") else None),
+        "state_reuse_npu": ({"formal_paths": ["OPTIMUM_REPLAY_NPU_UB1", "PERSIST_NPU_UB1"],
+                             "required_correctness_gates": []}
+                            if qualified(registry, "OPTIMUM_REPLAY_NPU_UB1")
+                            and qualified(registry, "PERSIST_NPU_UB1") else None),
+        "target_ub2": ({"formal_paths": ["PERSIST_NPU_UB1", "PERSIST_NPU_UB2"],
+                        "required_correctness_gates": ["TARGET_UB2"]} if persist_pair_ok else
+                       {"formal_paths": ["LEGACY_NPU_UB1", "LEGACY_NPU_UB2"],
+                        "required_correctness_gates": ["TARGET_UB2"]} if legacy_pair_ok else None),
+    }
+
     out = {
         "schema": "heterospec.358h.runtime.qualification_registry.v3",
         "status": "FROZEN_FOR_R2",
@@ -226,6 +241,7 @@ def main() -> int:
         "freeze_source_commit": small_commit,
         "registry": registry,
         "formal_conditions": formal,
+        "identifiable_effects": identifiable_effects,
         "formal_condition_reasons": selection_reasons,
         "formal_scope_rule": "retain only the target reference and controls required to identify qualified state/target interventions",
         "target_ub2_role": "correctness gate only; not a target-only performance condition",

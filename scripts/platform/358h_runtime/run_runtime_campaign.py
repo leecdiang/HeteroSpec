@@ -19,6 +19,41 @@ from runtime_session_v02 import RuntimeProcessSession, draft_groups, prepare_leg
 from runtime_types import first_divergence
 
 SEED = 20260925
+PROTOCOL_V03 = Path(__file__).resolve().parents[3] / "benchmarks/358h_runtime/runtime_protocol_v0_3.json"
+
+
+def assert_r2_stage_gate(protocol: dict, registry: dict) -> None:
+    """Refuse formal output until explicitly authorized and identifiable."""
+    if protocol.get("stage_gates", {}).get("r2_authorized") is not True:
+        raise RuntimeError("R2_NOT_AUTHORIZED_PROTOCOL")
+    effects = registry.get("identifiable_effects")
+    formal = set(registry.get("formal_conditions", []))
+    allowed = {
+        "state_reuse_cpu": [({"OPTIMUM_REPLAY_CPU_UB1", "PERSIST_CPU_UB1"}, set())],
+        "state_reuse_npu": [({"OPTIMUM_REPLAY_NPU_UB1", "PERSIST_NPU_UB1"}, set())],
+        "target_ub2": [({"PERSIST_NPU_UB1", "PERSIST_NPU_UB2"}, {"TARGET_UB2"}),
+                       ({"LEGACY_NPU_UB1", "LEGACY_NPU_UB2"}, {"TARGET_UB2"})],
+    }
+    qualified = lambda path: registry.get("registry", {}).get(path, {}).get("status") == "QUALIFIED"
+    valid = False
+    if isinstance(effects, dict) and "TARGET_UB1" in formal and qualified("TARGET_UB1"):
+        for name, alternatives in allowed.items():
+            effect = effects.get(name)
+            if not isinstance(effect, dict):
+                continue
+            paths = effect.get("formal_paths")
+            gates = effect.get("required_correctness_gates")
+            if not isinstance(paths, list) or not isinstance(gates, list):
+                continue
+            if any(set(paths) == expected_paths and len(paths) == len(expected_paths)
+                   and set(gates) == expected_gates and len(gates) == len(expected_gates)
+                   and set(paths).issubset(formal)
+                   and all(qualified(p) for p in set(paths) | set(gates))
+                   for expected_paths, expected_gates in alternatives):
+                valid = True
+                break
+    if not valid:
+        raise RuntimeError("R2_NOT_ADMISSIBLE_NO_IDENTIFIABLE_INTERVENTION")
 
 
 def main() -> int:
@@ -27,10 +62,12 @@ def main() -> int:
     ap.add_argument("--freeze-manifest", type=Path, required=True)
     ap.add_argument("--output-dir", type=Path, required=True)
     args = ap.parse_args()
+    protocol = json.loads(PROTOCOL_V03.read_text(encoding="utf-8"))
+    registry = json.loads(args.registry.read_text(encoding="utf-8"))
+    assert_r2_stage_gate(protocol, registry)
     assert_host_gate()
     freeze = verify_freeze_manifest(args.freeze_manifest)
     freeze_sha = sha256(args.freeze_manifest)
-    registry = json.loads(args.registry.read_text(encoding="utf-8"))
     if registry.get("status") != "FROZEN_FOR_R2" or registry.get("selection_uses_performance_timing") is not False:
         raise RuntimeError("registry is not frozen with timing-independent selection")
     if registry.get("freeze_manifest_sha256") != freeze_sha or registry.get("freeze_source_commit") != freeze["source_commit"]:

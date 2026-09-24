@@ -15,6 +15,9 @@ ROOT = HERE.parents[2]
 FROZEN_RELATIVE_FILES = [
     "benchmarks/358h_runtime/runtime_protocol_v0.json",
     "benchmarks/358h_runtime/runtime_protocol_v0_2.json",
+    "benchmarks/358h_runtime/runtime_protocol_v0_3.json",
+    "benchmarks/358h_runtime/V03_CORRECTNESS_DIAGNOSTIC_REPORT.md",
+    "benchmarks/358h_runtime/runtime_diagnostic_v0_3_evidence.json",
     "benchmarks/358h_runtime/RUNTIME_ARCHITECTURE_v0_2.md",
     "benchmarks/358h_runtime/V01_TO_V02_TRANSITION.md",
     "scripts/platform/358h_runtime/runtime_types.py",
@@ -42,6 +45,10 @@ FROZEN_RELATIVE_FILES = [
     "scripts/platform/358h_runtime/runtime_freeze.py",
     "scripts/platform/358h_runtime/create_runtime_freeze.py",
     "scripts/platform/358h_runtime/validate_runtime_scaffold.py",
+    "scripts/platform/358h_runtime/diagnose_target_v03.py",
+    "scripts/platform/358h_runtime/diagnose_verify_v03.py",
+    "scripts/platform/358h_runtime/runtime_r2_gate_tests_v03.py",
+    "scripts/platform/358h_runtime/summarize_diagnostics_v03.py",
 ]
 
 MODEL_ARTIFACT_SHA256 = {

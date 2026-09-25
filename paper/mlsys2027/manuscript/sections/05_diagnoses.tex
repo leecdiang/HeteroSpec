@@ -1,11 +1,9 @@
 \section{From Local Opportunity to Realized Gain}
 \label{sec:diagnoses}
 The observed outcomes motivate two diagnoses supported by path controls and direct timing. Figure~\ref{fig:translation} locates the execution-path qualification and stateful-realization boundaries. These diagnoses apply to identified configurations and do not constitute an exhaustive theory. The M4 contrast remains an independent empirical observation; neither diagnosis is assigned to it.
-\input{figures/06_translation.tex}
 
 \subsection{Execution-path qualification}
 \label{sec:admissibility}
-\input{figures/03_verification.tex}
 \paragraph{Cheap physical batching is not sufficient.}
 The final M4 Metal path combines exact frozen-workload outputs with a target-forward proxy near one baseline step. Across its tested contexts, $\vTwo$ is approximately 1.02--1.08. This is a shared-path reference from a separate micro study, not evidence for either diagnosed mechanism or a complete round decomposition. It does not explain the M4 outcome contrast.
 
@@ -13,6 +11,8 @@ On RTX 5070 Ti Laptop, the batched CUDA target also has near-one-step two-token 
 
 These controls are deliberately secondary. They qualify a slower path after the native fast attempt failed; they are not a rescued primary success. The verification microbenchmark explains lost batching opportunity, while the post-prefill decode controls include drafting and integration. We cannot recover a full $\rtarget$ decomposition by substituting the forward-only ratio into Equation~\ref{eq:normalized}.
 
+% Queue the state figure ahead of its discussion to preserve normal wide-float flow.
+\input{figures/04_358h.tex}
 \paragraph{A bounded numerical divergence.}
 The frozen CUDA reproducer repeats the HumanEval/106 divergence in three of three runs at the same captured location. Sequential and serialized execution select token 2790, whereas batched execution selects 2629. A separate same-commit diagnostic build captures the corresponding score-margin change from $+0.080948$ to $-0.126457$. That numerical instrumentation does not replace the original formal binary or its measurements.
 
@@ -27,12 +27,11 @@ This negative control matters because it prevents an attractive simplification: 
 
 \subsection{Stateful realization}
 \label{sec:state}
-\input{figures/04_358h.tex}
 On Core Ultra X7 358H, the isolated NPU draft has higher median steady-state throughput than CPU at the tested contexts, with a larger advantage at longer contexts. This local indicator does not survive integration: both qualified paths are exact but unprofitable, and the NPU path is slower. The measured regions reveal different costs on the two paths. The direct round records show mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, approximately 2.46. This is complete committed output, not the accepted-draft counter used in older native records.
 
 The target maintains persistent state, evaluates proposals, removes invalid candidate state when needed, and decodes correction or bonus output. Its complete measured region accounts for \HcpuTarget\% of CPU-path speculative time. The NPU path instead spends \HnpuDraft\% in the synchronous OpenVINO call that replays the full committed prefix and generates a proposal. Replay and proposal are inseparable within this measurement; we do not invent a replay-only value. Residual orchestration occupies only \HcpuResidual\% and \HnpuResidual\%, so it cannot explain the main loss.
 
-Figure~\ref{fig:state} separates isolated steady-state throughput from this realized request decomposition. The isolated NPU draft can outperform the CPU at the tested contexts, but this advantage does not survive the qualified state interface. The conclusion concerns that implementation, not insufficient NPU compute capability. A state-persistent intervention has not been implemented or measured.
+Figure~\ref{fig:state} separates isolated steady-state throughput from this realized request decomposition. The isolated NPU draft can outperform the CPU at the tested contexts, but this advantage does not survive the qualified state interface. The conclusion concerns that implementation, not insufficient NPU compute capability. The subsequent runtime study tests intervention eligibility separately; these Phase-3 timings do not estimate a persistence benefit.
 
 Using arithmetic totals at a common boundary reconstructs Equation~\ref{eq:normalized}. CPU has $(\dreal,\rtarget,X)=(\HcpuD,\HcpuR,\HcpuX)$ and aggregate speedup \HcpuAggregate$\times$; NPU has $(\HnpuD,\HnpuR,\HnpuX)$ and \HnpuAggregate$\times$. These agree with the ratios of total baseline/speculative times. They intentionally differ from the primary prompt-level geometric means in Table~\ref{tab:headlines}.
 

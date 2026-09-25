@@ -1,8 +1,28 @@
+# Manuscript v0.4 — measured runtime integration
+
+Current status: **MEASURED HARDWARE + BOUNDED PROSPECTIVE RUNTIME STUDY; DRAFT FOR AUTHOR REVIEW** — 2026-09-25.
+
+Base main: `bbf0c555cc50242f85c086eac342c9deb5c2e945`. Branch: `paper/mlsys2027-runtime-integration-v0.4`. The exact delivery HEAD is the Draft PR head; `RUNTIME_INTEGRATION_V04.md` records scope and QA.
+
+Section 7 now connects qualification to realized-cost control: the tested 358H intervention is qualification-blocked with no R2 performance result, and the separately frozen M4 guard is exact and profitable against target-only. The Guard does not beat fixed speculation's aggregate point estimate. Runtime energy is not claimed. The metadata-recording defect and independent M4 provenance recovery remain disclosed. Hardware campaigns and figures remain unchanged.
+
+Current artifacts are `manuscript/output/manuscript-v0.4.pdf` (10 body pages + 1 reference page), `manuscript/output/appendix-v0.4.pdf` (4 pages), and the current v0.4 collaboration ZIP. The old v0.3 ZIP/PDFs below are historical. Four main figures retain native sizes on pages 4–7; new Table 3 reports M4 runtime ratios, CIs and descriptive oracle regret. Title retained.
+
+Canonical build/check passes: 228 original numerical checks, 260 protected-file checks, all 57 prior prose numeric macros, 117 runtime checks and 23 sourced runtime macros, five original figure replays, active asset/placement checks, embedded fonts, anonymous PDFs, full-author references, zero overfull boxes and unresolved citations/references. Hardware-only removal remains an internal reference test (9 body + 1 reference page), not the primary paper or a standalone hardware manuscript.
+
+Humanizer was used after claims/citations were frozen. Eight style edits preserved numerical literals, TeX commands and citations; each scientific assertion was manually checked. A later layout-only page break separates hardware appendix tables from runtime notes. All final main and appendix pages were rendered and inspected, including the runtime table in 96-dpi grayscale. The final body page has a normal unused right column; the conclusion is complete in the left column. No geometry or font changes were used.
+
+Remaining reviewer risks: modest controller novelty; one model/runtime and finite held-out workload; M4 session/thermal uncertainty; 358H compact diagnostic provenance without local raw-trace replay. Full v0.2 raw qualification outputs are not present locally; their disposition is supplied by the task closeout, with pinned transition/protocol/diagnostic corroboration. These limits are not resolved by the integration.
+
+No new hardware/runtime timing was performed. No closed experiment result was modified. The PR is Draft and must not be automatically merged.
+
+---
+
 # Initial manuscript v0.3 — collaboration freeze
 
 **INITIAL DRAFT FROZEN FOR OVERLEAF COLLABORATION** — 2026-09-22.
 
-This is the current status. The v0.2 record below is historical and is superseded where it describes active figures, page counts, validator invocation, or unresolved integration decisions.
+This v0.3 status is historical. The v0.2 record below is also historical and is superseded where it describes active figures, page counts, validator invocation, or unresolved integration decisions.
 
 - Starting main: `9014e4b8a89031cfa26fc2c03180181bee124d86`. Fetched, checked out main, confirmed this exact HEAD and a clean working tree before creating the requested integration branch.
 - Branch: `paper/mlsys2027-initial-draft-v0.3`.

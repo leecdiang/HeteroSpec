@@ -3,31 +3,31 @@
   "pdfs": {
     "main": {
       "pages": 11,
-      "sha256": "cd9a7a3cb143ce3d0065ed41094b66c14f7239454fd745b9507c1ac093478151",
+      "sha256": "2abb3a9d2c8318f8752bb344b2c78273eb502bc385bb2021a8c271340b4fb93a",
       "metadata": {
         "/Producer": "pdfTeX-1.40.27",
         "/Author": "Anonymous Authors",
         "/Title": "Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs",
-        "/Subject": "MLSys 2027 research manuscript v0.3",
+        "/Subject": "MLSys 2027 research manuscript v0.4",
         "/Creator": "LaTeX with hyperref",
         "/Keywords": "speculative decoding, correctness, runtime characterization",
-        "/CreationDate": "D:20260922003148+08'00'",
-        "/ModDate": "D:20260922003148+08'00'",
+        "/CreationDate": "D:20260925124233+08'00'",
+        "/ModDate": "D:20260925124233+08'00'",
         "/Trapped": "/False",
         "/PTEX.Fullbanner": "This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) kpathsea version 6.4.1"
       },
       "fonts": {
         "/CTEMKX+NimbusRomNo9L-Regu": "/Type1",
-        "/HPCZUF+NimbusRomNo9L-Medi": "/Type1",
+        "/WDWRXJ+NimbusRomNo9L-Medi": "/Type1",
         "/SOSCBV+CMSY10": "/Type1",
-        "/ZHSFOP+NimbusRomNo9L-ReguItal": "/Type1",
         "/LVMFWK+CMMI9": "/Type1",
-        "/PRKZFF+CMMI10": "/Type1",
+        "/YJJLVX+NimbusRomNo9L-ReguItal": "/Type1",
+        "/WJCPFO+CMMI10": "/Type1",
         "/AGNNAM+CMMI7": "/Type1",
         "/DYABQH+CMR7": "/Type1",
         "/NQTGFX+CMR10": "/Type1",
         "/GGZTHD+NimbusRomNo9L-Regu-Slant_167": "/Type1",
-        "/TZVREM+NimbusMonL-Regu": "/Type1",
+        "/QPILNE+NimbusMonL-Regu": "/Type1",
         "/OPEKTB+CMSY9": "/Type1",
         "/DGOCSD+CMR9": "/Type1",
         "/CZRBLR+STIXGeneral-Regular": "/Type0",
@@ -39,29 +39,29 @@
       "undefined_references": 0
     },
     "appendix": {
-      "pages": 3,
-      "sha256": "3fd9d949b6b7e6b121afc178bd3ed583e02a8005c6ebb0d1ab86593021ae06b1",
+      "pages": 4,
+      "sha256": "a11c96255b2c1dfa94f3f1719e302ec6ef123f1269f892beb1f4a4b6a695f8d7",
       "metadata": {
         "/Producer": "pdfTeX-1.40.27",
         "/Author": "Anonymous Authors",
         "/Title": "Supplement: Speculative Decoding Across Consumer Systems",
-        "/Subject": "MLSys 2027 separate appendix v0.3",
+        "/Subject": "MLSys 2027 separate appendix v0.4",
         "/Creator": "LaTeX with hyperref",
         "/Keywords": "",
-        "/CreationDate": "D:20260922003150+08'00'",
-        "/ModDate": "D:20260922003150+08'00'",
+        "/CreationDate": "D:20260925124451+08'00'",
+        "/ModDate": "D:20260925124451+08'00'",
         "/Trapped": "/False",
         "/PTEX.Fullbanner": "This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) kpathsea version 6.4.1"
       },
       "fonts": {
-        "/AMQXHV+NimbusRomNo9L-Regu": "/Type1",
-        "/MDVGAU+NimbusRomNo9L-Medi": "/Type1",
+        "/XEOSBY+NimbusRomNo9L-Regu": "/Type1",
+        "/ZGCYZQ+NimbusRomNo9L-Medi": "/Type1",
         "/WTFHQC+CMMI10": "/Type1",
         "/ETBVVG+CMR10": "/Type1",
         "/SNVJRW+CMR7": "/Type1",
         "/YJCLWH+CMMI9": "/Type1",
         "/XSAUIV+NimbusRomNo9L-Regu-Slant_167": "/Type1",
-        "/PQXVDM+NimbusMonL-Regu": "/Type1"
+        "/MKWYCW+NimbusMonL-Regu": "/Type1"
       },
       "anonymous_scan": "PASS",
       "overfull_boxes": 0,
@@ -74,15 +74,15 @@
   "section_start_pages": {
     "sec:intro": 1,
     "sec:framework": 2,
-    "sec:methods": 3,
-    "sec:results": 4,
-    "sec:diagnoses": 4,
-    "sec:admissibility": 4,
+    "sec:methods": 2,
+    "sec:results": 3,
+    "sec:diagnoses": 5,
+    "sec:admissibility": 5,
     "sec:state": 6,
     "sec:hardwareconclusion": 7,
     "sec:runtime": 7,
     "sec:related": 9,
-    "sec:limitations": 10,
+    "sec:limitations": 9,
     "sec:conclusion": 10
   },
   "main_figures": {
@@ -122,22 +122,27 @@
     }
   },
   "references": {
-    "entries": 13,
+    "entries": 14,
     "full_author_lists": true,
     "HumanEval_author_count": 58
   },
   "overclaim_search_hits": [
     {
+      "path": "appendix.tex",
+      "line": 77,
+      "text": "The M4 runtime estimator first takes each condition's median of \\RTReps\\ repetitions, then forms a prompt latency ratio and its geometric mean across \\RTPrompts\\ prompts. The offline oracle uses the smaller target-only or Always-Spec median for each prompt. Bootstrap intervals use \\RTBootstrap\\ draws with Python Random seed \\RTSeed, resampling prompts in the frozen held-out order. Percentile endpoints linearly interpolate the sorted bootstrap draws at quantiles .025 and .975. A single random stream computes Target/Guard, Target/Always-Spec, and Guard/oracle intervals in that order. This preserves the frozen finite-bootstrap calculation; it does not replace the hardware estimators in Table~\\ref{tab:statistics}."
+    },
+    {
       "path": "sections/07_runtime_codesign.tex",
-      "line": 22,
-      "text": "A minimal path registry would associate each target execution setting with its qualification scope: model artifacts, runtime revision, numerical options, context/output conditions, and the evaluated workload. Selection would consider only paths admitted by the active contract. Changing the runtime, quantization, or execution shape would invalidate the relevant qualification rather than inherit it silently. This registry is proposed metadata and policy, not a claim that a finite test suite proves correctness for every possible input."
+      "line": 17,
+      "text": "The reference is the median across calibration prompts of each prompt's median target latency divided by its median output-token count. The preregistered candidate grid varies the first decision round and margin. Selection minimizes calibration geometric-mean latency relative to the offline minimum of target-only and Always-Spec among exact candidates, with frozen tie-breaks. It selects \\texttt{E8\\_M000}: first decision after \\RTRounds\\ completed speculative rounds, margin \\RTMargin, then a decision after every later round while speculation continues. A request ending earlier makes no decision. The online policy receives neither task/family labels nor future output length, current-request target-only latency, or oracle outcomes."
     }
   ],
   "hardware_only": {
-    "total_pages": 9,
-    "main_pages": 8,
+    "total_pages": 10,
+    "main_pages": 9,
     "runtime_section_removed": true,
     "no_undefined_references": true,
-    "sha256": "fa7665fe8df223e6c78b353d7a0f9ec32cf029fe51049fd3c291a9fbdf20c5b2"
+    "sha256": "8513c0f62ba8d1e3a2288ed69141e823e755de33c85e2987a12420ca0041c0e9"
   }
 }

@@ -7,13 +7,15 @@ all: assets
 	mkdir -p build output
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build appendix.tex
-	cp build/main.pdf output/manuscript-v0.3.pdf
-	cp build/appendix.pdf output/appendix-v0.3.pdf
+	cp build/main.pdf output/manuscript-v0.4.pdf
+	cp build/appendix.pdf output/appendix-v0.4.pdf
 assets:
 	$(PYTHON) scripts/build_assets.py
+	$(PYTHON) scripts/runtime_values.py
 check:
 	$(PYTHON) scripts/validate_evidence.py
 	$(PYTHON) scripts/validate_narrative.py
+	$(PYTHON) scripts/validate_runtime.py
 	$(PYTHON) scripts/validate_figures.py
 	$(PYTHON) scripts/qa_pdf.py
 hardware-only: assets

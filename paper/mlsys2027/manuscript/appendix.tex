@@ -8,8 +8,9 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.3}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.4}}
 \input{tables/values.tex}
+\input{tables/runtime_values.tex}
 \mlsystitlerunning{Supplement: Speculative Decoding Across Consumer Systems}
 \begin{document}
 \twocolumn[{
@@ -23,7 +24,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies manuscript v0.3, hardware-complete / runtime-reserved. It supplies statistical and measurement-boundary details without introducing a new result or a runtime implementation. All scientific limitations also appear in the main text. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.4. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
@@ -70,4 +71,16 @@ Table~\ref{tab:verificationlookup} retains all context cells behind the main ver
 \section{Evidence Inventory}
 Table~\ref{tab:regimes} collects the observed regimes and evidence classes. These are case descriptions, not a hardware ranking, population-wide failure rate, or exhaustive taxonomy. M4's separate-session studies establish opposite observed outcomes; neither diagnosed mechanism is assigned to that contrast.
 \input{tables/05_regimes.tex}
+% Finish the hardware lookup tables before the runtime reproducibility notes.
+\clearpage
+\section{Runtime Study Reproducibility}
+The M4 runtime estimator first takes each condition's median of \RTReps\ repetitions, then forms a prompt latency ratio and its geometric mean across \RTPrompts\ prompts. The offline oracle uses the smaller target-only or Always-Spec median for each prompt. Bootstrap intervals use \RTBootstrap\ draws with Python Random seed \RTSeed, resampling prompts in the frozen held-out order. Percentile endpoints linearly interpolate the sorted bootstrap draws at quantiles .025 and .975. A single random stream computes Target/Guard, Target/Always-Spec, and Guard/oracle intervals in that order. This preserves the frozen finite-bootstrap calculation; it does not replace the hardware estimators in Table~\ref{tab:statistics}.
+
+Calibration, qualification, and held-out IDs are disjoint. Selection ranks previously unexposed tasks by a seeded hash within each of HumanEval and Spec-Bench; each split is balanced across these two families. Calibration selects the exact candidate with the lowest geometric-mean oracle regret. Exact ties break by mean measured guard-compute overhead, smaller exploration count, larger margin, and lexicographic candidate ID. The frozen winner is \texttt{E8\_M000}; held-out results never select or retune it.
+
+The portable M4 archive contains original observations with generated-token IDs, complete-attempt manifests, qualification and calibration records, frozen source/build information, and analysis. An independent offline verifier reproduces policy selection, qualification and formal direct-ID equality, prompt medians, ratios, intervals, and fallback fraction without executing the models. No runtime energy result is claimed.
+
+A metadata-recording defect requires explicit provenance recovery. Loop-variable shadowing caused the frozen helper to return the build-manifest path rather than the calibration-freeze path. Qualification and formal-start records therefore contain the build-manifest digest in the intended freeze-hash field. A versioned recovery analyzer verified the actual freeze against the clean formal-start commit, qualification, frozen source/model/calibration/policy hashes, and complete attempts before applying the original formulas. The archive retains the original markers and pipeline STOPPED state. This is a metadata-recording defect, not a measurement mutation.
+
+The 358H diagnostic is pinned separately from the hardware campaign. Its compact evidence records reproducible target-only same-prefix divergence and proposal playback without live NPU inference, but does not establish a specific rollback-boundary bug. It explicitly records that no formal runtime performance data exist and that R2 is unauthorized. Internal evidence records retain the exact source commit and file hashes; the local raw diagnostic traces are not included in that compact record. No 358H runtime speedup is inferred from these diagnostics.
 \end{document}

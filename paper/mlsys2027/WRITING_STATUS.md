@@ -1,3 +1,9 @@
+# Current writing status — 2026-09-25
+
+The measured runtime integration in `RUNTIME_INTEGRATION_V04.md` and `MANUSCRIPT_STATUS.md` supersedes the historical proposal-only status below. Section 7 contains the prospective M4 runtime-control result and the scoped 358H qualification failure. The closed hardware evidence is unchanged. Humanizer and complete manuscript QA were applied; the delivery is a Draft PR for author review.
+
+---
+
 # MLSys 2027 writing status
 
 Status date: **2026-09-19**.

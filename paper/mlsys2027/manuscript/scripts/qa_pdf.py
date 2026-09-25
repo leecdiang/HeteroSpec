@@ -11,8 +11,8 @@ for fn in ['main','appendix']:
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert 'v0.3' in metadata.get('/Subject',''),metadata
- output=ROOT/'output'/('manuscript-v0.3.pdf' if fn=='main' else 'appendix-v0.3.pdf')
+ assert 'v0.4' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.4.pdf' if fn=='main' else 'appendix-v0.4.pdf')
  assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
  assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
@@ -56,14 +56,14 @@ assert r'\newlabel{tab:verificationlookup}{{A3}' in appendix_aux
 assert r'\newlabel{tab:regimes}{{A4}' in appendix_aux
 report['main_figures']=figures
 report['appendix_tables']={k:{'number':n,'page':int(p)} for k,n,p in re.findall(r'\\newlabel\{(tab:[^}]+)\}\{\{([^}]+)\}\{(\d+)\}',appendix_aux)}
-# All 13 cited entries have complete authors, including 58 HumanEval authors.
-bib=(ROOT/'references.bib').read_text();authors=re.findall(r'author=\{([^}]+)\}',bib);assert len(authors)==13;assert all('others' not in a and 'et al' not in a for a in authors)
-assert len(authors[-2].split(' and '))==58
+# All 14 cited entries have complete authors, including 58 HumanEval authors.
+bib=(ROOT/'references.bib').read_text();authors=re.findall(r'author=\{([^}]+)\}',bib);assert len(authors)==14;assert all('others' not in a and 'et al' not in a for a in authors)
+assert len(authors[-3].split(' and '))==58
 bbl=(ROOT/'build/main.bbl').read_text()
 for block in re.split(r'\\bibitem',bbl)[1:]:
  authorbody=block.split('}\n',1)[1].split('\\newblock',1)[0]
  assert 'et~al' not in authorbody and 'et al' not in authorbody,authorbody
-report['references']={'entries':13,'full_author_lists':True,'HumanEval_author_count':58}
+report['references']={'entries':14,'full_author_lists':True,'HumanEval_author_count':58}
 # Inventory every requested overclaim search hit for manual disposition.
 paths=[ROOT/'main.tex',ROOT/'appendix.tex']+list((ROOT/'sections').glob('*.tex'))+list((ROOT/'figures').glob('*.tex'))+list((ROOT/'tables').glob('*.tex'))
 hits=[]

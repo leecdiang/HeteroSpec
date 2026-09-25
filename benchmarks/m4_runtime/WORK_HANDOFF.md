@@ -1,6 +1,6 @@
 # M4 runtime-control preflight and recovered contract
 
-Status: **Formal measurement and post-measurement provenance audit complete.** R0 timing remains non-formal. See `FORMAL_REPORT.md` and `FORMAL_ANALYSIS.json` for results and the recorded freeze-hash defect.
+Status: **RUNTIME STUDY CLOSED.** Formal measurement, post-measurement provenance audit, portable evidence archive, and independent offline recomputation are complete. R0 timing remains non-formal. See `M4_RUNTIME_CLOSEOUT.md` for the final scientific state and `FORMAL_REPORT.md` for results.
 
 ## Repository and machine
 

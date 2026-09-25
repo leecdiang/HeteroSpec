@@ -1,6 +1,6 @@
 # M4 runtime-control preflight and recovered contract
 
-Status: **R0 feasibility passed; prospective calibration in progress.** R0 timing is non-formal. Qualification and formal held-out measurement have not started.
+Status: **Formal measurement and post-measurement provenance audit complete.** R0 timing remains non-formal. See `FORMAL_REPORT.md` and `FORMAL_ANALYSIS.json` for results and the recorded freeze-hash defect.
 
 ## Repository and machine
 
@@ -40,8 +40,10 @@ HumanEval uses a 128 generated-token cap; the older representative Spec-Bench ca
 
 The pinned `draft-simple` common library is linked by `scripts/platform/m4_runtime/runtime_runner.cpp`. The runner emits direct generated token IDs, the per-round draft and verifier trace, realized cost, one-way fallback, and control costs. A context-capability probe in llama.cpp clears the KV state; R0 found and fixed an initial misuse by moving that probe before prompt prefill. The corrected runner matched a fresh llama-server direct-ID reference for a previously exposed HumanEval prompt under target-only, fixed k=2, and guard with and without fallback. At the 128-token cap, all conditions matched the target-only 122-ID EOS output. R0 traces include full acceptance, rejection of each of two proposed positions, correction, bonus, early fallback at round 2, late fallback at round 8, cap, EOS, repeat/reset, and nonzero measured guard and transition work. These checks are in ignored `runs/m4/runtime_profitability_control_20260924/r0/` and validated by `validate_r0_traces.py`.
 
-The prompt-token file `PROMPT_TOKENS.json` was generated through pinned llama-server `/apply-template` and `/tokenize` with thinking disabled. It contains 116 outcome-blind prospective tasks; the longest formatted input is 1,500 tokens, below the 2,048-token runtime context after the 128-token output cap. R0 uses only historically exposed HumanEval/89. The prospective qualification and held-out task outcomes remain unseen.
+The prompt-token file `PROMPT_TOKENS.json` was generated through pinned llama-server `/apply-template` and `/tokenize` with thinking disabled. It contains 116 outcome-blind prospective tasks; the longest formatted input is 1,500 tokens, below the 2,048-token runtime context after the 128-token output cap. R0 uses only historically exposed HumanEval/89. The qualification and held-out outcomes were unseen before their reserved stages began.
 
-## Remaining gates
+## Completed study and provenance exception
 
-Complete calibration, freeze the selected policy and all source/data hashes, pass 48/48 direct-ID pairs per speculative condition on the reserved qualification set, then start a complete formal held-out attempt from a clean committed tree. Any failure remains an explicit result; no held-out performance claim is made before these gates pass.
+The completed attempt `unattended-20260924t125921z` recorded 240 baseline, 1,080 candidate, 144 qualification, and 540 formal observations. Calibration froze `E8_M000`; qualification passed 48/48 direct-ID pairs for each speculative condition. The formal run began from clean commit `202109717754bc62f889d19b5fbb141bfc3cc529` and produced 180/180 direct-ID pairs for each speculative condition, with no mismatches. The prompt-level geometric mean target/guard speedup is 1.3114 (95% prompt bootstrap interval 1.2487–1.3787). Energy is not claimed.
+
+The original pipeline stopped at analysis because the frozen `frozen()` function returned the build-manifest path after a loop variable shadowed the calibration-freeze path. Qualification and formal-start records therefore contain the build-manifest SHA-256 where the freeze SHA-256 was intended. Raw observations and original markers were retained without modification. The versioned recovery analyzer independently verified the actual freeze file against the clean formal-start commit, rechecked source/model/calibration/policy hashes and complete attempts, and used the original frozen analysis formulas. The report discloses this metadata exception; the original pipeline status remains `STOPPED` for auditability.

@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\caption{Verification-path lookup. Each row is a measured context cell; ratios are shown to six decimal places from the frozen source. Qualification and equality labels refer to the historical text-path comparator for the associated execution path; they do not certify generated-ID equality. M4 contexts and B570 contexts are prefix lengths; RTX uses the reported context depth. The stacks and context sets are not matched. The original rounded ranges are M4 Metal 1.02--1.08, RTX batched 0.98--1.01, RTX serialized 2.14--2.43, B570 fast 1.24--1.64, and B570 serialized 1.98--1.99; these span contexts, not confidence intervals.}
+\label{tab:verificationlookup}
+\centering
+\begin{tabular}{llrl}
+\toprule
+Path & Context (tokens) & $V_2^{\mathrm{micro}}$ & Qualification \\
+\midrule
+M4 Metal & 512 & 1.022182 & Qualified shared path \\
+M4 Metal & 2048 & 1.076126 & Qualified shared path \\
+M4 Metal & 8192 & 1.032264 & Qualified shared path \\
+RTX batched & 0 & 1.009030 & Correctness-blocked; diagnostic \\
+RTX batched & 256 & 0.983148 & Correctness-blocked; diagnostic \\
+RTX serialized & 0 & 2.430996 & Exact secondary control \\
+RTX serialized & 256 & 2.137011 & Exact secondary control \\
+B570 fast & 512 & 1.242576 & 45/90 exact; diagnostic, inadmissible \\
+B570 fast & 2048 & 1.637295 & 45/90 exact; diagnostic, inadmissible \\
+B570 serialized & 512 & 1.982668 & 60/90 exact; diagnostic, inadmissible \\
+B570 serialized & 2048 & 1.991707 & 60/90 exact; diagnostic, inadmissible \\
+\bottomrule
+\end{tabular}
+\end{table*}

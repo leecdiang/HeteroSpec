@@ -62,5 +62,5 @@ for phrase in ['Fixed speculation has the higher aggregate speedup point estimat
 for n in ['sections/07_runtime_codesign.tex','tables/07_runtime.tex']:
     check(n+' no raw empirical decimals',set(re.findall(r'\d+\.\d+',texts[n])) <= {'0.6'})
 report={'status':'PASS','checks':checks,'archive_recomputation':result,'macro_values':vals,'macro_sources':sources,'358h_pin':pin['pinned_commit'],'limits':['358H compact diagnostic findings verified; local raw traces not replayed.','Historical exposure exclusion verified against frozen inventory, not re-established from unavailable measurement-machine files.','Semantic prose and causal scope require human review.']}
-(E/'RUNTIME_QA_V04.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'RUNTIME_QA_V05.json').write_text(json.dumps(report,indent=2)+'\n')
 print(f'Runtime PASS: {len(checks)} checks, {len(vals)} sourced macros, complete M4 archive recomputation, pinned 358H controls.')

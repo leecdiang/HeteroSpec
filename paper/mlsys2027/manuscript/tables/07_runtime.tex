@@ -1,13 +1,16 @@
 \begin{table}[t]
-\caption{Prospective M4 runtime results. Ratios use per-prompt median post-prefill latencies. Both speculative conditions are \RTExact/\RTExact\ direct-token exact. The offline oracle is descriptive hindsight; its row reports latency regret, not speedup.}
+\caption{Prospective M4 results from per-prompt median post-prefill latencies. Each speculative condition is \RTExact/\RTExact\ direct-token exact. The offline oracle uses measured target-only and Always-Spec medians; it is unavailable online.}
 \label{tab:runtime}
 \centering
 \begin{tabular}{lcc}
 \toprule
 Latency ratio & GM & 95\% prompt CI \\
 \midrule
+\multicolumn{3}{l}{\emph{Speedup versus target-only (higher is faster)}}\\
 Target / Guard & \RTGuard & [\RTGuardLo, \RTGuardHi] \\
 Target / Always-Spec & \RTAlways & [\RTAlwaysLo, \RTAlwaysHi] \\
+\midrule
+\multicolumn{3}{l}{\emph{Descriptive hindsight latency ratio}}\\
 Guard / offline oracle & \RTOracle & [\RTOracleLo, \RTOracleHi] \\
 \bottomrule
 \end{tabular}

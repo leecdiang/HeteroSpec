@@ -1,3 +1,11 @@
+# v0.5 coordinated submission review
+
+Current review: `SUBMISSION_REVIEW_V05.md`. Current PDFs: `manuscript/output/*-v0.5.pdf`. Independent reports and disposition: `reviews/submission_v05/`. Historical comparator claims are narrowed by `evidence/SUBMISSION_COMPARATOR_SCOPE_V05.md`; closed values and evidence classes remain unchanged. Runtime integration is complete; no new timing or policy search was performed.
+
+The previous status below is retained as history.
+
+---
+
 # Current writing status — 2026-09-25
 
 The measured runtime integration in `RUNTIME_INTEGRATION_V04.md` and `MANUSCRIPT_STATUS.md` supersedes the historical proposal-only status below. Section 7 contains the prospective M4 runtime-control result and the scoped 358H qualification failure. The closed hardware evidence is unchanged. Humanizer and complete manuscript QA were applied; the delivery is a Draft PR for author review.

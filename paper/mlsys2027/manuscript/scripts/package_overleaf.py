@@ -44,7 +44,7 @@ files['references.bib'] = (HERE / 'references.bib').read_bytes()
 for source in (HERE / 'vendor/official/mlsys2025style').iterdir():
     if source.suffix in ('.sty', '.bst'):
         files[source.name] = source.read_bytes()
-files['README.txt'] = b'''MEASURED RUNTIME INTEGRATION FOR AUTHOR REVIEW -- v0.4
+files['README.txt'] = b'''COORDINATED SUBMISSION REVIEW FOR AUTHOR REVIEW -- v0.5
 
 Upload this ZIP as a new Overleaf project. Use pdfLaTeX and TeX Live 2025.
 Select main.tex for the full manuscript (measured runtime study included).
@@ -62,7 +62,7 @@ No shared Overleaf project or collaborator invitation is created by packaging.
 '''
 manifest = {name: hashlib.sha256(data).hexdigest() for name, data in sorted(files.items())}
 files['SHA256SUMS.json'] = (json.dumps(manifest, indent=2) + '\n').encode()
-out = HERE / 'output/overleaf-runtime-integration-v0.4.zip'
+out = HERE / 'output/overleaf-submission-review-v0.5.zip'
 with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name, data in sorted(files.items()):
         info = zipfile.ZipInfo(name, date_time=(2026, 9, 25, 0, 0, 0))

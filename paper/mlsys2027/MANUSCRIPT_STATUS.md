@@ -1,3 +1,11 @@
+# v0.5 coordinated submission review
+
+Current review: `SUBMISSION_REVIEW_V05.md`. Current PDFs: `manuscript/output/*-v0.5.pdf`. Independent reports and disposition: `reviews/submission_v05/`. Historical comparator claims are narrowed by `evidence/SUBMISSION_COMPARATOR_SCOPE_V05.md`; closed values and evidence classes remain unchanged. Runtime integration is complete; no new timing or policy search was performed.
+
+The previous status below is retained as history.
+
+---
+
 # Manuscript v0.4 — measured runtime integration
 
 Current status: **MEASURED HARDWARE + BOUNDED PROSPECTIVE RUNTIME STUDY; DRAFT FOR AUTHOR REVIEW** — 2026-09-25.

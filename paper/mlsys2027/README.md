@@ -1,3 +1,9 @@
+# Current manuscript: submission review v0.5
+
+The experimentally complete manuscript and runtime integration have received independent scientific, statistical, novelty, adversarial, writing, visual and artifact reviews. See `SUBMISSION_REVIEW_V05.md`, `manuscript/README.md`, and `reviews/submission_v05/`. Current review outputs use the v0.5 suffix. Earlier roadmap/status text below is historical, not a request for further experiments.
+
+---
+
 # MLSys 2027 paper workspace
 
 Target venue: **MLSys 2027 Research Track**.

@@ -96,7 +96,7 @@ assert 'Neither diagnosis assigned' in text and 'post-prefill' in text
 assert 'does not survive the tested' in text and 'stateful integration.' in text
 
 # The appendix retains the original rounded ranges and all 11 source cells.
-lookup=(HERE/'tables/06_verification_lookup.tex').read_text()
+lookup=(HERE/'tables/06_verification_lookup_v05.tex').read_text()
 for interval in ('1.02--1.08','0.98--1.01','2.14--2.43','1.24--1.64','1.98--1.99'):
     assert interval in lookup and interval in (HERE/'tables/03_mechanism.tex').read_text()
 parsed=re.findall(r'^([^&\n]+) & (\d+) & ([\d.]+) & (.+?) \\\\$',lookup,re.M)
@@ -135,5 +135,5 @@ report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source
         'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
         'original_five_figure_replays':results,'active_style_checks':style_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
-(EVID/'NARRATIVE_FIGURE_V04_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+(EVID/'NARRATIVE_FIGURE_V05_QA.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Figure v0.4 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

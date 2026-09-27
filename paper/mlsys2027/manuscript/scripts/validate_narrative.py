@@ -39,7 +39,9 @@ def original(path):
     return subprocess.check_output(['git', 'show', f'{base}:{path}'], cwd=ROOT, text=True)
 
 # Catch edits outside narrative, packaging and QA, including untracked experiment files.
-tracked = subprocess.check_output(['git', 'diff', '--name-only', 'bbf0c555cc50242f85c086eac342c9deb5c2e945'], cwd=ROOT, text=True).splitlines()
+# Tree-to-tree plus index/worktree comparison avoids rename-content reads in sparse audit checkouts.
+tracked = subprocess.check_output(['git', 'diff-tree', '--no-commit-id', '--no-renames', '-r', '--name-only', 'bbf0c555cc50242f85c086eac342c9deb5c2e945', 'HEAD'], cwd=ROOT, text=True).splitlines()
+tracked += subprocess.check_output(['git', 'diff', '--no-renames', '--name-only', 'HEAD'], cwd=ROOT, text=True).splitlines()
 untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
 allowed = ('paper/mlsys2027/manuscript/', 'paper/mlsys2027/evidence/NARRATIVE_',
            'paper/mlsys2027/evidence/PDF_QA.json', 'paper/mlsys2027/MANUSCRIPT_STATUS.md',
@@ -48,7 +50,10 @@ allowed = ('paper/mlsys2027/manuscript/', 'paper/mlsys2027/evidence/NARRATIVE_',
            'paper/mlsys2027/RUNTIME_INTEGRATION_V04.md',
            'paper/mlsys2027/reviews/INTERNAL_REVIEW_V04.md',
            'paper/mlsys2027/evidence/RUNTIME_',
-           'paper/mlsys2027/evidence/runtime_v04/')
+           'paper/mlsys2027/evidence/runtime_v04/',
+           'paper/mlsys2027/reviews/submission_v05/', 'paper/mlsys2027/SUBMISSION_REVIEW_V05.md',
+           'paper/mlsys2027/README.md', 'paper/mlsys2027/evidence/SUBMISSION_',
+           'paper/mlsys2027/evidence/NUMERICAL_QA_V05.json')
 assert all(p.startswith(allowed) for p in tracked + untracked), (tracked, untracked)
 
 # Keep table values and every generated figure coordinate byte-identical.
@@ -67,7 +72,7 @@ macros = json.loads((EVID/'published_values.json').read_text())['macros']
 old_used = {m for m in macros if re.search(r'\\'+m+r'\b', old_text)}
 new_used = {m for m in macros if re.search(r'\\'+m+r'\b', new_text)}
 assert old_used <= new_used, ('quantitative coverage lost', sorted(old_used-new_used))
-numerical = json.loads((EVID/'NUMERICAL_QA.json').read_text())
+numerical = json.loads((EVID/'NUMERICAL_QA_V05.json').read_text())
 assert numerical['status'] == 'PASS' and len(numerical['checks']) == 228
 assert all(c['pass'] for c in numerical['checks'])
 
@@ -78,6 +83,6 @@ report = {'status': 'PASS', 'main_baseline': base, 'integration_main': freeze['m
     'frozen_claim_ledger_unchanged': True,
     'selected_figure_tree_unchanged_since_integration_main': True,
     'experiment_data_and_source_unchanged': True,
-    'scope_note': 'Narrative and causal interpretations require manual review; see RUNTIME_INTEGRATION_V04.md.'}
-(EVID/'NARRATIVE_V04_QA.json').write_text(json.dumps(report, indent=2)+'\n')
+    'scope_note': 'Narrative and causal interpretations require manual review; see SUBMISSION_REVIEW_V05.md.'}
+(EVID/'NARRATIVE_V05_QA.json').write_text(json.dumps(report, indent=2)+'\n')
 print(f'Narrative PASS: {len(checks)} protected files, all {len(old_used)} prior prose numeric macros, 228 unchanged numerical checks.')

@@ -2,7 +2,7 @@
 """Validate runtime paper claims against immutable evidence, never run timing."""
 import hashlib,json,re,subprocess,sys
 from pathlib import Path
-from runtime_values import ROOT,HERE,values,tex,load
+from runtime_values import ROOT,HERE,values,secondary_values,tex,load
 E=HERE.parent/'evidence'
 checks=[]
 def check(name,condition):
@@ -61,6 +61,32 @@ for phrase in ['Fixed speculation has the higher aggregate speedup point estimat
 # Runtime empirical values must use RT macros; raw decimals in its prose/table are model/revision identities only.
 for n in ['sections/07_runtime_codesign.tex','tables/07_runtime.tex']:
     check(n+' no raw empirical decimals',set(re.findall(r'\d+\.\d+',texts[n])) <= {'0.6'})
-report={'status':'PASS','checks':checks,'archive_recomputation':result,'macro_values':vals,'macro_sources':sources,'358h_pin':pin['pinned_commit'],'limits':['358H compact diagnostic findings verified; local raw traces not replayed.','Historical exposure exclusion verified against frozen inventory, not re-established from unavailable measurement-machine files.','Semantic prose and causal scope require human review.']}
-(E/'RUNTIME_QA_V05.json').write_text(json.dumps(report,indent=2)+'\n')
+
+# Preserve every existing runtime check and primary macro; add the secondary gate.
+old=json.loads((E/'RUNTIME_QA_V05.json').read_text())
+check('all 117 prior runtime checks retained in order',checks==old['checks'] and len(checks)==117)
+check('all 23 primary macro values unchanged',vals==old['macro_values'] and sources==old['macro_sources'])
+primary_tex=subprocess.check_output(['git','show','50050f62a44064b11948263d064aa6b1bb7a3359:paper/mlsys2027/manuscript/tables/runtime_values.tex'],cwd=ROOT,text=True)
+check('primary runtime TeX preserved byte prefix',tex().startswith(primary_tex))
+secondary_script=ROOT/'scripts/platform/m4_runtime/analyze_guard_always_secondary.py'
+subprocess.run([sys.executable,str(secondary_script),'--check'],check=True,capture_output=True,text=True)
+check('secondary JSON and report exact deterministic replay',True)
+subprocess.run([sys.executable,str(ROOT/'scripts/platform/m4_runtime/verify_guard_always_secondary.py')],check=True,capture_output=True,text=True)
+qa=json.loads((E/'M4_GUARD_ALWAYS_SECONDARY_QA_V06.json').read_text())
+check('secondary independent raw recomputation',qa['status']=='PASS' and qa['check_count']==638 and qa['primary_medians_exact_match'])
+secondary=load('GUARD_ALWAYS_SECONDARY_ANALYSIS.json')
+check('secondary artifact hash verified',qa['result_sha256']==digest(ROOT/'benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS.json'))
+check('secondary fresh standalone fixed bootstrap',secondary['bootstrap_seed']==20260924 and secondary['bootstrap_resamples']==10000 and secondary['bootstrap_unit']=='paired held-out prompt' and secondary['bootstrap_random_stream']=='fresh standalone random.Random(20260924); randrange(60); archived held-out order')
+check('secondary status and no new model execution',secondary['analysis_status']=='POST_STUDY_SECONDARY' and secondary['no_new_measurement'] is True and secondary['new_model_execution'] is False and secondary['analysis_choices_changed_after_result'] is False)
+check('secondary interval wholly above parity',secondary['guard_over_always_95pct_prompt_bootstrap_ci'][0]>1 and secondary['interpretation']=='GUARD_HIGHER_LATENCY')
+extra,extra_sources=secondary_values()
+for n in extra:check('secondary macro '+n,re.search(r'\\'+n+r'\b',alltext) is not None)
+check('separate secondary table row and direction','Post-study paired secondary latency ratio' in texts['tables/07_runtime.tex'] and 'above one mean Guard is slower' in texts['tables/07_runtime.tex'])
+check('literal result in Section 7','Guard had higher latency on this comparison' in s and 'reviewer-requested post-study paired secondary analysis' in s)
+limitations=texts['sections/09_limitations.tex']
+check('secondary limitations and primary endpoint distinction','not the registered primary endpoint' in limitations and 'session and recalibration variation' in limitations)
+check('appendix formula and fresh secondary stream',all(p in texts['appendix.tex'] for p in ['post-study paired secondary analysis','r_i=','fresh standalone Python Random stream','not continue the primary stream','not preregistration or blinding','source hashes']))
+vals.update(extra);sources.update(extra_sources)
+report={'status':'PASS','checks':checks,'existing_runtime_checks':117,'new_secondary_checks':len(checks)-117,'archive_recomputation':result,'secondary_recomputation':qa,'macro_values':vals,'macro_sources':sources,'358h_pin':pin['pinned_commit'],'limits':['358H compact diagnostic findings verified; local raw traces not replayed.','Historical exposure exclusion verified against frozen inventory, not re-established from unavailable measurement-machine files.','Semantic prose and causal scope require human review.']}
+(E/'RUNTIME_QA_V06.json').write_text(json.dumps(report,indent=2)+'\n')
 print(f'Runtime PASS: {len(checks)} checks, {len(vals)} sourced macros, complete M4 archive recomputation, pinned 358H controls.')

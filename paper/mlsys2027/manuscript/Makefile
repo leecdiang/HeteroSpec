@@ -8,8 +8,8 @@ all: assets
 	mkdir -p build output
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build appendix.tex
-	cp build/main.pdf output/manuscript-v0.5.pdf
-	cp build/appendix.pdf output/appendix-v0.5.pdf
+	cp build/main.pdf output/manuscript-v0.6.pdf
+	cp build/appendix.pdf output/appendix-v0.6.pdf
 assets:
 	$(PYTHON) scripts/verify_frozen_assets.py
 	$(PYTHON) scripts/runtime_values.py
@@ -20,6 +20,7 @@ check:
 	$(PYTHON) scripts/run_historical_validation.py
 	$(PYTHON) scripts/validate_narrative.py
 	$(PYTHON) scripts/validate_runtime.py
+	$(PYTHON) ../../../scripts/platform/m4_runtime/test_guard_always_secondary.py
 	$(PYTHON) scripts/validate_figures.py
 	$(PYTHON) scripts/qa_pdf.py
 	$(PYTHON) scripts/validate_submission.py

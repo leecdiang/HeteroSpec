@@ -1,5 +1,5 @@
 \begin{table}[t]
-\caption{Prospective M4 results from per-prompt median post-prefill latencies. Each speculative condition is \RTExact/\RTExact\ direct-token exact. The offline oracle uses measured target-only and Always-Spec medians; it is unavailable online. Its row reports latency regret, not speedup.}
+\caption{M4 per-prompt median post-prefill latencies. Each speculative condition is \RTExact/\RTExact\ direct-token exact. The first two rows report speedups. The offline oracle uses the lower target-only or Always-Spec median and is unavailable online; its row reports latency regret. The separated Guard/Always-Spec contrast is reviewer-requested post-study paired secondary analysis; values above one mean Guard is slower.}
 \label{tab:runtime}
 \centering
 \begin{tabular}{lcc}
@@ -9,6 +9,9 @@ Latency ratio & GM & 95\% prompt CI \\
 Target / Guard & \RTGuard & [\RTGuardLo, \RTGuardHi] \\
 Target / Always-Spec & \RTAlways & [\RTAlwaysLo, \RTAlwaysHi] \\
 Guard / offline oracle & \RTOracle & [\RTOracleLo, \RTOracleHi] \\
+\midrule
+\multicolumn{3}{l}{\emph{Post-study paired secondary latency ratio}}\\
+Guard / Always-Spec & \RTSecondary & [\RTSecondaryLo, \RTSecondaryHi] \\
 \bottomrule
 \end{tabular}
 \end{table}

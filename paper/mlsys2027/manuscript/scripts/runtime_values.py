@@ -29,7 +29,20 @@ def values():
         ('RTBootstrap',format(a['bootstrap_resamples'],','),'FORMAL_ANALYSIS.json:bootstrap_resamples'),
         ('RTSeed',a['bootstrap_seed'],'FORMAL_ANALYSIS.json:bootstrap_seed')]:add(name,value,source)
     return out,sources
+def secondary_values():
+    a=load('GUARD_ALWAYS_SECONDARY_ANALYSIS.json')
+    out={}; sources={}
+    for name,value,source,digits in [
+        ('RTSecondary',a['geometric_mean_guard_over_always'],'geometric_mean_guard_over_always',4),
+        ('RTSecondaryLo',a['guard_over_always_95pct_prompt_bootstrap_ci'][0],'guard_over_always_95pct_prompt_bootstrap_ci[0]',4),
+        ('RTSecondaryHi',a['guard_over_always_95pct_prompt_bootstrap_ci'][1],'guard_over_always_95pct_prompt_bootstrap_ci[1]',4),
+        ('RTGuardFaster',a['prompt_counts']['guard_faster'],'prompt_counts.guard_faster',None),
+        ('RTAlwaysFaster',a['prompt_counts']['always_faster'],'prompt_counts.always_faster',None),
+        ('RTTies',a['prompt_counts']['ties'],'prompt_counts.ties',None)]:
+        out[name]=str(value) if digits is None else f'{value:.{digits}f}'
+        sources[name]='GUARD_ALWAYS_SECONDARY_ANALYSIS.json:'+source
+    return out,sources
 def tex():
-    return '% Generated from frozen runtime evidence by runtime_values.py.\n'+''.join('\\newcommand{\\'+k+'}{'+v+'}\n' for k,v in values()[0].items())
+    return '% Generated from frozen runtime evidence by runtime_values.py.\n'+''.join('\\newcommand{\\'+k+'}{'+v+'}\n' for k,v in {**values()[0],**secondary_values()[0]}.items())
 if __name__=='__main__':
     (HERE/'tables/runtime_values.tex').write_text(tex())

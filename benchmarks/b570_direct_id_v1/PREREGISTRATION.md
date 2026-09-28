@@ -86,3 +86,10 @@ reanalysis is authorized. No further candidate, ubatch, k, context, model,
 quantization, flash-attention or backend search. No manuscript, Figure 3 or
 historical figure CSV edits. Integration awaits joint review with the
 independent RTX arm. Open a draft PR and do not merge automatically.
+
+The Task Scheduler wrapper owns formal execution, validation, archiving and
+post-measurement Git publication. Open the draft PR after freeze, explicitly
+marking results pending; refresh it with actual results only after 270 runs
+and independent/archive verification pass. Publication failures retain the
+experiment and archive and never trigger selective execution or reruns.
+External diagnostic polling stops when the formal task is launched.

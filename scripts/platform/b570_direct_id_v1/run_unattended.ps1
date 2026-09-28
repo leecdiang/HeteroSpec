@@ -3,7 +3,8 @@ param(
     [Parameter(Mandatory=$true)][string]$R0Root,
     [Parameter(Mandatory=$true)][string]$FormalRoot,
     [Parameter(Mandatory=$true)][string]$PythonPath,
-    [Parameter(Mandatory=$true)][string]$GitPath
+    [Parameter(Mandatory=$true)][string]$GitPath,
+    [Parameter(Mandatory=$true)][int]$PrNumber
 )
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $RepoRoot
@@ -24,6 +25,9 @@ try {
     & $PythonPath -u scripts/platform/b570_direct_id_v1/archive.py --root $FormalRoot --r0 $R0Root 1> (Join-Path $controlRoot 'archive.stdout.txt') 2> (Join-Path $controlRoot 'archive.stderr.txt')
     if ($LASTEXITCODE -ne 0) { throw "Archive/independent validation exited $LASTEXITCODE." }
     Write-ControlState 'COMPLETE_ARCHIVED' 0
+    & $PythonPath -u scripts/platform/b570_direct_id_v1/publish.py --root $FormalRoot --pr-number $PrNumber 1> (Join-Path $controlRoot 'publish.stdout.txt') 2> (Join-Path $controlRoot 'publish.stderr.txt')
+    if ($LASTEXITCODE -ne 0) { throw "Post-experiment publication exited $LASTEXITCODE; experiment/archive retained." }
+    Write-ControlState 'COMPLETE_PUBLISHED_DRAFT' 0
     exit 0
 } catch {
     $_ | Out-String | Set-Content -LiteralPath (Join-Path $controlRoot 'controller.error.txt') -Encoding UTF8

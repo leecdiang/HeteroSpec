@@ -51,7 +51,7 @@ def prepare(repo,r0root):
       'system_changes':'None; no software installation, registry, power-plan, or driver changes.',
       'sleep_preflight':'High performance plan; both AC/DC STANDBYIDLE observed 0 (never).',
       'formal_task':'HeteroSpec_B570_DirectID_V1','wrapper':'scripts/platform/b570_direct_id_v1/run_unattended.ps1',
-      'completion':'270 executions -> independent validation -> content-addressed archive; external polling stops after launch.'})
+      'completion':'270 executions -> independent validation -> content-addressed archive -> result commits/push and existing draft PR refresh; external polling stops after launch.'})
     target,draft=assets(repo);dataset(repo);patch=make_patch(repo)
     schedule=[];rng=random.Random(SEED)
     for rep in range(1,4):

@@ -1,5 +1,5 @@
 """Freeze preparation, formal execution, and primary direct-ID analysis."""
-import argparse, difflib, json, os, random, subprocess, threading, time
+import argparse, difflib, json, os, random, subprocess, sys, threading, time
 from pathlib import Path
 from common import *
 
@@ -39,6 +39,9 @@ def prepare(repo,r0root):
         raise RuntimeError('R0 reset failed')
     if len(r0['eos_tests'])!=3 or not all(x['pass'] for x in r0['eos_tests']):
         raise RuntimeError('R0 EOG failed')
+    tests=json.loads(subprocess.check_output([sys.executable,'scripts/platform/b570_direct_id_v1/test_validator.py'],text=True))
+    if tests['status']!='PASS' or not tests['synthetic_only']:raise RuntimeError('Synthetic validator tests failed')
+    save(PROTOCOL_DIR/'PRE_FREEZE_TESTS.json',{'tested_at':utc(),'result':tests,'HumanEval_results_used':False})
     detach_path=repo/'work/b570_direct_id_v1/scheduler-preflight-2.json'
     detach=json.loads(detach_path.read_text(encoding='utf-8-sig'))
     if detach['status']!='PASS' or detach['parent_name']!='svchost.exe' or detach['inference_executed']:

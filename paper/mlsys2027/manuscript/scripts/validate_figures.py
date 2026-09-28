@@ -33,7 +33,7 @@ results = {}
 for i in range(1,6):
     findings = getattr(module,f'f{i}')()
     source = FIG/'pdf'/f'figure{i}.pdf'
-    path = str(source.relative_to(ROOT))
+    path = source.relative_to(ROOT).as_posix()
     assert hashlib.sha256(source.read_bytes()).hexdigest() == integration['protected_sha256'][path]
     page = PdfReader(source).pages[0]
     expected_width = 3.25 if i == 3 else 6.75
@@ -51,7 +51,7 @@ style_checks={}
 for asset in ('m4','verification','state'):
     receipt=json.loads((FIG/f'style_v04/qa/{asset}_render.json').read_text())
     source=FIG/f'style_v04/pdf/{asset}.pdf'
-    expected=freeze['protected_figure_tree_sha256'][str(source.relative_to(ROOT))]
+    expected=freeze['protected_figure_tree_sha256'][source.relative_to(ROOT).as_posix()]
     assert hashlib.sha256(source.read_bytes()).hexdigest()==expected==receipt['output_sha256']['pdf']
     assert receipt['out_of_bounds_text']==[]
     for path,sha in receipt['inputs'].items():
@@ -109,12 +109,18 @@ for (path,context,value,status),row in zip(parsed,source_rows):
     if path=='RTX batched':assert status=='Correctness-blocked; diagnostic'
     if path=='RTX serialized':assert status=='Exact secondary control'
 inventory=FIG/'style_v04/tables/appendix_table.tex'
-assert hashlib.sha256(inventory.read_bytes()).hexdigest()==freeze['protected_figure_tree_sha256'][str(inventory.relative_to(ROOT))]
+assert hashlib.sha256(inventory.read_bytes()).hexdigest()==freeze['protected_figure_tree_sha256'][inventory.relative_to(ROOT).as_posix()]
 assert len(re.findall(r'^.* & .* \\\\$',inventory.read_text(),re.M))==9  # header and eight cases
 
 # Verify actual PDF form placement, including widths, not just requested TeX sizes.
+presentation_spec=importlib.util.spec_from_file_location('approved_presentation',HERE/'figures/presentation_v05/validate.py')
+presentation_module=importlib.util.module_from_spec(presentation_spec)
+presentation_spec.loader.exec_module(presentation_module)
+presentation_checks=presentation_module.validate()
 placements=[]
 selected={'m4':3.25,'verification':6.75,'state':6.75,'mechanism':6.75}
+active_sources={asset:(FIG/'mechanism_v05/mechanism.pdf' if asset=='mechanism' else HERE/f'figures/presentation_v05/pdf/{asset}.pdf') for asset in selected}
+active_streams={asset:PdfReader(path).pages[0].get_contents().get_data().strip() for asset,path in active_sources.items()}
 for name in ('main','appendix'):
     pdf=PdfReader(HERE/'build'/f'{name}.pdf')
     for number,page in enumerate(pdf.pages,1):
@@ -122,9 +128,16 @@ for name in ('main','appendix'):
         def visit(operator,operands,cm,tm):
             if operator!=b'Do' or operands[0] not in xobjects:return
             form=xobjects[operands[0]].get_object();filename=str(form.get('/PTEX.FileName',''))
-            if not filename.endswith('.pdf'):return
-            asset=Path(filename).stem
+            if filename.endswith('.pdf'):
+                asset=Path(filename).stem
+            else:
+                # XeTeX/Tectonic omits PTEX.FileName. Identify the actual embedded
+                # figure by its complete content stream, not by dimensions alone.
+                matches=[asset for asset,data in active_streams.items() if data in form.get_data()]
+                assert len(matches)==1,('unrecognized embedded figure',name,number,matches)
+                asset=matches[0]
             assert name=='main' and asset in selected,(name,filename)
+            assert active_streams[asset] in form.get_data(),('unexpected figure content',asset)
             bbox=form['/BBox'];matrix=form.get('/Matrix',[1,0,0,1,0,0])
             width=(float(bbox[2])-float(bbox[0]))*math.hypot(cm[0],cm[1])*float(matrix[0])/72
             assert abs(width-selected[asset])<0.002,(asset,width)
@@ -133,7 +146,7 @@ for name in ('main','appendix'):
 assert len(placements)==4 and {p['asset'] for p in placements}==set(selected),placements
 report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source_head':freeze['mechanism_source_head'],
         'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
-        'original_five_figure_replays':results,'active_style_checks':style_checks,'actual_placements':placements,
+        'original_five_figure_replays':results,'historical_style_checks':style_checks,'active_presentation_checks':presentation_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
 (EVID/'NARRATIVE_FIGURE_V05_QA.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Figure v0.4 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

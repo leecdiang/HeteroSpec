@@ -8,7 +8,7 @@ PROTOCOL_DIR=Path('benchmarks/b570_direct_id_v1')
 def powershell(code):
     return json.loads(subprocess.check_output(['powershell.exe','-NoProfile','-Command',code],text=True,encoding='utf-8-sig'))
 def environment():
-    return powershell("[ordered]@{os=(Get-CimInstance Win32_OperatingSystem|Select-Object Caption,Version,BuildNumber);cpu=(Get-CimInstance Win32_Processor|Select-Object Name,NumberOfCores,NumberOfLogicalProcessors);ram_bytes=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory;gpu=@(Get-CimInstance Win32_VideoController|Select-Object Name,DriverVersion,PNPDeviceID);todesk_processes=@(Get-Process -Name '*ToDesk*' -ErrorAction SilentlyContinue|Select-Object ProcessName,Id);observed_at=(Get-Date).ToString('o')}|ConvertTo-Json -Depth 6")
+    return powershell("[ordered]@{os=(Get-CimInstance Win32_OperatingSystem|Select-Object Caption,Version,BuildNumber);cpu=(Get-CimInstance Win32_Processor|Select-Object Name,NumberOfCores,NumberOfLogicalProcessors);ram_bytes=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory;gpu=@(Get-CimInstance Win32_VideoController|Select-Object Name,DriverVersion,PNPDeviceID);todesk_processes=@(Get-Process -Name '*ToDesk*' -ErrorAction SilentlyContinue|Select-Object ProcessName,Id);power_plan=(powercfg /getactivescheme|Out-String).Trim();observed_at=(Get-Date).ToString('o')}|ConvertTo-Json -Depth 6")
 def build_flags(cache):
     return {line.split('=',1)[0]:line.split('=',1)[1] for line in cache.read_text(encoding='utf-8').splitlines()
             if '=' in line and not line.startswith('//') and (line.startswith(('GGML_','LLAMA_','CMAKE_C_FLAGS:','CMAKE_CXX_FLAGS:','CMAKE_C_FLAGS_RELEASE:','CMAKE_CXX_FLAGS_RELEASE:')))
@@ -39,6 +39,16 @@ def prepare(repo,r0root):
         raise RuntimeError('R0 reset failed')
     if len(r0['eos_tests'])!=3 or not all(x['pass'] for x in r0['eos_tests']):
         raise RuntimeError('R0 EOG failed')
+    detach_path=repo/'work/b570_direct_id_v1/scheduler-preflight-2.json'
+    detach=json.loads(detach_path.read_text(encoding='utf-8-sig'))
+    if detach['status']!='PASS' or detach['parent_name']!='svchost.exe' or detach['inference_executed']:
+        raise RuntimeError('Scheduler detach preflight not qualified')
+    save(PROTOCOL_DIR/'INFRASTRUCTURE_PREFLIGHT.json',{'task_scheduler_detach':'PASS','evidence':detach,
+      'evidence_sha256':sha(detach_path),'first_probe':'Failed before inference because scheduled context did not include Codex-bundled Git in PATH; retained task HeteroSpec_B570_DirectID_V1_Detach_Preflight. Explicit GitPath fixed only process-local PATH before freeze.',
+      'system_changes':'None; no software installation, registry, power-plan, or driver changes.',
+      'sleep_preflight':'High performance plan; both AC/DC STANDBYIDLE observed 0 (never).',
+      'formal_task':'HeteroSpec_B570_DirectID_V1','wrapper':'scripts/platform/b570_direct_id_v1/run_unattended.ps1',
+      'completion':'270 executions -> independent validation -> content-addressed archive; external polling stops after launch.'})
     target,draft=assets(repo);dataset(repo);patch=make_patch(repo)
     schedule=[];rng=random.Random(SEED)
     for rep in range(1,4):

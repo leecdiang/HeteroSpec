@@ -2,10 +2,12 @@ param(
     [Parameter(Mandatory=$true)][string]$RepoRoot,
     [Parameter(Mandatory=$true)][string]$R0Root,
     [Parameter(Mandatory=$true)][string]$FormalRoot,
-    [Parameter(Mandatory=$true)][string]$PythonPath
+    [Parameter(Mandatory=$true)][string]$PythonPath,
+    [Parameter(Mandatory=$true)][string]$GitPath
 )
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $RepoRoot
+$env:PATH = (Split-Path -Parent $GitPath) + ';' + $env:PATH
 $controlRoot = Join-Path (Split-Path -Parent $FormalRoot) ((Split-Path -Leaf $FormalRoot) + '-controller')
 if (Test-Path -LiteralPath $FormalRoot) { throw 'Formal root already exists; no overwrite or resume.' }
 New-Item -ItemType Directory -Path $controlRoot -ErrorAction Stop | Out-Null

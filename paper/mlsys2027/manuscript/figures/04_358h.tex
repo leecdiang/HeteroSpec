@@ -1,7 +1,7 @@
-% Immutable scientific style asset from PR #19; v0.3 caption preserves transferred qualifications.
+% Author-approved presentation revision; frozen data and current comparator qualifications preserved.
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{../figures/style_v04/pdf/state.pdf}
+\includegraphics[width=\textwidth]{figures/presentation_v05/pdf/state.pdf}
 \caption{\textbf{Isolated draft advantage does not survive the tested stateful integration}. (A) Phase-1 median steady-state draft throughput and 95\% repetition-bootstrap intervals, five repetitions per cell; the NPU median advantage grows across the tested contexts. (B) Phase-3 arithmetic mean post-prefill seconds per request over 90 observations per path, all exact. CPU and NPU totals are 13.25 s and 27.54 s against a 9.58 s mean baseline. The CPU path is target-side dominated (87.34\%); the NPU path spends 58.35\% in the measured replay-plus-proposal call. The 0.734$\times$ and 0.352$\times$ headlines use the separate prompt-GM estimator and are not ratios of the arithmetic mean bars. Replay and proposal share one timed OpenVINO call; replay-only time is not measured. Initial prompt prefill is excluded. This diagnoses the tested runtime interface, not intrinsic NPU capability or a measured benefit from a state-persistent intervention. CPU replay plus proposal is 12.63\%; NPU complete target work is 41.63\%. Residuals are 4.81 ms (0.04\%) and 5.06 ms (0.02\%). Prompt-GM speedup 95\% CIs are [0.693, 0.771] and [0.333, 0.369], respectively. The vertical dashed line is the shared arithmetic-mean baseline. Isolated throughput excludes the full-prefix state cost; device marks are horizontally offset for readability.}
 \label{fig:state}
 \end{figure*}

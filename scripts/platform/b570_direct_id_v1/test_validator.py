@@ -26,7 +26,7 @@ def main():
                     side=root/(stem+'.json');stdout=root/(stem+'.stdout');stderr=root/(stem+'.stderr')
                     common.save(side,{'ids':ids,'eog':flags});stdout.write_bytes(b'SYNTHETIC ONLY')
                     off=[['37','37']] if condition=='TARGET_REFERENCE' else [['37','37'],['29','29']]
-                    stderr.write_text('using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)\n'+''.join(f'offloaded {a}/{b} layers to GPU\n' for a,b in off),encoding='utf-8')
+                    stderr.write_text(''.join(f'using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)\noffloaded {a}/{b} layers to GPU\n' for a,b in off),encoding='utf-8')
                     exe='llama-completion.exe' if condition=='TARGET_REFERENCE' else 'llama-speculative.exe'
                     row={'task_id':task,'repetition':rep,'condition':condition,'execution_valid':True,'exit_code':0,
                          'source_commit':'mock-source','target_sha256':'mock-target','draft_sha256':None if condition=='TARGET_REFERENCE' else 'mock-draft',

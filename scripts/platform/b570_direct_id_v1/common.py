@@ -76,7 +76,8 @@ def execute(root,stem,cmd,instrumented=True):
     text=errpath.read_text(encoding='utf-8',errors='replace')
     off=re.findall(r'offloaded\s+(\d+)/(\d+) layers to GPU',text)
     required=[('37','37')] if Path(cmd[0]).name=='llama-completion.exe' else [('37','37'),('29','29')]
-    valid=p.returncode==0 and off==required and 'using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)' in text
+    placement=[line for line in text.splitlines() if 'using device ' in line]
+    valid=p.returncode==0 and off==required and len(placement)==len(required) and all('using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)' in line for line in placement)
     result={'command':cmd,'exit_code':p.returncode,'offloads':off,'placement_pass':valid,
             'placement_evidence':[line for line in text.splitlines() if 'using device Vulkan0' in line or 'offloaded ' in line],
             'start_utc':start,'end_utc':end,'elapsed_operational_seconds':elapsed,
@@ -88,6 +89,7 @@ def execute(root,stem,cmd,instrumented=True):
                       generated_ids_sha256=arraysha(ids),raw_ids_sha256=arraysha(raw['ids']),semantic_output_length=len(ids),
                       eos=eos,cap_reached=len(ids)==128,raw_cli_overshoot_ids=overshoot,sidecar=str(side.relative_to(root)).replace('\\','/'),
                       sidecar_sha256=sha(side))
+        if not eos and len(ids)!=128:valid=False;result['semantic_boundary_error']='Incomplete non-EOG generated sequence'
     elif instrumented:valid=False;result['sidecar_missing']=True
     result['execution_valid']=valid
     return result

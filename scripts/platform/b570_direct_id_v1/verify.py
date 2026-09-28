@@ -36,7 +36,8 @@ def validate(root,protocol_path,analysis_path):
         for name,hash_key in [('stdout','stdout_sha256'),('stderr','stderr_sha256'),('sidecar','sidecar_sha256')]:
             if digest(root/row[name])!=row[hash_key]:errors.append(f'Raw payload invalid {key} {name}')
         stderr=(root/row['stderr']).read_text(encoding='utf-8',errors='replace')
-        if 'using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)' not in stderr:errors.append(f'Raw device evidence absent {key}')
+        device_lines=re.findall(r'using device [^\n]+',stderr)
+        if len(device_lines)!=len(required) or any(not s.startswith('using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)') for s in device_lines):errors.append(f'Raw target/draft device evidence invalid {key}')
         raw_offloads=[list(x) for x in re.findall(r'offloaded\s+(\d+)/(\d+) layers to GPU',stderr)]
         if raw_offloads!=required:errors.append(f'Raw offload evidence invalid {key}')
         side=json.loads((root/row['sidecar']).read_text(encoding='utf-8'))

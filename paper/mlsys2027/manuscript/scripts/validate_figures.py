@@ -135,5 +135,5 @@ report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source
         'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
         'original_five_figure_replays':results,'active_style_checks':style_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
-(EVID/'NARRATIVE_FIGURE_V05_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+(EVID/'NARRATIVE_FIGURE_V06_QA.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Figure v0.4 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

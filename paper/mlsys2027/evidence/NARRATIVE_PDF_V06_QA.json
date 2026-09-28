@@ -1,0 +1,157 @@
+{
+  "status": "PASS",
+  "pdfs": {
+    "main": {
+      "pages": 11,
+      "sha256": "9a0d486829fcf5761d6d90ab640312ade4bf290c49fa449d3fc65797fd7a5614",
+      "metadata": {
+        "/Producer": "pdfTeX-1.40.27",
+        "/Author": "Anonymous Authors",
+        "/Title": "Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs",
+        "/Subject": "MLSys 2027 research manuscript v0.6",
+        "/Creator": "LaTeX with hyperref",
+        "/Keywords": "speculative decoding, correctness, runtime characterization",
+        "/CreationDate": "D:20260928130132+08'00'",
+        "/ModDate": "D:20260928130132+08'00'",
+        "/Trapped": "/False",
+        "/PTEX.Fullbanner": "This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) kpathsea version 6.4.1"
+      },
+      "fonts": {
+        "/CTEMKX+NimbusRomNo9L-Regu": "/Type1",
+        "/WDWRXJ+NimbusRomNo9L-Medi": "/Type1",
+        "/SOSCBV+CMSY10": "/Type1",
+        "/LVMFWK+CMMI9": "/Type1",
+        "/FLCKYC+NimbusRomNo9L-ReguItal": "/Type1",
+        "/WJCPFO+CMMI10": "/Type1",
+        "/AGNNAM+CMMI7": "/Type1",
+        "/DYABQH+CMR7": "/Type1",
+        "/NQTGFX+CMR10": "/Type1",
+        "/GGZTHD+NimbusRomNo9L-Regu-Slant_167": "/Type1",
+        "/FYAAGB+NimbusMonL-Regu": "/Type1",
+        "/OPEKTB+CMSY9": "/Type1",
+        "/DGOCSD+CMR9": "/Type1",
+        "/CZRBLR+STIXGeneral-Regular": "/Type0",
+        "/BSJGIA+CMR6": "/Type1",
+        "/FTXWZA+STIXGeneral-Italic": "/Type0"
+      },
+      "anonymous_scan": "PASS",
+      "overfull_boxes": 0,
+      "undefined_references": 0
+    },
+    "appendix": {
+      "pages": 4,
+      "sha256": "18593439fcd6ea40f8dc9ec38ff9f77bde4aee3d138d7bcc393bd123b2553313",
+      "metadata": {
+        "/Producer": "pdfTeX-1.40.27",
+        "/Author": "Anonymous Authors",
+        "/Title": "Supplement: Speculative Decoding Across Consumer Systems",
+        "/Subject": "MLSys 2027 separate appendix v0.6",
+        "/Creator": "LaTeX with hyperref",
+        "/Keywords": "",
+        "/CreationDate": "D:20260928130134+08'00'",
+        "/ModDate": "D:20260928130134+08'00'",
+        "/Trapped": "/False",
+        "/PTEX.Fullbanner": "This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) kpathsea version 6.4.1"
+      },
+      "fonts": {
+        "/XEOSBY+NimbusRomNo9L-Regu": "/Type1",
+        "/ZGCYZQ+NimbusRomNo9L-Medi": "/Type1",
+        "/PSJKHE+CMMI10": "/Type1",
+        "/QAWDLT+CMR10": "/Type1",
+        "/CWTFQO+CMR7": "/Type1",
+        "/YJCLWH+CMMI9": "/Type1",
+        "/XSAUIV+NimbusRomNo9L-Regu-Slant_167": "/Type1",
+        "/MKWYCW+NimbusMonL-Regu": "/Type1",
+        "/BAVVNA+CMSY10": "/Type1",
+        "/SCDOPB+CMMI7": "/Type1",
+        "/PXBGHL+CMSY7": "/Type1",
+        "/LBWBDW+CMEX10": "/Type1"
+      },
+      "anonymous_scan": "PASS",
+      "overfull_boxes": 0,
+      "undefined_references": 0
+    }
+  },
+  "manual_visual_review": "Recorded separately in MANUSCRIPT_STATUS.md; rerender after final edits.",
+  "main_text_pages": 10,
+  "references_pages": 1,
+  "section_start_pages": {
+    "sec:intro": 1,
+    "sec:framework": 2,
+    "sec:methods": 3,
+    "sec:results": 4,
+    "sec:diagnoses": 4,
+    "sec:admissibility": 5,
+    "sec:state": 6,
+    "sec:hardwareconclusion": 7,
+    "sec:runtime": 8,
+    "sec:related": 9,
+    "sec:limitations": 10,
+    "sec:conclusion": 10
+  },
+  "main_figures": {
+    "fig:m4": {
+      "number": "1",
+      "page": 4
+    },
+    "fig:translation": {
+      "number": "2",
+      "page": 5
+    },
+    "fig:verification": {
+      "number": "3",
+      "page": 6
+    },
+    "fig:state": {
+      "number": "4",
+      "page": 7
+    }
+  },
+  "appendix_tables": {
+    "tab:statistics": {
+      "number": "A1",
+      "page": 2
+    },
+    "tab:energy": {
+      "number": "A2",
+      "page": 2
+    },
+    "tab:verificationlookup": {
+      "number": "A3",
+      "page": 3
+    },
+    "tab:regimes": {
+      "number": "A4",
+      "page": 3
+    }
+  },
+  "references": {
+    "entries": 15,
+    "full_author_lists": true,
+    "HumanEval_author_count": 58
+  },
+  "overclaim_search_hits": [
+    {
+      "path": "appendix.tex",
+      "line": 77,
+      "text": "The M4 runtime estimator first takes each condition's median of \\RTReps\\ repetitions, then forms a prompt latency ratio and its geometric mean across \\RTPrompts\\ prompts. The offline oracle uses the smaller target-only or Always-Spec median for each prompt. Bootstrap intervals use \\RTBootstrap\\ draws with Python Random seed \\RTSeed, resampling prompts in the frozen held-out order. Percentile endpoints linearly interpolate the sorted bootstrap draws at quantiles .025 and .975. A single random stream computes Target/Guard, Target/Always-Spec, and Guard/oracle intervals in that order. This preserves the frozen finite-bootstrap calculation; it does not replace the hardware estimators in Table~\\ref{tab:statistics}. Intervals condition on the selected policy and observed prompt medians; they do not incorporate recalibration or between-session variation. The oracle selects between two measured fixed conditions, not all possible switching policies, so it is not a universal latency lower bound."
+    },
+    {
+      "path": "appendix.tex",
+      "line": 79,
+      "text": "Calibration, qualification, and held-out IDs are disjoint. Selection ranks tasks with no recorded prior M4 exposure in the frozen inventory by a seeded hash within each of HumanEval and Spec-Bench; each split is balanced across these two families. The registered grid has nine candidates: first decision round $E\\in\\{2,4,8\\}$ and margin $m\\in\\{0,0.05,0.10\\}$. Calibration selects the exact candidate with the lowest geometric-mean latency ratio to the offline oracle. Exact ties break by mean measured guard-compute overhead, smaller exploration count, larger margin, and lexicographic candidate ID. The frozen winner is \\texttt{E8\\_M000}; held-out results never select or retune it."
+    },
+    {
+      "path": "sections/07_runtime_codesign.tex",
+      "line": 17,
+      "text": "The reference is the median across calibration prompts of each prompt's median target latency divided by its median output-token count. The preregistered candidate grid varies the first decision round and margin. Selection minimizes calibration geometric-mean latency relative to the offline minimum of target-only and Always-Spec among exact candidates, with frozen tie-breaks. The selected rule uses margin \\RTMargin\\ and first decides after \\RTRounds\\ completed speculative rounds; it then decides after each later round while speculation continues. A request ending earlier makes no decision. The online policy receives neither task/family labels nor future output length, current-request target-only latency, or oracle outcomes."
+    }
+  ],
+  "hardware_only": {
+    "total_pages": 10,
+    "main_pages": 9,
+    "runtime_section_removed": true,
+    "no_undefined_references": true,
+    "sha256": "23f929eed2be13b82c44f6aefc0de7677a82bc71cfb1254533b51dcfd29e3ffb"
+  }
+}

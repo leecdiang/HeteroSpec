@@ -1,3 +1,44 @@
+# v0.6 paired M4 Guard versus Always-Spec secondary analysis
+
+Current review: `reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md`. Current
+PDFs: `manuscript/output/manuscript-v0.6.pdf` and `manuscript/output/appendix-v0.6.pdf`.
+This reviewer-requested post-study contrast uses only frozen raw observations:
+Guard/Always-Spec = 1.0270760219826773, 95% prompt-bootstrap interval
+[1.0129560055428655, 1.0435592653980876]. The interval lies above parity;
+Guard had higher latency on this comparison. Prompt medians favor Guard on
+24 prompts and Always-Spec on 36, with no ties. No new measurement or policy
+change occurred. All v0.5 review qualifications remain in force.
+
+## v0.6 validation and visual review
+
+- Main paper: **10 body pages + 1 reference page**; separate appendix: **4 pages**.
+- Hardware-only removal/reference check: **9 body pages + 1 reference page**.
+- **228** historical numerical checks; **260** protected narrative/source/assets;
+  **57** historical macros; **117** prior runtime checks preserved in order plus
+  **19** new checks (**136** total), with **23** primary and **6** secondary macros.
+- Full primary archive replay: all **62** payload hashes, frozen policy, direct-ID
+  qualification/formal pairs, primary intervals and fallback reproduced.
+- Independent secondary path: **638** checks, all 60 prompt medians and ratios,
+  exact headline and finite-bootstrap endpoints, and descriptive counts.
+- **7** hardware-free replay/rejection tests; **41** submission scope/projection
+  checks. All **41** pre-existing runtime-tree files and all **40**
+  pre-existing paper evidence files are byte-identical to the exact starting main.
+- Main, appendix, and hardware-only builds passed. Official style unchanged;
+  fonts embedded, PDFs anonymous, no unresolved citations/references or overfull
+  boxes. The **37-file** source ZIP also compiled in a clean directory.
+- Fresh visual review covered every main/appendix page and detailed full-page
+  inspection of main pages 9–10 and appendix page 4: Table 3's separated contrast
+  and direction, literal interpretation, limitations, formula and provenance
+  note are readable and fit without clipping or overlap. No new figure.
+
+Receipts: `evidence/M4_GUARD_ALWAYS_SECONDARY_QA_V06.json`,
+`evidence/M4_GUARD_ALWAYS_SECONDARY_TEST_QA_V06.json`,
+`evidence/M4_GUARD_ALWAYS_SECONDARY_VISUAL_QA_V06.json`, and the versioned
+`NUMERICAL`, `RUNTIME`, `NARRATIVE`, `NARRATIVE_FIGURE`, `NARRATIVE_PDF`, and
+`SUBMISSION` v0.6 receipts. Previous receipts and PDFs remain historical and
+unchanged. The artifact comparison sharpens the existing negative/control
+conclusion; no result-dependent analysis choice or new measurement occurred.
+
 # v0.5 coordinated submission review
 
 Current review: `SUBMISSION_REVIEW_V05.md`. Current PDFs: `manuscript/output/*-v0.5.pdf`. Independent reports and disposition: `reviews/submission_v05/`. Historical comparator claims are narrowed by `evidence/SUBMISSION_COMPARATOR_SCOPE_V05.md`; closed values and evidence classes remain unchanged. Runtime integration is complete; no new timing or policy search was performed.

@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.5}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.6}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \mlsystitlerunning{Supplement: Speculative Decoding Across Consumer Systems}
@@ -24,7 +24,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.5. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.6. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 equality counts compare re-tokenized parsed CLI output. In the historical M4 HumanEval pipeline the parsed text includes the prompt; equality of those arrays is not a direct generated-ID comparison. B570 strips the prompt and normalizes the text before re-tokenization, which still does not recover a direct-ID trace. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
@@ -79,6 +79,8 @@ The M4 runtime estimator first takes each condition's median of \RTReps\ repetit
 Calibration, qualification, and held-out IDs are disjoint. Selection ranks tasks with no recorded prior M4 exposure in the frozen inventory by a seeded hash within each of HumanEval and Spec-Bench; each split is balanced across these two families. The registered grid has nine candidates: first decision round $E\in\{2,4,8\}$ and margin $m\in\{0,0.05,0.10\}$. Calibration selects the exact candidate with the lowest geometric-mean latency ratio to the offline oracle. Exact ties break by mean measured guard-compute overhead, smaller exploration count, larger margin, and lexicographic candidate ID. The frozen winner is \texttt{E8\_M000}; held-out results never select or retune it.
 
 The portable M4 archive contains original observations with generated-token IDs, complete-attempt manifests, qualification and calibration records, frozen source/build information, and analysis. An independent offline verifier reproduces policy selection, qualification and formal direct-ID equality, prompt medians, ratios, intervals, and fallback fraction without executing the models. No runtime energy result is claimed.
+
+The reviewer-requested Guard/Always-Spec contrast is post-study paired secondary analysis, not the registered primary endpoint. Aggregate results were already known; the committed analysis plan is a procedural timestamp, not preregistration or blinding. For each frozen held-out prompt $i$, form $r_i=\operatorname{median}(T_{\mathrm{Guard},i})/\operatorname{median}(T_{\mathrm{Always},i})$ over its \RTReps\ repetitions, then compute $\exp(\RTPrompts^{-1}\sum_i\log r_i)$. Values above one mean Guard is slower. A fresh standalone Python Random stream with seed \RTSeed\ resamples \RTPrompts\ paired prompts per draw in frozen held-out order, using \RTBootstrap\ draws and the same linear percentile interpolation; it does not continue the primary stream. The ratio is \RTSecondary\ [\RTSecondaryLo, \RTSecondaryHi], with the interval above parity. Descriptive prompt counts are \RTGuardFaster\ Guard-faster, \RTAlwaysFaster\ Always-Spec-faster, and \RTTies\ exact ties. Both new implementations reconstruct raw medians from the same hash-verified archive and match the primary medians exactly; an independent calculation reproduces both finite-bootstrap endpoints. No new measurement or analysis choice after seeing the result was used. The interval excludes session and recalibration variation; source hashes and all prompt ratios remain in the private evidence ledger.
 
 A metadata-recording defect requires explicit provenance recovery. Loop-variable shadowing caused the frozen helper to return the build-manifest path rather than the calibration-freeze path. Qualification and formal-start records therefore contain the build-manifest digest in the intended freeze-hash field. A versioned recovery analyzer verified the actual freeze against the clean formal-start commit, qualification, frozen source/model/calibration/policy hashes, and complete attempts before applying the original formulas. The archive retains the original markers and pipeline STOPPED state. This is a metadata-recording defect, not a measurement mutation.
 

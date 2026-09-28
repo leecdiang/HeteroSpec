@@ -85,4 +85,12 @@ class SecondaryTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(SecondaryTests)
+    test_names = sorted(case.id() for case in suite)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    if result.wasSuccessful():
+        receipt = analyzer.ROOT / "paper/mlsys2027/evidence/M4_GUARD_ALWAYS_SECONDARY_TEST_QA_V06.json"
+        receipt.write_text(json.dumps({"status": "PASS", "tests_run": result.testsRun,
+                                      "tests": test_names, "new_model_execution": False,
+                                      "test_script_sha256": analyzer.digest(Path(__file__))}, indent=2) + "\n")
+    sys.exit(not result.wasSuccessful())

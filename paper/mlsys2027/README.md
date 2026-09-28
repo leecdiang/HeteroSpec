@@ -1,3 +1,14 @@
+# v0.6 paired M4 Guard versus Always-Spec secondary analysis
+
+Current review: `reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md`. Current
+PDFs: `manuscript/output/manuscript-v0.6.pdf` and `manuscript/output/appendix-v0.6.pdf`.
+This reviewer-requested post-study contrast uses only frozen raw observations:
+Guard/Always-Spec = 1.0270760219826773, 95% prompt-bootstrap interval
+[1.0129560055428655, 1.0435592653980876]. The interval lies above parity;
+Guard had higher latency on this comparison. Prompt medians favor Guard on
+24 prompts and Always-Spec on 36, with no ties. No new measurement or policy
+change occurred. All v0.5 review qualifications remain in force.
+
 # Current manuscript: submission review v0.5
 
 The experimentally complete manuscript and runtime integration have received independent scientific, statistical, novelty, adversarial, writing, visual and artifact reviews. See `SUBMISSION_REVIEW_V05.md`, `manuscript/README.md`, and `reviews/submission_v05/`. Current review outputs use the v0.5 suffix. Earlier roadmap/status text below is historical, not a request for further experiments.

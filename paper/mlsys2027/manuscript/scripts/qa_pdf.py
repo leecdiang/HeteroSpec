@@ -11,8 +11,8 @@ for fn in ['main','appendix']:
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert 'v0.5' in metadata.get('/Subject',''),metadata
- output=ROOT/'output'/('manuscript-v0.5.pdf' if fn=='main' else 'appendix-v0.5.pdf')
+ assert 'v0.6' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.6.pdf' if fn=='main' else 'appendix-v0.6.pdf')
  assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
  assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
@@ -77,5 +77,5 @@ if hp.exists():
  assert 'Requirements traced to closed measurements' not in htext and 'implementation and measured results pending' not in htext
  assert 'sec:runtime' not in haux and '??' not in htext
  report['hardware_only']={'total_pages':len(PdfReader(hp).pages),'main_pages':int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',haux).group(1)),'runtime_section_removed':True,'no_undefined_references':True,'sha256':hashlib.sha256(hp.read_bytes()).hexdigest()}
-(E/'NARRATIVE_PDF_V05_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'NARRATIVE_PDF_V06_QA.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({'status':'PASS','main_pages':mainpage,'references_pages':report['references_pages'],'appendix_pages':report['pdfs']['appendix']['pages'],'hardware_only':report.get('hardware_only'),'overclaim_hits':hits},indent=2))

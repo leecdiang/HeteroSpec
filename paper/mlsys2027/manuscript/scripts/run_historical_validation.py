@@ -13,6 +13,6 @@ try:
     result = historical.read_bytes()
     parsed = json.loads(result)
     assert parsed['status'] == 'PASS' and len(parsed['checks']) == 228
-    (EVID/'NUMERICAL_QA_V05.json').write_bytes(result)
+    (EVID/'NUMERICAL_QA_V06.json').write_bytes(result)
 finally:
     historical.write_bytes(original)

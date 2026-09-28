@@ -1,5 +1,5 @@
 """Independent hardware-free evidence and direct-ID validator; no common imports."""
-import argparse,hashlib,json
+import argparse,hashlib,json,re
 from pathlib import Path
 
 def digest(path):
@@ -15,6 +15,8 @@ def validate(root,protocol_path,analysis_path):
     protocol=json.loads(protocol_path.read_text(encoding='utf-8'))
     original=json.loads(analysis_path.read_text(encoding='utf-8'))
     data=json.loads((root/'executions.json').read_text(encoding='utf-8'));rows=data['executions'];errors=[]
+    if data.get('status')!='COMPLETE':errors.append('Formal attempt not complete')
+    if data.get('protocol_sha256')!=digest(protocol_path):errors.append('Execution manifest protocol hash invalid')
     expected={(t,r,c) for t in protocol['task_ids'] for r in range(1,4) for c in protocol['conditions']}
     actual=[(x['task_id'],x['repetition'],x['condition']) for x in rows]
     if len(rows)!=270 or len(set(actual))!=270 or set(actual)!=expected:errors.append('Execution coverage not exactly 270')
@@ -35,13 +37,17 @@ def validate(root,protocol_path,analysis_path):
             if digest(root/row[name])!=row[hash_key]:errors.append(f'Raw payload invalid {key} {name}')
         stderr=(root/row['stderr']).read_text(encoding='utf-8',errors='replace')
         if 'using device Vulkan0 (Intel(R) Arc(TM) B570 Graphics)' not in stderr:errors.append(f'Raw device evidence absent {key}')
+        raw_offloads=[list(x) for x in re.findall(r'offloaded\s+(\d+)/(\d+) layers to GPU',stderr)]
+        if raw_offloads!=required:errors.append(f'Raw offload evidence invalid {key}')
         side=json.loads((root/row['sidecar']).read_text(encoding='utf-8'))
         ids=side['ids'];flags=side['eog']
+        if not ids or any(type(x)!=int or x<0 for x in ids) or any(type(x)!=bool for x in flags):errors.append(f'Invalid sidecar types {key}')
         if ids!=row['raw_committed_ids'] or flags!=row['raw_eog_flags'] or len(ids)!=len(flags):errors.append(f'Raw IDs inconsistent {key}')
         end=len(ids)
         for i in range(len(flags)):
             if flags[i]:end=i+1;break
         selected=ids[:min(128,end)];sequences[key]=selected
+        if row['eos']!=any(flags[:len(selected)]) or row['cap_reached']!=(len(selected)==128) or row['raw_cli_overshoot_ids']!=len(ids)-len(selected):errors.append(f'EOS/cap evidence invalid {key}')
         if selected!=row['generated_ids'] or array_digest(selected)!=row['generated_ids_sha256']:errors.append(f'Semantic ID array invalid {key}')
         if len(selected)!=row['semantic_output_length'] or array_digest(ids)!=row['raw_ids_sha256']:errors.append(f'Length/hash invalid {key}')
         if not row['eos'] and len(selected)!=128:errors.append(f'Incomplete semantic cap {key}')

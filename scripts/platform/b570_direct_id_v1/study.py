@@ -8,7 +8,11 @@ PROTOCOL_DIR=Path('benchmarks/b570_direct_id_v1')
 def powershell(code):
     return json.loads(subprocess.check_output(['powershell.exe','-NoProfile','-Command',code],text=True,encoding='utf-8-sig'))
 def environment():
-    return powershell("[ordered]@{os=(Get-CimInstance Win32_OperatingSystem|Select-Object Caption,Version,BuildNumber);cpu=(Get-CimInstance Win32_Processor|Select-Object Name,NumberOfCores,NumberOfLogicalProcessors);gpu=@(Get-CimInstance Win32_VideoController|Select-Object Name,DriverVersion,PNPDeviceID);observed_at=(Get-Date).ToString('o')}|ConvertTo-Json -Depth 6")
+    return powershell("[ordered]@{os=(Get-CimInstance Win32_OperatingSystem|Select-Object Caption,Version,BuildNumber);cpu=(Get-CimInstance Win32_Processor|Select-Object Name,NumberOfCores,NumberOfLogicalProcessors);ram_bytes=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory;gpu=@(Get-CimInstance Win32_VideoController|Select-Object Name,DriverVersion,PNPDeviceID);todesk_processes=@(Get-Process -Name '*ToDesk*' -ErrorAction SilentlyContinue|Select-Object ProcessName,Id);observed_at=(Get-Date).ToString('o')}|ConvertTo-Json -Depth 6")
+def build_flags(cache):
+    return {line.split('=',1)[0]:line.split('=',1)[1] for line in cache.read_text(encoding='utf-8').splitlines()
+            if '=' in line and not line.startswith('//') and (line.startswith(('GGML_','LLAMA_','CMAKE_C_FLAGS:','CMAKE_CXX_FLAGS:','CMAKE_C_FLAGS_RELEASE:','CMAKE_CXX_FLAGS_RELEASE:')))
+            and ':INTERNAL=' not in line}
 def make_patch(repo):
     upstream=repo/'work/b570_direct_id_v1/upstream'/('llama.cpp-'+UPSTREAM)
     modified=Path('C:/hs/b570-direct-id-v1-src')
@@ -23,6 +27,18 @@ def make_patch(repo):
 def prepare(repo,r0root):
     r0=json.loads((r0root/'R0.json').read_text(encoding='utf-8'))
     if r0['status']!='PASS':raise RuntimeError('R0 has not qualified')
+    if len(r0['pairs'])!=18 or {(x['task_id'],x['condition']) for x in r0['pairs']}!={(t,c) for t in SANITY for c in CONDITIONS}:
+        raise RuntimeError('R0 coverage is incomplete')
+    for pair in r0['pairs']:
+        a,b=pair['original'],pair['instrumented']
+        if not a['execution_valid'] or not b['execution_valid'] or a['stdout_sha256']!=b['stdout_sha256']:
+            raise RuntimeError('R0 equivalence/placement failed')
+        if b['semantic_output_length']!=128 and not b['eos']:
+            raise RuntimeError('R0 semantic cap is incomplete')
+    if len(r0['state_reset'])!=3 or not all(x['exact_to_first'] and x['run']['execution_valid'] for x in r0['state_reset']):
+        raise RuntimeError('R0 reset failed')
+    if len(r0['eos_tests'])!=3 or not all(x['pass'] for x in r0['eos_tests']):
+        raise RuntimeError('R0 EOG failed')
     target,draft=assets(repo);dataset(repo);patch=make_patch(repo)
     schedule=[];rng=random.Random(SEED)
     for rep in range(1,4):
@@ -32,6 +48,12 @@ def prepare(repo,r0root):
     bins={x.name:sha(x) for x in INSTRUMENTED.iterdir() if x.suffix.lower() in ('.dll','.exe')}
     original_bins={x.name:sha(x) for x in ORIGINAL.iterdir() if x.suffix.lower() in ('.dll','.exe') and (x.suffix.lower()=='.dll' or x.name in ('llama-completion.exe','llama-speculative.exe'))}
     commands={c:command(Path('{BINARY_DIR}'),Path('{TARGET}'),Path('{DRAFT}'),Path('{PROMPT_FILE}'),c) for c in CONDITIONS}
+    differences=[i for i,(a,b) in enumerate(zip(commands['B570_FAST_K2'],commands['B570_SERIALIZED_K2'])) if a!=b]
+    if len(differences)!=1 or commands['B570_FAST_K2'][differences[0]-1]!='--ubatch-size':
+        raise RuntimeError('Candidate paths differ by more than ubatch')
+    original_cache=Path('C:/hs/b/CMakeCache.txt');instrumented_cache=Path('C:/hs/b570-direct-id-v1-build/CMakeCache.txt')
+    flags=build_flags(instrumented_cache)
+    if flags!=build_flags(original_cache):raise RuntimeError('Compile flags differ from frozen original build')
     protocol={'schema':'heterospec.b570.direct_id.protocol.v1','study':'prospectively frozen direct-ID replication',
       'starting_main':START,'preparation_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'upstream_commit':UPSTREAM,'build':10839,'historical_known_outcomes':{'fast_retokenized_text_pairs':45,'serialized_retokenized_text_pairs':60,'denominator':90},
       'historical_material_policy':'Closed, unchanged; new direct-ID replication is additive.',
@@ -55,16 +77,18 @@ def prepare(repo,r0root):
       'qualification_rule':'90/90 direct-ID pairs -> QUALIFIED; any lower count -> BLOCKED',
       'failure_policy':'Continue true token mismatches. Operational/parser/offload/hash failure makes the attempt INVALID; retain all records, no selective rerun. Semantic repairs require protocol v2.',
       'formal_execution':'Fresh process per execution. No energy collector. Operational timings are descriptive, not historical timing replication.',
+      'remote_session_policy':'ToDesk may remain connected for this direct-ID correctness endpoint; no authoritative timing or power inference is made. Task Scheduler owns the unattended process and does not require interactive shell survival.',
       'analysis_outputs':['FORMAL_ANALYSIS.json','FORMAL_REPORT.md','INDEPENDENT_VALIDATION.json','CLOSEOUT.md'],
       'manuscript_edits':False,'parameter_changes_after_data_start':False}
     save(PROTOCOL_DIR/'protocol_v1.json',protocol)
     save(PROTOCOL_DIR/'BUILD_ENVIRONMENT.json',{'upstream_archive_sha256':sha(repo/'work/b570_direct_id_v1/upstream-0cae43063.zip'),
       'compile_flags':'Same GGML/LLAMA and release compiler flags as the original build; MSVC19.44, Vulkan SDK1.4.357.',
+      'cmake_flags':flags,'original_cmake_cache_sha256':sha(original_cache),'instrumented_cmake_cache_sha256':sha(instrumented_cache),
       'historical_source_comparison':{'upstream_files_compared':3531,'differences':0,'scope':'Every upstream archive file matched the retained historical source before observational patching.'},
       'configure_command':'cmake -S SOURCE -B BUILD -G "Visual Studio 17 2022" -A x64 -DGGML_VULKAN=ON -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_NUMBER=10839 -DLLAMA_BUILD_COMMIT=0cae43063 -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_TESTS=OFF',
       'build_command':'cmake --build BUILD --config Release --target llama-completion llama-speculative -j 10',
       'binaries':bins,'environment':protocol['environment']})
-    files=[*Path('scripts/platform/b570_direct_id_v1').glob('*.py'),*PROTOCOL_DIR.glob('*')]
+    files=[*Path('scripts/platform/b570_direct_id_v1').glob('*.py'),*Path('scripts/platform/b570_direct_id_v1').glob('*.ps1'),*PROTOCOL_DIR.glob('*')]
     files=[p for p in files if p.is_file() and p.name!='FREEZE_MANIFEST.json']
     freeze={'schema':'heterospec.b570.direct_id.freeze.v1','created_at':utc(),'starting_main':START,
       'files':{str(p).replace('\\','/'):sha(p) for p in files},'binary_hashes':bins,
@@ -121,6 +145,12 @@ def run(repo,root):
     expected=next(x['DriverVersion'] for x in proto['environment']['gpu'] if x['Name']=='Intel(R) Arc(TM) B570 Graphics')
     if driver!=expected:raise RuntimeError('Frozen Arc driver changed')
     target,draft=assets(repo);problems=dataset(repo);head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+    for path in freeze['files']:
+        committed=subprocess.check_output(['git','show',head+':'+path])
+        if __import__('hashlib').sha256(committed).hexdigest()!=freeze['files'][path]:
+            raise RuntimeError('Frozen file not committed byte-for-byte: '+path)
+    if subprocess.check_output(['git','branch','--show-current'],text=True).strip()!='experiment/b570-direct-id-qualification-v1':
+        raise RuntimeError('Wrong study branch')
     root.mkdir(parents=True,exist_ok=False)
     evidence={'schema':'heterospec.b570.direct_id.executions.v1','study_head':head,'protocol_sha256':sha(PROTOCOL_DIR/'protocol_v1.json'),
       'started':utc(),'status':'RUNNING','executions':[]}
@@ -152,6 +182,15 @@ def run(repo,root):
                 evidence['executions'].append(row);save(root/'executions.json',evidence)
                 print(f"{len(evidence['executions'])}/270 {stem} ids={row.get('semantic_output_length')} valid={row['execution_valid']}",flush=True)
                 if not row['execution_valid']:raise RuntimeError('Operational/offload failure; retained without rerun')
+        if subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()!=head:
+            raise RuntimeError('Study HEAD changed during formal execution')
+        for path,want in freeze['files'].items():
+            if sha(repo/path)!=want:raise RuntimeError('Frozen source changed during execution: '+path)
+        for name,want in freeze['binary_hashes'].items():
+            if sha(INSTRUMENTED/name)!=want:raise RuntimeError('Frozen binary changed during execution: '+name)
+        final_driver=next(x['DriverVersion'] for x in environment()['gpu'] if x['Name']=='Intel(R) Arc(TM) B570 Graphics')
+        if final_driver!=expected:raise RuntimeError('Driver changed during formal execution')
+        assets(repo);dataset(repo)
         evidence['status']='COMPLETE';evidence['ended']=utc();save(root/'executions.json',evidence)
         result=analyze(root)
         status.update(state='MEASUREMENTS_COMPLETE',completed=270,paths=result['paths'])

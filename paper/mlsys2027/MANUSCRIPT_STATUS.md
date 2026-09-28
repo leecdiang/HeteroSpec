@@ -1,5 +1,13 @@
 # v0.6 paired M4 Guard versus Always-Spec secondary analysis
 
+Current integration base: `9b996dd702e5807b3cacc9db9c69aa7eb80035a4` (main after PR #29).
+The original scientific starting point below is retained as provenance.
+The conflict in Table 3 was resolved by retaining the approved compact three
+primary rows and adding the clearly separated paired secondary block. Approved
+Fig. 1/3/4 assets and the original mechanism diagram are byte-identical to latest
+main. All frozen primary and secondary results, plan and formulas are unchanged.
+Full QA and rendered-page review were refreshed on this combined version.
+
 Current review: `reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md`. Current
 PDFs: `manuscript/output/manuscript-v0.6.pdf` and `manuscript/output/appendix-v0.6.pdf`.
 This reviewer-requested post-study contrast uses only frozen raw observations:
@@ -22,7 +30,8 @@ change occurred. All v0.5 review qualifications remain in force.
   exact headline and finite-bootstrap endpoints, and descriptive counts.
 - **7** hardware-free replay/rejection tests; **41** submission scope/projection
   checks. All **41** pre-existing runtime-tree files and all **40**
-  pre-existing paper evidence files are byte-identical to the exact starting main.
+  pre-existing paper evidence files are byte-identical to the latest integration main.
+  All prior main PDFs/ZIP and approved manuscript figure files are also preserved.
 - Main, appendix, and hardware-only builds passed. Official style unchanged;
   fonts embedded, PDFs anonymous, no unresolved citations/references or overfull
   boxes. The **37-file** source ZIP also compiled in a clean directory.
@@ -35,8 +44,8 @@ Receipts: `evidence/M4_GUARD_ALWAYS_SECONDARY_QA_V06.json`,
 `evidence/M4_GUARD_ALWAYS_SECONDARY_TEST_QA_V06.json`,
 `evidence/M4_GUARD_ALWAYS_SECONDARY_VISUAL_QA_V06.json`, and the versioned
 `NUMERICAL`, `RUNTIME`, `NARRATIVE`, `NARRATIVE_FIGURE`, `NARRATIVE_PDF`, and
-`SUBMISSION` v0.6 receipts. Previous receipts and PDFs remain historical and
-unchanged. The artifact comparison sharpens the existing negative/control
+`SUBMISSION` v0.6 receipts. Previous receipts and PDFs match latest main, including PR #29
+review updates. The artifact comparison sharpens the existing negative/control
 conclusion; no result-dependent analysis choice or new measurement occurred.
 
 # v0.5 coordinated submission review

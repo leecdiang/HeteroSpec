@@ -6,7 +6,8 @@ HERE=Path(__file__).resolve().parents[1]
 ROOT=HERE.parents[2]
 E=HERE.parent/'evidence'
 SOURCE='b326ff7f20d9bac5afff6f53a6e9d9d8a7aaa7ae'
-START='50050f62a44064b11948263d064aa6b1bb7a3359'
+ANALYSIS_START='50050f62a44064b11948263d064aa6b1bb7a3359'
+START='9b996dd702e5807b3cacc9db9c69aa7eb80035a4'
 checks=[]
 def check(label,condition):
     assert condition,label
@@ -75,6 +76,6 @@ check('fresh full runtime gate',runtimeqa['status']=='PASS' and runtimeqa['exist
 oldruntime=json.loads((E/'RUNTIME_QA_V05.json').read_text())
 check('117 original runtime gates retained',runtimeqa['checks'][:117]==oldruntime['checks'])
 check('independent secondary recomputation',runtimeqa['secondary_recomputation']['status']=='PASS' and runtimeqa['secondary_recomputation']['check_count']==638)
-report={'status':'PASS','source_head':SOURCE,'secondary_starting_main':START,'checks':checks,'changed_tracked_files':changed,'secondary_scope_allowlist':sorted(secondary_allowed),'limits':['Historical text-path agreement is not direct-ID proof.','Hash and Git-byte consistency do not certify every possible historical exposure or machine state.','358H compact diagnostics verified, not raw-trace replay.']}
+report={'status':'PASS','source_head':SOURCE,'secondary_starting_main':ANALYSIS_START,'current_integration_main':START,'checks':checks,'changed_tracked_files':changed,'secondary_scope_allowlist':sorted(secondary_allowed),'limits':['Historical text-path agreement is not direct-ID proof.','Hash and Git-byte consistency do not certify every possible historical exposure or machine state.','358H compact diagnostics verified, not raw-trace replay.']}
 (E/'SUBMISSION_QA_V06.json').write_text(json.dumps(report,indent=2)+'\n')
 print(f'Submission PASS: {len(checks)} additional scope/projection/provenance checks.')

@@ -7,7 +7,9 @@ observations. Guard had higher latency on this held-out comparison. See
 `../reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md` and the committed plan
 in `benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS_PLAN.md`. All v0.5
 submission-review findings and historical table overlays remain in force.
-No new model execution, timing, or policy tuning occurred.
+Current integration base is main `9b996dd702e5807b3cacc9db9c69aa7eb80035a4` after PR #29;
+its approved figures and compact primary table layout are preserved alongside
+the separate secondary row. No new model execution, timing, or policy tuning occurred.
 
 ## Reproduce
 

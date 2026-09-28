@@ -3,7 +3,7 @@ export TEXINPUTS := $(STYLE)//:
 export BSTINPUTS := $(STYLE)//:
 PYTHON ?= python3
 export PYTHONDONTWRITEBYTECODE := 1
-.PHONY: all assets check clean hardware-only overleaf
+.PHONY: all assets figures check clean hardware-only overleaf
 all: assets
 	mkdir -p build output
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
@@ -13,6 +13,9 @@ all: assets
 assets:
 	$(PYTHON) scripts/verify_frozen_assets.py
 	$(PYTHON) scripts/runtime_values.py
+figures:
+	$(PYTHON) figures/presentation_v05/plot.py
+	$(PYTHON) figures/presentation_v05/validate.py
 check:
 	$(PYTHON) scripts/run_historical_validation.py
 	$(PYTHON) scripts/validate_narrative.py

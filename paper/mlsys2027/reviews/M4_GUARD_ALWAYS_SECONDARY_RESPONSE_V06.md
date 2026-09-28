@@ -53,3 +53,13 @@ fonts, references, citations, overfull boxes, and fresh rendered-page review.
 Final page counts and detailed counts are in `../MANUSCRIPT_STATUS.md` and
 `../evidence/NARRATIVE_PDF_V06_QA.json`. This is a draft PR for review;
 no automatic merge is authorized.
+
+## Integration with latest main
+
+Synced with main `9b996dd702e5807b3cacc9db9c69aa7eb80035a4` after PR #29. Its approved
+figures and three compact primary Table 3 rows are retained; the secondary
+contrast remains in a separate block. The only textual merge conflict was the
+table caption, which now states both the oracle latency-regret boundary and
+the post-study paired ratio direction. The analysis plan, raw reconstruction,
+JSON/report, formula and exact interval are unchanged. All validation and PDFs
+were refreshed on the combined version. No new model execution occurred.

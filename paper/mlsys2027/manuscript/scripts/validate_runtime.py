@@ -50,7 +50,7 @@ check('M4 independent full archive recomputation',result==descriptor['independen
 check('M4 sidecar manifest',digest(archive/'bundle_manifest.json')==descriptor['bundle_manifest_sha256'])
 check('runtime TeX exact source formatting',(HERE/'tables/runtime_values.tex').read_text()==tex())
 vals,sources=values()
-texts={str(p.relative_to(HERE)):p.read_text() for p in [HERE/'main.tex',HERE/'appendix.tex',*sorted((HERE/'sections').glob('*.tex')),HERE/'tables/07_runtime.tex']}
+texts={p.relative_to(HERE).as_posix():p.read_text() for p in [HERE/'main.tex',HERE/'appendix.tex',*sorted((HERE/'sections').glob('*.tex')),HERE/'tables/07_runtime.tex']}
 alltext='\n'.join(texts.values())
 for n,v in vals.items():check('runtime macro '+n,re.search(r'\\'+n+r'\b',alltext) is not None)
 for stale in ['proposed design only','implementation and measured results pending','No measured runtime intervention exists','hardware-complete / runtime-reserved','final conclusion awaits','final paper conclusion remains provisional']:

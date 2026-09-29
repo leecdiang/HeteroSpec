@@ -1,3 +1,13 @@
+# v0.8 B570 mechanism integration
+
+The current author-review Draft PR adds the frozen B570 target-only UB1 predictor and reserved 72/72 complete-sequence validation to Section 5 and the appendix. It changes no closed experiment, prior numeric macro, Figure 3 PDF or official style. The main body is ten pages plus references, appendix six pages. Outputs are `output/manuscript-v0.8.pdf`, `appendix-v0.8.pdf`, `hardware-only-v0.8.pdf`, and `overleaf-mechanism-integration-v0.8.zip`.
+
+From this directory, use `latexmk -pdf -output-directory=build main.tex` and `appendix.tex` with `TEXINPUTS` and `BSTINPUTS` including `vendor/official/mlsys2025style/`; compile `\def\HardwareOnly{1}\input{main.tex}` for the hardware proof. Run `python scripts/package_overleaf_v08.py` and `python scripts/validate_mechanism_v08.py`. The source ZIP was built in an independent directory and matched page counts/extracted text. Full historical/large-archive replay requires a complete authenticated repository checkout; the v0.8 local QA receipt distinguishes rerun checks from prior receipts.
+
+Earlier build and scientific history follows.
+
+---
+
 # v0.7 prospective direct-ID qualification integration
 
 Current author-review sources and outputs use v0.7. The new RTX/B570

@@ -72,4 +72,3 @@ with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
         info.compress_type = zipfile.ZIP_DEFLATED
         archive.writestr(info, data)
 print(f'Packaged {len(files)} files: {out}')
-

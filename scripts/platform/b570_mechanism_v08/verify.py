@@ -6,6 +6,7 @@ from pathlib import Path
 START='31e756f3311cee4226bd1be57ee6febadd032aa4'
 DISCOVERY={'HumanEval/'+str(n) for n in (89,101,104,162,3,10,68,70,19,20,28,32)}
 PREFIX='heterospec-b570-mechanism-v08-reserved|'
+PROMPT_PREFIX='Complete the following Python function. Return only the completed Python code, without Markdown fences.\n\n'
 
 def digest(path):return hashlib.file_digest(Path(path).open('rb'),'sha256').hexdigest()
 def array_digest(seq):return hashlib.sha256(json.dumps(seq,separators=(',',':')).encode('ascii')).hexdigest()
@@ -92,6 +93,10 @@ def verify(root):
         require(len({(r['task_id'],r['repetition'],r.get('condition',r.get('n_ubatch'))) for r in rows})==len(rows),'no duplicate observations: '+stage)
         for row in rows:
             label=stage+' '+row['task_id']+' r'+str(row['repetition'])
+            prompt_stage='reserved_predictions' if stage=='reserved_outcomes' else stage
+            prompt=raw/prompt_stage/(row['task_id'].replace('/','_')+'.prompt.txt')
+            require(prompt.read_bytes()==(PROMPT_PREFIX+dataset[row['task_id']]['prompt']).encode('utf-8'),'exact frozen dataset-derived prompt bytes: '+label)
+            if 'prompt_sha256' in row:require(digest(prompt)==row['prompt_sha256'],'prompt text file hash: '+label)
             if stage.startswith('discovery'):require(row['task_id'] in DISCOVERY and row['task_id'] not in selected,'no reserved discovery execution: '+label)
             if stage=='qualification':require(row['task_id'] in v1['task_ids'] and row['task_id'] not in selected,'qualification uses historical exposed task: '+label)
             require(row['start_utc']<=row['end_utc'],'operational temporal order: '+label)
@@ -101,8 +106,11 @@ def verify(root):
                 require(digest(location)==row[kind+'_sha256'],'included '+kind+' bytes: '+label)
             if stage=='reserved_outcomes':
                 sidecar=load(raw/stage/row['sidecar']);ids=sidecar['ids'];flags=sidecar['eog']
+                require(row['exit_code']==0 and row['execution_valid'],'actual outcome valid process completion: '+label)
+                require(len(ids)==len(flags) and ids and all(type(i)==int and i>=0 for i in ids) and all(type(f)==bool for f in flags),'actual integer committed IDs and runtime EOG flags: '+label)
                 end=min(128,next((i+1 for i,f in enumerate(flags) if f),len(ids)))
                 actual=ids[:end]
+                require(len(actual)==128 or flags[end-1],'actual complete semantic output endpoint: '+label)
                 require(actual==row['generated_ids'] and array_digest(actual)==row['generated_ids_sha256'],'actual direct committed IDs and inclusive endpoint: '+label)
                 require(array_digest(ids)==row['raw_ids_sha256'],'raw overshoot IDs hash: '+label)
                 text=(raw/stage/row['stderr']).read_text(encoding='utf-8',errors='replace')
@@ -135,6 +143,10 @@ def verify(root):
     plan_path='benchmarks/b570_mechanism_v08/discovery_protocol.json'
     plan_commit=first_commit_for(root,plan_path)
     require(checkpoint_bytes(root,plan_commit,plan_path)==(p/'discovery_protocol.json').read_bytes(),'discovery plan unchanged since initial pre-inference commit')
+    for name in ['exposure_inventory.json','RESERVED_VALIDATION_SET.json']:
+        path='benchmarks/b570_mechanism_v08/'+name
+        checkpoint=first_commit_for(root,path)
+        require(checkpoint_bytes(root,checkpoint,path)==(p/name).read_bytes(),'exposure/selection unchanged since initial commit: '+name)
     require(all(ancestor(root,plan_commit,r['study_head']) and inventory['audit_utc']<r['start_utc'] for r in all_rows),'exposure audit and discovery plan precede all new inference')
     for pair in q['pairs']:
         actual=recomputed.get((pair['task_id'],pair['repetition']))
@@ -182,6 +194,7 @@ def verify(root):
                     require(item['same_sequence_position'] and ref['decisions'][index]['sequence_position']==candidate['decisions'][index]['sequence_position'],'identical sequence position at first divergence')
     if (p/'RESERVED_PREDICTIONS.json').exists() and load(p/'RESERVED_PREDICTIONS.json').get('executed',True):
         predictions=load(p/'RESERVED_PREDICTIONS.json');freeze=load(p/'hypothesis_freeze.json');prediction_rows=[r for r in all_rows if r['stage']=='reserved_predictions'];outcomes=[r for r in all_rows if r['stage']=='reserved_outcomes']
+        require(freeze['reserved_task_ids']==selected,'hypothesis freeze uses original deterministic reserved IDs and order')
         freeze_commit=predictions['hypothesis_freeze_commit']
         freeze_path='benchmarks/b570_mechanism_v08/hypothesis_freeze.json'
         require(checkpoint_bytes(root,freeze_commit,freeze_path)==(p/'hypothesis_freeze.json').read_bytes(),'hypothesis freeze committed bytes')

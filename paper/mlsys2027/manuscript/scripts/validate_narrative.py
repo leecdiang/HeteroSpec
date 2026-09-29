@@ -40,7 +40,7 @@ def original(path):
 
 # Catch edits outside narrative, packaging and QA, including untracked experiment files.
 # Tree-to-tree plus index/worktree comparison avoids rename-content reads in sparse audit checkouts.
-tracked = subprocess.check_output(['git', 'diff-tree', '--no-commit-id', '--no-renames', '-r', '--name-only', 'bbf0c555cc50242f85c086eac342c9deb5c2e945', 'HEAD'], cwd=ROOT, text=True).splitlines()
+tracked = subprocess.check_output(['git', 'diff-tree', '--no-commit-id', '--no-renames', '-r', '--name-only', 'bab0e44c74f7fa59d2ea42faf4dcf4c51a78e674', 'HEAD'], cwd=ROOT, text=True).splitlines()
 tracked += subprocess.check_output(['git', 'diff', '--no-renames', '--name-only', 'HEAD'], cwd=ROOT, text=True).splitlines()
 untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
 allowed = ('paper/mlsys2027/manuscript/', 'paper/mlsys2027/evidence/NARRATIVE_',
@@ -54,7 +54,9 @@ allowed = ('paper/mlsys2027/manuscript/', 'paper/mlsys2027/evidence/NARRATIVE_',
            'paper/mlsys2027/reviews/submission_v05/', 'paper/mlsys2027/SUBMISSION_REVIEW_V05.md',
            'paper/mlsys2027/README.md', 'paper/mlsys2027/evidence/SUBMISSION_',
            'paper/mlsys2027/evidence/NUMERICAL_QA_V05.json',
-           'paper/mlsys2027/evidence/NUMERICAL_QA_V06.json')
+           'paper/mlsys2027/evidence/NUMERICAL_QA_V07.json',
+           'paper/mlsys2027/evidence/DIRECT_ID_',
+           'paper/mlsys2027/reviews/submission_v07/')
 secondary_allowed = {
     'benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS_PLAN.md',
     'benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS.json',
@@ -85,7 +87,7 @@ macros = json.loads((EVID/'published_values.json').read_text())['macros']
 old_used = {m for m in macros if re.search(r'\\'+m+r'\b', old_text)}
 new_used = {m for m in macros if re.search(r'\\'+m+r'\b', new_text)}
 assert old_used <= new_used, ('quantitative coverage lost', sorted(old_used-new_used))
-numerical = json.loads((EVID/'NUMERICAL_QA_V06.json').read_text())
+numerical = json.loads((EVID/'NUMERICAL_QA_V07.json').read_text())
 assert numerical['status'] == 'PASS' and len(numerical['checks']) == 228
 assert all(c['pass'] for c in numerical['checks'])
 
@@ -98,5 +100,5 @@ report = {'status': 'PASS', 'main_baseline': base, 'integration_main': freeze['m
     'experiment_data_and_source_unchanged': True,
     'secondary_scope_allowlist': sorted(secondary_allowed),
     'scope_note': 'Narrative and causal interpretations require manual review; see reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md and the retained SUBMISSION_REVIEW_V05.md.'}
-(EVID/'NARRATIVE_V06_QA.json').write_text(json.dumps(report, indent=2)+'\n')
+(EVID/'NARRATIVE_V07_QA.json').write_text(json.dumps(report, indent=2)+'\n',encoding='utf-8',newline='\n')
 print(f'Narrative PASS: {len(checks)} protected files, all {len(old_used)} prior prose numeric macros, 228 unchanged numerical checks.')

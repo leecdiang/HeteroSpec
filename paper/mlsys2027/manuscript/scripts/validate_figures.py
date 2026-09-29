@@ -119,7 +119,7 @@ presentation_spec.loader.exec_module(presentation_module)
 presentation_checks=presentation_module.validate()
 placements=[]
 selected={'m4':3.25,'verification':6.75,'state':6.75,'mechanism':6.75}
-active_sources={asset:(FIG/'mechanism_v05/mechanism.pdf' if asset=='mechanism' else HERE/f'figures/presentation_v05/pdf/{asset}.pdf') for asset in selected}
+active_sources={asset:(FIG/'mechanism_v05/mechanism.pdf' if asset=='mechanism' else HERE/f'figures/presentation_v07/pdf/{asset}.pdf' if asset=='verification' else HERE/f'figures/presentation_v05/pdf/{asset}.pdf') for asset in selected}
 active_streams={asset:PdfReader(path).pages[0].get_contents().get_data().strip() for asset,path in active_sources.items()}
 for name in ('main','appendix'):
     pdf=PdfReader(HERE/'build'/f'{name}.pdf')
@@ -148,5 +148,5 @@ report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source
         'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
         'original_five_figure_replays':results,'historical_style_checks':style_checks,'active_presentation_checks':presentation_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
-(EVID/'NARRATIVE_FIGURE_V06_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+(EVID/'NARRATIVE_FIGURE_V07_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Figure v0.4 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

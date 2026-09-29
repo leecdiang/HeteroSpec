@@ -53,10 +53,10 @@ inventory=subprocess.check_output(['git','ls-tree','-r','bab0e44','artifacts','b
 protected=[];expected=[]
 for line in inventory:
     meta,path=line.split('\t',1);protected.append(path);expected.append(meta.split()[2])
-actual=subprocess.check_output(['git','hash-object','--no-filters','--stdin-paths'],input=('\n'.join(protected)+'\n').encode(),cwd=REPO).decode().splitlines()
+actual=subprocess.check_output(['git','hash-object','--no-filters','--stdin-paths'],input=('\n'.join(protected)+'\n',encoding='utf-8',newline='\n').encode(),cwd=REPO).decode().splitlines()
 check('protected inventory coverage',len(actual)==len(protected))
 for path,want,got in zip(protected,expected,actual):check('protected base bytes '+path,want==got)
 
 report={'status':'PASS','checks':checks,'check_count':len(checks),'figure':figure,'base':'bab0e44c74f7fa59d2ea42faf4dcf4c51a78e674','no_new_inference':True,'historical_evidence_modified':False,'retroactive_certification':False}
-(E/'DIRECT_ID_INTEGRATION_QA_V07.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'DIRECT_ID_INTEGRATION_QA_V07.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Direct-ID integration PASS:',len(checks),'checks; figure:',figure['check_count'])

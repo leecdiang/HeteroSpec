@@ -71,8 +71,8 @@ check('primary runtime TeX preserved byte prefix',tex().startswith(primary_tex))
 secondary_script=ROOT/'scripts/platform/m4_runtime/analyze_guard_always_secondary.py'
 subprocess.run([sys.executable,str(secondary_script),'--check'],check=True,capture_output=True,text=True)
 check('secondary JSON and report exact deterministic replay',True)
-subprocess.run([sys.executable,str(ROOT/'scripts/platform/m4_runtime/verify_guard_always_secondary.py')],check=True,capture_output=True,text=True)
-qa=json.loads((E/'M4_GUARD_ALWAYS_SECONDARY_QA_V06.json').read_text())
+subprocess.run([sys.executable,str(ROOT/'scripts/platform/m4_runtime/verify_guard_always_secondary.py'),'--receipt',str(E/'DIRECT_ID_M4_SECONDARY_REPLAY_V07.json')],check=True,capture_output=True,text=True)
+qa=json.loads((E/'DIRECT_ID_M4_SECONDARY_REPLAY_V07.json').read_text())
 check('secondary independent raw recomputation',qa['status']=='PASS' and qa['check_count']==638 and qa['primary_medians_exact_match'])
 secondary=load('GUARD_ALWAYS_SECONDARY_ANALYSIS.json')
 check('secondary artifact hash verified',qa['result_sha256']==digest(ROOT/'benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS.json'))
@@ -88,5 +88,5 @@ check('secondary limitations and primary endpoint distinction','not the register
 check('appendix formula and fresh secondary stream',all(p in texts['appendix.tex'] for p in ['post-study paired secondary analysis','r_i=','fresh standalone Python Random stream','not continue the primary stream','not preregistration or blinding','source hashes']))
 vals.update(extra);sources.update(extra_sources)
 report={'status':'PASS','checks':checks,'existing_runtime_checks':117,'new_secondary_checks':len(checks)-117,'archive_recomputation':result,'secondary_recomputation':qa,'macro_values':vals,'macro_sources':sources,'358h_pin':pin['pinned_commit'],'limits':['358H compact diagnostic findings verified; local raw traces not replayed.','Historical exposure exclusion verified against frozen inventory, not re-established from unavailable measurement-machine files.','Semantic prose and causal scope require human review.']}
-(E/'RUNTIME_QA_V06.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'RUNTIME_QA_V07.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(f'Runtime PASS: {len(checks)} checks, {len(vals)} sourced macros, complete M4 archive recomputation, pinned 358H controls.')

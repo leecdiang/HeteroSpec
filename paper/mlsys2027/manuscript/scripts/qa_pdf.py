@@ -5,14 +5,14 @@ import re,json,hashlib
 from pypdf import PdfReader
 ROOT=Path(__file__).resolve().parents[1]; E=ROOT.parent/'evidence'
 report={'status':'PASS','pdfs':{},'manual_visual_review':'Recorded separately in MANUSCRIPT_STATUS.md; rerender after final edits.'}
-for fn in ['main','appendix']:
- p=ROOT/'build'/f'{fn}.pdf';r=PdfReader(p);text='\n'.join(page.extract_text() or '' for page in r.pages);metadata=dict(r.metadata)
+for fn in ['main','appendix','hardware-only']:
+ p=ROOT/'build'/('hardware-only/hardware-only.pdf' if fn=='hardware-only' else f'{fn}.pdf');r=PdfReader(p);text='\n'.join(page.extract_text() or '' for page in r.pages);metadata=dict(r.metadata)
  combined=text+'\n'+str(metadata)
  for forbidden in ['leecdiang','/Users/','D:\\','C:\\','HeteroSpec','AUTHORERR','/home/','Acknowledgments','Acknowledgements']:
   assert forbidden.casefold() not in combined.casefold(),(fn,forbidden)
  assert 'Anonymous' in metadata.get('/Author',''),metadata
- assert 'v0.6' in metadata.get('/Subject',''),metadata
- output=ROOT/'output'/('manuscript-v0.6.pdf' if fn=='main' else 'appendix-v0.6.pdf')
+ assert 'v0.7' in metadata.get('/Subject',''),metadata
+ output=ROOT/'output'/('manuscript-v0.7.pdf' if fn=='main' else 'hardware-only-v0.7.pdf' if fn=='hardware-only' else 'appendix-v0.7.pdf')
  assert output.read_bytes()==p.read_bytes(),(fn,'delivered PDF differs from checked build')
  assert not re.search(r'RTX 5070 Ti(?!\s+Laptop)', text), 'Missing Laptop identity'
  assert '??' not in text
@@ -39,8 +39,9 @@ for fn in ['main','appendix']:
    seen.add(key);obj=obj.get_object()
    if obj.get('/Subtype')=='/Form' and '/Resources' in obj:scan_resources(obj['/Resources'])
  for page in r.pages:scan_resources(page['/Resources'])
- log=(ROOT/'build'/f'{fn}.log').read_text()
- assert not re.search(r'Overfull|undefined references|Citation .* undefined|LaTeX Error|AUTHORERR',log),fn
+ assert any('NimbusRomNo9L' in name for name in fonts), (fn,'official Times fonts absent')
+ log=p.with_suffix('.log').read_text()
+ assert not re.search(r'Overfull|undefined references|Citation .* undefined|LaTeX Error|AUTHORERR|Font shape .* undefined',log),fn
  report['pdfs'][fn]={'pages':len(r.pages),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'metadata':metadata,'fonts':fonts,'anonymous_scan':'PASS','overfull_boxes':0,'undefined_references':0}
 aux=(ROOT/'build/main.aux').read_text();mainpage=int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',aux).group(1));assert mainpage<=10
 report['main_text_pages']=mainpage
@@ -54,6 +55,7 @@ appendix_aux=(ROOT/'build/appendix.aux').read_text()
 assert 'fig:regimes' not in appendix_aux
 assert r'\newlabel{tab:verificationlookup}{{A3}' in appendix_aux
 assert r'\newlabel{tab:regimes}{{A4}' in appendix_aux
+assert figures['fig:verification']['page']<=report['section_start_pages']['sec:runtime'], 'Figure 3 drifted into runtime discussion'
 report['main_figures']=figures
 report['appendix_tables']={k:{'number':n,'page':int(p)} for k,n,p in re.findall(r'\\newlabel\{(tab:[^}]+)\}\{\{([^}]+)\}\{(\d+)\}',appendix_aux)}
 # All 15 cited entries have complete authors, including 58 HumanEval authors.
@@ -77,5 +79,5 @@ if hp.exists():
  assert 'Requirements traced to closed measurements' not in htext and 'implementation and measured results pending' not in htext
  assert 'sec:runtime' not in haux and '??' not in htext
  report['hardware_only']={'total_pages':len(PdfReader(hp).pages),'main_pages':int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',haux).group(1)),'runtime_section_removed':True,'no_undefined_references':True,'sha256':hashlib.sha256(hp.read_bytes()).hexdigest()}
-(E/'NARRATIVE_PDF_V06_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'NARRATIVE_PDF_V07_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps({'status':'PASS','main_pages':mainpage,'references_pages':report['references_pages'],'appendix_pages':report['pdfs']['appendix']['pages'],'hardware_only':report.get('hardware_only'),'overclaim_hits':hits},indent=2))

@@ -2,6 +2,7 @@
 from pathlib import Path
 import csv,hashlib,json,math
 from pypdf import PdfReader
+import pymupdf
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[4]
@@ -38,6 +39,20 @@ def validate():
     text=page.extract_text()
     for count in ('75/90','90/90','60/90','78/90'):check('visible count '+count,count in text)
     check('visible statuses',text.count('BLOCKED')==4 and text.count('QUALIFIED')==2)
+    # Inspect plotted marker centers in the vector PDF, independently of the
+    # plotting code and its receipt. Exclude zero-width axis tick paths.
+    vector=pymupdf.open(HERE/'pdf/verification.pdf')
+    marks=[d for d in vector[0].get_drawings() if d['fill'] is not None and 3<d['rect'].width<8 and 3<d['rect'].height<8]
+    check('15 actual vector markers',len(marks)==15)
+    for drawing,row in zip(marks[:11],rows):
+        center=(drawing['rect'].x0+drawing['rect'].x1)/2
+        expected_x=.18*486+(float(row['v2_micro'])-.85)/1.75*(.285*486)
+        check('actual A vector coordinate '+row['path']+' '+row['context'],abs(center-expected_x)<.001)
+    for drawing,(_,_,condition,pairs,_,status) in zip(marks[11:],specs):
+        center=(drawing['rect'].x0+drawing['rect'].x1)/2
+        expected_x=.64*486+pairs/90*(.205*486)
+        check('actual B vector coordinate '+condition,abs(center-expected_x)<.001)
+        check('actual B fill '+condition,(drawing['fill']==(1,1,1))==(status=='BLOCKED'))
     check('vector SVG','<image' not in (HERE/'svg/verification.svg').read_text())
     for font in page['/Resources']['/Font'].values():
         font=font.get_object()
@@ -49,5 +64,5 @@ def validate():
             'pdf_sha256':hashlib.sha256((HERE/'pdf/verification.pdf').read_bytes()).hexdigest()}
 
 if __name__=='__main__':
-    result=validate();(HERE/'qa/validation.json').write_text(json.dumps(result,indent=2)+'\n')
+    result=validate();(HERE/'qa/validation.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('Figure 3 validation PASS:',result['check_count'],'checks.')

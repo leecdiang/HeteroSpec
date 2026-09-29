@@ -53,7 +53,7 @@ inventory=subprocess.check_output(['git','ls-tree','-r','bab0e44','artifacts','b
 protected=[];expected=[]
 for line in inventory:
     meta,path=line.split('\t',1);protected.append(path);expected.append(meta.split()[2])
-actual=subprocess.check_output(['git','hash-object','--no-filters','--stdin-paths'],input=('\n'.join(protected)+'\n',encoding='utf-8',newline='\n').encode(),cwd=REPO).decode().splitlines()
+actual=subprocess.check_output(['git','hash-object','--no-filters','--stdin-paths'],input=('\n'.join(protected)+'\n').encode(),cwd=REPO).decode().splitlines()
 check('protected inventory coverage',len(actual)==len(protected))
 for path,want,got in zip(protected,expected,actual):check('protected base bytes '+path,want==got)
 

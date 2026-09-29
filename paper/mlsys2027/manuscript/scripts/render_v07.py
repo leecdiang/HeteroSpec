@@ -8,6 +8,11 @@ def main():
     QA.mkdir(parents=True,exist_ok=True);rendered={}
     for name,filename in [('main','manuscript-v0.7.pdf'),('appendix','appendix-v0.7.pdf'),('hardware','hardware-only-v0.7.pdf')]:
         source=HERE/'output'/filename;doc=fitz.open(source);images=[]
+        # Remove only surplus renders from earlier drafts of this same artifact.
+        for stale in QA.glob(f'{name}-[0-9][0-9].png'):
+            if int(stale.stem.rsplit('-',1)[1]) > len(doc): stale.unlink()
+        for stale in QA.glob(f'{name}-contact-*.png'):
+            if int(stale.stem.rsplit('-',1)[1]) > (len(doc)+5)//6: stale.unlink()
         for index,page in enumerate(doc,1):
             path=QA/f'{name}-{index:02}.png';page.get_pixmap(dpi=150,alpha=False).save(path);images.append(path)
         sheets=[]

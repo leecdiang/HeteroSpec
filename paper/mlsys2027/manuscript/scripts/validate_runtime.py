@@ -73,6 +73,7 @@ subprocess.run([sys.executable,str(secondary_script),'--check'],check=True,captu
 check('secondary JSON and report exact deterministic replay',True)
 subprocess.run([sys.executable,str(ROOT/'scripts/platform/m4_runtime/verify_guard_always_secondary.py'),'--receipt',str(E/'DIRECT_ID_M4_SECONDARY_REPLAY_V07.json')],check=True,capture_output=True,text=True)
 qa=json.loads((E/'DIRECT_ID_M4_SECONDARY_REPLAY_V07.json').read_text())
+(E/'DIRECT_ID_M4_SECONDARY_REPLAY_V07.json').write_text(json.dumps(qa,indent=2)+'\n',encoding='utf-8',newline='\n')
 check('secondary independent raw recomputation',qa['status']=='PASS' and qa['check_count']==638 and qa['primary_medians_exact_match'])
 secondary=load('GUARD_ALWAYS_SECONDARY_ANALYSIS.json')
 check('secondary artifact hash verified',qa['result_sha256']==digest(ROOT/'benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_ANALYSIS.json'))

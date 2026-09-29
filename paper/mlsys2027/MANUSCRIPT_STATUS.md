@@ -1,3 +1,95 @@
+# v0.7 — prospective direct-ID qualification integration
+
+**HARDWARE + RUNTIME CHARACTERIZATION WITH PROSPECTIVE DIRECT-ID
+QUALIFICATION REPLICATIONS; DRAFT FOR AUTHOR REVIEW.** This is not a final
+submission or an accepted paper.
+
+- Starting main: `bab0e44c74f7fa59d2ea42faf4dcf4c51a78e674`.
+- Integration branch: `paper/mlsys2027-direct-id-integration-v0.7`.
+- Branch HEAD at artifact freeze: `1ea5c6e09d01c3219631f183fc1934db84955a66`.
+  The final delivery commit adds review/status/visual disposition and helper
+  portability repairs; its exact HEAD is the Draft PR head and final delivery
+  response. A document cannot embed its own containing commit SHA.
+- Main was independently rechecked on GitHub and remains the required base.
+
+## New evidence and preserved boundaries
+
+RTX batched: **75/90 exact pairs, 25/30 wholly exact prompts, BLOCKED**.
+RTX serialized: **90/90, 30/30, QUALIFIED**. B570 fast: **60/90, 20/30,
+BLOCKED**. B570 serialized: **78/90, 26/30, BLOCKED**. Each study completes
+270 executions and 180 comparisons. No passing subset qualifies.
+
+The studies share HumanEval30 IDs, model pair, greedy k=2, three repetitions,
+and a 90/90 rule. Runtime, reference, frontend and context differences preclude
+causal hardware ranking. Serialization changes tested qualification, but is
+not a portable correctness certificate. New qualification is separate from
+historical physical/timing evidence and the historical CUDA mechanism capture.
+No historical timing is retroactively certified; old B570 counts and all
+protected evidence, archives, old outputs and approved v0.5 figures are intact.
+Section 7 and its runtime table are unchanged from the starting main.
+
+Independent offline replay verifies archive SHA-256 and included records:
+
+- RTX: `fc3676adae93c4f21bf6e29d9787d95d1e60d08c2d7223de30fc58c46c3e0822`.
+- B570: `58daa4159de12042c73194bbd99abc5e5e23c171578ea873675f07901582db20`.
+
+The portable replay verifies recorded identities of omitted weights/binaries;
+it does not freshly rehash those absent assets. RTX v1 transport and B570's
+zero-inference launcher failure remain disclosed; no campaigns were reopened.
+
+The M4 paired secondary result remains Guard/Always-Spec latency
+**1.0270760219826773**, CI **[1.0129560055428655, 1.0435592653980876]**,
+24 Guard-faster and 36 Always-faster prompts. Guard is slower on this frozen
+comparison, despite remaining profitable against target-only.
+
+## Builds and QA
+
+- Main: **10 body pages + 1 reference page**. Appendix: **5 pages**.
+  Hardware/reference build: **9 body pages + 1 reference page**.
+- Full, appendix and hardware builds pass. The source ZIP clean-compiles main
+  and appendix with matching page counts and all page text; original official
+  style bytes are unchanged. The build used Tectonic with official Times
+  encoding, without font substitution, font-size or margin changes.
+- Historical numerical: **228 PASS**. Narrative: **260 protected files,
+  57 historical macros PASS**. Runtime: **136 checks, 29 sourced macros PASS**,
+  retaining all 117 old gates plus 19 paired-secondary gates.
+- M4 primary archive: **62 payload hashes PASS**; independent paired-secondary
+  replay: **638 checks PASS**; unchanged rejection/replay tests: **7 PASS**.
+  Submission projection: **41 checks PASS**.
+- Direct-ID integration: **2459 checks PASS**, including protected base blobs;
+  Figure 3: **67 independent checks PASS** including actual vector coordinates.
+  Both direct-ID archives replay independently; all 180 comparisons per study
+  are reproduced from native events/sidecars.
+- All 15 references retain full author lists. Anonymous PDFs, embedded fonts,
+  resolved citations/references, zero overfull boxes and no substitutions: PASS.
+- Every delivered page was rendered at 150 dpi and inspected: **26/26 PASS**.
+  Figure 3 actual vector PDF was inspected in color/grayscale at 96 and 200 dpi.
+
+Figure 3 is the versioned **6.75 × 2.12 inch** two-panel vector PDF/SVG.
+A retains all eleven historical target-forward micro cells with path shapes
+and no qualification encoding. B has exactly four direct-ID rows and a visible
+90/90 gate; open/filled markers and written labels survive grayscale.
+It stays with the qualification synthesis on main page 7. Counts and caption
+are readable, with no clipping or annotation overlap. Closely spaced historical
+markers rely on Table A3 for exact lookup, as disclosed in the visual review.
+All other approved figure assets remain byte-identical.
+
+## Fresh submission assessment
+
+Seven independent model-review simulations inspect the actual frozen v0.7 PDFs
+without reading one another's reports. Meta-review, mock decision and A–E delta
+are under `reviews/submission_v07/`. These are not external human peer reviews.
+The new evidence strengthens validity and the replicated qualification core;
+conference-level significance remains a substantive author-review question.
+The fresh mock decision is **Weak Reject, moderate confidence (3/5)**. Rigor and
+champion support bounded weak acceptance; the central remaining objection is
+limited transferable explanatory/predictive reach, not a demonstrated invalid
+endpoint. See the explicit v0.5-to-v0.7 A–E delta and unexecuted recommendations.
+The exact added/changed file manifest and output hashes accompany delivery.
+No recommended future experiment is authorized or executed by this integration.
+
+---
+
 # v0.6 paired M4 Guard versus Always-Spec secondary analysis
 
 Current integration base: `9b996dd702e5807b3cacc9db9c69aa7eb80035a4` (main after PR #29).

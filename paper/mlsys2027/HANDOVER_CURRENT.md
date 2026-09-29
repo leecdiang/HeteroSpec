@@ -2,7 +2,7 @@
 
 ## 1. Current repository state
 
-Current `main` is `1d3b556c93b477680788dfd1eb0737dfe9eee28c` (merged PR #35). Manuscript v0.8 is the merged baseline. PR #34 merged the B570 mechanism study, PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis.
+Scientific author-freeze baseline: immutable tag `mlsys2027-v0.8-author-freeze` resolves to `1d3b556c93b477680788dfd1eb0737dfe9eee28c` (merged PR #35). Repository current `main` MUST be queried with git/GitHub at every session start; this document does not permanently pin a mutable branch. Main observed when this revision was authored: `0e93dc93569ee091e48f2cd76327cfd8a9de3cde`, including handover PR #36. Manuscript v0.8 remains the scientific baseline; v0.8.1 is the literature/positioning submission-readiness candidate. PR #34 merged the B570 mechanism study, PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis.
 
 ## 2. Current paper thesis
 
@@ -58,7 +58,7 @@ How far does partition sufficiency transfer across model pairs, workloads, conte
 
 ## 10. Immediate next actions
 
-Freeze the v0.8 submission candidate against the author-freeze tag, then request external author review of the exact PDF, appendix, claim scope and source bundle. Resolve submission-format or wording issues in a separate reviewable PR before final submission; retain the closed scientific evidence.
+Review the v0.8.1 positioning candidate and title recommendation against the unchanged scientific author-freeze tag, then request external author review of the exact PDF, appendix, claim scope and source bundle. Resolve submission-format or wording issues in a separate reviewable PR before final submission; retain the closed scientific evidence.
 
 ## 11. Repository map
 
@@ -70,4 +70,4 @@ Fetch `main`, record its exact SHA, and inspect canonical evidence before changi
 
 ## 13. Last updated
 
-2026-09-29 UTC. `main` merge commit: `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. Manuscript: v0.8 merged baseline.
+2026-09-29 UTC. Scientific baseline: v0.8 immutable author-freeze tag above. Positioning candidate: v0.8.1. Query current main at session start; no SHA-only maintenance is required after merges.

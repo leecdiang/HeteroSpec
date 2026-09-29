@@ -9,7 +9,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.1}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
@@ -26,7 +26,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware, mechanism, and runtime studies in manuscript v0.8. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies the measured hardware, mechanism, and runtime studies in manuscript v0.8.1. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 equality counts compare re-tokenized parsed CLI output. In the historical M4 HumanEval pipeline the parsed text includes the prompt; equality of those arrays is not a direct generated-ID comparison. B570 strips the prompt and normalizes the text before re-tokenization, which still does not recover a direct-ID trace. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.

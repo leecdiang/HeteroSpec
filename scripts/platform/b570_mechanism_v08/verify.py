@@ -27,6 +27,10 @@ def checkpoint_bytes(root,commit,path):
         record=load(proof)['commits'][commit]['files'][path]
         return (root/'provenance/git_objects'/record['blob']).read_bytes()
     return subprocess.check_output(['git','show',commit+':'+path],cwd=root)
+def first_commit_for(root,path):
+    proof=root/'provenance/git_checkpoints.json'
+    if proof.exists():return next(oid for oid,record in load(proof)['commits'].items() if path in record['files'])
+    return subprocess.check_output(['git','log','--reverse','--format=%H','--',path],cwd=root,text=True).splitlines()[0]
 def temporal_audit(freeze_time,prediction_created,predictor_runs,outcome_runs,frozen_digest,current_digest):
     """Reject leaked or changed predictions, independently of sequence agreement."""
     errors=[]
@@ -71,6 +75,7 @@ def verify(root):
             for name,h in v1['binary_hashes'].items():require(digest(runtime/'serialized'/name)==h,'included historical serialized runtime bytes: '+name)
     for asset,section in [('models/gguf/Qwen3-8B-Q8_0.gguf','target'),('models/gguf/Qwen3-0.6B-Q8_0.gguf','draft'),('datasets/humaneval/HumanEval.jsonl.gz','dataset')]:
         require(build['assets'].get(asset,build['assets'].get(asset.replace('/','\\')))==v1[section]['sha256'],'asset recorded identity: '+section)
+        if (root/asset).exists():require(digest(root/asset)==v1[section]['sha256'],'available actual asset bytes independently rehashed: '+section)
     historical=root/'provenance/historical_executions.json'
     if not historical.exists():historical=root/'work/b570_direct_id_v1/formal-v1-20260929-local/executions.json'
     require(digest(historical)==build['historical_executions_sha256'],'historical direct-ID evidence bytes')
@@ -127,6 +132,10 @@ def verify(root):
                 ref=old_by[(row['task_id'],row['repetition'],'TARGET_REFERENCE')]['generated_ids']
                 recomputed[(row['task_id'],row['repetition'])]=divergence(ref,ids)
     q=load(p/'HARNESS_QUALIFICATION.json')
+    plan_path='benchmarks/b570_mechanism_v08/discovery_protocol.json'
+    plan_commit=first_commit_for(root,plan_path)
+    require(checkpoint_bytes(root,plan_commit,plan_path)==(p/'discovery_protocol.json').read_bytes(),'discovery plan unchanged since initial pre-inference commit')
+    require(all(ancestor(root,plan_commit,r['study_head']) and inventory['audit_utc']<r['start_utc'] for r in all_rows),'exposure audit and discovery plan precede all new inference')
     for pair in q['pairs']:
         actual=recomputed.get((pair['task_id'],pair['repetition']))
         if actual is not None:require(all(pair[k]==v for k,v in actual.items()),'independent qualification divergence recomputation')
@@ -159,6 +168,18 @@ def verify(root):
         if discovery['status']=='H1_SELECTED':
             require(h1_exact==36,'H1 selected only at 36/36')
             require(not any(r['stage']=='discovery_h2' for r in all_rows),'H2 not constructed after H1 succeeds')
+        if (p/'DISCOVERY_DECISION_DIAGNOSTICS.json').exists():
+            diagnostics=load(p/'DISCOVERY_DECISION_DIAGNOSTICS.json')['observations']
+            require(len(diagnostics)==36,'same-prefix diagnostics cover all discovery observations')
+            for item in diagnostics:
+                stem=item['task_id'].replace('/','_')+'-r'+str(item['repetition'])
+                ref=load(raw/'qualification'/(stem+'-ub128.capture.json'));candidate=load(raw/'discovery_h1'/(stem+'-ub1.capture.json'))
+                index=divergence(ref['generated_ids'],candidate['generated_ids'])['first_divergence_index']
+                require(item['first_divergence_index']==index and item['same_prompt_ids']==(ref['prompt_ids']==candidate['prompt_ids']),'same-prefix diagnostic index and prompt identity')
+                if index is not None:
+                    require(item['same_committed_prefix'] and ref['generated_ids'][:index]==candidate['generated_ids'][:index]==item['committed_prefix_ids'],'identical committed prefix at first divergence')
+                    require(item['reference_decision']==ref['decisions'][index] and item['candidate_decision']==candidate['decisions'][index],'same-prefix raw target top-two/logit/margin evidence')
+                    require(item['same_sequence_position'] and ref['decisions'][index]['sequence_position']==candidate['decisions'][index]['sequence_position'],'identical sequence position at first divergence')
     if (p/'RESERVED_PREDICTIONS.json').exists() and load(p/'RESERVED_PREDICTIONS.json').get('executed',True):
         predictions=load(p/'RESERVED_PREDICTIONS.json');freeze=load(p/'hypothesis_freeze.json');prediction_rows=[r for r in all_rows if r['stage']=='reserved_predictions'];outcomes=[r for r in all_rows if r['stage']=='reserved_outcomes']
         freeze_commit=predictions['hypothesis_freeze_commit']
@@ -201,6 +222,11 @@ def verify(root):
             forecast_exact=sum(i['relative_to_reference']['exact'] for i in predictions['predictions'])
             require(report['qualification_prediction']['predicted_reference_exact_pairs']==forecast_exact and report['qualification_prediction']['actual_reference_exact_pairs']==72-nonexact,'complete qualification prediction recomputed')
             require(report['status']==('MECHANISM_PREDICTION_VALIDATED' if exact==72 else 'MECHANISM_PREDICTION_NOT_FULLY_VALIDATED'),'strict all-72 classification')
+            audit=load(p/'POST_RUN_INPUT_AUDIT.json')
+            require(audit['model_dataset_hashes']==freeze['model_dataset_hashes'],'post-run model/dataset digests match hypothesis freeze')
+            require(audit['binary_hashes']==freeze['binary_hashes'] and audit['serialized_binary_hashes']==freeze['serialized_binary_hashes'],'post-run target/predictor/serialized binaries match frozen identities')
+            require(audit['environment']==freeze['driver_and_vulkan'],'post-run driver/Vulkan/OS environment matches freeze')
+            require(audit['prediction_file_sha256']==checkpoint['prediction_sha256'],'post-run predictions remain unchanged')
     return {'schema':'heterospec.b570.mechanism.independent.v08','status':'PASS' if not failures else 'FAIL','checks_passed':len(checks),'checks':checks,'failures':failures,'scope':'Independent identity/selection, included bytes, direct sequences, placement, coverage, comparisons and applicable phase gating/temporal checks; unavailable model bytes are checked only by recorded identity. Reserved temporal checks are inapplicable when no reserved inference occurs.'}
 
 if __name__=='__main__':

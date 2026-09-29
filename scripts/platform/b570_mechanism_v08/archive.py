@@ -16,7 +16,7 @@ def proof(destination):
     directory=destination/'provenance/git_objects';directory.mkdir(parents=True,exist_ok=True)
     commits=git('rev-list','--reverse',START+'..HEAD').decode().splitlines()
     commits=[START]+commits;result={'starting_main':START,'head_before_archive':git('rev-parse','HEAD').decode().strip(),'commits':{}}
-    relevant=['benchmarks/b570_mechanism_v08/DISCOVERY_PLAN.md','benchmarks/b570_mechanism_v08/exposure_inventory.json','benchmarks/b570_mechanism_v08/RESERVED_VALIDATION_SET.json','benchmarks/b570_mechanism_v08/hypothesis_freeze.json','benchmarks/b570_mechanism_v08/RESERVED_PREDICTIONS.json','scripts/platform/b570_mechanism_v08/study.py','scripts/platform/b570_mechanism_v08/harness.cpp','scripts/platform/b570_mechanism_v08/CMakeLists.txt']
+    relevant=['benchmarks/b570_mechanism_v08/DISCOVERY_PLAN.md','benchmarks/b570_mechanism_v08/discovery_protocol.json','benchmarks/b570_mechanism_v08/exposure_inventory.json','benchmarks/b570_mechanism_v08/RESERVED_VALIDATION_SET.json','benchmarks/b570_mechanism_v08/hypothesis_freeze.json','benchmarks/b570_mechanism_v08/RESERVED_PREDICTIONS.json','scripts/platform/b570_mechanism_v08/study.py','scripts/platform/b570_mechanism_v08/harness.cpp','scripts/platform/b570_mechanism_v08/CMakeLists.txt']
     def object_bytes(kind,oid):
         data=git('cat-file',kind,oid)
         if hashlib.sha1((kind+' '+str(len(data))+'\0').encode()+data).hexdigest()!=oid:raise RuntimeError('Git object identity mismatch')

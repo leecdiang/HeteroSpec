@@ -80,6 +80,10 @@ def verify(root):
         location=raw/stage/'executions.json'
         if not location.exists():continue
         rows=load(location)['executions'];all_rows.extend(rows)
+        if stage!='reserved_outcomes':
+            starts=list((raw/stage).glob('*.start.json'))
+            require(len(starts)==len(rows),'all started attempts accounted for, no hidden reruns: '+stage)
+            require({(load(s)['task_id'],load(s)['repetition'],load(s)['n_ubatch']) for s in starts}=={(r['task_id'],r['repetition'],r['n_ubatch']) for r in rows},'start records exactly match execution coverage: '+stage)
         require(len({(r['task_id'],r['repetition'],r.get('condition',r.get('n_ubatch'))) for r in rows})==len(rows),'no duplicate observations: '+stage)
         for row in rows:
             label=stage+' '+row['task_id']+' r'+str(row['repetition'])
@@ -105,6 +109,7 @@ def verify(root):
             if row['exit_code']!=0 or 'capture' not in row:
                 require(row['execution_valid']==False,'failed observation classified invalid: '+label);continue
             data=load(root/row['capture']);ids=data['generated_ids']
+            require(all(type(i)==int and i>=0 for i in ids) and all(type(f)==bool for f in data['eog']),'integer direct IDs and Boolean runtime EOG flags: '+label)
             require(ids==row['generated_ids'] and array_digest(ids)==row['generated_ids_sha256'],'complete token-array hash: '+label)
             require(array_digest(data['prompt_ids'])==row['prompt_ids_sha256'],'direct prompt-ID hash: '+label)
             require(len(data['eog'])==len(ids) and len(ids)>0 and len(ids)<=128 and (len(ids)==128 or data['eog'][-1]) and not any(data['eog'][:-1]),'inclusive EOG / 128-ID endpoint: '+label)
@@ -159,6 +164,8 @@ def verify(root):
         freeze_commit=predictions['hypothesis_freeze_commit']
         freeze_path='benchmarks/b570_mechanism_v08/hypothesis_freeze.json'
         require(checkpoint_bytes(root,freeze_commit,freeze_path)==(p/'hypothesis_freeze.json').read_bytes(),'hypothesis freeze committed bytes')
+        for path,h in freeze['predictor_files'].items():
+            require(hashlib.sha256(checkpoint_bytes(root,freeze_commit,path)).hexdigest()==h,'predictor source was committed at hypothesis freeze: '+path)
         require(len(prediction_rows)==144 and {(r['task_id'],r['repetition'],r['n_ubatch']) for r in prediction_rows}=={(t,n,u) for t in selected for n in (1,2,3) for u in (1,128)},'exact 144 reference/predictor executions')
         require(all(freeze['created_utc']<r['start_utc'] and ancestor(root,freeze_commit,r['study_head']) for r in prediction_rows),'hypothesis freeze precedes every reserved inference')
         require(len(predictions['predictions'])==72 and {(r['task_id'],r['repetition']) for r in predictions['predictions']}=={(t,n) for t in selected for n in (1,2,3)},'exact 72 reserved predictions')
@@ -191,6 +198,8 @@ def verify(root):
                 saved=next(r for r in report['pairs'] if r['task_id']==t and r['repetition']==n)
                 require(saved['primary']==primary and saved['actual_relative_to_reference']==observed and saved['predicted_relative_to_reference']==forecast,'independent actual/predicted complete sequences and first divergences')
             require(report['exact_sequences']==exact and report['prompt_classification_matches']==sum(all(v) for v in classification.values()) and report['first_divergence_exact_pairs']==first and report['actual_mismatching_pairs']==nonexact,'all primary/secondary counts independently recomputed')
+            forecast_exact=sum(i['relative_to_reference']['exact'] for i in predictions['predictions'])
+            require(report['qualification_prediction']['predicted_reference_exact_pairs']==forecast_exact and report['qualification_prediction']['actual_reference_exact_pairs']==72-nonexact,'complete qualification prediction recomputed')
             require(report['status']==('MECHANISM_PREDICTION_VALIDATED' if exact==72 else 'MECHANISM_PREDICTION_NOT_FULLY_VALIDATED'),'strict all-72 classification')
     return {'schema':'heterospec.b570.mechanism.independent.v08','status':'PASS' if not failures else 'FAIL','checks_passed':len(checks),'checks':checks,'failures':failures,'scope':'Independent identity/selection, included bytes, direct sequences, placement, coverage, comparisons and applicable phase gating/temporal checks; unavailable model bytes are checked only by recorded identity. Reserved temporal checks are inapplicable when no reserved inference occurs.'}
 

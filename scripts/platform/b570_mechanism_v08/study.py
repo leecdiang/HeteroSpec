@@ -158,7 +158,7 @@ def freeze_h1():
     if (PROTOCOL/'hypothesis_freeze.json').exists():raise RuntimeError('Hypothesis freeze already exists')
     check_build();identity=assets();build=read(PROTOCOL/'build_manifest.json')
     frozen={'schema':'heterospec.b570.mechanism.hypothesis.v08','status':'H1_SELECTED','created_utc':utc(),
-      'source_sha':V1['upstream_commit'],'harness_source_sha256':sha(Path(__file__).parent/'harness.cpp'),
+      'source_sha':V1['upstream_commit'],'study_repository_head_before_freeze':head(),'harness_source_sha256':sha(Path(__file__).parent/'harness.cpp'),
       'executable_sha256':sha(EXE),'binary_hashes':build['binary_hashes'],'model_dataset_hashes':identity,
       'driver_and_vulkan':build['environment'],'prediction_algorithm':'Common target-only autoregressive greedy decoding with n_ubatch=1; prefill/decode APIs, sampler, context, input IDs and all other semantics identical to qualified UB128 reference.',
       'comparison_orientation':'TARGET_REFERENCE vs predicted serialized IDs; primary predicted IDs vs actual serialized IDs',
@@ -218,7 +218,7 @@ def actual_reserved():
             cmd=historical_runner.command(historical_runner.INSTRUMENTED,TARGET,DRAFT,prompt,'B570_SERIALIZED_K2')
             row=historical_runner.execute(RAW/'reserved_outcomes',task.replace('/','_')+f'-r{rep}',cmd)
             row.update(stage='reserved_outcomes',task_id=task,repetition=rep,condition='B570_SERIALIZED_K2',study_head=head(),prediction_commit=prediction_commit,hypothesis_freeze_commit=freeze_commit,prediction_sha256=digest)
-            row['env_overrides']={'HETEROSPEC_DIRECT_ID_PATH':str(RAW/'reserved_outcomes'/row['sidecar'])}
+            row['env_overrides']={'HETEROSPEC_DIRECT_ID_PATH':str(RAW/'reserved_outcomes'/'ids'/(task.replace('/','_')+f'-r{rep}.json'))}
             rows.append(row);save(RAW/'reserved_outcomes/executions.json',{'schema':'heterospec.b570.mechanism.executions.v08','executions':rows})
             print(f'reserved_outcomes {len(rows)}/72: {task} r{rep} valid={row["execution_valid"]}',flush=True)
             if not row['execution_valid']:raise RuntimeError('Invalid outcome execution; preserve attempt and stop without selective rerun')
@@ -238,8 +238,11 @@ def analyze_reserved():
     differing=[p for p in pairs if not p['actual_relative_to_reference']['exact']]
     first=sum(p['actual_relative_to_reference']['first_divergence_index']==p['predicted_relative_to_reference']['first_divergence_index'] for p in differing)
     prompt_trajectories=sum(all(p['primary']['exact'] for p in pairs if p['task_id']==task) for task in tasks)
+    predicted_ref_exact=sum(p['predicted_relative_to_reference']['exact'] for p in pairs)
+    actual_ref_exact=sum(p['actual_relative_to_reference']['exact'] for p in pairs)
+    divergence_prompt_exact=sum(all(p['actual_relative_to_reference']['first_divergence_index']==p['predicted_relative_to_reference']['first_divergence_index'] for p in differing if p['task_id']==task) for task in {p['task_id'] for p in differing})
     status='MECHANISM_PREDICTION_VALIDATED' if exact==72 else 'MECHANISM_PREDICTION_NOT_FULLY_VALIDATED'
-    result={'schema':'heterospec.b570.mechanism.validation.v08','executed':True,'status':status,'exact_sequences':exact,'denominator':72,'prompt_classification_matches':classification,'prompt_denominator':24,'complete_prompt_trajectory_matches':prompt_trajectories,'first_divergence_exact_pairs':first,'actual_mismatching_pairs':len(differing),'pairs':pairs,'finished_utc':utc()}
+    result={'schema':'heterospec.b570.mechanism.validation.v08','executed':True,'status':status,'exact_sequences':exact,'denominator':72,'prompt_classification_matches':classification,'prompt_denominator':24,'complete_prompt_trajectory_matches':prompt_trajectories,'first_divergence_exact_pairs':first,'actual_mismatching_pairs':len(differing),'first_divergence_exact_prompts':divergence_prompt_exact,'actual_mismatching_prompts':len({p['task_id'] for p in differing}),'qualification_prediction':{'predicted_reference_exact_pairs':predicted_ref_exact,'actual_reference_exact_pairs':actual_ref_exact,'denominator':72,'predicted_status':'QUALIFIED_ON_RESERVED_PAIRS' if predicted_ref_exact==72 else 'BLOCKED_ON_RESERVED_PAIRS','actual_status':'QUALIFIED_ON_RESERVED_PAIRS' if actual_ref_exact==72 else 'BLOCKED_ON_RESERVED_PAIRS','scope':'Reserved pairs only; no production correctness certificate and no reinterpretation of historical 78/90 BLOCKED.'},'pairs':pairs,'finished_utc':utc()}
     save(PROTOCOL/'VALIDATION_ANALYSIS.json',result)
     (PROTOCOL/'VALIDATION_REPORT.md').write_text('# Reserved prospective validation\n\n'+f'**{status}**. Complete predictor-to-actual sequences: {exact}/72. Prompt mismatch/no-mismatch classification: {classification}/24. Complete prompt trajectories: {prompt_trajectories}/24. First-divergence index: {first}/{len(differing)} actually nonexact pairs.\n\nPredictions were committed and pushed before live serialized outcomes. No predictor changes, selective reruns, performance/energy study or manuscript edits. Complete token and divergence evidence are preserved in VALIDATION_ANALYSIS.json.\n',encoding='utf-8')
     print(status,flush=True)

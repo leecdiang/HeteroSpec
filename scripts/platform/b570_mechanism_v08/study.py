@@ -26,7 +26,18 @@ def save(path,data):
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
     tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8');tmp.replace(path)
 def head():return subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO,text=True).strip()
+def git(*args):return subprocess.check_output(['git',*args],cwd=REPO)
+def committed_and_pushed(path):
+    rel=str(Path(path).relative_to(REPO)).replace('\\','/')
+    commit=git('log','-1','--format=%H','--',rel).decode().strip()
+    if not commit or git('show',commit+':'+rel)!=Path(path).read_bytes():raise RuntimeError('Required immutable checkpoint not committed: '+rel)
+    branch=git('branch','--show-current').decode().strip()
+    git('fetch','origin',branch)
+    if subprocess.run(['git','merge-base','--is-ancestor',commit,'origin/'+branch],cwd=REPO).returncode:raise RuntimeError('Required checkpoint not pushed')
+    return commit
 def read(path):return json.loads(Path(path).read_text(encoding='utf-8-sig'))
+def environment():
+    return json.loads(subprocess.check_output(['powershell.exe','-NoProfile','-Command',"[Console]::OutputEncoding=[Text.UTF8Encoding]::new(); [ordered]@{os=(Get-CimInstance Win32_OperatingSystem|Select-Object Caption,Version,BuildNumber);gpu=@(Get-CimInstance Win32_VideoController|Select-Object Name,DriverVersion,PNPDeviceID);vulkan_runtime=(Get-Item C:\\Windows\\System32\\vulkan-1.dll).VersionInfo.FileVersion}|ConvertTo-Json -Depth 6"],encoding='utf-8-sig'))
 def compare(a,b):
     i=next((i for i,(x,y) in enumerate(zip(a,b)) if x!=y),None)
     if i is None and len(a)!=len(b):i=min(len(a),len(b))
@@ -35,7 +46,7 @@ def assets():
     expected={TARGET:V1['target']['sha256'],DRAFT:V1['draft']['sha256'],DATA:V1['dataset']['sha256']}
     for p,h in expected.items():
         if sha(p)!=h:raise RuntimeError('Asset SHA mismatch: '+str(p))
-    return {str(p.relative_to(REPO)):h for p,h in expected.items()}
+    return {str(p.relative_to(REPO)).replace('\\','/'):h for p,h in expected.items()}
 def prepare_build():
     identity=assets()
     binaries={}
@@ -63,6 +74,7 @@ def check_build():
         if sha(EXE.parent/name)!=h:raise RuntimeError('Runtime changed: '+name)
     if sha(Path(__file__).parent/'harness.cpp')!=m['harness_source_sha256']:raise RuntimeError('Harness source changed')
     if sha(OLD)!=m['historical_executions_sha256']:raise RuntimeError('Historical evidence changed')
+    if environment()!=m['environment']:raise RuntimeError('OS/driver/Vulkan stack changed')
     return m
 def command(prompt,ubatch):
     return [str(EXE),'--model',str(TARGET),'--device','Vulkan0','--n-gpu-layers','all','--fit','off','--ctx-size','1024','--batch-size','512','--ubatch-size',str(ubatch),'--flash-attn','off','--file',str(prompt),'--n-predict','128','--temp','0','--top-k','0','--top-p','1','--min-p','0','--seed','123','--reasoning','off','--simple-io','--no-warmup','--log-verbosity','4','--no-conversation']
@@ -140,6 +152,98 @@ def discover():
     (PROTOCOL/'DISCOVERY_REPORT.md').write_text('# Exploratory discovery\n\n'+f'H1: {count}/36 complete predictor-to-archived serialized sequences. Decision: {selected}.\n\nThe 12 discovery prompts are exposed and outcome-informed; this is no evidence of transfer.\n',encoding='utf-8')
     print(selected,flush=True)
 
+def freeze_h1():
+    result=read(PROTOCOL/'DISCOVERY_ANALYSIS.json')
+    if result['status']!='H1_SELECTED' or result['H1_exact_pairs']!=36:raise RuntimeError('H1 not selected')
+    if (PROTOCOL/'hypothesis_freeze.json').exists():raise RuntimeError('Hypothesis freeze already exists')
+    check_build();identity=assets();build=read(PROTOCOL/'build_manifest.json')
+    frozen={'schema':'heterospec.b570.mechanism.hypothesis.v08','status':'H1_SELECTED','created_utc':utc(),
+      'source_sha':V1['upstream_commit'],'harness_source_sha256':sha(Path(__file__).parent/'harness.cpp'),
+      'executable_sha256':sha(EXE),'binary_hashes':build['binary_hashes'],'model_dataset_hashes':identity,
+      'driver_and_vulkan':build['environment'],'prediction_algorithm':'Common target-only autoregressive greedy decoding with n_ubatch=1; prefill/decode APIs, sampler, context, input IDs and all other semantics identical to qualified UB128 reference.',
+      'comparison_orientation':'TARGET_REFERENCE vs predicted serialized IDs; primary predicted IDs vs actual serialized IDs',
+      'output_cap':128,'eog':'inclusive first runtime EOG, earlier than 128 if present','repetitions':3,
+      'reserved_task_ids':read(PROTOCOL/'RESERVED_VALIDATION_SET.json')['selected_task_ids'],
+      'predictor_files':{str(p.relative_to(REPO)).replace('\\','/'):sha(p) for p in [Path(__file__).parent/name for name in ('harness.cpp','CMakeLists.txt','study.py')]},
+      'serialized_binary_hashes':V1['binary_hashes'],
+      'serialized_runner_sha256':sha(REPO/'scripts/platform/b570_direct_id_v1/common.py'),
+      'success_criterion':'72/72 complete predictor-to-actual direct-ID sequences','failure_handling':'Repeat instability stops before live outcomes as operationally ambiguous; mismatches continue without tuning or selective rerun; fewer than 72 exact closes not fully validated.',
+      'confidence_intervals':False,'no_performance_or_energy':True,'discovery_result_sha256':sha(PROTOCOL/'DISCOVERY_ANALYSIS.json')}
+    save(PROTOCOL/'hypothesis_freeze.json',frozen)
+    (PROTOCOL/'HYPOTHESIS_FREEZE.md').write_text('# Hypothesis freeze\n\n**H1_SELECTED**. Target execution partition alone reproduced 36/36 archived serialized discovery sequences.\n\n'+f'Created before all reserved inference: {frozen["created_utc"]}.\n\n'+frozen['prediction_algorithm']+'\n\nAll predictor source/executable/runtime/model/dataset identities, driver and Vulkan runtime, 24 reserved tasks, three repetitions, comparison orientation, cap/EOG endpoint and strict 72/72 decision rule are frozen in hypothesis_freeze.json. No confidence intervals. No predictor changes after this checkpoint. Commit and push before reserved inference.\n',encoding='utf-8')
+def check_hypothesis():
+    frozen=read(PROTOCOL/'hypothesis_freeze.json')
+    if frozen['status']!='H1_SELECTED':raise RuntimeError('Unsupported selected predictor')
+    for path,h in frozen['predictor_files'].items():
+        if sha(REPO/path)!=h:raise RuntimeError('Frozen predictor source changed: '+path)
+    check_build();assets()
+    return frozen,committed_and_pushed(PROTOCOL/'hypothesis_freeze.json')
+def predict_reserved():
+    frozen,freeze_commit=check_hypothesis()
+    if (RAW/'reserved_predictions/executions.json').exists() or (RAW/'reserved_outcomes').exists():raise RuntimeError('No restart or outcome leakage permitted')
+    save(RAW/'reserved_predictions/checkpoint.json',{'hypothesis_freeze_commit':freeze_commit,'hypothesis_sha256':sha(PROTOCOL/'hypothesis_freeze.json'),'start_utc':utc()})
+    rows=[];predictions=[];by={}
+    for rep in range(1,4):
+        for task in frozen['reserved_task_ids']:
+            for ub in (128,1):
+                row=execute('reserved_predictions',task,rep,ub,rows);row['condition']='TARGET_REFERENCE' if ub==128 else 'MECHANISM_PREDICTOR'
+                by[(task,rep,ub)]=row
+                save(RAW/'reserved_predictions/executions.json',{'schema':'heterospec.b570.mechanism.executions.v08','executions':rows})
+                if not row['execution_valid']:raise RuntimeError('Reserved operational failure; preserve and stop before outcomes')
+            ref=by[(task,rep,128)]['generated_ids'];pred=by[(task,rep,1)]['generated_ids']
+            predictions.append({'task_id':task,'repetition':rep,'predicted_ids':pred,'predicted_ids_sha256':array_sha(pred),'reference_ids':ref,'reference_ids_sha256':array_sha(ref),'relative_to_reference':compare(ref,pred)})
+    stable=all(len({r['generated_ids_sha256'] for r in rows if r['task_id']==task and r['n_ubatch']==ub})==1 for task in frozen['reserved_task_ids'] for ub in (128,1))
+    status='PREDICTIONS_READY' if stable else 'OPERATIONALLY_AMBIGUOUS_REPEAT_INSTABILITY'
+    save(PROTOCOL/'RESERVED_PREDICTIONS.json',{'schema':'heterospec.b570.mechanism.predictions.v08','status':status,'created_utc':utc(),'hypothesis_freeze_commit':freeze_commit,'hypothesis_sha256':sha(PROTOCOL/'hypothesis_freeze.json'),'prediction_count':72,'predictor_reference_executions':144,'repeat_stable':stable,'predictions':predictions,'actual_serialized_outcomes_observed':False})
+    (PROTOCOL/'RESERVED_PREDICTIONS_SHA256.txt').write_text(sha(PROTOCOL/'RESERVED_PREDICTIONS.json')+'  RESERVED_PREDICTIONS.json\n',encoding='ascii')
+    print(status+'; commit and push predictions before outcomes.',flush=True)
+def actual_reserved():
+    frozen,freeze_commit=check_hypothesis();prediction=read(PROTOCOL/'RESERVED_PREDICTIONS.json')
+    if prediction['status']!='PREDICTIONS_READY' or not prediction['repeat_stable']:raise RuntimeError('Prediction phase not valid and stable')
+    if sha(REPO/'scripts/platform/b570_direct_id_v1/common.py')!=frozen['serialized_runner_sha256']:raise RuntimeError('Serialized execution source changed')
+    for name,h in frozen['serialized_binary_hashes'].items():
+        if sha(Path('C:/hs/b570-direct-id-v1-build/bin/Release')/name)!=h:raise RuntimeError('Frozen serialized runtime changed')
+    prediction_commit=committed_and_pushed(PROTOCOL/'RESERVED_PREDICTIONS.json')
+    if (RAW/'reserved_outcomes').exists():raise RuntimeError('Outcomes already started; no selective rerun')
+    digest=sha(PROTOCOL/'RESERVED_PREDICTIONS.json')
+    if (PROTOCOL/'RESERVED_PREDICTIONS_SHA256.txt').read_text().split()[0]!=digest:raise RuntimeError('Prediction freeze digest mismatch')
+    save(RAW/'reserved_outcomes/checkpoint.json',{'start_utc':utc(),'hypothesis_freeze_commit':freeze_commit,'prediction_commit':prediction_commit,'prediction_sha256':digest,'hypothesis_sha256':sha(PROTOCOL/'hypothesis_freeze.json')})
+    sys.path.insert(0,str(REPO/'scripts/platform/b570_direct_id_v1'))
+    import common as historical_runner
+    rows=[]
+    for rep in range(1,4):
+        for task in frozen['reserved_task_ids']:
+            if sha(PROTOCOL/'RESERVED_PREDICTIONS.json')!=digest:raise RuntimeError('Predictions changed after outcome start')
+            prompt=RAW/'reserved_predictions'/(task.replace('/','_')+'.prompt.txt')
+            cmd=historical_runner.command(historical_runner.INSTRUMENTED,TARGET,DRAFT,prompt,'B570_SERIALIZED_K2')
+            row=historical_runner.execute(RAW/'reserved_outcomes',task.replace('/','_')+f'-r{rep}',cmd)
+            row.update(stage='reserved_outcomes',task_id=task,repetition=rep,condition='B570_SERIALIZED_K2',study_head=head(),prediction_commit=prediction_commit,hypothesis_freeze_commit=freeze_commit,prediction_sha256=digest)
+            row['env_overrides']={'HETEROSPEC_DIRECT_ID_PATH':str(RAW/'reserved_outcomes'/row['sidecar'])}
+            rows.append(row);save(RAW/'reserved_outcomes/executions.json',{'schema':'heterospec.b570.mechanism.executions.v08','executions':rows})
+            print(f'reserved_outcomes {len(rows)}/72: {task} r{rep} valid={row["execution_valid"]}',flush=True)
+            if not row['execution_valid']:raise RuntimeError('Invalid outcome execution; preserve attempt and stop without selective rerun')
+    check_build()
+    save(PROTOCOL/'POST_RUN_INPUT_AUDIT.json',{'checked_utc':utc(),'model_dataset_hashes':assets(),'binary_hashes':{p.name:sha(p) for p in EXE.parent.glob('*') if p.suffix.lower() in ('.exe','.dll')},'serialized_binary_hashes':{p.name:sha(p) for p in Path('C:/hs/b570-direct-id-v1-build/bin/Release').glob('*') if p.suffix.lower() in ('.exe','.dll')},'environment':environment(),'prediction_file_sha256':sha(PROTOCOL/'RESERVED_PREDICTIONS.json')})
+    analyze_reserved()
+def analyze_reserved():
+    predictions=read(PROTOCOL/'RESERVED_PREDICTIONS.json')['predictions'];outcomes=read(RAW/'reserved_outcomes/executions.json')['executions'];pairs=[]
+    by={(r['task_id'],r['repetition']):r for r in outcomes}
+    for prediction in predictions:
+        actual=by[(prediction['task_id'],prediction['repetition'])]['generated_ids']
+        pair={'task_id':prediction['task_id'],'repetition':prediction['repetition'],'primary':compare(prediction['predicted_ids'],actual),'actual_relative_to_reference':compare(prediction['reference_ids'],actual),'predicted_relative_to_reference':prediction['relative_to_reference']}
+        pairs.append(pair)
+    exact=sum(p['primary']['exact'] for p in pairs)
+    tasks=read(PROTOCOL/'RESERVED_VALIDATION_SET.json')['selected_task_ids']
+    classification=sum(all(p['actual_relative_to_reference']['exact']==p['predicted_relative_to_reference']['exact'] for p in pairs if p['task_id']==task) for task in tasks)
+    differing=[p for p in pairs if not p['actual_relative_to_reference']['exact']]
+    first=sum(p['actual_relative_to_reference']['first_divergence_index']==p['predicted_relative_to_reference']['first_divergence_index'] for p in differing)
+    prompt_trajectories=sum(all(p['primary']['exact'] for p in pairs if p['task_id']==task) for task in tasks)
+    status='MECHANISM_PREDICTION_VALIDATED' if exact==72 else 'MECHANISM_PREDICTION_NOT_FULLY_VALIDATED'
+    result={'schema':'heterospec.b570.mechanism.validation.v08','executed':True,'status':status,'exact_sequences':exact,'denominator':72,'prompt_classification_matches':classification,'prompt_denominator':24,'complete_prompt_trajectory_matches':prompt_trajectories,'first_divergence_exact_pairs':first,'actual_mismatching_pairs':len(differing),'pairs':pairs,'finished_utc':utc()}
+    save(PROTOCOL/'VALIDATION_ANALYSIS.json',result)
+    (PROTOCOL/'VALIDATION_REPORT.md').write_text('# Reserved prospective validation\n\n'+f'**{status}**. Complete predictor-to-actual sequences: {exact}/72. Prompt mismatch/no-mismatch classification: {classification}/24. Complete prompt trajectories: {prompt_trajectories}/24. First-divergence index: {first}/{len(differing)} actually nonexact pairs.\n\nPredictions were committed and pushed before live serialized outcomes. No predictor changes, selective reruns, performance/energy study or manuscript edits. Complete token and divergence evidence are preserved in VALIDATION_ANALYSIS.json.\n',encoding='utf-8')
+    print(status,flush=True)
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('stage',choices=['prepare-build','qualify','discover']);a=p.parse_args()
-    {'prepare-build':prepare_build,'qualify':qualify,'discover':discover}[a.stage]()
+    stages={'prepare-build':prepare_build,'qualify':qualify,'discover':discover,'freeze-h1':freeze_h1,'predict-reserved':predict_reserved,'actual-reserved':actual_reserved,'analyze-reserved':analyze_reserved}
+    p=argparse.ArgumentParser();p.add_argument('stage',choices=list(stages));a=p.parse_args();stages[a.stage]()

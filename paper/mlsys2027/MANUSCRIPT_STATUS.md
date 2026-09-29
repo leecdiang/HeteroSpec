@@ -1,3 +1,17 @@
+# v0.8 — B570 mechanism prediction integration (Draft PR)
+
+Starting `main`: `00da1d00bd24328826b04db10b481c56fbba4f3e` (merged PR #34). Branch: `paper/mlsys2027-mechanism-integration-v0.8`. The final delivery HEAD is the Draft PR head, recorded in the PR and final delivery report; a SHA cannot be embedded in its own commit. No main edit or automatic merge was performed.
+
+The closed B570 study selected H1 target-execution-partition sufficiency after 36/36 exposed discovery agreement. Hypothesis freeze commit `313069ce5ac10d4d31849f515c912cad29ac7360` (2026-09-29 10:35:25 UTC) precedes reserved inference. All 72 reserved predictions were committed at `c99aaf2082ffff46741bef6f69dd96b4654d4c08` (11:04:57 UTC) before live serialized outcomes; prediction-file SHA-256 `0201ccd1f67492510d34be567aa83f1c38d3bd1f162a970c05d3cea9d3957826`. The reserved result is 72/72 complete predictor-to-live sequences, 24/24 prompt classes, 12/12 divergent-pair first-divergence indices and four/four divergent prompts. Predicted and actual reference equality is 60/72, BLOCKED. The mechanism is sufficient for the tested B570 trajectory, not a unique kernel or an RTX explanation. No new inference, performance, energy or parameter experiment was run during this integration.
+
+The main PDF has **10 body pages plus one reference page**; the separate appendix has **six pages**; hardware-only is **10 pages total**. Figure 3 remains the v0.7 two-panel PDF byte-identical to base; no new figure or main table was added. Section 5.2 and appendix J contain the mechanism chronology. Exact build PDFs and Overleaf bundle are under `manuscript/output/` with `v0.8` suffixes; v0.7 outputs are retained. Clean source ZIP recompilation matches page count and extracted text. Every final main/appendix page was rendered and visually inspected; the appendix seven-page draft's orphaned final paragraph was repaired.
+
+`evidence/MECHANISM_INTEGRATION_QA_V08.json` records **114 freshly run local offline checks** (mechanism projections, all 72 pair records, manuscript claim boundaries, PDF/anonymity/fonts/TeX and prior receipt presence). Existing v0.7 receipts report 228 historical numerical, 136 runtime, 638 M4 paired-secondary, 2,459 direct-ID integration and 67 Figure 3 checks; these were **inspected, not rerun** in this connector-supplied partial workspace. The 87 MB B570 archive verifier likewise was not freshly rerun here; committed independent/portable PASS receipts (5,681 and 5,696 checks) and extracted validation were inspected. This limit is explicit in the new QA receipt. Scientific claims and closed evidence files were not modified.
+
+Internal model-review simulations in `reviews/submission_v08/` assess the actual v0.8 PDF. The mock decision is **Borderline, lean Weak Accept (moderate 3/5 confidence)**, from v0.7 Weak Reject. The frozen 72/72 prediction materially answers the missing within-stack explanatory/predictive result, while the strongest remaining objection is transfer and practical reach beyond one B570 model/build/workload configuration. These are not external conference reviews. `HANDOVER_CURRENT.md` is the first-read current handover; it should be refreshed after this PR merges.
+
+---
+
 # v0.7 — prospective direct-ID qualification integration
 
 **HARDWARE + RUNTIME CHARACTERIZATION WITH PROSPECTIVE DIRECT-ID

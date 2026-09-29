@@ -1,0 +1,9 @@
+# Novelty review — v0.8 (internal model-review simulation)
+
+**Assessment: Borderline, confidence 3/5.** The manuscript does not discover finite-precision path dependence, invent deterministic inference, introduce speculative decoding, or claim a new guard algorithm. Its increment is methodological and empirical: a target-execution partition hypothesis derived from exposed B570 failures is frozen before reserved inference and predicts complete serialized speculative trajectories, including first divergence. This is materially different from the v0.7 paper's qualification boundary and historical CUDA margin capture.
+
+The related work correctly acknowledges batch-dependent numerics and deterministic inference. The controlled target-only predictor has a systems consequence: it shows that live draft generation is unnecessary for the observed B570 serialized path difference under the tested stack. It does not reveal a unique kernel, hardware-wide mechanism or a cross-platform prediction. The four consumer cases remain heterogeneous; the separate M4 runtime control does not make the H1 mechanism portable.
+
+Under a characterization-paper standard, a prospective held-out sequence prediction may be enough novelty when paired with a concrete diagnosis workflow. Under an algorithm or broadly generalizable architecture standard, the payoff remains modest. I would not reject solely because H1 lacks universal transfer, but I would not count the existing RTX/358H/M4 cases as mechanism replications. The authors should keep the contribution list's B570 prediction separate from qualification and cost accounting, as the final PDF does.
+
+**v0.7 delta:** The chief novelty objection shifts from “observational boundary with no validated prediction” to “prediction is valid but confined to one environment and workload family.”

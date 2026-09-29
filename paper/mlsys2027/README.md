@@ -1,3 +1,11 @@
+# Current handover and v0.8 mechanism integration
+
+**Read `HANDOVER_CURRENT.md` first** when joining the project or starting a new agent session. It describes the current thesis, evidence classes, closed experiments, reviewer blockers and working protocol. Update it after every merged PR that materially changes scientific evidence, manuscript thesis, active reviewer blocker or experiment status; formatting-only PRs do not require an update. The deeper history belongs in `MANUSCRIPT_STATUS.md`, experiment closeouts, review directories and Git history.
+
+Manuscript v0.8 integrates the closed B570 target-partition H1 study on a Draft PR from main `00da1d00bd24328826b04db10b481c56fbba4f3e`. Target-only UB1 predicts 72/72 complete reserved serialized sequences after hypothesis and prediction freezes. This is a configuration-scoped mechanism result, not a kernel identification or performance experiment. See `evidence/MECHANISM_INTEGRATION_AUDIT_V08.md` and `benchmarks/b570_mechanism_v08/CLOSEOUT.md` from the repository root. v0.7 files and the historical record remain preserved below.
+
+---
+
 # v0.7 prospective direct-ID qualification integration
 
 Current author-review sources and outputs use v0.7. The new RTX/B570

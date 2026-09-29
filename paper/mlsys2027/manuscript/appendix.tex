@@ -9,7 +9,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.7}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
@@ -26,7 +26,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.7. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies the measured hardware, mechanism, and runtime studies in manuscript v0.8. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 equality counts compare re-tokenized parsed CLI output. In the historical M4 HumanEval pipeline the parsed text includes the prompt; equality of those arrays is not a direct generated-ID comparison. B570 strips the prompt and normalizes the text before re-tokenization, which still does not recover a direct-ID trace. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
@@ -66,6 +66,8 @@ The M4 corrected synthetic ceiling was preregistered but not executed. Earlier s
 The B570 formal v2 correctness failure triggered its stop rule. A later six-prompt serialized probe passed 18/18 text-path comparisons, but full-workload serialization yielded only 60/90 under the same comparator. Earlier remote-interaction-contaminated verification observations are excluded from the plotted final serialized cells. A legacy ``exact'' field label in historical artifacts does not establish workload-global equality.
 
 Windows follow-up derived tables and numerical captures support the manuscript, but historical raw per-run provenance is weaker. The CUDA score capture came from a separate same-commit instrumented build and does not replace formal measurements. The 358H source reconstruction remains \texttt{STRONGLY\_SUPPORTED}, not proven exact historical upstream identity. Its completed Phase-3 records supersede the blocked-preflight empty scaffold. These are retained qualifications, not unresolved invitations to alter frozen experiments.
+
+The historical RTX HumanEval/106 CUDA reproducer selects token 2790 under sequential/serialized execution and 2629 under batching in three of three runs at the same location. A separate same-commit diagnostic build captures the score-margin change from $+0.080948$ to $-0.126457$. This supports stable batch-shape-dependent greedy argmax divergence in that historical configuration; it does not establish a specific kernel, universal CUDA defect, or a shared RTX/B570 root cause.
 \section{Verification Context Lookup}
 Table~\ref{tab:verificationlookup} retains all historical context cells behind Panel A of the main verification figure. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
 \input{tables/06_verification_lookup_v05.tex}
@@ -96,4 +98,15 @@ The RTX original embedded-server CLI exposes native committed-token debug events
 B570 uses source instrumentation to record committed IDs in sidecars, context 1024, and a separately frozen completion reference. Its endpoint selects the first 128 committed IDs or the inclusive earlier EOG; raw CLI overshoot is retained. Vulkan0 uses driver 32.0.101.9033 with full target 37/37 and draft 29/29 layer offload. The initial Task Scheduler launch failed during CP936/UTF-8 environment-metadata decoding before inference, with zero formal executions. The first data-producing attempt directly ran the unchanged frozen runner: no semantic, code, binary, model, driver, or parameter change occurred. This deployment deviation is preserved in provenance.
 
 The runtime/front-end, reference, and context differences preclude a causal hardware comparison. Neither study estimates population failure rates or functional code correctness. Repeat stability holds for every prompt in each condition, but stable disagreement remains disagreement. Historical B570 fast 45/90 and serialized 60/90 text-path counts and historical RTX controls retain their original comparators. New qualification does not retrospectively authorize old timing as strict-ID performance. Portable validators hash included evidence and check recorded identities of omitted external weights/binaries; they do not rehash omitted assets locally.
+
+\section{B570 Target-Partition Prediction}
+The B570 Vulkan follow-up uses Qwen3-8B/0.6B Q8\_0, greedy $k=2$, context 1024 and 128 committed IDs or earlier inclusive EOG. Its target-only harness matches the UB128 reference's input IDs, sampler and APIs; H1 changes only target $n_{\mathrm{ubatch}}$ to one. The harness reproduces 90/90 reference sequences before comparison with live serialized speculation.
+
+\paragraph{Selection and freeze.}
+The audit covers 8,706 retained file records and archive members; any B570 association is conservatively excluded, even if execution is uncertain. This excludes 31 of 164 tasks. The 24 reserved IDs have the smallest SHA-256 digest of a fixed study prefix plus each eligible task ID; outcomes play no role. Discovery uses exposed HumanEval/89, 101, 104, 162, 3, 10, 68, 70, 19, 20, 28, 32. The frozen tree selects H1 at 36/36; only failure permits H2 fixed-proposal replay (also 36/36), and failure of both stops validation. H1 passes; H2 is not built. Predictor, endpoint, reserved IDs, binaries and criterion are committed before reserved inference.
+
+\paragraph{Prospective validation.}
+The 24 reserved IDs are HumanEval/58, 156, 134, 42, 122, 114, 93, 115, 151, 63, 125, 133, 43, 139, 77, 35, 27, 34, 145, 82, 154, 78, 96, and 138. Target reference and target-only predictor run three times each (144 executions) with within-condition repeat stability. All 72 predicted complete ID arrays and their digest are committed before the first of 72 live serialized outcomes. Primary success requires 72/72 complete predictor-to-live sequences; no partial threshold or confidence interval is substituted. Prediction matches 72/72. Twenty prompts are predicted reference-equal; four are predicted divergent, and all 24 classifications match. Among the 12 divergent repetition pairs, the first-divergence index matches 12/12. Those four prompts and zero-based indices (reference token $\rightarrow$ serialized token) are HumanEval/134: 88 (914$\rightarrow$1946); /42: 73 (432$\rightarrow$1817); /145: 103 (1184$\rightarrow$686); and /138: 93 (14374$\rightarrow$9064). Predicted and actual reference equality is 60/72, blocked on this reserved set.
+
+An independent validator passes 5,681 input, output, hash, endpoint and chronology checks; extracted archive validation passes. No prediction edits, selective reruns, parameter changes, performance or energy experiments occur after the relevant freezes. No-known-exposure is limited to audited records. The result establishes tested partition sufficiency, not a unique kernel, universal rule, CUDA/B570 shared cause or production certificate.
 \end{document}

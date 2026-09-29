@@ -2,7 +2,7 @@
 
 ## 1. Current repository state
 
-The integration starts from `main` at `00da1d00bd24328826b04db10b481c56fbba4f3e` (merged PR #34, B570 mechanism). PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis. Manuscript v0.8 is being prepared on `paper/mlsys2027-mechanism-integration-v0.8` as an author-review Draft PR; until merged, `main` still carries v0.7. Check the branch and PR before interpreting this file after merge.
+Current `main` is `1d3b556c93b477680788dfd1eb0737dfe9eee28c` (merged PR #35). Manuscript v0.8 is the merged baseline. PR #34 merged the B570 mechanism study, PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis.
 
 ## 2. Current paper thesis
 
@@ -58,7 +58,7 @@ How far does partition sufficiency transfer across model pairs, workloads, conte
 
 ## 10. Immediate next actions
 
-Review the v0.8 Draft PR's exact PDF and evidence audit; resolve scientifically justified reviewer objections; decide author submission scope and final title. After a material PR merges, refresh this file against the new `main` SHA and active manuscript version.
+Freeze the v0.8 submission candidate against the author-freeze tag, then request external author review of the exact PDF, appendix, claim scope and source bundle. Resolve submission-format or wording issues in a separate reviewable PR before final submission; retain the closed scientific evidence.
 
 ## 11. Repository map
 
@@ -70,4 +70,4 @@ Fetch `main`, record its exact SHA, and inspect canonical evidence before changi
 
 ## 13. Last updated
 
-2026-09-29 UTC. Base `main`: `00da1d00bd24328826b04db10b481c56fbba4f3e`. Integration manuscript: v0.8 Draft PR branch. This file will need a new main SHA after merge.
+2026-09-29 UTC. `main` merge commit: `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. Manuscript: v0.8 merged baseline.

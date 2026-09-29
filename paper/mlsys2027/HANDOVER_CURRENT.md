@@ -58,7 +58,9 @@ How far does partition sufficiency transfer across model pairs, workloads, conte
 
 ## 10. Immediate next actions
 
-Review the v0.8.1 positioning candidate and title recommendation against the unchanged scientific author-freeze tag, then request external author review of the exact PDF, appendix, claim scope and source bundle. Resolve submission-format or wording issues in a separate reviewable PR before final submission; retain the closed scientific evidence.
+Human authors review Draft PR #37 using `reviews/AUTHOR_REVIEW_NOTE_V081.md`, the exact final PDFs and `SUBMISSION_UPLOAD_CHECKLIST.md`. If approved, merge PR #37, run final QA on the merged commit, record its SHA and artifact hashes, then create annotated tag `mlsys2027-v0.8.1-submission-candidate-1` and verify its peeled commit. Complete author-controlled OpenReview profiles/conflicts and upload the main PDF plus separate appendix. This task neither merges PR #37 nor creates the candidate tag.
+
+Applied current manuscript title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. The immutable scientific author-freeze tag is distinct from repository main, which must always be queried at session start; the observed main SHA above will change. Only the final title and author-review/submission preparation are updated here.
 
 ## 11. Repository map
 

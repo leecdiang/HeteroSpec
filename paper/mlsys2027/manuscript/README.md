@@ -1,10 +1,10 @@
 # v0.8.1 submission-readiness candidate
 
-Literature and positioning revision; closed science, all figures, numeric macros and the scientific author-freeze tag remain unchanged. Three headline contributions now cover execution-path qualification, frozen B570 prediction and realized 358H cost. Title unchanged pending author review. Current outputs: `output/manuscript-v0.8.1.pdf`, `appendix-v0.8.1.pdf`, `hardware-only-v0.8.1.pdf`, `overleaf-submission-readiness-v0.8.1.zip`.
+Literature and positioning revision; closed science, all figures, numeric macros and the scientific author-freeze tag remain unchanged. Three headline contributions now cover execution-path qualification, frozen B570 prediction and realized 358H cost. Current title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. Current outputs: `output/manuscript-v0.8.1.pdf`, `appendix-v0.8.1.pdf`, `hardware-only-v0.8.1.pdf`, `overleaf-submission-readiness-v0.8.1.zip`.
 
 Build with `python scripts/build_v081.py` using a Python environment with pypdf and TeX Live/latexmk. It creates fresh temporary build directories, compiles the separate appendix and internal hardware proof, verifies all fonts/anonymity/citations/layout and rebuilds the ZIP independently with plain `latexmk -pdf main.tex` and `latexmk -pdf appendix.tex`. Run `python scripts/validate_readiness_v081.py` for immutable-scope checks. These commands invoke no measurement/model runners and overwrite only v0.8.1 outputs/QA receipts. Render and visually review the final PDFs after prose changes. The legacy Makefile and older scripts reproduce older versions and are not the v0.8.1 entrypoint.
 
-Evidence: `../evidence/*V081*`; exactly three focused review records: `../reviews/submission_v081/`. Main 10 body + 2 reference pages; appendix 6; internal proof 9 + 2. The source ZIP is an author-collaboration bundle, not an anonymous repository artifact release. Author title/profile/conflict review and final submission remain pending; keep PR Draft and unmerged.
+Evidence: `../evidence/FINALIZATION_QA_V081.json`; author note `../reviews/AUTHOR_REVIEW_NOTE_V081.md` and upload checklist `../SUBMISSION_UPLOAD_CHECKLIST.md`; the three earlier focused review records: `../reviews/submission_v081/`. Main 10 body + 2 reference pages; appendix 6; internal proof 9 + 2. The source ZIP is an author-collaboration bundle, not an anonymous repository artifact release. Human author review, profile/conflict checks and final submission remain pending; keep PR Draft and unmerged.
 
 ---
 

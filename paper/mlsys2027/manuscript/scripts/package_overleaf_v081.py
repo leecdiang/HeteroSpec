@@ -47,6 +47,7 @@ for source in (HERE / 'vendor/official/mlsys2025style').iterdir():
 files['README.txt'] = b'''SUBMISSION-READINESS CANDIDATE FOR AUTHOR REVIEW -- v0.8.1
 
 Upload this ZIP as a new Overleaf project. Use pdfLaTeX and TeX Live 2025.
+Title: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems
 Select main.tex for the full manuscript (measured runtime study included).
 Select appendix.tex to compile the separate appendix, then restore main.tex.
 Locally: latexmk -pdf main.tex; latexmk -pdf appendix.tex.
@@ -56,7 +57,7 @@ outcomes were frozen independently. Separate runtime studies retain the blocked
 358H qualification and prospective M4 result. The B570 target-only UB1 predictor was frozen before reserved inference; it
 predicted 72/72 complete serialized sequences. The direct Guard/Always-Spec
 contrast is post-study secondary analysis of frozen observations. No new
-measurements were collected. Title unchanged pending author decision. No new inference, timing, or experiments.
+measurements were collected. Final title applied for human author review. No new inference, timing, or experiments.
 
 Only dependency paths are relocated. Figure PDF bytes, the inventory table,
 official style, scientific values, bibliography, and manuscript prose are kept.

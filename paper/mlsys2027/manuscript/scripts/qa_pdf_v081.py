@@ -6,7 +6,7 @@ from pypdf import PdfReader
 ROOT=Path(__file__).resolve().parents[1]; E=ROOT.parent/'evidence'
 import os
 BUILD=Path(os.environ['HETEROSPEC_V081_BUILD'])
-report={'status':'PASS','pdfs':{},'manual_visual_review':'Recorded separately in MANUSCRIPT_STATUS.md; rerender after final edits.'}
+report={'status':'PASS','pdfs':{},'manual_visual_review':'Pending final rendered-page inspection; recorded in FINALIZATION_QA_V081.json after visual review.'}
 for fn in ['main','appendix','hardware-only']:
  p=BUILD/('hardware-only/hardware-only.pdf' if fn=='hardware-only' else f'{fn}.pdf');r=PdfReader(p);text='\n'.join(page.extract_text() or '' for page in r.pages);metadata=dict(r.metadata)
  combined=text+'\n'+str(metadata)
@@ -92,5 +92,5 @@ if hp.exists():
  assert 'Requirements traced to closed measurements' not in htext and 'implementation and measured results pending' not in htext
  assert 'sec:runtime' not in haux and '??' not in htext
  report['hardware_only']={'total_pages':len(PdfReader(hp).pages),'main_pages':int(re.search(r'\\newlabel\{maintextend\}\{\{[^}]*\}\{(\d+)\}',haux).group(1)),'runtime_section_removed':True,'no_undefined_references':True,'sha256':hashlib.sha256(hp.read_bytes()).hexdigest()}
-(E/'NARRATIVE_PDF_V081_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
+(E/'NARRATIVE_PDF_FINALIZATION_V081_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps({'status':'PASS','main_pages':mainpage,'references_pages':report['references_pages'],'appendix_pages':report['pdfs']['appendix']['pages'],'hardware_only_pages':report['hardware_only']['total_pages'],'bibliography_entries':19}))

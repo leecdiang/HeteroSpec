@@ -62,5 +62,5 @@ report = {'status':'PASS', 'fresh_directory':str(fresh),'clean_zip_directory':st
           'manifest_files':len(manifest),'all_manifest_hashes_match':True,
           'comparison':comparison,'zip_sha256':hashlib.sha256((OUT/'overleaf-submission-readiness-v0.8.1.zip').read_bytes()).hexdigest(),
           'scope':'Document compilation only; no inference, measurement or evidence regeneration.'}
-(EVIDENCE/'CLEAN_ZIP_QA_V081.json').write_text(json.dumps(report,indent=2)+'\n')
+(EVIDENCE/'CLEAN_ZIP_FINALIZATION_V081_QA.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({'status':'PASS','fresh':str(fresh),'clean':str(clean),'comparison':comparison}))

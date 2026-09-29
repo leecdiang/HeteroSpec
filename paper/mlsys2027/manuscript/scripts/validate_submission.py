@@ -7,7 +7,7 @@ ROOT=HERE.parents[2]
 E=HERE.parent/'evidence'
 SOURCE='b326ff7f20d9bac5afff6f53a6e9d9d8a7aaa7ae'
 ANALYSIS_START='50050f62a44064b11948263d064aa6b1bb7a3359'
-START='9b996dd702e5807b3cacc9db9c69aa7eb80035a4'
+START='bab0e44c74f7fa59d2ea42faf4dcf4c51a78e674'
 checks=[]
 def check(label,condition):
     assert condition,label
@@ -69,13 +69,13 @@ with tarfile.open(archive) as t:
         data=t.extractfile('m4-runtime-evidence/freeze/'+name).read()
         committed=git('show','202109717754bc62f889d19b5fbb141bfc3cc529:benchmarks/m4_runtime/'+name)
         check('archive equals formal-start Git '+name,data==committed)
-fresh=json.loads((E/'NUMERICAL_QA_V06.json').read_text())
+fresh=json.loads((E/'NUMERICAL_QA_V07.json').read_text())
 check('fresh historical numerical checks',fresh['status']=='PASS' and len(fresh['checks'])==228 and all(c['pass'] for c in fresh['checks']))
-runtimeqa=json.loads((E/'RUNTIME_QA_V06.json').read_text())
+runtimeqa=json.loads((E/'RUNTIME_QA_V07.json').read_text())
 check('fresh full runtime gate',runtimeqa['status']=='PASS' and runtimeqa['existing_runtime_checks']==117 and len(runtimeqa['checks'])>117 and runtimeqa['archive_recomputation']['verified_payload_files']==62)
 oldruntime=json.loads((E/'RUNTIME_QA_V05.json').read_text())
 check('117 original runtime gates retained',runtimeqa['checks'][:117]==oldruntime['checks'])
 check('independent secondary recomputation',runtimeqa['secondary_recomputation']['status']=='PASS' and runtimeqa['secondary_recomputation']['check_count']==638)
 report={'status':'PASS','source_head':SOURCE,'secondary_starting_main':ANALYSIS_START,'current_integration_main':START,'checks':checks,'changed_tracked_files':changed,'secondary_scope_allowlist':sorted(secondary_allowed),'limits':['Historical text-path agreement is not direct-ID proof.','Hash and Git-byte consistency do not certify every possible historical exposure or machine state.','358H compact diagnostics verified, not raw-trace replay.']}
-(E/'SUBMISSION_QA_V06.json').write_text(json.dumps(report,indent=2)+'\n')
+(E/'SUBMISSION_QA_V07.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(f'Submission PASS: {len(checks)} additional scope/projection/provenance checks.')

@@ -1,17 +1,14 @@
 \documentclass{article}
+\usepackage[OT1]{fontenc} % Match official pdfLaTeX Times encoding under XeTeX as well.
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath,amssymb}
 \usepackage{array}
-\usepackage{tikz}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
-\usetikzlibrary{arrows.meta,positioning,fit}
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs},pdfsubject={MLSys 2027 research manuscript v0.6},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Speculative Decoding Across Consumer Systems: Gains, Failures, and Runtime Costs},pdfsubject={MLSys 2027 research manuscript v0.7},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -20,6 +17,7 @@
 \newcommand{\rtarget}{R_{\mathrm{target}}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
+\input{tables/direct_id_values.tex}
 \mlsystitlerunning{Speculative Decoding Across Consumer Systems}
 \begin{document}
 \twocolumn[{
@@ -32,7 +30,7 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-Fast drafting and cheap target batching need not yield faster speculative decoding once output preservation and state management are included. We examine this gap in four retrospective consumer-system case studies with campaign-specific output comparators. Path controls show that correctness qualification can exclude cheap verification paths, while direct timing shows that an isolated NPU draft advantage does not survive the tested 358H stateful interface. Separate M4 studies retain both profitable and unprofitable outcomes without isolating workload from session effects. We then examine two runtime decisions in separately frozen studies: qualification stops a 358H intervention before performance evaluation, and a one-way M4 guard uses complete realized cost to decide whether to continue speculation. On \RTPrompts\ held-out prompts, Guard achieves \RTGuard$\times$ post-prefill speedup over target-only (95\% prompt-bootstrap CI [\RTGuardLo, \RTGuardHi]); Guard and fixed speculation each preserve all \RTExact/\RTExact\ matched generated-token sequences. Fixed speculation has the higher aggregate speedup estimate, \RTAlways$\times$. The contribution is measured evidence of how output qualification and stateful execution constrain usable speculation, with a prospective test of continuation control on one qualified path; no advantage of adding control is established.
+Fast drafting and cheap target batching need not yield faster speculative decoding once output preservation and state management are included. We characterize four consumer systems, retaining profitable, unprofitable, and blocked outcomes with campaign-specific comparators. In two separately frozen direct-ID qualification studies, RTX batching matches \DIRTXBatchedPairs/90 pairs and serialization reaches \DIRTXSerializedPairs/90; B570 serialization improves agreement from \DIBFastPairs/90 to \DIBSerializedPairs/90 but remains below the preregistered 90/90 gate. Serialization can change which path qualifies but does not itself certify output preservation. Direct timing shows that an isolated NPU draft advantage does not survive the tested 358H stateful interface. A later 358H intervention stops at qualification. On \RTPrompts\ held-out M4 prompts, a one-way continuation guard achieves \RTGuard$\times$ post-prefill speedup over target-only (95\% prompt-bootstrap CI [\RTGuardLo, \RTGuardHi]); Guard and fixed speculation preserve all \RTExact/\RTExact\ matched generated-token sequences. Fixed speculation achieves \RTAlways$\times$, and the paired secondary comparison finds Guard slower. These execution-path and runtime-scoped results establish no incremental advantage of adding control.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}

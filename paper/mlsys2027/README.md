@@ -1,3 +1,28 @@
+# v0.7 prospective direct-ID qualification integration
+
+Current author-review sources and outputs use v0.7. The new RTX/B570
+qualification studies are separate from historical timing: RTX 75/90 to
+90/90; B570 60/90 to 78/90, with a frozen 90/90 gate. Figure 3 separates
+historical physical opportunity and fresh qualification. The historical
+comparator record, old outputs and approved figures remain preserved.
+
+Build with `make all hardware-only overleaf`, then `make check`. With an
+existing Tectonic executable, run
+`python scripts/build_v07.py --tectonic PATH_TO_TECTONIC` from the manuscript
+directory. Run `python scripts/render_v07.py` and inspect every page.
+All checks are offline; no model inference or parameter search is required.
+Portable archive checks replay retained evidence, not omitted weights.
+
+Delivery: `manuscript-v0.7.pdf`, `appendix-v0.7.pdf`,
+`hardware-only-v0.7.pdf`, and `overleaf-direct-id-integration-v0.7.zip` under
+`manuscript/output/` (or `output/` in the manuscript directory).
+See the v0.7 scope/audit, versioned QA receipts, `MANUSCRIPT_STATUS.md`, and
+`reviews/submission_v07/` for final pagination and independent review.
+This is a draft for author review; the PR must remain Draft and unmerged.
+Earlier status sections below are historical.
+
+---
+
 # v0.6 paired M4 Guard versus Always-Spec secondary analysis
 
 Current review: `reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md`. Current

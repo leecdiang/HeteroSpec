@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage[OT1]{fontenc} % Match official pdfLaTeX Times encoding under XeTeX as well.
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -8,9 +9,10 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.6}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Speculative Decoding Across Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.7}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
+\input{tables/direct_id_values.tex}
 \mlsystitlerunning{Supplement: Speculative Decoding Across Consumer Systems}
 \begin{document}
 \twocolumn[{
@@ -24,7 +26,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.6. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
+This separate appendix accompanies the measured hardware and runtime studies in manuscript v0.7. It supplies statistical, measurement-boundary, and provenance details. Internal source paths, repository identifiers and evidence hashes remain in the private evidence ledger rather than the anonymous PDF.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves each campaign's estimator. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 equality counts compare re-tokenized parsed CLI output. In the historical M4 HumanEval pipeline the parsed text includes the prompt; equality of those arrays is not a direct generated-ID comparison. B570 strips the prompt and normalizes the text before re-tokenization, which still does not recover a direct-ID trace. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its statistical estimator.
@@ -65,7 +67,7 @@ The B570 formal v2 correctness failure triggered its stop rule. A later six-prom
 
 Windows follow-up derived tables and numerical captures support the manuscript, but historical raw per-run provenance is weaker. The CUDA score capture came from a separate same-commit instrumented build and does not replace formal measurements. The 358H source reconstruction remains \texttt{STRONGLY\_SUPPORTED}, not proven exact historical upstream identity. Its completed Phase-3 records supersede the blocked-preflight empty scaffold. These are retained qualifications, not unresolved invitations to alter frozen experiments.
 \section{Verification Context Lookup}
-Table~\ref{tab:verificationlookup} retains all context cells behind the main verification figure. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
+Table~\ref{tab:verificationlookup} retains all historical context cells behind Panel A of the main verification figure. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
 \input{tables/06_verification_lookup_v05.tex}
 
 \section{Evidence Inventory}
@@ -84,5 +86,14 @@ The reviewer-requested Guard/Always-Spec contrast is post-study paired secondary
 
 A metadata-recording defect requires explicit provenance recovery. Loop-variable shadowing caused the frozen helper to return the build-manifest path rather than the calibration-freeze path. Qualification and formal-start records therefore contain the build-manifest digest in the intended freeze-hash field. A versioned recovery analyzer verified the actual freeze against the clean formal-start commit, qualification, frozen source/model/calibration/policy hashes, and complete attempts before applying the original formulas. The archive retains the original markers and pipeline STOPPED state. This is a metadata-recording defect, not a measurement mutation.
 
+\input{tables/08_direct_id.tex}
 The 358H diagnostic is pinned separately from the hardware campaign. Its compact evidence records reproducible target-only same-prefix divergence and proposal playback without live NPU inference, but does not establish a specific rollback-boundary bug. It explicitly records that no formal runtime performance data exist and that failed qualification prevented formal runtime performance evaluation. Internal evidence records retain the exact source commit and file hashes; the local raw diagnostic traces are not included in that compact record. No 358H runtime speedup is inferred from these diagnostics.
+\section{Prospective Direct-ID Qualification}
+Table~\ref{tab:directidqualification} reports new studies separately from the historical context lookup and timing inventory. Both freeze the same HumanEval30 IDs, Qwen3-8B and Qwen3-0.6B Q8\_0 models, greedy $k=2$, three repetitions, cap 128, and a 90/90 sequence-equality rule. Prompt IDs and uncommitted proposals are excluded; an earlier generated terminal EOG is included. No mismatch is discarded and no subset qualifies. Historical path-control outcomes informed the replications; prospective freezing does not imply blinded discovery. Each study completes 270 executions; independent offline implementations reproduce all 180 comparisons, including first divergences. Operational elapsed fields do not establish formal performance.
+
+The RTX original embedded-server CLI exposes native committed-token debug events without a source patch. It uses context 4096, reference target micro-batch one, candidate micro-batches two/one, driver 616.92, and full CUDA0 offload. The historical RTX driver was 616.56; this is not an exact replay of historical host state. The incomplete RTX v1 transport attempt is preserved and supplies no v2 formal pair; completed v2 uses lossless byte transport, a new prospective freeze, and a complete fresh schedule.
+
+B570 uses source instrumentation to record committed IDs in sidecars, context 1024, and a separately frozen completion reference. Its endpoint selects the first 128 committed IDs or the inclusive earlier EOG; raw CLI overshoot is retained. Vulkan0 uses driver 32.0.101.9033 with full target 37/37 and draft 29/29 layer offload. The initial Task Scheduler launch failed during CP936/UTF-8 environment-metadata decoding before inference, with zero formal executions. The first data-producing attempt directly ran the unchanged frozen runner: no semantic, code, binary, model, driver, or parameter change occurred. This deployment deviation is preserved in provenance.
+
+The runtime/front-end, reference, and context differences preclude a causal hardware comparison. Neither study estimates population failure rates or functional code correctness. Repeat stability holds for every prompt in each condition, but stable disagreement remains disagreement. Historical B570 fast 45/90 and serialized 60/90 text-path counts and historical RTX controls retain their original comparators. New qualification does not retrospectively authorize old timing as strict-ID performance. Portable validators hash included evidence and check recorded identities of omitted external weights/binaries; they do not rehash omitted assets locally.
 \end{document}

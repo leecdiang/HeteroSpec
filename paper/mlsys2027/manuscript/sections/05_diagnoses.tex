@@ -32,7 +32,7 @@ A frozen CUDA reproducer captures repeat-stable HumanEval/106 argmax divergence,
 \label{sec:state}
 On Core Ultra X7 358H, isolated NPU draft throughput exceeds CPU at tested contexts, yet both qualified integrated paths are unprofitable and NPU is slower. Direct round records show complete mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, rather than the older accepted-draft counter.
 
-Complete target work, including persistent state, verification, rollback, and correction/bonus decoding, accounts for \HcpuTarget\% of CPU-path time. On NPU, the synchronous OpenVINO call replays the committed prefix and proposes tokens, accounting for \HnpuDraft\%. Replay and proposal are inseparable. Residual orchestration is \HcpuResidual\% and \HnpuResidual\%, respectively.
+Complete target work, including persistent state, verification, rollback, and correction/bonus decoding, accounts for \HcpuTarget\% of CPU-path time. On NPU, the synchronous OpenVINO call combines full committed-prefix replay/reconstruction and proposal, accounting for \HnpuDraft\%; these components are inseparable in the recorded timing. Residual orchestration is \HcpuResidual\% and \HnpuResidual\%, respectively.
 
 Figure~\ref{fig:state} separates isolated throughput from realized cost. The result concerns this qualified interface, not NPU compute capability; Phase-3 timing does not estimate a persistence benefit.
 

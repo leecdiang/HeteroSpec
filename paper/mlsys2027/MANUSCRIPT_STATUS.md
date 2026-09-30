@@ -1,3 +1,13 @@
+# v0.8.2 — final clean-room textual fixes (Draft PR)
+
+Starting merged main: `2f4a38c316d6d4683822e6a24a74bddad9d3117f` (observed for this revision, not a permanent current-main pointer). Four original PDF-only clean-room review files are included under `reviews/final_clean_room_v081/`. Their final gate is **READY AFTER MINOR TEXTUAL REVISION**; **new experiment required: NO**.
+
+The manuscript changes only the abstract's complete generated-token-ID reserved endpoint wording and one Introduction sentence separating prospective direct-ID qualification from historical timing. Title, contribution structure, section headings, results, figures, numerical macros and closed evidence remain unchanged. Current v0.8.2 PDFs and source ZIP are built separately from retained v0.8.1 outputs; results are in `evidence/FINAL_SUBMISSION_QA_V082.json` and exact wording in `evidence/FINAL_CLEANROOM_FIXES_V082.md`.
+
+Human authors review and approve the new Draft PR before merge. After merge, run QA against that exact merged commit, then create an annotated submission-candidate tag pointing to the post-merge commit. Complete OpenReview author/conflict checks and upload. No merge or candidate tag occurs in this revision task.
+
+---
+
 # v0.8.1 — final title and author-review preparation (Draft PR #37)
 
 Current title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. Running title: **Execution-Path Qualification in Speculative Decoding**. The only headline change in this finalization is the authorized title; sections, claim wording, closed evidence, numerical values and figures remain unchanged. `reviews/AUTHOR_REVIEW_NOTE_V081.md` and `SUBMISSION_UPLOAD_CHECKLIST.md` guide human review and upload. Updated PDFs/source ZIP retain v0.8.1 filenames; older versions and historical records below remain intact.

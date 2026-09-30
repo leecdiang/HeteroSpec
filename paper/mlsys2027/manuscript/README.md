@@ -1,3 +1,11 @@
+# v0.8.2 final clean-room submission-candidate preparation
+
+The merged v0.8.1 manuscript receives exactly two decision-relevant clarifications: the abstract names complete generated-token-ID sequences on the reserved set, and the Introduction separates fresh direct-ID qualification from historical timing. Title, contributions, scientific results and figures are unchanged. The original four PDF-only review records are under `../reviews/final_clean_room_v081/`; `../evidence/FINAL_CLEANROOM_FIXES_V082.md` records the exact edits.
+
+Build the new manuscript, separate appendix, internal hardware-only proof and source ZIP with `python scripts/build_v082.py` in an environment with pypdf and TeX Live/latexmk. Outputs use `v0.8.2` filenames; all v0.8.1 files remain available. Fresh clean-ZIP rebuild, PDF/anonymity/bibliography QA and final artifact hashes are recorded in `../evidence/FINAL_SUBMISSION_QA_V082.json`. The ZIP is a manuscript-source collaboration package, not a raw experiment archive. The final Draft PR remains unmerged; human author review and post-merge QA precede the submission-candidate tag.
+
+---
+
 # v0.8.1 submission-readiness candidate
 
 Literature and positioning revision; closed science, all figures, numeric macros and the scientific author-freeze tag remain unchanged. Three headline contributions now cover execution-path qualification, frozen B570 prediction and realized 358H cost. Current title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. Current outputs: `output/manuscript-v0.8.1.pdf`, `appendix-v0.8.1.pdf`, `hardware-only-v0.8.1.pdf`, `overleaf-submission-readiness-v0.8.1.zip`.

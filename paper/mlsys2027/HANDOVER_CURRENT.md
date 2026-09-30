@@ -2,7 +2,7 @@
 
 ## 1. Current repository state
 
-Scientific author-freeze baseline: immutable tag `mlsys2027-v0.8-author-freeze` resolves to `1d3b556c93b477680788dfd1eb0737dfe9eee28c` (merged PR #35). Repository current `main` MUST be queried with git/GitHub at every session start; this document does not permanently pin a mutable branch. Main observed when this revision was authored: `0e93dc93569ee091e48f2cd76327cfd8a9de3cde`, including handover PR #36. Manuscript v0.8 remains the scientific baseline; v0.8.1 is the literature/positioning submission-readiness candidate. PR #34 merged the B570 mechanism study, PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis.
+Scientific author-freeze baseline: immutable tag `mlsys2027-v0.8-author-freeze` resolves to `1d3b556c93b477680788dfd1eb0737dfe9eee28c` (merged PR #35). Repository current `main` MUST be queried with git/GitHub at every session start; this document does not permanently pin a mutable branch. Main observed when v0.8.2 was authored: `2f4a38c316d6d4683822e6a24a74bddad9d3117f` (v0.8.1 merged baseline); this observation will change. Manuscript v0.8 remains the scientific baseline; v0.8.2 is final clean-room textual-fix and submission-candidate preparation. PR #34 merged the B570 mechanism study, PR #33 merged manuscript v0.7, PRs #31–32 merged the direct-ID B570/RTX studies, and PR #30 merged the paired M4 secondary analysis.
 
 ## 2. Current paper thesis
 
@@ -58,9 +58,9 @@ How far does partition sufficiency transfer across model pairs, workloads, conte
 
 ## 10. Immediate next actions
 
-Human authors review Draft PR #37 using `reviews/AUTHOR_REVIEW_NOTE_V081.md`, the exact final PDFs and `SUBMISSION_UPLOAD_CHECKLIST.md`. If approved, merge PR #37, run final QA on the merged commit, record its SHA and artifact hashes, then create annotated tag `mlsys2027-v0.8.1-submission-candidate-1` and verify its peeled commit. Complete author-controlled OpenReview profiles/conflicts and upload the main PDF plus separate appendix. This task neither merges PR #37 nor creates the candidate tag.
+Clean-room review of only the v0.8.1 main and appendix PDFs concluded **READY AFTER MINOR TEXTUAL REVISION**; **new experiment required: NO**. The v0.8.2 Draft PR changes only abstract endpoint wording (complete generated-token-ID sequences on the reserved set) and the first-page historical-timing/fresh-qualification boundary. Title, contributions and scientific results remain unchanged. Review provenance: `reviews/final_clean_room_v081/`; wording audit: `evidence/FINAL_CLEANROOM_FIXES_V082.md`; build receipt: `evidence/FINAL_SUBMISSION_QA_V082.json`.
 
-Applied current manuscript title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. The immutable scientific author-freeze tag is distinct from repository main, which must always be queried at session start; the observed main SHA above will change. Only the final title and author-review/submission preparation are updated here.
+Human authors review the final textual-fix Draft PR and, if approved, merge it. Run final post-merge QA on the exact merged commit, record its SHA and artifact hashes, then create annotated tag `mlsys2027-v0.8.2-submission-candidate-1` pointing to that verified commit. Complete author-controlled OpenReview profiles/conflicts and upload the main PDF plus separate appendix. This task neither merges the PR nor creates the candidate tag. Repository main must always be queried at session start.
 
 ## 11. Repository map
 
@@ -72,4 +72,4 @@ Fetch `main`, record its exact SHA, and inspect canonical evidence before changi
 
 ## 13. Last updated
 
-2026-09-29 UTC. Scientific baseline: v0.8 immutable author-freeze tag above. Positioning candidate: v0.8.1. Query current main at session start; no SHA-only maintenance is required after merges.
+2026-09-30 Shanghai time. Scientific baseline: v0.8 immutable author-freeze tag above. Submission-candidate preparation: v0.8.2. Query current main at session start; no SHA-only maintenance is required after merges.

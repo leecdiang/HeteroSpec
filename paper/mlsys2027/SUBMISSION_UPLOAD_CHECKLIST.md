@@ -13,7 +13,7 @@ Scientific author-freeze tag: `mlsys2027-v0.8-author-freeze` → `1d3b556c93b477
 - [ ] Closed evidence is unchanged.
 - [ ] No new unreviewed experiments are included.
 
-The submission-candidate tag has **not been created**. Create it only after PR #37 is author-approved and merged, and final QA passes on the merged commit. Query current repository main at session start; do not assume the scientific baseline equals current main.
+The v0.8.2 submission-candidate tag has **not been created**. Create it only after the final textual-fix Draft PR is author-approved and merged, and final QA passes on the merged commit. Query current repository main at session start; do not assume the scientific baseline equals current main.
 
 ## B. Main paper
 
@@ -93,10 +93,10 @@ This is a **manuscript-source package**, not the full reproducibility artifact p
 
 ## H. Final submission candidate freeze
 
-**After PR #37 merge and final build/QA**, complete these items; do not create this tag during the current finalization task.
+**After the final textual-fix PR merges and final build/QA passes on that merged commit**, complete these items; do not create this tag during the current finalization task.
 
 - [ ] Record the final submission commit SHA.
-- [ ] Create annotated tag: `mlsys2027-v0.8.1-submission-candidate-1`.
+- [ ] Create annotated tag: `mlsys2027-v0.8.2-submission-candidate-1`.
 - [ ] Verify the peeled commit SHA.
 - [ ] Record the main PDF SHA-256.
 - [ ] Record the appendix SHA-256.

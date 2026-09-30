@@ -1,3 +1,11 @@
+# v0.8.1 — final title and author-review preparation (Draft PR #37)
+
+Current title: **Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems**. Running title: **Execution-Path Qualification in Speculative Decoding**. The only headline change in this finalization is the authorized title; sections, claim wording, closed evidence, numerical values and figures remain unchanged. `reviews/AUTHOR_REVIEW_NOTE_V081.md` and `SUBMISSION_UPLOAD_CHECKLIST.md` guide human review and upload. Updated PDFs/source ZIP retain v0.8.1 filenames; older versions and historical records below remain intact.
+
+Keep PR #37 Draft and unmerged until human author approval. After approval and merge, perform final QA on the merged commit, then create the annotated submission-candidate tag; no candidate tag is created in this task. Final build results are recorded in `evidence/FINALIZATION_QA_V081.json`. Query repository main at session start; the immutable scientific baseline is the author-freeze tag.
+
+---
+
 # v0.8 — B570 mechanism prediction integration (Draft PR)
 
 Starting `main`: `00da1d00bd24328826b04db10b481c56fbba4f3e` (merged PR #34). Branch: `paper/mlsys2027-mechanism-integration-v0.8`. The final delivery HEAD is the Draft PR head, recorded in the PR and final delivery report; a SHA cannot be embedded in its own commit. No main edit or automatic merge was performed.

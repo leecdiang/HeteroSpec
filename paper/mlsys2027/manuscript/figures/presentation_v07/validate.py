@@ -39,6 +39,10 @@ def validate():
     text=page.extract_text()
     for count in ('75/90','90/90','60/90','78/90'):check('visible count '+count,count in text)
     check('visible statuses',text.count('BLOCKED')==4 and text.count('QUALIFIED')==2)
+    for label in ('Historical target-forward proxy','Different runs / contexts',
+                  'Fresh direct-ID qualification','No matching fresh latency endpoint',
+                  'Direct-ID equal pairs (of 90)'):
+        check('visible evidence-class label '+label,label in text)
     # Inspect plotted marker centers in the vector PDF, independently of the
     # plotting code and its receipt. Exclude zero-width axis tick paths.
     vector=pymupdf.open(HERE/'pdf/verification.pdf')
@@ -64,5 +68,5 @@ def validate():
             'pdf_sha256':hashlib.sha256((HERE/'pdf/verification.pdf').read_bytes()).hexdigest()}
 
 if __name__=='__main__':
-    result=validate();(HERE/'qa/validation.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+    result=validate();(HERE/'qa/validation.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print('Figure 3 validation PASS:',result['check_count'],'checks.')

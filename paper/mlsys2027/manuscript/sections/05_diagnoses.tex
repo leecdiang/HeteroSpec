@@ -1,27 +1,29 @@
 \section{From Local Opportunity to Realized Gain}
 \label{sec:diagnoses}
-The observed outcomes trace two tested boundaries: execution-path qualification and stateful realization. Figure~\ref{fig:translation} locates them. The B570 follow-up then tests a specific explanation for residual serialized divergence.
+The observed outcomes trace two tested boundaries: execution-path qualification and stateful realization. Figure~\ref{fig:translation} locates them. The B570 follow-up tests whether a frozen target-partition predictor reproduces the residual serialized trajectory.
 
 \subsection{Execution-path qualification}
 \label{sec:admissibility}
 \paragraph{Historical physical opportunity.}
-Figure~\ref{fig:verification}A preserves eleven historical target-forward cells. The M4 Metal micro ratios are $\vTwo\approx1.02$--$1.08$; RTX batching is near one baseline step while serialization costs more; B570 fast cells span 1.24--1.64 and serialized cells approximately \BvShort--\BvLong. These proxies omit drafting and integration, cannot replace complete $\rtarget$, and do not explain the separate-session M4 contrast.
+Figure~\ref{fig:verification}A preserves eleven historical target-forward proxy cells from different runs and contexts. The M4 Metal micro ratios are $\vTwo\approx1.02$--$1.08$; RTX batching is near one baseline step while serialization costs more; B570 fast cells span 1.24--1.64 and serialized cells approximately \BvShort--\BvLong. These proxies omit drafting and integration, cannot replace complete $\rtarget$, and do not explain the separate-session M4 contrast.
 
 \paragraph{Prospective direct-ID qualification.}
-Two frozen studies share 30 HumanEval tasks, three repetitions, greedy $k=2$, and the Qwen3-8B/0.6B Q8\_0 pair. Each completes 270 executions and 180 comparisons. The gate requires 90/90 complete direct-ID sequences with no dropped mismatch. Different runtime/front-end, context, and reference settings preclude controlled hardware comparison or fresh performance claims.
+Two frozen studies share 30 HumanEval tasks, three repetitions, greedy $k=2$, and the Qwen3-8B/0.6B Q8\_0 pair. Each completes 270 executions and 180 comparisons. Fresh direct-ID qualification requires 90/90 complete direct-ID sequence equality with no dropped mismatch. Different runtime/front-end, context, and reference settings preclude controlled hardware comparison or fresh performance claims.
 
-RTX batching matches \DIRTXBatchedPairs/90 pairs and serialization \DIRTXSerializedPairs/90, qualifying only the latter. B570 fast matches \DIBFastPairs/90 and serialization \DIBSerializedPairs/90; both remain blocked. All conditions are repetition-stable on 30 prompts, which does not imply reference equality. Figure~\ref{fig:verification}B separates these endpoints from historical cost.
+RTX direct-ID sequence equality is \DIRTXBatchedPairs/90\ batched and \DIRTXSerializedPairs/90\ serialized, qualifying only the latter. B570 direct-ID sequence equality is \DIBFastPairs/90\ fast and \DIBSerializedPairs/90\ serialized; both remain blocked. All conditions are repetition-stable on 30 prompts, which does not imply reference equality. Figure~\ref{fig:verification}B separates these endpoints from historical cost.
 
 \paragraph{Serialization changes qualification but is not a certificate.}
 The prospective direct-ID results do not replace historical B570 text-path counts or certify historical RTX timing; the older RTX controls remain secondary and B570 timing diagnostic. The earlier passing small B570 probe was limited to its subset.
 
-\subsection{Controlled B570 mechanism isolation}
+\subsection{Controlled B570 target-partition sufficiency}
 \label{sec:b570mechanism}
 The v0.7 B570 residual could reflect reference, front-end, context, or target-partition differences. A target-only harness first reproduces 90/90 reference sequences. On 12 outcome-exposed discovery prompts, target-only greedy execution with $n_{\mathrm{ubatch}}=1$ matches 36/36 serialized speculative sequences. The frozen H1/H2 decision tree selects H1 (target-partition sufficiency); H2 is not run. Discovery is exploratory.
 
-An exposure audit conservatively excludes 31 tasks, then deterministically selects 24 reserved HumanEval prompts from 133 eligible tasks. H1 is committed before reserved inference; all 72 complete target-only predictions are committed before any live serialized outcome. The live runs match 72/72 predicted sequences, 24/24 prompt classifications, and 12/12 divergent repetition-pair first-divergence indices across four prompts. Predicted and actual reference equality is 60/72, so qualification remains \emph{blocked}. No parameter or prediction changes after their respective freezes; no selective reruns occur. The appendix gives task IDs, divergence tokens, and audit scope.
+An exposure audit conservatively excludes 31 tasks, then deterministically selects 24 reserved HumanEval prompts from 133 eligible tasks. H1 is committed before reserved inference; all 72 complete target-only predictions are committed before any live serialized outcome. Predictor-to-live complete-ID agreement is 72/72, with 24/24 prompt classifications and 12/12 divergent repetition-pair first-divergence indices across four prompts. Reference-to-live direct-ID qualification is 60/72 and remains \emph{BLOCKED}. No parameter or prediction changes after their respective freezes; no selective reruns occur. The appendix gives task IDs, divergence tokens, and audit scope.
 
-Target-only micro-batch one thus reproduces the tested serialized trajectory without live draft computation. It isolates a sufficient target execution partition, not a unique kernel, universal rule, or RTX mechanism. The 60/72 reserved endpoint is distinct from the earlier 78/90 direct-ID study.
+\input{tables/b570_timeline_v083.tex}
+
+Target-only micro-batch one thus reproduces the tested serialized trajectory without live draft computation. This establishes sufficiency of that execution path on the tested B570 configuration; it does not identify a unique numerical operation, kernel, or root cause, establish a universal UB1 rule, or explain RTX behavior. The 60/72 reserved endpoint is distinct from the earlier 78/90 direct-ID study.
 
 % Queue the state figure before its discussion to preserve wide-float flow.
 \input{figures/04_358h.tex}
@@ -32,7 +34,7 @@ A frozen CUDA reproducer captures repeat-stable HumanEval/106 argmax divergence,
 \label{sec:state}
 On Core Ultra X7 358H, isolated NPU draft throughput exceeds CPU at tested contexts, yet both qualified integrated paths are unprofitable and NPU is slower. Direct round records show complete mean committed progress $C=\HcpuC$ and $\HnpuC$, respectively, rather than the older accepted-draft counter.
 
-Complete target work, including persistent state, verification, rollback, and correction/bonus decoding, accounts for \HcpuTarget\% of CPU-path time. On NPU, the synchronous OpenVINO call replays the committed prefix and proposes tokens, accounting for \HnpuDraft\%. Replay and proposal are inseparable. Residual orchestration is \HcpuResidual\% and \HnpuResidual\%, respectively.
+Complete target work, including persistent state, verification, rollback, and correction/bonus decoding, accounts for \HcpuTarget\% of CPU-path time. On NPU, the synchronous OpenVINO call combines full committed-prefix replay/reconstruction and proposal, accounting for \HnpuDraft\%; these components are inseparable in the recorded timing. Residual orchestration is \HcpuResidual\% and \HnpuResidual\%, respectively.
 
 Figure~\ref{fig:state} separates isolated throughput from realized cost. The result concerns this qualified interface, not NPU compute capability; Phase-3 timing does not estimate a persistence benefit.
 

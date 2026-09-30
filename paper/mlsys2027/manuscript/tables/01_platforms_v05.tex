@@ -1,6 +1,6 @@
 % Evidence: *-PROTOCOL; manuscript evidence ledger.
 \begin{table*}[t]
-\caption{Frozen platform and runtime scope. All final target models are Qwen3-8B Q8\_0. Greedy execution is compared with matched target-only references; historical M4/RTX/B570 use re-tokenized text, while 358H uses direct IDs. Hardware and software co-vary.}
+\caption{Independently frozen case studies; not a matched hardware comparison. All final target models are Qwen3-8B Q8\_0. Greedy execution uses campaign-matched target-only references; historical M4/RTX/B570 use re-tokenized text, while 358H uses direct IDs.}
 \label{tab:platforms}
 \centering
 \begin{tabular}{>{\raggedright\arraybackslash}p{1.4in}>{\raggedright\arraybackslash}p{1.65in}>{\raggedright\arraybackslash}p{1.35in}>{\raggedright\arraybackslash}p{1.5in}}
@@ -8,7 +8,7 @@
 System & Runtime / target backend & Draft model / placement & Evidence scope \\
 \midrule
 MacBook Air M4 & llama.cpp b10809 / Metal & Qwen3-0.6B Q8\_0 / Metal & Representative 24Q and separate HumanEval30 \\
-Core Ultra 9 275HX + RTX 5070 Ti Laptop & llama.cpp b10839 / CUDA & Qwen3-0.6B Q8\_0 / CPU or same GPU & Blocked fast path; text-path-qualified controls \\
+Core Ultra 9 275HX + RTX 5070 Ti Laptop & llama.cpp b10839 / CUDA & Qwen3-0.6B Q8\_0 / CPU or same GPU & Blocked fast path; text-path-agreeing controls \\
 Core i5-13400 + Arc B570 & llama.cpp b10839 / Vulkan0 & Qwen3-0.6B Q8\_0 / B570 & Formal gate failure; later diagnostics \\
 Core Ultra X7 358H + Arc B390 & llama.cpp b10839 / Vulkan0; OpenVINO draft & Qwen3-0.6B symmetric INT4 / CPU or NPU & Closed Phase 3; direct stateful decomposition \\
 \bottomrule

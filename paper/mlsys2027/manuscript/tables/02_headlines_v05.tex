@@ -1,19 +1,19 @@
 % Evidence: M4-24, M4-HE, RTX-cpu_k2, RTX-rtx_k2, B570-SERIAL, 358H-CPU/NPU.
 \begin{table*}[t]
-\caption{Headline decode outcomes. Speedup is baseline/speculative time, aggregated by the campaign's frozen prompt estimator. Brackets are 95\% prompt-bootstrap CIs. Matching pairs and faster prompts are separate metrics. M4/RTX/B570 count re-tokenized-text agreement; 358H counts direct-ID agreement. B570 timing is diagnostic, despite a reported CI.}
+\caption{Headline decode outcomes. Speedup is baseline/speculative time under each frozen prompt estimator; brackets are 95\% prompt-bootstrap CIs. Historical M4/RTX/B570 rows show recorded text-path agreement, not direct generated-ID qualification. The 358H rows show direct-ID sequence equality. Faster-prompt counts are separate; B570 timing remains diagnostic.}
 \label{tab:headlines}
 \centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{2.0in}>{\raggedright\arraybackslash}p{1.70in}>{\raggedright\arraybackslash}p{0.64in}>{\raggedright\arraybackslash}p{0.72in}>{\raggedright\arraybackslash}p{0.64in}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.75in}>{\raggedright\arraybackslash}p{1.52in}>{\centering\arraybackslash}p{0.73in}>{\centering\arraybackslash}p{0.43in}>{\raggedright\arraybackslash}p{0.70in}>{\raggedright\arraybackslash}p{0.61in}}
 \toprule
-Path / workload & Speedup [95\% CI] & Matching pairs & Faster prompts & Class \\
+Path / workload & Speedup [95\% CI] & Endpoint & Pairs & Faster prompts & Class \\
 \midrule
-M4 representative 24Q & \MRepSpeed\ [\MRepLo, \MRepHi] & \MRepExact/\MRepPairs & \MRepFaster/\MRepN & Primary \\
-M4 HumanEval fixed-$k=2$ & \MHEspeed\ [\MHElo, \MHEhi] & \MHEexact/\MHEpairs & \MHEfaster/\MHEprompts & Primary \\
-CPU to RTX 5070 Ti Laptop & \RTXcpuSpeed\ [\RTXcpuLo, \RTXcpuHi] & 90/90 & 0/30 & Second. \\
-RTX 5070 Ti Laptop to itself & \RTXgpuSpeed\ [\RTXgpuLo, \RTXgpuHi] & 90/90 & 0/30 & Second. \\
-B570 serialized fallback & \BSpeed\ [\BLo, \BHi] & \BExact/90 & 0/30 & Diag. \\
-358H CPU draft & \HcpuSpeed\ [\HcpuLo, \HcpuHi] & 90/90 & 0/30 & Primary \\
-358H NPU draft & \HnpuSpeed\ [\HnpuLo, \HnpuHi] & 90/90 & 0/30 & Primary \\
+M4 representative 24Q & \MRepSpeed\ [\MRepLo, \MRepHi] & Text-path & \MRepExact/\MRepPairs & \MRepFaster/\MRepN & Primary \\
+M4 HumanEval fixed-$k=2$ & \MHEspeed\ [\MHElo, \MHEhi] & Text-path & \MHEexact/\MHEpairs & \MHEfaster/\MHEprompts & Primary \\
+CPU to RTX 5070 Ti Laptop & \RTXcpuSpeed\ [\RTXcpuLo, \RTXcpuHi] & Text-path & 90/90 & 0/30 & Second. \\
+RTX 5070 Ti Laptop to itself & \RTXgpuSpeed\ [\RTXgpuLo, \RTXgpuHi] & Text-path & 90/90 & 0/30 & Second. \\
+B570 serialized fallback & \BSpeed\ [\BLo, \BHi] & Text-path & \BExact/90 & 0/30 & Diag. \\
+358H CPU draft & \HcpuSpeed\ [\HcpuLo, \HcpuHi] & Direct-ID & 90/90 & 0/30 & Primary \\
+358H NPU draft & \HnpuSpeed\ [\HnpuLo, \HnpuHi] & Direct-ID & 90/90 & 0/30 & Primary \\
 \bottomrule
 \end{tabular}
 \end{table*}

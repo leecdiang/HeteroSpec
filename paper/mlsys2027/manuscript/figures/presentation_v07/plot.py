@@ -26,10 +26,10 @@ def main():
     for ax in (a,b):
         for side in ('top','right','left'):ax.spines[side].set_visible(False)
         ax.tick_params(length=2,width=.55);ax.tick_params(axis='y',length=0,pad=5)
-    f.text(.015,.97,'A  Historical physical opportunity',va='top',fontsize=9)
-    f.text(.525,.97,'B  Prospective direct-ID qualification',va='top',fontsize=9)
-    f.text(.015,.86,'Target-forward micro studies',fontsize=7.5,color=GRAY)
-    f.text(.525,.86,'Separate HumanEval30 studies',fontsize=7.5,color=GRAY)
+    f.text(.015,.97,'A  Historical target-forward proxy',va='top',fontsize=9)
+    f.text(.525,.97,'B  Fresh direct-ID qualification',va='top',fontsize=9)
+    f.text(.015,.86,'Different runs / contexts',fontsize=7.5,color=GRAY)
+    f.text(.525,.86,'No matching fresh latency endpoint',fontsize=7.5,color=GRAY)
     paths=['M4 Metal','RTX batched','RTX serialized','B570 fast','B570 serialized']
     a.set(xlim=(.85,2.6),ylim=(4.5,-.5),yticks=range(5),yticklabels=paths,
           xticks=[1,1.5,2,2.5],xlabel=r'Target-forward $V_2^{\mathrm{micro}}$')
@@ -47,7 +47,7 @@ def main():
     data=records()
     b.set(xlim=(0,90),ylim=(3.5,-.5),yticks=range(4),
           yticklabels=['RTX batched','RTX serialized','B570 fast','B570 serialized'],
-          xticks=[0,30,60,90],xlabel='Exact pairs (of 90)')
+          xticks=[0,30,60,90],xlabel='Direct-ID equal pairs (of 90)')
     b.axvline(90,color=GRAY,ls='--',lw=.8,clip_on=False,zorder=0)
     f.text(.845,.81,'90/90 gate',ha='center',fontsize=7)
     for y,row in enumerate(data):
@@ -68,6 +68,8 @@ def main():
     for folder in ('pdf','svg','qa'):(HERE/folder).mkdir(parents=True,exist_ok=True)
     f.savefig(HERE/'pdf/verification.pdf',metadata={'CreationDate':None,'ModDate':None})
     f.savefig(HERE/'svg/verification.svg',metadata={'Date':None})
+    svg=HERE/'svg/verification.svg'
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
     for dpi in (96,200):
         path=HERE/f'qa/verification_color_{dpi}.png';f.savefig(path,dpi=dpi)
         Image.open(path).convert('L').save(HERE/f'qa/verification_grayscale_{dpi}.png')

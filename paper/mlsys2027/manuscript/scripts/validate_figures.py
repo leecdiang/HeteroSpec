@@ -106,8 +106,8 @@ for (path,context,value,status),row in zip(parsed,source_rows):
     assert path==row['path'] and context==row['context']
     assert value==f"{float(row['v2_micro']):.6f}"
     if path.startswith('B570'):assert 'diagnostic, inadmissible' in status
-    if path=='RTX batched':assert status=='Correctness-blocked; diagnostic'
-    if path=='RTX serialized':assert status=='Exact secondary control'
+    if path=='RTX batched':assert status=='Text-path blocked; diagnostic'
+    if path=='RTX serialized':assert status=='Text-path secondary control'
 inventory=FIG/'style_v04/tables/appendix_table.tex'
 assert hashlib.sha256(inventory.read_bytes()).hexdigest()==freeze['protected_figure_tree_sha256'][inventory.relative_to(ROOT).as_posix()]
 assert len(re.findall(r'^.* & .* \\\\$',inventory.read_text(),re.M))==9  # header and eight cases
@@ -148,5 +148,5 @@ report={'status':'PASS','integration_main':freeze['main_head'],'mechanism_source
         'source_records':len(source_lock),'historically_checked_narrative_documents':historical_documents,
         'original_five_figure_replays':results,'historical_style_checks':style_checks,'active_presentation_checks':presentation_checks,'actual_placements':placements,
         'appendix_lookup_cells':11,'appendix_inventory_cases':8,'assets_regenerated':False}
-(EVID/'NARRATIVE_FIGURE_V07_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
+(EVID/'NARRATIVE_FIGURE_V07_QA.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print('Figure v0.4 PASS: frozen numerical replays, three style variants, selected final schematic, four native-width placements, and appendix tables.')

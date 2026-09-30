@@ -21,6 +21,8 @@ The v0.7 B570 residual could reflect reference, front-end, context, or target-pa
 
 An exposure audit conservatively excludes 31 tasks, then deterministically selects 24 reserved HumanEval prompts from 133 eligible tasks. H1 is committed before reserved inference; all 72 complete target-only predictions are committed before any live serialized outcome. Predictor-to-live complete-ID agreement is 72/72, with 24/24 prompt classifications and 12/12 divergent repetition-pair first-divergence indices across four prompts. Reference-to-live direct-ID qualification is 60/72 and remains \emph{BLOCKED}. No parameter or prediction changes after their respective freezes; no selective reruns occur. The appendix gives task IDs, divergence tokens, and audit scope.
 
+\input{tables/b570_timeline_v083.tex}
+
 Target-only micro-batch one thus reproduces the tested serialized trajectory without live draft computation. This establishes sufficiency of that execution path on the tested B570 configuration; it does not identify a unique numerical operation, kernel, or root cause, establish a universal UB1 rule, or explain RTX behavior. The 60/72 reserved endpoint is distinct from the earlier 78/90 direct-ID study.
 
 % Queue the state figure before its discussion to preserve wide-float flow.

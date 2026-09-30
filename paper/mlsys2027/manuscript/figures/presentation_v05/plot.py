@@ -77,9 +77,9 @@ def state():
  iso=df('figure4_isolated.csv');d=df('figure4_realized.csv');f=plt.figure(figsize=(6.75,2.65));records=[]
  f.text(.075,.975,'(a) Isolated draft throughput',fontsize=9,fontweight='bold',va='top')
  f.text(.075,.902,'Median + 95% CI · 5 repetitions/cell',fontsize=8,va='top',color=GRAY)
- f.text(.53,.975,'(b) Integrated runtime costs',fontsize=9,fontweight='bold',va='top')
- f.text(.53,.902,'Mean · 90 exact requests/path',fontsize=8,va='top',color=GRAY)
- a=f.add_axes([.075,.32,.31,.49]);clean(a)
+ f.text(.53,.975,'(b) Arithmetic-mean timing breakdown',fontsize=8.5,fontweight='bold',va='top')
+ f.text(.53,.902,'90 exact requests/path',fontsize=8,va='top',color=GRAY)
+ a=f.add_axes([.075,.39,.31,.42]);clean(a)
  a.set(xlim=(-.3,2.3),ylim=(0,110),xticks=[0,1,2],xticklabels=['512','2,048','8,192'],yticks=[0,30,60,90],xlabel='Context tokens',ylabel='Draft tokens/s')
  for dev,mark,color,dx in [('CPU','o',INK,-.06),('NPU','D',BLUE,.06)]:
   x=iso[iso.device==dev].sort_values('context');obj=a.errorbar(np.arange(3)+dx,x.tokens_s,yerr=[x.tokens_s-x.ci_low,x.ci_high-x.tokens_s],fmt=mark,ms=3.8,color=color,capsize=2,elinewidth=.8,label=dev)
@@ -87,7 +87,7 @@ def state():
   check(dev+' throughput CIs',np.array(obj.lines[2][0].get_segments())[:,:,1],x[['ci_low','ci_high']].values)
   records.append({'kind':'isolated','device':dev,'values':list(x.tokens_s),'cis':x[['ci_low','ci_high']].values.tolist()})
  a.legend(loc='upper right',ncol=2,frameon=False,fontsize=8,handletextpad=.2,columnspacing=.8,borderpad=0)
- b=f.add_axes([.53,.32,.425,.49]);clean(b);b.spines['left'].set_visible(False)
+ b=f.add_axes([.53,.39,.425,.42]);clean(b);b.spines['left'].set_visible(False)
  b.set(xlim=(0,32),ylim=(-.5,1.75),xticks=[0,10,20,30],yticks=[1,0],yticklabels=['CPU','NPU'],xlabel='Post-prefill time (s/request)');b.tick_params(axis='y',length=0)
  ref=b.axvline(d.baseline_s.iloc[0],color=GRAY,ls='--',lw=.7,zorder=0)
  b.text(d.baseline_s.iloc[0]+.45,1.59,f'{d.baseline_s.iloc[0]:.2f} s baseline',fontsize=7.8,va='center')
@@ -101,7 +101,7 @@ def state():
   pct=r.target_pct if r.device=='CPU' else r.draft_pct
   b.text(midpoint,y,f'{pct:.2f}%',ha='center',va='center',fontsize=8,color=INK if r.device=='CPU' else 'white',bbox=dict(facecolor=LIGHT,edgecolor='none',pad=.4) if r.device=='CPU' else None)
   records.append({'kind':'realized','device':r.device,'components':parts,'total':r.total_s,'headline_speedup':r.headline_speedup,'dominant_share':pct})
- f.legend([Patch(facecolor=BLUE),Patch(facecolor=LIGHT,edgecolor=INK,hatch='///',linewidth=.35)],['Replay + proposal','Complete target side'],loc='lower left',bbox_to_anchor=(.505,.079),frameon=False,ncol=2,fontsize=7.7,handlelength=1.1,columnspacing=.8)
+ f.legend([Patch(facecolor=BLUE),Patch(facecolor=LIGHT,edgecolor=INK,hatch='///',linewidth=.35)],['Replay/reconstruction + proposal\n(inseparable)','Complete target side'],loc='lower left',bbox_to_anchor=(.515,.085),frameon=False,ncol=1,fontsize=7.6,handlelength=1.1,labelspacing=.2)
  f.text(.075,.045,'Separate prompt-GM speedup: CPU '+f'{d.headline_speedup.iloc[0]:.3f}×'+', NPU '+f'{d.headline_speedup.iloc[1]:.3f}×'+'. Residuals <0.05%; true widths retained.',fontsize=8)
  check('shared baseline',ref.get_xdata(),[d.baseline_s.iloc[0]]*2)
  save(f,'state',records,['figure4_isolated.csv','figure4_realized.csv'])

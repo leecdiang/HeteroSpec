@@ -13,7 +13,14 @@ def main():
     assert text.count(marker)==1
     text=text.replace(marker,addition+marker)
     # Retain the full upstream copyright/license in the portable package.
-    text=text.replace("'common/sampling.cpp','common/sampling.h'", "'LICENSE','common/sampling.cpp','common/sampling.h'")
+    text=text.replace("'common/sampling.cpp','common/sampling.h'", "'LICENSE','src/llama-io.cpp','src/llama-io.h','common/sampling.cpp','common/sampling.h'")
+    start=text.index("    commits=git('rev-list'")
+    end=text.index("    save(staging/'MANIFEST.json'",start)
+    text=text[:start]+'''    from git_evidence import export_proof
+    export_proof(ROOT,staging)
+    for obj in (staging/'provenance').rglob('*'):
+        if obj.is_file():manifest[obj.relative_to(staging).as_posix()]={'sha256':sha(obj),'bytes':obj.stat().st_size}
+'''+text[end:]
     (root/'deliver_complete.py').write_text(text,encoding='utf-8',newline='\n')
     text=(root/'verify_archive.py').read_text(encoding='utf-8').replace('verify.py','verify_complete.py')
     (root/'verify_archive_complete.py').write_text(text,encoding='utf-8',newline='\n')

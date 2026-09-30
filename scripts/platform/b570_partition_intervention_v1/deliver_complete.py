@@ -45,15 +45,13 @@ def archive():
     # Licensed frozen HumanEval input dataset for offline input checking, following the prior bounded evidence exception.
     data=LOCAL/'datasets/humaneval/HumanEval.jsonl.gz';dest=staging/'datasets/humaneval/HumanEval.jsonl.gz';dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(data,dest)
     manifest[dest.relative_to(staging).as_posix()]={'sha256':sha(dest),'bytes':dest.stat().st_size}
-    for name in ['LICENSE','common/sampling.cpp','common/sampling.h','include/llama.h','src/llama-context.cpp','src/llama-kv-cache.cpp','ggml/src/ggml-backend.cpp','examples/speculative/speculative.cpp']:
+    for name in ['LICENSE','src/llama-io.cpp','src/llama-io.h','common/sampling.cpp','common/sampling.h','include/llama.h','src/llama-context.cpp','src/llama-kv-cache.cpp','ggml/src/ggml-backend.cpp','examples/speculative/speculative.cpp']:
         src=Path('C:/hs/b570-direct-id-v1-src')/name;dest=staging/'provenance/pinned_source'/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dest)
         manifest[dest.relative_to(staging).as_posix()]={'sha256':sha(dest),'bytes':dest.stat().st_size}
-    commits=git('rev-list','--reverse','origin/main..HEAD').splitlines();proof=[]
-    for oid in commits:
-        rawcommit=subprocess.check_output(['git','cat-file','commit',oid],cwd=ROOT)
-        proof.append({'commit':oid,'raw_commit':rawcommit.decode('utf-8'),'git_object_sha1':hashlib.sha1(b'commit '+str(len(rawcommit)).encode()+b'\0'+rawcommit).hexdigest()})
-    save(staging/'provenance/GIT_CHECKPOINTS.json',{'created_utc':utc(),'commits':proof,'base':git('rev-parse','origin/main')})
-    manifest['provenance/GIT_CHECKPOINTS.json']={'sha256':sha(staging/'provenance/GIT_CHECKPOINTS.json'),'bytes':(staging/'provenance/GIT_CHECKPOINTS.json').stat().st_size}
+    from git_evidence import export_proof
+    export_proof(ROOT,staging)
+    for obj in (staging/'provenance').rglob('*'):
+        if obj.is_file():manifest[obj.relative_to(staging).as_posix()]={'sha256':sha(obj),'bytes':obj.stat().st_size}
     save(staging/'MANIFEST.json',{'files':manifest,'exclusions':['model weights','runtime binaries','static libraries','unrelated historical raw runs'],
         'validation_command':'python scripts/platform/b570_partition_intervention_v1/verify_complete.py --root .',
         'dataset_license':'HumanEval MIT; upstream code MIT; source repository retains licensing context.'})

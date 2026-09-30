@@ -173,6 +173,24 @@
  
                      return;
                  }
+--- a/tools/cli/cli.cpp
++++ b/tools/cli/cli.cpp
+@@ -55,6 +55,15 @@
+     SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(console_ctrl_handler), true);
+ #endif
+ 
++    // The in-process frontend must initialize its static host clock/backend
++    // before calling the parameter-overload server entry point. Frozen external
++    // CUDA backend DLLs have their own ggml-base clock state; initialize it too.
++    llama_backend_init();
++    HMODULE hs_base = LoadLibraryW(L"ggml-base.dll");
++    if (!hs_base) return 4;
++    auto hs_init_clock = (void (*)()) GetProcAddress(hs_base, "ggml_time_init");
++    if (!hs_init_clock) return 5;
++    hs_init_clock();
+     cli_context ctx_cli(params);
+ 
+     if (!ctx_cli.init()) {
 --- a/ggml/src/CMakeLists.txt
 +++ b/ggml/src/CMakeLists.txt
 @@ -186,7 +186,7 @@

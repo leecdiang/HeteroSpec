@@ -75,6 +75,21 @@ def main():
     STUDY.mkdir(parents=True,exist_ok=True)
     patch=''.join(difflib.unified_diff(original.splitlines(True),s.splitlines(True),fromfile='a/tools/server/server-context.cpp',tofile='b/tools/server/server-context.cpp'))
     (STUDY/'timer.patch').write_text(patch,encoding='utf-8',newline='\n')
+    clifile=src/'tools/cli/cli.cpp'
+    clioriginal=clifile.read_text(encoding='utf-8')
+    climodified=clioriginal.replace('    cli_context ctx_cli(params);', '''    // The in-process frontend must initialize its static host clock/backend
+    // before calling the parameter-overload server entry point. Frozen external
+    // CUDA backend DLLs have their own ggml-base clock state; initialize it too.
+    llama_backend_init();
+    HMODULE hs_base = LoadLibraryW(L"ggml-base.dll");
+    if (!hs_base) return 4;
+    auto hs_init_clock = (void (*)()) GetProcAddress(hs_base, "ggml_time_init");
+    if (!hs_init_clock) return 5;
+    hs_init_clock();
+    cli_context ctx_cli(params);''')
+    clifile.write_text(climodified,encoding='utf-8',newline='\n')
+    patch+=''.join(difflib.unified_diff(clioriginal.splitlines(True),climodified.splitlines(True),fromfile='a/tools/cli/cli.cpp',tofile='b/tools/cli/cli.cpp'))
+    (STUDY/'timer.patch').write_text(patch,encoding='utf-8',newline='\n')
     cmfile=src/'ggml/src/CMakeLists.txt'
     cmoriginal=cmfile.read_text(encoding='utf-8')
     cmmodified=cmoriginal.replace('message(FATAL_ERROR "GGML_BACKEND_DL requires BUILD_SHARED_LIBS")',

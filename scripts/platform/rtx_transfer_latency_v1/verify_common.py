@@ -22,6 +22,7 @@ def validate_run(r,phase,arm,metadata):
     vals={'{prompt}':r['command'][r['command'].index('--file')+1],'{native_log}':r['command'][r['command'].index('--log-file')+1],'{transcript}':r['command'][r['command'].index('--output-file')+1]}
     require(r['command']==[vals.get(x,x) for x in template],'command template differs')
     require(sha(d/'prompt.txt')==r['prompt_sha256'],'prompt bytes differ')
+    require(r['prompt_sha256']==p[arm]['prompt_hashes'][r['task_id']],'frozen full template/input hash differs')
     raw=(d/'native.log').read_bytes().replace(b'\r\n',b'\n');ids=[];tasks=set()
     for m in re.finditer(rb'^\d+\.\d{2}\.\d{3}\.\d{3} D slot process_toke: id\s+(\d+) \| task (\d+) \| n_gen = (\d+), n_remaining = (-?\d+), next token:\s+(-?\d+) ',raw,re.M):
         slot,task,index,budget,tok=map(int,m.groups())

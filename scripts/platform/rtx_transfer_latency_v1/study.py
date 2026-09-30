@@ -67,6 +67,7 @@ def prepare():
         'task_ids':audit['selected_task_ids'],'eligible_pool':audit['eligible_pool'],'exclusion_reasons':{t:{'sources':v[:5],'source_count':len(v)} for t,v in audit['exclusion_reasons'].items()},
         'selection_salt':audit['selection_salt'],'selection_keys':audit['selection_keys'],'input_hashes':audit['input_hashes'],'exposure_audit_sha256':n.sha(audit_path),
         'discovery_tasks':DISCOVERY,'repetitions':3,'harness_qualification_tasks':n.TASKS,'harness_qualification_runs':90,
+        'prompt_hashes':{t:hashlib.sha256(prompt_map()[t].encode('utf-8')).hexdigest() for t in set(n.TASKS+audit['selected_task_ids'])},
         'harness_definition':'original common CLI target-only frontend/sampler UB1, fresh process, empirically reproduces every archived reference; H1 changes only UB2',
         'H1':'target-only common CLI frontend UB2; actual native decode partitions retained; parameter name alone is not mechanism evidence',
         'H2':'fixed proposal target verification replay; permitted only with independent pre-live proposal tape generator. Pinned CLI has no fixed tape importer/generator. No reserved live call is allowed to produce that tape. If no independent generator can be specified, H2 is unavailable and A stops.',
@@ -77,6 +78,7 @@ def prepare():
         'zero_reference_divergent':'NONDISCRIMINATING','repeat_instability':'stop before live, REPEAT_INSTABILITY','harness_failure':'HARNESS_NOT_QUALIFIED'},
       'latency':{'question':'What is matched post-prefill latency on a freshly qualified serialized RTX path?',
         'task_ids':n.TASKS,'repetitions':3,'commands':b,'schedule_seed':2026093001,'schedule':schedule,'planned_runs':180,'formal_pairs':90,
+        'prompt_hashes':{t:hashlib.sha256(prompt_map()[t].encode('utf-8')).hexdigest() for t in n.TASKS},
         'timer_start':'after synchronized target and draft initial prompt prefill; before request sampler constructor/seed/reset/prompt acceptance and common_speculative_begin',
         'timer_end':'after last committed generated ID, target/draft synchronization and required slot release; includes final response/log work before release; excludes model destruction',
         'timer_includes':['sampler initialization/seed','draft generation','target verification','acceptance/correction/bonus','synchronization','KV rollback/state cleanup','proposal/scheduling','terminal slot release'],
@@ -90,7 +92,7 @@ def prepare():
         'thermal_rule':{'pre_B':'minimum 120s idle; three 10s-separated samples utilization<=5%, GPU temp<=55C, spread<=2C; maximum 600s then operational stop',
                         'pre_each_run':'fixed 2s idle; thermal/device snapshots before and after, no outcome-dependent delays','clock_lock':'no unsupported clock lock; observed clocks preserved; prompt pairing randomized'},
         'energy_claims':False},
-      'planned_counts':{'A_reserved':216,'B_formal':180,'base_formal':396,'A_harness':90,'A_discovery_H1':72,'R0':23,'H2_if_available':'36 replay plus separately counted tape generation'},
+      'planned_counts':{'A_reserved':216,'B_formal':180,'base_formal':396,'A_harness':90,'A_discovery_H1':72,'R0':28,'H2_if_available':'36 replay plus separately counted tape generation'},
       'failures':'retain every failure/mismatch; mismatch continues, operational failure stops affected arm; no selective replacement/restart after formal data; A failure does not alter frozen B',
       'immutable':'old v2, old timing, manuscripts and PR40 untouched; no auto merge'}
     write(STUDY/'protocol.json',protocol)
@@ -144,6 +146,17 @@ def r0():
     if not results['hook_probe']['PASS']:raise RuntimeError('timer clock hook overhead exceeds predeclared threshold')
     results.update(status='PASS',ended_utc=n.now());write(out/'r0.json',results);write(STUDY/'R0_REVIEW.json',results)
 
+def r0_cap():
+    out=ROOT/'work/joint-r0';results=read(out/'r0.json')
+    synthetic='Write every integer from 1 through 1000, in order, separated by commas. Include every integer explicitly. Do not abbreviate or use ellipses.'
+    for arm,c in [('prediction','TARGET_REFERENCE'),('prediction','RTX_BATCHED_K2'),('prediction','H1_TARGET_UB2'),('latency','TARGET_REFERENCE'),('latency','RTX_SERIALIZED_K2')]:
+        r=execute('R0_CAP',1,c,out/arm,arm,'R0_CAP',synthetic);results['runs'].append(r)
+        write(out/'r0.json',results)
+        if r['status']!='VALID' or r['termination']!='limit' or r['output_length']!=128:
+            raise RuntimeError('fixed R0 cap probe did not exercise inclusive 128-ID cutoff')
+    results['cap_probe']={'status':'PASS','five_conditions_output_length':128,'prompt':synthetic}
+    results['ended_utc']=n.now();write(out/'r0.json',results);write(STUDY/'R0_REVIEW.json',results)
+
 def assets_ok():
     ids=read(STUDY/'asset_identity.json')
     for arm in ('prediction','latency'):
@@ -155,6 +168,7 @@ def assets_ok():
     return {'utc':n.now(),'status':'PASS','environment':env}
 def freeze():
     assert read(STUDY/'R0_REVIEW.json')['status']=='PASS'
+    assert read(STUDY/'R0_REVIEW.json')['cap_probe']['status']=='PASS'
     assert not n.git('status','--porcelain')
     assert n.git('branch','--show-current')==BRANCH
     audit=assets_ok()
@@ -277,9 +291,10 @@ def latency():
     stabilize();p=read(STUDY/'protocol.json')['latency'];schedule=[(b['task_id'],b['repetition'],c) for b in p['schedule'] for c in b['order']]
     data=phase('formal','latency',schedule);write(STUDY/'latency/REPORT.json',analyze_latency(data))
 def main():
-    p=argparse.ArgumentParser();p.add_argument('stage',choices=['prepare','r0','freeze','prediction','latency','campaign']);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('stage',choices=['prepare','r0','r0_cap','freeze','prediction','latency','campaign']);a=p.parse_args()
     if a.stage=='prepare':prepare()
     elif a.stage=='r0':r0()
+    elif a.stage=='r0_cap':r0_cap()
     elif a.stage=='freeze':freeze()
     elif a.stage=='prediction':prediction()
     elif a.stage=='latency':latency()

@@ -22,6 +22,10 @@ def package(arm):
     for p in SOURCE.glob('verify*.py'):shutil.copyfile(p,work/p.name)
     shutil.copytree(ROOT/'work/joint-r0',work/'joint-r0')
     if (ROOT/'work/joint-r0-attempt1').exists():shutil.copytree(ROOT/'work/joint-r0-attempt1',work/'joint-r0-attempt1')
+    for name in ('harness-preformal-interrupted','campaign-preformal-interrupted'):
+        if (ROOT/'work'/name).exists():shutil.copytree(ROOT/'work'/name,work/name)
+    for name in ('protocol-before-cap-amendment.json','R0-before-cap-amendment.json'):
+        if (ROOT/'work'/name).exists():shutil.copyfile(ROOT/'work'/name,work/name)
     for p in (ROOT/'work').glob('timer-build*.log'):shutil.copyfile(p,work/p.name)
     if arm=='prediction':
         shutil.copyfile(ROOT/'work/exposure_inventory.json',work/'exposure_inventory.json')

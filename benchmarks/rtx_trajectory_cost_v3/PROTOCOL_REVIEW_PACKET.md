@@ -1,6 +1,6 @@
 # Protocol / engineering review packet
 
-This is PREPARE_ONLY. The exact F0 content commit and remote receipt will be inserted after real push, full remote retrieval and offline Git-object verification. No F1/F2 receipt is fabricated.
+This is PREPARE_ONLY. The exact F0 content commit is `a48381567f7f40330a589e33d285650c9e91f209`. Push, full remote retrieval and independent offline Git-object membership verification all passed. Remote acknowledgement: 2026-10-01T19:10:24.451062+00:00. No F1/F2 receipt is fabricated.
 
 Mode: A24_B24. Exposure audit covers 93,176 classified file/member entries, published scientific branch heads and conservative historical inventories. There are 26 eligible and 138 excluded HumanEval tasks. Selection is the fixed SHA-256 salt order in RESERVED_SET.json; no candidate performance selects or replaces tasks.
 
@@ -20,8 +20,19 @@ One real engineering metadata replacement failed after 338 valid runs. The block
 
 Target/draft/dataset, released DLL, P/R/T/Q/timer and observed driver identities are explicit. Initial/final scientific asset bytes, Windows/GPU identity, GHelper configuration and AC state agree. Original author checkout remains at a95ba4874668174bfa261578b23c3e036ea841b5 with no tracked changes. All old scientific paths and the author-freeze tag remain unchanged.
 
-Two separate author archives and two derived anonymous archives must each pass actual fresh-directory extraction, strict member hashes, independent arrays/tapes/timers/schedule/statistics and all 15 negative cases. The shared engineering run IDs are disclosed, not new independent A/B samples. Omitted external weights/runtime/driver bytes cannot be authenticated offline. Anonymous capsules redact host/account/PIDs and encode UTC ordinal order; original digests may retain linkage and do not prove unlinkability.
+Two separate author archives and two derived anonymous archives each passed actual fresh-directory extraction, strict member hashes, independent arrays/tapes/timers/schedule/statistics and all 15 negative cases. The shared engineering run IDs are disclosed, not new independent A/B samples. Omitted external weights/runtime/driver bytes cannot be authenticated offline. Anonymous capsules redact host/account/PIDs and encode UTC ordinal order; original digests may retain linkage and do not prove unlinkability.
 
 Review JOINT_PROTOCOL, PROTOCOL_MAPPING, EFFECTIVE_CONFIGURATION, INPUT_CONTRACT, COMMAND_TEMPLATES, BUILD_IDENTITY, ASSET_IDENTITY, ENGINEERING_REPORT, ENGINEERING_ATTEMPTS, NEGATIVE_VALIDATION and ARTIFACT_MANIFEST. REPRODUCTION gives all eight modes, exact Windows commands and no-retry formal stop rules. Author/full and anonymous verification results are recorded separately.
 
 Required stop: USER_SPECIFICATION section 10 says “首次运行到此停止”. Resume only with the literal EXECUTE_FROZEN and the reviewed complete F0 SHA. No authorization is inferred from “continue”, and the original shutdown request is deferred until the full formal experiment actually finishes.
+
+F0 publishing representation: GitHub rejected a 313.23 MiB plain ledger. Complete original 328,445,023-byte / 167,303-event engineering ledger, SHA-256 af8a427a60e5b6c4ab8c458a3443f251600a86ce5cbf920bf88d86fadc4c6d59, is preserved exactly in both author archive members `metadata/EXECUTION_LEDGER.jsonl`; ENGINEERING_LEDGER_ARCHIVE_INDEX.json binds these bytes. The local append-only ledger subsequently adds only the F0 acknowledgement (167,304 events). No model rerun, source math change or truncation occurred. Unpublished candidate commits and failed attempts are preserved locally; PUBLICATION_ATTEMPTS records them.
+
+Four archive SHA-256 values (two parts each, fully reconstructed from GitHub before acknowledgement):
+
+- `artifacts/rtx_trajectory_sufficiency_v3/engineering-a4500d44ee85c60856d07c6461681ca9013d00e008cbb9b4628a02a50dbcc938.parts.json`: `a4500d44ee85c60856d07c6461681ca9013d00e008cbb9b4628a02a50dbcc938` (89510514 bytes), offline PASS.
+- `artifacts/rtx_matched_qualification_cost_v2/engineering-b6b0835073c30d47390289beac996978684fb5e0a92b9ad56f5674b1ae4d1980.parts.json`: `b6b0835073c30d47390289beac996978684fb5e0a92b9ad56f5674b1ae4d1980` (89510514 bytes), offline PASS.
+- `artifacts/rtx_trajectory_sufficiency_v3/engineering-anonymous-f33da6e95191ec34213c7e0bd8f5b5eb05ac114db593ee7f9d2f9232f45a05c3.parts.json`: `f33da6e95191ec34213c7e0bd8f5b5eb05ac114db593ee7f9d2f9232f45a05c3` (71907638 bytes), offline PASS.
+- `artifacts/rtx_matched_qualification_cost_v2/engineering-anonymous-3f838c31bd74b627b57a23af81e040912830b1c8c362a281577bb7c0ac196a07.parts.json`: `3f838c31bd74b627b57a23af81e040912830b1c8c362a281577bb7c0ac196a07` (71907638 bytes), offline PASS.
+
+Resume instruction after review: `EXECUTE_FROZEN a48381567f7f40330a589e33d285650c9e91f209`.

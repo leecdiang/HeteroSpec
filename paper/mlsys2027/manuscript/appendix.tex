@@ -9,10 +9,11 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.4}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.5}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
+\input{tables/followup_values_v085.tex}
 \mlsystitlerunning{Supplement: Execution-Path Qualification in Speculative Decoding}
 \begin{document}
 \twocolumn[{
@@ -75,8 +76,6 @@ Table~\ref{tab:verificationlookup} retains all historical context cells behind P
 \section{Evidence Inventory}
 Table~\ref{tab:regimes} collects the observed regimes and evidence classes. These are case descriptions, not a hardware ranking, population-wide failure rate, or exhaustive taxonomy. M4's separate-session studies establish opposite observed outcomes; neither diagnosed mechanism is assigned to that contrast.
 \input{tables/05_regimes_v05.tex}
-% Finish the hardware lookup tables before the runtime reproducibility notes.
-\clearpage
 \section{Runtime Study Reproducibility}
 The M4 runtime estimator first takes each condition's median of \RTReps\ repetitions, then forms a prompt latency ratio and its geometric mean across \RTPrompts\ prompts. The offline oracle uses the smaller target-only or Always-Spec median for each prompt. Bootstrap intervals use \RTBootstrap\ draws with Python Random seed \RTSeed, resampling prompts in the frozen held-out order. Percentile endpoints linearly interpolate the sorted bootstrap draws at quantiles .025 and .975. A single random stream computes Target/Guard, Target/Always-Spec, and Guard/oracle intervals in that order. This preserves the frozen finite-bootstrap calculation; it does not replace the hardware estimators in Table~\ref{tab:statistics}. Intervals condition on the selected policy and observed prompt medians; they do not incorporate recalibration or between-session variation. The oracle selects between two measured fixed conditions, not all possible switching policies, so it is not a universal latency lower bound.
 
@@ -112,4 +111,5 @@ An independent validator passes 5,681 input, output, hash, endpoint and chronolo
 \paragraph{Reviewer-visible commitment record.}
 \input{tables/b570_prediction_commitment_v083.tex}
 The separate anonymous sequence supplement contains complete reference, predictor, and live generated-ID arrays for the 72 reserved runs, with a deterministic equality and divergence checker. It contains no identifying machine or repository metadata. Sanitizing the export changes its bytes, so it cannot reproduce the original prediction-file digest or independently prove the reported temporal freeze; the PDF's digest and chronology have those distinct stated roles.
+\input{sections/appendix_followups_v085.tex}
 \end{document}

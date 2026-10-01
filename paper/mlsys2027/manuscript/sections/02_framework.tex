@@ -1,9 +1,9 @@
 \section{Experimental Question and Measurement Discipline}
 \label{sec:framework}
-Acceptance, isolated draft throughput and target-forward batching measure different boundaries. None alone measures the complete speculative loop. We use an output contract and an accounting lens to separate them.
+Acceptance, isolated draft throughput and target-forward batching measure different boundaries. None alone measures the complete speculative loop. We distinguish them using an output contract and complete-cost accounting.
 
 \subsection{A path-qualified output contract}
-A greedy speculative round verifies draft proposals, commits the matching prefix and a correction or bonus when budget permits, then removes inconsistent suffix state. Our strict contract requires committed generated IDs to equal the matched target-only greedy reference under the frozen configuration. This is an empirical property of model, runtime, path and workload. A failed pair blocks a workload-global optimization claim; a small passing probe only establishes eligibility for broader testing. Capped ID equality does not measure functional HumanEval correctness or pass@$k$.
+Let $k$ be the maximum draft proposal width, UB the target micro-batch capacity ($n_{\mathrm{ubatch}}$), and EOG a vocabulary end-of-generation ID. A greedy speculative round verifies draft proposals, commits the matching prefix and a correction or bonus when budget permits, then removes inconsistent suffix state. Our strict contract requires committed generated IDs to equal the matched target-only greedy reference under the frozen configuration. We can therefore test lossless compatibility with a specified deployed greedy reference for each model, runtime, path and workload. A failed pair blocks a workload-global optimization claim; a small passing probe only establishes eligibility for broader testing. Capped ID equality does not measure functional HumanEval correctness or pass@$k$.
 
 Historical text-path agreement (H) compares arrays reconstructed from parsed CLI text. Direct-ID qualification (Q) compares captured IDs against the study's frozen reference. Frozen prediction equality (P) compares a sealed prediction with reserved live IDs. A predictor can match a reference-divergent path, so P does not imply Q. Same-state intervention separately compares scores, immediate decisions and subsequent trajectories; these endpoints must not be interchanged.
 
@@ -23,4 +23,4 @@ For context $n$ and path $e$,
 \begin{equation}
 \microv(n,e)=\frac{T_{\mathrm{target\ forward}}(k,n,e)}{T_{\mathrm{target\ decode}}(1,n)}.
 \end{equation}
-This narrower microbenchmark omits drafting and may omit correction/bonus and state work; $\microv$ is not complete $\rtarget$. Isolated draft throughput likewise cannot substitute for stateful $\dreal$. These boundaries guide diagnosis without supplying a universal cause.
+This narrower microbenchmark omits drafting and may omit correction/bonus and state work; $\microv$ is not complete $\rtarget$. Isolated draft throughput likewise cannot substitute for stateful $\dreal$. These measurements help diagnose the tested path but do not identify a universal cause.

@@ -1,12 +1,10 @@
-# Current author draft — v0.8.6 convergence
+# Current manuscript — v0.8.6 on main
 
-This draft starts from exact v085 content/delivery HEAD
-`dccbbb53e1f91d3239e2075336100795dd6daa1e`, on
-`paper/mlsys2027-convergence-v0.8.6`. It is stacked on the unmerged v085
-branch, not on a main containing v086. No hardware/model execution is added.
-The title and three contributions remain; the central story is the original
-B570 draft-free prospective full-trajectory prediction. Distinct fork,
-RTX P/R and qualified-cost studies supply different supporting evidence.
+Main contains the unchanged v0.8.6 delivery through PR #46, manuscript integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. The exact delivery/content tree remains `494a5ca4fe62534b032b37d01652c3f88e0d16e1` and authoritative TeX source remains `da8d5739eb108de7f35d3a3cfbd954d42462f2e0`. Documentation commits may follow the anchor; resolve the actual remote HEAD before work.
+
+Read [the canonical handover](../HANDOVER_CURRENT.md) for current scope and next-step authorization. Versioned manifests/reviews retain their original stacked-PR delivery context. This repository reconciliation adds no hardware/model execution and changes no TeX, numbers, Figure 3, official style, delivered PDF or ZIP.
+
+The central story remains the original B570 draft-free prospective full-trajectory prediction. Distinct fork, RTX P/R and qualified-cost studies supply different supporting evidence. The execution/build descriptions below report the original v0.8.6 delivery; this maintenance separately checks artifact identity, a fresh source-ZIP main/appendix build and compact evidence verification.
 
 ## Current build and QA
 
@@ -85,13 +83,8 @@ Original 72 B570 arrays are preserved and compared element by element.
 Offline hashes/ordinal mappings do not authenticate original absolute time,
 remote exposure completeness or omitted weights/runtime/compiler/driver.
 
-## Author review
+## Current author workflow and historical delivery records
 
-See ../HANDOVER_CURRENT.md, ../evidence/DELIVERY_V086.md and
-../reviews/convergence_v086/. R86-01 through13 map to the v085 prompt's CR
-list; the separately numbered v083 reviews are historical evidence.
-The three named new review attachments were unavailable; no unseen report
-was cited. No fresh formal/mock scoring, inference, measurement, merge,
-tag, release, submission or messages occurred. The next step is author
-review of these exact artifacts, then a separately requested independent
-submission-level review.
+Use [HANDOVER_CURRENT.md](../HANDOVER_CURRENT.md) for live repository state and RTX A+B preparation. See evidence/DELIVERY_V086.md and reviews/convergence_v086/ for the original revision response and delivery QA. Their Draft/unmerged and no-review language describes that delivery-time snapshot, not the later merge of #44/#45/#46 or a live authorization gate.
+
+This maintenance does not perform a new submission-level review or claim that acceptance follows from build success. Independent review and any integration of future RTX results remain separate tasks. RTX protocol preparation is authorized; reserved execution waits for review of the exact protocol/source SHA.

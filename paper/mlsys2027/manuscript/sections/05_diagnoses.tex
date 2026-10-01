@@ -1,6 +1,6 @@
 \section{From Local Opportunity to Realized Gain}
 \label{sec:diagnoses}
-The observed outcomes trace two tested boundaries: execution-path qualification and stateful realization. Figure~\ref{fig:translation} locates them. The B570 follow-up tests whether a frozen target-partition predictor reproduces the residual serialized trajectory.
+The observed outcomes trace two tested boundaries: execution-path qualification and stateful realization. Figure~\ref{fig:translation} shows the B570 discovery, freeze, and reserved prediction within that sequence; the platform cases are separate studies.
 
 \subsection{Execution-path qualification}
 \label{sec:admissibility}
@@ -10,20 +10,18 @@ Figure~\ref{fig:verification}A preserves eleven historical target-forward proxy 
 \paragraph{Prospective direct-ID qualification.}
 Two frozen studies share 30 HumanEval tasks, three repetitions, greedy $k=2$, and the Qwen3-8B/0.6B Q8\_0 pair. Each completes 270 executions and 180 comparisons. Fresh direct-ID qualification requires 90/90 complete direct-ID sequence equality with no dropped mismatch. Different runtime/front-end, context, and reference settings preclude controlled hardware comparison or fresh performance claims.
 
-RTX direct-ID sequence equality is \DIRTXBatchedPairs/90\ batched and \DIRTXSerializedPairs/90\ serialized, qualifying only the latter. B570 direct-ID sequence equality is \DIBFastPairs/90\ fast and \DIBSerializedPairs/90\ serialized; both remain blocked. All conditions are repetition-stable on 30 prompts, which does not imply reference equality. Figure~\ref{fig:verification}B separates these endpoints from historical cost.
+RTX direct-ID sequence equality is \DIRTXBatchedPairs/90\ batched and \DIRTXSerializedPairs/90\ serialized, qualifying only the latter. B570 direct-ID sequence equality is \DIBFastPairs/90\ fast and \DIBSerializedPairs/90\ serialized; both remain blocked. The historical B570 60/90 text-path count and fresh fast-path 60/90 direct-ID count are different campaigns and comparators. All conditions are repetition-stable on 30 prompts, which does not imply reference equality. Figure~\ref{fig:verification}B has no matched fresh latency endpoint and cannot be paired with Panel A's historical cost.
 
 \paragraph{Serialization changes qualification but is not a certificate.}
 The prospective direct-ID results do not replace historical B570 text-path counts or certify historical RTX timing; the older RTX controls remain secondary and B570 timing diagnostic. The earlier passing small B570 probe was limited to its subset.
 
 \subsection{Controlled B570 target-partition sufficiency}
 \label{sec:b570mechanism}
-The v0.7 B570 residual could reflect reference, front-end, context, or target-partition differences. A target-only harness first reproduces 90/90 reference sequences. On 12 outcome-exposed discovery prompts, target-only greedy execution with $n_{\mathrm{ubatch}}=1$ matches 36/36 serialized speculative sequences. The frozen H1/H2 decision tree selects H1 (target-partition sufficiency); H2 is not run. Discovery is exploratory.
+The v0.7 B570 residual could reflect reference, front-end, context, or target-partition differences. A target-only harness first reproduces 90/90 reference sequences. On 12 outcome-exposed discovery prompts, target-only greedy execution with $n_{\mathrm{ubatch}}=1$ matches 36/36 serialized speculative sequences. The frozen H1/H2 decision tree selects H1; H2 fixed-proposal replay is not run because H1 passes. Discovery is exploratory. H1 could still have failed to predict any complete reserved live sequence, especially the reference-divergent cases.
 
-An exposure audit conservatively excludes 31 tasks, then deterministically selects 24 reserved HumanEval prompts from 133 eligible tasks. H1 is committed before reserved inference; all 72 complete target-only predictions are committed before any live serialized outcome. Predictor-to-live complete-ID agreement is 72/72, with 24/24 prompt classifications and 12/12 divergent repetition-pair first-divergence indices across four prompts. Reference-to-live direct-ID qualification is 60/72 and remains \emph{BLOCKED}. No parameter or prediction changes after their respective freezes; no selective reruns occur. The appendix gives task IDs, divergence tokens, and audit scope.
+An exposure audit conservatively excludes 31 tasks, then deterministically selects 24 reserved HumanEval prompts from 133 eligible tasks. H1 is committed before reserved inference; all 72 complete target-only predictions are committed before any live serialized outcome. Predictor-to-live complete-ID agreement is 72/72 over three repeat-stable runs per prompt. Four prompts (12 runs) are reference-divergent, while 20 are reference-equal; predictor/live agrees on all 24 classifications and all 12 divergent first indices. The same-set UB128 reference matches only 60/72 and remains \emph{BLOCKED}. No parameter or prediction changes after their respective freezes; no selective reruns occur. The appendix gives task IDs, divergence tokens, and audit scope.
 
-\input{tables/b570_timeline_v083.tex}
-
-Target-only micro-batch one thus reproduces the tested serialized trajectory without live draft computation. This establishes sufficiency of that execution path on the tested B570 configuration; it does not identify a unique numerical operation, kernel, or root cause, establish a universal UB1 rule, or explain RTX behavior. The 60/72 reserved endpoint is distinct from the earlier 78/90 direct-ID study.
+Target-only micro-batch one thus predicts the tested serialized trajectory without live draft computation. This is observational path-level sufficiency on this B570 configuration and 128-ID/EOG endpoint. It does not isolate a unique numerical operation or show what happens when only the target partition is switched inside the live speculative loop at identical committed history. It establishes no universal UB1 rule or RTX mechanism. The 60/72 reserved endpoint is distinct from the earlier 78/90 direct-ID study. The anonymous sequence supplement permits independent equality checks on the archived arrays but does not independently authenticate the reported pre-live freeze time.
 
 % Queue the state figure before its discussion to preserve wide-float flow.
 \input{figures/04_358h.tex}

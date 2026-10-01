@@ -1,3 +1,20 @@
+# Current manuscript status — v0.8.6
+
+Current convergence draft is on `paper/mlsys2027-convergence-v0.8.6`, stacked
+on the unmerged v085 branch at `dccbbb53e1f91d3239e2075336100795dd6daa1e`.
+Main remains `98e8470f2559f78335de8d3473997d21b4bb55b8`; v086 is not merged.
+Current outputs, exact content commit, QA and handover are in
+`evidence/FINAL_ARTIFACT_MANIFEST_V086.json`, `evidence/DELIVERY_V086.md`,
+`HANDOVER_CURRENT.md` and `reviews/convergence_v086/`.
+
+Main10+2 pages, appendix12, internal proof9+2. No inference or hardware
+measurements were made; new analyses are explicitly post-study existing-record
+calculations. Original experiment/macro/style/Figure3/older-output bytes and
+scientific tag are preserved. Historical versioned records remain history.
+
+<details>
+<summary>Historical pre-v086 status; not current instructions</summary>
+
 # Current handover — v0.8.5
 
 The active draft integrates already merged B570 intervention, RTX independent
@@ -390,3 +407,5 @@ The resulting main PDF remains 10 body pages plus 1 reference page, the unchange
 The prior integration pass's absence of identified wording defects is a historical assessment, superseded by this review's concrete corrections and remaining concerns. The paper still requires author decisions on incremental novelty, runtime submission scope, mechanism-table duplication, caveat consolidation and the final title. Conservative copyediting does not make it submission-ready.
 
 All 11 revised main-PDF pages were visually inspected after the final build, split between the coordinating editor (pp. 1–6) and Reviewer C (pp. 7–11). The state figure, synthesis/runtime transition, conclusion and references remain correctly placed. Reviewer C additionally inspected the changed hardware-only ending; the byte-identical appendix retains its complete prior inspection.
+
+</details>

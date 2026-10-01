@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 research manuscript v0.8.5},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 research manuscript v0.8.6},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -19,6 +19,7 @@
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
 \input{tables/followup_values_v085.tex}
+\input{tables/derived_values_v086.tex}
 \mlsystitlerunning{Execution-Path Qualification in Speculative Decoding}
 \begin{document}
 \twocolumn[{
@@ -31,12 +32,12 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-Local speculative-decoding opportunity establishes neither output preservation nor integrated speedup. Fresh direct-ID gates qualify RTX serialization but leave B570 blocked. On the tested B570 stack, a target-only micro-batch-one predictor frozen before reserved live outcomes matches 72/72 complete generated-ID sequences within a 128-ID/EOG endpoint: 24 repeat-stable prompts, three runs each. Four prompts (12 runs) diverge from the reference, which matches 60/72. A separate same-state B570 intervention changes scores at 72/72 sampled forks but no immediate decisions; 18 later trajectories differ across six prompts. Separately frozen RTX proposal/verification programs predict 72/72 live runs on another 24-prompt set, while reference qualification remains 60/72. They share the numerical runtime and do not transfer B570's target-only hypothesis. A new directly qualified RTX serialized path is slower than target-only (\FUCost$\times$ target/serialized latency) under its instrumented post-prefill boundary. On 358H, an isolated NPU draft advantage does not survive the combined replay-plus-proposal interface. On \RTPrompts\ held-out M4 prompts, Guard and fixed speculation preserve \RTExact/\RTExact\ matched sequences; Guard reaches \RTGuard$\times$ speedup, but fixed speculation is faster (\RTAlways$\times$). The studies separate output qualification, bounded trajectory prediction and intervention, and same-path realized cost without locating a unique numerical cause.
+Numerical execution paths can change greedy output, but an observed mismatch does not predict a future trajectory. On the tested B570 stack, we select a draft-free target-only micro-batch-one predictor on exposed discovery data, then freeze complete generated-ID predictions before reserved live speculation. It matches 72/72 capped sequences on 24 repeat-stable prompts, including all 12 runs of four reference-divergent prompts; the same-set reference matches 60/72. This establishes prospective predictive sufficiency for that path, without restoring qualification or locating a unique numerical cause. Separate B570 same-state forks and RTX proposal/replay programs test different causal and reproduction questions; the RTX programs share numerical routines. Realized cost supplies a second decision: newly direct-ID-qualified RTX serialization is slower under its instrumented post-prefill boundary (\FUCost$\times$ target/serialized latency). At fixed measured progress and target work, 358H accounting remains below parity even with draft and residual costs removed. Qualified M4 Guard beats target-only but loses to fixed speculation. The contribution is a falsifiable path diagnosis and bounded engineering decisions about lossless compatibility and complete cost, rather than a portable decoding or control gain.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 \ifruntime\else
-\hypersetup{pdfsubject={MLSys 2027 v0.8.5 internal hardware-only proof}}
+\hypersetup{pdfsubject={MLSys 2027 v0.8.6 internal hardware-only proof}}
 \noindent\textbf{Internal section-removal and reference proof only.}
 \fi
 \input{sections/01_introduction}

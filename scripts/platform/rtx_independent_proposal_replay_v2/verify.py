@@ -163,6 +163,14 @@ def check_phase(root,kind):
                     if a and b:pairs.append({'task_id':t,'repetition':rep,'first_divergence':difference(a['generated_ids'],b['generated_ids'])})
             if pairs:scientific[left+'/'+right]={'exact_pairs':sum(x['first_divergence'] is None for x in pairs),'total_pairs':len(pairs),'comparisons':pairs}
         stable={t+'|'+c:len({arr(x['generated_ids']) for x in runs if x['task_id']==t and x['condition']==c})==1 for t in tasks for c in conditions}
+        if kind=='discovery':
+            claimed=read(study/'DISCOVERY_REPORT.json');counts={'H2_live':scientific['H2_P_R/RTX_BATCHED_K2']['exact_pairs'],'H2_R_ONLY':scientific['H2_P_R/R_ONLY']['exact_pairs']}
+            classification='DISCOVERY_QUALIFIED' if all(n==36 for n in counts.values()) and all(stable.values()) else 'DISCOVERY_NOT_QUALIFIED'
+            require(claimed['status']==classification and claimed['repeat_stability']==stable,'independent discovery classification/stability differs')
+            for label,count in counts.items():require(claimed['pairs'][label]['exact_pairs']==count,'discovery reported pair count differs')
+        elif kind=='pre-live':
+            claimed=read(study/'PRE_LIVE_QUALIFICATION.json');count=scientific['H2_P_R/R_ONLY']['exact_pairs'];classification='PRE_LIVE_QUALIFIED' if count==72 and all(stable.values()) else ('REPEAT_INSTABILITY' if not all(stable.values()) else 'REPLAY_QUALIFICATION_FAILED')
+            require(claimed['status']==classification and claimed['repeat_stability']==stable and claimed['pairs']['H2_R_ONLY']['exact_pairs']==count,'independent pre-live qualification differs')
         return {'status':'PASS','kind':kind,'executions':len(results),'scientific_comparisons':scientific,'repeat_stability':stable,'independent_implementation':True}
     return {'status':'PASS','kind':kind,'executions':len(results),'comparisons':len(comparisons),'exact_pairs':sum(x is None for x in comparisons),'independent_implementation':True}
 def provenance(f2,first_live):
@@ -181,6 +189,8 @@ def git_membership(root,metadata):
         if not directory:require(h==proof['root_tree'],'proof root differs');continue
         p=Path(directory);parent='' if str(p.parent)=='.' else p.parent.as_posix();require(parsed[parent][p.name][1]==h,'tree path membership')
     receipt=read(Path(metadata)/(root.name+'_REMOTE_RECEIPT.json'))
+    manifest_path=Path(metadata)/(root.name+'_MANIFEST.json');manifest_bytes=manifest_path.read_bytes();manifest_name='benchmarks/rtx_independent_proposal_replay_v2/'+manifest_path.name
+    require(hashlib.sha256(manifest_bytes).hexdigest()==receipt['manifest_sha256'] and parsed['benchmarks/rtx_independent_proposal_replay_v2'][manifest_path.name][1]==object_sha('blob',manifest_bytes),'manifest itself lacks exact frozen Git membership')
     for name,v in receipt['files'].items():
         p=Path(name);parent=p.parent.as_posix();b=(root/'files'/name).read_bytes();h=object_sha('blob',b)
         require(parsed[parent][p.name][1]==h==v['git_blob'] and hashlib.sha256(b).hexdigest()==v['sha256'],'frozen source/file actual Git membership')

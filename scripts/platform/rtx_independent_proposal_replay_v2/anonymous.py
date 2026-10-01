@@ -28,9 +28,11 @@ def main():
         for a,b in ordinal.items():s=s.replace(a,b)
         s=re.sub(r'("created":)\d+',r'\g<1>0',s)
         s=s.replace('leecdiang/HeteroSpec','ANON_REPOSITORY')
+        s=re.sub(r'wxid_[A-Za-z0-9_]+','ANON_ACCOUNT',s)
+        s=s.replace('C:/Users/ASUS','AUDITED_HOST').replace('C:/Users/DIANG','AUDITED_HOST')
         return s
     def scrub(o):
-        if isinstance(o,dict):return {k:scrub(v) for k,v in o.items() if k not in ['server_headers','git_author','author','committer']}
+        if isinstance(o,dict):return {clean(k):scrub(v) for k,v in o.items() if k not in ['server_headers','git_author','author','committer']}
         if isinstance(o,list):return [scrub(v) for v in o]
         return clean(o) if isinstance(o,str) else o
     for p in stage.rglob('*'):

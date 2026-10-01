@@ -39,6 +39,8 @@ def receipt(checkpoint,retrieve=None):
             if 'content' in candidate:payload=base64.b64decode(candidate['content'])
         if digest(payload)!=digest(path.read_bytes()):raise RuntimeError('remote frozen prediction archive retrieval/hash failed')
         r['retrieved_content']={'path':name,'git_blob':blob,'sha256':digest(payload),'bytes':len(payload),'retrieved_utc':now()}
+        # Include the exact archive in the Git Merkle proof, not only its declaration.
+        local[name]={'git_blob':blob,'sha256':digest(payload),'bytes':len(payload)}
     # Archive exact frozen file bytes and raw Git Merkle objects for offline membership.
     snapshot=ROOT/'work/frozen-checkpoints'/checkpoint;snapshot.mkdir(parents=True,exist_ok=False)
     proof={'commit':head,'root_tree':obj['tree']['sha'],'trees':{}}

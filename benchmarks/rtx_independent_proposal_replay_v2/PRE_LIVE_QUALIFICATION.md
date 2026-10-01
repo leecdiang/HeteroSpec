@@ -1,0 +1,7 @@
+# Reserved pre-live qualification and F2
+
+All 216 fixed fresh conditions completed: 24 selected tasks, three repetitions, original UB1 reference, independent H2 P/R, and fresh target-only R_ONLY. H2/R_ONLY matches 72/72 full arrays, including lengths and inclusive endpoints, across all 24 distinct prompts. All conditions are repeat-stable. Independent reconstruction of original commitment events, tape chains, sampler decisions, prefix state and schedule passes. No reserved original speculative live has started.
+
+RESERVED_PREDICTIONS.json contains all 72 rows of the three pre-live arrays, actual prompt/input hashes, tape hashes, and every predicted reference difference. PRE_LIVE_ARCHIVE.json identifies the exact frozen raw tape/event archive. The F2 receipt fetches actual archive bytes from the remote Git blob and checks their full SHA256 before enabling any live launch.
+
+After pre-live and before F2, only the remote proof generator is extended to include the retrieved artifact blob in its existing Git Merkle proof. This preserves the exact compressed archive bytes and artifact-tree objects for complete offline authentication against F2. The F1-frozen independent verifier already checks arbitrary receipt files and remains byte-identical. P/R binaries, worker/engine/phases source, numeric behavior, schedules, gates and comparators are unchanged. No pre-live executions are repeated.

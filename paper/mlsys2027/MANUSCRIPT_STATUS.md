@@ -1,3 +1,14 @@
+# Manuscript status — current pointer and historical record
+
+Current manuscript: **v0.8.6 on main** through PR #46, integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. Later documentation commits may follow this anchor. Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md) for live status and [manuscript/README.md](manuscript/README.md) for current build entries.
+
+PR #44 entered main first; #45 merged into its old v0.8.5 branch; #46 brings the identical v0.8.6 delivery into main. The scientific author-freeze tag is unchanged. RTX A+B protocol preparation is next; no new A/B reserved/model measurement is performed by this maintenance. B570/358H/M4 expansions are deferred.
+
+All text below is preserved history. A historical heading containing current, next, Draft or unmerged retains its date/version meaning and does not override the canonical handover.
+
+<details>
+<summary>Historical manuscript status before repository reconciliation on 2026-10-01</summary>
+
 # Current manuscript status — v0.8.6
 
 Current convergence draft is on `paper/mlsys2027-convergence-v0.8.6`, stacked
@@ -407,5 +418,7 @@ The resulting main PDF remains 10 body pages plus 1 reference page, the unchange
 The prior integration pass's absence of identified wording defects is a historical assessment, superseded by this review's concrete corrections and remaining concerns. The paper still requires author decisions on incremental novelty, runtime submission scope, mechanism-table duplication, caveat consolidation and the final title. Conservative copyediting does not make it submission-ready.
 
 All 11 revised main-PDF pages were visually inspected after the final build, split between the coordinating editor (pp. 1–6) and Reviewer C (pp. 7–11). The state figure, synthesis/runtime transition, conclusion and references remain correctly placed. Reviewer C additionally inspected the changed hardware-only ending; the byte-identical appendix retains its complete prior inspection.
+
+</details>
 
 </details>

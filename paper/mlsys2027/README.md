@@ -1,110 +1,27 @@
-# Current handover and v0.8 mechanism integration
+# MLSys 2027 paper workspace — v0.8.6
 
-**Read `HANDOVER_CURRENT.md` first** when joining the project or starting a new agent session. It describes the current thesis, evidence classes, closed experiments, reviewer blockers and working protocol. Update it after every merged PR that materially changes scientific evidence, manuscript thesis, active reviewer blocker or experiment status; formatting-only PRs do not require an update. The deeper history belongs in `MANUSCRIPT_STATUS.md`, experiment closeouts, review directories and Git history.
+**Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md) first.** It is the canonical current-state and next-action control file. Update it after a materially changing merged PR; keep versioned closeouts and review records as historical evidence.
 
-Manuscript v0.8 integrates the closed B570 target-partition H1 study on a Draft PR from main `00da1d00bd24328826b04db10b481c56fbba4f3e`. Target-only UB1 predicts 72/72 complete reserved serialized sequences after hypothesis and prediction freezes. This is a configuration-scoped mechanism result, not a kernel identification or performance experiment. See `evidence/MECHANISM_INTEGRATION_AUDIT_V08.md` and `benchmarks/b570_mechanism_v08/CLOSEOUT.md` from the repository root. v0.7 files and the historical record remain preserved below.
+## Current manuscript and repository
 
----
+Main contains the complete v0.8.6 delivery through [PR #46](https://github.com/leecdiang/HeteroSpec/pull/46), manuscript integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. #45 originally merged into the v0.8.5 branch after #44 had entered main; #46 resolves that topology. The moving main HEAD may include subsequent documentation commits.
 
-# v0.7 prospective direct-ID qualification integration
+Read [main PDF](manuscript/output/manuscript-v0.8.6.pdf), [appendix](manuscript/output/appendix-v0.8.6.pdf), [build instructions](manuscript/README.md) and [artifact manifest](evidence/FINAL_ARTIFACT_MANIFEST_V086.json). Main is 10+2 pages, appendix 12; the internal hardware-only proof is not a submission paper. Integration does not alter the delivered TeX, PDFs, ZIPs or numerical results.
 
-Current author-review sources and outputs use v0.7. The new RTX/B570
-qualification studies are separate from historical timing: RTX 75/90 to
-90/90; B570 60/90 to 78/90, with a frozen 90/90 gate. Figure 3 separates
-historical physical opportunity and fresh qualification. The historical
-comparator record, old outputs and approved figures remain preserved.
+The central result is original B570 draft-free prospective 72/72 full-trajectory prediction, with reference/live 60/72 blocked. Fork, RTX program-replay, cost and runtime studies have distinct cohorts/comparators. No unique numerical cause or general backend transfer is asserted.
 
-Build with `make all hardware-only overleaf`, then `make check`. With an
-existing Tectonic executable, run
-`python scripts/build_v07.py --tectonic PATH_TO_TECTONIC` from the manuscript
-directory. Run `python scripts/render_v07.py` and inspect every page.
-All checks are offline; no model inference or parameter search is required.
-Portable archive checks replay retained evidence, not omitted weights.
+## Evidence and history
 
-Delivery: `manuscript-v0.7.pdf`, `appendix-v0.7.pdf`,
-`hardware-only-v0.7.pdf`, and `overleaf-direct-id-integration-v0.7.zip` under
-`manuscript/output/` (or `output/` in the manuscript directory).
-See the v0.7 scope/audit, versioned QA receipts, `MANUSCRIPT_STATUS.md`, and
-`reviews/submission_v07/` for final pagination and independent review.
-This is a draft for author review; the PR must remain Draft and unmerged.
-Earlier status sections below are historical.
+[CLAIM_AND_CAMPAIGN_MAP_V086.md](reviews/convergence_v086/CLAIM_AND_CAMPAIGN_MAP_V086.md) maps the current finite claims. Versioned author handovers, stopping rules and manifests describe their delivery-time branch state; their old Draft/unmerged language is not current main status. [MANUSCRIPT_STATUS.md](MANUSCRIPT_STATUS.md) retains manuscript history. [The prior workspace README](history/README_BEFORE_STATE_RECONCILIATION_20261001.md) preserves older v0.8/v0.7/v0.6/v0.5 roadmaps; their current/next-step language is historical.
 
----
+PAPER_FRAMEWORK_HANDOFF.md and older platform reports remain useful original framework/campaign records. They do not override newer explicit evidence, versioned claim maps or current author authorization. Repair living status documents when they drift; do not rewrite frozen experiments.
 
-# v0.6 paired M4 Guard versus Always-Spec secondary analysis
+## Next authorized direction
 
-Current review: `reviews/M4_GUARD_ALWAYS_SECONDARY_RESPONSE_V06.md`. Current
-PDFs: `manuscript/output/manuscript-v0.6.pdf` and `manuscript/output/appendix-v0.6.pdf`.
-This reviewer-requested post-study contrast uses only frozen raw observations:
-Guard/Always-Spec = 1.0270760219826773, 95% prompt-bootstrap interval
-[1.0129560055428655, 1.0435592653980876]. The interval lies above parity;
-Guard had higher latency on this comparison. Prompt medians favor Guard on
-24 prompts and Always-Spec on 36, with no ties. No new measurement or policy
-change occurred. All v0.5 review qualifications remain in force.
+Prepare RTX A+B via [the complete prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md). First stage: exposed engineering, exposure audit and concrete protocol/source freeze; reserved forwards remain zero. Author review precedes EXECUTE_FROZEN. B570 dense scan, more backends, 358H persistence and M4 variants remain outside this scope.
 
-# Current manuscript: submission review v0.5
+Existing studies are closed. Optional strengthening experiments do not imply a validity rescue is required or guarantee acceptance. Independent submission review, manuscript integration of new results, arXiv/public release and conference submission remain separate actions.
 
-The experimentally complete manuscript and runtime integration have received independent scientific, statistical, novelty, adversarial, writing, visual and artifact reviews. See `SUBMISSION_REVIEW_V05.md`, `manuscript/README.md`, and `reviews/submission_v05/`. Current review outputs use the v0.5 suffix. Earlier roadmap/status text below is historical, not a request for further experiments.
+## Working discipline
 
----
-
-# MLSys 2027 paper workspace
-
-Target venue: **MLSys 2027 Research Track**.
-
-This directory is the controlled writing workspace for the HeteroSpec paper. It is intentionally separated from platform reports and raw experiment archives.
-
-## Authoritative control file
-
-`PAPER_FRAMEWORK_HANDOFF.md` is the scientific framework handoff / evidence ledger / claim taxonomy / decision log and is the single source of truth for paper claims.
-
-If any outline, compact status note, generated summary, or historical report wording conflicts with the handoff, first determine whether the conflict is historical provenance or a living-document error. Preserve historical experiment records; repair living paper-control documents instead of weakening repository evidence.
-
-## Current status
-
-- Four hardware campaigns: **scientifically CLOSED**.
-- 358H Phase 3: complete and merged.
-- Scientific audit Rounds 1–12: complete and merged through PR #13.
-- Terminal revalidation: maintained on `paper/final-audit-20260919` until reviewed.
-- Scientific thesis and contribution ordering: frozen for drafting, subject only to explicit evidence-driven revision.
-- Exact title wording: not frozen.
-- Runtime/software co-design: future work; not a current measured contribution.
-
-## Current writing policy
-
-- Write from tracked repository evidence; never backfill missing measurements from prose, memory, or chat history.
-- Preserve the strict greedy token-ID equality contract used by the experiments.
-- Keep PRIMARY, SECONDARY, DIAGNOSTIC, POST_HOC_DESCRIPTIVE, and MECHANISM_SUPPORTED evidence visibly distinct.
-- Use complete realized target-round cost (`R_target`) for end-to-end accounting; use `V_k^micro` only as a target-forward batching/mechanism proxy.
-- Keep committed progress `C` distinct from accepted draft tokens/round.
-- Do not compare energy values across incompatible sensor boundaries as if they measured one common calibrated system domain.
-- Do not attribute cross-platform effects to one hardware feature without an isolated control.
-- Use **RTX 5070 Ti Laptop** everywhere; do not shorten the tested device to desktop-like “RTX 5070 Ti”.
-- Do not call the B570 serialized fallback globally exact while its full-workload result is 60/90 exact pairs.
-- Do not treat isolated draft-device tok/s as realized speculative draft cost when the runtime reconstructs state.
-- HumanEval generated code was not functionally executed; exactness is generated token-ID equality, not pass@k.
-
-## Files
-
-- `PAPER_FRAMEWORK_HANDOFF.md` — authoritative scientific ledger, claims, evidence, decisions, reviewer risks, figure/table plan, and audit history.
-- `FORMAT_REQUIREMENTS.md` — MLSys 2027 submission constraints.
-- `EVIDENCE_AUDIT_2026-09-18.md` — compact evidence/status audit, revalidated 2026-09-19.
-- `OUTLINE.md` — post-audit paper structure; scientific ordering is stable, exact title/prose are not.
-- `WRITING_STATUS.md` — section-level drafting readiness.
-- `template/README.md` — instructions for importing the official style unchanged.
-
-## Frozen scientific direction
-
-> On the tested consumer systems, speculative decoding pays only when the execution path that survives the chosen correctness contract and the realized stateful runtime costs fit within the progress committed by a speculative round. The paper characterizes correctness-admissible execution paths and realized costs across consumer runtimes; it does not claim that heterogeneous speculative decoding, acceptance/cost accounting, numerical nondeterminism, or state reuse are themselves new ideas.
-
-This is a bounded systems result across the tested runtimes, workloads, quantizations, models, and devices—not a universal statement about Metal, CUDA, Vulkan, NPUs, or speculative decoding.
-
-## Next paper-production steps
-
-1. Draft manuscript sections from `PAPER_FRAMEWORK_HANDOFF.md` and `OUTLINE.md`; do not reconstruct scientific claims from older reports alone.
-2. Build main-paper figures under the handoff's comparability constraints: realized-cost schematic, M4 workload contrast, verification-path admissibility, and 358H isolated-vs-realized/state decomposition.
-3. Keep energy as boundary-separated secondary/appendix evidence; never make a cross-platform absolute J/token leaderboard.
-4. Run a final source/citation/anonymization/reviewer audit on the exact submission candidate.
-5. If a runtime/software co-design study is pursued, create a separate branch and preregistration; do not extend the closed hardware campaigns post hoc.
-
-Do not start a new hardware experiment, post-hoc parameter sweep, preregistration rewrite, or public release merely to make the paper story cleaner.
+Preserve native generated-ID exactness, original primary/secondary/diagnostic labels, ratio directions, committed progress C, full target work R_target and sensor boundaries. Retain every failure. Do not manufacture raw data, rename proxy timing as integrated cost, pool unmatched cohorts or count repetitions as independent prompts. Numerical macros, Figure 3, vendor style, prior artifacts and the author-freeze tag stay immutable.

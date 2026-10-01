@@ -109,10 +109,7 @@ int main(int argc,char **argv){try{
         if(op=="init"){
             require(nextpos==0,"duplicate prefill");auto text=q.at("formatted_prompt").get<std::string>();std::vector<int> toks(text.size()+64);
             int n=f_llama_tokenize(vocab,text.c_str(),text.size(),toks.data(),toks.size(),true,true);require(n>0,"tokenization failed");toks.resize(n);
-            std::vector<int> mask(n,0);
-#ifndef PROPOSER_ONLY
-            mask.back()=1;
-#endif
+            std::vector<int> mask(n,0);mask.back()=1;
             out={{"event","PREFILL"},{"prompt_ids",toks},{"decode",decode(toks,0,mask)}};nextpos=n;
 #ifndef PROPOSER_ONLY
             auto s=sample(n-1,-1,false);int id=s["selected_id"];committed.push_back(id);out["samples"]=json::array({s});out["committed_ids"]=committed;out["terminal"]=s["eog"];
@@ -130,7 +127,8 @@ int main(int argc,char **argv){try{
             out={{"event","PROPOSALS"},{"round",round},{"proposal_ids",ids},{"decodes",decodes},{"samples",samples},{"suffix_delete_start",nextpos}};
         }else if(op=="update"){
             auto tokens=q.at("verified_batch").get<std::vector<int>>();require(q.at("position").get<int>()==nextpos,"P update position");
-            auto d=decode(tokens,nextpos,std::vector<int>(tokens.size(),0));int retained=q.at("retain_count");require(retained>=1&&retained<=(int)tokens.size(),"P retained count");
+            std::vector<int> mask(tokens.size(),0);mask.back()=1;
+            auto d=decode(tokens,nextpos,mask);int retained=q.at("retain_count");require(retained>=1&&retained<=(int)tokens.size(),"P retained count");
             nextpos+=retained;require(f_llama_memory_seq_rm(f_llama_get_memory(ctx),0,nextpos,-1),"P verification suffix delete failed");
             out={{"event","UPDATE"},{"decode",d},{"next_position",nextpos},{"suffix_delete_start",nextpos}};round++;
         }

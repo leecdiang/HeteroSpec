@@ -1,5 +1,5 @@
 """V2 pre-forward exposure audit, including V1 outputs and logical shard archives."""
-import gzip,hashlib,io,json,re,subprocess,tarfile,tempfile,zipfile
+import gzip,hashlib,io,json,re,subprocess,tarfile,tempfile,zipfile,sys
 from pathlib import Path
 from datetime import datetime,timezone
 from prepare import ROOT,STUDY,OLD,save
@@ -19,9 +19,9 @@ def main():
             source='/frozen_source/' in low or '!frozen_source/' in low
             inputfile=Path(low).name in ['prompt.txt','user_specification.md','preregistration.md','protocol.json','reserved_set.json','reserved_validation_set.json','read_receipts.json'] or '/prompts/' in low
             if inputfile or source and not OUTPUT.search(text):kind='INPUT_OR_SOURCE_ONLY';why='input, protocol or frozen source; no result inferred from membership'
-            elif OUTPUT.search(text):kind='OUTPUT_EXPOSED';why='model output, committed IDs, scores or scientific comparison present'
             elif any(w in low for w in ['eligible','universe','inventory','manifest','identity','freeze','exposure','selection','schedule']):
                 kind='INVENTORY_ONLY';why='identity or universe listing without inference events; original exclusions retained separately'
+            elif OUTPUT.search(text):kind='OUTPUT_EXPOSED';why='model output, committed IDs, scores or scientific comparison present'
             elif any(w in low for w in ['report','closeout','results','run','native','stdout','stderr','telemetry','analysis','capture']):kind='AMBIGUOUS_EXCLUDED';why='task associated with result-bearing record; conservative exclusion'
             else:kind='INPUT_OR_SOURCE_ONLY';why='task listing without observed output-bearing fields'
         row={'path':label,'bytes':len(data),'sha256':digest(data),'task_ids':sorted(ids),'classification':kind,'reason':why}
@@ -41,8 +41,23 @@ def main():
     prior=json.loads((OLD/'benchmarks/rtx_transfer_latency_v1/RESERVED_SET.json').read_text(encoding='utf-8'))
     for t in prior['excluded_task_ids']:exclusions[t].append({'path':'PR42:RESERVED_SET.json','reason':'retain prior conservative known/ambiguous exposure exclusion'})
     roots=['C:/Users/ASUS/Documents/Codex','C:/Users/ASUS/Downloads','C:/Users/ASUS/Desktop','D:/HeteroSpec-PC','D:/','E:/','F:/']
+    if '--reclassify-preserved-catalog' in sys.argv:
+        cached=json.loads((ROOT/'work/audit-attempts/attempt1/exposure_catalog.json').read_text(encoding='utf-8'))
+        errors=cached['errors'];catalog=cached['catalog']
+        for row in catalog:
+            low=row['path'].lower()
+            # Only metadata inventories are reclassified. Raw logs, events, arrays and
+            # archive members already inspected remain conservative output evidence.
+            name=low.rsplit('!',1)[-1].replace('\\','/').rsplit('/',1)[-1]
+            if any(w in name for w in ['eligible','universe','inventory','manifest','identity','freeze','exposure','selection','schedule']):
+                row['classification']='INVENTORY_ONLY';row['reason']='metadata inventory; eligible/input listings are not output; original conservative exclusions preserved'
+            if row['classification'] in ['OUTPUT_EXPOSED','AMBIGUOUS_EXCLUDED']:
+                for t in row['task_ids']:exclusions[t].append({'path':row['path'],'sha256':row['sha256'],'reason':row['reason']})
+        archive_seen=set(r['path'].split('!')[0] for r in catalog if '!' in r['path'])
+        files=[];roots_to_scan=[]
+    else:roots_to_scan=roots
     files=[]
-    for root in roots:
+    for root in roots_to_scan:
         if not Path(root).exists():continue
         cmd=['rg','--files','--hidden','--no-ignore',root]
         for g in ['!.git/**','!node_modules/**','!AppData/**','!$RECYCLE.BIN/**','!System Volume Information/**','!.venv*/**','!python311/**','!hf-cache/**','!models/**','!datasets/**','!tools/**']:cmd+=['-g',g]
@@ -69,7 +84,7 @@ def main():
             else:inspect(str(path),path.read_bytes())
         except Exception as e:errors.append({'path':str(path),'error':repr(e)})
     # PRs are read directly from exact Git objects; no bulk duplicate checkout.
-    for ref in ['61a1eb104d9bd1f6220a066d797dcc10dfed268d','3d60ac010523bbb0bf5c9db879d221159473bf0e']:
+    for ref in ([] if '--reclassify-preserved-catalog' in sys.argv else ['61a1eb104d9bd1f6220a066d797dcc10dfed268d','3d60ac010523bbb0bf5c9db879d221159473bf0e']):
         names=subprocess.check_output(['git','diff','--name-only','f8290281156f6b3de8fbc8b44fd10a4afa7bcd89',ref],cwd=ROOT,text=True).splitlines()
         blobs={}
         for name in names:

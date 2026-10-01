@@ -25,7 +25,7 @@ def main():
         s=s.replace('C:\\Users\\ASUS\\','AUDITED_HOST/').replace('C:/Users/ASUS/','AUDITED_HOST/').replace('C:\\Users\\DIANG\\','AUDITED_HOST/').replace('C:/Users/DIANG/','AUDITED_HOST/')
         s=s.replace('D:\\HeteroSpec-PC','EXTERNAL_ASSET_ROOT').replace('D:/HeteroSpec-PC','EXTERNAL_ASSET_ROOT')
         s=re.sub(r'(?i)[A-Z]:[\\/]Users[\\/][^\\/]+[\\/]','AUDITED_HOST/',s)
-        for a,b in ordinal.items():s=s.replace(a,b)
+        s=re.sub(r'2026-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:\+00:00|Z)',lambda m:ordinal.get(m.group(0),m.group(0)),s)
         s=re.sub(r'("created":)\d+',r'\g<1>0',s)
         s=s.replace('leecdiang/HeteroSpec','ANON_REPOSITORY')
         s=re.sub(r'wxid_[A-Za-z0-9_]+','ANON_ACCOUNT',s)

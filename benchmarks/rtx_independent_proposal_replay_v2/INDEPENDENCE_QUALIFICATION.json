@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "scope": "compile-time role separation, explicit process/model API access records, successful single-model native loading and IPC input audit; not an OS-wide filesystem/driver adversary trace",
+  "checks": [
+    {
+      "run_id": "HumanEval-3-r1-H2_P_R",
+      "actual_role_processes": [
+        "P",
+        "R"
+      ],
+      "native_commit_event_verification": "PASS",
+      "CLI_impl_loaded": false
+    },
+    {
+      "run_id": "HumanEval-3-r1-R_ONLY",
+      "actual_role_processes": [
+        "R"
+      ],
+      "native_commit_event_verification": "PASS",
+      "CLI_impl_loaded": false
+    },
+    {
+      "run_id": "HumanEval-106-r1-H2_P_R",
+      "actual_role_processes": [
+        "P",
+        "R"
+      ],
+      "native_commit_event_verification": "PASS",
+      "CLI_impl_loaded": false
+    },
+    {
+      "run_id": "HumanEval-106-r1-R_ONLY",
+      "actual_role_processes": [
+        "R"
+      ],
+      "native_commit_event_verification": "PASS",
+      "CLI_impl_loaded": false
+    }
+  ],
+  "P_allowed_inputs": [
+    "formatted original input",
+    "current pending token and past retained position",
+    "own proposals and current H2 verification acceptance"
+  ],
+  "R_ONLY_allowed_inputs": [
+    "formatted input",
+    "one sealed current fixed proposal request"
+  ],
+  "R_ONLY_forbidden": [
+    "draft model",
+    "predictor/reference/live arrays",
+    "future prefix inputs"
+  ],
+  "shared_implementation": "original released llama/ggml/CUDA math and sampler primitives; independently organized but substantial native algorithm semantics reproduced",
+  "negative_tests": "NEGATIVE_VALIDATION.json"
+}

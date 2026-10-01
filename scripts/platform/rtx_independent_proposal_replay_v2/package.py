@@ -6,14 +6,15 @@ from engine import now,digest,source_head
 ART=ROOT/'artifacts/rtx_independent_proposal_replay_v2'
 def make(mode):
     ART.mkdir(exist_ok=True);stage=ROOT/'work'/('package-'+mode);stage.mkdir(exist_ok=False)
-    shutil.copytree(STUDY,stage/'metadata')
+    own_index=mode.upper().replace('-','_')+'_ARCHIVE.json';own_verification=mode.split('-')[0].upper()+'_OFFLINE_RECONSTRUCTION.json'
+    shutil.copytree(STUDY,stage/'metadata',ignore=shutil.ignore_patterns(own_index,own_verification))
     source=stage/'frozen_source/scripts/platform/rtx_independent_proposal_replay_v2';source.mkdir(parents=True)
     for p in Path(__file__).parent.glob('*'):
         if p.is_file():shutil.copyfile(p,source/p.name)
-    phases=['pre-live','frozen-checkpoints'] if mode=='pre-live' else ['reference-qualification','endpoint-probes','endpoint-probes-qualified','engineering-extra','discovery','pre-live','live','engineering-attempt1','engineering-attempt2','audit-attempts','build-attempts','frozen-checkpoints']
+    phases=['pre-live','frozen-checkpoints'] if mode=='pre-live' else ['reference-qualification','endpoint-probes','endpoint-probes-qualified','engineering-extra','discovery','pre-live','live','engineering-attempt1','engineering-attempt2','audit-attempts','build-attempts','frozen-checkpoints','packaging-attempts']
     for name in phases:
         p=ROOT/'work'/name
-        if p.exists():shutil.copytree(p,stage/name,ignore=shutil.ignore_patterns('*.exe','*.dll','*.pdb','__pycache__'))
+        if p.exists():shutil.copytree(p,stage/name,ignore=shutil.ignore_patterns('*.exe','*.dll','*.pdb','__pycache__','snapshot'))
     for name in ['exposure_catalog.json','audit-attempt1.log','audit-attempt2.log','qualification.stdout.log','qualification.stderr.log','engineering-extra.stdout.log','engineering-extra.stderr.log','build-P.log','build-R.log','tokenizer-only.stdout.jsonl','tokenizer-only.stderr.log','tokenizer-build.log','endpoint-probe-attempt1-receipt.json']:
         p=ROOT/'work'/name
         if p.exists() and mode!='pre-live':shutil.copyfile(p,stage/name)

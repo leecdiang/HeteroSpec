@@ -6,7 +6,8 @@ ROOT=Path(__file__).resolve().parents[3]
 STUDY=ROOT/'benchmarks/rtx_independent_proposal_replay_v2'
 OLD=Path('C:/Users/ASUS/Documents/Codex/2026-09-30/an-zh-a/work/HeteroSpec')
 def sha(data):return hashlib.sha256(data).hexdigest()
-def save(p,o):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(o,indent=2)+'\n',encoding='utf-8',newline='\n')
+def save(p,o):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);tmp=p.with_name(p.name+'.tmp');tmp.write_text(json.dumps(o,indent=2)+'\n',encoding='utf-8',newline='\n');tmp.replace(p)
 def main():
     reads=[]
     names=['PREREGISTRATION.md','protocol.json','asset_identity.json','runtime_freeze.json','RESERVED_SET.json','prediction/REPORT.md','prediction/REPORT.json','CLOSEOUT.md','CLOSEOUT.json','REPRODUCTION.md']

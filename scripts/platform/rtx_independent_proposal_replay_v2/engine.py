@@ -12,6 +12,20 @@ def ah(ids):return hashlib.sha256(json.dumps(ids,separators=(',',':')).encode('u
 def digest(b):return hashlib.sha256(b).hexdigest()
 def canonical(o):return json.dumps(o,separators=(',',':'),ensure_ascii=True).encode('utf-8')
 def source_head():return subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+def guard_reserved(task,condition,study=STUDY):
+    selected=json.loads((study/'RESERVED_SET.json').read_text(encoding='utf-8'))['selected_task_ids']
+    if task not in selected:return
+    f1=study/'F1_REMOTE_RECEIPT.json'
+    if not f1.exists():raise RuntimeError('RESERVED_FORWARD_BLOCKED: F1 not reached')
+    receipt=json.loads(f1.read_text(encoding='utf-8'))
+    if receipt['commit']!=receipt['remote_ref']:raise RuntimeError('PROVENANCE_INVALID: F1 ref mismatch')
+    if condition=='RTX_BATCHED_K2':
+        f2=study/'F2_REMOTE_RECEIPT.json'
+        if not f2.exists():raise RuntimeError('RESERVED_LIVE_BLOCKED: F2 not reached')
+        r=json.loads(f2.read_text(encoding='utf-8'))
+        if r['commit']!=r['remote_ref'] or 'retrieved_content' not in r or r['remote_ack_utc']>=now():raise RuntimeError('PROVENANCE_INVALID: F2 not acknowledged/retrieved before L')
+        qualification=json.loads((study/'PRE_LIVE_QUALIFICATION.json').read_text(encoding='utf-8'))
+        if qualification['status']!='PRE_LIVE_QUALIFIED':raise RuntimeError('RESERVED_LIVE_BLOCKED: pre-live qualification failed')
 def prompts():
     with gzip.open(ASSET/'datasets/humaneval/HumanEval.jsonl.gz','rt',encoding='utf-8') as f:return {r['task_id']:'Complete the following Python function. Return only the completed Python code, without Markdown fences.\n\n'+r['prompt'] for r in map(json.loads,f)}
 def format_prompt(text):
@@ -71,16 +85,17 @@ def parse_native(p):
     layers=re.findall(r'load_tensors: offloaded (\d+)/(\d+) layers to GPU',text);devices=re.findall(r'llama_prepare_model_devices: using device ([^\n]+)',text)
     if not layers or layers[0]!=('37','37') or any(not d.startswith('CUDA0 (NVIDIA GeForce RTX 5070 Ti Laptop GPU)') for d in devices):raise RuntimeError('native placement invalid')
     return {'generated_ids':ids,'array_sha256':ah(ids),'termination':stops[0],'placement':{'devices':devices,'offload':layers},'native_sha256':digest(b)}
-def execute(task,rep,condition,out,text=None,tape_path=None):
+def execute(task,rep,condition,out,text=None,tape_path=None,native_debug='1'):
+    guard_reserved(task,condition)
     if text is None:text=prompts()[task]
     out=Path(out).resolve()/f'{task.replace("/","-")}-r{rep}-{condition}';out.mkdir(parents=True,exist_ok=False)
-    record={'task_id':task,'repetition':rep,'condition':condition,'run_id':out.name,'source_head':source_head(),'started_utc':now(),'status':'STARTED','input_sha256':digest(text.encode('utf-8')),'process_environment_overrides':{'LLAMA_BATCH_DEBUG':'1'}}
+    record={'task_id':task,'repetition':rep,'condition':condition,'run_id':out.name,'source_head':source_head(),'started_utc':now(),'status':'STARTED','input_sha256':digest(text.encode('utf-8')),'process_environment_overrides':{'LLAMA_BATCH_DEBUG':native_debug if condition in ['REFERENCE_UB1','RTX_BATCHED_K2'] else '1'}}
     save(out/'record.json',record);(out/'prompt.txt').write_text(text,encoding='utf-8',newline='\n')
     workers=[]
     try:
         if condition in ['REFERENCE_UB1','RTX_BATCHED_K2']:
             cmd=native_command(out/'prompt.txt',out/'native.log',out/'transcript.txt',condition=='RTX_BATCHED_K2');record['command']=cmd
-            with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:run=subprocess.run(cmd,stdout=stdout,stderr=stderr,stdin=subprocess.DEVNULL,timeout=300,env={**os.environ,'LLAMA_BATCH_DEBUG':'1'})
+            with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:run=subprocess.run(cmd,stdout=stdout,stderr=stderr,stdin=subprocess.DEVNULL,timeout=300,env={**os.environ,'LLAMA_BATCH_DEBUG':native_debug})
             record['exit_code']=run.returncode
             if run.returncode:raise RuntimeError('native process failed')
             record.update(parse_native(out/'native.log'))
@@ -88,11 +103,11 @@ def execute(task,rep,condition,out,text=None,tape_path=None):
             with (out/'events.jsonl').open('wb') as log:
                 r=Worker('R',1 if condition=='R_REFERENCE_UB1' else 2,out,log);workers.append(r)
                 ri=r.call({'op':'init','formatted_prompt':format_prompt(text)});ids=ri['committed_ids'].copy();record['prompt_ids']=ri['prompt_ids'];record['prompt_array_sha256']=ah(ri['prompt_ids'])
-                pos=len(ri['prompt_ids']);terminal=ri['terminal'];round_index=0
+                pos=len(ri['prompt_ids']);terminal=ri['terminal'];last_eog=ri['samples'][0]['eog'];round_index=0
                 if condition=='R_REFERENCE_UB1':
                     while not terminal:
                         v=r.call({'op':'verify','round':round_index,'position':pos,'pending':ids[-1],'proposal_ids':[]})
-                        ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];round_index+=1
+                        ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];last_eog=v['samples'][len(v['committed_ids'])-1]['eog'];round_index+=1
                 elif condition=='H2_P_R':
                     p=Worker('P',2,out,log);workers.append(p);pi=p.call({'op':'init','formatted_prompt':format_prompt(text)})
                     if pi['prompt_ids']!=ri['prompt_ids']:raise RuntimeError('P/R prompt tokenization differs')
@@ -106,7 +121,7 @@ def execute(task,rep,condition,out,text=None,tape_path=None):
                             event['event_sha256']=digest(canonical(event));previous=event['event_sha256'];tape.write(canonical(event)+b'\n');tape.flush();os.fsync(tape.fileno())
                             # R is called only after durable append and digest of the current request.
                             v=r.call(q);p.call({'op':'update','position':pos,'verified_batch':tokens,'retain_count':v['retain_count']})
-                            ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];round_index+=1
+                            ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];last_eog=v['samples'][len(v['committed_ids'])-1]['eog'];round_index+=1
                     record['tape_sha256']=digest((out/'tape.jsonl').read_bytes());record['P_round_calls']=round_index
                 elif condition=='R_ONLY':
                     if tape_path is None:raise RuntimeError('sealed tape required')
@@ -122,12 +137,12 @@ def execute(task,rep,condition,out,text=None,tape_path=None):
                             if event['task_id']!=task or event['repetition']!=rep or event['round']!=round_index or event['prefix_count']!=len(ids) or event['prefix_sha256']!=ah(ids):raise RuntimeError('tape task/past prefix invalid')
                             q=event['request']
                             if set(q)!={'op','round','position','pending','proposal_ids'} or q['position']!=pos or q['pending']!=ids[-1]:raise RuntimeError('tape request dependencies invalid')
-                            v=r.call(q);ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];round_index+=1
+                            v=r.call(q);ids+=v['committed_ids'];pos=v['next_position'];terminal=v['terminal'];last_eog=v['samples'][len(v['committed_ids'])-1]['eog'];round_index+=1
                         if tape.readline():raise RuntimeError('future tape suffix beyond endpoint')
                     record['replayed_tape_sha256']=digest(Path(tape_path).read_bytes())
                 else:raise RuntimeError('unknown condition')
                 for w in workers:w.close()
-                record.update(generated_ids=ids,array_sha256=ah(ids),termination='limit' if len(ids)==128 else 'EOS',round_count=round_index)
+                record.update(generated_ids=ids,array_sha256=ah(ids),termination='EOS' if last_eog else 'limit',round_count=round_index)
         record['status']='VALID';save(out/'generated_ids.json',record['generated_ids'])
     except Exception as e:record.update(status='OPERATIONAL_FAILURE',error=repr(e))
     finally:

@@ -31,7 +31,7 @@ class Worker:
         self.role=role;self.log=log;self.counter=0;self.closed=False
         self.stderr=(out/(role+'-stderr.log')).open('wb')
         self.command=[str(ROOT/'work/h2-bin'/(role+'.exe')),str(BIN),str(DRAFT if role=='P' else TARGET),str(ub),role]
-        self.proc=subprocess.Popen(self.command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.stderr,cwd=BIN)
+        self.proc=subprocess.Popen(self.command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.stderr,cwd=BIN,env={**os.environ,'LLAMA_BATCH_DEBUG':'1'})
         self.queue=queue.Queue()
         def read():
             try:
@@ -49,6 +49,7 @@ class Worker:
         self.counter+=1;row={'utc':now(),'role':self.role,'pid':self.proc.pid,'event_sequence':self.counter,'event':event,'request':q,'response':r}
         self.log.write(canonical(row)+b'\n');self.log.flush();return row
     def call(self,q):
+        self.record('request_sent',q,{})
         self.proc.stdin.write(canonical(q)+b'\n');self.proc.stdin.flush();r=self.response();self.record(q['op'],q,r);return r
     def close(self):
         if self.closed:return
@@ -72,14 +73,14 @@ def parse_native(p):
     return {'generated_ids':ids,'array_sha256':ah(ids),'termination':stops[0],'placement':{'devices':devices,'offload':layers},'native_sha256':digest(b)}
 def execute(task,rep,condition,out,text=None,tape_path=None):
     if text is None:text=prompts()[task]
-    out=Path(out)/f'{task.replace("/","-")}-r{rep}-{condition}';out.mkdir(parents=True,exist_ok=False)
-    record={'task_id':task,'repetition':rep,'condition':condition,'run_id':out.name,'source_head':source_head(),'started_utc':now(),'status':'STARTED','input_sha256':digest(text.encode('utf-8'))}
+    out=Path(out).resolve()/f'{task.replace("/","-")}-r{rep}-{condition}';out.mkdir(parents=True,exist_ok=False)
+    record={'task_id':task,'repetition':rep,'condition':condition,'run_id':out.name,'source_head':source_head(),'started_utc':now(),'status':'STARTED','input_sha256':digest(text.encode('utf-8')),'process_environment_overrides':{'LLAMA_BATCH_DEBUG':'1'}}
     save(out/'record.json',record);(out/'prompt.txt').write_text(text,encoding='utf-8',newline='\n')
     workers=[]
     try:
         if condition in ['REFERENCE_UB1','RTX_BATCHED_K2']:
             cmd=native_command(out/'prompt.txt',out/'native.log',out/'transcript.txt',condition=='RTX_BATCHED_K2');record['command']=cmd
-            with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:run=subprocess.run(cmd,stdout=stdout,stderr=stderr,stdin=subprocess.DEVNULL,timeout=300)
+            with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:run=subprocess.run(cmd,stdout=stdout,stderr=stderr,stdin=subprocess.DEVNULL,timeout=300,env={**os.environ,'LLAMA_BATCH_DEBUG':'1'})
             record['exit_code']=run.returncode
             if run.returncode:raise RuntimeError('native process failed')
             record.update(parse_native(out/'native.log'))

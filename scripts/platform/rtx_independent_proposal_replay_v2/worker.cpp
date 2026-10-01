@@ -27,7 +27,7 @@ decltype(&ggml_backend_load_all_from_path) f_backend_load;
 decltype(&ggml_backend_dev_by_name) f_dev;
 static json graphs=json::array();
 static bool graph_observe(ggml_tensor * t,bool ask,void*) {
-    if(ask && std::string(t->name)=="result_output")graphs.push_back({{"name",t->name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}}});
+    if(ask && (std::string(t->name)=="result_output" || std::string(t->name)=="attn_norm-0"))graphs.push_back({{"name",t->name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}}});
     return false; // Observe metadata; request no tensor reads or extra execution.
 }
 static void require(bool ok,const char * msg){if(!ok)throw std::runtime_error(msg);}
@@ -58,8 +58,8 @@ int main(int argc,char **argv){try{
     auto dll=LoadLibraryA((std::string(argv[1])+"/llama.dll").c_str());require(base&&ggml&&dll,"original DLL load failed");
 #define LOAD(N) f_##N=(decltype(f_##N))GetProcAddress(dll,#N);require(f_##N!=nullptr,#N);
     API_LIST(LOAD)
-    f_backend_load=(decltype(f_backend_load))GetProcAddress(base,"ggml_backend_load_all_from_path");
-    f_dev=(decltype(f_dev))GetProcAddress(base,"ggml_backend_dev_by_name");require(f_backend_load&&f_dev,"backend exports");
+    f_backend_load=(decltype(f_backend_load))GetProcAddress(ggml,"ggml_backend_load_all_from_path");
+    f_dev=(decltype(f_dev))GetProcAddress(ggml,"ggml_backend_dev_by_name");require(f_backend_load&&f_dev,"backend exports");
     f_llama_backend_init();f_backend_load(argv[1]);
     ggml_backend_dev_t devices[]={f_dev("CUDA0"),nullptr};require(devices[0]!=nullptr,"CUDA0 unavailable");
     auto mp=f_llama_model_default_params();mp.n_gpu_layers=-1;mp.devices=devices;
@@ -106,6 +106,12 @@ int main(int argc,char **argv){try{
     std::string line;
     while(std::getline(std::cin,line)){
         auto q=json::parse(line);auto op=q.at("op").get<std::string>();json out;
+        std::vector<std::string> allowed={"op"};
+        if(op=="init")allowed.push_back("formatted_prompt");
+        else if(op=="propose")allowed={"op","position","pending","max_proposals"};
+        else if(op=="update")allowed={"op","position","verified_batch","retain_count"};
+        else if(op=="verify")allowed={"op","round","position","pending","proposal_ids"};
+        for(auto it=q.begin();it!=q.end();++it)require(std::find(allowed.begin(),allowed.end(),it.key())!=allowed.end(),"unexpected or future/answer input field");
         if(op=="init"){
             require(nextpos==0,"duplicate prefill");auto text=q.at("formatted_prompt").get<std::string>();std::vector<int> toks(text.size()+64);
             int n=f_llama_tokenize(vocab,text.c_str(),text.size(),toks.data(),toks.size(),true,true);require(n>0,"tokenization failed");toks.resize(n);

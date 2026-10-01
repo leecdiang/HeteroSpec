@@ -1,0 +1,1 @@
+PREPARE_ONLY: engineering qualification complete, pending actual F0 remote freeze and Draft PR. A reserved forwards = 0; A live = 0; B formal = 0. F1/F2 and formal scientific results are NOT_REACHED. Stop at the required protocol review. Computer shutdown is deferred until the complete formal experiment has actually finished.

@@ -1,0 +1,66 @@
+{
+  "study_id": "RTX_TRAJECTORY_SUFFICIENCY_V3",
+  "task_ids": [
+    "HumanEval/2",
+    "HumanEval/161",
+    "HumanEval/86",
+    "HumanEval/157",
+    "HumanEval/16",
+    "HumanEval/158",
+    "HumanEval/59",
+    "HumanEval/40",
+    "HumanEval/31",
+    "HumanEval/99",
+    "HumanEval/49",
+    "HumanEval/25",
+    "HumanEval/141",
+    "HumanEval/76",
+    "HumanEval/142",
+    "HumanEval/109",
+    "HumanEval/15",
+    "HumanEval/66",
+    "HumanEval/81",
+    "HumanEval/136",
+    "HumanEval/148",
+    "HumanEval/18",
+    "HumanEval/143",
+    "HumanEval/87"
+  ],
+  "repetitions": 3,
+  "conditions": [
+    "A_REFERENCE_UB1",
+    "A_TARGET_ONLY_UB2",
+    "A_H2_P_R",
+    "A_R_ONLY",
+    "A_NATIVE_BATCHED_LIVE"
+  ],
+  "wire_conditions": [
+    "REFERENCE_UB1",
+    "TARGET_ONLY_UB2",
+    "H2_P_R",
+    "R_ONLY",
+    "RTX_BATCHED_K2"
+  ],
+  "pre_live_wire_conditions": [
+    "REFERENCE_UB1",
+    "TARGET_ONLY_UB2",
+    "H2_P_R",
+    "R_ONLY"
+  ],
+  "pre_live_order": "selection rank then repetition 1,2,3 then fixed four conditions",
+  "planned_pre_live": 288,
+  "planned_live": 72,
+  "planned_complete_runs": 360,
+  "gate_before_F2": "four pre-live conditions repeat-stable and valid; H2/R_ONLY 72/72; UB2/reference difference legal",
+  "comparisons": [
+    "UB2/live",
+    "H2/live",
+    "R_ONLY/live",
+    "reference/live",
+    "H2/R_ONLY"
+  ],
+  "classification": "full match with at least one actual reference-divergent prompt -> MATCH_DISCRIMINATING; otherwise MATCH_NONDISCRIMINATING; partial comparisons fully retained",
+  "no_H1_selection_gate": true,
+  "no_H3": true,
+  "independence": "P loads draft only; R/R_ONLY target only; fresh R_ONLY consumes sealed per-round requests in order; original live imports no tape; shared original numeric DLLs disclosed"
+}

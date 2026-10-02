@@ -1,30 +1,15 @@
-# MLSys 2027 paper workspace — v0.8.6
+# MLSys 2027 paper workspace — v0.8.7 candidate
 
-**Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md) first.** It is the canonical current-state and next-action control file. Update it after a materially changing merged PR; keep versioned closeouts and review records as historical evidence.
+**Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md) first.** Update living status after materially changing merges; retain frozen handovers, stopping rules and reviews in their original delivery context.
 
-## Current manuscript and repository
+This branch delivers v0.8.7 from main `87b811e21a164468232cfea3c2404a1ebc869477`, which already contains v0.8.6 and closed RTX V4 evidence. v0.8.7 is pending merge. Its PR base must be main, not an earlier paper branch.
 
-Main contains the complete v0.8.6 delivery through [PR #46](https://github.com/leecdiang/HeteroSpec/pull/46), manuscript integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. #45 originally merged into the v0.8.5 branch after #44 had entered main; #46 resolves that topology. The moving main HEAD may include subsequent documentation commits.
+Read [main PDF](manuscript/output/manuscript-v0.8.7.pdf), [appendix](manuscript/output/appendix-v0.8.7.pdf), [source ZIP](manuscript/output/overleaf-rtx-integration-v0.8.7.zip), [anonymous evidence index](manuscript/output/anonymous-evidence-index-v0.8.7.zip), [build instructions](manuscript/README.md) and [manifest](evidence/FINAL_ARTIFACT_MANIFEST_V087.json). Main is 10+2 pages and appendix 14. The hardware-only proof is internal, not a submission paper.
 
-Read [main PDF](manuscript/output/manuscript-v0.8.6.pdf), [appendix](manuscript/output/appendix-v0.8.6.pdf), [build instructions](manuscript/README.md) and [artifact manifest](evidence/FINAL_ARTIFACT_MANIFEST_V086.json). Main is 10+2 pages, appendix 12; the internal hardware-only proof is not a submission paper. Integration does not alter the delivered TeX, PDFs, ZIPs or numerical results.
+The original B570 draft-free prospective 72/72 remains central; reference/live 60/72 is blocked. RTX V4 distinguishes predefined target-only UB2 from replay on the same 19-prompt cohort and pairs qualification with measured instrumented cost. Neither replay agreement nor UB2 failure proves history necessary. Existing fork, RTX V2/old-cost, 358H and M4 evidence remains separately scoped.
 
-The central result is original B570 draft-free prospective 72/72 full-trajectory prediction, with reference/live 60/72 blocked. Fork, RTX program-replay, cost and runtime studies have distinct cohorts/comparators. No unique numerical cause or general backend transfer is asserted.
+Use [the current claim/campaign map](reviews/rtx_integration_v087/CLAIM_AND_CAMPAIGN_MAP_V087.md), [delivery record](evidence/DELIVERY_V087.md) and [independent review](reviews/submission_v087/). The [V4 raw closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) records the prior completed CPU-only nine-capsule/native-log audit. No new model inference occurs in this revision.
 
-## Evidence and history
+[MANUSCRIPT_STATUS.md](MANUSCRIPT_STATUS.md), older claim maps and versioned handovers retain history. Their Draft/unmerged wording describes their own snapshots. Original numerical macros, arrays, Figure 3, styles, prior PDFs/ZIPs and author-freeze tag remain immutable.
 
-[CLAIM_AND_CAMPAIGN_MAP_V086.md](reviews/convergence_v086/CLAIM_AND_CAMPAIGN_MAP_V086.md) maps the current finite claims. Versioned author handovers, stopping rules and manifests describe their delivery-time branch state; their old Draft/unmerged language is not current main status. [MANUSCRIPT_STATUS.md](MANUSCRIPT_STATUS.md) retains manuscript history. [The prior workspace README](history/README_BEFORE_STATE_RECONCILIATION_20261001.md) preserves older v0.8/v0.7/v0.6/v0.5 roadmaps; their current/next-step language is historical.
-
-PAPER_FRAMEWORK_HANDOFF.md and older platform reports remain useful original framework/campaign records. They do not override newer explicit evidence, versioned claim maps or current author authorization. Repair living status documents when they drift; do not rewrite frozen experiments.
-
-## Next authorized direction
-
-The RTX A+B study is complete and CLOSED. Main includes PR #48's terminal V3 history and PR #49's V4 evidence. Read [the independent raw closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md): nine sealed capsules and all native A/B arrays and B QPC intervals were replayed on CPU, with no model inference. The original [RTX prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md) is historical guidance and does not authorize repeating the campaigns.
-
-Next is manuscript integration in a new version, with the same-set trajectory comparison, matched qualification–cost table, 19-prompt/exposure limits and retained V3 failure history; then build and independently review the new artifacts. The current delivered manuscript is still v0.8.6. No B570 dense scan, new backends, 358H persistence or M4 variants are authorized here.
-
-No necessary/minimal history state, unique cause, population performance or acceptance guarantee follows from these finite observations. arXiv/public release and conference submission are separate actions.
-
-## Working discipline
-
-Preserve native generated-ID exactness, original primary/secondary/diagnostic labels, ratio directions, committed progress C, full target work R_target and sensor boundaries. Retain every failure. Do not manufacture raw data, rename proxy timing as integrated cost, pool unmatched cohorts or count repetitions as independent prompts. Numerical macros, Figure 3, vendor style, prior artifacts and the author-freeze tag stay immutable.
-
+The review is complete: [meta-review](reviews/submission_v087/META_REVIEW_V087.md), [revision priorities](reviews/submission_v087/REVISION_PRIORITY_V087.md), [B570 decision](reviews/submission_v087/B570_DECISION_V087.md). One weak reject and five weak accepts reflect a significance disagreement, not a demonstrated validity failure or required new execution. Next is author assessment of these fixed artifacts and existing-material requests. Existing studies are CLOSED. No dense B570 scan, new backend, 358H persistence or M4 variant is authorized. A future B570 study requires a separately frozen single-block/common-continuation design. Public release, arXiv and submission remain separate decisions.

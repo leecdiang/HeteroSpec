@@ -9,12 +9,13 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.6}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.7}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
 \input{tables/followup_values_v085.tex}
 \input{tables/derived_values_v086.tex}
+\input{tables/rtx_v4_values_v087.tex}
 \mlsystitlerunning{Supplement: Execution-Path Qualification in Speculative Decoding}
 \begin{document}
 \twocolumn[{
@@ -28,7 +29,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware, mechanism, and runtime studies. It supplies statistical, measurement-boundary, and provenance details. Section J and Tables A6--A7 document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies exact packages and verifier entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
+This separate appendix accompanies the measured hardware, mechanism, and runtime studies. It supplies statistical, measurement-boundary, and provenance details. Section J and Tables A6--A7 document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies document and earlier study packages; Section Q gives RTX V4 same-set prediction, matched cost, failed V3 history and full anonymous evidence entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} (A1) preserves historical hardware estimators only; M4 runtime is in Section H, new RTX cost in Section N, and new post-study sensitivity in Section~\ref{app:derived}. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 counts are text-path agreement from parsed CLI output: M4 HumanEval includes the prompt in its parsed text; B570 strips and normalizes the prompt before re-tokenization. Neither is direct generated-ID equality. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its estimator.
@@ -112,6 +113,7 @@ An independent validator passes 5,681 input, output, hash, endpoint and chronolo
 \paragraph{Reviewer-visible commitment record.}
 \input{tables/b570_prediction_commitment_v083.tex}
 The separate anonymous sequence supplement contains complete reference, predictor, and live generated-ID arrays for the 72 reserved runs, with a deterministic equality and divergence checker. It contains no identifying machine or repository metadata. Sanitizing the export changes its bytes, so it cannot reproduce the original prediction-file digest or independently prove the reported temporal freeze; the PDF's digest and chronology have those distinct stated roles.
-\input{sections/appendix_followups_v086.tex}
+\input{sections/appendix_followups_v087.tex}
 \input{sections/appendix_derived_v086.tex}
+\input{sections/appendix_rtx_v4_v087.tex}
 \end{document}

@@ -1,8 +1,22 @@
+# Manuscript status — v0.8.7 candidate and historical record
+
+Current candidate: **v0.8.7**, branch `paper/mlsys2027-rtx-integration-v0.8.7`, directly based on main `87b811e21a164468232cfea3c2404a1ebc869477`. Pending merge; main at the baseline contains v0.8.6 and the closed RTX V4 evidence. Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md), [delivery record](evidence/DELIVERY_V087.md) and [fixed-artifact review](reviews/submission_v087/) for current decisions.
+
+v087 integrates same-set RTX UB2/replay discrimination and fresh matched qualification–cost, preserving original B570 prospective72/72 as the center. Main10+2 pages; appendix14; internal proof9+2. Two independent clean builds and37-page visual inspection are complete. No new model/GPU execution;scientific tag,arrays,macros,Figure3,style and old artifacts unchanged. Existing campaigns remain CLOSED;B570 dense scan is deferred/not authorized. Review significance judgments are separate from validity and build checks.
+
+Completed fixed-artifact review: one 3/6 weak reject and five 4/6 weak accepts, all confidence 4/5; no demonstrated central validity error or logically necessary new execution. [Meta-review](reviews/submission_v087/META_REVIEW_V087.md) retains the significance disagreement. [Existing-material requests](reviews/submission_v087/REVISION_PRIORITY_V087.md) remain unapplied to the frozen PDFs. [B570 recommendation](reviews/submission_v087/B570_DECISION_V087.md): do not execute now; bounded single-block/common-policy design remains an optional future study.
+
+<details>
+<summary>Repository-state pointer before v0.8.7 integration, preserved 2026-10-02</summary>
+
 # Manuscript status — current pointer and historical record
 
 Current manuscript: **v0.8.6 on main** through PR #46, integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. Later documentation commits may follow this anchor. Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md) for live status and [manuscript/README.md](manuscript/README.md) for current build entries.
 
 PR #44 entered main first; #45 merged into its old v0.8.5 branch; #46 brings the identical v0.8.6 delivery into main. The scientific author-freeze tag is unchanged. RTX A+B protocol preparation is next; no new A/B reserved/model measurement is performed by this maintenance. B570/358H/M4 expansions are deferred.
+
+
+</details>
 
 All text below is preserved history. A historical heading containing current, next, Draft or unmerged retains its date/version meaning and does not override the canonical handover.
 
@@ -422,3 +436,4 @@ All 11 revised main-PDF pages were visually inspected after the final build, spl
 </details>
 
 </details>
+

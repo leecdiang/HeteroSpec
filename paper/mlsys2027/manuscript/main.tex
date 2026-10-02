@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 research manuscript v0.8.6},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 research manuscript v0.8.7},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -20,6 +20,7 @@
 \input{tables/direct_id_values.tex}
 \input{tables/followup_values_v085.tex}
 \input{tables/derived_values_v086.tex}
+\input{tables/rtx_v4_values_v087.tex}
 \mlsystitlerunning{Execution-Path Qualification in Speculative Decoding}
 \begin{document}
 \twocolumn[{
@@ -32,12 +33,12 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-Numerical execution paths can change greedy output, but observing a mismatch does not predict the rest of a trajectory. On the tested B570 stack, we select a draft-free target-only micro-batch-one predictor using exposed discovery data, then freeze complete generated-ID predictions before reserved live speculation. It matches 72/72 capped sequences on 24 repeat-stable prompts, including all 12 runs of four reference-divergent prompts; the same-set reference matches 60/72. The predictor is sufficient for this path, but it neither restores qualification nor identifies a unique numerical cause. Separate B570 same-state forks test intervention effects; RTX proposal/replay programs test reproduction while sharing numerical routines. Cost comparisons answer a separate question. Newly direct-ID-qualified RTX serialization is slower within its instrumented post-prefill boundary (\FUCost$\times$ target/serialized latency). At fixed measured progress and target work, 358H remains below parity even with draft and residual costs removed. Qualified M4 Guard beats target-only but loses to fixed speculation. These results give testable diagnoses and engineering decisions about lossless compatibility and complete cost on the measured paths; they establish no portable decoding or control gain.
+Numerical execution paths can change greedy output, but observing a mismatch does not predict the rest of a trajectory. On the tested B570 stack, we select a draft-free target-only micro-batch-one predictor using exposed discovery data, then freeze complete generated-ID predictions before reserved live speculation. It matches 72/72 capped sequences on 24 repeat-stable prompts, including all 12 runs of four reference-divergent prompts; the same-set reference matches 60/72. The predictor is sufficient for this path, but neither restores qualification nor identifies a unique numerical cause. Separate B570 same-state forks change scores without changing sampled immediate decisions. A new prospective RTX comparison uses all 19 remaining exposure-audited prompts: target-only UB2 matches 51/57 live sequences, whereas proposal-conditioned replay matches 57/57 on shared numerical routines. This rejects the specified target-only candidate, without proving history necessary. On the same prompts, 171 fresh matched cost runs leave batching blocked by direct IDs; serialization qualifies but is slower (\VFourCost$\times$ target/serialized latency within an instrumented post-prefill boundary). At fixed progress and target work, 358H cannot reach parity even at zero draft/residual cost. Qualified M4 Guard loses to fixed speculation. These bounded results distinguish predictable trajectories, reference-compatible execution and profitable implementation.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 \ifruntime\else
-\hypersetup{pdfsubject={MLSys 2027 v0.8.6 internal hardware-only proof}}
+\hypersetup{pdfsubject={MLSys 2027 v0.8.7 internal hardware-only proof}}
 \noindent\textbf{Internal section-removal and reference proof only.}
 \fi
 \input{sections/01_introduction}

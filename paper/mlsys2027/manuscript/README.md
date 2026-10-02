@@ -1,90 +1,40 @@
-# Current manuscript — v0.8.6 on main
+# Manuscript v0.8.7 — RTX evidence integration candidate
 
-Main contains the unchanged v0.8.6 delivery through PR #46, manuscript integration anchor `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`. The exact delivery/content tree remains `494a5ca4fe62534b032b37d01652c3f88e0d16e1` and authoritative TeX source remains `da8d5739eb108de7f35d3a3cfbd954d42462f2e0`. Documentation commits may follow the anchor; resolve the actual remote HEAD before work.
+This branch is based on main `87b811e21a164468232cfea3c2404a1ebc869477`; v0.8.7 is pending merge. Read [the current handover](../HANDOVER_CURRENT.md) and [exact manifest](../evidence/FINAL_ARTIFACT_MANIFEST_V087.json). Prior v0.8.6 artifacts and receipts retain their original identities.
 
-Read [the canonical handover](../HANDOVER_CURRENT.md) for current scope and next-step authorization. Versioned manifests/reviews retain their original stacked-PR delivery context. This repository reconciliation adds no hardware/model execution and changes no TeX, numbers, Figure 3, official style, delivered PDF or ZIP.
+## Delivered artifacts
 
-The central story remains the original B570 draft-free prospective full-trajectory prediction. Distinct fork, RTX P/R and qualified-cost studies supply different supporting evidence. The execution/build descriptions below report the original v0.8.6 delivery; this maintenance separately checks artifact identity, a fresh source-ZIP main/appendix build and compact evidence verification.
+Main is **10 body + 2 reference pages**; the separate appendix is **14 pages**. The 9+2-page hardware-only proof removes the runtime section for an internal check while retaining full-paper summaries; it is not a submission manuscript.
 
-## Current build and QA
+- `output/manuscript-v0.8.7.pdf`
+- `output/appendix-v0.8.7.pdf`
+- `output/hardware-only-v0.8.7.pdf`
+- `output/overleaf-rtx-integration-v0.8.7.zip`
+- `output/anonymous-evidence-index-v0.8.7.zip`
 
-Prerequisites: Python 3.11+ with pypdf, numpy and pymupdf; pdfLaTeX, BibTeX
-and latexmk. Poppler renders the final pages. Activate those dependencies
-before invoking Makefile; no runtime or model installation is needed.
-These current entries have actually been run from this directory:
+The original B570 prospective prediction remains central. New Tables 3–4 and Appendix Q integrate same-set RTX candidate comparison and matched qualification–cost, without pooling older cohorts or converting blocked timing into speedup.
 
-```sh
-make all
-make check
-make overleaf
-```
+## Build and verification
 
-The defaults use v086 entries only. All old scripts, macros, Figure3,
-archives, vendor styles and earlier PDFs/ZIPs/QA receipts are preserved.
-Each build packages actual TeX dependencies and checks canonical-to-ZIP
-byte transformations. It independently extracts into two new directories,
-builds main/appendix and the internal hardware-only proof in each, and
-compares every page's raw extracted text without normalization. Fresh aux
-and bibliography files are generated locally; nothing is copied from an
-old build. Automated PDF/log/font/reference/anonymous checks run afterward.
-Manual review has its own final PDF/render hash receipt.
-
-Outputs are manuscript-v0.8.6.pdf, appendix-v0.8.6.pdf,
-hardware-only-v0.8.6.pdf, overleaf-convergence-v0.8.6.zip and
-anonymous-evidence-index-v0.8.6.zip. Main has 10 body + 2 reference pages;
-appendix has 12; internal proof has 9 body + 2 reference pages. The proof
-removes the runtime section but keeps full-manuscript summaries; it is not
-a submission paper. Appendix growth pays for raw-score/continuation tables,
-M4 opportunity/sensitivity, conditional accounting, H2 input/witness audit
-and evidence navigation; the CFP has no appendix page cap.
-
-The source ZIP needs only TeX: extract into an empty directory and run
-`latexmk -pdf main.tex` and `latexmk -pdf appendix.tex`. The compact index
-needs only Python 3.11+ stdlib: extract into an empty directory and run
-`python3 -B verify.py`. It executes unchanged prior numeric/endpoint
-assertions and recomputes new post-study statistics from exported inputs.
-INDEX.json identifies the separate unchanged H2 tape/events capsule by
-exact filename, length and SHA256. Internal reviews and author paths are
-excluded from both ZIPs.
-
-## Actually executed full-archive and derived entries
-
-The following commands were run from the repository root:
+Prerequisites: Python 3.11+, pypdf, numpy, PyMuPDF, pdfLaTeX, BibTeX, latexmk and Poppler. No models or GPU runtime are needed. From the repository root, these entries were actually executed for this delivery:
 
 ```sh
-python3 -B paper/mlsys2027/scripts/replay_archives_v086.py --work tmp/qa-v086/archives-final
-python3 -B paper/mlsys2027/scripts/analyze_existing_records_v086.py --work tmp/qa-v086/archives-final
-python3 -B paper/mlsys2027/scripts/audit_h2_inputs_v086.py --work tmp/qa-v086/archives-final
-python3 -B paper/mlsys2027/scripts/package_anonymous_evidence_v086.py --work tmp/qa-v086/archives-final
+python3 -B paper/mlsys2027/scripts/prepare_evidence_v087.py
+python3 -B paper/mlsys2027/manuscript/scripts/build_v087.py --qa-root /path/to/new-build-directory
+python3 -B paper/mlsys2027/manuscript/scripts/qa_pdf_v087.py --build /path/to/new-build-directory/fresh
+python3 -B paper/mlsys2027/scripts/validate_integration_v087.py
 ```
 
-Archive replay requires a nonexistent directory; for another replay choose
-a new path and pass that same path to the other three entries. The scripts
-execute file/CPU verifiers only. All nine available families are reconstructed
-and verified, including all 49 B570 parts, full/anonymous RTX H2, RTX H1 and
-latency, old B570 H1 and both direct-ID studies, and M4 primary/secondary.
-Original B570 Windows basename failures on POSIX remain explicit RERUN_FAIL
-records; the Path.name-only adapter keeps every scientific assertion active.
-Original verifier entry SHA, arguments, exit status and raw stdout/stderr
-hashes are recorded. Other old prose-bound reviews are PRIOR_RECEIPT_ONLY
-history; their fixed-word checks are not current semantic claims.
+Use a new build directory for another build. Makefile defaults now invoke v087 build/check/package entries. `make all` creates both clean extractions and runs automated QA; `make check` validates the evidence and logs from the build directory recorded in its receipt. This delivery ran the explicit entries above and `make check`; it does not claim that the new `make all` target itself was separately executed. Fresh builds can change PDF metadata and bytes; identify each new artifact before reviewing it.
 
-New descriptors use all original applicable records. The M4 sensitivity
-has its own secondary seed2026100101/10000 stratified draws. Original
-primary/secondary CIs and streams stay unchanged. 358H zero-draft results
-are fixed-progress/target-work/baseline arithmetic bounds, not prompt-GM
-bounds or optimization experiments. Complete native-log file counts are
-observed, not a timed logging-cost estimate. Empty hook p99 0.6 microseconds
-does not bound all logging. RTX independent GM .6458157742698285 and sealed
-original .6458157742698286 remain distinct at one ulp.
+Both independent source-ZIP extractions regenerate all aux/bibliography files and build main, appendix and internal proof. Raw extracted page text must match exactly without normalization. Final explicit TeX passes resolve cross-references after latexmk. Source-to-ZIP byte transformations, complete bibliography authors, embedded fonts, anonymous PDF text/metadata/actions, logs and page limits are checked. Separate final-hash-bound visual QA records all 37 pages.
 
-Exact old v084 sequence ZIP and 358H runtime raw traces remain UNAVAILABLE.
-Original 72 B570 arrays are preserved and compared element by element.
-Offline hashes/ordinal mappings do not authenticate original absolute time,
-remote exposure completeness or omitted weights/runtime/compiler/driver.
+For a minimal source reproduction, extract the ZIP into an empty directory and run `latexmk -pdf main.tex` and `latexmk -pdf appendix.tex`, then rerun TeX if a log reports unresolved references. The compact evidence package needs only Python stdlib: extract into an empty directory and run `python3 -B verify.py`. It recomputes original studies and post-study descriptors from preserved inputs, then the new V4 trajectory/timer projection. Two independent clean executions were performed; ten invalid-evidence cases were rejected.
 
-## Current author workflow and historical delivery records
+The anonymous index is a known-outcome projection, not a prospective freeze or a new experiment. Its INDEX identifies unchanged full H2 and V4 anonymous capsules by exact name/length/hash. Native absolute timer endpoints are omitted from the compact export; recorded intervals and frequencies remain exact, and the raw author capsules retain endpoints. Internal reviews and author paths are absent from both ZIPs.
 
-Use [HANDOVER_CURRENT.md](../HANDOVER_CURRENT.md) for live repository state and RTX A+B preparation. See evidence/DELIVERY_V086.md and reviews/convergence_v086/ for the original revision response and delivery QA. Their Draft/unmerged and no-review language describes that delivery-time snapshot, not the later merge of #44/#45/#46 or a live authorization gate.
+## Audit scope and limits
 
-This maintenance does not perform a new submission-level review or claim that acceptance follows from build success. Independent review and any integration of future RTX results remain separate tasks. RTX protocol preparation is authorized; reserved execution waits for review of the exact protocol/source SHA.
+Figure 3's 71 checks were rerun. The prior [RTX V4 independent native-log audit](../evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already verified nine sealed capsules, all 228 native live/timed arrays and raw QPC-to-statistic calculations on CPU. That receipt is reused, not relabeled as a new nine-capsule replay here. Historical v086 archive/numeric/runtime/secondary receipts remain historical; current QA does not claim their entire suites were freshly rerun.
+
+No GPU/model forward occurred in v087 integration. Scientific arrays, old macros, Figure 3, vendor style and prior artifacts stay unchanged. Exact old v084 sequence ZIP and 358H runtime raw traces remain unavailable. Offline hashes and ordinal mappings do not authenticate original absolute time, exposure completeness or omitted weights/runtime/compiler/driver. Build success is separate from [submission-level review](../reviews/submission_v087/).

@@ -4,7 +4,7 @@ Updated 2026-10-02. This is the living control file for current state and scope.
 
 ## 1. Repository state
 
-Candidate branch: `paper/mlsys2027-rtx-integration-v0.8.7`, based directly on main `87b811e21a164468232cfea3c2404a1ebc869477`. v0.8.7 is pending merge. Baseline main contains v0.8.6 via #46, V3 terminal history via #48, V4 completed evidence via #49, and independent raw closeout via #50. The earlier #45 stacked merge was resolved by #46; the new candidate must target main.
+Candidate [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51), branch: `paper/mlsys2027-rtx-integration-v0.8.7`, based directly on main `87b811e21a164468232cfea3c2404a1ebc869477`. v0.8.7 is pending merge. Baseline main contains v0.8.6 via #46, V3 terminal history via #48, V4 completed evidence via #49, and independent raw closeout via #50. The earlier #45 stacked merge was resolved by #46; the new candidate must target main.
 
 The v086 delivery remains `494a5ca4fe62534b032b37d01652c3f88e0d16e1`; authoritative TeX source `da8d5739eb108de7f35d3a3cfbd954d42462f2e0`. Scientific author-freeze tag `mlsys2027-v0.8-author-freeze` still peels to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. See [DELIVERY_V087.md](evidence/DELIVERY_V087.md) for the candidate content identity and PR; do not confuse that fixed anchor with a moving branch tip. No author-machine checkout state is inferred.
 

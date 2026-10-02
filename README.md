@@ -31,9 +31,11 @@ The hardware-only proof is an internal section-removal check, not a submission m
 
 ## Next work
 
-The author selected RTX A+B as optional strengthening studies: a fresh same-set predictor comparison and a matched target/batched/serialized qualification–cost study. Use [the complete RTX prompt](docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md), initially **PREPARE_ONLY**. Reserved execution follows review of the exact frozen protocol/source. Neither a positive result nor A success is required to report B.
+RTX A+B is completed and merged: [PR #48](https://github.com/leecdiang/HeteroSpec/pull/48) preserves the terminal V3 attempts, while [PR #49](https://github.com/leecdiang/HeteroSpec/pull/49) contains the complete 19-prompt V4 study. UB2/live is 51/57; H2/R_ONLY each match live 57/57. In the same-cohort fresh cost study, batched is BLOCKED and serialized is QUALIFIED but slower (0.677× [0.662, 0.692]). The finite results do not establish proposal/history necessity.
 
-Do not start B570 dense scanning, extra backends, 358H persistence or M4 variants from a limitation paragraph. Current guardrails and stopping rules are in the handover. Public release, arXiv and conference submission are separate decisions; no DOI or submission is claimed here.
+See [the independent raw closeout](paper/mlsys2027/evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md): all nine sealed V4 capsules and the native array/QPC-to-statistic chain were independently replayed on CPU, without a model rerun. The manuscript itself remains v0.8.6. Next is a new evidence-integration manuscript revision and independent review; the old RTX execution prompt is historical.
+
+Do not start B570 dense scanning, extra backends, 358H persistence or M4 variants from a limitation paragraph. Public release, arXiv and conference submission remain separate decisions.
 
 ## Repository layout
 
@@ -44,3 +46,4 @@ Do not start B570 dense scanning, extra backends, 358H persistence or M4 variant
 - paper/mlsys2027/: current manuscript, evidence and versioned review records.
 - docs/: reproduction, data policy, history and the next RTX execution prompt.
 - configs/ and requirements/: portable configuration and platform dependencies.
+

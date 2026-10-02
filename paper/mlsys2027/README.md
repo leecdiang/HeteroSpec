@@ -18,10 +18,13 @@ PAPER_FRAMEWORK_HANDOFF.md and older platform reports remain useful original fra
 
 ## Next authorized direction
 
-Prepare RTX A+B via [the complete prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md). First stage: exposed engineering, exposure audit and concrete protocol/source freeze; reserved forwards remain zero. Author review precedes EXECUTE_FROZEN. B570 dense scan, more backends, 358H persistence and M4 variants remain outside this scope.
+The RTX A+B study is complete and CLOSED. Main includes PR #48's terminal V3 history and PR #49's V4 evidence. Read [the independent raw closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md): nine sealed capsules and all native A/B arrays and B QPC intervals were replayed on CPU, with no model inference. The original [RTX prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md) is historical guidance and does not authorize repeating the campaigns.
 
-Existing studies are closed. Optional strengthening experiments do not imply a validity rescue is required or guarantee acceptance. Independent submission review, manuscript integration of new results, arXiv/public release and conference submission remain separate actions.
+Next is manuscript integration in a new version, with the same-set trajectory comparison, matched qualification–cost table, 19-prompt/exposure limits and retained V3 failure history; then build and independently review the new artifacts. The current delivered manuscript is still v0.8.6. No B570 dense scan, new backends, 358H persistence or M4 variants are authorized here.
+
+No necessary/minimal history state, unique cause, population performance or acceptance guarantee follows from these finite observations. arXiv/public release and conference submission are separate actions.
 
 ## Working discipline
 
 Preserve native generated-ID exactness, original primary/secondary/diagnostic labels, ratio directions, committed progress C, full target work R_target and sensor boundaries. Retain every failure. Do not manufacture raw data, rename proxy timing as integrated cost, pool unmatched cohorts or count repetitions as independent prompts. Numerical macros, Figure 3, vendor style, prior artifacts and the author-freeze tag stay immutable.
+

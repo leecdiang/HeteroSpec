@@ -1,6 +1,6 @@
-# Current handover — v0.8.6 on main; RTX A+B protocol preparation next
+# Current handover — v0.8.6 manuscript; RTX A+B V4 evidence closed on main
 
-Status reconciled 2026-10-01. Read this file first for current decisions. Versioned handovers, stopping rules, manifests and experiment closeouts retain their original delivery context; they are not live branch status.
+Status reconciled 2026-10-02 after the RTX experiment merges and independent CPU-only raw replay. Read this file first for current decisions. Versioned handovers, stopping rules, manifests and experiment closeouts retain their original delivery context; they are not live branch status.
 
 ## 1. Repository state and version identities
 
@@ -13,11 +13,13 @@ Status reconciled 2026-10-01. Read this file first for current decisions. Versio
 | Stacked #45 merge | `30635a680a93a2bd145361861b6c563f2f485fca`; originally merged into the v0.8.5 branch, now also an ancestor of main |
 | v0.8.6 delivery/content tree | `494a5ca4fe62534b032b37d01652c3f88e0d16e1`; exact delivered source and artifacts |
 | v0.8.6 authoritative TeX source/content | `da8d5739eb108de7f35d3a3cfbd954d42462f2e0` |
+| RTX V3 terminal-history merge | `7f365f4fa87aedcebc2ae4cae5d8071b8223132d`; PR #48; incomplete scientific schedule, not successful A/B evidence |
+| RTX V4 completed-study merge | `4500d140d78f77d0e314044acab1ae8e68dec42f`; PR #49; 19 prompts, 285 A and 171 fresh B conditions |
 | Immutable scientific author-freeze | `mlsys2027-v0.8-author-freeze` peels to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`; not advanced to v0.8.6 |
 
 The integration anchor is not a claim that the moving main HEAD always equals that SHA. This documentation maintenance and later commits may follow it. Resolve the actual remote HEAD with GitHub or `git fetch origin` / `git rev-parse origin/main`; verify that it contains the anchor and inspect subsequent changes. A document cannot truthfully embed its own future containing commit hash.
 
-Authoritative development baseline is main. The new RTX branch is to be created separately as `experiment/rtx-trajectory-and-matched-cost-v3`; no RTX V3 experiment implementation or execution is delivered by this maintenance. Do not assume the author's machine-local checkout has moved. Its current HEAD/dirty state must be read on that host before work.
+Authoritative development baseline is main. PR #48 preserves the failed V3 study; PR #49 contains the completed V4 study. Both now target and are merged into main. Manuscript TeX and delivered artifacts remain v0.8.6; the RTX V4 results have not yet been integrated into a new manuscript version. Do not assume the author's machine-local checkout has moved. Its current HEAD/dirty state must be read on that host before work.
 
 ## 2. Current paper thesis and exact artifacts
 
@@ -36,8 +38,11 @@ Full artifact SHA-256/lengths and the original delivery QA scope remain in [FINA
 | B570 original H1 | 36/36 exposed discovery; reserved prediction/live 72/72 on 24×3; reference/live 60/72 | Draft-free tested-path predictive sufficiency; reference compatibility still blocked |
 | B570 same-state fork | Scores change 72/72; raw top-1 and immediate decisions change 0/72; later trajectories change 18/72 on 6/24 prompts | UB128 persists after the sampled fork; delayed effects cannot be attributed to that block alone; separate cohort from original H1 |
 | RTX earlier H1 | Target-only UB2/live discovery 24/36; H2 not executed in that arm; reserved 0 | Failed candidate and stopping outcome remain visible |
-| RTX H2 V2 | H2/live, R_ONLY/live, H2/R_ONLY each 72/72; UB1 reference/live 60/72 | Independent program orchestration on shared numerical libraries; H2 builds tape with draft; no same-set UB2 competitor |
+| RTX H2 V2 | H2/live, R_ONLY/live, H2/R_ONLY each 72/72; UB1 reference/live 60/72 | Independent program orchestration on shared numerical libraries; H2 builds tape with draft; V2 alone has no same-set UB2 competitor |
 | RTX fresh serialized cost | New 90/90 direct-ID gate; 180 runs; target/serialized 0.646 [0.630, 0.660]; 0/30 prompts faster | Instrumented post-prefill CLI boundary; no same-study qualified batched timing or production estimate |
+| RTX V3 | 72 valid pre-live conditions + one failed capture; A live 0; 54 valid B conditions + one failed capture | Terminal prefixes only; no full-cohort accuracy, speedup or CI; old failed status remains unchanged |
+| RTX V4 trajectory A | 19×3: target-only UB2/live 51/57, H2/live and R_ONLY/live 57/57; UB1 reference/live 51/57; 2 reference-divergent prompts | Rejects only the predefined UB2 candidate on this cohort; replay agreement is finite empirical sufficiency, not history necessity or unique cause |
+| RTX V4 matched cost B | 171 new runs: batched 51/57 BLOCKED; serialized 57/57 QUALIFIED; target/serialized 0.677351 [0.661653, 0.691812]; 0/19 faster | Same cohort/timer/schedule, instrumented post-prefill latency; blocked timing diagnostic only; not comparable as an optimization to the old 0.646 cohort |
 | 358H | CPU/NPU Phase 3 each 90/90; fixed-progress/target-work zero-draft-and-residual bounds 0.82745 / 0.83519 | Conditional arithmetic total-time bounds; replay/proposal inseparable; runtime qualification stopped; no runtime gain or NPU-general claim |
 | M4 runtime | Guard 1.3114×, Always-Spec 1.3469×; both 180/180; Guard/Always 1.0271; Always/oracle 1.000692 | Guard beats target-only but loses to fixed speculation; hindsight oracle compares two measured fixed modes; no incremental adaptive-policy win |
 
@@ -59,24 +64,17 @@ Existing B570, RTX, 358H and M4 campaigns are **CLOSED**. Their negative results
 
 Under the current explicitly limited claims, no additional experiment is recorded as a prerequisite to rescue validity. The v0.8.6 [stopping rule](reviews/convergence_v086/STOPPING_RULE_V086.md) remains the historical revision-completion decision, not an acceptance guarantee. Importance, generality and venue fit remain independent review questions. New optional studies below do not reopen old campaigns.
 
-## 6. Authorized next RTX direction and execution state
+## 6. RTX A+B closeout and next manuscript work
 
-The author has selected one RTX activity with two separately reported studies:
+RTX A+B execution is complete and **CLOSED**. The old [execution prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md) is historical preparation guidance, not an instruction to rerun experiments. Original V3 stopping records are unchanged; its EOS/cap capture failure led to a separately authorized V4 protocol and a new 19-prompt cohort containing all remaining exposure-audited tasks. The V3 seven exposed tasks are excluded. Never pool failed prefixes, the V2 cohort, or repetitions into V4's 19 independent prompts.
 
-| Priority | Question | Current execution state |
-|---|---|---|
-| A — trajectory sufficiency comparison | On one new reserved cohort, compare UB1 reference, target-only UB2, H2 P/R, R_ONLY and native batched live | Protocol/engineering preparation next; no V3 reserved predictions or live executions performed here |
-| B — matched qualification–cost | In one frozen timer build/cohort/schedule, jointly measure target reference, batched and serialized IDs and time | Protocol/engineering preparation next; no new matched three-condition runs performed here |
+All nine sealed V4 author/anonymous/pre-live capsules were fetched at exact study HEAD `8f30449d51bca1fe4907c392c5c65d5cc0fbcd3f`, rebuilt from their parts, and replayed with the original CPU-only offline verifier in [the independent audit run](https://github.com/leecdiang/HeteroSpec/actions/runs/37015269566). A separate parser reconstructed all 57 A native arrays and 171 B arrays/QPC intervals, and recomputed gates, medians and the frozen 10,000-draw paired-prompt bootstrap. Read [the closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) and [machine-readable receipt](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.json) for exact evidence identities and limits. No GPU/model forward or scientific rerun occurred.
 
-Use [the complete RTX A+B prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md). First run is **PREPARE_ONLY**: exposed engineering runs, exposure audit, implementation, two concrete protocols and F0 remote freeze/Draft PR. Reserved model forwards remain zero. **EXECUTE_FROZEN** follows author review of the exact protocol/source SHA; this handover is not that authorization.
+Completion retains the disclosed host-policy amendment and original strict-host stop. The author explicitly instructed that fan adjustment is not to block the work or cause reruns. Frozen numeric source, gate, denominator and failed records remain unchanged. Offline evidence does not authenticate omitted external weights/runtime/driver bytes or establish independently trusted absolute timestamps.
 
-Normal plan: new 24 prompts × three; A 360 complete condition runs, B 216 separate runs, total 576, engineering separately counted. B need not wait for A success. It does wait for a safe exposure barrier: A predictions remotely sealed before any reserved A live/B formal call; ordinarily A closes before B. If A stops before F2, terminally close it before B and never resume prospective A on those exposed tasks.
+The next scientific-document action is a new manuscript integration revision: add the same-set UB2/replay discriminator and matched correctness–cost table, retain V3 failure/exposure history in the appendix, build and independently review the resulting exact artifacts. Do not overwrite v0.8.6 artifacts or claim this evidence merge already generated v0.8.7.
 
-Reaudit repository and accessible local archives. The old V2 inventory's 50 eligible minus 24 selected leaves 26 only under that old inventory, not a guarantee of 24 fresh tasks today. No new discovery set is drawn from that pool. The prompt predeclares an audit-complete, pool-insufficient A-blocked/B-only 30-task preparation branch; the exact mode/workload still needs protocol review before formal execution.
-
-Freeze candidates, conditions, inputs, counts, full arrays/tapes, timetable, gate, timer, estimator and failure branches before outcomes. A uses two predefined candidates without an H1-success selection gate; no H3 search. Zero reference divergence is NONDISCRIMINATING. UB2 failure plus replay success excludes the tested UB2 candidate; it does not establish proposal/history necessity. Native `--ubatch-size` also affects draft; B compares whole path configurations, not target-verification-only causality.
-
-B gate precedes timing interpretation. Failed paths retain diagnostic times but no lossless speedup/CI; negative scientific outcomes complete the frozen schedule. Operational/provenance failures retain their actual prefix without selective replacement. Do not fill B with the old 0.646 result.
+UB2 failure plus replay success does not prove proposal/history necessity. Native `--ubatch-size` also affects draft; B is a whole-path configuration comparison. Do not call the blocked batched path faster, manufacture a speedup/CI for it, compare 0.677 with 0.646 as an improvement, or expand candidates/prompts until a positive result appears. There is no remaining authorized GPU study in this closeout.
 
 ## 7. Scope guardrails and separate release decisions
 
@@ -87,3 +85,4 @@ B gate precedes timing interpretation. Failed paths retain diagnostic times but 
 - arXiv, public release, licensing/authorship metadata and conference submission are separate decisions. No public release/submission is claimed or authorized by this handover.
 
 Keep this compact current file and root REPO_STATUS synchronized after a materially changing merged PR. Put history in MANUSCRIPT_STATUS, versioned handovers and original closeouts. Before a stacked PR merge, check its actual base; `merged=true` alone does not prove main contains it.
+

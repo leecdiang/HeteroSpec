@@ -1,3 +1,20 @@
+# Current handover — v0.9.0
+
+Updated 2026-10-03. This status supersedes the preserved history below. Read the [revision response](reviews/diagnostic_revision_v090/REVISION_RESPONSE_V090.md) for the implemented acceptance-reassessment requests and their limits.
+
+v0.9.0 explains the tested B570/RTX reproduction tasks, adds complete-trajectory failure extents, and aligns the 358H optimization budget with the original prompt estimator. It quantifies M4 opportunity between two measured fixed modes and carries those conclusions through the whole paper. All analyses use retained records after outcomes were known. Original observations, primary GM/CI/seeds and all historical artifacts remain unchanged.
+
+Current files: [main PDF](manuscript/output/manuscript-v0.9.0.pdf) (10 body + 2 reference pages), [separate appendix](manuscript/output/appendix-v0.9.0.pdf) (17 pages), [portable document source](manuscript/output/overleaf-diagnostic-revision-v0.9.0.zip), and [anonymous scientific package](manuscript/output/anonymous-evidence-index-v0.9.0.zip). The new scientific package retains every v0.8.8 member byte-identically and adds the new diagnostic calculator/data. The hardware-only PDF is an internal section-removal proof, not a submission artifact. [Manifest](evidence/FINAL_ARTIFACT_MANIFEST_V090.json) and [revision QA](evidence/REVISION_V090_QA.json) bind the files and checks.
+
+Two clean source-ZIP builds agree on exact raw per-page text. Final 40-page visual coverage comprises 26 manually inspected final pages and 14 exact pixel matches to manually inspected pages from the current revision's first candidate. Fonts, citations, anonymity and page limits pass. The new diagnostic calculator passes twice in clean extractions. Historical verifier/bootstrap suites are not rerun; 319 protected files and all 30 historical scientific ZIP members retain their original bytes.
+
+The [fixed v0.8.9 reassessment](reviews/acceptance_reassessment_v089/ACCEPTANCE_REASSESSMENT_V089.md) remains historical: systems 3/6 weak reject, evidence 4/6 weak accept. These are not v0.9.0 scores or acceptance probabilities. Concrete reproduction inputs and conditional budgets are now clearer; no actual bug fix or measured debugging saving is demonstrated. Main-track significance remains open to a fresh assessment. No further B570 experiment is needed for the current finite claims.
+
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) keeps branch `paper/mlsys2027-rtx-integration-v0.8.7`. Revision parent is `c39461230f34554151dcfddafffb41ab938517dd`; main remains `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. **B570/RTX/358H/M4 remain CLOSED.** This revision authorizes no new model/hardware experiment, merge, release or conference submission.
+
+<details>
+<summary>Preserved v0.8.9 status and earlier history</summary>
+
 # Handover Current — v0.8.9 review closeout
 
 Updated 2026-10-03. This current status supersedes all historical wording below. [Final review](reviews/system_revision_v089/FINAL_REVIEW_V089.md) records the complete request mapping and remaining significance concern.
@@ -105,6 +122,8 @@ Assess the exact v087 artifacts and completed review, then decide existing-mater
 - arXiv, public release, author/licensing metadata and conference submission are separate decisions. No submission or public release is performed here.
 
 After a materially changing merge, reconcile this file with actual remote main. Check PR base before merging; merged=true alone does not prove main contains a stacked PR.
+
+</details>
 
 </details>
 

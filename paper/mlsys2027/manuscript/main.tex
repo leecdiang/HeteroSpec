@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Predicting Execution Paths and Bounding Optimization in Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.8.9},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Predicting Execution Paths and Bounding Optimization in Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.9.0},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -21,6 +21,7 @@
 \input{tables/followup_values_v085.tex}
 \input{tables/derived_values_v086.tex}
 \input{tables/rtx_v4_values_v087.tex}
+\input{tables/acceptance_values_v090.tex}
 \mlsystitlerunning{Predicting Execution Paths in Speculative Decoding}
 \begin{document}
 \twocolumn[{
@@ -33,12 +34,12 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-A reference mismatch rejects an execution path but does not predict its subsequent output. We test frozen complete-trajectory descriptions of speculative decoding, then examine their system consequences. On one B570 stack, a draft-free target-only UB1 predictor selected on exposed discovery matches 72/72 reserved capped ID sequences on 24 repeat-stable prompts, including four reference-divergent trajectories; the UB128 reference matches 60/72. This establishes predictive sufficiency for that path, without restoring qualification or identifying a unique cause. Separate same-state forks change scores but not sampled immediate decisions. A prospective RTX same-set comparison on all 19 remaining exposure-audited prompts rejects the specified target-only UB2 candidate (51/57), while proposal-conditioned replay matches 57/57 on shared numerical routines. UB2 and reference fail on different tasks; no necessity of history follows. On the same prompts, 171 fresh qualification/cost runs block batching and qualify serialization, which is slower (\VFourCost$\times$ target/serialized latency) within an instrumented post-prefill boundary. Supporting evidence rules out draft/residual-only parity on 358H at fixed progress and target work, and shows qualified M4 Guard losing to fixed speculation. These finite results constrain both execution descriptions and optimization choices while keeping prediction, reference compatibility and complete cost distinct.
+A reference mismatch rejects an execution path but does not predict its later output. We test frozen programs as complete-output descriptions of speculative decoding, then measure qualification and cost separately. On one B570 stack, a draft-free target-only UB1 program matches 72/72 reserved capped sequences on 24 repeat-stable prompts. Across four reference-divergent trajectories, all \DiagBNonref\ non-reference positions through cap are predicted correctly. This supplies a simpler reproducer without restoring compatibility or identifying a unique cause. Separate sampled forks change scores but not immediate decisions. On 19 remaining exposure-audited RTX prompts, target-only UB2 matches 51/57, while proposal-conditioned replay matches 57/57 using shared numerical routines. The two target-only comparators fail on different tasks; replay success proves no necessity of history. Fresh matched RTX cost runs qualify serialization but find it slower within the instrumented post-prefill boundary. Supporting 358H CPU/NPU records give conditional prompt-GM ceilings \DiagCPUCeiling/\DiagNPUCeiling\ even with draft/residual removed; M4 fixed-mode hindsight opportunity is about \DiagMOpportunity\% GM latency reduction, and Guard loses to fixed speculation. These finite tests identify tested reproduction programs and bound optimization opportunity on the measured paths.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 \ifruntime\else
-\hypersetup{pdfsubject={MLSys 2027 v0.8.9 internal hardware-only proof}}
+\hypersetup{pdfsubject={MLSys 2027 v0.9.0 internal hardware-only proof}}
 \noindent\textbf{Internal section-removal and reference proof only.}
 \fi
 \input{sections/01_introduction}

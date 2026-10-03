@@ -8,7 +8,7 @@ Let $k$ be maximum draft width, UB the target micro-batch capacity ($n_{\mathrm{
 Historical text-path agreement (H) compares arrays reconstructed from CLI text. Direct-ID qualification (Q) compares captured IDs with the study's reference. Prediction equality compares a sealed complete array with reserved native live IDs. Prediction can succeed on a reference-divergent path, so it does not imply Q. We write prediction equality in words; the letter P below denotes only the draft worker. Same-state intervention has separate score, immediate-decision and continuation endpoints.
 
 \subsection{Execution descriptions as testable candidates}
-Table~\ref{tab:inputcontracts} states what each program receives and computes. UB denotes capacity, not a trace of actual forward shapes, occupied positions or prior KV operations. In particular, target-only UB2 and native speculative UB2 need not issue the same sequence of forwards. The candidate test asks whether a specified program predicts complete output, rather than assuming matching parameter names imply matching numerical paths.
+Table~\ref{tab:inputcontracts} states what each program receives and computes. UB denotes capacity, not a trace of actual forward shapes, occupied positions or prior KV operations. In particular, target-only UB2 and native speculative UB2 need not issue the same sequence of forwards. The candidate test checks complete output directly. Equal parameter names alone do not establish equal numerical paths.
 \input{tables/input_contracts_v088.tex}
 
 \subsection{Complete realized cost}
@@ -19,4 +19,4 @@ S &= \frac{T_b C}{T_d^{\mathrm{real}}+T_{\mathrm{target,round}}^{\mathrm{real}}+
 \end{align}
 The normalized denominator gives break-even $C>\dreal+\rtarget+X$. These are accounting identities, not new profitability theory \citep{specllm}. Total-time ratios need not equal prompt geometric means. Incompatible experiments cannot isolate an unmeasured component by subtraction. The historical target-forward proxy $\microv$ omits drafting and integration; its original cells and separate fresh qualification gates remain in Appendix F.
 
-Primary results answer a frozen question after its applicable gate; secondary and post-study results retain their own scope. Path controls or measured regions support a bounded explanation, while timing on blocked paths remains diagnostic. A later Q gate does not retrospectively certify historical H timing.
+Primary results retain their frozen questions and gates; post-study results are identified separately. Timing on blocked paths remains diagnostic, and a later Q gate does not certify historical H timing.

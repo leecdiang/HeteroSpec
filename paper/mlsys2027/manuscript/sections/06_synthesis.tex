@@ -1,19 +1,19 @@
 \section{System Implications and Research Outlook}
 \label{sec:hardwareconclusion}
-The studies constrain different choices (Table~\ref{tab:decisions}); they do not identify one cause or rank stacks. Qualification already rejects a reference-divergent implementation. The extra scientific information is whether a predefined execution description can predict that path before it runs, including every ID after divergence. B570 succeeds without proposals in its predictor; RTX rejects its specified capacity-level candidate on the same prompts where replay succeeds. Neither result licenses native replacement or proves a minimal state representation.
-\input{tables/system_decisions_v088.tex}
+The prediction studies select reproduction programs; reference gates decide compatibility; cost studies bound optimization opportunity (Table~\ref{tab:decisions}). B570's successful simplification removes draft/proposal dependencies from its frozen reproduction task. RTX's specified capacity-level simplification fails, while proposal-conditioned replay reproduces the complete path. Neither result establishes a minimal state representation or a portable cause.
+\input{tables/system_decisions_v090.tex}
 
-\paragraph{Execution descriptions should be explicit.}
-These results motivate treating effective numerical execution as part of an experimental output contract. A micro-batch setting is a candidate description, not a guarantee of equal forward histories. The successful B570 description and failed RTX one tell an investigator which already-tested simplification survives, rather than supplying a universal kernel explanation. Replay can serve as a reproducible description when it succeeds, but shared kernels limit its independence. Stronger causal attribution would require controlling subsequent policy and checking relevant state, beyond complete-array agreement.
+\paragraph{Use a tested reproducer for diagnosis.}
+On B570, a target-only harness can generate the tested native expected outputs, including non-reference suffixes. On RTX, the successful harness computes its own target decisions while consuming a sealed proposal tape. The complete arrays give expected outputs for regression checks of the frozen paths. Their agreement supplies no evidence that a future correction or changed numerical stack will behave identically; such a use needs agreement back to native execution. The present study demonstrates reproducer selection, not a completed bug fix or measured debugging savings.
 
-\paragraph{Optimization targets should follow complete cost.}
-For RTX, legality and latency are measured together: the apparent alternative of serialization satisfies IDs but does not improve measured cost. For 358H, reducing interface replay alone cannot overturn the fixed-progress target-work bound. A design that aims for parity must change progress, target execution or the reference/baseline assumptions and qualify that changed path anew. Isolated NPU speed and target-forward proxies cannot establish that such a change works.
+\paragraph{Change the cost term that limits the opportunity.}
+RTX serialization qualifies but loses within its instrumented boundary. On 358H, removing draft/residual cannot reach parity at fixed target work and progress. Under the optimistic premise that all other cost vanishes, a uniform target-work reduction of at least \DiagCPUReduction\% CPU or \DiagNPUReduction\% NPU is needed for the original prompt-GM ceiling to reach one. A design that changes target execution or committed progress must qualify that new path before claiming a gain. Isolated NPU speed cannot establish it.
 
 \ifruntime
-\paragraph{Control opportunity precedes policy complexity.}
-On M4, fixed speculation is already close to the hindsight comparator over the two measured modes. Guard's fallback activity does not show that a large recoverable loss exists. This favors assessing the available fixed-mode opportunity before attributing benefit to continuation control. It does not bound all possible within-request policies: a better policy could alter decisions and transition costs, but that gain is not in the current measurements.
+\paragraph{Measure opportunity before adding control.}
+Hindsight choice between the two measured fixed modes lowers GM latency from Always by about \DiagMOpportunity\%; Guard instead adds 2.71\%. This small fixed-mode opportunity helps explain why fallback activity alone is weak evidence of useful control. It does not bound policies that change the execution or switch within a request.
 \else
-The full manuscript separately assesses M4 continuation control and its limited measured opportunity between two fixed modes.
+The full manuscript separately assesses M4 control and its limited opportunity between two measured fixed modes.
 \fi
 
-These are design constraints and research directions supported by finite studies, not measured improvements. Their reusable element is the separation of predictive description, reference compatibility and complete-cost opportunity; each concrete conclusion remains conditional on the tested path, workload and measurement boundary.
+A useful next diagnostic study would test whether a simpler reproducer helps isolate a discrepancy or validate a correction, then confirm the result on native execution. Stronger causal attribution instead needs a discriminating state/trace-matched contrast and controlled continuation. These are additional research questions; full-array agreement alone cannot answer them. The conclusions here remain the tested reproduction choices and conditional cost budgets.

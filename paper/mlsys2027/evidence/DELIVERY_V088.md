@@ -16,3 +16,10 @@ Assessment: **Share with caveats**. The finite claims are supported within the c
 B570 remains closed. No experiment is needed to retain the current bounded claims. A stronger single-block causal contribution would need a separately specified common-continuation study; neither dense scanning nor a positive witness is assumed.
 
 Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains its historical branch name `paper/mlsys2027-rtx-integration-v0.8.7`, directly against main `87b811e21a164468232cfea3c2404a1ebc869477`. This revision starts from `79327fd0c15e4d382b6264e9e780004b046fe5c1`; exact new remote identities are recorded in the publication receipt. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. No merge, release or submission is performed.
+
+## Fixed remote content identity
+
+Exact v0.8.8 content commit: `46621eb78b1bb5507ec60f5c5a31f0ea7872555d`.
+Content tree: `afd3ce8cb09f6361ed6096047d4148efd6a0cd6b`.
+
+Remote recursive-tree verification passed for all 57 proposed paths (19 current-file edits, 38 additions). The other 3,888 existing blobs are byte-identical, with no deletions or unexpected additions. Prior scientific arrays, primary macros, old PDF/ZIPs, fixed reviews and the author-freeze tag remain unchanged. A metadata-only child records this delivery identity; it changes this record and PUBLICATION_V088.json only. Its own commit SHA is available in Draft PR #51; no PDF or scientific source is changed by that child.

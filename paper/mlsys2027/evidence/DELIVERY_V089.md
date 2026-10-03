@@ -17,4 +17,11 @@ Assessment: **Share with caveats**. Bounded claims are supported within the chec
 
 **B570 remains CLOSED.** The current prospective/persistent-continuation claims do not require a new single-block causal experiment. RTX/358H/M4 also remain closed; no model/GPU experiment occurred.
 
-Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains its historical branch name `paper/mlsys2027-rtx-integration-v0.8.7`. Parent: `4a4854575dcd1f652975bb008ceccbae0300d6c2`; direct base main: `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. Exact remote content identity will be appended in a metadata-only child after full-tree verification; no PDF or scientific source is modified by that child. No merge, release or conference submission is performed.
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains its historical branch name `paper/mlsys2027-rtx-integration-v0.8.7`. Parent: `4a4854575dcd1f652975bb008ceccbae0300d6c2`; direct base main: `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. Exact remote content identity is appended below after full-tree verification; no PDF or scientific source is modified by that child. No merge, release or conference submission is performed.
+
+## Fixed remote content identity
+
+Exact v0.8.9 content commit: `21967ff56328541e998523b131fe9b41e59208a2`.
+Content tree: `807dcf6b369078da4ce8fd5af0050642fa52571a`.
+
+Remote recursive-tree verification passes all 28 proposed paths (9 current-file edits, 19 additions). The other 3,936 existing blobs are unchanged, with no deletions or unexpected additions. A metadata-only child changes this delivery record and PUBLICATION_V089.json only; no PDF, source, evidence array, prior artifact, fixed review or scientific tag changes after the content commit. Its own SHA is recorded in Draft PR #51 and the final remote check.

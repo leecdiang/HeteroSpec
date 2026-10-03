@@ -1,3 +1,18 @@
+# Manuscript status — v0.8.8 and preserved history
+
+Current candidate: **v0.8.8**, an author revision of existing Draft PR #51. Parent v0.8.7 HEAD `79327fd0c15e4d382b6264e9e780004b046fe5c1`; main remains `87b811e21a164468232cfea3c2404a1ebc869477`. Read [current handover](HANDOVER_CURRENT.md), [delivery](evidence/DELIVERY_V088.md) and [response](reviews/system_revision_v088/REVIEW_RESPONSE_V088.md).
+
+v0.8.8 follows the completed fixed-artifact v0.8.7 review. It reorganizes the paper around prospective trajectory prediction, same-set specified-candidate discrimination, and the resulting qualification/cost choices; 358H and M4 supply bounded optimization constraints. A new global system readout states what each result adds beyond a basic gate. New V4 absolute latency descriptors use only the existing 171 QPC records and do not replace the frozen GM/CI.
+
+B570 H1 remains 72/72 reserved complete predictions against reference/live 60/72. RTX V4 remains UB2/live 51/57, replay 57/57, with /15 both comparators failing, /18 reference-only failure and /25 UB2-only failure. Its fresh cost gate remains batched 51/57 BLOCKED (speedup/CI null), serialized 57/57 QUALIFIED but slower: 0.677351 [0.661653,0.691812], 0/19 faster. A/B share 19 exposure-conditioned prompts; the earlier 0.646 belongs to a different study.
+
+All campaigns remain CLOSED. No new GPU/model execution, merge, release or submission. Original arrays, estimates/seeds, versioned artifacts/reviews/scripts, numerical macros, official style and scientific author-freeze tag are preserved. The historical Figure 3 is moved into Appendix F with identical tex/PDF/caption and textwidth inclusion. Its numbering changes with relocation, not its data or geometry. Old scores apply only to v0.8.7; main-track significance remains a judgment, not a QA result.
+
+The global evidence/decision readout and system outlook are implemented, not just proposed. All v0.8.7 review requests are mapped to changes or a retained significance caveat. New artifact identity/QA replaces the current pointer while frozen prior review artifacts remain intact. Final pages/hashes are in [manifest](evidence/FINAL_ARTIFACT_MANIFEST_V088.json); build/CPU checks and actual page inspection are separate receipts.
+
+<details>
+<summary>Historical v0.8.7 living-pointer text, retained as history; not current instructions</summary>
+
 # Manuscript status — v0.8.7 candidate and historical record
 
 Current candidate: **v0.8.7**, branch `paper/mlsys2027-rtx-integration-v0.8.7`, directly based on main `87b811e21a164468232cfea3c2404a1ebc869477`. Pending merge; main at the baseline contains v0.8.6 and the closed RTX V4 evidence. Read [HANDOVER_CURRENT.md](HANDOVER_CURRENT.md), [delivery record](evidence/DELIVERY_V087.md) and [fixed-artifact review](reviews/submission_v087/) for current decisions.
@@ -437,3 +452,5 @@ All 11 revised main-PDF pages were visually inspected after the final build, spl
 
 </details>
 
+
+</details>

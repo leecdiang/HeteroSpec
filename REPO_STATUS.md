@@ -1,3 +1,29 @@
+# Repository status — v0.8.8 author revision
+
+Updated 2026-10-03. [Current handover](paper/mlsys2027/HANDOVER_CURRENT.md) controls active work.
+
+- Existing Draft PR #51 is revised to v0.8.8, on `paper/mlsys2027-rtx-integration-v0.8.7` (historical branch name).
+- Parent delivery: v0.8.7 `79327fd0c15e4d382b6264e9e780004b046fe5c1`. Direct PR base: main `87b811e21a164468232cfea3c2404a1ebc869477`. No merge or author-host checkout state is inferred.
+- Scientific tag `mlsys2027-v0.8-author-freeze` remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+- Exact revision commit, artifacts and final remote verification are in [DELIVERY_V088.md](paper/mlsys2027/evidence/DELIVERY_V088.md) and [manifest](paper/mlsys2027/evidence/FINAL_ARTIFACT_MANIFEST_V088.json).
+
+v0.8.8 follows the completed fixed-artifact v0.8.7 review. It reorganizes the paper around prospective trajectory prediction, same-set specified-candidate discrimination, and the resulting qualification/cost choices; 358H and M4 supply bounded optimization constraints. A new global system readout states what each result adds beyond a basic gate. New V4 absolute latency descriptors use only the existing 171 QPC records and do not replace the frozen GM/CI.
+
+B570 H1 remains 72/72 reserved complete predictions against reference/live 60/72. RTX V4 remains UB2/live 51/57, replay 57/57, with /15 both comparators failing, /18 reference-only failure and /25 UB2-only failure. Its fresh cost gate remains batched 51/57 BLOCKED (speedup/CI null), serialized 57/57 QUALIFIED but slower: 0.677351 [0.661653,0.691812], 0/19 faster. A/B share 19 exposure-conditioned prompts; the earlier 0.646 belongs to a different study.
+
+All campaigns remain CLOSED. No new GPU/model execution, merge, release or submission. Original arrays, estimates/seeds, versioned artifacts/reviews/scripts, numerical macros, official style and scientific author-freeze tag are preserved. The historical Figure 3 is moved into Appendix F with identical tex/PDF/caption and textwidth inclusion. Its numbering changes with relocation, not its data or geometry. Old scores apply only to v0.8.7; main-track significance remains a judgment, not a QA result.
+
+## Verification scope
+
+The final receipts bind two independent fresh source-ZIP builds, exact unnormalized per-page text comparison, PDF trailer/font/anonymity/reference checks, page inspection and the author response. The anonymous verifier executes twice in clean directories; two rehashed corrupt descriptor cases must fail. A separate NumPy implementation checks all 171 original QPC durations and all condition descriptors. Original compact studies and verifier bytes remain unchanged. These are CPU/build checks, not new hardware experiments or new review votes.
+
+The prior nine-capsule V4 native-log audit is reused as a prior completed receipt; the full historical suites are not newly rerun. Unavailable old sequence ZIP/358H runtime traces, omitted runtime assets and original absolute chronology remain verification limits. The disclosed fan/host amendment remains recorded; it is not a rerun blocker under author instructions.
+
+B570 dense scans, additional backends, 358H persistence and M4 variants remain deferred. The existing-material revision is complete when its final receipts pass; author assessment/merge and eventual release/submission are separate decisions.
+
+<details>
+<summary>Historical v0.8.7 living-pointer text, retained as history; not current instructions</summary>
+
 # Repository status — v0.8.7 delivery candidate
 
 Updated 2026-10-02. [Current handover](paper/mlsys2027/HANDOVER_CURRENT.md) is the first-read control file.
@@ -26,3 +52,5 @@ All campaigns are CLOSED. Under current finite claims, integration does not crea
 B570 dense/all-block scanning, more backends, 358H persistence and M4 variants remain deferred/not authorized. Future B570, if separately approved, must use bounded single-block intervention followed by common continuation policy. No candidate/cohort expansion driven by results.
 
 Remaining access limits include unavailable 358H runtime traces and the exact old v0.8.4 sequence ZIP. Offline hashes do not authenticate omitted assets or trusted absolute chronology. The disclosed host-policy amendment remains recorded; fan adjustment is not a rerun blocker under author instructions. Release and submission require separate decisions.
+
+</details>

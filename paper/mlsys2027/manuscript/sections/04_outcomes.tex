@@ -1,22 +1,31 @@
-\section{Gains Do Not Translate Uniformly}
+\section{Prospective Execution-Path Prediction}
 \label{sec:results}
-\input{tables/02_headlines_v087.tex}
-Table~\ref{tab:headlines} retains historical text-path timing for M4/RTX/B570. The separate direct-ID gates in Section~\ref{sec:admissibility} and Figure~\ref{fig:verification} do not certify those timings. Later RTX cost studies qualify their own instrumented paths; the new matched three-condition result is in Table~\ref{tab:rtxv4cost}. A blocked path remains diagnostic.
-
-\subsection{M4: outcomes in two separate studies}
-\input{figures/02_m4.tex}
-The representative frozen M4 sample produces \MRepSpeed$\times$ speedup (95\% CI [\MRepLo, \MRepHi]), with \MRepExact/\MRepPairs\ text-path-equal pairs and only \MRepFaster/\MRepN\ prompts faster. The separately preregistered HumanEval fixed-$k=2$ study produces \MHEspeed$\times$ [\MHElo, \MHEhi], with \MHEexact/\MHEpairs\ text-path-equal pairs and \MHEfaster/\MHEprompts\ prompts faster. Figure~\ref{fig:m4} retains both; the positive code-conditioned result does not replace or pool with the negative representative result.
-
-The two studies observe opposite outcomes on the same hardware, with different workloads and sessions. These are not workload-only causal effects or general M4 profitability. The discovery effect size is not a confirmatory estimate; early MLX failures do not negate the historical Q8\_0 Metal result.
-
-For primary fixed-$k=2$ HumanEval, the package-efficiency ratio (baseline/speculative J per output token) is \MHEenergy$\times$ [\MHEenergyLo, \MHEenergyHi]. The interval includes parity; a package-energy improvement is not established. The registered $p_{\min}=0.9$ condition has secondary energy evidence, discussed separately in the appendix. The preregistered corrected synthetic ceiling was not executed. We retain that deviation rather than treating the earlier synthetic diagnostic as its replacement.
-
-% Queue the diagnosis figures before their discussion; retain native asset sizes.
+\label{sec:diagnoses}
 \input{figures/06_translation_v086.tex}
-\input{figures/03_verification.tex}
-\subsection{Across stacks: negative and blocked outcomes}
-On RTX 5070 Ti Laptop, the serialized CPU-to-RTX control reaches \RTXcpuSpeed$\times$ [\RTXcpuLo, \RTXcpuHi], while the same-GPU draft control reaches \RTXgpuSpeed$\times$ [\RTXgpuLo, \RTXgpuHi]. Both pass \RTXexact/90\ text-path comparisons and accelerate zero of 30 prompts. The higher speed of same-GPU placement shows that placement and associated integration costs matter, but its continued loss rules out transfer as the sole explanation.
+\subsection{B570: a draft-free full-trajectory predictor}
+\label{sec:b570mechanism}
+A target-only harness first reproduces 90/90 UB128 reference sequences. On 12 exposed discovery tasks, H1 target-only UB1 matches 36/36 native serialized trajectories. The frozen decision tree selects H1 and leaves H2 unrun. Conservative exposure exclusion then selects 24 reserved tasks. H1 freezes before reserved reference/predictor inference, and all 72 complete predictions freeze before reserved native live (Figure~\ref{fig:translation}).
 
-On Arc B570, neither the fast path nor the serialized fallback supports a workload-global admissible optimization result. The latter's diagnostic speedup is \BSpeed$\times$ [\BLo, \BHi], with zero of 30 prompts faster. That interval describes timing on a partially mismatching path; its precision does not turn it into an admissible speed claim. The formal failure and stop rule remain the platform result. Board-energy observations likewise remain diagnostic and boundary-limited.
+Prediction/live agrees 72/72 over three stable runs per prompt, including all 12 runs of four reference-divergent prompts. The same-set UB128 reference agrees only 60/72 and remains \emph{BLOCKED}. Every reserved array reaches 128 generated IDs. Any wrong later ID would falsify the prediction, rather than merely reproduce a first-difference signature. The four first differences occur on /134 at index88 (914$\to$1946), /42 at 73 (432$\to$1817), /145 at 103 (1184$\to$686), and /138 at 93 (14374$\to$9064); all later IDs are also predicted. Appendix J retains every committed array and freeze role.
 
-On Core Ultra X7 358H, the closed Phase-3 heterogeneous runner has direct-ID sequence equality on both CPU and NPU drafting: \HExact/90\ pairs per path, with zero of 30 prompts faster. CPU achieves \HcpuSpeed$\times$ [\HcpuLo, \HcpuHi]; NPU achieves \HnpuSpeed$\times$ [\HnpuLo, \HnpuHi]. Both qualified paths are slower despite favorable isolated draft measurements. Section~\ref{sec:diagnoses} examines the measured costs behind this slowdown.
+This answers a question that qualification alone cannot. Reference mismatch establishes that the path is unsuitable for strict replacement; it does not establish whether a target-only program can describe its full output. Here the selected target-only UB1 program suffices without receiving draft weights, proposals or future live IDs. That result rules out the need for those inputs \emph{in this successful predictive description}. It does not show that drafting is causally irrelevant inside native execution, that UB1 is the unique predictor, or that the output contract is restored.
+
+\subsection{Sampled numerical sensitivity is not an immediate split}
+A separate frozen fork study uses 24 new prompts $\times$ three, sampling the first verification block after at least 64 committed IDs. UB1/UB128 branches share checked KV, prefix, positions, proposals and cloned sampler state. Scores change at \FUForkScores/72 forks, but raw top-one and actual immediate decisions change at \FUForkImmediate/72. The immediate comparison contains 195 reachable paired decisions; 216 raw-logit rows are correlated within prompts and blocks.
+
+\begin{samepage}
+Existing-record descriptors put these results on a score scale. Median absolute top-one score change is \DerScoreAbsMedian, with p95 0.3437 and maximum 2.3503. Raw top-two margins have minima 0.2291 (UB1) and 0.2003 (UB128), and medians 17.5021 and 17.5128. These are marginal descriptors, not a certified decision-boundary distance or a uniform perturbation bound. In particular, the study does not supply a sampled near-tie witness. Changed scores with stable sampled decisions show local numerical sensitivity and immediate stability, not a whole-generation null effect.
+\end{samepage}
+
+The alternate branch restores draft state and continues with UB128 target blocks; later proposals follow its altered live history. Complete trajectories differ in \FUForkLater/72 runs on \FUForkLaterPrompts/24 prompts, first diverging 10--50 positions after the fork. Persistent continuation therefore confounds attributing a delayed difference to one sampled block. The study neither explains the original H1 four tasks nor establishes immediate reference restoration. Appendices L/P retain score/margin distributions, all six later-sensitive prompts and clone/R0 controls.
+
+\subsection{RTX: discriminating predefined candidates on one set}
+\label{sec:rtxreplay}
+Earlier RTX H1 fails exposed discovery at 24/36 and stops with zero reserved runs. A separate V2 study obtains 72/72 matches from proposal-conditioned H2 and fresh R\_ONLY but lacks a same-set target-only competitor (Appendix M). V4 addresses that missing comparison; it is not a retest of one portable B570 predictor.
+
+All 19 remaining exposure-audited tasks enter V4. Four pre-live conditions---UB1 reference, target-only UB2, H2 and fresh R\_ONLY---produce 228 complete arrays. All arrays/tapes are sealed and remotely retrieved before 57 native batched live runs. H2's draft worker P uses its own earlier target feedback to construct proposals; target worker R computes its own decisions. Fresh R\_ONLY reads the sealed tape sequentially, and native live imports no tape. This separates application/API orchestration on shared llama.cpp/GGML/CUDA numerical routines (Table~\ref{tab:inputcontracts}), not adversarial OS access or an independent numerical implementation.
+
+Table~\ref{tab:rtxv4trajectory} shows complete-array agreement and the cross comparison hidden by aggregate totals. Target-only UB2/live is 51/57 on 17/19 prompts. H2/live, R\_ONLY/live and H2/R\_ONLY are each 57/57; both programs predict the two reference-divergent trajectories. All five conditions are repeat-stable. UB2 and reference both score 51/57, but /18 refutes only the reference and /25 only UB2; /15 refutes both.
+\input{tables/rtx_v4_trajectory_v088.tex}
+
+The prospective result rejects the specified UB2 program's full-cohort sufficiency. Matching capacity does not establish identical occupied forward shapes, inputs or prior state transitions. Replay supplies a successful richer execution description; its success does not reject every target-only hypothesis or prove proposal/history necessary, minimal or unique. Tape construction uses drafting, and replay shares numerical code. Appendix Q gives first-difference IDs, complete endpoints and the failed V3 capture history; V3 contributes no observations to these denominators.

@@ -1,3 +1,43 @@
+# Manuscript build — v0.8.8
+
+Title: **Predicting Execution Paths and Bounding Optimization in Speculative Decoding**.
+
+The existing Draft PR #51 now carries an author revision based on v0.8.7. Prior review scores remain bound to old artifacts. [Current handover](../HANDOVER_CURRENT.md), [global readout](../reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md), [review response](../reviews/system_revision_v088/REVIEW_RESPONSE_V088.md) and [delivery](../evidence/DELIVERY_V088.md) state the current scope.
+
+## Portable document build
+
+Use `output/overleaf-system-revision-v0.8.8.zip`. Extract into a clean directory and run:
+
+```sh
+latexmk -pdf main.tex
+latexmk -pdf appendix.tex
+```
+
+The ZIP contains all TeX/figure/bibliography/style dependencies and SHA256SUMS.json; it does not execute models. The official vendored 2025 style remains unchanged; use of it is not a certification of unpublished 2027 rules. The main body keeps the existing ten-page repository target.
+
+## Repository checks
+
+From the repository root:
+
+```sh
+python3 -B paper/mlsys2027/scripts/analyze_global_v088.py
+python3 -B paper/mlsys2027/scripts/crosscheck_global_v088.py
+python3 -B paper/mlsys2027/scripts/prepare_global_v088.py
+python3 -B paper/mlsys2027/manuscript/scripts/build_v088.py
+python3 -B paper/mlsys2027/scripts/validate_revision_v088.py
+```
+
+The new calculation is post-study with known outcomes; it preserves primary GM/CI/seed and blocked nulls. Build uses two new source-ZIP extractions and compares raw page text exactly. PDF completeness is checked before acceptance; any incomplete intermediate output is rejected, with at most one logged exact-command rerun. Automated PDF checks do not replace final page inspection. `VISUAL_QA_V088.json` binds actual inspected PDF hashes.
+
+## Evidence and outputs
+
+Extract `output/anonymous-evidence-index-v0.8.8.zip` into a clean directory and run `python3 -B verify.py`. This standard-library verifier preserves previous numerical inputs/verifiers and adds 19-prompt latency descriptors and candidate cross failures. Full raw-capsule identities remain in INDEX.json; compact state checks are not raw KV/sampler bytes and cannot prove original absolute chronology or omitted assets.
+
+Outputs: `manuscript-v0.8.8.pdf`, `appendix-v0.8.8.pdf`, `overleaf-system-revision-v0.8.8.zip`, `anonymous-evidence-index-v0.8.8.zip`. `hardware-only-v0.8.8.pdf` is internal only. Final hashes/pages/source mapping are in [FINAL_ARTIFACT_MANIFEST_V088.json](../evidence/FINAL_ARTIFACT_MANIFEST_V088.json). Older artifacts, scripts, arrays, macros and Figure 3 source/asset/geometry are preserved. No new inference, merge, release or submission.
+
+<details>
+<summary>Historical v0.8.7 living-pointer text, retained as history; not current instructions</summary>
+
 # Manuscript v0.8.7 — RTX evidence integration candidate
 
 This branch is based on main `87b811e21a164468232cfea3c2404a1ebc869477`; v0.8.7 is pending merge. Read [the current handover](../HANDOVER_CURRENT.md) and [exact manifest](../evidence/FINAL_ARTIFACT_MANIFEST_V087.json). Prior v0.8.6 artifacts and receipts retain their original identities.
@@ -38,3 +78,5 @@ The anonymous index is a known-outcome projection, not a prospective freeze or a
 Figure 3's 71 checks were rerun. The prior [RTX V4 independent native-log audit](../evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already verified nine sealed capsules, all 228 native live/timed arrays and raw QPC-to-statistic calculations on CPU. That receipt is reused, not relabeled as a new nine-capsule replay here. Historical v086 archive/numeric/runtime/secondary receipts remain historical; current QA does not claim their entire suites were freshly rerun.
 
 No GPU/model forward occurred in v087 integration. Scientific arrays, old macros, Figure 3, vendor style and prior artifacts stay unchanged. Exact old v084 sequence ZIP and 358H runtime raw traces remain unavailable. Offline hashes and ordinal mappings do not authenticate original absolute time, exposure completeness or omitted weights/runtime/compiler/driver. Build success is separate from [submission-level review](../reviews/submission_v087/).
+
+</details>

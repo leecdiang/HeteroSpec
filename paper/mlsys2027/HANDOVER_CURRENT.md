@@ -1,3 +1,32 @@
+# Current handover — v0.8.8 author revision
+
+Updated 2026-10-03. This first-read file supersedes historical “next/current” wording below.
+
+## Repository identity
+
+Existing Draft PR #51, direct base main `87b811e21a164468232cfea3c2404a1ebc869477`, parent v0.8.7 delivery `79327fd0c15e4d382b6264e9e780004b046fe5c1`. Branch `paper/mlsys2027-rtx-integration-v0.8.7` retains its historical name. New exact content/metadata-child identities are in [DELIVERY_V088.md](evidence/DELIVERY_V088.md); do not assert main was merged or an author machine checkout changed. Scientific tag remains peeled `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+
+v0.8.8 follows the completed fixed-artifact v0.8.7 review. It reorganizes the paper around prospective trajectory prediction, same-set specified-candidate discrimination, and the resulting qualification/cost choices; 358H and M4 supply bounded optimization constraints. A new global system readout states what each result adds beyond a basic gate. New V4 absolute latency descriptors use only the existing 171 QPC records and do not replace the frozen GM/CI.
+
+B570 H1 remains 72/72 reserved complete predictions against reference/live 60/72. RTX V4 remains UB2/live 51/57, replay 57/57, with /15 both comparators failing, /18 reference-only failure and /25 UB2-only failure. Its fresh cost gate remains batched 51/57 BLOCKED (speedup/CI null), serialized 57/57 QUALIFIED but slower: 0.677351 [0.661653,0.691812], 0/19 faster. A/B share 19 exposure-conditioned prompts; the earlier 0.646 belongs to a different study.
+
+All campaigns remain CLOSED. No new GPU/model execution, merge, release or submission. Original arrays, estimates/seeds, versioned artifacts/reviews/scripts, numerical macros, official style and scientific author-freeze tag are preserved. The historical Figure 3 is moved into Appendix F with identical tex/PDF/caption and textwidth inclusion. Its numbering changes with relocation, not its data or geometry. Old scores apply only to v0.8.7; main-track significance remains a judgment, not a QA result.
+
+## Read and verify
+
+Read [global system analysis](reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md), [complete review response](reviews/system_revision_v088/REVIEW_RESPONSE_V088.md), [analysis plan](reviews/system_revision_v088/ANALYSIS_PLAN_V088.md), [main](manuscript/output/manuscript-v0.8.8.pdf), [appendix](manuscript/output/appendix-v0.8.8.pdf), [source](manuscript/output/overleaf-system-revision-v0.8.8.zip), [anonymous evidence](manuscript/output/anonymous-evidence-index-v0.8.8.zip), [build instructions](manuscript/README.md) and [manifest](evidence/FINAL_ARTIFACT_MANIFEST_V088.json).
+
+New checks: independent original-QPC/NumPy descriptors; two clean anonymous executions; two rehashed corrupt descriptor cases rejected; two fresh builds with exact raw page text; PDF completeness/fonts/anonymity/reference scans; all final pages inspected. Receipts state exact hashes and actual execution scope. Reused only: prior nine-capsule raw audit and historical suites. No GPU/model execution, no new six-report score, and no hidden retuning of candidates or endpoints.
+
+## Authorized work and next decision
+
+Existing-material repair and compilation are complete when final receipts pass. All prior campaigns remain CLOSED. Do not launch B570 dense scans or a single-block causal study without a new concrete objective and bounded protocol. Current finite claims do not require it. The old six grades are not v0.8.8 grades; main-track significance remains unresolved despite a clearer contribution and decision argument.
+
+Author assessment/merge is next; no automatic merge, release, arXiv or conference submission. Avoid repeating full historical suites or six votes absent a new failure/material scientific change. Exact old sequence ZIP, 358H runtime raw traces, omitted assets and trusted absolute chronology remain unavailable. Fan/host amendment is retained and not a work/rerun blocker under author instruction.
+
+<details>
+<summary>Historical v0.8.7 living-pointer text, retained as history; not current instructions</summary>
+
 # Current handover — v0.8.7 candidate; RTX V4 integrated
 
 Updated 2026-10-02. This is the living control file for current state and scope. Historical manifests, handovers and stopping rules retain their original delivery context.
@@ -59,3 +88,5 @@ Assess the exact v087 artifacts and completed review, then decide existing-mater
 - arXiv, public release, author/licensing metadata and conference submission are separate decisions. No submission or public release is performed here.
 
 After a materially changing merge, reconcile this file with actual remote main. Check PR base before merging; merged=true alone does not prove main contains a stacked PR.
+
+</details>

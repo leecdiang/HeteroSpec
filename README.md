@@ -1,3 +1,20 @@
+# HeteroSpec — v0.8.9 review closeout
+
+Updated 2026-10-03. This current status supersedes all historical wording below. [Final review](paper/mlsys2027/reviews/system_revision_v089/FINAL_REVIEW_V089.md) records the complete request mapping and remaining significance concern.
+
+v0.8.9 completes the missed A6 prospective-path endpoint wording and the A9 Section Q entry. The scientific prose, observations, primary estimates and [v0.8.8 global system analysis](paper/mlsys2027/reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md) remain unchanged. Assessment: **Share with caveats**; finite claims are supported, while main-track significance remains an author judgment. This is an author closeout, not a fresh committee vote.
+
+Current artifacts: [main PDF](paper/mlsys2027/manuscript/output/manuscript-v0.8.9.pdf) (10 body + 2 references), [separate appendix](paper/mlsys2027/manuscript/output/appendix-v0.8.9.pdf) (16 pages), [document source ZIP](paper/mlsys2027/manuscript/output/overleaf-system-revision-v0.8.9.zip), and unchanged [anonymous scientific evidence v0.8.8](paper/mlsys2027/manuscript/output/anonymous-evidence-index-v0.8.8.zip). The internal hardware-only proof is not a submission artifact. [Manifest](paper/mlsys2027/evidence/FINAL_ARTIFACT_MANIFEST_V089.json) and [delivery identity](paper/mlsys2027/evidence/DELIVERY_V089.md) bind the final files.
+
+Two clean ZIP builds pass with exact raw per-page text equality. Three changed appendix pages were manually checked; the other 36 pages exactly match previously inspected pixels. Scientific CPU/data verification receipts are reused after hash verification, not described as new executions. [Closeout QA](paper/mlsys2027/evidence/REVIEW_CLOSEOUT_V089_QA.json) records the scope.
+
+The [official 2027 format check](paper/mlsys2027/reviews/system_revision_v089/VENUE_PRECHECK_20261003.md) confirms 2025 style and the 10-page body limit. Style/bst bytes stay fixed. The CFP and homepage disagree by one hour on the deadline; the note preserves both times pending OpenReview confirmation.
+
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains branch `paper/mlsys2027-rtx-integration-v0.8.7`. Parent is `4a4854575dcd1f652975bb008ceccbae0300d6c2`; main is `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. **B570/RTX/358H/M4 remain CLOSED.** No model execution, merge, release or conference submission is authorized by this closeout.
+
+<details>
+<summary>Preserved v0.8.8 status and earlier history</summary>
+
 # HeteroSpec
 
 Prospective execution-path prediction and bounded optimization choices in speculative decoding.
@@ -55,5 +72,7 @@ The hardware-only PDF is an internal section-removal proof, not a submission man
 The fixed-artifact independent review is complete (one weak reject, five weak accepts; significance remains disputed). Read [the meta-review](paper/mlsys2027/reviews/submission_v087/META_REVIEW_V087.md), [existing-material revision priorities](paper/mlsys2027/reviews/submission_v087/REVISION_PRIORITY_V087.md) and [the decision not to execute B570 now](paper/mlsys2027/reviews/submission_v087/B570_DECISION_V087.md). The next decision is author assessment of the fixed artifacts and these requests; no manuscript changes were made during review. B570 dense scanning, additional backends, 358H persistence and M4 variants are deferred and not authorized by a limitation paragraph. Public release, arXiv and conference submission remain separate decisions.
 
 `scripts/` contains runners/verifiers; `benchmarks/` frozen campaigns; `artifacts/` indexed archives; `analysis/` and `reports/` processed/historical reports; `paper/mlsys2027/` manuscript/evidence/reviews; `docs/` reproduction, history and data policy. Model weights, downloaded datasets, caches and most machine-local logs are absent by policy. See [reproduction](docs/reproduction.md) and [data policy](docs/data_policy.md).
+
+</details>
 
 </details>

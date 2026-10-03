@@ -1,3 +1,30 @@
+# Readme — v0.8.9 review closeout
+
+Updated 2026-10-03. This current status supersedes all historical wording below. [Final review](../reviews/system_revision_v089/FINAL_REVIEW_V089.md) records the complete request mapping and remaining significance concern.
+
+v0.8.9 completes the missed A6 prospective-path endpoint wording and the A9 Section Q entry. The scientific prose, observations, primary estimates and [v0.8.8 global system analysis](../reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md) remain unchanged. Assessment: **Share with caveats**; finite claims are supported, while main-track significance remains an author judgment. This is an author closeout, not a fresh committee vote.
+
+Current artifacts: [main PDF](output/manuscript-v0.8.9.pdf) (10 body + 2 references), [separate appendix](output/appendix-v0.8.9.pdf) (16 pages), [document source ZIP](output/overleaf-system-revision-v0.8.9.zip), and unchanged [anonymous scientific evidence v0.8.8](output/anonymous-evidence-index-v0.8.8.zip). The internal hardware-only proof is not a submission artifact. [Manifest](../evidence/FINAL_ARTIFACT_MANIFEST_V089.json) and [delivery identity](../evidence/DELIVERY_V089.md) bind the final files.
+
+Two clean ZIP builds pass with exact raw per-page text equality. Three changed appendix pages were manually checked; the other 36 pages exactly match previously inspected pixels. Scientific CPU/data verification receipts are reused after hash verification, not described as new executions. [Closeout QA](../evidence/REVIEW_CLOSEOUT_V089_QA.json) records the scope.
+
+The [official 2027 format check](../reviews/system_revision_v089/VENUE_PRECHECK_20261003.md) confirms 2025 style and the 10-page body limit. Style/bst bytes stay fixed. The CFP and homepage disagree by one hour on the deadline; the note preserves both times pending OpenReview confirmation.
+
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains branch `paper/mlsys2027-rtx-integration-v0.8.7`. Parent is `4a4854575dcd1f652975bb008ceccbae0300d6c2`; main is `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. **B570/RTX/358H/M4 remain CLOSED.** No model execution, merge, release or conference submission is authorized by this closeout.
+
+Run from this manuscript directory:
+
+```sh
+python3 -B scripts/build_v089.py
+python3 -B ../scripts/validate_closeout_v089.py
+python3 -B scripts/qa_pdf_v089.py
+```
+
+For a portable document build, extract the v0.8.9 source ZIP into a fresh directory and run `latexmk -pdf main.tex`, then `latexmk -pdf appendix.tex`. The package builds documents without models. `make check` expects the final hash-bound visual receipt; a changed rendering needs renewed inspection before delivery.
+
+<details>
+<summary>Preserved v0.8.8 status and earlier history</summary>
+
 # Manuscript build — v0.8.8
 
 Title: **Predicting Execution Paths and Bounding Optimization in Speculative Decoding**.
@@ -78,5 +105,7 @@ The anonymous index is a known-outcome projection, not a prospective freeze or a
 Figure 3's 71 checks were rerun. The prior [RTX V4 independent native-log audit](../evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already verified nine sealed capsules, all 228 native live/timed arrays and raw QPC-to-statistic calculations on CPU. That receipt is reused, not relabeled as a new nine-capsule replay here. Historical v086 archive/numeric/runtime/secondary receipts remain historical; current QA does not claim their entire suites were freshly rerun.
 
 No GPU/model forward occurred in v087 integration. Scientific arrays, old macros, Figure 3, vendor style and prior artifacts stay unchanged. Exact old v084 sequence ZIP and 358H runtime raw traces remain unavailable. Offline hashes and ordinal mappings do not authenticate original absolute time, exposure completeness or omitted weights/runtime/compiler/driver. Build success is separate from [submission-level review](../reviews/submission_v087/).
+
+</details>
 
 </details>

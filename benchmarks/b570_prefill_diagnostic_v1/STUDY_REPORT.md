@@ -1,6 +1,6 @@
 # B570 prefill diagnostic v1
 
-360/360 formal units independently verified; archival completion pending. G0 passed; 72 T1 predictions sealed before first N1. All 24 tasks previously exposed.
+COMPLETE: 360/360 formal units independently verified; archive contents verified. G0 passed; 72 T1 predictions sealed before first N1. All 24 tasks previously exposed.
 
  | Task | Group | T0/N0 | T1/N1 | N0/R | N1/R | Stable |
  |---|---|---:|---:|---:|---:|---|

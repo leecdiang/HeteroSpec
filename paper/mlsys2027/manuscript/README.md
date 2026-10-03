@@ -1,3 +1,18 @@
+# Manuscript build and delivery — v0.9.0 reassessment
+
+Updated 2026-10-03. The [fresh reassessment](../reviews/acceptance_reassessment_v090/ACCEPTANCE_REASSESSMENT_V090.md) supersedes the review status in the preserved history below. The manuscript remains v0.9.0.
+
+Two new reviewers independently recommend **3/6 weak reject, confidence 4/5**. Both read all 12 main and 17 appendix text pages, inspect selected renders, and directly check retained arrays and costs. Their arithmetic agrees with the bounded claims; neither identifies a new material defect in the checked results. The remaining blocker is demonstrated systems significance: the simpler reproducer has not yet guided a discriminating intervention confirmed on native execution. These are internal simulated judgments, not acceptance probabilities. Historical v0.8.9 scores (3/6 and 4/6) are different reviewers' assessments of a different packet; there is no score evidence of improvement.
+
+The [B570 diagnostic study plan](../reviews/acceptance_reassessment_v090/DIAGNOSTIC_STUDY_PREPARE_ONLY.md) is **PREPARE_ONLY, not execution-ready or executed**. It proposes one target-prefill intervention on the four known divergent cases plus 20 regression controls, after new baseline, sham-transfer, state and instrumentation qualification. Five conditions with three repetitions would yield 360 planned complete arrays; these are not new observations. The [source check](../reviews/acceptance_reassessment_v090/PREPARE_SOURCE_AUDIT.json) establishes caller-level facts only, not a prefill cause. Original B570/RTX/358H/M4 campaigns remain CLOSED.
+
+Frozen delivery: [main PDF](../manuscript/output/manuscript-v0.9.0.pdf), 10 body + 2 reference pages; [appendix](../manuscript/output/appendix-v0.9.0.pdf), 17 pages; [document source](../manuscript/output/overleaf-diagnostic-revision-v0.9.0.zip); [anonymous scientific package](../manuscript/output/anonymous-evidence-index-v0.9.0.zip). All four are byte-identical to content commit `01682f3b992a11b36b309fbd6c9e9950f1dc5d89`. The [artifact manifest](../evidence/FINAL_ARTIFACT_MANIFEST_V090.json) retains its original identity. No TeX build, historical verifier/bootstrap, model or GPU ran in this review round; earlier build and whole-page QA remain historical receipts for the same hashes.
+
+New [systems review](../reviews/acceptance_reassessment_v090/SYSTEMS_ACCEPTANCE_REVIEW.md), [evidence review](../reviews/acceptance_reassessment_v090/EVIDENCE_ACCEPTANCE_REVIEW.md), and [coverage/consistency QA](../reviews/acceptance_reassessment_v090/REVIEW_COVERAGE_QA.json) retain their individual judgments and limits. Only six living status files and new review/plan files change. Original scientific records, manuscript sources/PDFs/ZIPs, prior reviews, and scripts remain unchanged. Existing Draft PR #51 stays open and unmerged; no release or conference submission. Base/main stays `87b811e21a164468232cfea3c2404a1ebc869477`; author-freeze tag remains object `a3e33d405a53b8ee9fe4018d166b651001daa305`, peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+
+<details>
+<summary>Preserved v0.9.0 diagnostic revision status and earlier history</summary>
+
 # Manuscript build and delivery — v0.9.0
 
 Updated 2026-10-03. This status supersedes the preserved history below. Read the [revision response](../reviews/diagnostic_revision_v090/REVISION_RESPONSE_V090.md) for the implemented acceptance-reassessment requests and their limits.
@@ -124,6 +139,8 @@ The anonymous index is a known-outcome projection, not a prospective freeze or a
 Figure 3's 71 checks were rerun. The prior [RTX V4 independent native-log audit](../evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already verified nine sealed capsules, all 228 native live/timed arrays and raw QPC-to-statistic calculations on CPU. That receipt is reused, not relabeled as a new nine-capsule replay here. Historical v086 archive/numeric/runtime/secondary receipts remain historical; current QA does not claim their entire suites were freshly rerun.
 
 No GPU/model forward occurred in v087 integration. Scientific arrays, old macros, Figure 3, vendor style and prior artifacts stay unchanged. Exact old v084 sequence ZIP and 358H runtime raw traces remain unavailable. Offline hashes and ordinal mappings do not authenticate original absolute time, exposure completeness or omitted weights/runtime/compiler/driver. Build success is separate from [submission-level review](../reviews/submission_v087/).
+
+</details>
 
 </details>
 

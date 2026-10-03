@@ -1,3 +1,18 @@
+# HeteroSpec — v0.9.0 independently reassessed
+
+Updated 2026-10-03. The [fresh reassessment](paper/mlsys2027/reviews/acceptance_reassessment_v090/ACCEPTANCE_REASSESSMENT_V090.md) supersedes the review status in the preserved history below. The manuscript remains v0.9.0.
+
+Two new reviewers independently recommend **3/6 weak reject, confidence 4/5**. Both read all 12 main and 17 appendix text pages, inspect selected renders, and directly check retained arrays and costs. Their arithmetic agrees with the bounded claims; neither identifies a new material defect in the checked results. The remaining blocker is demonstrated systems significance: the simpler reproducer has not yet guided a discriminating intervention confirmed on native execution. These are internal simulated judgments, not acceptance probabilities. Historical v0.8.9 scores (3/6 and 4/6) are different reviewers' assessments of a different packet; there is no score evidence of improvement.
+
+The [B570 diagnostic study plan](paper/mlsys2027/reviews/acceptance_reassessment_v090/DIAGNOSTIC_STUDY_PREPARE_ONLY.md) is **PREPARE_ONLY, not execution-ready or executed**. It proposes one target-prefill intervention on the four known divergent cases plus 20 regression controls, after new baseline, sham-transfer, state and instrumentation qualification. Five conditions with three repetitions would yield 360 planned complete arrays; these are not new observations. The [source check](paper/mlsys2027/reviews/acceptance_reassessment_v090/PREPARE_SOURCE_AUDIT.json) establishes caller-level facts only, not a prefill cause. Original B570/RTX/358H/M4 campaigns remain CLOSED.
+
+Frozen delivery: [main PDF](paper/mlsys2027/manuscript/output/manuscript-v0.9.0.pdf), 10 body + 2 reference pages; [appendix](paper/mlsys2027/manuscript/output/appendix-v0.9.0.pdf), 17 pages; [document source](paper/mlsys2027/manuscript/output/overleaf-diagnostic-revision-v0.9.0.zip); [anonymous scientific package](paper/mlsys2027/manuscript/output/anonymous-evidence-index-v0.9.0.zip). All four are byte-identical to content commit `01682f3b992a11b36b309fbd6c9e9950f1dc5d89`. The [artifact manifest](paper/mlsys2027/evidence/FINAL_ARTIFACT_MANIFEST_V090.json) retains its original identity. No TeX build, historical verifier/bootstrap, model or GPU ran in this review round; earlier build and whole-page QA remain historical receipts for the same hashes.
+
+New [systems review](paper/mlsys2027/reviews/acceptance_reassessment_v090/SYSTEMS_ACCEPTANCE_REVIEW.md), [evidence review](paper/mlsys2027/reviews/acceptance_reassessment_v090/EVIDENCE_ACCEPTANCE_REVIEW.md), and [coverage/consistency QA](paper/mlsys2027/reviews/acceptance_reassessment_v090/REVIEW_COVERAGE_QA.json) retain their individual judgments and limits. Only six living status files and new review/plan files change. Original scientific records, manuscript sources/PDFs/ZIPs, prior reviews, and scripts remain unchanged. Existing Draft PR #51 stays open and unmerged; no release or conference submission. Base/main stays `87b811e21a164468232cfea3c2404a1ebc869477`; author-freeze tag remains object `a3e33d405a53b8ee9fe4018d166b651001daa305`, peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+
+<details>
+<summary>Preserved v0.9.0 diagnostic revision status and earlier history</summary>
+
 # HeteroSpec — v0.9.0 diagnostic revision
 
 Updated 2026-10-03. This status supersedes the preserved history below. Read the [revision response](paper/mlsys2027/reviews/diagnostic_revision_v090/REVISION_RESPONSE_V090.md) for the implemented acceptance-reassessment requests and their limits.
@@ -89,6 +104,8 @@ The hardware-only PDF is an internal section-removal proof, not a submission man
 The fixed-artifact independent review is complete (one weak reject, five weak accepts; significance remains disputed). Read [the meta-review](paper/mlsys2027/reviews/submission_v087/META_REVIEW_V087.md), [existing-material revision priorities](paper/mlsys2027/reviews/submission_v087/REVISION_PRIORITY_V087.md) and [the decision not to execute B570 now](paper/mlsys2027/reviews/submission_v087/B570_DECISION_V087.md). The next decision is author assessment of the fixed artifacts and these requests; no manuscript changes were made during review. B570 dense scanning, additional backends, 358H persistence and M4 variants are deferred and not authorized by a limitation paragraph. Public release, arXiv and conference submission remain separate decisions.
 
 `scripts/` contains runners/verifiers; `benchmarks/` frozen campaigns; `artifacts/` indexed archives; `analysis/` and `reports/` processed/historical reports; `paper/mlsys2027/` manuscript/evidence/reviews; `docs/` reproduction, history and data policy. Model weights, downloaded datasets, caches and most machine-local logs are absent by policy. See [reproduction](docs/reproduction.md) and [data policy](docs/data_policy.md).
+
+</details>
 
 </details>
 

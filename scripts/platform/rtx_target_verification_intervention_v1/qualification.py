@@ -5,9 +5,13 @@ from execution import unit, Worker
 
 VARIANTS=['R_original','H_original','N_original','R_instrumented','H_plain','N_plain','H_sham','N_sham']
 
+def selected_attempt(base):
+    row=read(base/'result.json');prefixes={Path(p).parts[0] for p in row['files']};assert len(prefixes)==1
+    return base/next(iter(prefixes))
+
 def normalize_h(d):
     rows=[]
-    for p in sorted(d.glob('*/[PR]-wire.jsonl')):
+    for p in sorted(selected_attempt(d).glob('[PR]-wire.jsonl')):
         for line in p.read_text(encoding='utf-8').splitlines():
             x=json.loads(line)
             if x['event'] in ['startup','close','request_sent']:continue
@@ -20,7 +24,7 @@ def normalize_h(d):
 
 def normalize_native(d):
     rows=[]
-    for p in d.glob('*/trace.jsonl'):
+    for p in selected_attempt(d).glob('trace.jsonl'):
         for line in p.read_text(encoding='utf-8').splitlines():
             x=json.loads(line)
             if x['event'] in ['transfer','first_pending']:continue

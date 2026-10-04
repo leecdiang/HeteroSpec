@@ -51,3 +51,18 @@ upstream source (UnicodeDecodeError, position14123). Source reads were changed t
 explicit UTF8 before native compilation or formal freeze. Build command attempts
 and logs remain. The first full-history fetch was cancelled after stalled transport;
 an isolated filtered exact-base clone/worktree supplied the verified source instead.
+
+Pre-freeze recovery comparison failure retained in PREPARATION_STOP_01.json. The
+controller restart left one /18N_sham-r2 attempt incomplete after four trace events.
+Resume retained that attempt and produced a complete second attempt. The comparison
+helper incorrectly concatenated both attempts; direct raw inspection shows the two
+selected complete plain/sham attempts are exactly equal under the declared predicate.
+Before freeze, both qualification and independent audit were corrected to select
+the successful attempt bound by result.json.files. Abandoned bytes and the failing
+helper versions remain in preparation-history. This is a bookkeeping repair, not
+rerunning a scientific disagreement or changing historical expected arrays. Draft
+PR53 initially records the stop and will be rewritten around the final delivery.
+
+Final pre-freeze audit strengthened independent checks for all exact645 cohort/condition/repetition keys, protocol/cohort/asset result bindings and actual H target37/37 and draft29/29 GPU offload. Delivery transports CAS parts in bounded pushes and rewrites the existing Draft PR around the final results. Independent verifier and delivery are executed from disk after freeze; neither is imported in the active qualification controller. No numerical frontend or qualification predicate changed.
+
+The resolved preparation stop is retained as STOP_REASON.pre-freeze-01.json and PREPARATION_STOP_01.json. The CAS archive includes an explicit pre-archive report snapshot; final archive/readback receipts and final report are later Git objects whose exact bytes are separately verified, avoiding a circular report/archive hash claim. No formal work has started at this edit.

@@ -114,6 +114,8 @@ def main():
     root=a.root;doc=root/'benchmarks/rtx_target_verification_intervention_v1';out=root/'work/rtx-target-v1';report=a.output or out/'independent-recompute';report.mkdir(parents=True,exist_ok=True)
     queue=load(doc/'QUEUE.json');assert len(queue)==645 and len({q['id'] for q in queue})==645
     protocol=load(doc/'PROTOCOL.json');inputs=load(out/'INPUTS.json');expected=load(doc/'HISTORICAL_EXPECTED.json');raw={};records={};checks=0;graph_rows=[]
+    expected_units={f"{protocol['study']}/v1/{t}/{c}/{r}" for t in protocol['tasks'] for c in protocol['conditions'] for r in range(1,4)}
+    assert len(protocol['tasks'])==43 and set(protocol['conditions'])=={'R','H0','H1','N0','N1'} and {q['id'] for q in queue}==expected_units
     freeze=load(doc/'FREEZE.json');omissions=load(doc/'ARCHIVE_OMISSIONS.json') if (doc/'ARCHIVE_OMISSIONS.json').exists() else {'paths':[]};omitted=set(omissions['paths'])
     for name,h in freeze['files'].items():
         if name in omitted and not (root/name).exists():continue
@@ -121,6 +123,7 @@ def main():
     for q in queue:
         base=out/'formal'/(q['task'].replace('/','-')+'-'+q['condition']+'-r'+str(q['rep']));rec=load(base/'result.json')
         assert rec['valid'] and rec['unit_id']==q['id'];assert rec['freeze_sha256']==sha(doc/'FREEZE.json')
+        for key,name in [('protocol_sha256','PROTOCOL.json'),('cohort_sha256','COHORT.json'),('asset_manifest_sha256','ASSET_ENVIRONMENT.json')]:assert rec[key]==sha(doc/name)
         for name,h in rec['files'].items():assert sha(base/name)==h;checks+=1
         attempts=list(base.glob('attempt-*'));d=base/pathlib.Path(next(iter(rec['files']))).parts[0]
         x=parse_h(d) if q['condition'].startswith('H') else parse_native(d/'native.log')
@@ -133,6 +136,10 @@ def main():
                 ev=[json.loads(s) for s in (d/(role+'-wire.jsonl')).read_text(encoding='utf-8').splitlines()]
                 ready=ev[0]['response'];assert ready['context']['n_ubatch']==2 and ready['context']['threads']==24
                 assert ready['context']['flash_attention']=='off'
+                stderr=(d/(role+'-stderr.log')).read_text(encoding='utf-8',errors='replace')
+                layers='29' if role=='P' else '37'
+                assert re.findall(r'load_tensors: offloaded (\d+)/(\d+) layers to GPU',stderr)==[(layers,layers)]
+                assert ready['context']['n_ctx']==4096 and ready['context']['n_batch']==2048 and ready['context']['n_seq_max']==1
                 for r in ev:
                     req=r['request'];assert not any(k in req for k in ['future_native_ids','reference','prediction_ids','sealed_tape'])
                     response=r['response'];decodes=([response['decode']] if 'decode' in response else [])+response.get('decodes',[])
@@ -161,7 +168,10 @@ def main():
     # Recompute every qualification array and the actual pair witnesses from raw.
     g0=load(doc/'G0.json');assert g0['arrays']==120 and len(g0['records'])==120;grows={}
     for r in g0['records']:
-        base=root/r['path'];d=base if (base/'native.log').exists() else next(base.glob('attempt-*'))
+        base=root/r['path']
+        if (base/'native.log').exists():d=base
+        else:
+            bound=load(base/'result.json');prefixes={pathlib.Path(p).parts[0] for p in bound['files']};assert len(prefixes)==1;d=base/next(iter(prefixes))
         c='R' if r['variant'].startswith('R') else 'H0' if r['variant'].startswith('H') else 'N0'
         x=parse_h(d) if c=='H0' else parse_native(d/'native.log');old=expected[f"{r['task']}/{c}/{r['rep']}"]
         assert x['ids']==old['ids'] and x['endpoint']==old['endpoint'];grows[r['task'],r['rep'],r['variant']]=d;checks+=1

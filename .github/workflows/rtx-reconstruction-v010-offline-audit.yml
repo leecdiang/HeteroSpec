@@ -1,0 +1,37 @@
+name: RTX v0.10 independent offline raw audit
+on:
+  push:
+    branches: [codex/rtx-reconstruction-v010-offline-audit]
+    paths:
+      - scripts/audit/rtx_reconstruction_v010.py
+      - .github/workflows/rtx-reconstruction-v010-offline-audit.yml
+permissions:
+  contents: read
+jobs:
+  offline-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Independent clean restoration (CPU, no model execution)
+        run: |
+          mkdir -p /tmp/rtx-review-output
+          python scripts/audit/rtx_reconstruction_v010.py restore --root . --dest /tmp/rtx-review-restored --output /tmp/rtx-review-output
+      - name: Independent raw result, endpoint and transition recomputation
+        run: python scripts/audit/rtx_reconstruction_v010.py audit --root /tmp/rtx-review-restored --output /tmp/rtx-review-output
+      - name: Author parser as separate validation path (CPU only)
+        run: python scripts/platform/rtx_target_verification_intervention_v1/independent_verify.py --root /tmp/rtx-review-restored --output /tmp/rtx-review-output/author-parser-crosscheck
+      - name: Upload complete offline audit reports and raw capture subset
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rtx-reconstruction-v010-independent-audit
+          path: |
+            /tmp/rtx-review-output/*.json
+            /tmp/rtx-review-output/*.csv
+            /tmp/rtx-review-output/*.tar.gz
+            /tmp/rtx-review-output/author-parser-crosscheck
+          compression-level: 1
+          retention-days: 30

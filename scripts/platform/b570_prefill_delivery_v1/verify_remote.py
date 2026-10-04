@@ -33,6 +33,16 @@ def main(existing_checkout=None):
     run(['git','-C',str(checkout),'sparse-checkout','set','/artifacts/b570_prefill_diagnostic_v1/','/benchmarks/b570_prefill_diagnostic_v1/','/scripts/platform/b570_prefill_delivery_v1/'],'remote-sparse-set-'+nonce)
     print(json.dumps({'phase':'FETCHING_REMOTE_EVIDENCE','content_commit':content,'checkout':str(checkout)}),flush=True)
     run(['git','-C',str(checkout),'-c','http.sslBackend=openssl','checkout'],'remote-checkout-'+nonce)
+    canonicalized=[]
+    # Existing Windows checkouts can retain CRLF even after policy changes.
+    # Materialize the two sealed metadata files from the network-fetched Git
+    # blobs, preserving exactly the bytes stored by GitHub.
+    for relative in ('artifacts/b570_prefill_diagnostic_v1/ARCHIVE.json','benchmarks/b570_prefill_diagnostic_v1/DELIVERY_SEAL.json'):
+        blob=subprocess.check_output(['git','-C',str(checkout),'show','HEAD:'+relative])
+        target=checkout/relative
+        if target.read_bytes()!=blob:
+            target.write_bytes(blob)
+            canonicalized.append(relative)
     remote_index=checkout/'artifacts/b570_prefill_diagnostic_v1/ARCHIVE.json'
     assert sha(remote_index)==state['archive_index_sha256']==sha(OUT/'ARCHIVE.json')
     seal=read(DOC/'DELIVERY_SEAL.json');assert expected['archive_sha256']==seal['archive_sha256']
@@ -45,6 +55,7 @@ def main(existing_checkout=None):
     receipt.update({'status':'UPLOADED_AND_REMOTE_RESTORE_VERIFIED','repository':'leecdiang/HeteroSpec','repository_visibility':'private','branch':'codex/b570-prefill-diagnostic-v1',
       'remote_content_commit':content,'fresh_remote_checkout':str(checkout),'remote_readback_method':'isolated shallow filtered Git clone from GitHub; all objects originally hydrated over network, no objects borrowed from authoritative local study; metadata amendment fetched over network',
       'checkout_line_ending_policy':'core.autocrlf=false and tracked -text attributes for sealed JSON; earlier failed working-copy conversion retained in delivery logs',
+      'canonical_git_blob_materialization':canonicalized,
       'remote_parts_verified':len(expected['parts']),'remote_archive_bytes':expected['archive_bytes'],
       'delivery_seal_sha256':sha(DOC/'DELIVERY_SEAL.json'),'verification_implementation_sha256':sha(pathlib.Path(__file__)),
       'scientific_raw_or_frozen_code_changed':False,'main_tag_merge_release_or_PR51_modified':False})

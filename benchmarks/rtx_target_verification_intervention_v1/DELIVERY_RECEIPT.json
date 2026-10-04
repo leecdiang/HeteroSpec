@@ -1,7 +1,6 @@
 {
   "status": "DELIVERY_PARTIAL",
-  "pr": "https://github.com/leecdiang/HeteroSpec/pull/53",
-  "head": "f72afc6d281d528fb04c569e3f6f6faa5d3f1f07",
-  "raw": "local retained prefix",
-  "utc": "2026-10-04T06:43:11.377299+00:00"
+  "utc": "2026-10-04T09:08:34.132495+00:00",
+  "error": "CalledProcessError(1, ['gh', 'api', 'repos/leecdiang/HeteroSpec/git/blobs/1392afe307db78726b1a81f3b55b4efa295e4ac5'])",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\HeteroSpec-RTX-Target-V1\\scripts\\platform\\rtx_target_verification_intervention_v1\\delivery.py\", line 157, in final_delivery\n    b,oid=blob(head,p['path']);assert len(b)==p['bytes'] and hashlib.sha256(b).hexdigest()==p['sha256'];f.write(b);received.append({'path':p['path'],'blob':oid,'sha256':p['sha256']})\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\HeteroSpec-RTX-Target-V1\\scripts\\platform\\rtx_target_verification_intervention_v1\\delivery.py\", line 21, in blob\n    response=subprocess.check_output(['gh','api',f'repos/leecdiang/HeteroSpec/git/blobs/{oid}'],timeout=600)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\HeteroSpec-PC\\python311\\Lib\\subprocess.py\", line 466, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\HeteroSpec-PC\\python311\\Lib\\subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['gh', 'api', 'repos/leecdiang/HeteroSpec/git/blobs/1392afe307db78726b1a81f3b55b4efa295e4ac5']' returned non-zero exit status 1.\n"
 }

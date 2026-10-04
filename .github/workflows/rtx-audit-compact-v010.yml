@@ -30,11 +30,12 @@ jobs:
           tasks=['HumanEval-15','HumanEval-18','HumanEval-25','MBPP-463','MBPP-304']
           with tarfile.open(raw,'r:gz') as inp,tarfile.open(dst/'SELECTED_RAW_CASES.tar.gz','w:gz') as out:
               for m in inp:
-                  if not m.isfile():continue
+                  if not (m.isfile() or m.islnk()):continue
                   if m.name.startswith(('benchmarks/rtx_target_verification_intervention_v1/','scripts/platform/rtx_target_verification_intervention_v1/')) or any('/formal/'+t+'-'+c+'-r1/' in m.name for t in tasks for c in ['R','H0','H1','N0','N1']):
                       b=inp.extractfile(m).read();captures[m.name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
-                      import io
-                      out.addfile(m,io.BytesIO(b))
+                      import io,copy
+                      item=copy.copy(m);item.type=tarfile.REGTYPE;item.linkname='';item.size=len(b)
+                      out.addfile(item,io.BytesIO(b))
           (dst/'SELECTED_RAW_CAPTURE_MANIFEST.json').write_text(json.dumps({'source_run':37195517731,'source_artifact':11300741759,'files':captures,'scope':'complete captured log/wire/trace/tape/result JSON for five salient tasks first repetition; large KV witnesses independently hashed on original CPU audit runner'},indent=2))
           print('compact offline reports and raw captures',len(captures))
           PY

@@ -73,8 +73,8 @@ def native(d):
     x=complete([r[4] for r in found]); stops=re.findall(r'stopped by (EOS|limit)',s)
     wanted=(['limit','EOS'] if x['inclusive_eog'] else ['limit']) if len(x['ids'])==128 else ['EOS']
     assert stops==wanted,(d,stops,wanted); x['raw_stop_markers']=stops
-    counts=re.findall(r'slot print_timing:.*?eval time\s*=\s*[\d.]+ ms /\s*(\d+) tokens',s)
-    assert counts==[str(len(found))]
+    counts=re.findall(r'slot print_timing: id\s+0 \| task \d+ \|\s+eval time\s*=\s*[\d.]+ ms /\s*(\d+) tokens',s)
+    assert counts==[str(len(found))], (d,counts,len(found))
     x['threads']=[list(map(int,r)) for r in re.findall(r'system_info: n_threads = (\d+) \(n_threads_batch = (\d+)\)',s)]
     x['offload']=re.findall(r'load_tensors: offloaded (\d+)/(\d+) layers to GPU',s)
     x['ub_capacity']=list(map(int,re.findall(r'llama_context: n_ubatch\s*=\s*(\d+)',s)))

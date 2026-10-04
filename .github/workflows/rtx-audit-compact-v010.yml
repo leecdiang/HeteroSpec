@@ -1,0 +1,45 @@
+name: RTX compact offline audit delivery
+on:
+  push:
+    branches: [codex/rtx-reconstruction-v010-offline-audit]
+    paths: [.github/workflows/rtx-audit-compact-v010.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 37195517731
+          name: rtx-reconstruction-v010-independent-audit
+          path: /tmp/full-audit
+      - name: Retain all audit JSON and complete representative raw attempts
+        run: |
+          python - <<'PY'
+          import pathlib,shutil,tarfile,hashlib,json
+          src=pathlib.Path('/tmp/full-audit');dst=pathlib.Path('/tmp/compact-audit');dst.mkdir()
+          for p in src.rglob('*'):
+              if p.is_file() and p.suffix in ('.json','.csv'):
+                  q=dst/p.relative_to(src);q.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,q)
+          raw=src/'RAW_WITNESSES.tar.gz'
+          captures={}
+          tasks=['HumanEval-15','HumanEval-18','HumanEval-25','MBPP-463','MBPP-304']
+          with tarfile.open(raw,'r:gz') as inp,tarfile.open(dst/'SELECTED_RAW_CASES.tar.gz','w:gz') as out:
+              for m in inp:
+                  if not m.isfile():continue
+                  if m.name.startswith(('benchmarks/rtx_target_verification_intervention_v1/','scripts/platform/rtx_target_verification_intervention_v1/')) or any('/formal/'+t+'-'+c+'-r1/' in m.name for t in tasks for c in ['R','H0','H1','N0','N1']):
+                      b=inp.extractfile(m).read();captures[m.name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+                      import io
+                      out.addfile(m,io.BytesIO(b))
+          (dst/'SELECTED_RAW_CAPTURE_MANIFEST.json').write_text(json.dumps({'source_run':37195517731,'source_artifact':11300741759,'files':captures,'scope':'complete captured log/wire/trace/tape/result JSON for five salient tasks first repetition; large KV witnesses independently hashed on original CPU audit runner'},indent=2))
+          print('compact offline reports and raw captures',len(captures))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rtx-v010-compact-independent-audit
+          path: /tmp/compact-audit
+          retention-days: 30

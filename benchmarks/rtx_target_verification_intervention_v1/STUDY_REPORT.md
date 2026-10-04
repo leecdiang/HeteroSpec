@@ -91,3 +91,5 @@ H及native保持各自caller grouping。Prefill和draft UB2固定，target conti
 独立parser直接重读raw，未导入研究比较helpers。归档15192个逻辑文件，SHA256 `ee545bda11c9c0622d589024e4805fb1f1d3f3f0cbcd9c5551aeb22258733482`，1205757106字节；CAS逐文件还原并重算科学字段一致。省略权重及外部/新runtime二进制，离线哈希清单不能认证省略字节。
 
 贡献范围：固定单模型对、RTX/CUDA、旧19及新24任务上的预测干预native闭环和有限参考恢复计数。不推断功能正确率、生产lossless、唯一kernel、必要/最小性、速度或能耗。具体是否成功以H1/N1完整匹配与/15、/18参考恢复共同判断。未改论文、旧实验状态或作者tag。
+
+远程交付：DELIVERY_PARTIAL。Draft PR：https://github.com/leecdiang/HeteroSpec/pull/53。

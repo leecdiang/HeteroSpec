@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import sys
 import tarfile
+import traceback
 import urllib.request
 from datetime import datetime, timezone
 
@@ -49,6 +50,7 @@ def blob(entry, path):
 
 def main():
     OUTPUT.mkdir(exist_ok=True)
+    save('PROGRESS.json', {'phase': 'starting', 'reviewed_head': HEAD})
     ROOT.mkdir(exist_ok=False)
     listing = get('git/trees/' + TREE + '?recursive=1')
     assert not listing['truncated'] and listing['sha'] == TREE
@@ -64,6 +66,7 @@ def main():
         path = checkout / name
         blob(entries[name], path)
         assert path.stat().st_size == part['bytes'] and sha(path) == part['sha256']
+        save('PROGRESS.json', {'phase': 'part_verified', 'part': number, 'total': len(index['parts'])})
         print(json.dumps({'phase': 'part_verified', 'part': number, 'total': len(index['parts'])}), flush=True)
     archive = ROOT / 'evidence.tar.gz'
     with archive.open('wb') as dest:
@@ -93,7 +96,9 @@ def main():
         target = restored / relative
         assert source.stat().st_size == item['bytes'] and sha(source) == item['sha256']
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, target)
+        # Disposable CPU audit only. Hardlinks avoid 20 GB of duplicate KV
+        # bytes; frozen evidence is read only, and reports use a shadow directory.
+        os.link(source, target)
         assert sha(target) == item['sha256']
     print(json.dumps({'phase': '4073_files_restored_and_hashed'}), flush=True)
     for name, expected in expected_sources.items():
@@ -127,6 +132,7 @@ def main():
     save('REVIEW_RETRIEVAL_RECEIPT.json', {
         'status': 'PASS', 'reviewed_head': HEAD, 'reviewed_tree': TREE,
         'archive_sha256': ARCHIVE, 'archive_bytes': index['archive_bytes'], 'parts': len(index['parts']),
+        'temporary_materialization': 'hardlinks to verified CAS bytes; report writes isolated in shadow directory',
         'restored_files': len(manifest['files']), 'all_file_hashes': 'PASS', 'frozen_sources': 'PASS',
         'raw_verifier': read(reports / 'INDEPENDENT_VERIFICATION.json'),
         'summary_fields_recomputed_equal': True, 'subset_files': len(selected),
@@ -139,4 +145,10 @@ def main():
     print(json.dumps({'phase': 'PASS', 'raw_units': 360}), flush=True)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:
+        OUTPUT.mkdir(exist_ok=True)
+        save('ERROR.json', {'status': 'FAILED', 'error': str(error), 'traceback': traceback.format_exc(),
+                           'reviewed_head': HEAD, 'no_model_inference': True})
+        raise

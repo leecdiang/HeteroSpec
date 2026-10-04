@@ -43,7 +43,7 @@ def main(existing_checkout=None):
     print(json.dumps({'phase':'REMOTE_PARTS_HASHED','parts':len(expected['parts']),'bytes':expected['archive_bytes']}),flush=True)
     receipt=restore(remote_index,dest)
     receipt.update({'status':'UPLOADED_AND_REMOTE_RESTORE_VERIFIED','repository':'leecdiang/HeteroSpec','repository_visibility':'private','branch':'codex/b570-prefill-diagnostic-v1',
-      'remote_content_commit':content,'fresh_remote_checkout':str(checkout),'remote_readback_method':'new shallow filtered Git clone from GitHub; no local object cache or alternates; hydrate all archive parts over network',
+      'remote_content_commit':content,'fresh_remote_checkout':str(checkout),'remote_readback_method':'isolated shallow filtered Git clone from GitHub; all objects originally hydrated over network, no objects borrowed from authoritative local study; metadata amendment fetched over network',
       'checkout_line_ending_policy':'core.autocrlf=false and tracked -text attributes for sealed JSON; earlier failed working-copy conversion retained in delivery logs',
       'remote_parts_verified':len(expected['parts']),'remote_archive_bytes':expected['archive_bytes'],
       'delivery_seal_sha256':sha(DOC/'DELIVERY_SEAL.json'),'verification_implementation_sha256':sha(pathlib.Path(__file__)),

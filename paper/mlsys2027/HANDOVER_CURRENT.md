@@ -1,37 +1,116 @@
-# Current handover — v0.8.6 manuscript; RTX A+B V4 evidence closed on main
+# Current handover — B570 prefill study verified; manuscript integration pending
 
-Status reconciled 2026-10-02 after the RTX experiment merges and independent CPU-only raw replay. Read this file first for current decisions. Versioned handovers, stopping rules, manifests and experiment closeouts retain their original delivery context; they are not live branch status.
+Updated 2026-10-04. The separately authorized B570 prefill diagnostic study is **COMPLETE and CLOSED**. Its [delivery](https://github.com/leecdiang/HeteroSpec/blob/196ed563b36d0e16a3cdb667b6996a4afd98da1d/benchmarks/b570_prefill_diagnostic_v1/DELIVERY_REPORT.md) and [independent review](https://github.com/leecdiang/HeteroSpec/blob/main/paper/mlsys2027/reviews/b570_prefill_review_20261004/REVIEW_REPORT.md) supersede the PREPARE_ONLY study status preserved below.
 
-## 1. Repository state and version identities
+All 360 planned formal units are valid, with zero failed formal attempts. T0/N0 and sealed T1/N1 each match 72/72 complete arrays and endpoints. Native/reference agreement changes from 60/72 to 72/72; all four original diagnostic tasks recover reference output and none of the 20 controls regresses. The 24 tasks were previously exposed; three repetitions establish stability. The independent review checks 120 G0 arrays, 30 sham pairs, frozen source identities and local prediction-seal order. The [read-only CPU audit](https://github.com/leecdiang/HeteroSpec/actions/runs/37178393741) validates all 30 remote parts and 4,073 manifest files.
 
-`main` now contains the complete v0.8.6 delivery through [PR #46](https://github.com/leecdiang/HeteroSpec/pull/46). The integration made no content changes to the #45 delivery tree.
+The new evidence supports a bounded predictor-guided prefill intervention confirmed on native execution. It strengthens the practical diagnostic contribution. Generality, omitted external asset authentication and local-only chronology remain limitations; no performance, energy, functional-pass-rate or unique-kernel result is added. Historical v0.9.0 internal ratings of 3/6 are not updated scores for the new study or acceptance probabilities.
 
-| Role | Exact identity / meaning |
-|---|---|
-| Last manuscript integration into main | `361cb43a67f7fd9bfae95de4cdf7e816c46bbe90`; PR #46, immutable integration anchor |
-| Prior main / v0.8.5 merge | `30673fd8153b30681e959ea36a10b23ef89a990e`; PR #44 |
-| Stacked #45 merge | `30635a680a93a2bd145361861b6c563f2f485fca`; originally merged into the v0.8.5 branch, now also an ancestor of main |
-| v0.8.6 delivery/content tree | `494a5ca4fe62534b032b37d01652c3f88e0d16e1`; exact delivered source and artifacts |
-| v0.8.6 authoritative TeX source/content | `da8d5739eb108de7f35d3a3cfbd954d42462f2e0` |
-| RTX V3 terminal-history merge | `7f365f4fa87aedcebc2ae4cae5d8071b8223132d`; PR #48; incomplete scientific schedule, not successful A/B evidence |
-| RTX V4 completed-study merge | `4500d140d78f77d0e314044acab1ae8e68dec42f`; PR #49; 19 prompts, 285 A and 171 fresh B conditions |
-| Immutable scientific author-freeze | `mlsys2027-v0.8-author-freeze` peels to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`; not advanced to v0.8.6 |
+The manuscript delivery remains **v0.9.0**, fixed content `01682f3b992a11b36b309fbd6c9e9950f1dc5d89`: 10 body + 2 reference pages and a 17-page appendix. Its TeX/PDFs/ZIPs are unchanged by this evidence review. The B570 intervention has not yet been integrated into a new manuscript. Build and artifact instructions remain in the preserved delivery documentation below.
 
-The integration anchor is not a claim that the moving main HEAD always equals that SHA. This documentation maintenance and later commits may follow it. Resolve the actual remote HEAD with GitHub or `git fetch origin` / `git rev-parse origin/main`; verify that it contains the anchor and inspect subsequent changes. A document cannot truthfully embed its own future containing commit hash.
+[Integration PR #52](https://github.com/leecdiang/HeteroSpec/pull/52) targets main and includes the previously reviewed #51 ancestor plus this study, review receipts and current-status reconciliation. Resolve the actual PR/main state on GitHub; this file does not predict its own containing merge SHA. Prior draft/unmerged wording below describes its historical delivery. The scientific author-freeze remains `mlsys2027-v0.8-author-freeze`, peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
 
-Authoritative development baseline is main. PR #48 preserves the failed V3 study; PR #49 contains the completed V4 study. Both now target and are merged into main. Manuscript TeX and delivered artifacts remain v0.8.6; the RTX V4 results have not yet been integrated into a new manuscript version. Do not assume the author's machine-local checkout has moved. Its current HEAD/dirty state must be read on that host before work.
+Next: integrate the intervention and reference-recovery chain into the contribution, results and controls of a new manuscript, then independently review that exact delivery. The original B570/RTX/358H/M4 campaigns remain CLOSED. Public release and conference submission are separate decisions.
 
-## 2. Current paper thesis and exact artifacts
+<details>
+<summary>Preserved status before B570 prefill integration</summary>
 
-The paper connects execution-path qualification, prospective trajectory prediction, supporting intervention/program reproduction, and realized cost/runtime decisions. Its central result is the original B570 draft-free target-only UB1 predictor: frozen before reserved live outcomes, it predicts 72/72 complete capped trajectories on 24 prompts × three repetitions, including all 12 runs of four reference-divergent prompts. UB128 reference/live is only 60/72, so predicting that path does not qualify it as a lossless replacement.
+# Current handover — v0.9.0 reassessment
 
-The conclusion is finite predictive sufficiency on the tested path. It does not identify a unique numerical cause. The three contributions and original claim boundaries remain unchanged by repository reconciliation.
+Updated 2026-10-03. The [fresh reassessment](reviews/acceptance_reassessment_v090/ACCEPTANCE_REASSESSMENT_V090.md) supersedes the review status in the preserved history below. The manuscript remains v0.9.0.
 
-Current artifacts are [main PDF](manuscript/output/manuscript-v0.8.6.pdf), [separate appendix](manuscript/output/appendix-v0.8.6.pdf), [source ZIP](manuscript/output/overleaf-convergence-v0.8.6.zip) and [anonymous evidence index](manuscript/output/anonymous-evidence-index-v0.8.6.zip). Main: 10 body + 2 references pages; appendix: 12 pages. The 9+2-page hardware-only proof is an internal section-removal check, not a submission manuscript.
+Two new reviewers independently recommend **3/6 weak reject, confidence 4/5**. Both read all 12 main and 17 appendix text pages, inspect selected renders, and directly check retained arrays and costs. Their arithmetic agrees with the bounded claims; neither identifies a new material defect in the checked results. The remaining blocker is demonstrated systems significance: the simpler reproducer has not yet guided a discriminating intervention confirmed on native execution. These are internal simulated judgments, not acceptance probabilities. Historical v0.8.9 scores (3/6 and 4/6) are different reviewers' assessments of a different packet; there is no score evidence of improvement.
 
-Full artifact SHA-256/lengths and the original delivery QA scope remain in [FINAL_ARTIFACT_MANIFEST_V086.json](evidence/FINAL_ARTIFACT_MANIFEST_V086.json). Build instructions are in [manuscript/README.md](manuscript/README.md). Integration QA is distinct from an independent submission-level review. No completed new v0.8.6 acceptance verdict is asserted by this maintenance.
+The [B570 diagnostic study plan](reviews/acceptance_reassessment_v090/DIAGNOSTIC_STUDY_PREPARE_ONLY.md) is **PREPARE_ONLY, not execution-ready or executed**. It proposes one target-prefill intervention on the four known divergent cases plus 20 regression controls, after new baseline, sham-transfer, state and instrumentation qualification. Five conditions with three repetitions would yield 360 planned complete arrays; these are not new observations. The [source check](reviews/acceptance_reassessment_v090/PREPARE_SOURCE_AUDIT.json) establishes caller-level facts only, not a prefill cause. Original B570/RTX/358H/M4 campaigns remain CLOSED.
 
-## 3. Current evidence ledger
+Frozen delivery: [main PDF](manuscript/output/manuscript-v0.9.0.pdf), 10 body + 2 reference pages; [appendix](manuscript/output/appendix-v0.9.0.pdf), 17 pages; [document source](manuscript/output/overleaf-diagnostic-revision-v0.9.0.zip); [anonymous scientific package](manuscript/output/anonymous-evidence-index-v0.9.0.zip). All four are byte-identical to content commit `01682f3b992a11b36b309fbd6c9e9950f1dc5d89`. The [artifact manifest](evidence/FINAL_ARTIFACT_MANIFEST_V090.json) retains its original identity. No TeX build, historical verifier/bootstrap, model or GPU ran in this review round; earlier build and whole-page QA remain historical receipts for the same hashes.
+
+New [systems review](reviews/acceptance_reassessment_v090/SYSTEMS_ACCEPTANCE_REVIEW.md), [evidence review](reviews/acceptance_reassessment_v090/EVIDENCE_ACCEPTANCE_REVIEW.md), and [coverage/consistency QA](reviews/acceptance_reassessment_v090/REVIEW_COVERAGE_QA.json) retain their individual judgments and limits. Only six living status files and new review/plan files change. Original scientific records, manuscript sources/PDFs/ZIPs, prior reviews, and scripts remain unchanged. Existing Draft PR #51 stays open and unmerged; no release or conference submission. Base/main stays `87b811e21a164468232cfea3c2404a1ebc869477`; author-freeze tag remains object `a3e33d405a53b8ee9fe4018d166b651001daa305`, peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+
+<details>
+<summary>Preserved v0.9.0 diagnostic revision status and earlier history</summary>
+
+# Current handover — v0.9.0
+
+Updated 2026-10-03. This status supersedes the preserved history below. Read the [revision response](reviews/diagnostic_revision_v090/REVISION_RESPONSE_V090.md) for the implemented acceptance-reassessment requests and their limits.
+
+v0.9.0 explains the tested B570/RTX reproduction tasks, adds complete-trajectory failure extents, and aligns the 358H optimization budget with the original prompt estimator. It quantifies M4 opportunity between two measured fixed modes and carries those conclusions through the whole paper. All analyses use retained records after outcomes were known. Original observations, primary GM/CI/seeds and all historical artifacts remain unchanged.
+
+Current files: [main PDF](manuscript/output/manuscript-v0.9.0.pdf) (10 body + 2 reference pages), [separate appendix](manuscript/output/appendix-v0.9.0.pdf) (17 pages), [portable document source](manuscript/output/overleaf-diagnostic-revision-v0.9.0.zip), and [anonymous scientific package](manuscript/output/anonymous-evidence-index-v0.9.0.zip). The new scientific package retains every v0.8.8 member byte-identically and adds the new diagnostic calculator/data. The hardware-only PDF is an internal section-removal proof, not a submission artifact. [Manifest](evidence/FINAL_ARTIFACT_MANIFEST_V090.json) and [revision QA](evidence/REVISION_V090_QA.json) bind the files and checks.
+
+Two clean source-ZIP builds agree on exact raw per-page text. Final 40-page visual coverage comprises 26 manually inspected final pages and 14 exact pixel matches to manually inspected pages from the current revision's first candidate. Fonts, citations, anonymity and page limits pass. The new diagnostic calculator passes twice in clean extractions. Historical verifier/bootstrap suites are not rerun; 319 protected files and all 30 historical scientific ZIP members retain their original bytes.
+
+The [fixed v0.8.9 reassessment](reviews/acceptance_reassessment_v089/ACCEPTANCE_REASSESSMENT_V089.md) remains historical: systems 3/6 weak reject, evidence 4/6 weak accept. These are not v0.9.0 scores or acceptance probabilities. Concrete reproduction inputs and conditional budgets are now clearer; no actual bug fix or measured debugging saving is demonstrated. Main-track significance remains open to a fresh assessment. No further B570 experiment is needed for the current finite claims.
+
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) keeps branch `paper/mlsys2027-rtx-integration-v0.8.7`. Revision parent is `c39461230f34554151dcfddafffb41ab938517dd`; main remains `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. **B570/RTX/358H/M4 remain CLOSED.** This revision authorizes no new model/hardware experiment, merge, release or conference submission.
+
+<details>
+<summary>Preserved v0.8.9 status and earlier history</summary>
+
+# Handover Current — v0.8.9 review closeout
+
+Updated 2026-10-03. This current status supersedes all historical wording below. [Final review](reviews/system_revision_v089/FINAL_REVIEW_V089.md) records the complete request mapping and remaining significance concern.
+
+v0.8.9 completes the missed A6 prospective-path endpoint wording and the A9 Section Q entry. The scientific prose, observations, primary estimates and [v0.8.8 global system analysis](reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md) remain unchanged. Assessment: **Share with caveats**; finite claims are supported, while main-track significance remains an author judgment. This is an author closeout, not a fresh committee vote.
+
+Current artifacts: [main PDF](manuscript/output/manuscript-v0.8.9.pdf) (10 body + 2 references), [separate appendix](manuscript/output/appendix-v0.8.9.pdf) (16 pages), [document source ZIP](manuscript/output/overleaf-system-revision-v0.8.9.zip), and unchanged [anonymous scientific evidence v0.8.8](manuscript/output/anonymous-evidence-index-v0.8.8.zip). The internal hardware-only proof is not a submission artifact. [Manifest](evidence/FINAL_ARTIFACT_MANIFEST_V089.json) and [delivery identity](evidence/DELIVERY_V089.md) bind the final files.
+
+Two clean ZIP builds pass with exact raw per-page text equality. Three changed appendix pages were manually checked; the other 36 pages exactly match previously inspected pixels. Scientific CPU/data verification receipts are reused after hash verification, not described as new executions. [Closeout QA](evidence/REVIEW_CLOSEOUT_V089_QA.json) records the scope.
+
+The [official 2027 format check](reviews/system_revision_v089/VENUE_PRECHECK_20261003.md) confirms 2025 style and the 10-page body limit. Style/bst bytes stay fixed. The CFP and homepage disagree by one hour on the deadline; the note preserves both times pending OpenReview confirmation.
+
+Existing [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51) retains branch `paper/mlsys2027-rtx-integration-v0.8.7`. Parent is `4a4854575dcd1f652975bb008ceccbae0300d6c2`; main is `87b811e21a164468232cfea3c2404a1ebc869477`. The author-freeze tag remains peeled to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. **B570/RTX/358H/M4 remain CLOSED.** No model execution, merge, release or conference submission is authorized by this closeout.
+
+<details>
+<summary>Preserved v0.8.8 status and earlier history</summary>
+
+# Current handover — v0.8.8 author revision
+
+Updated 2026-10-03. This first-read file supersedes historical “next/current” wording below.
+
+## Repository identity
+
+Existing Draft PR #51, direct base main `87b811e21a164468232cfea3c2404a1ebc869477`, parent v0.8.7 delivery `79327fd0c15e4d382b6264e9e780004b046fe5c1`. Branch `paper/mlsys2027-rtx-integration-v0.8.7` retains its historical name. New exact content/metadata-child identities are in [DELIVERY_V088.md](evidence/DELIVERY_V088.md); do not assert main was merged or an author machine checkout changed. Scientific tag remains peeled `1d3b556c93b477680788dfd1eb0737dfe9eee28c`.
+
+v0.8.8 follows the completed fixed-artifact v0.8.7 review. It reorganizes the paper around prospective trajectory prediction, same-set specified-candidate discrimination, and the resulting qualification/cost choices; 358H and M4 supply bounded optimization constraints. A new global system readout states what each result adds beyond a basic gate. New V4 absolute latency descriptors use only the existing 171 QPC records and do not replace the frozen GM/CI.
+
+B570 H1 remains 72/72 reserved complete predictions against reference/live 60/72. RTX V4 remains UB2/live 51/57, replay 57/57, with /15 both comparators failing, /18 reference-only failure and /25 UB2-only failure. Its fresh cost gate remains batched 51/57 BLOCKED (speedup/CI null), serialized 57/57 QUALIFIED but slower: 0.677351 [0.661653,0.691812], 0/19 faster. A/B share 19 exposure-conditioned prompts; the earlier 0.646 belongs to a different study.
+
+All campaigns remain CLOSED. No new GPU/model execution, merge, release or submission. Original arrays, estimates/seeds, versioned artifacts/reviews/scripts, numerical macros, official style and scientific author-freeze tag are preserved. The historical Figure 3 is moved into Appendix F with identical tex/PDF/caption and textwidth inclusion. Its numbering changes with relocation, not its data or geometry. Old scores apply only to v0.8.7; main-track significance remains a judgment, not a QA result.
+
+## Read and verify
+
+Read [global system analysis](reviews/system_revision_v088/GLOBAL_SYSTEM_READOUT_V088.md), [complete review response](reviews/system_revision_v088/REVIEW_RESPONSE_V088.md), [analysis plan](reviews/system_revision_v088/ANALYSIS_PLAN_V088.md), [main](manuscript/output/manuscript-v0.8.8.pdf), [appendix](manuscript/output/appendix-v0.8.8.pdf), [source](manuscript/output/overleaf-system-revision-v0.8.8.zip), [anonymous evidence](manuscript/output/anonymous-evidence-index-v0.8.8.zip), [build instructions](manuscript/README.md) and [manifest](evidence/FINAL_ARTIFACT_MANIFEST_V088.json).
+
+New checks: independent original-QPC/NumPy descriptors; two clean anonymous executions; two rehashed corrupt descriptor cases rejected; two fresh builds with exact raw page text; PDF completeness/fonts/anonymity/reference scans; all final pages inspected. Receipts state exact hashes and actual execution scope. Reused only: prior nine-capsule raw audit and historical suites. No GPU/model execution, no new six-report score, and no hidden retuning of candidates or endpoints.
+
+## Authorized work and next decision
+
+Existing-material repair and compilation are complete when final receipts pass. All prior campaigns remain CLOSED. Do not launch B570 dense scans or a single-block causal study without a new concrete objective and bounded protocol. Current finite claims do not require it. The old six grades are not v0.8.8 grades; main-track significance remains unresolved despite a clearer contribution and decision argument.
+
+Author assessment/merge is next; no automatic merge, release, arXiv or conference submission. Avoid repeating full historical suites or six votes absent a new failure/material scientific change. Exact old sequence ZIP, 358H runtime raw traces, omitted assets and trusted absolute chronology remain unavailable. Fan/host amendment is retained and not a work/rerun blocker under author instruction.
+
+<details>
+<summary>Historical v0.8.7 living-pointer text, retained as history; not current instructions</summary>
+
+# Current handover — v0.8.7 candidate; RTX V4 integrated
+
+Updated 2026-10-02. This is the living control file for current state and scope. Historical manifests, handovers and stopping rules retain their original delivery context.
+
+## 1. Repository state
+
+Candidate [Draft PR #51](https://github.com/leecdiang/HeteroSpec/pull/51), branch: `paper/mlsys2027-rtx-integration-v0.8.7`, based directly on main `87b811e21a164468232cfea3c2404a1ebc869477`. v0.8.7 is pending merge. Baseline main contains v0.8.6 via #46, V3 terminal history via #48, V4 completed evidence via #49, and independent raw closeout via #50. The earlier #45 stacked merge was resolved by #46; the new candidate must target main.
+
+The v086 delivery remains `494a5ca4fe62534b032b37d01652c3f88e0d16e1`; authoritative TeX source `da8d5739eb108de7f35d3a3cfbd954d42462f2e0`. Scientific author-freeze tag `mlsys2027-v0.8-author-freeze` still peels to `1d3b556c93b477680788dfd1eb0737dfe9eee28c`. See [DELIVERY_V087.md](evidence/DELIVERY_V087.md) for the candidate content identity and PR; do not confuse that fixed anchor with a moving branch tip. No author-machine checkout state is inferred.
+
+## 2. Paper thesis and exact artifacts
+
+Qualification → prospective trajectory prediction → supporting intervention/program reproduction → realized cost/runtime decisions. Original B570 draft-free target-only UB1 prediction remains central: 72/72 complete trajectories on 24×3 reserved runs, including all 12 runs on four reference-divergent prompts. Reference/live 60/72 remains BLOCKED. Predicting a trajectory does not make it lossless-compatible.
+
+RTX V4 adds the same-set UB2/replay comparison and matched qualification–cost. These distinguish specified candidates, not all possible predictors or necessary/minimal state. Main is [10+2 pages](manuscript/output/manuscript-v0.8.7.pdf); the [appendix](manuscript/output/appendix-v0.8.7.pdf) is 14 pages. [Source ZIP](manuscript/output/overleaf-rtx-integration-v0.8.7.zip), [anonymous evidence index](manuscript/output/anonymous-evidence-index-v0.8.7.zip), [manifest](evidence/FINAL_ARTIFACT_MANIFEST_V087.json), [build instructions](manuscript/README.md) and [claim/campaign map](reviews/rtx_integration_v087/CLAIM_AND_CAMPAIGN_MAP_V087.md) identify the fixed delivery. Internal hardware-only proof is 9+2, not a submission manuscript.
+
+## 3. Closed evidence ledger
+
 
 | Study | Retained result | Interpretation boundary |
 |---|---|---|
@@ -46,43 +125,42 @@ Full artifact SHA-256/lengths and the original delivery QA scope remain in [FINA
 | 358H | CPU/NPU Phase 3 each 90/90; fixed-progress/target-work zero-draft-and-residual bounds 0.82745 / 0.83519 | Conditional arithmetic total-time bounds; replay/proposal inseparable; runtime qualification stopped; no runtime gain or NPU-general claim |
 | M4 runtime | Guard 1.3114×, Always-Spec 1.3469×; both 180/180; Guard/Always 1.0271; Always/oracle 1.000692 | Guard beats target-only but loses to fixed speculation; hindsight oracle compares two measured fixed modes; no incremental adaptive-policy win |
 
-Use the [v0.8.6 claim/campaign map](reviews/convergence_v086/CLAIM_AND_CAMPAIGN_MAP_V086.md) and original closeouts for cohorts, references, endpoints, ratio directions and raw evidence. Repetitions and correlated events are not independent prompts. v0.8.6 record-derived quantities are post-study; original primary estimates/CIs remain intact.
+Use the [v0.8.7 claim/campaign map](reviews/rtx_integration_v087/CLAIM_AND_CAMPAIGN_MAP_V087.md) and original closeouts for cohorts, references, endpoints, ratio directions and raw evidence. Repetitions and correlated events are not independent prompts. v0.8.6 record-derived quantities are post-study; original primary estimates/CIs remain intact.
 
-## 4. Non-claims and evidence-access limits
+## 4. Non-claims and audit limits
 
-- No unique numerical cause, universal backend transfer or necessary/minimal proposal-history state is established.
-- B570 prediction does not make its blocked path lossless-compatible. RTX replay is not draft-free prediction generation.
-- No RTX production-speed or energy claim; empty clock-hook cost does not bound all instrumentation/logging.
-- No general NPU weakness; the 358H bound fixes measured progress, target work and baseline. Removing draft/residual alone cannot reach parity under those assumptions.
-- No M4 adaptive-controller advantage over the measured fixed strategy, and no universal workload generalization.
-- Exact IDs are not HumanEval functional pass@k. Sensor boundaries are not a common calibrated energy domain.
-- 358H runtime raw traces and the exact old v0.8.4 sequence ZIP remain unavailable. Original B570 arrays and processed component inputs remain preserved. Offline hashes do not authenticate omitted assets or original absolute chronology.
+No unique numerical cause, universal backend transfer, necessary/minimal history state, B570 lossless replacement, qualified batched RTX speedup, production throughput/energy, general 358H NPU weakness or M4 adaptive-policy win is claimed. HumanEval IDs are paired greedy equality, not functional pass@k. Repetitions/correlated events are not independent prompts.
 
-## 5. Closed studies versus remaining decisions
+V4 A/B share all 19 remaining exposure-audited tasks after 145 conservative exclusions. B observations are fresh but not a new task generalization set. UB1 and UB2 have equal aggregate 51/57 yet fail different prompts. Global native micro-batch changes draft as well as target; B is a whole-path comparison. V3 remains a failed terminal campaign with no full-study accuracy or speedup/CI. Never pool V3 prefixes, V2 or old cost into V4.
 
-Existing B570, RTX, 358H and M4 campaigns are **CLOSED**. Their negative results, failed gates and boundaries are final records, not requests to improve a result.
+Current checks: two independent source-ZIP builds with exact raw per-page text equality, all 37 PDF pages visually inspected, old anonymous member/verifier bytes preserved, 285 A and 171 B arrays/timer intervals recomputed, ten negative cases rejected, two clean anonymous-package executions, and 71 Figure 3 checks. [Prior V4 raw closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already replayed nine capsules and reconstructed native arrays/QPC on CPU; it is not a new GPU or archive run in this integration. Other old suites are historical receipts, not new claims.
 
-Under the current explicitly limited claims, no additional experiment is recorded as a prerequisite to rescue validity. The v0.8.6 [stopping rule](reviews/convergence_v086/STOPPING_RULE_V086.md) remains the historical revision-completion decision, not an acceptance guarantee. Importance, generality and venue fit remain independent review questions. New optional studies below do not reopen old campaigns.
+358H runtime traces and exact old v084 sequence ZIP remain unavailable. Offline evidence does not authenticate omitted assets, exposure completeness or trusted absolute chronology. The disclosed host-policy amendment and strict-host stopping record are preserved; author instructions say fan adjustment is not a work/rerun blocker.
 
-## 6. RTX A+B closeout and next manuscript work
+## 5. Validity versus strengthening
 
-RTX A+B execution is complete and **CLOSED**. The old [execution prompt](../../docs/experiments/RTX_A_B_V3_EXECUTION_PROMPT.md) is historical preparation guidance, not an instruction to rerun experiments. Original V3 stopping records are unchanged; its EOS/cap capture failure led to a separately authorized V4 protocol and a new 19-prompt cohort containing all remaining exposure-audited tasks. The V3 seven exposed tasks are excluded. Never pool failed prefixes, the V2 cohort, or repetitions into V4's 19 independent prompts.
+All existing B570, RTX, 358H and M4 campaigns are CLOSED. The finite claims do not authorize further experiments simply because limitations remain. Delivery QA is separate from independent judgments of significance, novelty and venue fit. The fixed-artifact submission review is complete: R1 gives 3/6 (weak reject), R2–R6 each 4/6 (weak accept), all confidence 4/5. No reviewer identified a demonstrated central validity failure or logically required new model execution. The disagreement concerns main-track significance; votes are not acceptance probabilities. Read [the meta-review](reviews/submission_v087/META_REVIEW_V087.md) and [revision priorities](reviews/submission_v087/REVISION_PRIORITY_V087.md). Old scores do not carry forward.
 
-All nine sealed V4 author/anonymous/pre-live capsules were fetched at exact study HEAD `8f30449d51bca1fe4907c392c5c65d5cc0fbcd3f`, rebuilt from their parts, and replayed with the original CPU-only offline verifier in [the independent audit run](https://github.com/leecdiang/HeteroSpec/actions/runs/37015269566). A separate parser reconstructed all 57 A native arrays and 171 B arrays/QPC intervals, and recomputed gates, medians and the frozen 10,000-draw paired-prompt bootstrap. Read [the closeout](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) and [machine-readable receipt](evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.json) for exact evidence identities and limits. No GPU/model forward or scientific rerun occurred.
+## 6. Next authorized action
 
-Completion retains the disclosed host-policy amendment and original strict-host stop. The author explicitly instructed that fan adjustment is not to block the work or cause reruns. Frozen numeric source, gate, denominator and failed records remain unchanged. Offline evidence does not authenticate omitted external weights/runtime/driver bytes or establish independently trusted absolute timestamps.
+Assess the exact v087 artifacts and completed review, then decide existing-material manuscript revisions and merge. The current recommendation is not to execute B570 now; [the B570 decision](reviews/submission_v087/B570_DECISION_V087.md) records why and the bounded trigger for any later single-block/common-policy study. No review request has been silently applied to the frozen PDFs. The old RTX execution prompt is historical; RTX A+B has been completed and no GPU study remains authorized. Do not modify this frozen review packet while collecting votes. A later manuscript edit requires a new artifact identity and explicit record of what changed.
 
-The next scientific-document action is a new manuscript integration revision: add the same-set UB2/replay discriminator and matched correctness–cost table, retain V3 failure/exposure history in the appendix, build and independently review the resulting exact artifacts. Do not overwrite v0.8.6 artifacts or claim this evidence merge already generated v0.8.7.
+## 7. Scope and release guardrails
 
-UB2 failure plus replay success does not prove proposal/history necessity. Native `--ubatch-size` also affects draft; B is a whole-path configuration comparison. Do not call the blocked batched path faster, manufacture a speedup/CI for it, compare 0.677 with 0.646 as an improvement, or expand candidates/prompts until a positive result appears. There is no remaining authorized GPU study in this closeout.
+- B570 dense/all-block scan, more prompts/backends, 358H persistence and M4 controller variants remain deferred and NOT AUTHORIZED.
+- Optional future B570 work requires a separately bounded single-block intervention followed by common continuation policy; it is not an automatic validity repair.
+- No result-driven candidate/cohort expansion, outcome-selected repetitions, hidden failures or pooling unmatched studies. Negative results are valid endpoints.
+- Old arrays, numerical macros, Figure 3, vendor styles, prior artifacts/reviews/manifests and scientific tag stay immutable. New TeX and v087 artifacts are versioned separately.
+- arXiv, public release, author/licensing metadata and conference submission are separate decisions. No submission or public release is performed here.
 
-## 7. Scope guardrails and separate release decisions
+After a materially changing merge, reconcile this file with actual remote main. Check PR base before merging; merged=true alone does not prove main contains a stacked PR.
 
-- B570 dense/all-verification-block scan, more B570 prompts, more backends, 358H persistence and M4 controller variants are **NOT AUTHORIZED** in the current next step.
-- A possible future B570 study would require a separately bounded single-block intervention followed by a common continuation policy, with its own protocol. It is deferred, not approved for execution.
-- No result-driven dataset/parameter expansion, outcome-selected repetition, hidden failures or reopening old studies. Negative results are valid endpoints.
-- Repository integration/status repair does not modify scientific arrays, TeX, macros, Figure 3, official styles, delivered PDFs/ZIPs, old manifests/reviews, or the author-freeze tag.
-- arXiv, public release, licensing/authorship metadata and conference submission are separate decisions. No public release/submission is claimed or authorized by this handover.
+</details>
 
-Keep this compact current file and root REPO_STATUS synchronized after a materially changing merged PR. Put history in MANUSCRIPT_STATUS, versioned handovers and original closeouts. Before a stacked PR merge, check its actual base; `merged=true` alone does not prove main contains it.
+</details>
 
+</details>
+
+</details>
+
+</details>

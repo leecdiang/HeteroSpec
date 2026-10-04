@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 research manuscript v0.8.6},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Predicting Execution Paths and Bounding Optimization in Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.9.0},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -20,10 +20,12 @@
 \input{tables/direct_id_values.tex}
 \input{tables/followup_values_v085.tex}
 \input{tables/derived_values_v086.tex}
-\mlsystitlerunning{Execution-Path Qualification in Speculative Decoding}
+\input{tables/rtx_v4_values_v087.tex}
+\input{tables/acceptance_values_v090.tex}
+\mlsystitlerunning{Predicting Execution Paths in Speculative Decoding}
 \begin{document}
 \twocolumn[{
-\mlsystitle{Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems}
+\mlsystitle{Predicting Execution Paths and Bounding Optimization in Speculative Decoding}
 \begin{mlsysauthorlist}
 \mlsysauthor{Anonymous Authors}{anon}
 \end{mlsysauthorlist}
@@ -32,12 +34,12 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-Numerical execution paths can change greedy output, but observing a mismatch does not predict the rest of a trajectory. On the tested B570 stack, we select a draft-free target-only micro-batch-one predictor using exposed discovery data, then freeze complete generated-ID predictions before reserved live speculation. It matches 72/72 capped sequences on 24 repeat-stable prompts, including all 12 runs of four reference-divergent prompts; the same-set reference matches 60/72. The predictor is sufficient for this path, but it neither restores qualification nor identifies a unique numerical cause. Separate B570 same-state forks test intervention effects; RTX proposal/replay programs test reproduction while sharing numerical routines. Cost comparisons answer a separate question. Newly direct-ID-qualified RTX serialization is slower within its instrumented post-prefill boundary (\FUCost$\times$ target/serialized latency). At fixed measured progress and target work, 358H remains below parity even with draft and residual costs removed. Qualified M4 Guard beats target-only but loses to fixed speculation. These results give testable diagnoses and engineering decisions about lossless compatibility and complete cost on the measured paths; they establish no portable decoding or control gain.
+A reference mismatch rejects an execution path but does not predict its later output. We test frozen programs as complete-output descriptions of speculative decoding, then measure qualification and cost separately. On one B570 stack, a draft-free target-only UB1 program matches 72/72 reserved capped sequences on 24 repeat-stable prompts. Across four reference-divergent trajectories, all \DiagBNonref\ non-reference positions through cap are predicted correctly. This supplies a simpler reproducer without restoring compatibility or identifying a unique cause. Separate sampled forks change scores but not immediate decisions. On 19 remaining exposure-audited RTX prompts, target-only UB2 matches 51/57, while proposal-conditioned replay matches 57/57 using shared numerical routines. The two target-only comparators fail on different tasks; replay success proves no necessity of history. Fresh matched RTX cost runs qualify serialization but find it slower within the instrumented post-prefill boundary. Supporting 358H CPU/NPU records give conditional prompt-GM ceilings \DiagCPUCeiling/\DiagNPUCeiling\ even with draft/residual removed; M4 fixed-mode hindsight opportunity is about \DiagMOpportunity\% GM latency reduction, and Guard loses to fixed speculation. These finite tests identify tested reproduction programs and bound optimization opportunity on the measured paths.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 \ifruntime\else
-\hypersetup{pdfsubject={MLSys 2027 v0.8.6 internal hardware-only proof}}
+\hypersetup{pdfsubject={MLSys 2027 v0.9.0 internal hardware-only proof}}
 \noindent\textbf{Internal section-removal and reference proof only.}
 \fi
 \input{sections/01_introduction}
@@ -45,8 +47,8 @@ Numerical execution paths can change greedy output, but observing a mismatch doe
 \input{sections/03_methodology}
 \input{sections/04_outcomes}
 \input{sections/05_diagnoses}
-\input{sections/06_synthesis}
 \ifruntime\input{sections/07_runtime_codesign}\fi
+\input{sections/06_synthesis}
 \input{sections/08_related_work}
 \input{sections/09_limitations}
 \input{sections/10_conclusion}

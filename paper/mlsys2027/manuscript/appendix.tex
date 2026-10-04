@@ -9,16 +9,18 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems},pdfsubject={MLSys 2027 separate appendix v0.8.6}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Predicting Execution Paths and Bounding Optimization in Speculative Decoding},pdfsubject={MLSys 2027 separate appendix v0.9.0}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
 \input{tables/followup_values_v085.tex}
 \input{tables/derived_values_v086.tex}
-\mlsystitlerunning{Supplement: Execution-Path Qualification in Speculative Decoding}
+\input{tables/rtx_v4_values_v087.tex}
+\input{tables/acceptance_values_v090.tex}
+\mlsystitlerunning{Supplement: Predicting Execution Paths}
 \begin{document}
 \twocolumn[{
-\mlsystitle{Supplement: Execution-Path Qualification and Realized Costs in Speculative Decoding on Consumer Systems}
+\mlsystitle{Supplement: Predicting Execution Paths and Bounding Optimization in Speculative Decoding}
 \begin{mlsysauthorlist}\mlsysauthor{Anonymous Authors}{anon}\end{mlsysauthorlist}
 \mlsysaffiliation{anon}{Anonymous Institution}
 \mlsyscorrespondingauthor{Anonymous Author}{anon.email@domain.com}
@@ -28,10 +30,10 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the measured hardware, mechanism, and runtime studies. It supplies statistical, measurement-boundary, and provenance details. Section J and Tables A6--A7 document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies exact packages and verifier entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
+This separate appendix accompanies the prospective prediction, sampled intervention, qualification/cost and runtime studies. It supplies statistical, measurement-boundary, and provenance details. Section J and its commitment tables document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies document and earlier study packages; Section Q gives RTX V4 same-set prediction, matched cost, failed V3 history and full anonymous evidence entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
 
 \section{Frozen Estimators}
-Table~\ref{tab:statistics} (A1) preserves historical hardware estimators only; M4 runtime is in Section H, new RTX cost in Section N, and new post-study sensitivity in Section~\ref{app:derived}. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 counts are text-path agreement from parsed CLI output: M4 HumanEval includes the prompt in its parsed text; B570 strips and normalizes the prompt before re-tokenization. Neither is direct generated-ID equality. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its estimator.
+Table~\ref{tab:statistics} preserves historical hardware estimators only; M4 runtime is in Section H, new RTX cost in Section N, and new post-study sensitivity in Section~\ref{app:derived}. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 counts are text-path agreement from parsed CLI output: M4 HumanEval includes the prompt in its parsed text; B570 strips and normalizes the prompt before re-tokenization. Neither is direct generated-ID equality. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its estimator.
 
 \begin{table*}[t]
 \caption{Frozen statistical policies. GM = geometric mean. Indices below are zero-based order statistics of sorted bootstrap draws; NumPy quantiles use the original analyzer's convention.}
@@ -70,12 +72,18 @@ The B570 formal v2 correctness failure triggered its stop rule. A later six-prom
 Windows follow-up derived tables and numerical captures support the manuscript, but historical raw per-run provenance is weaker. The CUDA score capture came from a separate same-commit instrumented build and does not replace formal measurements. The 358H source reconstruction is strongly supported by retained evidence but lacks proof of exact historical upstream identity (the internal \texttt{STRONGLY\_SUPPORTED} label). Its completed Phase-3 records supersede the blocked-preflight empty scaffold. These qualifications describe the limits of the retained evidence.
 
 The historical RTX HumanEval/106 CUDA reproducer selects token 2790 under sequential/serialized execution and 2629 under batching in three of three runs at the same location. A separate same-commit diagnostic build captures the score-margin change from $+0.080948$ to $-0.126457$. This supports stable batch-shape-dependent greedy argmax divergence in that historical configuration; it does not establish a specific kernel, universal CUDA defect, or a shared RTX/B570 root cause.
-\section{Verification Context Lookup}
-Table~\ref{tab:verificationlookup} retains all historical context cells behind Panel A of the main verification figure. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
+\section{Historical Proxy and Separate Qualification}
+The historical main Figure 3 is relocated here with its PDF asset, inclusion width and caption unchanged (Figure~\ref{fig:verification}). This figure is background: its panels do not constitute a matched qualification/cost study. For context $n$ and execution path $e$, the target-forward-only proxy is
+\[
+V_k^{\mathrm{micro}}(n,e)=\frac{T_{\mathrm{target\ forward}}(k,n,e)}{T_{\mathrm{target\ decode}}(1,n)}.
+\]
+It omits drafting and may omit correction/bonus and state work; it is not complete target-side round cost. Original RTX and B570 direct-ID campaigns each use 30 prompts $\times$ three, no timing and a 90/90 gate. RTX batching is \DIRTXBatchedPairs/90, serialization \DIRTXSerializedPairs/90; B570 fast is \DIBFastPairs/90, serialization \DIBSerializedPairs/90. These are different campaigns from historical timings, B570 H1 and RTX V4; no retrospective qualification or pooled tradeoff follows.
+\input{figures/03_verification.tex}
+Table~\ref{tab:verificationlookup} retains all historical context cells behind Panel A of Figure~\ref{fig:verification}. Values are target-forward ratios, not complete target-side round cost or integrated speedup. Context ranges do not represent uncertainty intervals. RTX denotes RTX 5070 Ti Laptop throughout this appendix.
 \input{tables/06_verification_lookup_v05.tex}
 
 \section{Evidence Inventory}
-Table~\ref{tab:regimes} (A4) collects only the original case inventory and evidence classes; follow-up cohorts and endpoints are documented in Sections K--N. It is not an inventory of all newer prediction studies. These are case descriptions, not a hardware ranking, population-wide failure rate, or exhaustive taxonomy. M4's separate-session studies establish opposite observed outcomes; neither diagnosed mechanism is assigned to that contrast.
+Table~\ref{tab:regimes} collects only the original case inventory and evidence classes; follow-up cohorts and endpoints are documented in Sections K--N. It is not an inventory of all newer prediction studies. These are case descriptions, not a hardware ranking, population-wide failure rate, or exhaustive taxonomy. M4's separate-session studies establish opposite observed outcomes; neither diagnosed mechanism is assigned to that contrast.
 \input{tables/05_regimes_v05.tex}
 \section{Runtime Study Reproducibility}
 The M4 runtime estimator first takes each condition's median of \RTReps\ repetitions, then forms a prompt latency ratio and its geometric mean across \RTPrompts\ prompts. The offline oracle uses the smaller target-only or Always-Spec median for each prompt. Bootstrap intervals use \RTBootstrap\ draws with Python Random seed \RTSeed, resampling prompts in the frozen held-out order. Percentile endpoints linearly interpolate the sorted bootstrap draws at quantiles .025 and .975. A single random stream computes Target/Guard, Target/Always-Spec, and Guard/oracle intervals in that order. This preserves the frozen finite-bootstrap calculation; it does not replace the hardware estimators in Table~\ref{tab:statistics}. Intervals condition on the selected policy and observed prompt medians; they do not incorporate recalibration or between-session variation. The oracle selects between two measured fixed conditions, not all possible switching policies, so it is not a universal latency lower bound.
@@ -106,12 +114,27 @@ The B570 Vulkan follow-up uses Qwen3-8B/0.6B Q8\_0, greedy $k=2$, context 1024 a
 The audit covers 8,706 retained file records and archive members; any B570 association is conservatively excluded, even if execution is uncertain. This excludes 31 of 164 tasks. The 24 reserved IDs have the smallest SHA-256 digest of a fixed study prefix plus each eligible task ID; outcomes play no role. Discovery uses exposed HumanEval/89, 101, 104, 162, 3, 10, 68, 70, 19, 20, 28, 32. The frozen tree selects H1 at 36/36; only failure permits H2 fixed-proposal replay (also 36/36), and failure of both stops validation. H1 passes; H2 is not built. Predictor, endpoint, reserved IDs, binaries and criterion are committed before reserved inference.
 
 \paragraph{Prospective validation.}
-The 24 reserved IDs are HumanEval/58, 156, 134, 42, 122, 114, 93, 115, 151, 63, 125, 133, 43, 139, 77, 35, 27, 34, 145, 82, 154, 78, 96, and 138. Target reference and target-only predictor run three times each (144 executions) with within-condition repeat stability. All 72 predicted complete ID arrays and their digest are committed before the first of 72 live serialized outcomes. Primary mechanism validation requires 72/72 predictor-to-live complete-ID agreement; no partial threshold or confidence interval is substituted. That agreement is 72/72. Twenty prompts are predicted reference-equal; four are predicted divergent, and all 24 classifications match. Among the 12 divergent repetition pairs, the first-divergence index matches 12/12. Those four prompts and zero-based indices (reference token $\rightarrow$ serialized token) are HumanEval/134: 88 (914$\rightarrow$1946); /42: 73 (432$\rightarrow$1817); /145: 103 (1184$\rightarrow$686); and /138: 93 (14374$\rightarrow$9064). Reference-to-live direct-ID qualification is 60/72 and BLOCKED on this reserved set.
+The 24 reserved IDs are HumanEval/58, 156, 134, 42, 122, 114, 93, 115, 151, 63, 125, 133, 43, 139, 77, 35, 27, 34, 145, 82, 154, 78, 96, and 138. Target reference and target-only predictor run three times each (144 executions) with within-condition repeat stability. All 72 predicted complete ID arrays and their digest are committed before the first of 72 live serialized outcomes. Primary prospective trajectory validation requires 72/72 predictor-to-live complete-ID agreement; no partial threshold or confidence interval is substituted. That agreement is 72/72. Twenty prompts are predicted reference-equal; four are predicted divergent, and all 24 classifications match. Among the 12 divergent repetition pairs, the first-divergence index matches 12/12. Those four prompts and zero-based indices (reference token $\rightarrow$ serialized token) are HumanEval/134: 88 (914$\rightarrow$1946); /42: 73 (432$\rightarrow$1817); /145: 103 (1184$\rightarrow$686); and /138: 93 (14374$\rightarrow$9064). Reference-to-live direct-ID qualification is 60/72 and BLOCKED on this reserved set.
 
-An independent validator passes 5,681 input, output, hash, endpoint and chronology checks; extracted archive validation passes. No prediction edits, selective reruns, parameter changes, performance or energy experiments occur after the relevant freezes. No-known-exposure is limited to audited records. The result establishes tested partition sufficiency, not a unique kernel, universal rule, CUDA/B570 shared cause or production certificate.
+An independent validator passes 5,681 input, output, hash, endpoint and chronology checks; extracted archive validation passes. No prediction edits, selective reruns, parameter changes, performance or energy experiments occur after the relevant freezes. No-known-exposure is limited to audited records. The result establishes tested predictive path sufficiency, not a unique kernel, universal rule, CUDA/B570 shared cause or production certificate.
 \paragraph{Reviewer-visible commitment record.}
-\input{tables/b570_prediction_commitment_v083.tex}
+\input{tables/b570_prediction_commitment_v089.tex}
 The separate anonymous sequence supplement contains complete reference, predictor, and live generated-ID arrays for the 72 reserved runs, with a deterministic equality and divergence checker. It contains no identifying machine or repository metadata. Sanitizing the export changes its bytes, so it cannot reproduce the original prediction-file digest or independently prove the reported temporal freeze; the PDF's digest and chronology have those distinct stated roles.
-\input{sections/appendix_followups_v086.tex}
-\input{sections/appendix_derived_v086.tex}
+\input{sections/appendix_followups_v090.tex}
+\input{sections/appendix_derived_v090.tex}
+\input{sections/appendix_rtx_v4_v090.tex}
+
+
+\section{Study Map and Historical Timing}
+\label{app:history}
+The main text now centers the prospective predictions and system decisions. This section preserves earlier timing evidence and the opposite M4 workload outcomes without pooling them with later direct-ID studies. Historical M4/RTX/B570 timings use parsed-text comparators (H), not direct-ID qualification. Later Q gates do not certify those observations.
+\input{tables/study_map_v088.tex}
+\input{tables/02_headlines_v088.tex}
+\input{figures/02_m4.tex}
+The representative frozen M4 sample gives \MRepSpeed$\times$ [\MRepLo, \MRepHi], with \MRepExact/\MRepPairs\ text-path-equal pairs and \MRepFaster/\MRepN\ prompts faster. Separate preregistered HumanEval fixed-$k=2$ gives \MHEspeed$\times$ [\MHElo, \MHEhi], \MHEexact/\MHEpairs\ text-path-equal pairs and \MHEfaster/\MHEprompts\ prompts faster (Figure~\ref{fig:m4}). The workloads and sessions differ: neither is a workload-only causal effect or general M4 profitability. Early MLX failures do not negate the historical Q8\_0 Metal result.
+
+Primary fixed-$k=2$ HumanEval package-efficiency is \MHEenergy$\times$ [\MHEenergyLo, \MHEenergyHi]; the interval includes parity. The registered $p_{\min}=0.9$ energy result remains secondary. The preregistered corrected synthetic ceiling was not executed, and the earlier diagnostic does not replace it.
+
+RTX serialized CPU-to-GPU is \RTXcpuSpeed$\times$ [\RTXcpuLo, \RTXcpuHi], same-GPU drafting \RTXgpuSpeed$\times$ [\RTXgpuLo, \RTXgpuHi], both \RTXexact/90 H pairs and zero of 30 prompts faster. These controls retain different placement/integration costs, not an isolated transfer-cause estimate. B570 serialized timing is diagnostic, \BSpeed$\times$ [\BLo, \BHi], with zero of 30 prompts faster; its formal failure/stop rule and board-energy boundary remain unchanged. All newer studies retain their own reference and cohort.
+
 \end{document}

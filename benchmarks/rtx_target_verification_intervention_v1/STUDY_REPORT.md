@@ -92,4 +92,4 @@ H及native保持各自caller grouping。Prefill和draft UB2固定，target conti
 
 贡献范围：固定单模型对、RTX/CUDA、旧19及新24任务上的预测干预native闭环和有限参考恢复计数。不推断功能正确率、生产lossless、唯一kernel、必要/最小性、速度或能耗。具体是否成功以H1/N1完整匹配与/15、/18参考恢复共同判断。未改论文、旧实验状态或作者tag。
 
-远程交付：DELIVERY_PARTIAL。Draft PR：https://github.com/leecdiang/HeteroSpec/pull/53。
+远程交付：DELIVERY_COMPLETE。Draft PR：https://github.com/leecdiang/HeteroSpec/pull/53。全部24个远程分片回读、短空目录完整恢复及独立raw重算通过。初次HTTP502、后续网络失败、长路径失败及恢复助手的失败均保留于交付附录；未重跑模型，也未改冻结的科学源码、协议、cohort、队列或预测封存。

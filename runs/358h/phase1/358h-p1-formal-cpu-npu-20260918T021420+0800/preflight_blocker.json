@@ -1,0 +1,44 @@
+{
+  "schema": "heterospec.358h.phase1.formal_preflight.v1",
+  "formal": true,
+  "phase": 1,
+  "platform": "358H",
+  "run_id": "358h-p1-formal-cpu-npu-20260918T021420+0800",
+  "created_at": "2026-09-18T02:14:20.4081350+08:00",
+  "status": "BLOCKED_BEFORE_MEASUREMENT",
+  "frozen_protocol_commit": "6cdb84fe7962c1871136fc316fd6d12e40b99271",
+  "frozen_protocol_verification": {
+    "method": "Exact text comparison of local execution-critical files against GitHub commit",
+    "repository": "leecdiang/HeteroSpec",
+    "files_checked": [
+      "benchmarks/358h_threshold_validation/preregistration_v1.json",
+      "scripts/platform/358h/run_phase1_draft_characterization.py",
+      "scripts/platform/358h/threshold_gate_v2.py",
+      "runs/358h/qualification/phase0_gate.json",
+      "runs/358h/preformal_manifest.json"
+    ],
+    "all_exact_text_match": true
+  },
+  "local_repository_state": {
+    "head": "ref: refs/heads/.invalid",
+    "status": "all workspace content appears untracked because the pre-existing local Git metadata is incomplete",
+    "authoritative_freeze": "connected GitHub commit 6cdb84fe7962c1871136fc316fd6d12e40b99271"
+  },
+  "formal_measurements_started": false,
+  "formal_raw_run_files_before_attempt": 0,
+  "blockers": [
+    {
+      "classification": "SCIENTIFIC_PROTOCOL_BLOCKER",
+      "id": "cpu_energy_formal_design_incomplete",
+      "detail": "The frozen CPU energy track specifies the sensor, 1000 ms cadence, physical boundary, workload/collector affinity and qualification evidence, but does not freeze formal energy contexts, repetitions, run order, warm-up/window orchestration or an authoritative formal energy runner. The only frozen PDH sampler hard-codes formal_measurement=false and invalid_for_claims=true. Inferring or adding these fields after authorization would invent scientific parameters."
+    },
+    {
+      "classification": "SCIENTIFIC_PROTOCOL_BLOCKER",
+      "id": "phase2_inputs_not_frozen_or_available",
+      "detail": "The frozen Phase-2 rule requires same-platform T_b and exact-admissible V_2. It says these will be collected after Phase 1 under a frozen addendum, but no such addendum or 358H T_b/V_2 formal inputs exist. Their measurement contexts, repetitions, warm-up/timing boundaries and run order cannot be inferred without changing the frozen design."
+    }
+  ],
+  "preservation_action": "Stopped before LLMPipeline formal execution, telemetry collection, or any reportable timing/energy observation, as required by the source-of-truth rule.",
+  "formal_data_contamination": "NONE"
+}
+

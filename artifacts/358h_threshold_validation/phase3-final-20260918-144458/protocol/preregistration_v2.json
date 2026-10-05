@@ -1,0 +1,107 @@
+{
+  "schema": "heterospec.358h.threshold_validation.v2",
+  "status": "READY_TO_FREEZE_AFTER_REPLACEMENT_PHASE0_PASS",
+  "formal_measurement_authorized": false,
+  "scope_change": "The operator-selected comparison is CPU draft versus NPU draft; GPU draft is excluded from this campaign.",
+  "repository_commit": "FILL_WITH_PRE_MEASUREMENT_COMMIT_AFTER_PHASE0_PASS",
+  "platform": {
+    "cpu": "Intel Core Ultra X7 358H",
+    "ram_gb": 32,
+    "os": "Windows 11 build 26200",
+    "power_condition": "PowerOnline=true, Discharging=false, Windows Balanced scheme; capture before and after every run",
+    "openvino": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+    "openvino_genai": "2026.3.1.0",
+    "gpu_driver": "32.0.101.8991",
+    "npu_driver": "1005540",
+    "npu_compiler": "524290"
+  },
+  "models": {
+    "historical_draft": {
+      "repo": "Qwen/Qwen3-0.6B-GGUF",
+      "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+      "file": "Qwen3-0.6B-Q8_0.gguf",
+      "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031"
+    },
+    "qualified_openvino_source": {
+      "repo": "Qwen/Qwen3-0.6B",
+      "revision": "6130ef31402718485ca4d80a6234f70d9a4cf362",
+      "equivalence": "STRONGLY_SUPPORTED",
+      "historical_source_revision_limitation": "The exact historical Transformers source was not recorded; see reports/358h/358H_PROVENANCE_AMENDMENT.md."
+    },
+    "draft_runtime": {
+      "representation": "one common OpenVINO IR for CPU and NPU",
+      "precision": "data-free symmetric INT4, group_size=128, ratio=1.0",
+      "xml_sha256": "fc8ad94dbecfc0c45cf3db4f0624344d2bea2cdd6997e0b45ca52d4f7baa1103",
+      "bin_sha256": "2e129cffb1a7239007a3df27e0f3f7bb12f65a40e5c9b1e24a250d952da47837",
+      "chat_template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361"
+    },
+    "target_for_later_threshold_or_end_to_end_work": {
+      "repo": "Qwen/Qwen3-8B-GGUF",
+      "revision": "7c41481f57cb95916b40956ab2f0b139b296d974",
+      "file": "Qwen3-8B-Q8_0.gguf",
+      "bytes": 8709518112,
+      "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+      "note": "Not consumed by Phase 1 draft-only characterization."
+    }
+  },
+  "phase_0_gate": {
+    "required_status": "PASS",
+    "required_devices": ["CPU", "NPU"],
+    "forbidden_devices": ["AUTO", "MULTI", "HETERO"],
+    "require_execution_devices_evidence": true,
+    "require_npu_no_fallback": true,
+    "require_ac_power": true,
+    "require_telemetry_qualification": true
+  },
+  "phase_1_draft_characterization": {
+    "devices": ["CPU", "NPU"],
+    "context_tokens": [512, 2048, 8192],
+    "repetitions_per_cell": 5,
+    "output_cap_generated_tokens": 128,
+    "decode": {"greedy": true, "temperature": 0, "seed": 123, "ignore_eos": true, "apply_chat_template": false},
+    "proposal_width_for_threshold_model": 2,
+    "warmup": {
+      "minimum": 3,
+      "maximum": 5,
+      "stability_rule": "After warm-up 3, continue until the latest two throughput observations differ by no more than 5%; abort the cell if not stable by warm-up 5."
+    },
+    "timing_boundary": {
+      "primary": "host QPC/perf_counter_ns immediately around LLMPipeline.generate",
+      "secondary": "OpenVINO GenAI TTFT, TPOT, generate and inference metrics",
+      "excluded": ["model download", "model load", "compilation", "NPU cache construction", "tokenizer construction", "input tokenization", "warm-up"]
+    },
+    "prompt_construction": {
+      "base_text": "Heterogeneous computing assigns work to processors with different strengths. A reproducible experiment records every configuration, timestamp, and device name. Correctness is checked before performance, and raw measurements are never discarded. Candidate tokens are verified in order, while timing and energy remain separate measurements. ",
+      "method": "Repeat base_text, tokenize without special tokens, then take the first exact N tokens.",
+      "token_id_sha256_by_context": {
+        "512": "6ee42042bb3dbbcabb41ef6f4de19c087968d7dd7826db3a156483887e0d952d",
+        "2048": "bff2d39de34df22b6e396ceb08679340d1cb60dc59d015f0a54b8d2bb50cbbb3",
+        "8192": "44f53a57a151650323aef61c02878ceecf10f3ae707281a2ffbfbcf9c15d9ff2"
+      }
+    },
+    "npu_compile_policy": {"MAX_PROMPT_LEN": 8192, "MIN_RESPONSE_LEN": 128, "PREFILL_HINT": "DYNAMIC", "GENERATE_HINT": "FAST_COMPILE", "cache_policy": "reuse the AC-qualified and hashed Phase-0 cache blob; no compilation inside measured boundaries"}
+  },
+  "telemetry": {
+    "primary_tool": "Intel Unified Telemetry 0.2.0-beta1.1",
+    "primary_tool_zip_sha256": "f78151fffa89a05b7551da3cbfaf53fcc22d6fffdb97605af00706d6393b6da1",
+    "configuration": "socwatch uses configs/platform/358h/ut-pwr-100ms.json (samplingInterval=100 ms; otherwise the same metric list as official pwr-low.json); NPU additionally uses level-zero and xpu-os low configs; ITT is used only in adjacent clock-calibration traces and is disabled during formal workload traces",
+    "boundaries": ["Package power/energy", "NPU power/energy where exposed"],
+    "reporting": "Report each domain separately; never add Package, NPU, core, graphics, or DRAM domains.",
+    "secondary_cross_check": "Windows Energy Meter RAPL Package/PP0/PP1/DRAM at 1000 ms; diagnostic only.",
+    "integration": "At least 5 s lead and tail coverage; translate exact host perf_counter/QPC boundaries into the UT clock using adjacent before/after ITT calibration traces; require calibration spread/drift <=5 ms; linear boundary interpolation and trapezoidal integration; report J and J/output-token.",
+    "sanity_gate": "Idle-load-idle response, monotonic timestamps, no unexplained missing samples, units and scale confirmed.",
+    "overhead_gate": "Randomized/interleaved 10 telemetry-OFF and 10 telemetry-ON qualification runs; absolute median host-duration overhead <=1%; seed 570, reusing the B570 protocol."
+  },
+  "phase_2_gate": {
+    "framework": "speedup = T_b * C / (T_d(2) + V_2 * T_b + T_x)",
+    "optimistic_tokens_accepted_per_round": 3,
+    "central_tokens_accepted_per_round": 2,
+    "classification": {
+      "NO-GO": "optimistic upper-bound speedup < 1.00",
+      "GO": "central predicted speedup >= 1.05",
+      "BORDERLINE": "all remaining cases"
+    },
+    "same_platform_rule": "T_b, V_2, T_x, and T_d must be frozen 358H observations; M4, CUDA, and B570 timings may not be substituted."
+  },
+  "freeze_rule": "Change status to FROZEN and fill repository_commit only after replacement Phase-0 PASS and before observing any formal timing or energy result."
+}

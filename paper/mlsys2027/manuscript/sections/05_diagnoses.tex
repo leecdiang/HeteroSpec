@@ -1,0 +1,30 @@
+\section{Qualification and Optimization Limits}
+\label{sec:admissibility}
+\subsection{RTX: matched qualification and complete cost}
+\label{sec:matchedcost}
+The historical V4 cost arm uses the same 19 tasks as its prediction arm but 171 fresh observations: target-only UB1, batched $k=2$ UB2 and serialized $k=2$ UB1. One frozen timer executable, model/runtime, input, endpoint and balanced order schedule cover all three paths; each condition occupies each order position 19 times. The global native micro-batch option also propagates to draft, making this a whole-path configuration comparison, not an isolated target intervention.
+
+The fresh ID gate blocks batching at 51/57. Serialization qualifies at 57/57, but its prompt-median target/candidate GM is \VFourCost$\times$ [\VFourCostLo, \VFourCostHi], with 0/19 prompts faster (Table~\ref{tab:rtxv4cost}). Reciprocal relative GM latency is 1.476$\times$. The experiment excludes the measured serialized configuration as a latency optimization and establishes no fast qualified alternative. Blocked batching supplies no admissible speedup or CI.
+\input{tables/rtx_v4_cost_v088.tex}
+
+Absolute latency descriptors show the scale behind the ratios (Table~\ref{tab:rtxv4absolute}). Median across the 19 prompt medians is 1.607s for target and 2.332s for serialization; the full ranges are 0.532--2.920s and 0.843--4.102s. These post-study distributions do not estimate the paired GM by dividing their medians. Appendix Q retains every prompt-condition median and the unchanged primary estimator. The earlier two-path 30-prompt result, \mbox{\FUCost$\times$ [\FUCostLo, \FUCostHi]}, uses a different cohort and has no batched condition; the two estimates do not form an optimization trend.
+\input{tables/rtx_v4_absolute_v088.tex}
+
+The native timer charges per-request sampler/state work after synchronized prefill, drafting, target validation, acceptance/correction/bonus, KV rollback, synchronization and related logging/response through slot release. Loading, prefill and teardown are excluded. Observer controls check output stability, while clock probes bound clock-call overhead only; condition-dependent debug logging need not cancel. Thus the conclusion concerns instrumented post-prefill request latency, not logging-free deployment, throughput or energy. The bootstrap conditions on the selected rows and observed medians as stated in Section~\ref{sec:methods}.
+
+\subsection{358H: a bound on draft-only optimization}
+\label{sec:state}
+\input{figures/04_358h_v088.tex}
+The closed 358H Phase-3 runner directly qualifies CPU and NPU drafting at \HExact/90 pairs per path, yet both are slower than target-only: CPU \HcpuSpeed$\times$ [\HcpuLo, \HcpuHi], NPU \HnpuSpeed$\times$ [\HnpuLo, \HnpuHi], with zero of 30 prompts faster. Isolated NPU drafting is faster than CPU at tested contexts, but the integrated synchronous OpenVINO region combines full-prefix replay/reconstruction and proposal. Its \HnpuDraft\% share cannot be separated into the two costs (Figure~\ref{fig:state}). This is an interface result, not a general NPU limitation.
+
+Measured committed progress is $C=\HcpuC$ CPU and $\HnpuC$ NPU, including correction/bonus. Complete target work consumes \HcpuTarget\% of CPU-path time; residual orchestration is \HcpuResidual\% CPU and \HnpuResidual\% NPU. Processed-total accounting gives $(\dreal,\rtarget,X)=(\HcpuD,\HcpuR,\HcpuX)$ CPU and $(\HnpuD,\HnpuR,\HnpuX)$ NPU. Their \HcpuAggregate$\times$ and \HnpuAggregate$\times$ total-time ratios differ from prompt GMs.
+
+With baseline, target work and progress fixed, eliminating draft/residual gives pooled-total ceilings $C/\rtarget=$ \DerCPUZero$\times$ CPU and \DerNPUZero$\times$ NPU. The original prompt estimator has its own bound. Let $B_{ij}$ and $T_{ij}$ be matched baseline and complete target time for prompt $i$, repetition $j$. Nonnegative remaining cost and monotonicity of the median and GM give
+\begin{equation}
+\operatorname{GM}_i\operatorname{median}_j S'_{ij}
+\le \operatorname{GM}_i\operatorname{median}_j(B_{ij}/T_{ij}).
+\label{eq:promptceiling}
+\end{equation}
+All 90 rows per path yield ceilings \DiagCPUCeiling$\times$ CPU and \DiagNPUCeiling$\times$ NPU. Thus overhead-only savings cannot reach parity under either estimator. Even with other cost zero, a uniform target-work reduction must be at least \DiagCPUReduction\%/\DiagNPUReduction\% to make the prompt-GM ceiling reach one. These are post-study necessary budgets, not achieved savings; changed progress or target execution requires new qualification and measurement. Appendix P gives full precision and per-prompt limits. The persistent-state/wider-target candidate stops at qualification, with no performance or energy result.
+
+CPU restore/reconcile correctness could not be established under the tested state representation; the NPU state-capable path was unavailable with the frozen dynamic-shape IR. Separate correctness-only controls reproduce UB1/UB2 greedy divergence on the target even with exact matching prefixes, and proposal replay reproduces speculative divergence without live NPU draft inference. These controls identify no unique floating-point operation. The implementation motivated by cost remains blocked by output compatibility; neither device is proved incapable of retaining state.

@@ -1,0 +1,93 @@
+{
+  "schema": "heterospec.b570_backend_control.preregistration.v2",
+  "status": "FROZEN_PENDING_REVIEW",
+  "frozen_at": "2026-09-12T00:45:00+08:00",
+  "branch": "windows/b570-backend-control",
+  "qualification_commit": "385f3fc590e4b37d27d7ae6db9211aa7803c84ba",
+  "supersession": {
+    "supersedes": "work/b570/B570_FORMAL_CONFIG.json (n_batch=128, n_ctx=512)",
+    "previous_attempt_status": "INVALID / CONFIGURATION-BLOCKED",
+    "retention": "All previous work/b570/formal-* directories are retained unchanged as pilot/provenance records.",
+    "inference_policy": "The invalid attempt is excluded from scientific correctness, performance, and Vulkan numerical-behavior inference.",
+    "observed_before_v2": {
+      "b570_v2_cells": 0,
+      "humaneval30_performance_runs": 0,
+      "usable_six_prompt_correctness_pairs": 0
+    },
+    "reasons": [
+      "The frozen n_batch=128 configuration asserted n_tokens_all <= cparams.n_batch on HumanEval/3.",
+      "The old wrapper exposed a 127/129 CLI output-boundary disagreement, so its apparent mismatch cannot be attributed to Vulkan numerical behavior."
+    ]
+  },
+  "offline_capacity_check": {
+    "method": "Exact frozen Qwen3-8B Q8_0 tokenizer via llama-tokenize b10839, default BOS behavior, exact frozen prompt template; no model inference.",
+    "prompt_lengths_tokens": {
+      "HumanEval/106": 137,
+      "HumanEval/129": 407,
+      "HumanEval/3": 130,
+      "HumanEval/10": 153,
+      "HumanEval/19": 116,
+      "HumanEval/20": 177
+    },
+    "longest_prompt_tokens": 407,
+    "semantic_output_cap_tokens": 128,
+    "minimum_prompt_plus_output_capacity": 535,
+    "n_batch": 512,
+    "n_batch_rationale": "Smallest reasonable power of two covering the longest frozen input (407); selected solely for capacity, before replacement execution and without performance evidence.",
+    "n_ctx": 1024,
+    "n_ctx_rationale": "The superseded n_ctx=512 cannot contain 407 input tokens plus the 128-token output contract. 1024 is the smallest power of two covering 535 and is a capacity correction, not tuning."
+  },
+  "runtime": {
+    "llama_cpp_build": 10839,
+    "llama_cpp_commit": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "backend": "Vulkan",
+    "device": "Vulkan0",
+    "device_name": "Intel(R) Arc(TM) B570 Graphics",
+    "target": {"filename": "Qwen3-8B-Q8_0.gguf", "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6", "gpu_layers": "all"},
+    "draft": {"filename": "Qwen3-0.6B-Q8_0.gguf", "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031", "gpu_layers": "all"},
+    "decode": {"greedy": true, "temperature": 0, "seed": 123, "flash_attention": "off", "n_ctx": 1024, "n_batch": 512, "n_ubatch": 128, "semantic_output_cap": 128, "baseline_cli_n_predict": 128, "speculative_cli_n_predict": 127, "cli_mapping_reason": "In b10839 llama-speculative the initial target token precedes the n_predict loop; 127 maps to the same 128-token semantic cap as llama-completion 128."},
+    "speculation": {"type": "draft-simple", "k": 2, "draft_min": 0}
+  },
+  "correctness_contract": {
+    "unit": "generated token IDs only",
+    "prompt_and_prefix_tokens": "excluded",
+    "maximum_compared_generated_tokens": 128,
+    "eos": "If EOS is generated before token 128, the normalized completion terminates at and includes that EOS token consistently for both conditions.",
+    "cli_boundary_policy": "Both applications expose the prompt in captured stdout. The wrapper locates the exact frozen prompt boundary, removes prompt/prefix bytes, tokenizes only the generated segment with the frozen target tokenizer and no added BOS, reconciles against the runtime-reported generated count, then truncates at EOS or 128 tokens. Raw CLI total-token counts are never an equality criterion.",
+    "ambiguity_policy": "If the prompt boundary is absent/non-unique, retokenized output is shorter than the runtime generated count, or count reconciliation fails, the run is CONFIGURATION_ERROR rather than MISMATCH.",
+    "comparison": "Exact list equality of the two normalized generated-token ID arrays.",
+    "normalization_test": "Synthetic token-array tests must pass before formal execution; no HumanEval output may be consumed for runner debugging."
+  },
+  "correctness_gate": {
+    "task_ids": ["HumanEval/106", "HumanEval/129", "HumanEval/3", "HumanEval/10", "HumanEval/19", "HumanEval/20"],
+    "selection_unchanged": true,
+    "conditions": ["baseline", "vulkan_k2"],
+    "order_seed": 20260912,
+    "repetitions_per_condition_per_prompt": 3,
+    "order_seed": 20260912,
+    "pass": "All 18 paired repetitions have exact normalized generated-token arrays.",
+    "failure_evidence": ["first divergence index", "baseline token ID", "speculative token ID", "normalized lengths", "raw stdout/stderr", "acceptance statistics", "runtime metadata"]
+  },
+  "verification": {
+    "runs_only_after_correctness_pass": true,
+    "definition": "V2(n) = median T_verify(2,n) / median T_decode(1,n), using llama-bench PP2/PP1 target-forward proxy.",
+    "contexts": [512, 2048],
+    "repetitions_per_cell": 20,
+    "batch": 512,
+    "paths": {"fast_ubatch2": 2, "serialized_control_ubatch1": 1},
+    "statistics": ["individual timings", "median", "mean", "sample standard deviation", "CV", "ratio of medians"],
+    "diagnostic_after_correctness_fail": false,
+    "interpretation": "Mechanism proxy only; never end-to-end speedup."
+  },
+  "remote_protocol": {
+    "todesk": "Disconnected for the entire formal correctness and timing interval",
+    "settling_seconds": 60,
+    "power_measurement": false,
+    "fail_closed": "Abort if ToDesk activity is detected on the B570 LUID during preflight."
+  },
+  "stop_rule": {
+    "true_mismatch": "CORRECTNESS=FAIL; preserve first-divergence evidence; do not run HumanEval30 or admissible exact performance. V2 is not run under this v2 preregistration after failure.",
+    "exact_pass": "Run only the preregistered V2 cells.",
+    "later_humaneval30_proposal": "Allowed only if exact PASS and V2_exact <= 1.20; it remains a separate later phase."
+  }
+}

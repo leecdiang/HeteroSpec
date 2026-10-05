@@ -1,0 +1,18 @@
+% B570 prediction summary from frozen discovery and reserved validation.
+% This replaces the generic evaluation-flow graphic; no new result is inferred.
+\begin{figure*}[t]
+\centering
+\small
+\begin{tabular}{@{}p{0.95in}p{2.12in}p{3.08in}@{}}
+\toprule
+Stage & Design or comparator & Complete generated-ID endpoint \\
+\midrule
+Discovery & 12 prompts $\times$ 3 runs; select target-only UB1 as H1. & UB1 predicts the serialized trajectory in \textbf{36/36} runs. \\
+Freeze & 24 reserved prompts $\times$ 3 runs; fix 72 UB1 arrays before live outcomes. & No live reserved outcome is used to select or alter H1. \\
+Live test & Compare each of 72 live serialized runs with both frozen paths. & UB1 predictor/live \textbf{72/72}; UB128 reference/live \textbf{60/72 (BLOCKED)}. Four prompts (12 runs) are reference-divergent. \\
+Divergent case & HumanEval/134; first difference at generated-ID index 88. & Reference ID 914 $\rightarrow$ predictor/live ID 1946 in all 3 runs. \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{B570 prospective target-partition prediction.} The 72 comparisons are repeat-stable executions of 24 distinct prompts, not 72 independent tasks. The same-set reference contrast and divergent example distinguish prediction of the observed blocked trajectory from restored qualification. H1's freeze and live ordering are reported in the appendix; complete arrays appear in the separate anonymous sequence supplement. This one-stack observational predictor is not a history-controlled live-loop intervention.}
+\label{fig:translation}
+\end{figure*}

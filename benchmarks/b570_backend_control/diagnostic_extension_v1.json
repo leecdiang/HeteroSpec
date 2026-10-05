@@ -1,0 +1,113 @@
+{
+  "schema": "heterospec.b570_backend_control.diagnostic_extension.v1",
+  "status": "FROZEN_DIAGNOSTIC_ONLY",
+  "frozen_at": "2026-09-12T13:05:00+08:00",
+  "branch": "windows/b570-backend-control",
+  "relationship_to_formal_v2": {
+    "formal_run": "work/b570/formal-v2-20260912-122930",
+    "result": "VALID SCIENTIFIC RUN; CORRECTNESS=FAIL; 9/18 exact pairs and 9/18 mismatches",
+    "policy": "The original correctness failure is immutable. This post-gate extension is DIAGNOSTIC EXTENSION only, not primary validation, rescue, replacement, or evidence that the fast path is admissible.",
+    "fast_path_status": "CORRECTNESS-BLOCKED",
+    "reporting": "Raw timing and board energy from mismatched outputs are descriptive only. No prompt may be dropped and no result may be selectively reported."
+  },
+  "no_search_contract": {
+    "configuration_search": false,
+    "forbidden": ["k sweep", "p_min", "backend race", "Vulkan vs SYCL/OpenVINO", "driver/runtime/model/quantization changes", "prompt reselection", "post-hoc prompt dropping", "rerun-until-exact", "logit instrumentation", "source rebuild", "parameter tuning"],
+    "no_post_hoc_changes": true
+  },
+  "platform": {
+    "cpu": "Intel Core i5-13400",
+    "gpu": "Intel Arc B570",
+    "ram": "DDR4-3200",
+    "os": "Windows 11 25H2",
+    "runtime_build": "b10839",
+    "runtime_commit": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "backend": "Vulkan",
+    "device": "Vulkan0 / Intel Arc B570",
+    "target": {"filename": "Qwen3-8B-Q8_0.gguf", "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6", "gpu_offload": "37/37"},
+    "draft": {"filename": "Qwen3-0.6B-Q8_0.gguf", "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031", "gpu_offload": "29/29"},
+    "fast_path": {"greedy": true, "temperature": 0, "seed": 123, "k": 2, "n_ctx": 1024, "n_batch": 512, "n_ubatch": 128, "output_cap_generated_tokens": 128, "flash_attention": "off"}
+  },
+  "correctness_contract": {
+    "unit": "generated token IDs only",
+    "prompt_prefix": "excluded",
+    "maximum_generated_tokens": 128,
+    "eos": "terminates completion earlier",
+    "raw_cli_total_count_is_equality_criterion": false,
+    "parser_boundary_ambiguity": "CONFIGURATION_ERROR",
+    "true_mismatch": "identical generated prefix followed by a different generated token ID",
+    "normalization_logic": "unchanged from preregistration_v2.json"
+  },
+  "telemetry": {
+    "collector": "PresentMon 2.5.1.0 dynamic query",
+    "primary_metric": "PM_METRIC_GPU_CARD_POWER",
+    "sampling_ms": 100,
+    "boundary": "Intel Arc B570 GPU BOARD ENERGY",
+    "unsupported": ["CPU power", "Level Zero energy counter", "whole-system energy"],
+    "lead_seconds": 5,
+    "tail_seconds": 5,
+    "clock": "QPC",
+    "integration": "trapezoidal over workload interval"
+  },
+  "infrastructure": {
+    "owner": "Windows Task Scheduler",
+    "required_gates": ["NO_PENDING_REBOOT", "TASK_SCHEDULER_DETACH", "PRESENTMON_DETACH"],
+    "todesk": "disconnected throughout authoritative timing and power workloads",
+    "delayed_start_seconds": 120,
+    "heartbeat_max_interval_seconds": 30,
+    "watchdog_stale_seconds": 300
+  },
+  "stage_a_v2_raw": {
+    "definition": "V2_raw(n) = median T_verify(2,n) / median T_decode(1,n), using the llama-bench PP2/PP1 target-forward proxy",
+    "contexts": [512, 2048],
+    "primary_context": 512,
+    "repetitions_per_cell": 20,
+    "batch": 512,
+    "path": {"name": "fast_ubatch2", "ubatch": 2},
+    "labels": ["V2_raw", "diagnostic", "not V2_exact", "not end-to-end speedup"],
+    "context_2048_stop": "NOT_RUN_CAPACITY if unsupported without model, offload, or frozen end-to-end configuration changes",
+    "microbench_energy_rule": "Report only if duration is meaningful relative to 100 ms telemetry; otherwise NOT RELIABLE FOR MICROBENCH."
+  },
+  "stage_b_humaneval30": {
+    "source": "benchmarks/m4_code_conditioned_30q/preregistration.json",
+    "task_ids": ["HumanEval/3", "HumanEval/10", "HumanEval/19", "HumanEval/20", "HumanEval/28", "HumanEval/32", "HumanEval/44", "HumanEval/47", "HumanEval/48", "HumanEval/50", "HumanEval/54", "HumanEval/57", "HumanEval/62", "HumanEval/64", "HumanEval/68", "HumanEval/70", "HumanEval/89", "HumanEval/90", "HumanEval/101", "HumanEval/104", "HumanEval/105", "HumanEval/106", "HumanEval/107", "HumanEval/111", "HumanEval/119", "HumanEval/123", "HumanEval/126", "HumanEval/128", "HumanEval/129", "HumanEval/162"],
+    "conditions": ["baseline", "vulkan_k2"],
+    "repetitions_per_condition_per_prompt": 3,
+    "total_runs": 180,
+    "schedule_seed": 20260912,
+    "schedule_rule": "For each repetition, shuffle all 30 task IDs with Python random.Random(schedule_seed), then independently shuffle the two conditions for every task using the same RNG stream. Freeze the resulting schedule into the run manifest before the first workload.",
+    "pair_classes": ["EXACT_ADMISSIBLE", "MISMATCH_DIAGNOSTIC", "CONFIGURATION_ERROR"],
+    "all_pair_view": "RAW DIAGNOSTIC / NOT CORRECTNESS-ADMISSIBLE AS A WHOLE",
+    "exact_subset_view": "POST-HOC EXACT-SUBSET DESCRIPTIVE STATISTIC",
+    "bootstrap": {"resamples": 10000, "seed": 20260910, "unit": "prompt"},
+    "no_prompt_dropping": true
+  },
+  "divergence": {
+    "fields": ["prompt ID", "repetition", "first divergent generated token index", "shared generated prefix length", "baseline token ID", "speculative token ID", "shared-prefix SHA256", "acceptance", "runtime/model/backend hashes"],
+    "prompt_classes": ["STABLE_3_OF_3", "STABLE_2_OF_3", "UNSTABLE", "NO_DIVERGENCE"]
+  },
+  "single_fallback_candidate": {
+    "status": "PREDEFINED_BEFORE_DIAGNOSTIC_RESULTS",
+    "candidate": "serialized n_ubatch=1 speculative execution",
+    "rationale": "A single serialized/smaller-ubatch path is an existing llama.cpp execution semantic and is analogous to the previously defined Windows CUDA exact control; it is selected before B570 diagnostic results and is not chosen by a B570 search.",
+    "unchanged": ["runtime", "models", "backend/device", "offload", "greedy decoding", "temperature", "seed", "k=2", "n_ctx=1024", "n_batch=512", "128-token contract"],
+    "only_change": "n_ubatch from 128 to 1",
+    "initial_scope": {"task_ids": ["HumanEval/106", "HumanEval/129", "HumanEval/3", "HumanEval/10", "HumanEval/19", "HumanEval/20"], "repetitions": 3, "conditions": ["baseline", "serialized_vulkan_k2"]},
+    "if_exact": "Run V2_exact at context 512 using ubatch=1; context 2048 only if capacity permits.",
+    "if_fail": "Stop fallback branch.",
+    "humaneval30_fallback_authorized": false,
+    "candidate_count_limit": 1
+  },
+  "analysis": {
+    "raw_speedup": "baseline elapsed time / speculative elapsed time for all successfully executed pairs",
+    "exact_only_speedup": "same ratio for EXACT_ADMISSIBLE pairs only; post-hoc descriptive",
+    "energy_ratio": "baseline board J/generated token / speculative board J/generated token",
+    "correlations": ["acceptance vs raw speedup", "acceptance vs exactness", "first divergence position vs acceptance", "board J/token vs speedup", "board power vs elapsed time"],
+    "correlation_label": "exploratory/descriptive; no causality"
+  },
+  "failure_policy": {
+    "infrastructure": "Do not restart completed scientific stages; retain exact completeness and label PARTIAL / INFRASTRUCTURE_INTERRUPTED.",
+    "global_configuration_error": "STOP",
+    "independent_workload_error": "Preserve evidence and continue only where protocol safely permits; never silently fill missing runs."
+  }
+}

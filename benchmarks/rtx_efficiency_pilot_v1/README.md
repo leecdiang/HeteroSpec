@@ -1,0 +1,15 @@
+# RTX efficiency pilot: real speed, strict output gates
+
+Three hundred new measured GPU requests test whether the existing RTX stack has useful acceleration headroom. Existing native methods deliver qualified gains on a small exposed panel, but each fails the complete additional panel's exact-output gate. This is an executed engineering screen, not a new speculative algorithm or a manuscript change.
+
+Read `REPORT.md` for findings and `NEXT_STEPS.md` for a bounded implementation direction. `SUMMARY.csv` includes invalid timing ratios with `qualified_speedup` empty; do not report them as speedups. `PAIRED.csv`, `TOKEN_OUTCOMES.json`, `RUNS.json` and `VALIDATION.json` retain all cases, complete direct native ID arrays, stopping boundaries, timing scopes and source/raw-record bindings. Raw server logs, response telemetry, model weights and context state are not committed.
+
+The original screen, adaptive extension and final short-draft check each have a separate frozen protocol. The local execution commits are recorded in `SOURCE_BINDINGS.json`; they are standalone local Git commits, not claimed to exist in this GitHub repository. `frozen/` preserves their exact LF source blobs, and the user-facing raw archive includes their complete Git bundle. Raw Windows input-byte hashes differ from LF Git blob hashes solely through verified CRLF reconstruction.
+
+Run `python recompute.py` in this directory for CPU-only independent recomputation from the public summaries. New GPU runs use `python run_pilot.py --runtime <existing-runtime-directory> --models <existing-model-directory> --output <fresh-output-directory>`. Additional settings and input files are described in the protocols. Every new request records its actual current repository commit and relative source paths. Do not overwrite an old raw run.
+
+For the original four-condition screen, explicitly add `--conditions target draft_k2 draft_k4 ngram`; the current runner additionally supports the later native cascade. The completed initial run used the matching four-condition frozen runner. The original first-four (FA on, UB512) matrix and later ablation sessions were not completely interleaved; do not interpret their cross-session timing differences as isolated kernel costs.
+
+The archived local full-run validator requires the local freeze history; restore the supplied Git bundle for historical Git bindings. The public summary recomputation does not require those unavailable GitHub commits or model files. A new run in this repository uses its own Git history.
+
+Scope: RTX 5070 Ti Laptop, Qwen3-8B/Qwen3-0.6B Q8_0, llama.cpp b10839, greedy decoding, one resident slot, context2048, uncached prompts. HumanEval generation is capped at128 tokens; two tasks reach that cap. This screen measures complete bounded requests, not full unconstrained solutions or HumanEval pass@1. All tasks are exposed or exposure-unknown, not held-out. Three repeats and balanced/rotated session orders support prioritization, not a formal confidence interval or publication claim.

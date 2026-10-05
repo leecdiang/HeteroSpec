@@ -24,16 +24,16 @@ def prepare():
          'server_sha256':read(HERE/'generated/C_BUILD_IDENTITY.json')['server_sha256'],'reference':'Already-paid independent repeat-stable B scalar reference and immutable old scalar references; never supplied online.'})
     save(HERE/'generated/C2_SELECTION.json',{'status':'RUN','selected_k':k,'manifest_sha256':sha(HERE/'C2_MANIFEST.json')});print(f'C2 selected k{k} by outputs only; freeze new manifest before running.',flush=True)
 
-def references():
+def references(experiment='c2'):
     refs={r['task']:signature(r) for r in read(HERE/'runs/b/RECORDS.json') if r['condition']=='scalar_reference' and r['repetition']==1}
-    refs.update({t['id']:(tuple(t['original_reference_ids']),t['original_endpoint']) for t in read(HERE/'C2_INPUTS.json') if t['id'].startswith('HumanEval/')})
+    refs.update({t['id']:(tuple(t['original_reference_ids']),t['original_endpoint']) for t in read(HERE/(experiment.upper()+'_INPUTS.json')) if t['id'].startswith('HumanEval/')})
     return refs
 
-def run():
-    source=head();plan=read(HERE/'C2_MANIFEST.json');assert plan['inputs_sha256']==sha(HERE/'C2_INPUTS.json') and plan['preoutput_plan_sha256']==sha(HERE/'C2_PREOUTPUT_PLAN.json')
+def run(experiment='c2'):
+    source=head();prefix=experiment.upper();plan=read(HERE/(prefix+'_MANIFEST.json'));assert plan['inputs_sha256']==sha(HERE/(prefix+'_INPUTS.json')) and plan['preoutput_plan_sha256']==sha(HERE/(prefix+'_PREOUTPUT_PLAN.json'))
     exe=HERE/'generated/c-build/bin/llama-server.exe';assert sha(exe)==plan['server_sha256']
-    root=HERE/'runs/c2';root.mkdir(parents=True,exist_ok=False);save(root/'MANIFEST.json',{'utc':now(),'source_commit':source,'plan_sha256':sha(HERE/'C2_MANIFEST.json')})
-    tasks=read(HERE/'C2_INPUTS.json');refs=references();records=[]
+    root=HERE/'runs'/experiment;root.mkdir(parents=True,exist_ok=False);save(root/'MANIFEST.json',{'utc':now(),'source_commit':source,'plan_sha256':sha(HERE/(prefix+'_MANIFEST.json'))})
+    tasks=read(HERE/(prefix+'_INPUTS.json'));refs=references(experiment);records=[]
     for rep in range(4):
         cs=plan['conditions'];cs=cs[rep:]+cs[:rep];ts=tasks[rep:]+tasks[:rep]
         for c in cs:
@@ -46,10 +46,10 @@ def run():
                         p=d/(t['id'].replace('/','-')+'.json');r['record_relative_path']=p.relative_to(HERE).as_posix();save(p,r);records.append(r)
                         print(f'DONE {d.name} {t["id"]} equal={r["reference_equal"]}',flush=True)
                 finally:gpu_capture(d/'GPU_POST.json')
-    save(root/'RECORDS.json',records);print('COMPLETE c2 448',flush=True)
+    save(root/'RECORDS.json',records);print(f'COMPLETE {experiment} 448',flush=True)
 
-def analyze():
-    rows=read(HERE/'runs/c2/RECORDS.json');plan=read(HERE/'C2_MANIFEST.json');assert len(rows)==448;refs=references();q={};details=[]
+def analyze(experiment='c2'):
+    prefix=experiment.upper();rows=read(HERE/'runs'/experiment/'RECORDS.json');plan=read(HERE/(prefix+'_MANIFEST.json'));assert len(rows)==448;refs=references(experiment);q={};details=[]
     for c in plan['conditions']:
         name=c['name'];q[name]=True
         for task in plan['tasks']:
@@ -61,9 +61,10 @@ def analyze():
     for label in ['MBPP','HumanEval']:
         ids=[t for t in plan['tasks'] if t.startswith(label+'/')];cq={c:all(d['full_equal'] for d in details if d['task'] in ids and d['condition']==c) for c in q}
         cohorts[label]={'qualification':cq,'costs':[summarize(rows,ids,a,b,cq[a] and cq[b]) for a,b in [('wider_speculation','anchor_speculation'),('wider_speculation','matched_target')]]}
-    out={'stage':'C2','selected_k':plan['selected_k'],'requests':448,'warmups':16,'records_sha256':sha(HERE/'runs/c2/RECORDS.json'),'qualification':q,'details':details,'costs':costs,'cohorts':cohorts,
-         'interpretation':'Conditional configuration confirmation after C; the sixteen B tasks outside the C primary cohort had no wider-width outputs used for selection. This is not a new unused-task claim.'}
-    save(HERE/'generated/C2_RESULTS.json',out);print({'qualification':q,'costs':[(c['numerator'],c['denominator'],c['generation']['task_median_geomean_speedup'],c['wall']['task_median_geomean_speedup']) for c in costs]},flush=True)
+    draft_counts={c['name']:{'drafted':sum(r['response']['timings'].get('draft_n',0) for r in rows if r['condition']==c['name']),'accepted':sum(r['response']['timings'].get('draft_n_accepted',0) for r in rows if r['condition']==c['name'])} for c in plan['conditions']}
+    out={'stage':prefix,'selected_k':plan['selected_k'],'requests':448,'warmups':16,'records_sha256':sha(HERE/'runs'/experiment/'RECORDS.json'),'qualification':q,'details':details,'costs':costs,'cohorts':cohorts,'draft_counts':draft_counts,
+         'interpretation':('Fixed-UB qualification pilot used all 28 tasks for width selection. These tasks are reused in independent cost sessions; no held-out or unused-task claim. Long-panel tasks were previously exposed.' if experiment=='c4' else 'Conditional configuration confirmation after C; the sixteen B tasks outside the C primary cohort had no wider-width outputs used for selection. This is not a new unused-task claim.')}
+    save(HERE/'generated'/(prefix+'_RESULTS.json'),out);print({'qualification':q,'costs':[(c['numerator'],c['denominator'],c['generation']['task_median_geomean_speedup'],c['wall']['task_median_geomean_speedup']) for c in costs]},flush=True)
 
 if __name__=='__main__':
     import sys

@@ -1,7 +1,0 @@
-# First-page story audit v0.8.6
-
-Read title, abstract and first Introduction page, without appendix rescue. The retained title describes path qualification and realized cost. Abstract opens from known numerical path variation to a prospective whole-trajectory question. B570 draft-free UB1 predictions precede live outcomes, match72/72 on24 repeat-stable prompts and include4 reference-divergent prompts/12 runs versus reference60/72. A later wrong ID is an explicit falsifier. Success is predictive sufficiency, not restored lossless compatibility or a unique operation.
-
-The supporting fork and RTX reproduction use different inputs. The cost branch shows that passing a contract does not imply speedup, and presents fixed-progress accounting and fixed-policy comparisons as bounded decisions. The contribution count remains exactly three; numerical path dependence, accounting identities and adaptive speculation are established background. The first-page copy avoids a campaign-count ledger. Detailed comparison counts, configurations and freeze objects move to Table1 and appendix.
-
-Useful finite decisions: reject the B570 path as a lossless replacement for its reference; do not assume H1 transfer after RTX discovery failure; do not expect draft-only savings to recover fixed-progress358H parity; compare Guard with the qualified fixed path. No algorithmic novelty, universal mechanism or production win is claimed. Full first-page visual verification is separately hash-bound in VISUAL_QA_V086.json.

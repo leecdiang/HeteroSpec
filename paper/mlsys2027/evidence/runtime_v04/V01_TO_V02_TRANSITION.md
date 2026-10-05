@@ -1,9 +1,0 @@
-# v0.1 to v0.2 transition
-
-v0.1 R0 was attempted at `ae99c146d6f88505268dd4de9a35ead6c8a88752`. Static validation and five hardware-independent logic tests passed. CPU Optimum exposed 56 VariableStates, but snapshot/restore/reconcile correctness was not established. Direct Optimum/OpenVINO NPU compilation of the frozen dynamic IR failed. The forced state tests could not complete because the pinned llama.cpp target and Optimum draft load different OpenMP runtimes in one Windows process; either initialization order produced OpenMP Error #15.
-
-No formal performance data was seen. No v0.1 R1 or R2 was executed. The original R0 logs, capability probe, patch, and stop report remain preserved. The v0.1 branch and closed hardware campaign/manuscript are unchanged.
-
-v0.2 changes only the target/draft process topology and its realized IPC accounting. The target and draft run in spawned workers with synchronous Pipes; all target-to-draft RPC time is charged inside the post-target-prefill primary timer. The scientific questions, models, weights, quantization, frozen IR, llama.cpp commit, prompt format, HumanEval workload, output cap, k=2, acceptance/correction/bonus semantics, candidate scope, bootstrap estimator, energy exclusion, and profitability-guard scope remain unchanged. The NPU dynamic-shape failure is recorded as an implementation limitation of the frozen representation, with no reshape, new conversion, frontend change, or fallback.
-
-Two v0.1 R0 repairs were reviewed and carried into v0.2: required `RoundRecord.checkpoint_restored` serialization, and exact validation of the main Git blob whose sole difference from the closed runner hash is terminal CRLF. Neither changes token semantics, target verification, draft state policy, or the timing boundary. v0.2 must finish and review R0 before any freeze or R1/R2 work.

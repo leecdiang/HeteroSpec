@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-REPO_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../../.." && pwd)
-export HETEROSPEC_ROOT="${HETEROSPEC_ROOT:-$REPO_ROOT}"
-export HETEROSPEC_MODEL_ROOT="${HETEROSPEC_MODEL_ROOT:-$HOME/.cache/heterospec/models}"
-export HETEROSPEC_DATA_ROOT="${HETEROSPEC_DATA_ROOT:-$REPO_ROOT/datasets}"
-export HETEROSPEC_CACHE_ROOT="${HETEROSPEC_CACHE_ROOT:-$HOME/.cache/heterospec}"
-export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"

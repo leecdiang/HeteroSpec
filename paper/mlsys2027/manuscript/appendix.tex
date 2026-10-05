@@ -3,13 +3,14 @@
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Predicting Execution Paths and Bounding Optimization in Speculative Decoding},pdfsubject={MLSys 2027 separate appendix v0.9.0}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Supplement: Predicting Native Intervention Outcomes in Speculative Decoding},pdfsubject={MLSys 2027 separate appendix v0.10.0}}
 \input{tables/values.tex}
 \input{tables/runtime_values.tex}
 \input{tables/direct_id_values.tex}
@@ -17,10 +18,10 @@
 \input{tables/derived_values_v086.tex}
 \input{tables/rtx_v4_values_v087.tex}
 \input{tables/acceptance_values_v090.tex}
-\mlsystitlerunning{Supplement: Predicting Execution Paths}
+\mlsystitlerunning{Supplement: Native Intervention Outcomes}
 \begin{document}
 \twocolumn[{
-\mlsystitle{Supplement: Predicting Execution Paths and Bounding Optimization in Speculative Decoding}
+\mlsystitle{Supplement: Predicting Native Intervention Outcomes in Speculative Decoding}
 \begin{mlsysauthorlist}\mlsysauthor{Anonymous Authors}{anon}\end{mlsysauthorlist}
 \mlsysaffiliation{anon}{Anonymous Institution}
 \mlsyscorrespondingauthor{Anonymous Author}{anon.email@domain.com}
@@ -30,7 +31,7 @@
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}
 \section{Supplement Scope}
-This separate appendix accompanies the prospective prediction, sampled intervention, qualification/cost and runtime studies. It supplies statistical, measurement-boundary, and provenance details. Section J and its commitment tables document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies document and earlier study packages; Section Q gives RTX V4 same-set prediction, matched cost, failed V3 history and full anonymous evidence entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
+This separate appendix preserves the earlier prediction, sampled-fork, qualification/cost and runtime studies, and adds the controlled B570/RTX intervention contracts and full paired results in Section~\ref{app:interventions}. It supplies statistical, measurement-boundary, and provenance details. Section J and its commitment tables document the main B570 H1 result. Section L and the post-study tables cover the new forks; Section M and the input audit cover RTX prediction; Section N covers RTX cost. M4 appears in Section H and the post-study fixed-mode comparison; 358H appears in Section D and the conditional accounting. Section O identifies document and earlier study packages; Section Q gives RTX V4 same-set prediction, matched cost, failed V3 history and full anonymous evidence entries. Identifying repository metadata and internal source paths remain outside the anonymous PDF; the nonidentifying B570 prediction-file content digest appears below.
 
 \section{Frozen Estimators}
 Table~\ref{tab:statistics} preserves historical hardware estimators only; M4 runtime is in Section H, new RTX cost in Section N, and new post-study sensitivity in Section~\ref{app:derived}. The primary sample unit is the prompt. Repeated observations contribute to its summary, rather than being treated as independent prompts. Pair ratios divide matched baseline decode time by speculative decode time. Historical M4, RTX, and B570 counts are text-path agreement from parsed CLI output: M4 HumanEval includes the prompt in its parsed text; B570 strips and normalizes the prompt before re-tokenization. Neither is direct generated-ID equality. The 358H runner and prospective M4 study record generated IDs directly. A geometric mean across prompt summaries is used for headline speedup. B570 timing remains diagnostic regardless of its estimator.
@@ -128,7 +129,7 @@ The separate anonymous sequence supplement contains complete reference, predicto
 \section{Study Map and Historical Timing}
 \label{app:history}
 The main text now centers the prospective predictions and system decisions. This section preserves earlier timing evidence and the opposite M4 workload outcomes without pooling them with later direct-ID studies. Historical M4/RTX/B570 timings use parsed-text comparators (H), not direct-ID qualification. Later Q gates do not certify those observations.
-\input{tables/study_map_v088.tex}
+\input{tables/study_map_v010.tex}
 \input{tables/02_headlines_v088.tex}
 \input{figures/02_m4.tex}
 The representative frozen M4 sample gives \MRepSpeed$\times$ [\MRepLo, \MRepHi], with \MRepExact/\MRepPairs\ text-path-equal pairs and \MRepFaster/\MRepN\ prompts faster. Separate preregistered HumanEval fixed-$k=2$ gives \MHEspeed$\times$ [\MHElo, \MHEhi], \MHEexact/\MHEpairs\ text-path-equal pairs and \MHEfaster/\MHEprompts\ prompts faster (Figure~\ref{fig:m4}). The workloads and sessions differ: neither is a workload-only causal effect or general M4 profitability. Early MLX failures do not negate the historical Q8\_0 Metal result.
@@ -137,4 +138,9 @@ Primary fixed-$k=2$ HumanEval package-efficiency is \MHEenergy$\times$ [\MHEener
 
 RTX serialized CPU-to-GPU is \RTXcpuSpeed$\times$ [\RTXcpuLo, \RTXcpuHi], same-GPU drafting \RTXgpuSpeed$\times$ [\RTXgpuLo, \RTXgpuHi], both \RTXexact/90 H pairs and zero of 30 prompts faster. These controls retain different placement/integration costs, not an isolated transfer-cause estimate. B570 serialized timing is diagnostic, \BSpeed$\times$ [\BLo, \BHi], with zero of 30 prompts faster; its formal failure/stop rule and board-energy boundary remain unchanged. All newer studies retain their own reference and cohort.
 
+\input{sections/appendix_prediction_history_v010.tex}
+\input{sections/appendix_interventions_v010.tex}
+\clearpage
+\bibliographystyle{mlsys2025}
+\bibliography{references}
 \end{document}

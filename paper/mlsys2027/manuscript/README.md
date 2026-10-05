@@ -1,3 +1,24 @@
+# Current reconstruction — v0.10.0
+
+The intervention reconstruction is reviewed on a stacked branch based on PR #53, not yet accepted main evidence. Read `../reviews/reconstruction_v010/` for exact source binding, independent raw reviews, reviewer simulation and QA.
+
+Build current documents with `python scripts/build_v010.py`; this creates versioned main/appendix PDFs and an anonymous portable source ZIP, then independently extracts/rebuilds that ZIP. Figures: `python scripts/intervention_figures_v010.py` requires independently recomputed intervention evidence.
+
+Historical v0.9.0 outputs, source ZIP and build scripts remain at their original repository paths. To reproduce v0.9.0, use its immutable ZIP or the original fixed commit `3a0d3c9eb1c8778141bf546b5cdd25ad1e5243e4`; historical build scripts on an edited tree do not freeze their dependencies. No old output is overwritten by the v0.10.0 build.
+
+The author evidence packet includes private provenance; the anonymous package strips identifying metadata and uses its own content hashes. Neither is described as publicly released. No new inference, GPU experiments, timing or energy measurements were performed.
+
+---
+
+Final artifacts: [main PDF](output/manuscript-v0.10.0.pdf) (10 body +2 references), [appendix](output/appendix-v0.10.0.pdf) (24 pages), [portable source ZIP](output/overleaf-intervention-reconstruction-v0.10.0.zip), [anonymous evidence](output/anonymous-intervention-evidence-v0.10.0.zip), and [author evidence transport manifest](output/author-evidence-packet-v0.10.0.zip.parts/MANIFEST.json). Reassemble the same author ZIP with `python scripts/restore_author_packet_v010.py`; all part and ZIP/member hashes are checked. [Final artifact manifest](../evidence/FINAL_ARTIFACT_MANIFEST_V010.json) binds exact bytes. [Independent review and revision](../reviews/reconstruction_v010/) preserve initial/final PDF hashes and all three internal simulation reports; no acceptance probability is reported.
+
+Run `python scripts/evidence_package_v010.py`, then unpack the anonymous evidence ZIP and run `python -B verify_v010.py` for full endpoint-bounded arrays and preserved cost arithmetic. B570 comparison is CAP128; all144 untruncated native captures are retained separately (60/63 post-cap IDs), excluded from equality. No common-prefix-only comparison is used.
+
+The author ZIP retains large raw inventories, source/attempt bindings, handoff/sham/remote-seal records, selected complete raw captures and exact reviewer packets. Its `reviews/` directory maps to `../reviews/reconstruction_v010/`; extract those members there before reconstructing the complete author package with `python scripts/closeout_v010.py`. Raw archive/Actions artifact identities and CPU-only audit commands are in `rtx/REVIEW_REPORT.md` within that packet. It is not the full1.2GBarchive and contains no omitted weights/runtime binaries. The anonymous package makes export arithmetic inspectable; it is not full independent runtime replication.
+
+<details>
+<summary>Historical delivery notes (superseded for the current v0.10.0 manuscript)</summary>
+
 # Manuscript build — unchanged v0.9.0 delivery; B570 integration pending
 
 Updated 2026-10-04. The separately authorized B570 prefill diagnostic study is **COMPLETE and CLOSED**. Its [delivery](https://github.com/leecdiang/HeteroSpec/blob/196ed563b36d0e16a3cdb667b6996a4afd98da1d/benchmarks/b570_prefill_diagnostic_v1/DELIVERY_REPORT.md) and [independent review](https://github.com/leecdiang/HeteroSpec/blob/main/paper/mlsys2027/reviews/b570_prefill_review_20261004/REVIEW_REPORT.md) supersede the PREPARE_ONLY study status preserved below.
@@ -156,6 +177,8 @@ The anonymous index is a known-outcome projection, not a prospective freeze or a
 Figure 3's 71 checks were rerun. The prior [RTX V4 independent native-log audit](../evidence/RTX_V4_INDEPENDENT_RAW_CLOSEOUT_20261002.md) already verified nine sealed capsules, all 228 native live/timed arrays and raw QPC-to-statistic calculations on CPU. That receipt is reused, not relabeled as a new nine-capsule replay here. Historical v086 archive/numeric/runtime/secondary receipts remain historical; current QA does not claim their entire suites were freshly rerun.
 
 No GPU/model forward occurred in v087 integration. Scientific arrays, old macros, Figure 3, vendor style and prior artifacts stay unchanged. Exact old v084 sequence ZIP and 358H runtime raw traces remain unavailable. Offline hashes and ordinal mappings do not authenticate original absolute time, exposure completeness or omitted weights/runtime/compiler/driver. Build success is separate from [submission-level review](../reviews/submission_v087/).
+
+</details>
 
 </details>
 

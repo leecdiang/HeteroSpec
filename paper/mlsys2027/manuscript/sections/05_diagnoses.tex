@@ -2,7 +2,7 @@
 \label{sec:admissibility}
 \subsection{RTX: matched qualification and complete cost}
 \label{sec:matchedcost}
-V4 B uses A's 19 tasks but 171 fresh observations: target-only UB1, batched $k=2$ UB2 and serialized $k=2$ UB1. One frozen timer executable, model/runtime, input, endpoint and balanced order schedule cover all three paths; each condition occupies each order position 19 times. The global native micro-batch option also propagates to draft, making this a whole-path configuration comparison, not an isolated target intervention.
+The historical V4 cost arm uses the same 19 tasks as its prediction arm but 171 fresh observations: target-only UB1, batched $k=2$ UB2 and serialized $k=2$ UB1. One frozen timer executable, model/runtime, input, endpoint and balanced order schedule cover all three paths; each condition occupies each order position 19 times. The global native micro-batch option also propagates to draft, making this a whole-path configuration comparison, not an isolated target intervention.
 
 The fresh ID gate blocks batching at 51/57. Serialization qualifies at 57/57, but its prompt-median target/candidate GM is \VFourCost$\times$ [\VFourCostLo, \VFourCostHi], with 0/19 prompts faster (Table~\ref{tab:rtxv4cost}). Reciprocal relative GM latency is 1.476$\times$. The experiment excludes the measured serialized configuration as a latency optimization and establishes no fast qualified alternative. Blocked batching supplies no admissible speedup or CI.
 \input{tables/rtx_v4_cost_v088.tex}

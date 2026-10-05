@@ -14,13 +14,15 @@ def main():
     pairs=[]
     for p in HERE.iterdir():
         if p.is_file():pairs.append((p,'experiment/'+p.name))
-    for directory in ['runs','generated/c-source']:
+    for directory in ['runs','generated/c-source']+(['generated/x-source'] if (HERE/'generated/x-source').exists() else []):
         for p in (HERE/directory).rglob('*'):
             if p.is_file():pairs.append((p,'experiment/'+p.relative_to(HERE).as_posix()))
     for p in (HERE/'generated').rglob('*'):
-        if p.is_file() and '/c-source/' not in p.as_posix() and '/c-build/' not in p.as_posix() and not p.name.startswith('PUBLISH_'):
+        if p.is_file() and all('/'+d+'/' not in p.as_posix() for d in ['c-source','c-build','x-source','x-build']) and not p.name.startswith('PUBLISH_'):
             pairs.append((p,'experiment/'+p.relative_to(HERE).as_posix()))
     for n in ['llama-cli.exe','llama-server.exe']:pairs.append((HERE/'generated/c-build/bin'/n,'experiment/current-binaries/'+n))
+    if (HERE/'generated/x-build/bin/llama-server.exe').exists():
+        for n in ['llama-cli','llama-server']:pairs.append((HERE/'generated/x-build/bin'/(n+'.exe'),'experiment/current-binaries/'+n+'-cross.exe'))
     corpus=OLDROOT/'work/rtx-target-v1/sanitized-mbpp.json';assert sha(corpus)==read(HERE/'EXPOSURE_LEDGER.json')['dataset']['sha256']
     pairs.append((corpus,'experiment/frozen-corpus/sanitized-mbpp.json'))
     for p in OUT.iterdir():

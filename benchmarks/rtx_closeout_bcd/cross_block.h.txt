@@ -1,0 +1,49 @@
+    if (std::getenv("HS_CROSS_STATE_ON")) {
+        out["cross_forks"] = hs::j::array();
+        for (const char * donor : {"on", "off"}) {
+            const char * path = std::getenv(std::strcmp(donor, "on") == 0 ? "HS_CROSS_STATE_ON" : "HS_CROSS_STATE_OFF");
+            require(path != nullptr, "cross donor path missing");
+            std::ifstream file(path, std::ios::binary);
+            require(bool(file), "cross donor state missing");
+            std::vector<uint8_t> bytes((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            require(!bytes.empty(), "cross donor state empty");
+            for (bool query_batch : {false, true}) {
+                auto fp = cp;
+                fp.n_ubatch = llama_n_ubatch(source);
+                fp.cb_eval_user_data = (void *) "cross_fork";
+                llama_context_ptr ctx(llama_init_from_model(model, fp));
+                require(bool(ctx), "cross context allocation failed");
+                hs::roles[ctx.get()] = "cross_fork";
+                require(llama_state_set_data(ctx.get(), bytes.data(), bytes.size()) == bytes.size(), "cross state restore failed");
+                require(bytes == hs::state(ctx.get()) && bounds == hs::position(ctx.get()), "cross state roundtrip differs");
+                common_sampler_ptr fs(common_sampler_clone(smpl));
+                require(sc == sampler_contract(fs.get(), ctx.get()), "cross sampler clone differs");
+                hs::graphs = hs::j::array();
+                const bool prior_active = hs_scope::active;
+                hs_scope::active = query_batch;
+                const int rc = llama_decode(ctx.get(), input);
+                llama_synchronize(ctx.get());
+                hs_scope::active = prior_active;
+                require(rc == 0, "cross decode failed");
+                const auto graph = hs::graphs;
+                std::vector<int> idxs;
+                llama_tokens proposals;
+                for (int i = 0; i < input.n_tokens; ++i) {
+                    require(input.logits[i], "cross logits mask unsupported");
+                    idxs.push_back(i);
+                    if (i > 0) proposals.push_back(input.token[i]);
+                    auto row = logits(ctx.get(), nv, i);
+                    const std::string name = dir + "/cross-" + donor + (query_batch ? "-querybatch" : "-ordinary") + "-row" + std::to_string(i) + ".f32";
+                    write(name, row.data(), row.size() * sizeof(float));
+                }
+                const auto accepted = common_sampler_sample_and_accept_n(fs.get(), ctx.get(), idxs, proposals);
+                out["cross_forks"].push_back({{"donor", donor}, {"current_query_batch", query_batch},
+                    {"ub", llama_n_ubatch(ctx.get())}, {"state_roundtrip_equal", true}, {"sampler_clone_equal", true},
+                    {"graphs", graph}, {"sampled_ids", accepted}, {"accepted_proposals", accepted.size() - 1},
+                    {"logits_rows", input.n_tokens}, {"previous_logits_consumed", false}});
+            }
+        }
+        require(saved == hs::state(source) && bounds == hs::position(source) &&
+                float_equal(pending_logits, logits(source, nv, -1)) && sc == sampler_contract(smpl, source), "cross forks changed source");
+        out["source_after_cross_unchanged"] = true;
+    }

@@ -54,6 +54,7 @@ def c():
     modes=['scalar_reference','matched_target','selected_speculation'];bycap={};configs=[];failures=[]
     anchors128={r['task']:signature(r) for r in read(HERE/'runs/b/RECORDS.json') if r['condition']=='scalar_reference' and r['repetition']==1}
     anchors128.update({t['id']:(tuple(t['original_reference_ids']),t['original_endpoint']) for t in inputs if t['cohort']=='exposed_long_supplement'})
+    anchors128={t:anchors128[t] for t in tasks}
     for cap in [128,256,512]:
         bycap[cap]={t:signature(next(r for r in rows if r['task']==t and r['condition']=='scalar_reference' and r['width_k']==1 and r['requested_cap']==cap)) for t in tasks}
         if cap==128:assert bycap[cap]==anchors128
@@ -83,7 +84,7 @@ def d():
     for stage in ['d_reset','d']:
         rows=read(HERE/f'runs/{stage}/RECORDS.json');assert len(rows)==96
         q={mode:all(signature(r)==refs[r['task']] for r in rows if r['condition']==mode) for mode in ['matched_target','selected_speculation']}
-        details=[{'task':r['task'],'condition':r['condition'],'cycle':r['repetition'],'full_equal':signature(r)==refs[r['task']],'tokens':len(r['response']['tokens']),'endpoint':r['endpoint'],'drafted':r['response'].get('tokens_evaluated'),'timings':r['response']['timings']} for r in rows]
+        details=[{'task':r['task'],'condition':r['condition'],'cycle':r['repetition'],'full_equal':signature(r)==refs[r['task']],'tokens':len(r['response']['tokens']),'endpoint':r['endpoint'],'drafted':r['response']['timings'].get('draft_n'),'accepted_drafts':r['response']['timings'].get('draft_n_accepted'),'timings':r['response']['timings']} for r in rows]
         panel={'records_sha256':sha(HERE/f'runs/{stage}/RECORDS.json'),'qualification':q,'details':details,'measured':stage=='d'}
         if stage=='d':
             panel['costs']=summarize(rows,tasks,'selected_speculation','matched_target',all(q.values()))

@@ -1,6 +1,6 @@
 # Exact handover
 
-Scientific state: **SUPPORTED_ON_EXPOSED_COHORT**. Formal 171/171; engineering 12; additional diagnostics 0; failed model attempts/retries/restarts 0. All-part authenticated readback, clean 2,276-file restoration and independent verification pass. The mandatory Draft PR is the next delivery step; its final identity is recorded in DELIVERY_RECEIPT.json after creation.
+Scientific state: **SUPPORTED_ON_EXPOSED_COHORT**. Formal 171/171; engineering 12; additional diagnostics 0; failed model attempts/retries/restarts 0. All-part authenticated readback, clean 2,276-file restoration and independent verification pass. New Draft PR #55 is created and attached: https://github.com/leecdiang/HeteroSpec/pull/55. It is unmerged; base SHA is pinned below. DELIVERY_RECEIPT.json records its creation snapshot. The current head is the commit containing this handover and can be read from the PR/Git; this file does not embed a self-referential head hash.
 
 Branch: `codex/rtx-target-only-bridge-v1`. Base: `codex/manuscript-intervention-reconstruction-v010`, exact source `16aeada781c475c9641e09c90e93fb0a0e136c34` (PR #54). Freeze: `564398820b747674e6ba1bc131e6738e5fda1459`; receipt committed before formal execution. Raw artifact content commit: `1903ade3507b6a9df8390f44ca88fe83f922ce42`. Existing manuscript, old evidence, PR #53/#54 and original checkouts are unchanged.
 

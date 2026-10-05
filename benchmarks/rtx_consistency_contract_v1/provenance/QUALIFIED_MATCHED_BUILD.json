@@ -1,0 +1,74 @@
+{
+  "status": "QUALIFIED_EXPOSED_FINITE_GATE",
+  "cli_sha256": "2b216556d33c33e9eace50e82135448c366e10403f72a365dc5d4c2cc50692e9",
+  "server_sha256": "f23c4dc4dc1379ab805352a547c985c4fef4e3cb5e391229082454aa0a8ceabc",
+  "build_identity": {
+    "compiler_sha256": "086ce9d47ba42f33a514e1a6e04eb1d4a8fa1d75e0868e0213caad447c91e864",
+    "changed_source_files": {
+      "common/hs_observer.h": "192e34427cdcbf69c60d38e314ef5928c42bb0411c6be3e8f60ba8db9230aeb1",
+      "common/live_capture.h": "f6b11bd4ca4f1469a1e2ddca4f5f87dccb1ec18583199ecfd561886cf93a8d6c",
+      "src/llama-graph.cpp": "2f16d824ae2cde62d6da326fa7cf9a1b2dcfba9ae7eabae032554b87f9f63f8f",
+      "tools/server/server-context.cpp": "06a1faadc2dcc86aef9f7524625f16823362cf5c5b9210ae75244d2516c5b8ad"
+    },
+    "retained_cuda_sha256": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+    "original_cuda_equal": true,
+    "frontend_sha256": "2b216556d33c33e9eace50e82135448c366e10403f72a365dc5d4c2cc50692e9",
+    "status": "BUILT_NOT_QUALIFIED"
+  },
+  "qualification": "PASS_EXPOSED_PROBE",
+  "qualification_source_commits": [
+    "9148d2ab86b6319499a9e1456726bd9d6186285b"
+  ],
+  "cost_manifest": {
+    "source_commit": "1a9a9271c0b3f95ccd5538bf7e20c045fc62d482",
+    "runner_sha256": "9325c6c2af3251dc52d88cb13a979332bd3fadfeb24d4ff5524aa0e42906e3f6",
+    "inputs_sha256": "cdb84b12f75a3f7d537603a61b03094beb65e5cd9b6cbc0be353a9a716e040fa",
+    "server_sha256": "f23c4dc4dc1379ab805352a547c985c4fef4e3cb5e391229082454aa0a8ceabc",
+    "cuda_sha256": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+    "base_command": [
+      "C:\\Users\\ASUS\\Documents\\Codex\\2026-10-05\\w\\work\\continuity-state-v1\\generated\\build\\bin\\llama-server.exe",
+      "--model",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-8B-Q8_0.gguf",
+      "--device",
+      "CUDA0",
+      "--n-gpu-layers",
+      "all",
+      "--fit",
+      "off",
+      "--ctx-size",
+      "4096",
+      "--batch-size",
+      "2048",
+      "--ubatch-size",
+      "4",
+      "--flash-attn",
+      "off",
+      "--parallel",
+      "1",
+      "--threads",
+      "24",
+      "--threads-batch",
+      "24",
+      "--cache-ram",
+      "0",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18763",
+      "--no-webui",
+      "--no-warmup",
+      "--no-cache-prompt"
+    ],
+    "conditions": [
+      "target",
+      "query_batch_k3"
+    ],
+    "repetitions": 4,
+    "started_utc": "2026-10-05T10:00:14.852773+00:00",
+    "measured_request_cap": 152,
+    "excluded_warmups": 8,
+    "capture_disabled": true,
+    "observer_fast_bypass": true,
+    "both_conditions_attention_mode": "query_batch"
+  }
+}

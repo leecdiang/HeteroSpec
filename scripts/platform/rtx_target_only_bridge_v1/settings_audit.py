@@ -9,7 +9,7 @@ def unique_object(pairs):
 def load(p):return json.loads(p.read_text(encoding='utf-8-sig'),object_pairs_hook=unique_object)
 def sha(p):
     with p.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
-def audit(root):
+def audit(root,output=None):
     doc=root/'benchmarks/rtx_target_only_bridge_v1';out=root/'work/rtx-target-only-bridge-v1'
     protocol=load(doc/'PROTOCOL.json');cohort=load(doc/'COHORT.json');contract=load(doc/'INPUT_CONTRACT.json')
     exact=['HumanEval/'+str(i) for i in [143,31,25,81,15,141,142,18,136,99,148,140,87,76,26,49,40,109,66]]
@@ -45,7 +45,8 @@ def audit(root):
             handovers+=1
         rows.append({'key':key,'raw_f16_contexts':len(f16),'kv_unified':False,'greedy_target':True,'warmup':False,'fresh_cache':True})
     receipt={'status':'PASS','formal':sum(k.startswith('formal/') for k in selected),'engineering':sum(k.startswith('engineering/') for k in selected),'handoffs_checked':handovers,'raw_settings_records':len(rows),'queue_and_cohort_exact':True,'rows':rows,'scope':'raw KV type/config and source-bound handoff sequencing; no serialized opaque sampler or independently authenticated machine clock'}
-    (doc/'SETTINGS_AUDIT.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8',newline='\n')
+    destination=output or doc/'SETTINGS_AUDIT.json';destination.parent.mkdir(parents=True,exist_ok=True)
+    destination.write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({k:v for k,v in receipt.items() if k!='rows'}),flush=True)
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--root',type=pathlib.Path,default=pathlib.Path(__file__).resolve().parents[3]);a=p.parse_args();audit(a.root.resolve())
+    p=argparse.ArgumentParser();p.add_argument('--root',type=pathlib.Path,default=pathlib.Path(__file__).resolve().parents[3]);p.add_argument('--output',type=pathlib.Path);a=p.parse_args();audit(a.root.resolve(),a.output)

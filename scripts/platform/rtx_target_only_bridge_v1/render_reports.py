@@ -3,7 +3,8 @@ from common import *
 def main():
     s=load(DOC/'RESULTS.json');facts=load(DOC/'DIAGNOSTIC_FACTS.json');freeze=load(DOC/'FREEZE_RECEIPT.json');assert s['status']=='PASS' and s['formal']==171
     def write(name,text):(DOC/name).write_text(text,encoding='utf-8',newline='\n')
-    pairs='\n'.join(f"| {p} | {v['array_equal']}/57 | {v['endpoint_equal']}/57 | {v['joint_equal']}/57 | {v['all_three_equal_tasks']}/19 |" for p,v in s['comparisons'].items())
+    boundary=load(DOC/'BOUNDARY_COMPARISONS.json')['comparisons'] if (DOC/'BOUNDARY_COMPARISONS.json').exists() else None
+    pairs='\n'.join(f"| {p} | {v['array_equal']}/57 | {v['endpoint_equal']}/57 | {boundary[p]['full_boundary_equal'] if boundary else 'pending'}/57 | {v['joint_equal']}/57 | {v['all_three_equal_tasks']}/19 |" for p,v in s['comparisons'].items())
     changed=[r['task'] for r in s['task_table'] if r['N0_N1_changed']]
     tails=facts['raw_post_endpoint_sample_tails'];tailids=sum(map(len,tails.values()))
     write('STUDY_REPORT.md',f'''# RTX matched-configuration target-only bridge
@@ -26,11 +27,11 @@ Twelve local engineering runs passed independent capture/input/config/handoff ch
 
 ## Fresh results
 
-| Pair | Full arrays | EOS/limit endpoints | Joint equality | All three equal task units |
-|---|---:|---:|---:|---:|
+| Pair | Full arrays | EOS/limit reason | Full stop boundary | Joint equality | All three equal task units |
+|---|---:|---:|---:|---:|---:|
 {pairs}
 
-N0, N1 and U2 each have 19/19 stable tasks across all three repetitions. Tasks are the scientific units; the 57 pairs are repeated observations, not independent samples. Full arrays include the terminal EOG ID, or all 128 committed IDs at the cap. Endpoint equality compares EOS/limit separately; lengths and terminal IDs remain in the array comparison.
+N0, N1 and U2 each have 19/19 stable tasks across all three repetitions. Tasks are the scientific units; the 57 pairs are repeated observations, not independent samples. Full arrays include the terminal EOG ID, or all 128 committed IDs at the cap. The frozen endpoint field records EOS/limit reason. A supplementary strict stop boundary compares (committed length, reason, terminal token ID), so /15's differing lengths are explicitly visible as three unequal boundaries. BOUNDARY_COMPARISONS.json reparses all 171 raw records for this clarification; the frozen primary reason metric, numerical execution and outcomes remain unchanged.
 
 Changed N0/N1 tasks: {', '.join(changed)}. Both changed tasks agree with U2 in all three repetitions (6/6 observations). The other 17 tasks are output no-ops. Predicting N1=N0 achieves 17/19 tasks and 51/57 observations, compared with U2's 19/19 and 57/57. These finite exposed-case differences do not establish a general predictive method. COMPARISONS.json gives every length, zero-based first divergence and endpoint; unequal-length difference count is positional substitutions over the common length plus the absolute length difference, divided by max length for its fraction.
 

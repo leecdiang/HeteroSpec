@@ -1,0 +1,30 @@
+Ordinary released draft-free target-only UB2 reproduces the native N1 intervention on all 19 exposed tasks under the matched current RTX configuration. This completes the bounded bridge study with **171/171 fresh formal runs**, independent raw verification and durable raw evidence. Outcome: **SUPPORTED_ON_EXPOSED_COHORT**. This result weakens the novelty of the more complex RTX predictor for this reproduction objective; it does not establish general equivalence or reference restoration.
+
+**Exact dependency:** stacked on `codex/manuscript-intervention-reconstruction-v010`, PR #54, at `16aeada781c475c9641e09c90e93fb0a0e136c34`; underlying PR #53 is `3a0d3c9eb1c8778141bf546b5cdd25ad1e5243e4`. Pre-formal implementation/protocol freeze: `564398820b747674e6ba1bc131e6738e5fda1459`. Existing manuscript and historical evidence remain unchanged. No inherited changes are presented as this study's work.
+
+Execution used the existing Windows RTX 5070 Ti Laptop GPU (12,227 MiB, driver 616.92), pinned Qwen3-8B/Qwen3-0.6B Q8_0 assets, released b10839 runtime and byte-identical qualified native frontend. N0/N1 retain UB2 prefill/draft, k=2, caller grouping and first-pending sample/accept/handoff; N1 changes target continuation to UB1, N0 performs its UB2 sham. U2 uses its ordinary released initialization/prefill/target-only continuation, with no draft or transplant. Target/batch and relevant draft thread settings are explicitly 24/24. Twelve local engineering generations passed; unchanged instrumentation reuses prior qualification. Seven meaningful negative CPU tests passed. Additional diagnostic generations: 0; failed model attempts/retries/formal restarts: 0.
+
+| Fresh comparison | Full arrays | Full stop boundary | Joint | All three equal task units |
+|---|---:|---:|---:|---:|
+| U2 / N1 | 57/57 | 57/57 | 57/57 | 19/19 |
+| U2 / N0 | 51/57 | 54/57 | 51/57 | 17/19 |
+| N0 / N1 | 51/57 | 54/57 | 51/57 | 17/19 |
+
+Full stop boundary means (committed length, EOS/limit reason, terminal token ID). Reason-only equality is 57/57 for every pair and is retained as the frozen primary endpoint field; the supplementary boundary column makes /15's length difference explicit. N0, N1 and U2 each have 19/19 repeat-stable tasks. The 57 checks are repeated observations of 19 task units, not independent samples.
+
+- /15: N0 has 25 IDs, N1=U2 28; first divergence index 15, 9147→4199. N1/U2 restore the preserved old UB1 reference.
+- /25: all lengths 75; first divergence index 4, 1406→271. N0 matches reference, while N1/U2 move away from it.
+- /18: all three have identical 69-ID EOS output and still differ from reference.
+- No new U2/N1 mismatch or instability. U2 predicts N1 on both changed tasks (6/6 observations); N0=N1 no-op prediction achieves 17/19 tasks, 51/57 observations. Unchanged tasks are reported separately.
+
+Fresh N0/N1 each match their pinned historical counterpart 57/57; fresh U2/24-thread matches historical U2/12-thread 57/57. The retrospective lead was recomputed (old U2=N0 51/57; U2=N1 57/57). Historical thread comparisons are observational, not causal. Current reference agreement remains 51/57 for every condition; reproduction fidelity does not erase the failed restoration objective.
+
+Bounded exploratory diagnosis uses existing formal traces for /15,/25,/18,/31. N0/N1 initial source KV and full pending logits match at these cases. The first divergent decisions flip target top candidates; N0 target continuation observes occupied tokens [1,2], N1 [1], while U2 continuation batch dumps contain one token despite UB2 capacity. U2 occupied graph tensors/live KV/logits are unobserved. The evidence is consistent with caller/shape numerical behavior but does not uniquely prove causation or equal later prefix state. All 60 recorded uncommitted target samples remain inspectable outside committed-array equality.
+
+Independent CPU verification imports no controller/capture/comparison helper: it reparses all 171 selected raw records, checks 1,596 per-run bindings, exact keys/inputs/settings/handoffs/endpoints/stability, and recomputes every table. It also reparses 114 historical native logs; supplementary settings audit covers 183 records and 122 handoffs. All 80 asset bindings pass local post-execution readback. Omitted assets and absolute machine execution/time are not independently authenticated by content hashes.
+
+**Durable evidence:** 11 Git-backed CAS parts, 523,758,950 bytes, archive SHA256 `26995b3a07789fd6311141e074c49909811a333c642504bbd5b1a3a655e81427`, published at `1903ade3507b6a9df8390f44ca88fe83f922ce42`. All parts/index/manifest were downloaded again from the authenticated repository, all 2,276 logical files restored and hashed, and the frozen raw verifier rerun. Eight audit outputs are byte-identical after restoration, including strict boundary results. Three failed gh raw downloads and an identity-header probe are preserved; a binary-safe reader repaired delivery with no model rerun. Model weights/runtime binaries are not uploaded. Later reports, supplementary boundary clarification and delivery receipts are separate Git objects outside the immutable raw snapshot; no frozen numerical code or primary result changed.
+
+Reports/scripts are additive under `benchmarks/rtx_target_only_bridge_v1/`, `scripts/platform/rtx_target_only_bridge_v1/` and `artifacts/rtx_target_only_bridge_v1/`. See STUDY_REPORT.md, DIAGNOSTICS.md, VERIFICATION_REPORT.md, REPRODUCIBILITY.md, HANDOVER.md and the manifests/receipts for exact reproduction and coverage.
+
+**Decision:** stop this new-method novelty route. Ordinary deterministic greedy re-execution remains a simple plausible explanation. A future study would require a concrete useful engineering decision and a frozen rule tested against ordinary target-only and the no-op baseline on new tasks/configurations; this study does not demonstrate that utility. No speed/energy/actual VRAM benefit, functional accuracy, cross-platform generality or bitwise state equivalence is claimed. Draft only; no merge, external review request or manuscript edit.

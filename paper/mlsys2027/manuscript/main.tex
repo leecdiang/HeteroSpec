@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[OT1]{fontenc} % Match official pdfLaTeX Times encoding under XeTeX as well.
+\usepackage[OT1]{fontenc} 
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -8,7 +8,7 @@
 \usepackage{xurl}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{mlsys2025}
-\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Predicting Native Intervention Outcomes in Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.10.0},pdfkeywords={speculative decoding, correctness, runtime characterization}}
+\hypersetup{pdfauthor={Anonymous Authors},pdftitle={Interventions, Simple Baselines, and Cost Limits in Speculative Decoding},pdfsubject={MLSys 2027 research manuscript v0.11.0},pdfkeywords={speculative decoding, correctness, runtime characterization}}
 \newif\ifruntime
 \ifdefined\HardwareOnly\runtimefalse\else\runtimetrue\fi
 \newcommand{\microv}{V_k^{\mathrm{micro}}}
@@ -22,10 +22,10 @@
 \input{tables/derived_values_v086.tex}
 \input{tables/rtx_v4_values_v087.tex}
 \input{tables/acceptance_values_v090.tex}
-\mlsystitlerunning{Predicting Native Intervention Outcomes}
+\mlsystitlerunning{Interventions and Baselines in Speculative Decoding}
 \begin{document}
 \twocolumn[{
-\mlsystitle{Predicting Native Intervention Outcomes in Speculative Decoding}
+\mlsystitle{Interventions, Simple Baselines, and Cost Limits in Speculative Decoding}
 \begin{mlsysauthorlist}
 \mlsysauthor{Anonymous Authors}{anon}
 \end{mlsysauthorlist}
@@ -34,24 +34,26 @@
 \mlsyskeywords{speculative decoding, correctness, runtime characterization}
 \vskip 0.3in
 \begin{abstract}
-A reference mismatch rejects an execution path but does not describe its later output or predict a controlled intervention. We test frozen executable execution-path descriptions against complete native generated-ID arrays and endpoints before and after stage-specific changes. On one B570 stack, draft-free predictions match both conditions on 24 exposed tasks, and a prefill intervention restores all four diagnostic deviations without new control deviations. On one RTX stack, proposal-conditioned predictions match both conditions on 43 tasks, yet a target-continuation intervention fails its reference-recovery and no-new-regression goal: one task recovers and one newly deviates, leaving aggregate agreement unchanged. These distinct finite tests establish intervention-prediction closure, not universal repair, functional correctness or a unique stage cause. Separate cost evidence finds qualified RTX serialization slower, conditional 358H overhead-removal ceilings below parity, and M4 Guard inferior to fixed speculation. Complete prediction, paired reference effects and realized cost support different system decisions.
+Speculative-decoding output reproduction, reference compatibility and optimization require different evidence. We examine these distinctions through controlled consumer-system studies. A B570 prefill intervention restores four known deviations without new deviations among 20 controls. An RTX target-continuation intervention is predicted exactly on 43 tasks but repairs one task and introduces another deviation, leaving reference agreement unchanged. A subsequent matched 19-task study finds ordinary draft-free target-only execution reproduces every RTX intervention output, limiting the demonstrated need for the more complex predictor. An offline intervention-selection analysis finds no advantage over the tested simple alternatives. Separate cost evidence shows qualified RTX serialization slower than target-only, conditional 358H overhead-removal ceilings below parity, and M4 Guard slower than fixed speculation. The contribution is a bounded empirical characterization with complete-output contracts, paired effects, strong baselines and explicit negative results, rather than a general repair or new decoding method. These findings identify what the measured stacks support and which optimization claims remain unestablished.
 \end{abstract}
 }]
 \printAffiliationsAndNotice{}
 \ifruntime\else
-\hypersetup{pdfsubject={MLSys 2027 v0.10.0 internal hardware-only proof}}
+\hypersetup{pdfsubject={MLSys 2027 v0.11.0 internal hardware-only proof}}
 \noindent\textbf{Internal section-removal and reference proof only.}
 \fi
-\input{sections/01_introduction}
-\input{sections/02_framework}
-\input{sections/03_methodology}
-\input{sections/04_outcomes}
-\input{sections/05_diagnoses}
-\ifruntime\input{sections/07_runtime_codesign}\fi
-\input{sections/06_synthesis}
-\input{sections/08_related_work}
-\input{sections/09_limitations}
-\input{sections/10_conclusion}
+\input{sections/01_introduction.tex}
+\input{sections/02_framework.tex}
+\input{sections/03_methodology.tex}
+\input{sections/04_outcomes.tex}
+\input{sections/05_bridge_v011.tex}
+\input{sections/06_selection_v011.tex}
+\input{sections/05_diagnoses.tex}
+\ifruntime\input{sections/07_runtime_codesign.tex}\fi
+\input{sections/06_synthesis.tex}
+\input{sections/08_related_work.tex}
+\input{sections/09_limitations.tex}
+\input{sections/10_conclusion.tex}
 \label{maintextend}
 \clearpage
 \bibliographystyle{mlsys2025}

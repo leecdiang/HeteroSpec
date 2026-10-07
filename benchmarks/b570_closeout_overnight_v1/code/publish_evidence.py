@@ -14,10 +14,12 @@ def git(*args,cwd=WORK):return subprocess.check_output(['git',*args],cwd=cwd,tex
 def verify(head):
  target=ROOT/'archive'/('remote-readback-'+str(time.time_ns()));target.mkdir(exist_ok=False)
  git('init','--quiet',str(target));git('remote','add','origin',ORIGIN,cwd=target)
- git('-c','remote.origin.promisor=true','-c','remote.origin.partialclonefilter=blob:none','fetch','--quiet','--depth=1','--filter=blob:none','origin',BRANCH,cwd=target)
+ git('config','remote.origin.promisor','true',cwd=target)
+ git('config','remote.origin.partialclonefilter','blob:none',cwd=target)
+ git('fetch','--quiet','--depth=1','--filter=blob:none','origin',BRANCH,cwd=target)
  actual=git('rev-parse','FETCH_HEAD',cwd=target);assert actual==head,(actual,head)
  git('config','core.autocrlf','false',cwd=target)
- git('restore','--source=FETCH_HEAD','--worktree','--',REL,cwd=target)
+ git('restore','--source=FETCH_HEAD','--staged','--worktree','--',REL,cwd=target)
  files=git('ls-tree','-r','--name-only',head,'--',REL).splitlines();checks=[]
  for f in files:
   a=WORK/f;b=target/f;assert a.read_bytes()==b.read_bytes(),f
@@ -37,7 +39,7 @@ def publish():
  for file in ROOT.glob('*.py'):shutil.copy2(file,code/file.name)
  shutil.copytree(ROOT/'src',code/'src',dirs_exist_ok=True)
  public=['STARTUP.json','RECOVERY_AMENDMENT.json','TIMER_AMENDMENT.json','G0_ACCOUNTING.json','G0.json','G0_REBUILT.json','G0_SHAM.json','G0_WIDTH.json','G0_ETA.json','TOKENIZATION_PROOF.json','PROTOCOL.json','EXECUTION_FREEZE.json','INPUTS.json','EXPOSURE_AUDIT.json','ASSET_MANIFEST.json','ASSET_POST.json','B_SUMMARY.json','C_SUMMARY.json','C_ANCHOR_SUMMARY.json','D_GATE.json','D_RESET_SUMMARY.json','D_TIMING_SUMMARY.json','E_PLAN.json','E_SELECTION.json','E_CAPTURE_SUMMARY.json','E_PILOT_SUMMARY.json','E_CONFIRM_SUMMARY.json','E_LONG_SUMMARY.json','E_D_RESET_SUMMARY.json','E_D_TIMING_SUMMARY.json','E_DECISION.json','MECHANISM_PLAN.json','MECHANISM.json','INDEPENDENT_VERIFICATION.json','STAGE_COUNTS.json','DECISION.json','RTX_B570_COMPARISON.json','RTX_B570_COMPARISON.csv','REQUEST_ACCOUNTING.json','COLD_LOAD_ACCOUNTING.json','RESEARCH_BOUNDARIES.md','REPORT.md','ARCHIVE_RESTORE.json','BUDGET_DEGRADATION.json']
- public+=['WORK_ACCOUNTING.json','WORK_ACCOUNTING.csv','WORK_ACCOUNTING_HANDOFF.json','WORK_ACCOUNTING_AMENDMENT.json']
+ public+=['WORK_ACCOUNTING.json','WORK_ACCOUNTING.csv','WORK_ACCOUNTING_HANDOFF.json','WORK_ACCOUNTING_AMENDMENT.json','DELIVERY_TRANSPORT_AMENDMENT.json']
  for name in public:
   if (ROOT/name).exists():shutil.copy2(ROOT/name,DEST/name)
  for name in ['MATCHED_RESERVATION_AMENDMENT.json','CPU_GRAPH_ZERO_AMENDMENT.json','AMENDMENT_INDEX.json','G0_TARGET_FINAL.json','FINAL_TARGET_SCOPE_PROOF.json','ENVIRONMENT_OBSERVATIONS.json','DEVICE_RECOVERY_AMENDMENT.json','DEVICE_RECOVERY_FREEZE.json','DEVICE_RECOVERY_FAILURE.json','CPU_DELIVERY_CLARIFICATION.json','CONTINUATION_AMENDMENT.json','CONTINUATION_FREEZE.json','CONTINUATION_FAILURE.json','CONTINUATION_CPU_SOURCES_AT_FREEZE.json','OFFLINE_VERIFIER_CONTINUATION_AMENDMENT.json','CPU_PAYLOAD_RECOVERY.json','CPU_PAYLOAD_RECOVERY_PAUSE.json','PAUSE_RESUME_AMENDMENT.json','PAUSE.json','G0_CONTINUATION_QUAL.json','G0_CONTINUATION_QUAL_SCHEDULE.json','G0_DEVICE_REQUALIFICATION.json','G0_DEVICE_REQUALIFICATION_SCHEDULE.json','G0_ETA_N0.json','ETA_CURRENT_REFERENCE_AMENDMENT.json','CPU_REVIEW_HANDOFF.json','FINAL_CPU_CONTINUATION.json']:

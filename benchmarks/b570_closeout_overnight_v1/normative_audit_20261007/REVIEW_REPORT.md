@@ -76,3 +76,7 @@ N1相对N0整请求收益1.247059x，约19.8%时间减少，生成阶段基本�
 原包保持 `238e1e499c8529fd65bfab00691a5f5d5cc31140e3595e5ae15e1765d1bc8697`。补充包独立封存raw全轨迹、full logits、KV、日志、失败/暖机/计时、冻结源码/bundle和私有exe；权重与runtime DLL作为已有哈希外部依赖，不入Git或补充包。Git只追加派生审核、源码和收据到同一Draft PR #63。`verify_supplement.py <restored-root>` 可CPU重算补充；原核心从原不可变包恢复后用原verifier复算；source-derived显式同步脚本读取原包raw与冻结源码，不再模型执行。
 
 本轮保留原锚点的已验证适用范围，拒绝不合格的额外效率候选。核心问题、失败边界、匹配费用、长驻reset、有限自然诊断及可恢复交付全部完成且最终回读通过时，可宣布 **B570本平台本轮按PR #63 prompt的完整有限实验闭环**。没有剩余核心实验漏项；有明确负结果及prompt允许的机制/遥测限制。PR保留Draft，**不合并**。
+
+## 最终交付已核验
+
+审核科学/派生提交 `50b84aaf30067d02459bec51d854d9ec210bf9c3` 的全部209个研究文件，经全新Git存储从GitHub抓取、干净checkout与逐文件字节比对通过。**本平台本轮状态：COMPLETE_FINITE_SCOPE_AUDITED。可以宣布按PR #63 prompt的完整有限实验闭环。**原/补充包恢复通过，无剩余核心实验漏项，负结果及机制限制保留，Draft不合并。交付收据和manifest另提交后再次完整回读；最终提交身份见PR和本机final receipt。

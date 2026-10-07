@@ -216,3 +216,7 @@ RTX 的局部布局资格和增加 k 可能变慢的经验用作设计依据；R
 | E_PILOT | E_k5_ub2 | 24 | 452 | 2472 | 2020 | 1204 | 0.5960 |
 | E_PILOT | E_k7_ub2 | 24 | 414 | 2976 | 2562 | 1248 | 0.4871 |
 | E_PILOT | N1_repaired | 24 | 678 | 1938 | 1260 | 968 | 0.7683 |
+
+## 已核验交付
+
+本地 immutable CAS 包与干净恢复通过；178 个研究文件从全新 Git 存储回读字节一致。科学证据提交 `8679420c5efb01c1bfa89a68789d2aaad64a3598`。对应范围状态：**COMPLETE_FINITE_SCOPE**。PR #63 保持 Draft，未合并。完整原始证据、历史 bundle 及私有程序位于 ARCHIVE_RESTORE.json 指定的本地包；该包不是远端 raw 上传。

@@ -13,10 +13,11 @@ def save(p,x):Path(p).write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n',
 def git(*args,cwd=WORK):return subprocess.check_output(['git',*args],cwd=cwd,text=True,encoding='utf-8',errors='replace').strip()
 def verify(head):
  target=ROOT/'archive'/('remote-readback-'+str(time.time_ns()));target.mkdir(exist_ok=False)
+ blob_limit=max(p.stat().st_size for p in DEST.rglob('*') if p.is_file())+1
  git('init','--quiet',str(target));git('remote','add','origin',ORIGIN,cwd=target)
  git('config','remote.origin.promisor','true',cwd=target)
- git('config','remote.origin.partialclonefilter','blob:none',cwd=target)
- git('fetch','--quiet','--depth=1','--filter=blob:none','origin',BRANCH,cwd=target)
+ git('config','remote.origin.partialclonefilter','blob:limit='+str(blob_limit),cwd=target)
+ git('fetch','--quiet','--depth=1','--filter=blob:limit='+str(blob_limit),'origin',BRANCH,cwd=target)
  actual=git('rev-parse','FETCH_HEAD',cwd=target);assert actual==head,(actual,head)
  git('config','core.autocrlf','false',cwd=target)
  git('restore','--source=FETCH_HEAD','--staged','--worktree','--',REL,cwd=target)
@@ -24,7 +25,7 @@ def verify(head):
  for f in files:
   a=WORK/f;b=target/f;assert a.read_bytes()==b.read_bytes(),f
   checks.append({'path':f,'sha256':sha(b),'bytes':b.stat().st_size})
- return {'status':'PASS','head':head,'files':checks,'fresh_repository':str(target),'transport':'fresh depth-one filtered Git fetch and checkout, no local object borrowing','remote_branch':BRANCH,'model_forwards':0}
+ return {'status':'PASS','head':head,'files':checks,'fresh_repository':str(target),'transport':'fresh depth-one size-filtered Git fetch including every study blob, clean checkout, no local object borrowing','blob_limit_bytes':blob_limit,'remote_branch':BRANCH,'model_forwards':0}
 def publish():
  assert read(ROOT/'ARCHIVE_RESTORE.json')['status']=='PASS'
  assert read(ROOT/'ASSET_POST.json')['status']=='PASS'

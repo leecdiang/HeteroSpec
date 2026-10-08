@@ -1,3 +1,20 @@
+# HeteroSpec — v0.11.0 baseline Draft; further merges paused
+
+Updated 2026-10-05 **on this review branch**. PR #53–56 were merged before the author's pause request, ending at main `e87291d26df32f2cb9571e005ab173b1c7a6830b`. All further merges are paused. This v0.11.0 delivery is a complete baseline covering evidence through #56, **not a frozen submission or a manuscript integration of #57–60**. The paper revision itself remains a Draft pending research review.
+
+Artifacts: [main PDF](../../paper/mlsys2027/manuscript/output/manuscript-v0.11.0.pdf) (10 body +2 references), [appendix](../../paper/mlsys2027/manuscript/output/appendix-v0.11.0.pdf) (27 pages), [portable source](../../paper/mlsys2027/manuscript/output/overleaf-integrated-empirical-v0.11.0.zip), [anonymous evidence](../../paper/mlsys2027/manuscript/output/anonymous-integrated-evidence-v0.11.0.zip). From repository root, build with `python paper/mlsys2027/manuscript/scripts/build_v011.py`; this packages all document dependencies and checks two independent extracted builds. Run the separately extracted evidence pack with `python -B verify_v011.py`. Neither operation launches models or GPU jobs. Historical versioned outputs and frozen experimental files are preserved.
+
+The baseline adds the native target-only bridge (ordinary U2 equals N1 on 19/19 exposed tasks; reference agreement is 17/19) and scoped offline selection feasibility (no measured selector advantage; MBPP U2 unknown). Interventions and historical cost studies retain separate contracts and denominators. [Evidence map](../../paper/mlsys2027/reviews/integration_v011/EVIDENCE_MAPPING.md), [complete baseline review](../../paper/mlsys2027/reviews/integration_v011/FINAL_REVIEW.md), [style/build QA](../../paper/mlsys2027/reviews/integration_v011/STYLE_QA.md), [artifact manifest](../../paper/mlsys2027/reviews/integration_v011/ARTIFACT_MANIFEST.json).
+
+The [new research review](../../paper/mlsys2027/reviews/integration_v011/LATEST_RESEARCH_REVIEW.md) separately assesses open Drafts [#57](https://github.com/leecdiang/HeteroSpec/pull/57), [#58](https://github.com/leecdiang/HeteroSpec/pull/58), [#59](https://github.com/leecdiang/HeteroSpec/pull/59), [#60](https://github.com/leecdiang/HeteroSpec/pull/60). #59/#60 provide a native repair with matched speculative speedup on the exposed cohort; Stage B/C/D transfer remains unexecuted. The extra generation gain from relaxing draft constraints did not pass its predeclared gate. These later results are not included in the anonymous v0.11.0 manuscript. Audit unused-task eligibility before new outputs; do not silently treat the old 19 tasks as a holdout.
+
+[Venue assessment](../../paper/mlsys2027/reviews/integration_v011/VENUE_ASSESSMENT.md) is conditional on the next research results. Do not infer acceptance probabilities from old internal ratings, or apply this baseline's novelty rating to future method revisions. No submission, further merge, upstream communication or new hardware execution was performed during this delivery.
+
+---
+
+<details>
+<summary>Historical status before this baseline review (preserved, superseded above)</summary>
+
 # Manuscript status — v0.9.0 and new B570 evidence
 
 Updated 2026-10-04. The separately authorized B570 prefill diagnostic study is **COMPLETE and CLOSED**. Its [delivery](https://github.com/leecdiang/HeteroSpec/blob/196ed563b36d0e16a3cdb667b6996a4afd98da1d/benchmarks/b570_prefill_diagnostic_v1/DELIVERY_REPORT.md) and [independent review](https://github.com/leecdiang/HeteroSpec/blob/main/paper/mlsys2027/reviews/b570_prefill_review_20261004/REVIEW_REPORT.md) supersede the PREPARE_ONLY study status preserved below.
@@ -518,6 +535,8 @@ All 11 revised main-PDF pages were visually inspected after the final build, spl
 
 </details>
 
+
+</details>
 
 </details>
 

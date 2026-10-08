@@ -1,3 +1,18 @@
+# HeteroSpec — scientific baseline v0.12.0
+
+Updated 2026-10-08. The author authorized review and merge of all open PRs #57–66; all ten were merged at reviewed heads. Research evidence anchor: `f9b9457fe528a343dd0b01614dcce017801913db`. Earlier pause notices and unexecuted-stage statements below are historical.
+
+**Current manuscript:** [State and Cost Limits of Reference-Preserving Speculative Decoding](paper/mlsys2027/baseline_v012/output/manuscript-v0.12.0.pdf) (6 body + 1 references page); [supplement](paper/mlsys2027/baseline_v012/output/appendix-v0.12.0.pdf) (3 pages); [portable author source](paper/mlsys2027/baseline_v012/output/portable-source-v0.12.0.zip). [Scientific baseline and build](paper/mlsys2027/baseline_v012/README.md); [whole-baseline review and contribution overlap](paper/mlsys2027/reviews/baseline_v012/BASELINE_REVIEW.zh-CN.md).
+
+Mainline: natural numerical state × current execution path → bounded target-path constraints → independent output and amortization gates. RTX24 yields **1.170× generation / 1.742× resident-request speed against the paid ordinary scalar reference**, and **1.169× / 1.035× against matched draft-free execution**. The matched path already provides **1.683× request speed without speculation**; the total is not all attributable to speculation. B570 finite endpoint repair has no ordinary-reference cost gain. Fixed-UB wider drafting stays qualified but slows down. Four platforms do not establish one universal mechanism.
+
+The v0.12 review judges a stronger bounded empirical contribution than v0.11, with substantial nearest-work overlap and limited cross-model generality. It is not a high-confidence MLSys acceptance claim. Public-table arithmetic, bootstrap and qualification-hash checks pass; private raw-archive authentication is inherited rather than independently repeated here. CPU reanalysis is not new inference. No submission or new GPU experiment occurred. Portable source includes provenance identities and is not an anonymous submission artifact.
+
+---
+
+<details>
+<summary>Historical documents and versioned artifacts (superseded for current status)</summary>
+
 # HeteroSpec — v0.11.0 baseline Draft; further merges paused
 
 Updated 2026-10-05 **on this review branch**. PR #53–56 were merged before the author's pause request, ending at main `e87291d26df32f2cb9571e005ab173b1c7a6830b`. All further merges are paused. This v0.11.0 delivery is a complete baseline covering evidence through #56, **not a frozen submission or a manuscript integration of #57–60**. The paper revision itself remains a Draft pending research review.
@@ -150,3 +165,6 @@ The fixed-artifact independent review is complete (one weak reject, five weak ac
 </details>
 
 </details>
+
+</details>
+

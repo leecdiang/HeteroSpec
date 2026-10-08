@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-06T04:03:33.454434+00:00",
+  "reason": "Index existing pre-new-input amendments. Timer and CPU correction receipts lacked their own UTC field; preserve them verbatim and bind contemporaneous commits/file timestamps without inventing an earlier index time.",
+  "model_forwards": 0,
+  "original_amendment_bytes_changed": false,
+  "items": [
+    {
+      "path": "RECOVERY_AMENDMENT.json",
+      "sha256": "87ee5cfe6c10f8248ef14ada16f26abb1dcd3c974e02e23390ada9da64d3290b",
+      "recorded_utc": "2026-10-06T02:37:38.2907252+00:00",
+      "bound_commit": "6fee207b7c3d2e4513d6ce00784b80962127a031",
+      "commit_timestamp": "2026-10-06T10:37:38+08:00",
+      "observed_file_mtime_utc": "2026-10-06T02:37:38.448963+00:00",
+      "reason": "User explicitly resumed interrupted study on 2026-10-06. Original budget and failed attempts preserved. No new MBPP input has run. Renew 10-hour recovery window including 75-minute archive reserve; do not modify prompt v1."
+    },
+    {
+      "path": "TIMER_AMENDMENT.json",
+      "sha256": "498733ad488b321b35c7bdeff21434de9a99cba06d2f744961db80b64411b8ba",
+      "recorded_utc": null,
+      "bound_commit": "9aee4cd573c85884943e649a8cdaf699a31e1ce4",
+      "commit_timestamp": "2026-10-06T11:19:30+08:00",
+      "observed_file_mtime_utc": "2026-10-06T03:19:30.728142+00:00",
+      "reason": "Before any new MBPP forward, include native sampler/batch initialization in generation timer; close target auxiliary evidence stream before exposing HS_RESULT. No math, model, sampler rules, state, backend or decode call changed. Exact source diff assertions passed. Fresh G0 sham/bridge/width controls run after rebuild."
+    },
+    {
+      "path": "recovery/CPU_GRAPH_ZERO_AMENDMENT.json",
+      "sha256": "f5040f845ba222ae9e45b1ce7008a93e82712ed056ed06da7d7c10dc7b4ede44",
+      "recorded_utc": null,
+      "bound_commit": "cb9d30c1005dd41c4fca662d4b407610df229855",
+      "commit_timestamp": "2026-10-06T11:40:42+08:00",
+      "observed_file_mtime_utc": "2026-10-06T03:40:41.552869+00:00",
+      "reason": "Independent verifier incorrectly required a positive result_output row count for every prefill microbatch. Recorded embd=1 and result_output=0 on intermediate UB1 prefix micros are valid KV updates with no requested logits; the final micro emits one result. Embd still requires positive query width; result_output permits zero and remains bounded by actual UB."
+    },
+    {
+      "path": "MATCHED_RESERVATION_AMENDMENT.json",
+      "sha256": "d5a1a6038f04e76793e24c51176c36fbcf75f4bdc032f57171561f1d3b536344",
+      "recorded_utc": "2026-10-06T03:59:37.265333+00:00",
+      "bound_commit": "19db04f6648d43bd5eb76734f450dca5e6a97cf9",
+      "commit_timestamp": "2026-10-06T11:59:37+08:00",
+      "observed_file_mtime_utc": "2026-10-06T03:59:37.266342+00:00",
+      "reason": "Matched target captured default continuation params before common initialization reduced per-sequence outputs. Default n_outputs_max=0 resolves to batch512, per_seq=0 resolves512 in a newly created context; a one-query continuation only needs one row. Set matched continuation max/per_seq=1. Ordinary R/source prefill and all native executables remain unchanged. Fresh target plain/sham, old reference and all width controls required before ETA/new inputs."
+    }
+  ]
+}

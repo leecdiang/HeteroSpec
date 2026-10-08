@@ -1,0 +1,1357 @@
+{
+  "status": "PASS",
+  "utc": "2026-10-07T08:29:51.643531+00:00",
+  "checks": 21172,
+  "errors": [],
+  "raw_records": 32,
+  "planned_nonwarm": 18,
+  "completed_nonwarm": 18,
+  "warm": 14,
+  "full_logit_rows": 4108,
+  "selected_pairs": [
+    {
+      "task": "HumanEval/42",
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "original_units": [
+        "E_PILOT/0/9/HumanEval/42",
+        "E_PILOT/11/2/HumanEval/42"
+      ]
+    },
+    {
+      "task": "HumanEval/145",
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "original_units": [
+        "E_PILOT/0/10/HumanEval/145",
+        "E_PILOT/11/1/HumanEval/145"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "task": "HumanEval/42",
+      "pair": 0,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "N1_repaired",
+      "unit_id": "MECHANISM_SUPPLEMENT/3/0/HumanEval/42",
+      "qualified": true,
+      "raw_length": 129,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 73,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "76c8834c10525d0bd46c9193cd02f03200c36efc43fa74b9b009a0b56c70cf24",
+      "committed_id": 432,
+      "top1": 432,
+      "top2": 1817,
+      "top1_logit": 48.78212356567383,
+      "top2_logit": 48.77332305908203,
+      "top1_top2_margin": 0.008800506591796875,
+      "reference_id": 432,
+      "reference_is_eog": false,
+      "reference_logit": 48.78212356567383,
+      "natural_native_alternative_id": 1817,
+      "alternative_is_eog": false,
+      "alternative_logit": 48.77332305908203,
+      "reference_minus_alternative": 0.008800506591796875,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 5.941738605499268,
+      "reference_minus_best_eog": 42.84038496017456,
+      "decision_logit_sha256": "88dd8a76822104f7a0c2c8465a9e94f993407e423f07bd6113bd216b59d84433",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 198
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 405,
+        "input_ids": [
+          16252,
+          432,
+          553
+        ],
+        "positions": [
+          196,
+          197,
+          198
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true,
+          true
+        ],
+        "caller_batch_length": 3,
+        "ub_capacity": 1,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_ub": 128,
+        "destination_ub": 1,
+        "state_bytes": 18286921,
+        "consumed_bytes": 18286921,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 56,
+        "draft_calls": 164,
+        "target_caller_tokens": 286,
+        "draft_caller_tokens": 287
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/3/0/HumanEval/42",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\46618fc3333834f7b8f5\\attempt-e21d172e8f6c44db9494877cf97a25c4\\capture.json",
+        "generation_ms": 37791.158,
+        "whole_request_ms": 43176.329,
+        "prefill_ms": 5350.039,
+        "raw_count": 129,
+        "drafted": 108,
+        "accepted": 74,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 1,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/42",
+      "pair": 0,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "M_failed",
+      "unit_id": "MECHANISM_SUPPLEMENT/2/0/HumanEval/42",
+      "qualified": false,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": 73,
+      "selected_natural_boundary": 73,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "76c8834c10525d0bd46c9193cd02f03200c36efc43fa74b9b009a0b56c70cf24",
+      "committed_id": 1817,
+      "top1": 1817,
+      "top2": 432,
+      "top1_logit": 48.86920166015625,
+      "top2_logit": 48.52251434326172,
+      "top1_top2_margin": 0.34668731689453125,
+      "reference_id": 432,
+      "reference_is_eog": false,
+      "reference_logit": 48.52251434326172,
+      "natural_native_alternative_id": 1817,
+      "alternative_is_eog": false,
+      "alternative_logit": 48.86920166015625,
+      "reference_minus_alternative": -0.34668731689453125,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 5.839581489562988,
+      "reference_minus_best_eog": 42.68293285369873,
+      "decision_logit_sha256": "673acd9826444f23726527ee5b294bca5cc9634caa7d72cf8f918a6dabe64569",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 197
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 518,
+        "input_ids": [
+          16252,
+          432
+        ],
+        "positions": [
+          196,
+          197
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true
+        ],
+        "caller_batch_length": 2,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_ub": 128,
+        "destination_ub": 2,
+        "state_bytes": 18286921,
+        "consumed_bytes": 18286921,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 75,
+        "draft_calls": 148,
+        "target_caller_tokens": 270,
+        "draft_caller_tokens": 271
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/2/0/HumanEval/42",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\69f55381fdb227ad322e\\attempt-db4f9313f97b443595c1a45b479aa935\\capture.json",
+        "generation_ms": 25898.397,
+        "whole_request_ms": 31216.623,
+        "prefill_ms": 5308.327,
+        "raw_count": 128,
+        "drafted": 73,
+        "accepted": 54,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/42",
+      "pair": 0,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "T_matched",
+      "unit_id": "MECHANISM_SUPPLEMENT/1/0/HumanEval/42",
+      "qualified": true,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 73,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "76c8834c10525d0bd46c9193cd02f03200c36efc43fa74b9b009a0b56c70cf24",
+      "committed_id": 432,
+      "top1": 432,
+      "top2": 1817,
+      "top1_logit": 48.78212356567383,
+      "top2_logit": 48.77332305908203,
+      "top1_top2_margin": 0.008800506591796875,
+      "reference_id": 432,
+      "reference_is_eog": false,
+      "reference_logit": 48.78212356567383,
+      "natural_native_alternative_id": 1817,
+      "alternative_is_eog": false,
+      "alternative_logit": 48.77332305908203,
+      "reference_minus_alternative": 0.008800506591796875,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 5.941738605499268,
+      "reference_minus_best_eog": 42.84038496017456,
+      "decision_logit_sha256": "88dd8a76822104f7a0c2c8465a9e94f993407e423f07bd6113bd216b59d84433",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 196
+      },
+      "logits_index": -1,
+      "compatible_target_decode": {
+        "event_index": 74,
+        "input_ids": [
+          16252
+        ],
+        "positions": [
+          196
+        ],
+        "sequence_ids": [
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true
+        ],
+        "caller_batch_length": 1,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 123
+        },
+        "source_ub": 128,
+        "destination_ub": 2,
+        "state_bytes": 18286921,
+        "consumed_bytes": 18286921,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 129,
+        "draft_calls": 0,
+        "target_caller_tokens": 251,
+        "draft_caller_tokens": 0
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/1/0/HumanEval/42",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\7b66e2d976b3916da95f\\attempt-e969c71126c3411bad9e1d48d54a5c5b\\capture.json",
+        "generation_ms": 24421.094,
+        "whole_request_ms": 24730.761,
+        "raw_count": 128,
+        "drafted": 0,
+        "accepted": 0,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/42",
+      "pair": 0,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "M_ordinary",
+      "unit_id": "MECHANISM_SUPPLEMENT/4/0/HumanEval/42",
+      "qualified": false,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": 73,
+      "selected_natural_boundary": 73,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "76c8834c10525d0bd46c9193cd02f03200c36efc43fa74b9b009a0b56c70cf24",
+      "committed_id": 1817,
+      "top1": 1817,
+      "top2": 432,
+      "top1_logit": 48.898643493652344,
+      "top2_logit": 48.30316925048828,
+      "top1_top2_margin": 0.5954742431640625,
+      "reference_id": 432,
+      "reference_is_eog": false,
+      "reference_logit": 48.30316925048828,
+      "natural_native_alternative_id": 1817,
+      "alternative_is_eog": false,
+      "alternative_logit": 48.898643493652344,
+      "reference_minus_alternative": -0.5954742431640625,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 6.032233715057373,
+      "reference_minus_best_eog": 42.27093553543091,
+      "decision_logit_sha256": "a36cf834787bfb8b1ff63e5248da934d90dd458ae82adffc96e6927faa618ac7",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 197
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 518,
+        "input_ids": [
+          16252,
+          432
+        ],
+        "positions": [
+          196,
+          197
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true
+        ],
+        "caller_batch_length": 2,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": null,
+      "work": {
+        "target_calls": 75,
+        "draft_calls": 148,
+        "target_caller_tokens": 270,
+        "draft_caller_tokens": 271
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/4/0/HumanEval/42",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\7f438be703fda5298886\\attempt-4fd2a025c7ec4a449656ccd29d104855\\capture.json",
+        "generation_ms": 15473.779,
+        "whole_request_ms": 25431.915,
+        "prefill_ms": 9951.292,
+        "raw_count": 128,
+        "drafted": 73,
+        "accepted": 54,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/42",
+      "pair": 0,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "R_reference",
+      "unit_id": "MECHANISM_SUPPLEMENT/0/0/HumanEval/42",
+      "qualified": true,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 73,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "76c8834c10525d0bd46c9193cd02f03200c36efc43fa74b9b009a0b56c70cf24",
+      "committed_id": 432,
+      "top1": 432,
+      "top2": 1817,
+      "top1_logit": 48.77611541748047,
+      "top2_logit": 48.77353286743164,
+      "top1_top2_margin": 0.002582550048828125,
+      "reference_id": 432,
+      "reference_is_eog": false,
+      "reference_logit": 48.77611541748047,
+      "natural_native_alternative_id": 1817,
+      "alternative_is_eog": false,
+      "alternative_logit": 48.77353286743164,
+      "reference_minus_alternative": 0.002582550048828125,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 5.941637992858887,
+      "reference_minus_best_eog": 42.83447742462158,
+      "decision_logit_sha256": "33756050f68d90771f9f646ac79efd29f2eb6e5179f6fc82ec4a1888de719d15",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 196
+      },
+      "logits_index": -1,
+      "compatible_target_decode": {
+        "event_index": 73,
+        "input_ids": [
+          16252
+        ],
+        "positions": [
+          196
+        ],
+        "sequence_ids": [
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true
+        ],
+        "caller_batch_length": 1,
+        "ub_capacity": 128,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": null,
+      "work": {
+        "target_calls": 128,
+        "draft_calls": 0,
+        "target_caller_tokens": 251,
+        "draft_caller_tokens": 0
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/0/0/HumanEval/42",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\ee08b9e093e899459c60\\attempt-38bedc9c68fb49d9bb1fcd49a2bfaf52\\capture.json",
+        "generation_ms": 11978.419,
+        "whole_request_ms": 12184.285,
+        "raw_count": 128,
+        "drafted": 0,
+        "accepted": 0,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 128,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/145",
+      "pair": 1,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "T_matched",
+      "unit_id": "MECHANISM_SUPPLEMENT/6/0/HumanEval/145",
+      "qualified": true,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 56,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "07dbbe52ac325c008ea77136aedaa59d95d81158fbfda58859a5a2716b8ba381",
+      "committed_id": 71465,
+      "top1": 71465,
+      "top2": 279,
+      "top1_logit": 42.315155029296875,
+      "top2_logit": 42.29991912841797,
+      "top1_top2_margin": 0.01523590087890625,
+      "reference_id": 71465,
+      "reference_is_eog": false,
+      "reference_logit": 42.315155029296875,
+      "natural_native_alternative_id": 279,
+      "alternative_is_eog": false,
+      "alternative_logit": 42.29991912841797,
+      "reference_minus_alternative": 0.01523590087890625,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 1.1903185844421387,
+      "reference_minus_best_eog": 41.124836444854736,
+      "decision_logit_sha256": "a48e60be341bec2a86871d21087f2f588a8c74ea33b310259f5dd529d5fa1775",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 187
+      },
+      "logits_index": -1,
+      "compatible_target_decode": {
+        "event_index": 57,
+        "input_ids": [
+          47866
+        ],
+        "positions": [
+          187
+        ],
+        "sequence_ids": [
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true
+        ],
+        "caller_batch_length": 1,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_ub": 128,
+        "destination_ub": 2,
+        "state_bytes": 19466665,
+        "consumed_bytes": 19466665,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 129,
+        "draft_calls": 0,
+        "target_caller_tokens": 259,
+        "draft_caller_tokens": 0
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/6/0/HumanEval/145",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\40032a8a323b78a9a641\\attempt-ee5670ad57c04961b728bd935f5bdd4f\\capture.json",
+        "generation_ms": 26083.875,
+        "whole_request_ms": 26465.566,
+        "raw_count": 128,
+        "drafted": 0,
+        "accepted": 0,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/145",
+      "pair": 1,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "N1_repaired",
+      "unit_id": "MECHANISM_SUPPLEMENT/8/0/HumanEval/145",
+      "qualified": true,
+      "raw_length": 130,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 56,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "07dbbe52ac325c008ea77136aedaa59d95d81158fbfda58859a5a2716b8ba381",
+      "committed_id": 71465,
+      "top1": 71465,
+      "top2": 279,
+      "top1_logit": 42.315155029296875,
+      "top2_logit": 42.29991912841797,
+      "top1_top2_margin": 0.01523590087890625,
+      "reference_id": 71465,
+      "reference_is_eog": false,
+      "reference_logit": 42.315155029296875,
+      "natural_native_alternative_id": 279,
+      "alternative_is_eog": false,
+      "alternative_logit": 42.29991912841797,
+      "reference_minus_alternative": 0.01523590087890625,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 1.1903185844421387,
+      "reference_minus_best_eog": 41.124836444854736,
+      "decision_logit_sha256": "a48e60be341bec2a86871d21087f2f588a8c74ea33b310259f5dd529d5fa1775",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 189
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 301,
+        "input_ids": [
+          47866,
+          279,
+          8116
+        ],
+        "positions": [
+          187,
+          188,
+          189
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true,
+          true
+        ],
+        "caller_batch_length": 3,
+        "ub_capacity": 1,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_ub": 128,
+        "destination_ub": 1,
+        "state_bytes": 19466665,
+        "consumed_bytes": 19466665,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 55,
+        "draft_calls": 161,
+        "target_caller_tokens": 291,
+        "draft_caller_tokens": 292
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/8/0/HumanEval/145",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\58586fbf7b00db94d336\\attempt-68e26abc3da54eed8f3e53b94e38a474\\capture.json",
+        "generation_ms": 37631.872,
+        "whole_request_ms": 43335.116,
+        "prefill_ms": 5693.842,
+        "raw_count": 130,
+        "drafted": 106,
+        "accepted": 76,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 1,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/145",
+      "pair": 1,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "R_reference",
+      "unit_id": "MECHANISM_SUPPLEMENT/5/0/HumanEval/145",
+      "qualified": true,
+      "raw_length": 128,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 56,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "07dbbe52ac325c008ea77136aedaa59d95d81158fbfda58859a5a2716b8ba381",
+      "committed_id": 71465,
+      "top1": 71465,
+      "top2": 279,
+      "top1_logit": 42.301727294921875,
+      "top2_logit": 42.29011535644531,
+      "top1_top2_margin": 0.0116119384765625,
+      "reference_id": 71465,
+      "reference_is_eog": false,
+      "reference_logit": 42.301727294921875,
+      "natural_native_alternative_id": 279,
+      "alternative_is_eog": false,
+      "alternative_logit": 42.29011535644531,
+      "reference_minus_alternative": 0.0116119384765625,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 1.191695213317871,
+      "reference_minus_best_eog": 41.110032081604004,
+      "decision_logit_sha256": "a7fccfcc8328c7f2881a0bac99fc5b356581423fe11124c28293c44adfb5658b",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 187
+      },
+      "logits_index": -1,
+      "compatible_target_decode": {
+        "event_index": 56,
+        "input_ids": [
+          47866
+        ],
+        "positions": [
+          187
+        ],
+        "sequence_ids": [
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true
+        ],
+        "caller_batch_length": 1,
+        "ub_capacity": 128,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 1,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": null,
+      "work": {
+        "target_calls": 128,
+        "draft_calls": 0,
+        "target_caller_tokens": 259,
+        "draft_caller_tokens": 0
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/5/0/HumanEval/145",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\67da3951194008bdb003\\attempt-4b0fd0b97b634d3891707a75ddc24462\\capture.json",
+        "generation_ms": 11989.872,
+        "whole_request_ms": 12297.188,
+        "raw_count": 128,
+        "drafted": 0,
+        "accepted": 0,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 128,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/145",
+      "pair": 1,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "M_ordinary",
+      "unit_id": "MECHANISM_SUPPLEMENT/9/0/HumanEval/145",
+      "qualified": true,
+      "raw_length": 129,
+      "endpoint_length": 128,
+      "first_difference": null,
+      "selected_natural_boundary": 56,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "07dbbe52ac325c008ea77136aedaa59d95d81158fbfda58859a5a2716b8ba381",
+      "committed_id": 71465,
+      "top1": 71465,
+      "top2": 279,
+      "top1_logit": 42.13980484008789,
+      "top2_logit": 42.13920593261719,
+      "top1_top2_margin": 0.000598907470703125,
+      "reference_id": 71465,
+      "reference_is_eog": false,
+      "reference_logit": 42.13980484008789,
+      "natural_native_alternative_id": 279,
+      "alternative_is_eog": false,
+      "alternative_logit": 42.13920593261719,
+      "reference_minus_alternative": 0.000598907470703125,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 1.162156581878662,
+      "reference_minus_best_eog": 40.97764825820923,
+      "decision_logit_sha256": "7e4edd954a313fb480dc60b425a16dcce6aaf0d12d67fc16c48556d2a6ca8585",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 188
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 362,
+        "input_ids": [
+          47866,
+          279
+        ],
+        "positions": [
+          187,
+          188
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true
+        ],
+        "caller_batch_length": 2,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": null,
+      "work": {
+        "target_calls": 71,
+        "draft_calls": 140,
+        "target_caller_tokens": 270,
+        "draft_caller_tokens": 271
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/9/0/HumanEval/145",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\ba690ef4a2f92ce30a9f\\attempt-602514ff5c784eb78f5a92406c01d510\\capture.json",
+        "generation_ms": 14624.586,
+        "whole_request_ms": 25258.46,
+        "prefill_ms": 10626.954,
+        "raw_count": 129,
+        "drafted": 69,
+        "accepted": 59,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    },
+    {
+      "task": "HumanEval/145",
+      "pair": 1,
+      "k": 1,
+      "ub": 2,
+      "cap": 128,
+      "label": "M_failed",
+      "unit_id": "MECHANISM_SUPPLEMENT/7/0/HumanEval/145",
+      "qualified": false,
+      "raw_length": 129,
+      "endpoint_length": 128,
+      "first_difference": 56,
+      "selected_natural_boundary": 56,
+      "natural_common_prefix": true,
+      "common_prefix_sha256": "07dbbe52ac325c008ea77136aedaa59d95d81158fbfda58859a5a2716b8ba381",
+      "committed_id": 279,
+      "top1": 279,
+      "top2": 71465,
+      "top1_logit": 42.31405258178711,
+      "top2_logit": 42.197410583496094,
+      "top1_top2_margin": 0.11664199829101562,
+      "reference_id": 71465,
+      "reference_is_eog": false,
+      "reference_logit": 42.197410583496094,
+      "natural_native_alternative_id": 279,
+      "alternative_is_eog": false,
+      "alternative_logit": 42.31405258178711,
+      "reference_minus_alternative": -0.11664199829101562,
+      "best_runtime_eog_id": 151643,
+      "best_eog_logit": 1.212278962135315,
+      "reference_minus_best_eog": 40.98513162136078,
+      "decision_logit_sha256": "e411cfa7d4c72e0f31edad23cdb2edf09c1e655b9ca484b926f9197ae1521b83",
+      "state_position": {
+        "sequence_id": 0,
+        "min": 0,
+        "max": 188
+      },
+      "logits_index": 0,
+      "compatible_target_decode": {
+        "event_index": 362,
+        "input_ids": [
+          47866,
+          279
+        ],
+        "positions": [
+          187,
+          188
+        ],
+        "sequence_ids": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "logits_requested": [
+          true,
+          true
+        ],
+        "caller_batch_length": 2,
+        "ub_capacity": 2,
+        "graphs": [
+          {
+            "tensor": "embd",
+            "ne0": 4096,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          },
+          {
+            "tensor": "result_output",
+            "ne0": 151936,
+            "ne1": 2,
+            "observation": "scheduler graph tensor; embd ne1 is occupied forward tokens; no kernel identity"
+          }
+        ]
+      },
+      "query_association": "Last retained compatible target decode by natural position and KV maximum; no mid-state donor reconstruction or claimed crossed equivalence",
+      "transfer": {
+        "before": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_after": {
+          "sequence_id": 0,
+          "min": 0,
+          "max": 131
+        },
+        "source_ub": 128,
+        "destination_ub": 2,
+        "state_bytes": 19466665,
+        "consumed_bytes": 19466665,
+        "kv_equal": true,
+        "source_unchanged": true,
+        "pending_id": 1406,
+        "pending_eog": false,
+        "pending_logits_method": "sample once in prefill context; carry pending ID and cloned post-sample sampler; never sample missing restored logits",
+        "sampler_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "clone_chain": "logits -> ?penalties -> ?dry -> ?top-n-sigma -> ?top-k -> ?typical -> ?top-p -> ?min-p -> ?xtc -> temp-ext -> dist ",
+        "sampler_history": "",
+        "clone_history": "",
+        "seed": 123,
+        "clone_seed": 123,
+        "opaque_sampler_bytes": "unavailable; pinned clone and behavioral sham equivalence",
+        "sequence_ownership": "single sequence 0; serialized ownership and min/max checked"
+      },
+      "work": {
+        "target_calls": 70,
+        "draft_calls": 138,
+        "target_caller_tokens": 268,
+        "draft_caller_tokens": 269
+      },
+      "metrics": {
+        "request_id": "MECHANISM_SUPPLEMENT/7/0/HumanEval/145",
+        "capture": "C:\\hs\\b570-closeout-audit-v1\\raw\\eb6d4951d34f3205d265\\attempt-68c8150dcb5844d88950d9daec6db4bd\\capture.json",
+        "generation_ms": 29336.228,
+        "whole_request_ms": 35054.949,
+        "prefill_ms": 5709.349,
+        "raw_count": 129,
+        "drafted": 68,
+        "accepted": 60,
+        "reset_target": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "reset_draft": {
+          "sequence_id": 0,
+          "min": -1,
+          "max": -1
+        },
+        "target_continuation_ub": 2,
+        "draft_continuation_ub": 1,
+        "threads": 10,
+        "batch_threads": 10
+      },
+      "timing_scope": "CAPTURE_DIAGNOSTIC_ONLY_NOT_PERFORMANCE"
+    }
+  ],
+  "causal_status": "NOT_CAUSALLY_IDENTIFIED",
+  "state_cross": "NOT_IMPLEMENTED",
+  "auxiliary_model_forwards": 0,
+  "performance_samples_added": 0,
+  "original_failures_preserved": true,
+  "claim": "Authentic natural trajectories and raw full decision scores show local margin and caller boundaries. Parent comparisons with different callers or past states are not crossed causal interventions. No unique kernel, universal bound, online guard or opaque sampler-byte claim."
+}

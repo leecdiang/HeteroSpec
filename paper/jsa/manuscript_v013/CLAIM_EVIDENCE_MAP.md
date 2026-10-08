@@ -1,0 +1,26 @@
+# Claim–evidence map (v0.13.0)
+
+All claims concern saved configurations and registered endpoints. No pooled platform success rate or portable recipe is claimed.
+
+| Body claim | Saved evidence | Supported conclusion | Inference limit |
+|---|---|---|---|
+| Prediction/native closure is not a repair criterion | Historical outcomes/diagnoses: B57024, RTX43 | B570 improves 60/72 to 72/72; RTX remains 51/57 HumanEval and 66/72 MBPP despite opposing repair/regression and changed failing output | Exposed tasks; compound intervention; no new algorithm or general predictor superiority |
+| Simpler execution explains the early RTX intervention | Historical bridge, fresh RTX19, 171 runs | Target-only U2 equals intervention N1 on all 57 arrays and strict stops | 19 exposed tasks; no live U2 tensor/state equivalence or timing superiority |
+| Saved proxy screening does not establish useful selection | Historical selection, RTX114/B570 direct72/proxy144 records | RTX alternatives abstain; B570 proxy agrees with sole direct choice | Offline recorded counts are not latency, held-out routing, or adaptive policy evaluation |
+| Equal prefixes can hide state/path dependencies | RTX_NATURAL_CROSSES.json and B570 CAUSAL_RECHECK.json | Selected crosses identify state effects, current-path effects, interactions, and nulls with own-path shams | Local sensitivity, not prevalence; partial tensors/counterfactual suffixes and opaque sampler state |
+| Target phases form the local minimum tested repair | RTX_PHASE_FACTORIAL.csv: 16 masks × 4 probes × 2 reps | Passing speculative masks 3,7,11,15; inclusion-minimal mask 3 constrains target prefill and continuation | Minimality only within the registered family and exposed probes |
+| Frozen RTX recipe supplies a finite positive case | rtx66 costs, qualification hashes, counts, timer audit | 384 formal requests; 96/96 candidate full-output matches on 24 project-unused MBPP inputs | Qwen3 greedy one-slot non-flash configuration; project-unused is not pretraining independence |
+| Ordinary and matched request gains answer different questions | rtx66 RAW_COSTS.csv / COST_SUMMARY.json | Generation R/C=1.170124, M/C=1.169238; request R/C=1.741569, M/C=1.035071, R/M=1.682560 | Task medians then geometric mean; 7 matched-request regressions, repetition 2=0.940220; no independent component profile |
+| Fixed-capacity width can qualify while slowing | RTX_FIXED_UB_RESULTS.json | k7/UB4 qualifies; anchor/wide=0.829442 generation, 0.889868 request; matched/wide=0.997404/0.950353 | Exposed 28-task panel; selected width; counts from separate diagnostic sessions are not a fabricated joint profile |
+| Wider geometry can break the numerical recipe | Width/length exports and natural crosses | MBPP229 fails at (k,UB)=(5,6),(7,8); natural state can affect its decision | Not a certified 512-token trajectory; observed maximum response length 261 |
+| B570 endpoint recovery is not deployment acceleration | b57065 qualification, cost rows, work breakdown | 15-input candidate30/30 endpoint-qualified; R/C=0.282588/0.201290; M/C=0.285761/0.205704 | Endpoint through first EOG/cap128, not raw-array equality; suffix work paid; old-N1 has one missing request and only14 complete task pairs |
+| Global serialization is a separate qualified cost failure | Historical direct_id_values.tex and methodology | Earlier RTX19 serial57/57 qualifies but speed0.677, zero19 faster | Different timer, intervention and runtime; not a causal optimization trend into later RTX |
+| M4 supports fixed speculation but not this guard's advantage | M4_FORMAL_ANALYSIS.json, historical acceptance values | 60 prospective tasks; fixed/guard180/180 qualified; target/fixed1.346894; target/guard1.311387; whole-request two-action oracle adds0.0692% | Historical contract/timer; oracle is panel-specific, not an intra-request-policy bound |
+| Saved workload partitions reveal heterogeneity | RTX_FIXED_UB_RESULTS.json, M4_FORMAL_ANALYSIS.json | Matched/wide generation MBPP0.953 vs HumanEval1.308; M4 fixed HE1.570 vs Spec-Bench1.155 | Descriptive reused subsets; four HumanEval width probes cannot validate a selector |
+| Draft-only optimization cannot reach parity under the measured target-work floor | Historical methodology and followup values | 358H CPU/NPU ceilings0.8372/0.8448 for prompt estimator; target-work cuts at least16.28%/15.52% under fixed progress | Conditional optimistic budgets; pooled ceilings0.8275/0.8352 use another estimator; not heterogeneous-decoding impossibility |
+
+## Verification depth
+
+`build.py` independently recalculates the saved public late RTX medians/comparisons, qualified-hash joins and ratio identities, passing masks, all saved fixed-UB comparisons, 24/4-task width partitions, M4 prompt summaries and two-action oracle, and the 119-row formal B570 cost matrix. It authenticates 16 historical extracts by Git blob SHA1. The inherited verifier authenticates its saved bundle.
+
+Earlier prediction, bridge, global-serialization, repair screening, and 358H records are source-bound historical reports, not freshly replayed raw campaigns. Original-host verification of private archives is inherited. Hash identity authenticates an extract's source, not the truth of every original measurement. Timers, endpoints, exposure, missingness and confidence interpretations stay campaign-specific.

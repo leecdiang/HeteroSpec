@@ -4,4 +4,4 @@ The current JSA-oriented author draft is [manuscript_v013](manuscript_v013/READM
 
 This directory does not replace or remove the historical `paper/mlsys2027/` manuscripts. It is an author-review branch, not a journal submission. Figure redesign and final submission declarations remain pending.
 
-Latest submission-requirement verification: [2026-10-09 audit](JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md) and [machine-readable record](JSA_REQUIREMENTS_VERIFIED_20261009.json). These supersede earlier uncertainty for the verified entries; frozen manuscript PDFs/source ZIP remain unchanged.
+Latest submission-requirement verification: [2026-10-09 audit](JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md) and [machine-readable record](JSA_REQUIREMENTS_VERIFIED_20261009.json). The audit now includes a full reading of the supplied 18-page official Guide for Authors, page references, its SHA256, and concrete manuscript/submission gaps. It supersedes earlier uncertainty for the verified entries; frozen manuscript PDFs/source ZIP remain unchanged.

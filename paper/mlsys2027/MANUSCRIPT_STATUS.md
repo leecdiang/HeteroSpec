@@ -1,3 +1,20 @@
+# HeteroSpec — current manuscript v0.12.1
+
+Updated 2026-10-08. This is an exposition and figure revision of the frozen v0.12.0 baseline at main `c38ae79dedf8b5016bc7db8ece315cbd25b82812`. Research PRs #57–66 and baseline PR #67 remain integrated. Experimental source files and the original v0.12.0 manuscript are preserved.
+
+**Current manuscript:** [main PDF](baseline_v0121/output/manuscript-v0.12.1.pdf) (6 body + 1 references page); [supplement](baseline_v0121/output/appendix-v0.12.1.pdf) (3 pages); [portable author source](baseline_v0121/output/portable-source-v0.12.1.zip). [Build and revision notes](baseline_v0121/README.md); [full editorial self-review](reviews/editorial_v0121/EDITORIAL_REVIEW.zh-CN.md); [current venue fit](reviews/editorial_v0121/VENUE_FIT.zh-CN.md).
+
+Mainline: natural numerical state × current execution path → finite target-path constraints → output qualification and amortization. RTX24 generation speed is **1.170× ordinary / 1.169× matched**. Resident-request speed is **1.742× ordinary / 1.035× matched**, while the matched path already supplies **1.683× without speculation**. B570 repair and fixed-UB wider drafting provide qualified cost failures. Late mechanisms predominantly use Qwen3; historical platforms retain their own contracts.
+
+The revision rewrites the argument, adds natural-cross and task-level comparison figures, checks plot inputs, and preserves all 26 inherited evidence files byte-for-byte. No new inference or GPU campaign occurs. Author self-review still leans Weak Reject at the MLSys research bar; IEEE Access and JSA are conditional journal-fit options, not acceptance promises. Fresh finite-window phrase checking is limited and is not a licensed plagiarism score. Private raw-archive verification remains inherited. No venue submission occurred.
+
+The PDFs are anonymous author drafts; the provenance source package is not an anonymous submission artifact. Select a venue before preparing final author metadata and submission materials.
+
+---
+
+<details>
+<summary>Preserved v0.12.0 status and earlier history</summary>
+
 # HeteroSpec — scientific baseline v0.12.0
 
 Updated 2026-10-08. The author authorized review and merge of all open PRs #57–66; all ten were merged at reviewed heads. Research evidence anchor: `f9b9457fe528a343dd0b01614dcce017801913db`. Earlier pause notices and unexecuted-stage statements below are historical.
@@ -565,3 +582,5 @@ All 11 revised main-PDF pages were visually inspected after the final build, spl
 
 </details>
 
+
+</details>

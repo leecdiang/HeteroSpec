@@ -1,0 +1,15 @@
+\section{Finite Repair Design on RTX}
+\label{sec:repair}
+\subsection{Local attention layout and phase scope}
+
+The RTX implementation changes the query layout of the Qwen3 non-flash attention subgraph using existing ggml views and CUDA operations. Query columns are represented in the batch dimension so that attention follows the selected scalar-query structure; projection and feed-forward operations retain their batched execution. This is a local graph transformation, not a new CUDA kernel or architecture-independent arithmetic proof.
+
+Four switches apply the constraint to target prefill, target continuation, draft prefill and draft continuation, encoded by bits 1, 2, 4 and 8. The exposed factorial contains 16 masks, four probes and two repetitions, totaling 128 complete requests. Masks 3, 7, 11 and 15 pass every registered reference endpoint. Mask 3 is inclusion-minimal within this finite family. /15 and /31 pass all masks; /25 needs either target phase; /18 needs both. Draft constraints are unnecessary for qualification on this panel. 
+
+Mask 3 is chosen by output qualification, not observed speed. On 19 exposed tasks, the subsequent six-repetition panel yields 1.27808$\times$ generation and 1.11298$\times$ resident-request speed against matched target-only execution. Removing draft constraints relative to mask 15 adds only 1.00357$\times$ generation and 1.02569$\times$ request speed. The extra generation benefit misses the predeclared 1.03$\times$ gate, and its descriptive interval crosses one. 
+
+
+\subsection{From scope selection to a frozen operating point}
+The factorial selects mask 3 by output qualification, not by the fastest measured cost. The exposed scope-cost panel then measures what leaving draft phases unconstrained adds. Neither step is an untouched-input validation. The subsequent expansion freezes the recipe and input eligibility before generating reference answers. This sequence separates a local repair construction from an input-level check.
+
+The resulting constraint is compatible with batched projection and feed-forward work on the recorded non-flash graph; preserving output does not require globally serializing every target operation in this instance. A later wide-geometry failure still shows that the layout is not invariant over every capacity. Repair scope and width therefore require separate qualification.

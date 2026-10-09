@@ -1,0 +1,38 @@
+\section{Implementation and Phase Qualification}
+\label{supp:implementation}
+\subsection{RTX query layout and dispatch}
+\label{supp:query_layout}
+The source-bound implementation modifies the non-flash attention graph, not the quantized projection/FFN kernels or the greedy acceptance algorithm. After the standard query permutation, a query tensor with dimensions $(d,q,h,1)$ is viewed as $(d,1,h,q)$. KV tensors broadcast over the query batch dimension. The corresponding mask is viewed with the matching layout; existing matrix multiplication, softmax, value multiplication and recombination operations then evaluate each query column with the registered geometry. Batched projection, FFN and output computation remain available. This shape description is about graph operations, not independently traced CUDA kernel dispatch.
+
+Assertions restrict the tested graph to Qwen3 non-flash attention, one KV stream and supported query widths, without attention bias, sinks or MLA. The initial patch supports up to four queries; the width study extends the admitted graph to eight. Unsupported cases do not inherit qualification. The earlier implementation creates per-query attention subgraphs before the later query-batch transformation; their costs differ.
+
+The four-switch patch records model role and phase through a thread-local guard entered before graph capture/fast-path selection. Target prefill and continuation have bits 1 and 2; draft prefill and continuation have bits 4 and 8. The process mask selects enabled phases. A disabled phase returns to the native graph. The graph parameters and reuse check include the query-batch flag, preventing reuse across differing constraint modes. Reset re-enters prefill. Thus the switches act on actual graph selection; they are not a retrospective label on timings. Capture-off bypasses observer metadata and forced witness synchronization. The optional continuation state-move helper is inactive in the frozen expansion because its activating environment variable is absent.
+
+The exact scripts, native delta and reports are included under \nolinkurl{source_records/benchmarks/rtx_consistency_contract_v1} and \nolinkurl{rtx_consistency_phase2}. The author source package records their Git blob and SHA-256 identities. The portable manuscript code does not apply patches or execute these runtimes.
+
+\subsection{Factorial and scope-cost results}
+\label{supp:phase_factorial}
+All 16 phase masks are run on HumanEval/15, /18, /25 and /31 twice. The task-level booleans in the original A1 result agree with the committed 16-row aggregate export. Passing masks are 3, 7, 11 and 15; all repeat stably. Masks contain target prefill and continuation when they pass. HumanEval/15 and /31 pass throughout this family; /25 needs at least one target bit; /18 needs both. The main manuscript's phase-qualification matrix shows every mask and probe rather than only successful configurations.
+
+Mask 3 is inclusion-minimal among passing masks in this fixed four-switch family: no strict subset passes. It is not a statement that every runtime must constrain precisely these phases, that each bit is necessary on every input, or that all possible constraints have been searched. Natural crosses identify local dependencies; the factorial qualifies implementations under a different complete-output gate.
+
+The independent scope-cost arm uses 19 exposed tasks, three conditions and six balanced repeats: 342 formal requests and 18 excluded warmups, capture off. Mask 3 speculation versus matched target-only gives generation/request speed $1.278076\times/1.112977\times$. Mask 15 versus mask 3 cost gives $1.003569\times/1.025686\times$, with 12/19 generation and 17/19 request tasks faster. The extra generation interval is $[0.997739,1.009456]$. Per-round generation ratios are 1.008646, 0.998091, 1.004328, 1.003691, 1.007860 and 1.006777. The predefined optimization gate additionally requires generation speed at least 1.03, request speed at least 1.00 and at least four of six faster rounds. It is not met because the aggregate generation gain is too small. Qualification does not imply a speed gain from fewer constraints.
+
+\subsection{Implementation variants and paid-boundary changes}
+\label{supp:implementation_variants}
+Table~\ref{tab:implementation_history} retains the early local implementation comparisons. Their baselines and observer costs differ from the final frozen expansion. Request gains against global UB1 include a prefill/path change; they are not matched speculative increments. The strict final local comparison disables observers and matches target graph, UB4 and prefill, giving $1.256449\times$ generation and $1.077451\times$ request over 19 task medians, with 19/19 and 16/19 tasks faster. All observations are from that campaign, not paired with later costs.
+
+\begin{table}[ht]\centering\small
+\caption{Earlier RTX implementation variants. Ratios are baseline/candidate under each stated campaign.}
+\label{tab:implementation_history}
+\begin{tabularx}{\linewidth}{@{}Xlrr@{}}\toprule
+Candidate; comparison baseline & ID gate & Generation & Request\\\midrule
+Global serial $k=2$; global UB1 target & 57/57 & 0.677 & 0.795\\
+Per-query $k=2$; global UB1 target & 57/57 & 0.746 & 1.041\\
+Per-query $k=3$; new frontend global UB1 & 76/76 & 1.084 & 1.562\\
+Query-batch $k=3$; new frontend global UB1 & 76/76 & 1.242 & 1.852\\
+Query-batch $k=3$; strict matched target & 76/76 & 1.256 & 1.077\\\bottomrule
+\end{tabularx}
+\end{table}
+
+The ordinary $k=3$ path in the second campaign qualifies only 68/76, with /18 and /25 failing in every repeat. Its timing cannot become a lossless speed claim. Serial, per-query and query-batch comparisons preserve both successful and unsuccessful cost outcomes.

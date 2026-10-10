@@ -1,0 +1,191 @@
+--- v014/main.tex
++++ unchanged-twocolumn/main.tex
+@@ -1,6 +1,6 @@
+-\documentclass[preprint,12pt,nopreprintline]{elsarticle}
++\documentclass[final,5p,times,twocolumn]{elsarticle}
+ \usepackage[T1]{fontenc}
+-\usepackage{lmodern,microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl}
++\usepackage{microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl}
+ \usepackage[hypertexnames=false]{hyperref}
+ \setlength{\emergencystretch}{2em}
+ \renewcommand{\topfraction}{0.9}
+--- v014/sections/02_runtime.tex
++++ unchanged-twocolumn/sections/02_runtime.tex
+@@ -5,11 +5,11 @@
+ 
+ The runtime state includes more than committed IDs. Target and draft KV ownership, logical positions, pending logits or tokens, sampler history, and loop counters connect successive calls. A pending token may already have been sampled and accepted into the sampler while remaining to be evaluated into the cache. A transfer that repeats or omits this event changes the transaction. Early intervention frontends therefore retain pending state and clone behavior as well as KV. The later B570 candidate instead binds phases in the same context and live sampler. The RTX cost candidate does not activate its optional state-transplant branch.
+ 
+-\begin{figure}[!htbp]
+-\centering\includegraphics[width=\linewidth]{figures/figure_1_architecture.pdf}
++\begin{figure*}[t]
++\centering\includegraphics[width=.82\textwidth]{figures/figure_1_architecture.pdf}
+ \caption{Execution transaction and consistency controls. Bits 1/2 constrain target prefill/continuation; bits 4/8 constrain draft prefill/continuation. Verification consumes retained target state and online proposals; commit/rollback reconciles the next iteration. $R$ and $M$ omit the draft loop. The diagram was prepared with ChatGPT/Codex-assisted plotting code from the source-bound interfaces; it does not imply that the RTX cost candidate performs state transplantation.}
+ \label{fig:architecture}
+-\end{figure}
++\end{figure*}
+ 
+ The microbatch capacity, denoted UB, limits how a caller batch is partitioned for backend execution. It is distinct from $k$, occupied query count, and the number of output rows reserved by the frontend. UB2 can process a caller with one occupied continuation token. A larger $k$ can lower caller count while increasing the number of micrographs. Output reservation can change the recipe even at the same UB. These distinctions matter when interpreting a cross or a performance counter.
+ 
+@@ -20,7 +20,7 @@
+ 
+ LLM-42 uses a decode--verify--rollback design, fixed verification shapes with padding, and replacement of decoded KV entries by verifier entries~\cite{llm42}. It also permits distinct consistent strategies for prefill and decode. Stage-Replay studies fixed-prefix precision controls and bidirectional cache transplantation~\cite{stagereplay}. Vosti specifies and verifies deterministic inference at a system level~\cite{vosti}. MarginGate uses margin-triggered verification and repairs confirmed mismatches~\cite{margingate}. These works establish principles that this manuscript uses rather than renames. Table~\ref{tab:related} states the specific additional evidence and the comparisons not performed.
+ 
+-\begin{table}[t]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Closest research context and the scope of this study. No row implies an implementation or speed advantage over the cited method.}
+ \label{tab:related}
+ \begin{tabularx}{\linewidth}{@{}p{.23\linewidth}XX@{}}\toprule
+@@ -29,7 +29,7 @@
+ Stage-Replay; Vosti~\cite{stagereplay,vosti} & Fixed-prefix state intervention; specified system determinism & Natural donor $\times$ current recipe with shams; finite output qualification rather than a verified general guarantee\\
+ Consumer cost anatomy; Performance or Illusion?~\cite{lossless,illusion} & Backend verification cost and weak performance proxies & Reference-qualified fixed-UB width counterexample and distinction between target-path and speculative request gains\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ The natural crosses extend the experimental question to both naturally formed state and the current native recipe, under a shared committed boundary. They do not uniquely derive the attention implementation or identify a sole kernel cause. Local diagnosis motivates a candidate; native qualification tests its sufficiency. We have no same-contract implementation comparison with LLM-42, Stage-Replay, or Vosti, and make no superiority claim over their guarantees.
+ 
+--- v014/sections/03_methods.tex
++++ unchanged-twocolumn/sections/03_methods.tex
+@@ -3,7 +3,7 @@
+ \subsection{Systems, inputs, and evidence roles}
+ Table~\ref{tab:contracts} separates the principal contracts. All final targets are Qwen3-8B; changing device, draft representation, or backend does not create another target family. HumanEval~\cite{humaneval} and sanitized MBPP~\cite{mbpp} provide coding inputs. M4 also uses a prospective Spec-Bench partition~\cite{specbench}. Prompt construction and dataset identities remain campaign-specific. We measure reference reproduction, not benchmark test-pass accuracy.
+ 
+-\begin{table}[t]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Principal study contracts. All cases process one request at a time. Historical text checks are listed separately in S1 and are weaker than direct-ID qualification.}
+ \label{tab:contracts}
+ \begin{tabularx}{\linewidth}{@{}p{.17\linewidth}p{.26\linewidth}XX@{}}\toprule
+@@ -13,7 +13,7 @@
+ M4 runtime & MacBook Air M4; Metal; Q8\_0 target/draft & Direct generated IDs; prospective 30 HumanEval plus 30 Spec-Bench, three repeats & Registered post-prefill runtime interval\\
+ 358H stateful & Arc B390 Vulkan target; symmetric INT4 OpenVINO CPU/NPU draft & Direct IDs; 30 prompts, three repeats per draft condition & Registered stateful interval and target-work accounting\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ Late RTX settings are non-flash attention, context 4096, caller batch capacity 2048, 24 host threads, greedy seed 123, full target/draft GPU offload, and one slot. B570 retains context 1024, caller batch 512, non-flash Vulkan execution, and its own frozen threads, modules, and phase settings. S1 records the role of each campaign rather than adding their requests into a pooled sample.
+ 
+--- v014/sections/04_diagnosis.tex
++++ unchanged-twocolumn/sections/04_diagnosis.tex
+@@ -10,11 +10,11 @@
+ 
+ Figure~\ref{fig:cross} shows discriminating IDs. At /15, with 13 committed tokens, changing the current UB2/UB1 recipe changes the third submitted decision from 9147 to 4199 under either donor. At /25, with four committed tokens, only the N1 donor/current-UB1 cell changes the submitted decision. That cell produces IDs 271,750,8168 rather than 1406. The effect is an interaction, not an explanation based only on donor state. At the selected /18 and /31 cuts, both recipes and donors preserve the discrete decision. These nulls are local and do not establish trajectory-wide invariance.
+ 
+-\begin{figure}[!htbp]
+-\centering\includegraphics[width=\linewidth]{figures/figure_2_natural_crosses.pdf}
++\begin{figure*}[t]
++\centering\includegraphics[width=.82\textwidth]{figures/figure_2_natural_crosses.pdf}
+ \caption{Source-derived RTX and B570 natural-state crosses. Rows are donors and columns current recipes. Cell labels are the discriminating sampled/argmax ID; colors group equal IDs within each task only. RTX /15 shows a current-path effect and /25 an interaction. B570 /145 and /42 cross N1 (UB1/reservation3) with E (UB2/reservation2); /72 has identical UB1/reservation3 current columns and is a state control. All repetitions reproduce the displayed local patterns.}
+ \label{fig:cross}
+-\end{figure}
++\end{figure*}
+ 
+ The RTX donor comparison also distinguishes logical tensor equality from file hashes. All 12 prompt-KV pair comparisons agree, while 70 of 72 generated-prefix K/V tensor comparisons differ; tested first-layer logical K/V remain equal. This supports examining state formation and attention-related execution, but does not identify attention as the sole cause. In particular, the discriminating /15 bonus row is itself a single-token microbatch under both histories. The final row's nominal shape cannot explain the entire effect without considering its inputs and preceding work.
+ 
+--- v014/sections/05_repair.tex
++++ unchanged-twocolumn/sections/05_repair.tex
+@@ -17,11 +17,11 @@
+ \subsection{The finite phase family}
+ Figure~\ref{fig:phase} presents the full four-switch factorial: 16 masks, four exposed HumanEval probes and two repetitions, totaling 128 requests. All outputs and registered stop boundaries are repeat-stable. Masks 3, 7, 11 and 15 pass the complete probe panel. /15 and /31 pass every mask; /25 needs at least one target-phase bit; /18 needs both target phases. Draft-phase bits do not change this pattern.
+ 
+-\begin{figure}[!htbp]
+-\centering\includegraphics[width=\linewidth]{figures/figure_3_phase_matrix.pdf}
++\begin{figure*}[t]
++\centering\includegraphics[width=.82\textwidth]{figures/figure_3_phase_matrix.pdf}
+ \caption{RTX phase qualification at fixed $k=3$, UB4 and cap128. Left columns show enabled phase bits; right columns show native full-response qualification for each probe in both repetitions. Passing masks are 3/7/11/15. Mask 3 is inclusion-minimal within this switch family; it is not an operator-level or all-input minimality theorem.}
+ \label{fig:phase}
+-\end{figure}
++\end{figure*}
+ 
+ Mask 3 is the only passing set with no passing strict subset. This is inclusion-minimality in the registered family. The result neither proves that attention is the unique cause nor that draft behavior can be arbitrary in a different implementation. Acceptance, cache ownership, committed state and stopping still have to be valid. The $k=3$/UB4 factorial also differs from the original UB2/UB1 intervention, so /15's all-mask agreement does not erase its earlier path effect.
+ 
+--- v014/sections/06_cost.tex
++++ unchanged-twocolumn/sections/06_cost.tex
+@@ -9,22 +9,22 @@
+ 
+ Figure~\ref{fig:cost} displays the three comparisons on a common baseline/candidate axis while keeping generation and resident-request intervals distinct. Equation~\ref{eq:identity} is verified for all 48 task-level timer identities and both aggregate identities. This consistency check explains why the three ratios fit together; it does not measure which component contributes a fraction of the saving.
+ 
+-\begin{figure}[!htbp]
+-\centering\includegraphics[width=\linewidth]{figures/figure_4_paid_cost.pdf}
++\begin{figure*}[t]
++\centering\includegraphics[width=.82\textwidth]{figures/figure_4_paid_cost.pdf}
+ \caption{RTX expansion paid speed ratios with descriptive task-bootstrap intervals. Ordinary/candidate measures the deployment change; matched/candidate the increment from speculation; ordinary/matched the draft-free path change. The two timers cover different intervals. Ratios are not additive component costs.}
+ \label{fig:cost}
+-\end{figure}
++\end{figure*}
+ 
+ The target-path comparison changes prefill microbatch/attention behavior and continuation capacity jointly. Generation $R/M$ is near parity, whereas the request ratio is much larger. Without independent profiling, that contrast cannot quantify attention, KV, transport, synchronization or host shares. It also cannot certify that $R$ is the fastest ordinary decoder. A faster qualified ordinary implementation could narrow the deployment benefit without changing the arithmetic reported here.
+ 
+ \subsection{Task variation and session uncertainty}
+ The incremental request benefit is modest and uneven. Figure~\ref{fig:tasks} keeps task generation and request ratios in the same request-sorted order. Seven tasks are slower than matched execution, although all 24 are faster than ordinary request cost. Matched-request round 2 reverses direction at $0.940220\times$; the other round geometric means are approximately 1.029, 1.052 and 1.044. The descriptive task interval for the median-based aggregate lies above one, but does not erase that reversal.
+ 
+-\begin{figure}[!htbp]
+-\centering\includegraphics[width=\linewidth]{figures/figure_5_task_variation.pdf}
++\begin{figure*}[t]
++\centering\includegraphics[width=.82\textwidth]{figures/figure_5_task_variation.pdf}
+ \caption{RTX matched/candidate task ratios from four-repetition absolute-time medians, in a shared order sorted by request ratio. Points represent tasks. Generation improves on 22/24 and resident request on 17/24; seven request regressions remain. Dashed lines mark aggregate geometric means and the solid parity line marks one.}
+ \label{fig:tasks}
+-\end{figure}
++\end{figure*}
+ 
+ Separate resident sessions, laptop scheduling and thermal variation can affect these estimates. Balanced order and task medians reveal some variation but do not remove session confounding. A task bootstrap is not independent session/day replication. We therefore report a qualified positive aggregate operating point, rather than stable production request acceleration. The larger generation gain remains a result for its defined interval, not an end-to-end substitute.
+ 
+--- v014/tables/b570_cost.tex
++++ unchanged-twocolumn/tables/b570_cost.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{B570 paid baseline/candidate task-median ratios. Complete two-round pairs only; the missing old-N1 task is not imputed. All raw suffix work stays charged.}\label{tab:b570_cost}
+ \begin{tabular}{@{}lrrrr@{}}\toprule
+ Ratio & Tasks & Generation & Whole request & Host\\\midrule
+@@ -9,4 +9,4 @@
+ $R/M$ & 15 & 0.988893 & 0.978539 & 0.978864\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}
+--- v014/tables/fixed_ub.tex
++++ unchanged-twocolumn/tables/fixed_ub.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Fixed-UB4 width costs: baseline/candidate. Anchor is $k=3$, wide is $k=7$, and matched has no draft. Partitions are descriptive.}\label{tab:fixed_ub}
+ \begin{tabular}{@{}llrr@{}}\toprule
+ Panel & Ratio & Generation & Request\\\midrule
+@@ -12,4 +12,4 @@
+ HE (4) & Matched/Wide & 1.307590 & 1.164148\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}
+--- v014/tables/m4_strata.tex
++++ unchanged-twocolumn/tables/m4_strata.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{M4 formal post-prefill baseline/candidate speeds from three-repeat condition medians. Family strata are descriptive.}\label{tab:m4_strata}
+ \begin{tabular}{@{}lrrr@{}}\toprule
+ Panel & Tasks & Target/Always & Target/Guard\\\midrule
+@@ -8,4 +8,4 @@
+ Spec-Bench & 30 & 1.155485 & 1.106160\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}
+--- v014/tables/rtx_cost.tex
++++ unchanged-twocolumn/tables/rtx_cost.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{RTX frozen expansion paid ratios: 24 task medians, four repeats. Intervals describe task resampling. $C_3$ is mask 3 speculation.}\label{tab:rtx_cost}
+ \begin{tabular}{@{}lrrrr@{}}\toprule
+ Ratio & Gen. & Interval & Request & Interval\\\midrule
+@@ -8,4 +8,4 @@
+ $R$/$M$ & 1.000758 & [0.995,1.008] & 1.682560 & [1.590,1.766]\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}

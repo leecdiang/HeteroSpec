@@ -58,6 +58,9 @@ Supplement \S S7 documents the frozen exports, source bindings and CPU-only chec
         assert re.findall(pattern, s7_before) == re.findall(pattern, s7_after)
     payload[s7_name] = s7_after.encode()
     helpers = r'''
+% Reserve room beside the first-page arXiv stamp, without reducing type size.
+% Only this public, combined entry uses these margins; journal entries keep 5p.
+\geometry{left=20mm,right=20mm}
 % Separate supplement navigation, with continuous page and PDF destination IDs.
 \makeatletter
 \newcommand{\supplementtableofcontents}{\section*{\contentsname}\@starttoc{stoc}}
@@ -126,6 +129,9 @@ Supplement \S S7 documents the frozen exports, source bindings and CPU-only chec
             after_sha256=sha(s7_after.encode()), replacements=s7_edits,
             numbers_equations_citations_equal=True),
         generated_entry_sha256=sha(payload['arxiv.tex']),
+        public_layout=dict(left_margin_mm=20, right_margin_mm=20,
+            rationale='Reserve a clear gutter for the platform-added arXiv stamp.',
+            type_size_reduced=False, journal_entry_layout_changed=False),
         public_declarations=public_declarations,
         journal_only_pending_forms_omitted=['CRediT roles','funding/interests confirmation prompts','public-deposit decision prompts'],
         submitted=False, live_arxiv_acceptance=False)
@@ -152,6 +158,15 @@ Supplement \S S7 documents the frozen exports, source bindings and CPU-only chec
         with fitz.open(target) as pdf:
             texts = [p.get_text() for p in pdf]
             text = '\n'.join(texts)
+            first_spans = [span for block in pdf[0].get_text('dict')['blocks']
+                           if 'lines' in block for line in block['lines']
+                           for span in line['spans'] if span['text'].strip()]
+            first_left = min(span['bbox'][0] for span in first_spans)
+            # Allow normal microtype protrusion at the nominal 20-mm edge.
+            assert first_left >= 55.5, ('first-page left gutter', first_left)
+            assert abs(pdf[0].rect.width - 210 * 72 / 25.4) < 0.01
+            record['public_layout']['first_page_text_left_pt'] = round(first_left, 3)
+            record['public_layout']['first_page_left_gutter_check_passed'] = True
             assert 'Author information pending confirmation' not in text
             assert 'await author confirmation' not in text
             assert all(value in text for value in ['Chengzhan Li', '1.742', '1.683', '1.035'])

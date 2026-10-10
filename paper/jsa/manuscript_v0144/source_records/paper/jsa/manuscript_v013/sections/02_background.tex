@@ -1,0 +1,19 @@
+\section{Runtime Architecture and Related Work}
+\label{sec:background}
+\subsection{The speculative execution transaction}
+A speculative iteration has four relevant stages. The draft first extends the committed prefix with candidate tokens. The target evaluates candidate positions, often in a multi-token call. Acceptance, correction, and bonus sampling determine the next committed tokens. The runtime then reconciles cache positions and pending computation before the next iteration. Its target cache must represent the committed trajectory after rejected candidates are removed or repaired.
+
+The ordinary greedy reference advances through its own sequence of prefill and continuation calls. Identical token IDs so far do not certify identical numerical histories. Allocated microbatch capacity, occupied positions, attention query layout, and output reservation can affect the current computation. These quantities must not be conflated: changing capacity does not prove every call occupies that capacity, and changing a whole recipe does not isolate a single operator.
+
+We study quantized Qwen3 deployments with native proposals and recorded backends. The late RTX graph constrains non-flash attention layout while keeping other target operations batched. B570 uses a separately qualified Vulkan phase-binding recipe. Historical M4 and 358H retain their own interfaces. This is a software execution study on consumer hardware, not a hardware-only comparison.
+
+\subsection{Numerical preservation and state intervention}
+Batch-invariant inference constrains numerical reductions~\cite{thinkingmachines}. LLM-42 combines fixed-shape verification, consistent KV state, and selective deterministic requests~\cite{llm42}. Stage-Replay holds prefixes fixed and performs bidirectional cache transplantation~\cite{stagereplay}. Vosti specifies and verifies system-level determinism~\cite{vosti}, a stronger guarantee than finite token or endpoint qualification. MarginGate studies calibrated sparse verification~\cite{margingate}.
+
+State intervention has precedent. Our additional measured factor is the current native recipe crossed with naturally retained state, followed by finite repair qualification and paid ordinary/matched comparisons. We have no shared-contract implementation comparison with those methods. The crosses cannot establish superiority to a verified deterministic runtime; sampled-token agreement does not establish equal logits or caches.
+
+\subsection{Performance and heterogeneous drafting}
+Speculative sampling~\cite{leviathan2023}, heterogeneous drafting~\cite{dovetail,duodecoding}, and adaptive depth~\cite{turbospec,banditspec} are established directions. Consumer numerical deviations and serialization costs are documented~\cite{lossless}. \emph{Performance or Illusion?} examines verification costs and performance limits in a production engine~\cite{illusion}. Our experiments connect reference-qualified repair scope with the distinction between changing a target path and adding speculation on that path.
+
+Contextual uncertainty-based verification allocation is studied by HeteroSpec~\cite{aclheterospec}. Our question concerns the execution state, repair scope, and cost of reproducing a registered reference.
+

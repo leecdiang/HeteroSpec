@@ -7,6 +7,13 @@ def main():
     receipt=read(LOCAL/'F_E_ENGINEERING_REMOTE_RECEIPT.json');assert receipt['remote_sha']==receipt['frozen_sha'] and receipt['manifest_sha256']==sha(PUB/'F_E_ENGINEERING_F0.json')
     plan=read(PUB/'F_E_ENGINEERING_F0.json')
     for name,h in plan['code_sha256'].items():assert sha(HERE/name)==h,'engineering code drift'
+    assert sha(PUB/'MODEL_CHOICE.json')==plan['model_choice_sha256'] and sha(PUB/'NATIVE_BUILD.json')==plan['native_build_sha256']
+    for name,h in plan['resolved_inputs'].items():assert sha(PUB/name)==h
+    family_cfg=read(LOCAL/'F_MODEL_CONFIG.json');assert family_cfg['models']==read(PUB/'MODEL_CHOICE.json')['models']
+    native=read(PUB/'NATIVE_BUILD.json');binroot=LOCAL/'native/build/bin'
+    for name,h in native['all_runtime_dlls'].items():assert sha(binroot/name)==h
+    for name,h in native['binaries'].items():assert sha(binroot/name)==h
+    for m in family_cfg['models'].values():assert sha(m['path'])==m['sha256']
     while not (LOCAL/'runs/S_formal/COMPLETE.json').exists():time.sleep(20)
     call('verify_s.py');call('engineering.py','bridge');call('verify_engineering.py','bridge')
     call('engineering.py','family_proof');family=True

@@ -69,7 +69,7 @@ def dvr(model):
             good&=accepted==b['accepted_proposals'] and mismatch==b['mismatch'] and keep==b['kv_kept_queries']
         good&=expected==out and len(r['blocks'])==r['verify_decode_calls']
         shapes=[g for g in r['graph_observations'] if g['stage']=='verify' and g['name']=='attn_norm-0'];verify_shapes.extend(shapes);good&=len(shapes)==len(r['blocks']) and all(g['ne'][1]==32 for g in shapes)
-        if c['kind']=='synthetic_rollback':forced.append({'case':c['name'],'first_block_mismatch':bool(r['blocks']) and r['blocks'][0]['mismatch'],'accepted_first':r['blocks'][0]['accepted_proposals'] if r['blocks'] else None})
+        if c['kind']=='synthetic_rollback':forced.append({'case':c['name'],'first_block_mismatch':bool(r['blocks']) and r['blocks'][0]['mismatch'],'accepted_first':r['blocks'][0]['accepted_proposals'] if r['blocks'] else None,'injected_index':c['body']['fixture_bad_proposal_at']})
         arrays[c['name']]=out;checks.append({'case':c['name'],'valid':bool(good),'length':len(out),'endpoint':r['stop_type'],'verify_calls':len(r['blocks'])})
         if c['kind']=='synthetic_verified_eog_decision':
             index=c['body']['fixture_verified_eog_at'];checks[-1]['valid'] &= len(out)==index+2 and r['stop_type']=='eos' and len(r['blocks'])==1 and r['blocks'][0]['synthetic_verified_eog_at']==index and len(r['blocks'][0]['native_verification_predictions'])==32
@@ -78,7 +78,7 @@ def dvr(model):
         values=[arrays.get(f'padding-cap{cap}-dummy{d}-r{rep}') for d in [32,33] for rep in [1,2]];padding.append({'cap':cap,'equal':values[0] is not None and all(v==values[0] for v in values)})
     statefiles={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/'state-proof').glob('*.state')};state_equal=len(statefiles)==4 and len({statefiles.get(n) for n in ['verifier_prefix.state','verifier_after_copy.state','fast_loaded_prefix.state']})==1
     repeated=[{'case_prefix':name[:-3],'equal':arrays[name]==arrays.get(name[:-3]+'-r2')} for name in arrays if name.endswith('-r1')]
-    passed=len(checks)==len(plan['cases']) and all(c['valid'] for c in checks) and all(p['equal'] for p in padding) and all(f['first_block_mismatch'] for f in forced) and bool(verify_shapes) and state_equal and all(r['equal'] for r in repeated)
+    passed=len(checks)==len(plan['cases']) and all(c['valid'] for c in checks) and all(p['equal'] for p in padding) and all(f['first_block_mismatch'] and f['accepted_first']==f['injected_index'] for f in forced) and bool(verify_shapes) and state_equal and all(r['equal'] for r in repeated)
     result={'status':'PASS' if passed else 'IMPLEMENTATION_BLOCKED','model':model,'requests':len(checks),'planned':len(plan['cases']),'checks':checks,'repeat_checks':repeated,'padding':padding,'forced_rollback':forced,'actual_verify_query_range':[min(g['ne'][1] for g in verify_shapes),max(g['ne'][1] for g in verify_shapes)] if verify_shapes else None,'state_files_sha256':statefiles,'prefix_state_copy_source_unchanged_and_exact':state_equal,'ordinary_reference_gate':'DEFERRED_TO_PAID_CONFIRMATION; repeat stability alone is not R equality','pending_eog_fixture':'explicitly synthetic forced pending runtime EOG; no fabricated ordinary model decision'}
     save(PUB/('E_ENGINEERING_'+model+'.json'),result);return passed
 if __name__=='__main__':

@@ -11,7 +11,7 @@ def main():
     eog=set(read(PUB/'S_TOKEN_CONTRACT.json')['eog']);records={};checks=[]
     for slot,a in slots.items():
         if a['status']!='COMPLETED':continue
-        p=LOCAL/a['record'];assert h(p)==a['record_sha256'];r=read(p);assert r['slot']==slot;t=tasks[r['task']];resp=r['response'];ids=resp['tokens']
+        p=LOCAL/a['record'];assert h(p)==a['record_sha256'];r=read(p);assert r['slot']==slot and r['execution_freeze_commit']==read(LOCAL/'S_REMOTE_RECEIPT.json')['frozen_sha'];t=tasks[r['task']];resp=r['response'];ids=resp['tokens']
         valid=all(isinstance(x,int) for x in ids) and len(ids)==resp['tokens_predicted'] and 0<len(ids)<=128 and not any(x in eog for x in ids[:-1]) and ((ids[-1] in eog)==(resp['stop_type']=='eos')) and (len(ids)==128 or resp['stop_type']=='eos') and not resp['truncated'] and resp['timings']['cache_n']==0 and resp['prompt']==t['formatted_prompt'] and resp['timings']['prompt_n']==t['prompt_token_count'] and math.isfinite(r['wall_ms']) and r['wall_ms']>0
         assert hashlib.sha256(json.dumps(ids,separators=(',',':')).encode()).hexdigest()==r['tokens_digest'];records[(r['session'],r['round'],r['task'],r['condition']['name'])]=r;checks.append({'slot':slot,'valid_contract':valid})
     conditions=['scalar_reference','matched_target','target_scopes','all_scopes'];complete=len(records)==768 and all(r['valid_contract'] for r in checks);qualification={};stable=True

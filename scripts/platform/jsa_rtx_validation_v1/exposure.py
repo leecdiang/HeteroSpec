@@ -10,7 +10,16 @@ def main():
     for r in data:
         for b in [r['prompt'].encode(),json.dumps(r['prompt'],ensure_ascii=True)[1:-1].encode()]:patterns.setdefault(b,set()).add(r['task_id'])
     descriptions=re.compile(b'|'.join(re.escape(b) for b in sorted(patterns,key=len,reverse=True)));ids=re.compile(rb'\bMBPP[/_\-](\d{1,4})\b',re.I)
-    seen=set();matches={};catalog=[];errors=[];archive_receipts=[];roots=[];commits={};last=time.monotonic();availability=[];archive_seen=set()
+    seen=set();matches={};catalog=[];errors=[];archive_receipts=[];roots=[];commits={};last=time.monotonic();availability=[];archive_seen=set();resume=os.environ.get('JSA_EXPOSURE_RESUME_LONG')=='1';retry_paths=set();publication={};unwrapped_ids=[]
+    if resume:
+        prior=read(PUB/'EXPOSURE_AUDIT.json');save(LOCAL/'EXPOSURE_SHORTPATH_ATTEMPT.json',prior);catalog=read(LOCAL/'EXPOSURE_CATALOG.json');seen={r['sha256'] for r in catalog};matches={int(r['id'].split('/')[1]):r['evidence'] for r in prior['rows'] if r['evidence']};availability=prior['availability_only'];archive_receipts=prior['archive_receipts'];archive_seen={r['sha256'] for r in archive_receipts};retry_paths={r['path'] for r in prior['errors']}
+        for tid,evidence in list(matches.items()):
+            if evidence['count']==len(evidence['examples']) and all('PUBLISH' in e['path'] and '!' not in e['path'] for e in evidence['examples']):
+                checked=True
+                for e in evidence['examples']:
+                    p=Path('\\\\?\\'+e['path']);b=p.read_bytes();assert hashlib.sha256(b).hexdigest()==e['sha256'];a=json.loads(b);checked &= isinstance(a,list) and all(isinstance(r,dict) and r.get('type')=='blob' and isinstance(r.get('path'),str) and isinstance(r.get('content'),str) for r in a);publication[e['path']]=b
+                if checked:del matches[tid];unwrapped_ids.append(tid)
+        seen.difference_update(hashlib.sha256(b).hexdigest() for b in publication.values())
     def scan(b,label):
         nonlocal last
         h=hashlib.sha256(b).hexdigest();catalog.append({'path':label,'sha256':h,'bytes':len(b)})
@@ -39,8 +48,15 @@ def main():
                 availability.append({'path':label,'sha256':h,'classification':'audit index; underlying source objects and ledger exclusions scanned separately'});return
         try:a=json.loads(b)
         except (ValueError,UnicodeDecodeError):a=None
+        tree=a.get('tree') if isinstance(a,dict) else a
+        if isinstance(tree,list) and tree and all(isinstance(r,dict) and r.get('type')=='blob' and isinstance(r.get('path'),str) and isinstance(r.get('content'),str) for r in tree):
+            availability.append({'path':label,'sha256':h,'classification':'GitHub publication transport wrapper; each embedded logical file decoded and audited separately'})
+            for r in tree:scan(r['content'].encode(),label+'!publish:'+r['path'])
+            return
         if isinstance(a,list) and a==data:
             availability.append({'path':label,'sha256':h,'classification':'semantically identical official downloaded corpus; no forward record'});return
+        if isinstance(a,list) and len(a)==len(data) and all(isinstance(r,dict) and 'task_id' in r and 'prompt' in r and not any(k in r for k in ['response','generated_ids','proposal','logits','predicted_ms','tokens_predicted']) for r in a) and {r['task_id']:r['prompt'] for r in a}=={r['task_id']:r['prompt'] for r in data}:
+            availability.append({'path':label,'sha256':h,'classification':'complete official ID/description corpus; answer/test/metadata representation differs; no output payload'});return
         if isinstance(a,dict) and isinstance(a.get('files'),dict) and all(isinstance(v,dict) and 'sha256' in v for v in a['files'].values()):
             availability.append({'path':label,'sha256':h,'classification':'CAS logical-file index; actual science objects scanned independently'});return
         hits=set(int(m.group(1)) for m in ids.finditer(b))
@@ -74,14 +90,18 @@ def main():
         assert header[0].decode()==oid and len(header)==3
         b=proc.stdout.read(int(header[2]));assert proc.stdout.read(1)==b'\n';scan(b,label)
     proc.stdin.close();assert proc.wait()==0
+    for label,b in publication.items():scan(b,label)
     for root in [Path('C:/Users/ASUS/Documents/Codex'),Path('D:/HeteroSpec-PC'),Path('D:/HeteroSpec-RTX-Target-V1')]:
         roots.append(str(root))
-        for d,dirs,files in os.walk(root):
+        walk_root='\\\\?\\'+str(root.resolve()) if resume else root
+        for d,dirs,files in os.walk(walk_root):
             dirs[:]=[n for n in dirs if n not in SKIP and not n.startswith('.venv')]
             for name in files:
                 p=Path(d)/name
+                label=str(p)[4:] if str(p).startswith('\\\\?\\') else str(p)
+                if resume and len(label)<260 and label not in retry_paths:continue
                 try:
-                    if p.suffix.lower() in TEXT:scan(p.read_bytes(),str(p))
+                    if p.suffix.lower() in TEXT:scan(p.read_bytes(),label)
                     elif p.suffix.lower()=='.zip':
                         archive_h=sha(p)
                         if archive_h in archive_seen:archive_receipts.append({'path':str(p),'sha256':archive_h,'classification':'byte-identical previously scanned archive'});continue
@@ -141,9 +161,11 @@ def main():
         if not reasons:pool.append({'id':full,'description':r['prompt'],'raw_prompt':'Complete the following Python programming task. Return only the completed Python code, without Markdown fences.\n\n'+r['prompt'],'description_sha256':hashlib.sha256(r['prompt'].encode()).hexdigest(),'cap':128,'selection_hash':rank})
     pool.sort(key=lambda r:(r['selection_hash'],r['id']));selected=pool[:24]
     save(LOCAL/'EXPOSURE_CATALOG.json',catalog)
-    report={'status':'PASS' if len(pool)>=24 and not errors else 'INPUT_POOL_BLOCKED','utc':now(),'dataset':{'revision':'e49bbfe381c9c0e564b937f1c4e163a2273c65cc','sha256':expected,'rows':len(data)},'refs_scanned':commits,'pull_heads_count':len(prs),'host_roots':roots,'archive_receipts':archive_receipts,'catalog_sha256':sha(LOCAL/'EXPOSURE_CATALOG.json'),'records':len(catalog),'unique_texts':len(seen),'errors':errors,'rows':rows,'eligible_ranked':[r['id'] for r in pool],'selected':[r['id'] for r in selected],'new_confirmation_forwards':0,'policy':'Pure downloaded corpus and explicit vocab-only output do not count as forwards; ambiguous matches excluded conservatively. Unknown remote host payloads are unavailable; public cohort IDs conservatively excluded. No global training-data claim.'}
+    report={'status':'PASS' if len(pool)>=24 and not errors else 'INPUT_POOL_BLOCKED','utc':now(),'dataset':{'revision':'e49bbfe381c9c0e564b937f1c4e163a2273c65cc','sha256':expected,'rows':len(data)},'refs_scanned':commits,'pull_heads_count':len(prs),'host_roots':roots,'archive_receipts':archive_receipts,'catalog_sha256':sha(LOCAL/'EXPOSURE_CATALOG.json'),'records':len(catalog),'unique_texts':len(seen),'errors':errors,'rows':rows,'eligible_ranked':[r['id'] for r in pool],'selected':[r['id'] for r in selected],'new_confirmation_forwards':0,'Windows_extended_path_supplement':resume,'prior_shortpath_failure_count':len(retry_paths),'policy':'Pure downloaded corpus and explicit vocab-only output do not count as forwards; ambiguous matches excluded conservatively. Unknown remote host payloads are unavailable; public cohort IDs conservatively excluded. No global training-data claim.'}
     report['availability_only']=availability
+    if resume:
+        save(PUB/'EXPOSURE_RECOVERY.json',{'prior_attempt_sha256':sha(LOCAL/'EXPOSURE_SHORTPATH_ATTEMPT.json'),'shortpath_failures':len(retry_paths),'extended_path_supplement':True,'publication_transport_wrappers':{label:hashlib.sha256(b).hexdigest() for label,b in publication.items()},'IDs_removed_from_wrapper_only_evidence_before_actual_inner_file_rescan':unwrapped_ids,'inner_payloads_scanned_as_actual_files':True,'confirmation_forwards_during_all_audit_attempts':0})
     save(PUB/'EXPOSURE_AUDIT.json',report)
     if report['status']=='PASS':save(PUB/'CONFIRMATION_INPUTS.json',selected)
-    print(json.dumps({'status':report['status'],'eligible':len(pool),'selected':report['selected'],'errors':errors}),flush=True)
+    print(json.dumps({'status':report['status'],'eligible':len(pool),'selected':report['selected'],'error_count':len(errors)}),flush=True)
 if __name__=='__main__':main()

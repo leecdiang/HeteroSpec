@@ -3,13 +3,18 @@ from common import *
 from gguf import Reader
 TEMPLATE="{% for message in messages %}{% if loop.first and messages[0]['role'] != 'system' %}{{ '<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n' }}{% endif %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
 def format_smol(text):return '<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n<|im_start|>user\n'+text+'<|im_end|>\n<|im_start|>assistant\n'
+def raw_user(t):
+    if 'raw_prompt' in t:return t['raw_prompt']
+    prefix='<|im_start|>user\n';suffix='<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n';formatted=t['formatted_prompt'];assert formatted.startswith(prefix) and formatted.endswith(suffix)
+    text=formatted[len(prefix):-len(suffix)];assert prefix+text+suffix==formatted
+    return text
 def main():
     assert read(PUB/'EXPOSURE_AUDIT.json')['status']=='PASS'
     cfg=read(LOCAL/'CONFIG.json');models={r:read(LOCAL/'models'/f'{r}_DOWNLOAD.json') for r in ['target','draft']};meta={};vocabs={};input_records={}
     official={r:read(LOCAL/'models'/f'{r}-tokenizer.json') for r in models}
     assert all(official['target'][k]==official['draft'][k] for k in ['model','added_tokens','normalizer','pre_tokenizer','post_processor','decoder'])
     discovery=read(PUB/'BRIDGE_INPUTS.json')+read(PUB/'S_INPUTS.json')[:8];confirmation=read(PUB/'CONFIRMATION_INPUTS.json')
-    tasks=[{**{k:v for k,v in t.items() if k not in ['prompt_ids','prompt_token_count','formatted_prompt','formatted_prompt_sha256']},'formatted_prompt':format_smol(t['raw_prompt'])} for t in discovery+confirmation]
+    tasks=[{**{k:v for k,v in t.items() if k not in ['prompt_ids','prompt_token_count','formatted_prompt','formatted_prompt_sha256']},'raw_prompt':raw_user(t),'formatted_prompt':format_smol(raw_user(t)),'source_user_bytes':'existing raw_prompt or exact inverse of original one-user Qwen wrapper; no output/reference array used'} for t in discovery+confirmation]
     warm={'id':'synthetic/warmup','raw_prompt':'Write Python code to add two integers.','formatted_prompt':format_smol('Write Python code to add two integers.'),'cap':32}
     for role,m in models.items():
         assert sha(m['path'])==m['sha256'];g,tensors=Reader(m['path']).metadata();meta[role]=g

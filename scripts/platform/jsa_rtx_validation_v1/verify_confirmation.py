@@ -13,7 +13,7 @@ def main(model):
     eog=set(read(PUB/'MODEL_CHOICE.json')['eog' if model=='SmolLM2' else 'Qwen_eog']);records={};contract={}
     for slot,l in ledger.items():
         if l['status']!='COMPLETED':continue
-        p=LOCAL/l['record'];assert h(p)==l['record_sha256'];a=read(p);assert a['slot']==slot;t=tasks[a['task']];r=a['response'];ids=r['tokens']
+        p=LOCAL/l['record'];assert h(p)==l['record_sha256'];a=read(p);assert a['slot']==slot and a['execution_freeze_commit']==read(LOCAL/(model+'_REMOTE_RECEIPT.json'))['frozen_sha'];t=tasks[a['task']];r=a['response'];ids=r['tokens']
         assert h(PUB/plan['input_file'])==plan['input_sha256'];assert hashlib.sha256(json.dumps(ids,separators=(',',':')).encode()).hexdigest()==a['tokens_digest']
         valid=0<len(ids)<=t['cap'] and all(type(x) is int for x in ids) and len(ids)==r['tokens_predicted'] and not any(x in eog for x in ids[:-1]) and ((ids[-1] in eog)==(r['stop_type']=='eos')) and (len(ids)==t['cap'] or r['stop_type']=='eos') and not r['truncated'] and r['timings']['cache_n']==0 and r['prompt']==t['formatted_prompt'] and r['timings']['prompt_n']==t['prompt_token_count'] and math.isfinite(a['wall_ms']) and a['wall_ms']>0
         if a['condition']['name']=='E32':valid &= r['request_reset'] and all(b['actual_queries']==32 and b['retained_kv_owner']=='verifier' for b in r['blocks']) and len(r['blocks'])==r['verify_decode_calls']

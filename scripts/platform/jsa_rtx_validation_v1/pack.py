@@ -39,6 +39,8 @@ def main():
             private['jsa/'+p.relative_to(LOCAL).as_posix()]=p
     for p in (LOCAL/'native/source').rglob('*'):
         if p.is_file() and '.git' not in p.parts and p.suffix!='.gguf':private['jsa/'+p.relative_to(LOCAL).as_posix()]=p
+    for p in (LOCAL/'native/versions').rglob('*'):
+        if p.is_file() and p.suffix not in ['.gguf','.dll']:private['jsa/'+p.relative_to(LOCAL).as_posix()]=p
     for rel in ['native/build/bin/llama-cli.exe','native/build/bin/llama-server.exe','native/build/bin/jsa-dvr-server.exe','native/vocabulary.exe','runtime/S/llama-cli.exe','runtime/S/llama-server.exe']:
         p=LOCAL/rel
         if p.exists():private['jsa/'+rel]=p

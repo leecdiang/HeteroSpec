@@ -1,0 +1,19 @@
+\section{Study Design and Evidence Scope}
+\label{sec:methods}
+\subsection{Systems, endpoints and exposure}
+Each study retains its own protocol, tasks and comparator. The target/draft pair is Qwen3-8B/0.6B Q8\_0, except the 358H adapter's symmetric INT4 OpenVINO draft. Comparisons process one request at a time. Hardware, backend, OS and quantization jointly vary; no hardware-only causal comparison follows. Historical settings are in Appendix K and RTX V4 in Appendix Q. RTX's original direct-ID OS build is 26200; follow-ups use 26300.
+
+Complete-output equality includes an earlier terminal EOG or the 128-ID cap. B570 untruncated native captures retain 1--2 committed post-cap IDs separately, excluded from contract equality. Stop markers are checked. Each result selects a complete attempt; interrupted attempts remain separate and are never concatenated.
+
+B570 intervention uses 24 exposed tasks. RTX intervention uses 19 exposed HumanEval tasks and 24 MBPP tasks selected by a frozen static exposure audit before their execution. No-known-exposure concerns retained project records, not training data. The later bridge and offline analysis reuse exposed evidence. Prediction arrays precede native comparison; RTX records remote readback and B570 local seals. Neither establishes independently trusted absolute time. Task selection and exclusions remain fixed. Three repetitions assess stability; they are not independent sampling units.
+
+Prior raw audits check source-bound arrays, traces, shams, handoffs and effective settings. This revision adds CPU checks of compact exports, not new model execution. The anonymous package exposes arithmetic; the author ledger separates provenance and access limits. Omitted weights/binaries and opaque sampler state remain outside this verification.
+
+\subsection{Cost boundaries and estimators}
+RTX V4 takes each condition's median of three times per prompt, then the prompt GM of reference/candidate ratios. Its 10,000 paired-row bootstrap draws use seed 2026100204, frozen order and linear .025/.975 percentiles. Intervals condition on selected prompt rows, observed medians and configuration; they exclude exposure-selection, population and full thermal/session uncertainty. Cost eligibility requires complete reference-ID agreement and stable reference repeats.
+
+358H takes the median of three paired ratios before the prompt GM; total-time accounting remains separate. M4 runtime uses condition medians and its own frozen random streams. Historical parsed-text estimators, measurement deviations and energy domains remain in the supplement. Later Q gates do not certify historical H timing.
+
+All headline latency measurements exclude loading and initial prefill. RTX V4 charges post-prefill sampler/state work through slot release, including drafting, verification, rollback, synchronization and logging. M4 and 358H retain their separately stated boundaries. No common system-energy boundary exists across platforms; no runtime intervention energy result is claimed.
+
+Trajectory extents, score descriptors, fixed-mode opportunity and conditional bounds are post-study analyses, not new observations or preregistered primary estimates. Historical M4 Spec-Bench \citep{specbench} and HumanEval \citep{humaneval} campaigns remain background to its separate runtime study.

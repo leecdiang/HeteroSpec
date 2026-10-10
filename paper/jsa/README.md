@@ -2,11 +2,11 @@
 
 Updated 2026-10-10 after the reviewed merge of PRs #69–#77. The current author manuscript is [manuscript_v0145](manuscript_v0145/README.md): a 12-page main paper, 13-page independent supplement, complete editable/rebuildable author sources and separate flat journal sources. Its arXiv delivery is a 26-page combined document with a single-entry source archive.
 
+The [2026-10-10 independent B570 validation plan](../../docs/experiments/jsa_b570_validation_20261010/README.md) specifies bounded SmolLM2 model-family transfer under the B570/Vulkan ordinary-reference contract, separate RTX input reservations and four fresh-process rounds. It can start without RTX result completion and contains no new model results.
+
 The current argument is diagnosis → finite implementation/qualification → measured ordinary/matched cost. Seven figures, 26 claim bindings, all 28 experiment destinations and negative/missing cases are retained. [Current integration review and JSA checklist](../../reports/jsa_merge_audit_20261010/REVIEW.md) distinguish completed manuscript work from unresolved declarations, access arrangements and scientific limits.
 
 The dated [requirements audit](JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md), [verified guide record](JSA_REQUIREMENTS_VERIFIED_20261009.json) and [later layout recheck](manuscript_v0145/JSA_REQUIREMENTS_RECHECK.md) retain their original verification scope. This merge is not journal or arXiv submission. Earlier JSA and MLSys manuscripts remain historical artifacts.
-
-The [2026-10-10 independent B570 validation plan](../../docs/experiments/jsa_b570_validation_20261010/README.md) specifies bounded SmolLM2 model-family transfer under the B570/Vulkan ordinary-reference contract, separate RTX input reservations and four fresh-process rounds. It can start without RTX result completion and contains no new model results.
 
 <details>
 <summary>Original v0.13.0 working-manuscript entry</summary>

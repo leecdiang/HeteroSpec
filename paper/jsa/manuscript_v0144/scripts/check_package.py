@@ -59,7 +59,7 @@ def main():
         original_sibling = original_scientific['preservation'].pop('v014_sibling_comparisons')
         rebuilt_sibling = rebuilt_scientific['preservation'].pop('v014_sibling_comparisons')
         assert original_scientific == rebuilt_scientific
-        for name in ['LOSSLESS_COMPRESSION_QA.json', 'VISUAL_DATA_QA.json', 'ASSET_PRESERVATION_QA.json']:
+        for name in ['LOSSLESS_COMPRESSION_QA.json', 'VISUAL_DATA_QA.json', 'ASSET_PRESERVATION_QA.json', 'HUMANIZER_QA.json']:
             assert json.loads((OUT / name).read_text()) == json.loads((fresh / 'output' / name).read_text()), name
         toolchain = {}
         for tool, arguments in [('pdflatex', ['--version']), ('latexmk', ['-version']), ('pdfinfo', ['-v'])]:
@@ -71,6 +71,7 @@ def main():
                       package_source_bytes_equal=True, numerical_qa_equal=True,
                       independent_scientific_core_equal=True,
                       lossless_compression_and_new_figure_qa_equal=True,
+                      humanizer_prose_qa_equal=True,
                       workspace_sibling_comparisons=original_sibling,
                       extracted_sibling_comparisons=rebuilt_sibling,
                       toolchain=toolchain,

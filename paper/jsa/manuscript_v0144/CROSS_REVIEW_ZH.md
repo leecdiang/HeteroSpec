@@ -33,7 +33,7 @@
 | RTX 实现；§5.1–§5.4、S3，C10–C12/C16 | Query 从列维转为批维，沿用 head stride；KV broadcast、batched projection/FFN/recombination 仍在。通过 masks 3/7/11/15 是四开关家族内 inclusion-minimal 结论；更宽 UB 失败限制外推。 | 图 1/3 与实现说明一致；不声称重写全部算子、全局最小修复或独立 CUDA 内核优越性。原实现文件和计算函数不改。 |
 | B570 实现、缺失与成本；§5.5/§6.4、S5，C19–C22 | 同一 target context 保留 KV/live sampler，pending token 只取样／接受一次；capture-off 不读 witness。Endpoint equality 与 raw-array equality 分离；26 suffix IDs 仍付费。119/120 包含 old-N1 /400 round 1 缺失；old N1 仅 14 个完整 pair，R/M/C 各 15 个。 | 新 Figure S1 把三项合同放在同一图中。缺失不补零、不补测，不删除 /400 其他比较；仍无独立成本组件归因。候选对强基线失败的结果保留。 |
 | 历史比较与 358H；§6.5、S6，C23–C25 | 历史 text/ID、energy domain 和估计器不可池化。358H prompt ceiling 为 CPU≈0.837219、NPU≈0.844840；固定 baseline/progress、删除其他非负工作后，达到 parity 仍需 target-work 至少降 16.28%/15.52%。Pooled accounting 是另一估计器。 | 新 Figure S2 区分 measured circle 与 conditional open diamond，无 ceiling CI；不把必要预算说成实现收益或 NPU 不可能性。180-row 原主机 ceiling 审计仍是继承证据。 |
-| 补充材料／复现；S1–S7 | 27 页的主要长度来自单栏、独立目录分页及宽表处理。双栏保留独立 S 编号、目录与完整 table rows 可显著压缩；单靠 PDF 字符统计不足以证明信息不丢失。 | 27→13 页，减少 51.85%。逐段规范化比对、所有 16 个原始表格（正文 4＋补充 12）单元格／标题／标签比对、证据字节比对和 clean rebuild 均用于核验。 |
+| 补充材料／复现；S1–S7 | 27 页的主要长度来自单栏、独立目录分页及宽表处理。双栏保留独立 S 编号、目录与完整 table rows 可显著压缩；单靠 PDF 字符统计不足以证明信息不丢失。 | 27→13 页，减少 51.85%。编辑前文字精确恢复后逐段规范化比对、所有 16 个原始表格（正文 4＋补充 12）单元格／标题／标签比对、证据字节比对和 clean rebuild 均用于核验。 |
 
 ## 与相近工作的复核
 
@@ -54,8 +54,10 @@
 
 ## 本轮验证及剩余事项
 
-`LOSSLESS_COMPRESSION_QA.json` 逐项保存了允许的三处文字更新、七节原内容、30 个导航目标、537 个 generated data cells、六个 inline tables、26 claims 和 28 groups 的核对结果。191 个受保护文件字节相同，覆盖 133 个绑定来源、26 个冻结导出、16 个历史副本、原计算逻辑／格式类／声明／书目，以及四张未改正文图的八个资产。最新来源包的 268 个基线源文件先逐一与 #74 Git blob 核对，再形成可随 ZIP 独立检查的基线记录。
+`LOSSLESS_COMPRESSION_QA.json` 逐项保存了receipt 允许的显示／构建更新及可逆 humanizer 语言修改、七节原内容、30 个导航目标、537 个 generated data cells、六个 inline tables、26 claims 和 28 groups 的核对结果。后续视觉修订保留 183 个受保护文件字节相同，覆盖全部 133 个绑定来源、26 个冻结导出、16 个历史副本、原计算逻辑／格式类／声明／书目；八个原正文图资产按初始认证哈希重绘。七张图的全部初始科学输入对象完全相等。最新来源包的 268 个基线源文件先逐一与 #74 Git blob 核对，再形成可随 ZIP 独立检查的基线记录。
 
-CPU 重算、标准库科学核对、七张 vector figure 的数据／边界检查、pdfLaTeX 编译、源包空目录重建和 flat-source 重建均记录当前哈希。全部 25 页以联系表检查，Figure 2 和两张新图独立放大检查，关键宽表页面复看。当前检查不重新打开私有 raw archives、不重新执行模型，也不验证缺失二进制／驱动或在线投稿系统。
+按作者指定 humanizer v3.1.0 的固定提交完成全文两遍复读。19文件审阅，17文件中的63段改写；数值、数学、引用、表格、图注和版式不因语言修改而改变，所有编辑前源码可精确恢复。局部证据、条件预算、未验证比较、负面／缺失结果和不确定性边界另经人工核对；见 `HUMANIZER_REVIEW_ZH.md`。
+
+CPU 重算、标准库科学核对、七张 vector figure 的数据／边界检查、pdfLaTeX 编译、源包空目录重建和 flat-source 重建均记录当前哈希。全部 25 页以联系表检查，全部七张图独立放大检查，关键宽表页面复看。当前检查不重新打开私有 raw archives、不重新执行模型，也不验证缺失二进制／驱动或在线投稿系统。
 
 作者事实、CRediT、资金／利益冲突、公开访问方案、AI 使用声明、最终文献状态以及实际门户附件仍由作者核实。科学加强若继续开展，应优先提供新的家族／方法／独立会话证据；本轮保留这些空白和限制，不填入预期结果。

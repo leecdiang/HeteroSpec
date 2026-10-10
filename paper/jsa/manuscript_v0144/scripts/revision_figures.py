@@ -1,12 +1,13 @@
-"""Make the label-only Figure 2 revision and two source-bound supplement figures.
+"""Source-bound supplement drawings and the retained initial Figure 2 renderer.
 
 Shared styling is imported from the retained ASV-inspired drawing module.
-No model, inference runtime, new measurement or other main figure is invoked.
+The current entry point delegates to semantic_figures for all seven figures.
+No model, inference runtime or new measurement is invoked.
 """
 from pathlib import Path
 import copy, csv, hashlib, json, re
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, FancyBboxPatch
 from matplotlib.lines import Line2D
 from visual_figures import canvas, panel, text, box, arrow, divider, clean
 from visual_figures import BLUE, OCHRE, GREEN, INK, GRAY, LIGHT, PALE_BLUE, PALE_GREEN
@@ -113,15 +114,18 @@ def b570(inputs):
     assert 'pilot_phase' in native and 'pending' in native
     fig = canvas(3.7)
     ax = panel(fig, [.025, .60, .95, .28], '(A) Bind phases without a second target context')
-    steps = [('Ordinary prefill\nUB128; reserve 512 / 1', BLUE, PALE_BLUE),
+    steps = [('Ordinary prefill\nUB128; reserve\n512 / 1', BLUE, PALE_BLUE),
              ('Sample pending\nfirst token once', BLUE, 'white'),
              ('Bind same context\nUB128 to UB1', GREEN, PALE_GREEN),
              ('Native k = 2 loop\nDraft UB1', OCHRE, 'white')]
     for i, (label, color, fill) in enumerate(steps):
         x = .005 + i * .255
-        box(ax, x, .39, .225, .36, label, color, fill, fs=9)
+        ax.add_patch(FancyBboxPatch((x, .30), .21, .50,
+                     boxstyle='round,pad=0,rounding_size=0.012',
+                     edgecolor=color, facecolor=fill, linewidth=.7))
+        text(ax, x+.105, .55, label, fontsize=9)
         if i < 3:
-            arrow(ax, (x+.225, .57), (x+.255, .57), GREEN if i == 1 else GRAY)
+            arrow(ax, (x+.22, .55), (x+.245, .55), GREEN if i == 1 else GRAY)
     text(ax, .5, .16, 'Retain target KV and the live sampler; consume / accept the saved token once.', fontsize=9)
     text(ax, .5, -.02, 'Reservation values are total / per sequence. Capture-off omits witness readbacks.', fontsize=8.5, color=GRAY)
     divider(fig, .025, .535, .975, .535)
@@ -138,7 +142,8 @@ def b570(inputs):
     for i, name in enumerate(groups):
         yy = .50 - i * .145
         label = {'ordinary_R':'R: ordinary', 'matched_target':'M: matched', 'candidate':'C: candidate', 'old_N1':'Old N1'}[name]
-        text(ax, .0, yy, label, fontsize=8.7, ha='left')
+        color = {'ordinary_R':BLUE, 'matched_target':GREEN, 'candidate':OCHRE, 'old_N1':GRAY}[name]
+        text(ax, .0, yy, label, fontsize=8.7, ha='left', color=color)
         text(ax, .48, yy, str(len(groups[name])), fontsize=9)
         text(ax, .83, yy, str(complete[name]), fontsize=9)
     text(ax, .5, -.10, 'Old N1 / MBPP400 / round 1: unavailable', fontsize=8.3, color=GRAY)
@@ -168,16 +173,16 @@ def floor358h(inputs):
     for device, yy in [('CPU',1), ('NPU',0)]:
         p = points[device]
         value, (lo,hi) = p['actual'], p['interval']
-        ax.errorbar(value, yy+.065, xerr=[[value-lo],[hi-value]], fmt='o', color=BLUE, ms=4.5, lw=.8, capsize=2)
-        ax.plot(p['ceiling'], yy-.065, marker='D', ms=5, mfc='white', mec=GREEN, mew=.8)
-        ax.text(value, yy+.26, f'{value:.3f}', color=BLUE, ha='center', va='bottom', fontsize=9)
+        ax.errorbar(value, yy+.065, xerr=[[value-lo],[hi-value]], fmt='o', color=OCHRE, ms=4.5, lw=.8, capsize=2)
+        ax.plot(p['ceiling'], yy-.065, marker='D', ms=5, mfc='white', mec=GREEN, mew=.8, color=GREEN, lw=0)
+        ax.text(value, yy+.26, f'{value:.3f}', color=OCHRE, ha='center', va='bottom', fontsize=9)
         ax.text(p['ceiling'], yy-.27, f'{p["ceiling"]:.3f}', color=GREEN, ha='center', va='top', fontsize=9)
     ax.axvline(1, ls='--', lw=.7, color=GRAY)
     ax.text(1, 1.46, 'Parity', ha='center', color=GRAY, fontsize=8.5)
     ax.set(xlim=(.25,1.08), ylim=(-.45,1.55), yticks=[1,0], yticklabels=['CPU draft','NPU draft'],
            xticks=[.4,.6,.8,1.0], xlabel='Matched target-only / speculative time')
     clean(ax)
-    handles=[Line2D([],[],marker='o',color=BLUE,lw=.8,markersize=4,label='Measured; saved interval'),
+    handles=[Line2D([],[],marker='o',color=OCHRE,lw=.8,markersize=4,label='Measured; saved interval'),
              Line2D([],[],marker='D',color=GREEN,lw=0,markerfacecolor='white',markersize=5,label='Zero-other-work ceiling')]
     ax.legend(handles=handles, loc='upper center', bbox_to_anchor=(.48,-.26), ncol=2, frameon=False,
               fontsize=8.3, handlelength=1.1, columnspacing=.9)
@@ -185,7 +190,7 @@ def floor358h(inputs):
     ax = panel(fig, [.65, .20, .325, .60], '(B) Budget target work')
     text(ax, .5, .86, 'Fixed baseline and committed progress\nAll other work optimistically removed', fontsize=8.7, color=GRAY)
     text(ax, .5, .58, r'$F/(1-\delta)\geq 1\quad\Rightarrow\quad\delta\geq 1-F$', fontsize=11)
-    box(ax, .02, .15, .96, .27, f'CPU: at least {100*points["CPU"]["necessary_uniform_target_cut"]:.2f}%\nNPU: at least {100*points["NPU"]["necessary_uniform_target_cut"]:.2f}%', OCHRE, fs=10)
+    box(ax, .02, .15, .96, .27, f'CPU: at least {100*points["CPU"]["necessary_uniform_target_cut"]:.2f}%\nNPU: at least {100*points["NPU"]["necessary_uniform_target_cut"]:.2f}%', GREEN, PALE_GREEN, fs=10)
     text(ax, .5, .0, 'Necessary budgets, not achieved savings.', fontsize=8.5, color=GRAY)
     save(fig, 'figure_S2_358h_budget')
     inputs['figure_S2_358h_budget'] = dict(points=points,
@@ -196,18 +201,8 @@ def floor358h(inputs):
 
 
 def main():
-    inputs = json.loads((ROOT / 'provenance/FIGURE_INPUTS_V0142.json').read_text())
-    figure2(inputs)
-    b570(inputs)
-    floor358h(inputs)
-    out = ROOT / 'output'
-    out.mkdir(exist_ok=True)
-    (out / 'FIGURE_INPUTS.json').write_text(json.dumps(inputs, indent=2) + '\n')
-    (ROOT / 'provenance/FIGURE_INPUTS_V0144.json').write_bytes((out / 'FIGURE_INPUTS.json').read_bytes())
-    lock = {p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in list((ROOT / 'figures').glob('*')) + list((ROOT / 'tables').glob('*.tex'))}
-    (ROOT / 'provenance/LOCKED_REVISION_ASSETS.json').write_text(json.dumps(dict(version='v0.14.4',assets=lock),indent=2)+'\n')
-    print('Figure 2 labels and two supplementary figures drawn from bound sources; four other main figures untouched.')
+    from semantic_figures import main as redraw
+    redraw()
 
 
 if __name__ == '__main__':

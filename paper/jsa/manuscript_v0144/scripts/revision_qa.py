@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 import re
+from humanizer_qa import audit as humanizer_audit, recover_before
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -77,20 +78,40 @@ def compute_ast(text):
     return sha(ast.dump(function, include_attributes=False).encode())
 
 
+def followup_text(text, name, manifest):
+    humanizer = json.loads((ROOT / 'provenance/HUMANIZER_EDIT_RECEIPT.json').read_text())
+    text = recover_before(text, name, humanizer)
+    for replacement in manifest['permitted_followup_replacements'].get(name, []):
+        assert text.count(replacement['new']) == 1, name
+        text = text.replace(replacement['new'], replacement['old'])
+    return text
+
+
 def preservation(receipt):
     protected = receipt['protected_files']
+    manifest = json.loads((ROOT / 'provenance/SEMANTIC_VISUAL_REVISION.json').read_text())
+    restyled = manifest['allowed_protected_asset_restyles']
+    assert sorted(restyled) == sorted('figures/' + name + '.' + ext
+        for name in ['figure_1_architecture', 'figure_3_phase_matrix',
+                     'figure_4_paid_cost', 'figure_5_task_variation'] for ext in ['pdf', 'svg'])
+    lock = json.loads((ROOT / 'provenance/LOCKED_REVISION_ASSETS.json').read_text())['assets']
     for name, expected in protected.items():
-        assert sha((ROOT / name).read_bytes()) == expected, name
+        actual = sha((ROOT / name).read_bytes())
+        if name in restyled:
+            assert manifest['initial_asset_sha256'][name] == expected, name
+            assert actual == manifest['current_asset_sha256'][name] == lock[name], name
+        else:
+            assert actual == expected, name
     assert compute_ast((ROOT / 'scripts/reconstruct.py').read_text()) == receipt['compute_ast_sha256']
     for name, expected in receipt['main_source_hashes'].items():
-        text = (ROOT / name).read_text()
+        text = followup_text((ROOT / name).read_text(), name, manifest)
         for replacement in receipt['permitted_text_replacements'].get(name, []):
             assert text.count(replacement['new']) == 1, name
             text = text.replace(replacement['new'], replacement['old'])
         assert sha(text.encode()) == expected, name
     supplement = {}
     for name, expected in receipt['supplement_content'].items():
-        text = (ROOT / name).read_text()
+        text = followup_text((ROOT / name).read_text(), name, manifest)
         for replacement in receipt['permitted_text_replacements'].get(name, []):
             assert text.count(replacement['new']) == 1, name
             text = text.replace(replacement['new'], replacement['old'])
@@ -102,7 +123,7 @@ def preservation(receipt):
         assert labels == expected['labels'], name
         actual_tables = inline_tables(text)
         assert actual_tables == expected['inline_tables'], name
-        supplement[name] = dict(original_text_retained=True, existing_labels_retained=True,
+        supplement[name] = dict(original_text_exactly_recoverable=True, existing_labels_retained=True,
                                section_count=len(expected['sections']), subsection_count=len(expected['subsections']),
                                inline_tables=len(actual_tables))
     table_cells = 0
@@ -122,20 +143,32 @@ def preservation(receipt):
     ledger = json.loads((ROOT / 'EXPERIMENT_DESTINATIONS.json').read_text())
     assert ledger['entries'] == receipt['experiment_entries']
     assert (ledger['original_groups'], ledger['covered_groups'], ledger['unassigned_groups']) == (28, 28, 0)
-    return dict(protected_files_byte_equal=len(protected), frozen_evidence_files=26,
+    return dict(protected_files_byte_equal=len(protected)-len(restyled),
+                protected_figure_assets_restyled=len(restyled),
+                protected_figure_restyle_initial_hashes_equal=True,
+                frozen_evidence_files=26,
                 historical_source_files=16, authenticated_source_copies=133,
-                unchanged_main_figure_assets=8, compute_ast_equal=True,
+                unchanged_main_figure_assets=0, compute_ast_equal=True,
                 main_source_files_checked=len(receipt['main_source_hashes']),
                 supplement=supplement, generated_tables=generated,
                 generated_data_cells_equal=table_cells, supplement_inline_tables_equal=6,
                 main_inline_tables_equal=2, total_original_tables_equal=16,
                 original_supplement_navigation_targets=30,
                 claims_equal=26, experiment_entries_equal=28,
-                allowed_prose_edits='Two Figure 2 label descriptions; one current-build provenance sentence in S7. Marked additions introduce only explanations/figures.')
+                allowed_prose_edits='Recorded display/provenance corrections plus the fully reversible '
+                'humanizer prose pass. Numbers, equations, references, tables, figure captions and '
+                'layout commands are unchanged by that pass; scientific scope was manually reviewed. '
+                'Marked additions introduce only explanations/figures.')
 
 
 def figure_inputs(receipt):
     data = json.loads((ROOT / 'output/FIGURE_INPUTS.json').read_text())
+    initial_path = ROOT / 'provenance/INITIAL_V0144_FIGURE_INPUTS.json'
+    manifest = json.loads((ROOT / 'provenance/SEMANTIC_VISUAL_REVISION.json').read_text())
+    assert sha(initial_path.read_bytes()) == manifest['initial_scientific_inputs_sha256']
+    initial = json.loads(initial_path.read_text())
+    assert {k: data[k] for k in initial} == initial
+    assert set(data)-set(initial) == {'semantic_visual_revision'}
     cross = data['figure_2_natural_crosses']
     for key, value in receipt['figure_2_original_inputs'].items():
         assert cross[key] == value, key
@@ -183,6 +216,7 @@ def figure_inputs(receipt):
     for entry in bindings:
         assert sha((ROOT / entry['path']).read_bytes()) == entry['sha256'], entry
     return dict(figure2_original_cases_equal=5, figure2_original_categorical_cells_equal=20,
+                all_seven_initial_scientific_input_objects_equal=True,
                 figure2_continuation_counts_equal=True, figure2_display_labels_source_bound=True,
                 b570_formal_rows=119, b570_missing_unit_preserved=True,
                 b570_group_counts_and_pair_eligibility_equal=True, b570_paid_suffix_counts_equal=True,
@@ -194,9 +228,14 @@ def figure_inputs(receipt):
 
 def main():
     receipt = json.loads((ROOT / 'provenance/V0143_BASELINE_CONTENT.json').read_text())
+    prose = humanizer_audit()
     result = dict(version='v0.14.4', status='PASS', baseline_pr=74,
                   baseline_sha=receipt['baseline_sha'], preservation=preservation(receipt),
-                  figure_inputs=figure_inputs(receipt), new_model_requests=0)
+                  figure_inputs=figure_inputs(receipt),
+                  humanizer_prose=dict(reviewed_files=prose['reviewed_files'],
+                    changed_files=prose['changed_files'], edited_paragraph_blocks=prose['edited_paragraph_blocks'],
+                    all_pre_edit_sources_exactly_recoverable=True, protected_atoms_equal=True,
+                    scientific_scope_manually_reviewed=True), new_model_requests=0)
     build = ROOT / 'output/BUILD_QA.json'
     if build.exists():
         qa = json.loads(build.read_text())

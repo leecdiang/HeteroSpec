@@ -1,0 +1,36 @@
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+\usepackage[T1]{fontenc}
+\renewcommand{\ttdefault}{lmtt} % Embedded vector Latin Modern Typewriter
+\usepackage{microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl,placeins}
+\usepackage[hypertexnames=false]{hyperref}
+\setlength{\emergencystretch}{2em}
+\hypersetup{hidelinks,pdfauthor={Chengzhan Li},pdftitle={Reference-Preserving Speculative Decoding on Consumer Systems: Diagnosis, Repair Scope, and Measured Cost},pdfsubject={JSA v0.14.5 author-review manuscript; not submitted}}
+\newcommand{\RQtag}[1]{\textbf{RQ#1}}
+\makeatletter
+\def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty\def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+\makeatother
+\begin{document}
+\begin{frontmatter}
+\title{Reference-Preserving Speculative Decoding on Consumer Systems: Diagnosis, Repair Scope, and Measured Cost}
+\author{Chengzhan Li}
+\ead{chengzhan.li@std.uestc.edu.cn}
+\address{University of Electronic Science and Technology of China}
+\begin{abstract}
+Speculative decoding changes the numerical history of a quantized runtime as well as its execution cost. When an application requires a fixed ordinary greedy output, the runtime must establish where constraints are needed and whether the qualified design saves time. We connect local state/path diagnosis, phase-scoped repair and measured comparisons with ordinary and matched target-only execution. Natural donor-state crosses on CUDA and Vulkan distinguish current-path, retained-state and interaction effects; a separate B570 fork study shows that immediate agreement can coexist with later divergence. On RTX, a query-layout transformation retains batched projection and feed-forward work. Target prefill and continuation form an inclusion-minimal passing set within a tested four-switch family, and the frozen design qualifies full responses on 24 project-unused inputs. Resident-request speed is 1.742 times ordinary execution; the matched draft-free path already achieves 1.683 times, leaving a 1.035-times speculative increment. Seven tasks regress against matched request time, and one round reverses direction. Wider fixed-capacity drafting and a B570 endpoint repair qualify while losing performance. Auxiliary M4 and 358H cases bound the value of added control and draft-only optimization. These results support a configuration-specific decision process from diagnosis through qualification to cost comparison; repair evidence remains restricted to the tested Qwen3 family.
+\end{abstract}
+\begin{keyword}
+speculative decoding \sep numerical consistency \sep execution state \sep runtime design \sep performance evaluation \sep consumer systems
+\end{keyword}
+\end{frontmatter}
+\input{sections/01_introduction}
+\input{sections/02_runtime}
+\input{sections/03_methods}
+\input{sections/04_diagnosis}
+\input{sections/05_repair}
+\input{sections/06_cost}
+\input{sections/07_implications}
+\input{sections/08_conclusion}
+\input{declarations}
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+\end{document}

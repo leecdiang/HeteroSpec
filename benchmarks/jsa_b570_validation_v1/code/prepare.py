@@ -39,7 +39,7 @@ def restore():
  for name in ['src','candidate-src','candidate-common','candidate-front']:
   shutil.copytree(dest/name,R/'source'/name,dirs_exist_ok=True)
  # Histories include exact raw arrays, selected mechanically from retained own-path records.
- history={};mapping={'R_reference':'R','ordinary_R':'R','N1_repaired':'N','old_N1':'N','matched_target':'M','matched_bridge':'M','candidate':'C'}
+ history={};mapping={'R_reference':'R','ordinary_R':'R','N1_repaired':'N','old_N1':'N','matched_target':'M','matched_bridge':'M','candidate':'C','CANONICAL_PREFILL_INPLACE_PHASE_BINDING':'C'}
  for p in sorted((dest/'raw').glob('*/RESULT.json')):
   x=load(p);arm=mapping.get(x['config'].get('label'))
   if x['warm'] or not arm or x['config'].get('cap',128)!=128:continue

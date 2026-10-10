@@ -6,6 +6,8 @@ The current argument is diagnosis → finite implementation/qualification → me
 
 The dated [requirements audit](JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md), [verified guide record](JSA_REQUIREMENTS_VERIFIED_20261009.json) and [later layout recheck](manuscript_v0145/JSA_REQUIREMENTS_RECHECK.md) retain their original verification scope. This merge is not journal or arXiv submission. Earlier JSA and MLSys manuscripts remain historical artifacts.
 
+The [2026-10-10 independent B570 validation plan](../../docs/experiments/jsa_b570_validation_20261010/README.md) specifies bounded SmolLM2 model-family transfer under the B570/Vulkan ordinary-reference contract, separate RTX input reservations and four fresh-process rounds. It can start without RTX result completion and contains no new model results.
+
 <details>
 <summary>Original v0.13.0 working-manuscript entry</summary>
 

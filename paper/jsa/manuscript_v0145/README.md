@@ -6,7 +6,7 @@ This revision aligns the title, 204-word abstract, introduction contributions an
 
 | Deliverable | File |
 |---|---|
-| **arXiv combined PDF, 24 pages** | [Single PDF](output/arxiv-combined-v0.14.5.pdf) |
+| **arXiv combined PDF, 26 pages** | [Single PDF](output/arxiv-combined-v0.14.5.pdf) |
 | Minimal arXiv sources for the combined document | [ZIP](output/arxiv-source-v0.14.5.zip), [update notes](ARXIV_UPDATE_ZH.md) |
 | Separate author-review main/supplement | [Main, 12 pages](output/jsa-manuscript-v0.14.5.pdf), [supplement, 13 pages](output/jsa-supplement-v0.14.5.pdf) |
 | Complete author sources and reproducibility records | [ZIP](output/overleaf-author-source-v0.14.5.zip) |
@@ -33,7 +33,9 @@ python3 scripts/render_qa.py
 
 The full build checks frozen numerical exports, the standard-library scientific audit, 22 locked figure/table assets, both PDFs, closeout recovery, inherited humanizer edits, lossless content and visual data. The author ZIP needs no sibling checkout. Historical rendering scripts remain as historical tools; replacing locked assets would require a fresh authenticated revision.
 
-The minimal arXiv ZIP contains 37 required files: manuscript dependencies, seven vector figures, one shared prebuilt bibliography and `00README.json`. A single `arxiv.tex` entry places the main manuscript and shared references before the supplement, with continuous page numbers and a separate supplement contents list. It excludes evidence exports, historical sources, Python code and internal reviews. The builder compiles this entry from an empty directory into one 24-page PDF, checks all links and 30 supplement navigation entries, and verifies byte-identical repeat compilation. This is local validation, not live arXiv acceptance.
+The minimal arXiv ZIP contains 37 required files: manuscript dependencies, seven vector figures, one shared prebuilt bibliography and `00README.json`. A single `arxiv.tex` entry places the main manuscript and shared references before the supplement, with continuous page numbers and a separate supplement contents list. It excludes evidence exports, historical sources, Python code and internal reviews. The builder compiles this entry from an empty directory into one 26-page PDF, checks all links and 30 supplement navigation entries, and verifies byte-identical repeat compilation. This is local validation, not live arXiv acceptance.
+
+The arXiv entry uses symmetric 20-mm side margins to leave room for the platform-added stamp. Type size, column separation and text height are retained; the narrower line width repaginates the combined document from 24 to 26 pages, with the supplement starting on page 14. The journal source entries keep their existing margins.
 
 The arXiv document inherits Chengzhan Li, the University of Electronic Science and Technology of China, and the contact email from [published v1](https://arxiv.org/abs/2610.03228v1). It replaces internal author-review forms with factual AI-assistance and reproducibility statements; it asserts no unconfirmed funding, conflicts or public deposit. The separate journal drafts retain their author-review forms. The contact email appears directly below the affiliation in all three PDF title blocks, with a mailto link; the default email footnote and its repeated author-name parenthesis are removed. Read [ARXIV_UPDATE_ZH.md](ARXIV_UPDATE_ZH.md) before updating arXiv. The complete author ZIP is for editing/reproduction rather than minimal public submission. Neither arXiv submission nor PR merge is performed here.
 

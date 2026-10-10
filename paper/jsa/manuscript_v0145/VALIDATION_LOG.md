@@ -9,13 +9,14 @@ Baseline: Draft #75 at `92b08a0ffab2ca08c835b411d9d7478ccd57603b`. Date: 2026-10
 - Title uses Measured Cost. Abstract: 204 words. Its omitted generation ratios remain in §6 and the cost tables; request ratios and negative findings retain their stated scope.
 - All 22 locked figure/table assets equal #75 byte-for-byte. Inherited checks retain 16 original tables, 537 generated data cells plus inline tables, 26 claim rows, 28 experiment entries and all seven scientific-input objects. Numerical and standard-library scientific checks pass.
 - Author identity, affiliation and contact in both source entries follow user-provided https://arxiv.org/pdf/2610.03228v1. No funding, conflicts or public-access facts are invented.
+- Follow-up title-block adjustment: email below affiliation, clickable mailto address, no repeated author-name parenthesis or email footnote. The title, abstract, body and frozen figure/table assets are unchanged by this adjustment.
 
 ## PDF and public arXiv variant
 
 - Main 12 pages; supplement 13 pages; normal Elsevier 5p Times double columns. Zero overfull boxes, undefined references, duplicate labels/targets, missing glyphs or oversized floats. All fonts embedded; no Type 3 fonts.
 - arXiv uses one `arxiv.tex` source and a 24-page combined PDF, with supplement starting on page 13, continuous printed page numbers, 30 supplement navigation entries and 18 shared references. Seven scientific figures and all original table/content inputs remain present.
 - The arXiv variant changes front matter, a factual AI/reproducibility statement and S7 delivery instructions. S7's exact delivery replacements are recorded separately and preserve numerical sequences, equations and citations. Journal-only unresolved forms remain in the separate author-review files; no public evidence deposit is asserted.
-- Clean extraction of the 37-file arXiv ZIP compiles with supplied `.bbl`, clean diagnostics and embedded vector fonts. Repeat compilation is byte-identical. All 200 internal/external links have valid destinations; 34 bookmarks are retained. Local compilation is not live arXiv acceptance.
+- Clean extraction of the 37-file arXiv ZIP compiles with supplied `.bbl`, clean diagnostics and embedded vector fonts. Repeat compilation is byte-identical. All internal/external links have valid destinations; 34 bookmarks are retained. Local compilation is not live arXiv acceptance.
 - Visual review covers all pages of the separate drafts and all 24 combined pages in numbered contact sheets; key title, figure and supplement-transition pages are additionally inspected at enlarged resolution. Figure 1C and Figure 2 retain the latest #75 layout and color roles.
 
 ## Portable source checks

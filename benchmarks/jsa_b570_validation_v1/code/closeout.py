@@ -1,5 +1,6 @@
 """CPU-only evidence/accounting/negative guards and finite scientific closeout."""
 import json,hashlib,statistics,math,time,shutil,sys,collections
+from datetime import datetime
 from pathlib import Path
 R=Path(sys.argv[2]) if len(sys.argv)>2 else Path('C:/hs/jsa-b570-run-v1');REPO=Path('C:/hs/jsa-b570-v1')
 def load(p):return json.loads(Path(p).read_text(encoding='utf8'))
@@ -42,7 +43,14 @@ def final():
  keys=[r['unit'] for r in records];assert len(keys)==len(set(keys));startedkeys=[s['unit'] for s in starts];assert len(startedkeys)==len(set(startedkeys)),'scientific retries'
  assert set(keys)=={s['unit'] for s in finished};assert set(keys)<=set(startedkeys)
  eng=sum(not s['warm'] and s['stage']!='D' for s in starts);formal=sum(not s['warm'] and s['stage']=='D' for s in starts);warm=sum(s['warm'] for s in starts)
- eg=sum(s['active_seconds'] for s in sessions if s['stage']!='D');fg=sum(s['active_seconds'] for s in sessions if s['stage']=='D');assert eng<=256 and formal<=384 and warm<=64 and len(starts)<=704 and eg<=28800 and fg<=28800 and eg+fg<=57600
+ enforcement_eg=sum(s['active_seconds'] for s in sessions if s['stage']!='D');enforcement_fg=sum(s['active_seconds'] for s in sessions if s['stage']=='D');assert eng<=256 and formal<=384 and warm<=64 and len(starts)<=704 and enforcement_eg<=28800 and enforcement_fg<=28800 and enforcement_eg+enforcement_fg<=57600
+ timing=[]
+ for p in sorted((R/'sessions').glob('*/SESSION_CLOSE.json')):
+  close=load(p);session=load(p.parent/'SESSION.json');creation=int(session['creation_identity'])/10_000_000-11_644_473_600;end=datetime.fromisoformat(close['utc']).timestamp();seconds=end-creation
+  assert 0<seconds<=close['active_seconds']+0.1
+  timing.append(dict(session=p.parent.name,stage=close['stage'],process_creation_unix_seconds=creation,observed_closed_utc=close['utc'],owned_session_upper_bound_seconds=seconds,conservative_controller_seconds=close['active_seconds']))
+ eg=sum(s['owned_session_upper_bound_seconds'] for s in timing if s['stage']!='D');fg=sum(s['owned_session_upper_bound_seconds'] for s in timing if s['stage']=='D')
+ save('ACTIVE_GPU_ACCOUNTING.json',dict(sessions=timing,engineering_owned_seconds_upper_bound=eg,formal_owned_seconds_upper_bound=fg,total_owned_seconds_upper_bound=eg+fg,controller_bound_seconds=enforcement_eg+enforcement_fg,scope='Actual Windows process-creation FILETIME identity through observed post-exit close receipt. Small post-exit receipt overhead makes this an upper bound. Controller conservatively also charges preflight/hash qualification before creation; performance host timers unchanged.'))
  files=load(R/'F0.json')['frozen_files'];assert all(sha(R/f)==d['sha256'] for f,d in files.items()),'frozen identity changed'
  for family in ['QWEN_MODELS.json','MODEL_CHOICE.json']:
   for role,m in load(R/family)['models'].items():assert sha(m['path'])==m['sha256'],'model final identity'
@@ -54,11 +62,11 @@ def final():
   for k,v in raw['work'].items():work[key][k]+=v
   work[key]['raw_committed_tokens']+=len(raw['ids']);work[key]['endpoint_committed_tokens']+=len(receipt['endpoint']['ids']);work[key]['suffix_tokens']+=receipt['endpoint']['raw_suffix'];work[key]['instrumented_graph_tensor_observations']+=sum(len(x.get('graphs',[])) for x in raw.get('trace',[]))
  save('WORK_ACCOUNTING.json',dict(by_stage={k:dict(v) for k,v in work.items()},implicit_model_request_starts=0,auxiliary_decode_starts=0,scope='Actual caller decode counts/input tokens and generated raw/endpoint/suffix IDs. Callback tensor observations are instrumented diagnostic graph observations, not full kernel launch counts; full device graph count unavailable in capture-off performance matrix.'))
- a=load(R/'A_VERIFICATION.json');b=load(R/'B_VERIFICATION.json');d=load(R/'D_VERIFICATION.json');q=d['qualification'];cost=d['costs']
+ a=load(R/'A_VERIFICATION.json');b=load(R/'B_VERIFICATION.json');d=load(R/'D_VERIFICATION.json');states=load(R/'STATE_FLOAT_VERIFICATION.json');assert states['status']=='PASS';q=d['qualification'];cost=d['costs']
  complete=a['status']==b['status']==d['status']=='PASS' and eng==160 and formal==384 and warm==16 and len(records)==560 and not count['missing']
  decision='COMPLETE_FIXED_CANDIDATE_ENDPOINT_TRANSFER_WITHOUT_ORDINARY_GAIN' if complete and q['C']['endpoint_qualified'] and cost['R/C']['qualified_speedup'] is not None and cost['R/C']['qualified_speedup']<=1 else 'COMPLETE_FIXED_CANDIDATE_ENDPOINT_TRANSFER_WITH_ORDINARY_GAIN' if complete and q['C']['endpoint_qualified'] else 'COMPLETE_FIXED_CANDIDATE_ENDPOINT_TRANSFER_FAILED' if complete else 'PARTIAL_INFRASTRUCTURE'
  save('DECISION.json',dict(status=decision,scientific_matrix_complete=complete,delivery_status='PENDING_CAS_AND_REMOTE_READBACK',qualification=q,costs={k:{f:v for f,v in x.items() if f!='taskrows'} for k,x in cost.items()},counts=count,natural=load(R/'NATURAL_DIAGNOSTIC.json')['status'],limits=['Tested Windows/Intel Arc B570/Vulkan b10839 configuration and fixed SmolLM2 GGUF bytes only.','Endpoint equality does not certify complete raw equality or functional code accuracy.','Four fresh process rounds on one date do not establish cross-date or production robustness.','No unique numerical operator cause or GPU energy inference.']))
- save('INDEPENDENT_VERIFICATION.json',dict(status='PASS' if a['status']==b['status']==d['status']=='PASS' else 'PARTIAL_VALIDATION',checks=a['checks']+b['checks']+d['checks']+5,stages={k:dict(status=x['status'],checks=x['checks'],complete=x['complete'],expected=x['expected']) for k,x in [('A',a),('B',b),('D',d)]},negative_guards=load(R/'NEGATIVE_CONTRACT_TESTS.json'),frozen_files_verified=len(files),raw_payloads_rederived=True,count_accounting_verified=True,scientific_qualification_separate_from_integrity=True,models_rehashed=True))
+ save('INDEPENDENT_VERIFICATION.json',dict(status='PASS' if a['status']==b['status']==d['status']=='PASS' else 'PARTIAL_VALIDATION',checks=a['checks']+b['checks']+d['checks']+states['checks']+5,stages={k:dict(status=x['status'],checks=x['checks'],complete=x['complete'],expected=x['expected']) for k,x in [('A',a),('B',b),('D',d)]},state_float=dict(status=states['status'],checks=states['checks']),negative_guards=load(R/'NEGATIVE_CONTRACT_TESTS.json'),frozen_files_verified=len(files),raw_payloads_rederived=True,count_accounting_verified=True,scientific_qualification_separate_from_integrity=True,models_rehashed=True))
  lines=['# B570 第二模型家族独立验证','',f'状态：`{decision}`。数值/成本矩阵已封闭；归档恢复与远端回读状态见单独交付收据。','',f'按 PR #81 固定头执行，原桥接 32/32；SmolLM2 发现及观测资格 128/128；正式 384/384；16 次已暴露 warmup。共 {len(records)} 次完整请求，失败 {len(failed)}，缺失 {len(count["missing"])}，科学重试 0。','',f'整请求付费时间包括 reset、状态/phase 修改、draft/verify/sampling/rollback/sync、完整 payload 与 IDs/EOG 读回校验。原生 whole/generation 另列，不代替 host timer。','', '| 条件 | 端点与 R 全队列相等且稳定 | 完整 raw 与 R 相等 | raw 四轮稳定 |','|---|---|---|---|']
  for arm in ['R','N','M','C']:lines.append(f'| {arm} | {q[arm]["endpoint_qualified"]} | {q[arm]["raw_equal_to_R"]} | {q[arm]["raw_stable"]} |')
  lines+=['','| 比较 | qualified host GM（baseline/C） | 诊断 host GM |','|---|---|---|']

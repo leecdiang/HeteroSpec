@@ -9,8 +9,10 @@ def save(p,x):Path(p).parent.mkdir(parents=True,exist_ok=True);Path(p).write_tex
 def prepare_sources():
  shutil.copytree(Path('C:/hs/b570-closeout-v1/src'),R/'source/pr63-original-front',dirs_exist_ok=True)
  shutil.copyfile(PUBLIC/'code/closeout.py',R/'cpu-closeout.py')
+ shutil.copyfile(PUBLIC/'code/verify_states.py',R/'cpu-states.py')
  sources={p.relative_to(R).as_posix():dict(sha256=sha(p),bytes=p.stat().st_size) for p in (R/'source/pr63-original-front').rglob('*') if p.is_file()}
  sources['cpu-closeout.py']=dict(sha256=sha(R/'cpu-closeout.py'),bytes=(R/'cpu-closeout.py').stat().st_size)
+ sources['cpu-states.py']=dict(sha256=sha(R/'cpu-states.py'),bytes=(R/'cpu-states.py').stat().st_size)
  save(R/'CPU_CLOSEOUT_SOURCE_BINDINGS.json',dict(scope='CPU closeout/provenance only, frozen generation binaries and F0 unchanged',sources=sources))
 def seal():
  assert not (R/'LOCK.json').exists();assert all((p.parent/'SESSION_CLOSE.json').exists() for p in (R/'sessions').glob('*/SESSION.json'))
@@ -50,9 +52,10 @@ def restore(checkout,dest,receiptfile=None):
    if i%600==0:print('RESTORE objects',i,flush=True)
   for name,m in index['files'].items():
    p=dest/name;assert p.resolve().is_relative_to(dest.resolve());p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read('objects/'+m['sha256']));assert sha(p)==m['sha256']
- expected={n:load(dest/n) for n in ['A_VERIFICATION.json','B_VERIFICATION.json','D_VERIFICATION.json','INDEPENDENT_VERIFICATION.json','DECISION.json','COUNTS.json','NATURAL_DIAGNOSTIC.json']};logs=[]
+ expected={n:load(dest/n) for n in ['A_VERIFICATION.json','B_VERIFICATION.json','D_VERIFICATION.json','INDEPENDENT_VERIFICATION.json','DECISION.json','COUNTS.json','NATURAL_DIAGNOSTIC.json','STATE_FLOAT_VERIFICATION.json']};logs=[]
  for stage in ['A','B','D']:
   result=subprocess.run([sys.executable,str(dest/'code/verify.py'),stage,str(dest)],capture_output=True,text=True,encoding='utf8');logs.append(dict(stage=stage,returncode=result.returncode,stdout=result.stdout,stderr=result.stderr));assert result.returncode==0
+ result=subprocess.run([sys.executable,str(dest/'cpu-states.py'),str(dest)],capture_output=True,text=True,encoding='utf8');logs.append(dict(stage='states',returncode=result.returncode,stdout=result.stdout,stderr=result.stderr));assert result.returncode==0
  result=subprocess.run([sys.executable,str(dest/'cpu-closeout.py'),'final',str(dest)],capture_output=True,text=True,encoding='utf8');logs.append(dict(stage='closeout',returncode=result.returncode,stdout=result.stdout,stderr=result.stderr));assert result.returncode==0
  for name,x in expected.items():assert load(dest/name)==x,'fresh CPU rederivation changed '+name
  receipt=dict(status='PASS',utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),source_checkout=str(checkout),fresh_restore=str(dest),archive_sha256=meta['archive_sha256'],files=len(index['files']),objects=len(index['objects']),parts=len(meta['parts']),all_crc_sha_logical_files_verified=True,complete_CPU_rederivation_identical=True,logs=logs,new_forwards=0)

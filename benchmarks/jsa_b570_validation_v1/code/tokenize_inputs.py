@@ -37,8 +37,9 @@ discovery=[]
 for x in load(R/'QWEN_INPUTS.json'):
  raw=x.get('raw_prompt')
  if not raw:
-  # HumanEval raw user content is reconstructed from the retained exact Qwen wrapper.
-  formatted=x['formatted_prompt'];assert formatted.startswith('<|im_start|>user\n');raw=formatted.split('<|im_start|>user\n',1)[1].split('<|im_end|>',1)[0]
+  # Original HumanEval inputs were plain user strings; MBPP carries an explicit raw field.
+  formatted=x['formatted_prompt']
+  raw=formatted.split('<|im_start|>user\n',1)[1].split('<|im_end|>',1)[0] if formatted.startswith('<|im_start|>user\n') else formatted
  discovery.append(dict(id=x['id'],raw_prompt=raw,description=x.get('description',raw),description_sha256=hashlib.sha256(x.get('description',raw).encode()).hexdigest()))
 groups={'SMOL_DISCOVERY_INPUTS.json':discovery,'SMOL_CONFIRMATION_INPUTS.json':load(R/'CONFIRMATION_RAW_INPUTS.json')}
 all_inputs=[]

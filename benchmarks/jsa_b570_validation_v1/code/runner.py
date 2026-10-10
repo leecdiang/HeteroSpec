@@ -48,6 +48,11 @@ class Session:
   devices=re.findall(r'(Vulkan\d+): Intel\(R\) Arc\(TM\) B570 Graphics',available);assert len(devices)==1;device=devices[0]
   save(self.dir/'DEVICE_PREFLIGHT.json',dict(utc=now(),selected_device=device,available=available,model_forwards=0))
   models=load(R/('QWEN_MODELS.json' if self.family=='Qwen' else 'MODEL_CHOICE.json'))['models']
+  for role,model in models.items():assert sha(model['path'])==model['sha256'],role+' model identity'
+  inventory=json.loads(subprocess.check_output(['powershell.exe','-NoProfile','-Command',"@{device=@(Get-CimInstance Win32_VideoController | Select-Object Name,DriverVersion);processes=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -match 'b570|llama|ToDesk|forza'} | Select-Object ProcessId,Name,CommandLine)} | ConvertTo-Json -Depth 4 -Compress"],text=True,encoding='utf8'))
+  assert not any(re.search(r'b570|llama',x['Name'],re.I) for x in inventory['processes']),'OTHER_MODEL_GPU_SESSION'
+  assert next(x['DriverVersion'] for x in inventory['device'] if x['Name']=='Intel(R) Arc(TM) B570 Graphics')=='32.0.101.9034','DRIVER_IDENTITY_CHANGE'
+  save(self.dir/'ENVIRONMENT.json',dict(utc=now(),**inventory,temperature='UNAVAILABLE_NO_PINNED_READOUT',frequency='UNAVAILABLE_NO_PINNED_READOUT',policy='Record interference; never change desktop apps or power configuration.'))
   cmd=[str(self.exe),'--model',models['target']['path'],'--device',device,'--n-gpu-layers','all','--fit','off','--ctx-size','1024','--batch-size','512','--ubatch-size',str(ub),'--flash-attn','off','--n-predict',str(127 if native else 128),'--temp','0','--top-k','0','--top-p','1','--min-p','0','--seed','123','--threads','10','--threads-batch','10','--log-verbosity','3']
   if native:cmd+=['--spec-type','draft-simple','--spec-draft-model',models['draft']['path'],'--spec-draft-device',device,'--spec-draft-ngl','all','--spec-draft-n-max','2','--spec-draft-n-min','0','--spec-draft-threads','10','--spec-draft-threads-batch','10']
   else:cmd+=['--no-warmup','--reasoning','off','--simple-io','--no-conversation']
@@ -89,7 +94,8 @@ class Session:
    except queue.Empty:pass
   raise TimeoutError('Owned frontend timeout')
  def request(self,req):
-  unit=req['unit'];warm=req['warm'];b=budget();assert b['total']<704 and b['warm']<64 if warm else b['total']<704 and b['engineering']<(384 if self.stage=='D' else 256)
+  unit=req['unit'];warm=req['warm'];b=budget();assert b['total']<704
+  if warm:assert b['warm']<64
   if not warm:assert b['formal']<384 if self.stage=='D' else b['engineering']<256
   if stopped():raise RuntimeError('MANUAL_STOP')
   folder=R/'raw'/hashlib.sha256(unit.encode()).hexdigest()[:24];folder.mkdir(parents=True,exist_ok=False)
@@ -125,7 +131,11 @@ class Session:
 def run(stage):
  if stage!='A':
   assert load(R/'REMOTE_FREEZE_RECEIPT.json')['status']=='PASS';assert load(R/'A_VERIFICATION.json')['status']=='PASS'
-  for rel,x in load(R/'F0.json')['frozen_files'].items():assert sha(R/rel)==x['sha256'],rel
+  for rel,x in load(R/'F0.json')['frozen_files'].items():
+   assert sha(R/rel)==x['sha256'],rel
+   if rel.startswith('code/'):assert sha(REPO/'benchmarks/jsa_b570_validation_v1'/rel)==x['sha256'],rel+' current source'
+  events=[json.loads(s) for s in (R/'LEDGER.jsonl').read_text(encoding='utf8').splitlines()]
+  first=next(e for e in events if e['event']=='SESSION_START');assert (datetime.now(timezone.utc)-datetime.fromisoformat(first['utc'])).total_seconds()<7*86400,'CALENDAR_BUDGET'
  schedule=load(R/'REQUEST_SCHEDULE.json')[stage]
  for spec in schedule:
   if (R/'sessions'/spec['session']).exists():

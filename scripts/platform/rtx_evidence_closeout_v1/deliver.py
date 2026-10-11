@@ -132,7 +132,13 @@ def publish(stop=None):
     receipt=restore(remote,LOCAL/'restored-result-remote',with_analysis=not bool(stop));receipt.update(actual_authenticated_remote_bytes=True,remote_commit=commit,git_blob=item['sha']);save(PUB/'RESTORE_REMOTE.json',receipt)
     subprocess.run(['git','add','--sparse','benchmarks/rtx_evidence_closeout_v1/RESTORE_REMOTE.json'],cwd=REPO,check=True);subprocess.run(['git','commit','-m','Record authenticated remote CAS restoration'],cwd=REPO,check=True);subprocess.run(['git','push'],cwd=REPO,check=True)
     body=LOCAL/'PR_BODY.md';body.write_text(('PR #89 的真实 RTX 执行结果。'+('触发具体协议停止线；保留所有已付记录与未完成项。' if stop else '完成固定普通 UB 筛选、四模式机制尝试及 3600 正式请求与 150 预热；保留逐比较完整资格、负收益和退化任务。')+'\n\n固定三家族、k3、Q8、ctx1024、counts通道。F0A/F0B在对应推理前commit/push并逐GitHub blob读回。完整科学CAS和作者源码档案、独立CPU复算、本地与认证远端实际恢复收据随结果交付。\n\n原生计数、分母及物理micrograph行数单独审计。真实lite仅提供异步API/自然就绪标记，不能证明互斥完成wall分解，因此模型保留 MODEL_TIMING_UNAVAILABLE，不增加同步、不用正式费用拟合。\n\n请从 benchmarks/rtx_evidence_closeout_v1/RESULTS.md 阅读结果/停止原因；此PR不合并或修改论文/release。\n'),encoding='utf-8')
-    url=subprocess.check_output(['gh','pr','create','--draft','--repo','leecdiang/HeteroSpec','--base','codex/rtx-evidence-closeout-plan-20261011','--head',git('branch','--show-current'),'--title','RTX closeout: '+('protocol stop and complete paid evidence' if stop else 'strong ordinary baselines and verified request workload'),'--body-file',str(body)],cwd=REPO).decode().strip()
+    title='RTX closeout: '+('protocol stop and complete paid evidence' if stop else 'strong ordinary baselines and verified request workload')
+    existing=json.loads(subprocess.check_output(['gh','pr','list','--repo','leecdiang/HeteroSpec','--head',git('branch','--show-current'),'--state','open','--json','url'],cwd=REPO))
+    assert len(existing)<=1
+    if existing:
+        url=existing[0]['url'];subprocess.run(['gh','pr','edit',url,'--repo','leecdiang/HeteroSpec','--title',title,'--body-file',str(body)],cwd=REPO,check=True)
+    else:
+        url=subprocess.check_output(['gh','pr','create','--draft','--repo','leecdiang/HeteroSpec','--base','codex/rtx-evidence-closeout-plan-20261011','--head',git('branch','--show-current'),'--title',title,'--body-file',str(body)],cwd=REPO).decode().strip()
     save(LOCAL/'RESULT_PR.json',dict(url=url,utc=now(),status='PROTOCOL_STOP' if stop else 'COMPLETE',attachment_pending=True))
     status('PROTOCOL_STOP_DELIVERED' if stop else 'COMPLETE',result_PR=url)
 

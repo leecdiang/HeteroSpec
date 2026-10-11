@@ -5,6 +5,20 @@ import closeout
 
 TEXT={'.json','.jsonl','.md','.txt','.csv','.log','.yaml','.yml','.py','.toml','.cpp','.h','.tex'}
 SKIP={'.git','__pycache__','node_modules','vendor','third_party','models','tools','hf-cache','datasets','env','python311','pinned-source','native-build','native-source','source','c-source','x-source','build','c-build','x-build','bin','dependencies','site-packages','llm-42','static-native','restored84'}
+def reachable_text_objects(known_git):
+    # Enumerate all reachable snapshots without fetching unrelated binary blobs
+    # from this partial clone merely to discover their object type.
+    trees=set(git('log','--all','--format=%T').splitlines());objects={}
+    for tree in sorted(trees):
+        raw=subprocess.check_output(['git','ls-tree','-r','-z','--full-tree',tree],cwd=REPO)
+        for entry in raw.split(b'\0'):
+            if not entry:continue
+            metadata,name=entry.split(b'\t',1);_,kind,oid=metadata.split()
+            name=name.decode('utf-8');oid=oid.decode('ascii')
+            if kind==b'blob' and Path(name).suffix.lower() in TEXT and oid not in known_git:objects.setdefault(oid,name)
+    save(LOCAL/'REACHABLE_TEXT_TREES.json',dict(complete_reachable_snapshot_trees=sorted(trees),additional_text_objects=objects,enumeration='all reachable commit root trees; recursive ls-tree; no binary lazy-fetch'))
+    return objects
+
 def main():
     prior=read(OLDPUB/'EXPOSURE_AUDIT.json');assert prior['status']=='PASS' and not prior['errors']
     catpath=LOCAL/'restored84/third-family/EXPOSURE_CATALOG.json';assert sha(catpath)==prior['catalog_sha256']
@@ -64,8 +78,7 @@ def main():
     save(LOCAL/'AUDIT_PULL_HEADS.json',[dict(number=p['number'],head=p['head']['sha'],base=p['base']['sha']) for p in pulls])
     subprocess.run(['git','fetch','origin',*[f'refs/pull/{p["number"]}/head:refs/closeout-audit/pr-{p["number"]}' for p in pulls]],cwd=REPO,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     assert git('rev-parse','--is-shallow-repository')=='false','complete reachable history required'
-    objects=subprocess.check_output(['git','rev-list','--objects','--all'],cwd=REPO).decode('utf-8').splitlines()
-    newobjects={s.split(' ',1)[0]:s.split(' ',1)[1] for s in objects if ' ' in s and Path(s.split(' ',1)[1]).suffix.lower() in TEXT and s.split(' ',1)[0] not in known_git}
+    newobjects=reachable_text_objects(known_git)
     proc=subprocess.Popen(['git','cat-file','--batch'],cwd=REPO,stdin=subprocess.PIPE,stdout=subprocess.PIPE)
     for oid,name in newobjects.items():
         proc.stdin.write((oid+'\n').encode());proc.stdin.flush();head=proc.stdout.readline().split();assert len(head)==3 and head[1]==b'blob'

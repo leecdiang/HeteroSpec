@@ -348,5 +348,55 @@
     "outer_calendar_days": 7
   },
   "memory_proof_claim_scope": "only actual traced worker intervals and bound allocations; no general B570 capacity claim",
-  "scope_boundaries": "distinct Q6 target reference; physical UB1 target continuation; not RTX query-batch algorithm"
+  "scope_boundaries": "distinct Q6 target reference; physical UB1 target continuation; not RTX query-batch algorithm",
+  "mechanism": {
+    "status": "PROSPECTIVE_NOT_EXECUTED",
+    "profile_arms": [
+      "R_stock",
+      "R_prod",
+      "M_match",
+      "C_k1"
+    ],
+    "matched_arm": "M_match",
+    "candidate_arm": "C_k1",
+    "reference_arm": "R_stock",
+    "calibration_source_path": "benchmarks/b570_memory_followup_v1/ENGINEERING_INPUTS.json",
+    "calibration_source_head": "4db9bc501fa01c76db50721e7d11e9a0d1e53782",
+    "calibration_task_ids": [
+      "MBPP/415",
+      "MBPP/439",
+      "MBPP/441",
+      "GSM8K/test/16",
+      "GSM8K/test/1198",
+      "GSM8K/test/1257"
+    ],
+    "profile_units_per_family": 72,
+    "profile_modes": [
+      "baseline",
+      "lite",
+      "heavy"
+    ],
+    "coefficient_source_mode": "lite",
+    "model_sealed_before_confirmation": true,
+    "fit_on_confirmation": false,
+    "online_selector": false,
+    "profile_budget_included_in_engineering": true,
+    "max_validation_mape": 0.2,
+    "min_direction_accuracy": 0.8,
+    "direction_deadband_fraction": 0.05,
+    "minimum_informative_task_sessions": 6,
+    "prompt_bins_upper": [
+      64,
+      128,
+      256,
+      768
+    ],
+    "output_bins_upper": [
+      32,
+      64,
+      127,
+      128
+    ]
+  },
+  "profile_units_per_family": 72
 }

@@ -36,7 +36,7 @@ P0必须得到实际可用的事件覆盖与load allocation归因才能进入for
 
 用于物理证据的已冻结轻量ETW必须统一覆盖各formal worker加载与请求期间，其真实共同系统观测成本包含在wall request结果中，明确正式结果为该可观测合同下的费用。若无法在formal获得同范围证据，qualified resident ratios置null，不用工程驻留样本保证formal全部时期。event-loss、覆盖与allocation对应逐worker记录，不以预先true字段填充。
 
-组件profiling只在预算内的曝光工程中进行。把实际prefill、draft、verify、phase-binding/调度、rollback/sync的CPU跨度、可得GPU跨度及异步重叠分开。不可将N/C两个不同输出路径的时间差称为纯修复算子税；N/C不保参考时仅诊断。
+组件与工作量profiling按 [MECHANISM_PROTOCOL.md](MECHANISM_PROTOCOL.md)：6曝光输入×R_stock/R_prod/M_match/C_k1四arm×baseline/lite/heavy=最多72请求，计入256总预算，驻留与原生资格优先。三模式保留同一ETW；heavy不得校准正式费用，lite不能新增同步。不能将N/C输出不同的时间差当纯修复税。驻留未通过则仅整理已暴露计数/缺项，不为成本模型绕过P0启动forward。
 
 ## 4. 新确认与排程
 

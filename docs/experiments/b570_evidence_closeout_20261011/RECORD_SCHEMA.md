@@ -41,3 +41,15 @@ freeze JSON含actual commit、actual_remote_blobs_verified、before_first_formal
 
 每block另保存命令、loaded metadata/PID、全部warmup/failed、source版本和完整生命周期；搜索/trace探测/计数capture单独列账。分析文件附原始record哈希清单和独立复算收据。
 
+
+## 工作量和模型接口
+
+正式记录可附 workload 与 feature_units（无重型trace）；各feature单位及计数守恒见MECHANISM_PROTOCOL和mechanism.py。workload缺失标为缺项，primary输出/成本资格独立处理。所有字段源于新冻结native adapter和实际原始证据，不以boolean替代核验。
+
+MODEL_CALIBRATION.json = {"rows": [...]}，精确包含每family固定6题×4arms的lite校准行。每行phase=exposed_profile、profile_mode=lite、slot/family/condition/task、wall_ms、feature_units、component_ms（键完全对应）、actual_no_added_sync=true、completed_wall_partition=true、on_off_raw_equal=true、source_identity_sha256、raw_evidence_sha256。feature_units包含target_prefill_ids、draft_prefill_ids、draft_continuation_rows、reconcile_output_ids、rollback_calls、request_channel及target_continuation_calls_w1..w(k+1)。component_ms是真实同一clock完成wall互斥分项；无对应work却有费用不可硬塞该分项，先检查phase定义。
+
+calibrate返回模型只处于COEFFICIENTS_REQUIRE_F0B_SEAL；F0B额外绑定model_sha256=closeout.digest(model)、model_frozen_before_first_formal=true，以及实际模型文件字节SHA。receipt不代表此设计已完成native校准。独立raw verifier仍需复算原始计数、时钟与Git封存时间。
+
+正式feature_units只用于冻结模型预测；确认wall不参与系数拟合。未覆盖feature输出UNSUPPORTED_SHAPE与null，不能填零。模型文件状态MODEL_TIMING_UNAVAILABLE时保留原因与空系数，仍可交付有资格的原生成本结果。
+
+workload原生字段与守恒见mechanism.workload_metrics；正式记录还含source_identity_sha256，与该家族校准的完整source/runtime/model身份相同。验证caller每周期含一个seed行，实际draftUB1行数等于continuation调用数。初始/bonus/correction/fallback为互斥提交来源。feature_units不得从请求耗时或模型预测反推。组件wall闭合精度为max(0.05ms,0.001*wall_ms)。

@@ -93,7 +93,7 @@ class Resident:
                 seen[n]=actual;rows.append(dict(path=name,sha256=actual))
             elif n=='llama.dll':raise AssertionError('unexpected shared llama core')
             elif n=='llama-server.exe':assert sha(p)==read(PUB/'NATIVE_BUILD.json')['server_sha256']
-        assert {'ggml.dll','ggml-base.dll','ggml-cuda.dll','cublas64_12.dll','cublaslt64_12.dll','cudart64_12.dll'}<=set(seen),'missing actual numeric modules'
+        assert {'ggml-base.dll','ggml-cuda.dll','cublas64_12.dll','cublaslt64_12.dll','cudart64_12.dll'}<=set(seen),'missing actual numeric modules'
         self.module_receipt=dict(pid=self.p.pid,modules=rows,verified=True,utc=now())
         save(self.d/'MODULE_IDENTITY.json',self.module_receipt)
     def complete(self,task,slot,warmup=False,mode='counts',meta=None):

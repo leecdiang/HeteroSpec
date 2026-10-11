@@ -1,22 +1,34 @@
-# RTX 执行端交接提示词
+# RTX 执行端完整提示词
 
-在真实RTX 5070 Ti Laptop主机完成本设计，创建独立结果Draft PR；以本补全PR实际HEAD为执行来源，不回退到旧稿或覆盖#84。先读取README、ASSESSMENT、PROTOCOL、DESIGN、ASSETS、SOURCE_BINDINGS、MINIMUM_EXCLUSIONS、EVIDENCE_AUDIT和CPU_VALIDATION。此PR只提供CPU规划/复算工具，没有声称native已编译或开始GPU。
+请在真实 RTX 5070 Ti Laptop 主机持续完成 HeteroSpec 最终证据补全，并创建独立结果 Draft PR。
 
-1. 实读当前HEAD及所有Git blob并记录bytes/hash，恢复#84完整作者源码/EXE/数值DLL，重新核验ASSETS。独立新study目录和single-writer ledger，源码/runtime身份全部绑定。新实现不得修改旧冻结runner。
-2. 按协议实现controller adapter，将actual model/condition/phase/原生全输出/cap/EOG/费用等填入RECORD_SCHEMA.md。修改#84控制器的硬编码排程仅能在新目录，保留其numeric路径。
-3. 完成全历史审计与12曝光工程题，封存/发布/实际remote读回F0A后才forward。每家族360 paid工程上限。用完整ordinary网格选择R_prod，不使用任何confirmation速度。
-4. 以MINIMUM_EXCLUSIONS加完整历史排除、偶数description桶准备新24题；输入格式沿用#84的tasks/families字段并补history_audit。每题保留完整description、prompt与native IDs。
-5. 用closeout.py select-ordinary和schedule生成选择与五条件五轮排程，独立验证顺序/slot/budget；冻结共同F0B并读回remote bytes。
-6. 建立单独本地无人值守控制器，按实际冻结排程运行全部三家族；无需Codex/OpenAI API轮询，不因Smol负收益删除或停止其合格确认。正式请求不自动retry；metadata有限I/O重试不得重发推理。结果先独立唯一落盘，监视器不得干扰写入。
-7. 工程重型capture关闭后运行3750 formal/warm请求预算（3600+150）；全部实际启动计费。沿用冻结host准入，按16h生命周期/7天停止线结束。
-8. 原生record adapter必须保留raw tokens与结束语义；只转换字段名，不裁剪输出。closeout.py analyse核对完整比较，独立raw verifier再核对CPU结果。生成中文结果与全部负例。
-9. 实际本地恢复及认证Git科学档案恢复/字节读回，提交独立结果Draft PR并更新其状态。不能合并、发布或修改paper/release。
+仓库：https://github.com/leecdiang/HeteroSpec
+执行设计：https://github.com/leecdiang/HeteroSpec/pull/89
+设计分支：codex/rtx-evidence-closeout-plan-20261011
+已绑定原结果：#84 / 59b0f87a7011dad15f5e1146591ae83d9556d0e7
 
-执行命令模板（不会启动GPU）：
+我已授权本主机执行这个有界实验、实现必要的新控制/计数层、保存完整科学档案和创建结果 Draft PR。请完成到可核验结果或协议停止报告，不停在计划。不要合并、修改论文/release或启动本范围外模型搜索。
+
+1. 先核对 #89 实际最新 HEAD、base、#84 来源与工作树，完整读取 docs/experiments/rtx_evidence_closeout_20261011/ 中 README、ASSESSMENT、CLAIM_EVIDENCE、PROTOCOL、MECHANISM_PROTOCOL、DESIGN、ASSETS、SOURCE_BINDINGS、MINIMUM_EXCLUSIONS、EVIDENCE_AUDIT、PRIOR_WORKLOAD_AUDIT、RECORD_SCHEMA、CPU_VALIDATION 和本文件。以实际读取字节执行；设计HEAD若更新要用最新内容，不能沿用先前未含机制扩展的commit。原始结果与冻结均只读，新建结果分支接在实际 #89 HEAD 上。
+2. 实际恢复 #84 的完整作者 source/binary/DLL/CAS 和模型字节，核验哈希、native IDs/EOG、模板、加载GPU/UB/capacity与原计时。此设计的CPU复算没有替你恢复完整raw archive，也没有编译native。保留来源未认证项，不凭报告宣布恢复完成。
+3. 保持三家族 Qwen/SmolLM2/Llama、绑定Q8文件、k3、ctx1024、F16 KV、FAoff、greedy seed123、threads24、draftUB1、batch requested2048/effective1024、prompt<=768、cap128。建立独立 single-writer ledger/worker/controller，所有失败、加载、预热和实现修复收费，正式 retry0。新数值路径不调参。
+4. 新forward前封存 F0A（源码/完整依赖/设计、曝光工程与校准输入、观测、计时、预算），commit/push并实际认证Git blob逐字节读回。工程每家族最多360，总1080；owned进程16小时，outer7天。不依赖Codex/OpenAI API轮询。
+5. 按固定 ordinary UB1/4/32/128/512×12曝光题×2重复，支付稳定UB1参考并选择完整保持参考输出的R_prod；只按工程费用选择并冻结，不看新确认速度。验证 R/M0/M3/R_prod/C3、工程N，以及实际phase/reset/graph/cap/EOG/rollback/最长输入。资格按比较独立，保留失败条件和全部负成本。
+6. 机制解释是本轮必做的有界尝试：按DESIGN中6个旧曝光任务（3MBPP+3GSM8K）与 R/R_prod/M3/C3 四arm，执行固定 baseline/lite/heavy 三模式，共72请求/家族，计入上述360。核验三模式完整raw输出与计数语义，报告lite扰动；heavy形状/同步时间不得用于正式费用拟合，不新增同步把enqueue时间变GPU时间。
+7. 精确记录Acceptance两种分母、proposal五种去向、每周期接受前缀/实际进展、draft prefill/proposal/catch-up调用及行数、target prefill/verify/replay/fallback调用宽度及实际物理工作、rollback/sampling/sync/channel成本，以及prompt/output IDs、EOG/CAP和固定长度桶。原生计数先审计映射，不把所有未接受proposal叫拒绝。
+8. 用6曝光任务的有效lite互斥完成wall分项校准MECHANISM_PROTOCOL指定的一阶Break-Even模型，按family/arm拟合，禁止按域或新题重新拟合。工程阶段冻结MODEL_CALIBRATION和BREAK_EVEN_MODEL；没有可用完成span则冻结MODEL_TIMING_UNAVAILABLE及原因，仍收尾原生资格/成本，不扩预算追成功。它是利用执行后work的条件性解释模型，不是online选择器。
+9. 全可访问历史按ID与描述排除后，按原偶数description桶准备新12MBPP+12GSM8K题；最小排除表不能代替全历史审计。共同F0B封存R_prod、全部输入/native IDs、source/runtime/计数/观测/排程/统计和模型字节，并实际remote读回，先于任何新确认warmup/forward。不能为Smol变快换题/改k/改草稿。
+10. 运行全部5arms×24题×5轮×2连续会话×3家族=3600formal+150warm，位置平衡和顺序由schedule生成。正式固定lite、关闭heavy capture，记录实际完整request费用与观测开销。合格Smol即使负收益也完成确认，不补槽、不覆盖、不裁输出、不根据域在线routing。
+11. closeout.py analyse独立核验完整raw资格与双基线成本；mechanism.py analyse只用新题work和冻结参数验证预测、MAPE/MAE、signed residual、matched/prod break-even方向、域/长度/停止分层。按全任务/会话分母展示未覆盖形状、缺计数、近盈亏边界和模型否证，不用新确认wall调系数。Qwen新1.106与历史约1.035只能列来源/设计差异，不宣称优化提升。
+12. 交付独立 benchmarks/rtx_evidence_closeout_v1 的完整raw arrays/ledger、源码/binary/模型绑定、所有ordinary候选、phase/counter证据、WORKLOAD_RECORDS、校准/模型/验证JSON、MECHANISM_REPORT和分解图/预测–实测散点，以及中文结果、全部负例/停止原因。真实独立CPU复算、本地和认证Git科学档案恢复/读回完成后创建结果Draft PR，base为本次实际#89分支。预算/源码/资格阻断时提交可恢复停止报告，不能临时重选方案。
+
+CPU命令模板（不启动GPU）：
 ```bash
 python scripts/platform/rtx_evidence_closeout_v1/closeout.py --design docs/experiments/rtx_evidence_closeout_20261011/DESIGN.json validate
+python -m unittest discover -s scripts/platform/rtx_evidence_closeout_v1 -p 'test_*.py'
 python scripts/platform/rtx_evidence_closeout_v1/closeout.py --design docs/experiments/rtx_evidence_closeout_20261011/DESIGN.json select-ordinary --rows <exposed_ordinary_rows.json> --out <selected_ordinary.json>
+python scripts/platform/rtx_evidence_closeout_v1/mechanism.py --design docs/experiments/rtx_evidence_closeout_20261011/DESIGN.json calibrate --calibration <MODEL_CALIBRATION.json> --out <BREAK_EVEN_MODEL.json>
 python scripts/platform/rtx_evidence_closeout_v1/closeout.py --design docs/experiments/rtx_evidence_closeout_20261011/DESIGN.json schedule --inputs <new_confirmation_inputs.json> --ordinary <selected_ordinary.json> --out <new_formal_plan.json>
+python scripts/platform/rtx_evidence_closeout_v1/mechanism.py --design docs/experiments/rtx_evidence_closeout_20261011/DESIGN.json analyse --plan <new_formal_plan.json> --inputs <new_confirmation_inputs.json> --records <formal_records.json> --freeze <F0B.json> --model <BREAK_EVEN_MODEL.json> --out <MODEL_VALIDATION.json>
 ```
-遇到无法恢复源码、预算或资格阻断，完成可恢复停止报告；不得临时替换为新模型/更大k/更低精度来追正结果。
-
+所有尖括号都是接口占位；填写真实导出与封存信息，不制造数据。持续执行到上述交付完成或协议停止线。

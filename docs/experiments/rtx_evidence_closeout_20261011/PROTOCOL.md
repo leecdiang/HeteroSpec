@@ -22,7 +22,7 @@ M0=ordinary/mask0/UB4；M3=target-only/mask3/UB4；C3=spec/mask3/UB4/k3。工程
 
 工程须核验actual图/phase/reset/graph reuse/capture开关、cap1/2/3/4/31/128、原生EOG、rollback和最长768 prompt。M0/R_prod可能不保参考，照样保留并完成其有限测量；未合格的普通路径不成为合格速度基线。固定C3实现不满足自身工程/内存条件则该家族按停止分支交付，不重选mask或k。
 
-专门profiling最多每家族36完整请求：事前固定6个曝光输入×R_prod/M3/C3×capture on/off。计数/capture的数值及边界一致性先检验。记录target/draft prefill、proposal、verification、reconciliation、caller/micrograph/occupied-query数量及接受进展。CPU跨度、GPU event跨度与异步重叠分别报告；没有独立GPU timing就留空，禁止把request-generation差额分摊成组件费用。profiling时长不用选择新候选；正式关闭重型observer。
+工作量归因与盈亏平衡必须按 [MECHANISM_PROTOCOL.md](MECHANISM_PROTOCOL.md) 做有界尝试：固定6个已暴露MBPP/GSM8K输入，R/R_prod/M3/C3四arm×baseline/lite/heavy=每家族72完整工程请求，均计入360预算。只用无新增同步的有效lite计时校准；heavy只验证计数/形状。正式冻结lite通道和工程校准模型，不从新任务重拟合或为Smol追正结果。
 
 ## 3. 新输入、共同冻结、排程
 

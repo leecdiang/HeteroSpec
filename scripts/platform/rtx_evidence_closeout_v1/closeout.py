@@ -25,6 +25,15 @@ def validate(design):
     w = len(design["families"]) * design["sessions"] * design["rounds"] * 5
     assert n == design["budgets"]["formal_requests"] and w == design["budgets"]["formal_warmups"]
     assert design["budgets"]["engineering_units"] > 0
+    mech = design["mechanism"]
+    assert mech["profile_units_per_family"] == 72
+    assert set(mech["profile_modes"]) == {"baseline", "lite", "heavy"}
+    assert mech["coefficient_source_mode"] == "lite" and mech["model_sealed_before_confirmation"] is True
+    assert mech["fit_on_confirmation"] is False and mech["online_selector"] is False
+    assert mech["profile_budget_included_in_engineering"] is True
+    assert len(mech["calibration_task_ids"]) == len(set(mech["calibration_task_ids"])) == 6
+    assert collections.Counter(t.split("/")[0] for t in mech["calibration_task_ids"]) == {"MBPP": 3, "GSM8K": 3}
+    assert set(mech["profile_arms"]) <= {c["name"] for c in design["conditions"]}
     if design["platform"] == "RTX":
         assert design["ordinary_ub_grid"] == [1, 4, 32, 128, 512]
         assert {c["name"] for c in design["conditions"]} == {"R", "M0", "M3", "R_prod", "C3"}

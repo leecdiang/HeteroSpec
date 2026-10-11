@@ -2,7 +2,7 @@
 
 本PR给出最新#84正式结果之后的最后证据计划及CPU复算。GPU/trace/native新实验尚未执行。
 
-入口：[整体判断](ASSESSMENT.md)、[主张与证据](CLAIM_EVIDENCE.md)、[执行协议](PROTOCOL.md)、[执行端交接](EXECUTION_PROMPT.md)、[机器设计](DESIGN.json)、[资产](ASSETS.json)、[源码绑定](SOURCE_BINDINGS.json)、[最小排除](MINIMUM_EXCLUSIONS.json)、[现有证据CPU复算](EVIDENCE_AUDIT.json)、[记录接口](RECORD_SCHEMA.md)、[CPU验证](CPU_VALIDATION.json)。
+入口：[整体判断](ASSESSMENT.md)、[主张与证据](CLAIM_EVIDENCE.md)、[执行协议](PROTOCOL.md)、[工作量与盈亏模型](MECHANISM_PROTOCOL.md)、[执行端交接](EXECUTION_PROMPT.md)、[机器设计](DESIGN.json)、[资产](ASSETS.json)、[源码绑定](SOURCE_BINDINGS.json)、[最小排除](MINIMUM_EXCLUSIONS.json)、[现有证据CPU复算](EVIDENCE_AUDIT.json)、[记录接口](RECORD_SCHEMA.md)、[CPU验证](CPU_VALIDATION.json)。
 
 接在 RTX #84 的实际结果分支上。保留三家族和k3，补同UB普通M0、预定网格R_prod及收益归因；正式五条件、五轮、两会话。
 
@@ -17,3 +17,9 @@ python scripts/platform/rtx_evidence_closeout_v1/audit_previous.py --root . --pl
 
 静态PASS只代表设计/CPU边界检查通过，不代表native编译、原始档案再验证或物理驻留证明。
 
+
+本次扩展明确检验Acceptance、实际draft/target work、长度/停止分布与冻结成本模型。模型失败也是结果；历史Qwen1.035与新1.106不构成实现优化A/B。
+
+工作量工具：mechanism.py calibrate / analyse；必须保留真实校准/原始证据并事前封存。它不实现native计数hook或GPU timer，CPU测试不证明计时正确。
+
+已有数据再分析：[原生计数/长度](PRIOR_WORKLOAD_AUDIT.md)、[机器复算](PRIOR_WORKLOAD_AUDIT.json)。

@@ -413,6 +413,55 @@
     "owned_gpu_hours": 16,
     "outer_calendar_days": 7
   },
-  "profile_units_per_family": 36,
-  "scope_boundaries": "single seq; same-day descriptive effects; no concurrency/energy/FP32-logit-equivalence claim"
+  "profile_units_per_family": 72,
+  "scope_boundaries": "single seq; same-day descriptive effects; no concurrency/energy/FP32-logit-equivalence claim",
+  "mechanism": {
+    "status": "PROSPECTIVE_NOT_EXECUTED",
+    "profile_arms": [
+      "R",
+      "R_prod",
+      "M3",
+      "C3"
+    ],
+    "matched_arm": "M3",
+    "candidate_arm": "C3",
+    "reference_arm": "R",
+    "calibration_source_path": "benchmarks/jsa_third_family_v1/CONFIRMATION_INPUTS.json",
+    "calibration_source_head": "59b0f87a7011dad15f5e1146591ae83d9556d0e7",
+    "calibration_task_ids": [
+      "MBPP/19",
+      "MBPP/282",
+      "MBPP/406",
+      "GSM8K/test/287",
+      "GSM8K/test/16",
+      "GSM8K/test/1198"
+    ],
+    "profile_units_per_family": 72,
+    "profile_modes": [
+      "baseline",
+      "lite",
+      "heavy"
+    ],
+    "coefficient_source_mode": "lite",
+    "model_sealed_before_confirmation": true,
+    "fit_on_confirmation": false,
+    "online_selector": false,
+    "profile_budget_included_in_engineering": true,
+    "max_validation_mape": 0.2,
+    "min_direction_accuracy": 0.8,
+    "direction_deadband_fraction": 0.05,
+    "minimum_informative_task_sessions": 6,
+    "prompt_bins_upper": [
+      64,
+      128,
+      256,
+      768
+    ],
+    "output_bins_upper": [
+      32,
+      64,
+      127,
+      128
+    ]
+  }
 }

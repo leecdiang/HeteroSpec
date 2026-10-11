@@ -4,10 +4,13 @@ Execution plan: PR85 at `840ef5fef96068e0e40eee434d89d07bbad6a592`. New result b
 
 The actual B570 SDK memory template compiled after a retained CPU-only field correction. All numerical DLLs match the restored #82 originals. Fifteen plan source blobs,307 restored private source files and the full #82 CAS restoration were independently checked. Hardware/driver/display/power inventory is bound.
 
-8 actual zero-forward load combinations are recorded; independent parser checks: 730. All7 memory guard mutations were rejected. CPU planning selftests passed19 tests.
+11 actual zero-forward load combinations are recorded; independent parser checks: 561324. All7 memory guard mutations were rejected. CPU planning selftests passed19 tests.
 
 | Actual configuration | Loaded dedicated headroom (MiB) | Native zero-forward status |
 |---|---:|---|
+| LLAMA_Q4_UB32_OUT1 | 209.2734375 | BLOCKED_INSUFFICIENT_LOADED_HEADROOM |
+| LLAMA_Q8_LOGFIX_UB32_OUT1 | unavailable | BLOCKED_LOAD_ERROR |
+| LLAMA_Q8_UB32_OUT1 | unavailable | BLOCKED_LOAD_ERROR |
 | QWEN_Q4 | 485.84375 | BLOCKED_INSUFFICIENT_LOADED_HEADROOM |
 | QWEN_Q4_UB128_OUT1 | 438.71875 | BLOCKED_INSUFFICIENT_LOADED_HEADROOM |
 | QWEN_Q4_UB32 | 489.34375 | BLOCKED_INSUFFICIENT_LOADED_HEADROOM |
@@ -19,8 +22,8 @@ The actual B570 SDK memory template compiled after a retained CPU-only field cor
 
 ## Current family decisions
 
-- Qwen: `BLOCKED_LOADED_HEADROOM_OR_LOAD_ERROR`; 8/8 zero-forward load combinations,0/640 engineering requests,0/800 confirmation requests,qualified ratio=null.
-- Llama: `PENDING_PINNED_TARGET_ASSET_AND_ACTUAL_LOAD`; 0/8 zero-forward load combinations,0/640 engineering requests,0/800 confirmation requests,qualified ratio=null.
+- Qwen: `BLOCKED_LOADED_HEADROOM_OR_LOAD_ERROR`; 8/8 zero-forward load combinations,0 generated requests and8/640 conservatively charged engineering units,0/800 confirmation requests,qualified ratio=null.
+- Llama: `BLOCKED_LOADED_HEADROOM_OR_LOAD_ERROR`; 3/8 zero-forward load combinations,0 generated requests and3/640 conservatively charged engineering units,0/800 confirmation requests,qualified ratio=null.
 
 Dedicated headroom is calculated from the actual model-owning worker PID's device-local heap only. The separate system heap is retained and never added to device-local free bytes. Required minimum is536,870,912 bytes (512MiB). File-size estimates and another process's usage are not load proof.
 
@@ -37,3 +40,7 @@ The hash-bound `code/load_controller.py` is a serial zero-forward loading contro
 Observed zero-forward native load intervals are about seconds, not an estimate of inference throughput. No measured forward rate exists from which to estimate a complete optimization/confirmation run. Whole study elapsed time is conservatively charged as each family's owned-GPU-lifetime upper bound, including CPU/download time.
 
 Separate new CAS packaging, actual fresh restoration and remote Git readback remain tracked in the delivery receipt. No automatic merge, manuscript edit, backend upgrade, offload fallback or target-precision change is authorized by this result.
+
+[中文报告](REPORT.zh-CN.md), [恢复步骤](RESTORE.md), [canonical CAS](CAS_INDEX.json), [实际本地恢复](LOCAL_RESTORE.json).
+
+ASSET_CHECKS retains original design-pin pending/false fields; actual full-file verification and independent native vocabulary receipts state the executed findings. The final closure follows the separate remote receipt.

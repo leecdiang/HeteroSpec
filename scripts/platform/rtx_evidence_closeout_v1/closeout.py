@@ -26,11 +26,17 @@ def validate(design):
     assert n == design["budgets"]["formal_requests"] and w == design["budgets"]["formal_warmups"]
     assert design["budgets"]["engineering_units"] > 0
     mech = design["mechanism"]
-    assert mech["profile_units_per_family"] == 72
-    assert set(mech["profile_modes"]) == {"baseline", "lite", "heavy"}
+    assert mech["profile_units_per_family"] == 128
+    assert mech["profile_request_slots_per_family"] == 96
+    assert set(mech["profile_modes"]) == {"baseline", "counts", "lite", "heavy"}
     assert mech["coefficient_source_mode"] == "lite" and mech["model_sealed_before_confirmation"] is True
     assert mech["fit_on_confirmation"] is False and mech["online_selector"] is False
     assert mech["profile_budget_included_in_engineering"] is True
+    assert mech["profile_reserved_separately"] is True
+    assert mech["validation_source_mode"] == design["formal_observation_mode"] == "counts"
+    assert design["formal_observation"] == {"phase_timers": False, "heavy_capture": False, "etw": False, "added_sync": False}
+    assert design["budgets"]["engineering_units"] == len(design["families"]) * (
+        design["budgets"]["core_engineering_per_family"] + design["budgets"]["profile_units_per_family"])
     assert len(mech["calibration_task_ids"]) == len(set(mech["calibration_task_ids"])) == 6
     assert collections.Counter(t.split("/")[0] for t in mech["calibration_task_ids"]) == {"MBPP": 3, "GSM8K": 3}
     assert set(mech["profile_arms"]) <= {c["name"] for c in design["conditions"]}
@@ -41,6 +47,9 @@ def validate(design):
     else:
         assert design["platform"] == "B570"
         assert design["required_physical_residency"] is True
+        assert design["physical_residency_required_for"] == "fully_resident_claim_only"
+        assert design["unknown_residency_blocks_request_study"] is False
+        assert design["formal_etw_required"] is False and design["operational_memory_gate_required"] is True
         assert design["signed_dedicated_headroom_bytes"] == 536870912
         assert design["target_quantization"] == "Q6_K" and design["draft_quantization"] == "Q4_K_M"
         assert design["selected_k"] == 1
@@ -67,6 +76,19 @@ def residency_gate(receipt):
     assert receipt["minimum_signed_headroom_bytes"] >= 536870912
     assert {"load", "prefill", "proposal", "verification", "rollback", "reset", "longest_prompt"} <= set(receipt["covered_phases"])
     return True
+
+def operational_memory_gate(record):
+    """Check normalized runtime evidence, not proof of physical residency."""
+    m = record.get("operational_memory", {})
+    return (type(m.get("minimum_signed_headroom_bytes")) is int
+            and m["minimum_signed_headroom_bytes"] >= 536870912
+            and m.get("all_weights_and_kv_gpu_placed") is True
+            and m.get("allocation_failure") is False and m.get("cpu_offload") is False
+            and m.get("known_paging_or_eviction") is False
+            and m.get("same_worker_budget_identity_verified") is True
+            and isinstance(m.get("raw_evidence_sha256"), str)
+            and len(m["raw_evidence_sha256"]) == 64
+            and all(c in "0123456789abcdef" for c in m["raw_evidence_sha256"]))
 
 def select_ordinary(rows, design):
     """RTX discovery only: complete 12-task/two-repeat ordinary costs, no confirmation."""
@@ -193,6 +215,8 @@ def analyse(design, plan, inputs, records, freeze, residency=None):
         assert r["session"] == b["session"] and r["round"] == b["round"] and r["task"] == s["task"]
         if r["status"] == "COMPLETED":
             assert r["runtime_identity_verified"] is True
+            assert r["measurement_mode"] == design["formal_observation_mode"]
+            assert r["observation"] == design["formal_observation"], "profiler differs from primary channel"
             assert r["actual_condition"] == b["condition"], "runtime differs from frozen arm"
             assert math.isfinite(r["wall_ms"]) and r["wall_ms"] > 0
         parsed[r["slot"]] = r
@@ -227,9 +251,14 @@ def analyse(design, plan, inputs, records, freeze, residency=None):
             stable = all(len(rr := [r for r in rows if r["task"] == tid]) == 10
                          and all(signature(r) == signature(rr[0]) for r in rr) for tid in tids)
             native_ok = reference_ok and len(rows) == len(valid_rows) == 240 and stable and not mismatches
+            operational_ok = (all(operational_memory_gate(r) for r in rows)
+                              if design["platform"] == "B570" else True)
+            request_ok = bool(native_ok and operational_ok)
             qual[name] = {"complete": len(rows), "planned": 240, "native_qualified": bool(native_ok),
                           "physical_residency_qualified": allowed_memory if design["platform"] == "B570" else None,
-                          "qualified": bool(native_ok and allowed_memory), "mismatches": mismatches}
+                          "operational_memory_qualified": operational_ok if design["platform"] == "B570" else None,
+                          "request_cost_qualified": request_ok,
+                          "qualified": bool(request_ok and allowed_memory), "mismatches": mismatches}
             for sess in range(2):
                 for tid in tids:
                     times = [r["wall_ms"] for r in rows if r["session"] == sess and r["task"] == tid]
@@ -248,12 +277,16 @@ def analyse(design, plan, inputs, records, freeze, residency=None):
                 ss.append(statistics.mean(logs) if len(logs) == 24 else None)
             ratio = math.exp(statistics.mean(ss)) if all(v is not None for v in ss) else None
             admissible = qual[base]["qualified"] and qual[cand]["qualified"]
+            request_admissible = qual[base]["request_cost_qualified"] and qual[cand]["request_cost_qualified"]
             domain_effects = {}
             for domain in ("MBPP", "GSM8K"):
                 dt = [t["id"] for t in inputs["tasks"] if t["domain"] == domain]
                 vals = [statistics.mean(by_task[t]) for t in dt if len(by_task[t]) == 2]
                 domain_effects[domain] = math.exp(statistics.mean(vals)) if len(vals) == 12 else None
             comparisons.append({"comparison": base + "/" + cand,
+                                "request_qualified_ratio": ratio if request_admissible else None,
+                                "domain_request_qualified_ratios": domain_effects if request_admissible else {k: None for k in domain_effects},
+                                "request_cost_scope": "frozen counts channel; physical residency is a separate claim",
                                 "domain_qualified_ratios": domain_effects if admissible else {k: None for k in domain_effects},
                                 "qualified_ratio": ratio if admissible else None,
                                 "diagnostic_complete_cost_ratio": ratio,

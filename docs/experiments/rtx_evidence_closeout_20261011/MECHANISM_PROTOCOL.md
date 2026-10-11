@@ -17,17 +17,17 @@ R/M 的大收益可能来自 prefill 微批量、目标端路径或两者。用 
 - Target work：prefill 的 IDs/调用；continuation caller 宽度直方图及实际行数，分 verification/replay/fallback；实际物理 UB、micrograph/occupied query 行数独立记录。k+1 或逻辑 caller 宽度不是实际并行度。
 - Sampling/commit、phase binding、KV trim/rollback、同步/调度、request channel 计时分别保留。GPU event 有则报告，无则 null；CPU enqueue span 不能当完成的 GPU 工作费用。
 
-原始周期 trace 与计数可在 heavy 工程中记录；正式 lite 通道只保留汇总计数和必要的低成本时间戳，全部 arms 一致启用。source/计数语义/观测开关绑定在 F0A/F0B；缺失或不一致保留具体原因，不填估计值。输出长度/终止仍由原始数组独立检查。
+原始周期 trace 与计数可在 heavy 工程中记录；正式 counts 通道只保留轻量整数汇总计数，全部 arms 一致启用；不启用分阶段时间戳、heavy capture、新增同步或实验 ETW。source/计数语义/观测开关绑定在 F0A/F0B；缺失或不一致保留具体原因，不填估计值。输出长度/终止仍由原始数组独立检查。
 
 ## 3. 固定校准面板与观测扰动
 
 每家族六个已经暴露的任务，3 MBPP + 3 GSM8K。来源/选法/ID 在 DESIGN.json 固定；按 SHA256('heterospec-break-even-v1|'+task_id) 排序取每域前三，不看速度、接受率或输出长度挑题。RTX 从 #84 的旧确认面板取，因此它们明确转为曝光工程题；B570 从 #88 的12个曝光工程题取。两平台正式新面板仍按原来的偶/奇 description 分池。
 
-四 arms × 六题 × baseline/lite/heavy 三种观测模式 = 每家族最多72个完整工程请求，替换原先宽泛 profiling 配额；均计入原有工程总预算，不增加360/256或正式预算。三种模式按六题固定循环顺序平衡，不能用最快模式选择配置。
+四 arms × 六题 × baseline/counts/lite/heavy 四种观测模式 = 每家族96个请求槽；profiling 单列128 paid单元上限（96个测量槽加32个加载/预热/失败余量；不足时保留缺项），不挤占原核心工程360/256。工程总上限变为RTX每家族488、B570384；正式量和生命周期上限不变。模式按四循环Latin行、题号模4预先排程；F0A保存完整顺序，披露六题下位置计数的有限不平衡，不按费用选择模式。
 
-baseline = 继承的必要原生计数；lite = 新汇总 work 计数与可验证的低成本 elapsed hooks、无重型 capture/状态 readback；heavy = 独立周期/形状证据，可有同步开销。所有三模式完整 raw IDs/EOG/stop/cap 比较及原生计数映射必须核对，lite 对 baseline 的 wall 扰动单独报告。B570 三模式均保留同一强制 ETW/预算合同，不关闭驻留证据来获取快数字。
+baseline = 继承的必要原生计数；counts = 新轻量整数 work 汇总，无分项时钟；lite = counts加可验证的elapsed hooks；heavy = 独立周期/形状/驻留证据，可有同步开销。四模式完整raw IDs/EOG/stop/cap与原生计数映射必须核对。分别报告counts-baseline、lite-counts及heavy-counts的逐arm/题配对费用，不能把单次差值当精确因果开销或从主费用扣减。B570的ETW只用于独立工程驻留观察（在heavy槽内），baseline/counts/lite关闭实验ETW，均保持实际运行内存门槛；其正式physical residency未覆盖时仍UNKNOWN。
 
-正式采用冻结 lite 通道；其费用包含计数/时钟/强制观测开销，不能称完全未观测的部署费用。只用 lite 的有效 elapsed span 校准。heavy 为形状/计数证据，其强制同步时间禁止拟合干净通道。若 lite 只能提供 enqueue 时间或无法形成同一 request 时钟下的互斥完成跨度，模型状态 MODEL_TIMING_UNAVAILABLE；已有合格成本仍按协议收尾，不加同步、不扩预算追模型成功。
+正式采用冻结 counts 通道；只测完整请求起止，不强制分阶段观测，不能称计数开销为零。lite有效elapsed span只用于曝光校准；模型转移到counts正式通道的误差含观测差异，配对扰动作为解释证据，不用正式wall校正模型。heavy 为形状/计数证据，其强制同步时间禁止拟合干净通道。若 lite 只能提供 enqueue 时间或无法形成同一 request 时钟下的互斥完成跨度，模型状态 MODEL_TIMING_UNAVAILABLE；已有合格成本仍按协议收尾，不加同步、不扩预算追模型成功。若模型/计数缺失或扰动较大，主输出与费用实验照常完成；模型阈值不是算法准入门槛。
 
 ## 4. 预先冻结的一阶模型
 

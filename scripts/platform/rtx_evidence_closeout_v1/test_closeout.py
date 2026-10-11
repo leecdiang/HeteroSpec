@@ -37,6 +37,11 @@ def fixture():
                             "phase": "formal", "warmup": False, "freeze_commit": freeze["commit"],
                             "input_sha256": slot["input_sha256"], "status": "COMPLETED",
                             "wall_ms": 100.0, "runtime_identity_verified": True,
+                            "measurement_mode": "counts", "observation": dict(D["formal_observation"]),
+                            "operational_memory": {"minimum_signed_headroom_bytes": 536870912,
+                                "all_weights_and_kv_gpu_placed": True, "allocation_failure": False,
+                                "cpu_offload": False, "known_paging_or_eviction": False,
+                                "same_worker_budget_identity_verified": True, "raw_evidence_sha256": "e"*64},
                             "actual_condition": block["condition"],
                             "output": {"ids": [3] * 128, "eog_flags": [False] * 128,
                                        "length": 128, "terminal_id": 3, "stop_reason": "CAP",
@@ -44,6 +49,26 @@ def fixture():
     return inp, p, freeze, records
 
 class GuardTests(unittest.TestCase):
+    def test_primary_observer_cannot_include_phase_timers_or_etw(self):
+        for key in ("phase_timers", "heavy_capture", "etw", "added_sync"):
+            i,p,f,rr=fixture();rr[0]["observation"][key]=True
+            with self.assertRaises(AssertionError):analyse(D,p,i,rr,f)
+
+    def test_unknown_residency_preserves_complete_request_comparison(self):
+        i,p,f,rr=fixture();out=analyse(D,p,i,rr,f)
+        pair=out["families"][D["families"][0]]["comparisons"][0]
+        self.assertEqual(pair["request_qualified_ratio"],1.0)
+        if PLATFORM=="b570":self.assertIsNone(pair["qualified_ratio"])
+
+    def test_resource_failure_or_incomplete_output_still_blocks_request_ratio(self):
+        i,p,f,rr=fixture();candidate="C3" if PLATFORM=="rtx" else "C_k1"
+        r=next(z for z in rr if z["condition"]==candidate)
+        if PLATFORM=="b570":r["operational_memory"]["minimum_signed_headroom_bytes"]=-1
+        else:r["status"]="FAILED"
+        out=analyse(D,p,i,rr,f)
+        pair=out["families"][D["families"][0]]["comparisons"][0]
+        self.assertIsNone(pair["request_qualified_ratio"])
+
     def test_budget_and_position_balance(self):
         inp, p, freeze, records = fixture()
         self.assertEqual(len(records), D["budgets"]["formal_requests"])

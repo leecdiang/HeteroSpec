@@ -18,6 +18,8 @@ CPU工具是未来export的验证器，不是native worker或GPU启动器。执�
   "status": "COMPLETED",
   "wall_ms": 123.0,
   "runtime_identity_verified": true,
+  "measurement_mode": "counts",
+  "observation": {"phase_timers": false, "heavy_capture": false, "etw": false, "added_sync": false},
   "actual_condition": "<complete resolved condition object>",
   "output": {
     "ids": ["native integer IDs"],
@@ -33,7 +35,7 @@ CPU工具是未来export的验证器，不是native worker或GPU启动器。执�
 
 示例内尖括号和数组说明是schema占位，不是运行数据。实际output.ids/eog_flags必须为integer/boolean数组。STARTED/FAILED记录保留同一个slot、phase/input身份和错误，不能被后续重试覆盖。身份核验要对应完整source/binary/model/DLL bytes与实际CLI/runtime logs，不能只设置boolean。
 
-B570额外记录worker_pid、adapter_pci、residency_receipt_sha256。receipt至少绑定raw_etl_sha256（多个ETL时为完整ETL清单的hash）、decoder_sha256、allocation_map_sha256、worker_pids、adapter_pci=8086:E20C、events_lost、coverage_complete、weight_kv_allocation_mapping_complete、dedicated_segments_only、paging_or_eviction_events、unattributed_allocations、minimum_signed_headroom_bytes及covered_phases。只有独立真实decoder从保留的ETL/allocations导出OBSERVED_SCOPE_CERTIFIED才可通过。CPU工具只检查结构、引用及worker范围，不证明物理事实；执行端另行重算hash、raw解码与证据范围。
+B570额外记录worker_pid、adapter_pci及operational_memory：minimum_signed_headroom_bytes（实际检查点最小值，不推断连续物理驻留）、all_weights_and_kv_gpu_placed、allocation_failure、cpu_offload、known_paging_or_eviction、same_worker_budget_identity_verified、raw_evidence_sha256。预算/放置原始日志需独立核验，不以手填boolean代替。物理证明另用residency_receipt_sha256；正式关闭ETW、缺同范围证明时该字段可空，request_qualified_ratio仍按输出/完整性/运行门槛判断，严格qualified_ratio保持null。receipt至少绑定raw_etl_sha256（多个ETL时为完整ETL清单的hash）、decoder_sha256、allocation_map_sha256、worker_pids、adapter_pci=8086:E20C、events_lost、coverage_complete、weight_kv_allocation_mapping_complete、dedicated_segments_only、paging_or_eviction_events、unattributed_allocations、minimum_signed_headroom_bytes及covered_phases。只有独立真实decoder从保留的ETL/allocations导出OBSERVED_SCOPE_CERTIFIED才可通过。CPU工具只检查结构、引用及worker范围，不证明物理事实；执行端另行重算hash、raw解码与证据范围。
 
 新输入沿用#84 tasks/families结构，每全局task需要id/domain/description；每family-specific task含id、完整prompt_ids、cap128及原生模板/输入hash。history_audit必须含completed、by_id_and_description、unknown_hosts_disclosed、training_unseen_claim=false、excluded_ids、evidence_sha256。
 
@@ -46,7 +48,7 @@ freeze JSON含actual commit、actual_remote_blobs_verified、before_first_formal
 
 正式记录可附 workload 与 feature_units（无重型trace）；各feature单位及计数守恒见MECHANISM_PROTOCOL和mechanism.py。workload缺失标为缺项，primary输出/成本资格独立处理。所有字段源于新冻结native adapter和实际原始证据，不以boolean替代核验。
 
-MODEL_CALIBRATION.json = {"rows": [...]}，精确包含每family固定6题×4arms的lite校准行。每行phase=exposed_profile、profile_mode=lite、slot/family/condition/task、wall_ms、feature_units、component_ms（键完全对应）、actual_no_added_sync=true、completed_wall_partition=true、on_off_raw_equal=true、source_identity_sha256、raw_evidence_sha256。feature_units包含target_prefill_ids、draft_prefill_ids、draft_continuation_rows、reconcile_output_ids、rollback_calls、request_channel及target_continuation_calls_w1..w(k+1)。component_ms是真实同一clock完成wall互斥分项；无对应work却有费用不可硬塞该分项，先检查phase定义。
+MODEL_CALIBRATION.json = {"rows": [...]}，精确包含每family固定6题×4arms的lite校准行。每行phase=exposed_profile、profile_mode=lite、slot/family/condition/task、wall_ms、feature_units、component_ms（键完全对应）、actual_no_added_sync=true、completed_wall_partition=true、on_off_raw_equal=true、source_identity_sha256、raw_evidence_sha256。feature_units包含target_prefill_ids、draft_prefill_ids、draft_continuation_rows、reconcile_output_ids、rollback_calls、request_channel及target_continuation_calls_w1..w(k+1)。校准行观测模式为lite；正式为counts、关闭phase timers/ETW，模型报告必须保留这个观测差异及曝光配对扰动。component_ms是真实同一clock完成wall互斥分项；无对应work却有费用不可硬塞该分项，先检查phase定义。
 
 calibrate返回模型只处于COEFFICIENTS_REQUIRE_F0B_SEAL；F0B额外绑定model_sha256=closeout.digest(model)、model_frozen_before_first_formal=true，以及实际模型文件字节SHA。receipt不代表此设计已完成native校准。独立raw verifier仍需复算原始计数、时钟与Git封存时间。
 

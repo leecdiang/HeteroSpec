@@ -12,17 +12,17 @@
 
 ## 2. 工程与普通基线选择
 
-每家族复用12个已暴露工程输入，重新支付R。先运行5UB×12题×2重复=120个ordinary请求，完整token IDs、原生EOG/长度/停止边界等于稳定UB1 R方可参加选择。R自身不稳定则该家族停止。
+每家族复用12个已暴露工程输入，重新支付R。所有核心工程费用使用与正式相同的counts观测通道。先运行5UB×12题×2重复=120个ordinary请求，完整token IDs、原生EOG/长度/停止边界等于稳定UB1 R方可参加选择。R自身不稳定则该家族停止。
 
 选择完整合格者的两轮等权log费用最低配置；精确tie选较小UB。选择同时包含UB1/4，所谓R_prod只是此网格内最优，不声称全局最优。失败配置/费用/缺失全部保留。不得删失败任务或从确认数据选普通基线。
 
 M0=ordinary/mask0/UB4；M3=target-only/mask3/UB4；C3=spec/mask3/UB4/k3。工程加N=ordinary speculation/mask0/UB4/k3，12题×2重复，验证本数值合同中实际分歧；N只作有界修复必要性诊断，不替代#84完整N结果。M3与C3同样各24次。无正收益准入门槛。
 
-每家族360工程预算，包括全部load-only探针、warmup、forward、辅助decode、失败与实现修复；合计1080。ordinary120 + M3/C3/N72 + warmup及资格/profiling均占该预算。修复保留每版本，重新做受影响资格，不重置预算，不扩空间。
+每家族核心工程360，另保留profiling128，工程合计488/家族、1464总量。所有load-only探针、warmup、forward、辅助decode、失败和修复均收费。ordinary120 + M3/C3/N72 + warmup/资格占核心360；profiling的96测量槽及最多32加载/预热/失败余量占独立128，两类不借用。修复保留每版本，重新做受影响资格，不重置预算，不扩空间。
 
 工程须核验actual图/phase/reset/graph reuse/capture开关、cap1/2/3/4/31/128、原生EOG、rollback和最长768 prompt。M0/R_prod可能不保参考，照样保留并完成其有限测量；未合格的普通路径不成为合格速度基线。固定C3实现不满足自身工程/内存条件则该家族按停止分支交付，不重选mask或k。
 
-工作量归因与盈亏平衡必须按 [MECHANISM_PROTOCOL.md](MECHANISM_PROTOCOL.md) 做有界尝试：固定6个已暴露MBPP/GSM8K输入，R/R_prod/M3/C3四arm×baseline/lite/heavy=每家族72完整工程请求，均计入360预算。只用无新增同步的有效lite计时校准；heavy只验证计数/形状。正式冻结lite通道和工程校准模型，不从新任务重拟合或为Smol追正结果。
+工作量归因与盈亏平衡必须按 [MECHANISM_PROTOCOL.md](MECHANISM_PROTOCOL.md) 做有界尝试：固定6个已暴露MBPP/GSM8K输入，R/R_prod/M3/C3四arm×baseline/counts/lite/heavy=每家族96测量槽，占独立128 profiling paid预算。只用无新增同步的有效lite计时校准；heavy只验证计数/形状。正式冻结counts通道（无分项计时/heavy/实验ETW）和工程校准模型，不从新任务重拟合或为Smol追正结果。
 
 ## 3. 新输入、共同冻结、排程
 
@@ -46,7 +46,7 @@ session0使用5个循环Latin行；session1逐行反转，每arm每session在每
 
 若M0本已保参考且同样快，R/M的较大收益不能全归attention改造。若M0失败而M3通过，可支持局部约束使该并行路径获得资格。若C3未胜R_prod，收缩该配置部署加速主张；若Smol仍负，保留并给出拒绝使用draft的有限决定。不将MBPP/GSM8K标签变成事后online routing规则。
 
-总上限1080工程+3600formal+150warm=4830 paid单元；owned GPU-process lifetime16小时、外层7天。失败/加载/等待均记完整生命周期，不跨家族挪预算。达到停止线交付已有结果与缺项，不补跑。跨日、energy、多请求吞吐不属于最终必需证据。
+总上限1464工程+3600formal+150warm=5214 paid单元；owned GPU-process lifetime16小时、外层7天。失败/加载/等待均记完整生命周期，不跨家族挪预算。F0B前以工程真实耗时做完整确认预算预估并预留主比较资源；模型缺项不阻断主确认。达到停止线交付已有结果与缺项，不重跑已启动槽。未启动槽可在同一冻结计划/预算内从持久账本恢复。跨日、energy、多请求吞吐不属于最终必需证据。
 
 ## 5. 交付
 

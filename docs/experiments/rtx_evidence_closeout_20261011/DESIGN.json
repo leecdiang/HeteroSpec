@@ -406,14 +406,16 @@
   "required_physical_residency": false,
   "inherited_memory_admission": "actual full model/context allocation; complete CUDA offload; at least512MiB loaded headroom; runtime identity logged at each worker",
   "budgets": {
-    "engineering_units": 1080,
-    "engineering_per_family": 360,
+    "engineering_units": 1464,
+    "engineering_per_family": 488,
     "formal_requests": 3600,
     "formal_warmups": 150,
     "owned_gpu_hours": 16,
-    "outer_calendar_days": 7
+    "outer_calendar_days": 7,
+    "profile_units_per_family": 128,
+    "core_engineering_per_family": 360
   },
-  "profile_units_per_family": 72,
+  "profile_units_per_family": 128,
   "scope_boundaries": "single seq; same-day descriptive effects; no concurrency/energy/FP32-logit-equivalence claim",
   "mechanism": {
     "status": "PROSPECTIVE_NOT_EXECUTED",
@@ -436,9 +438,10 @@
       "GSM8K/test/16",
       "GSM8K/test/1198"
     ],
-    "profile_units_per_family": 72,
+    "profile_units_per_family": 128,
     "profile_modes": [
       "baseline",
+      "counts",
       "lite",
       "heavy"
     ],
@@ -462,6 +465,18 @@
       64,
       127,
       128
-    ]
+    ],
+    "validation_source_mode": "counts",
+    "profile_reserved_separately": true,
+    "profile_request_slots_per_family": 96
+  },
+  "execution_short_command": "完成 PR89",
+  "execution_deliverable": "IMPLEMENT_RUN_VERIFY_AND_CREATE_SEPARATE_DRAFT_RESULT_PR",
+  "formal_observation_mode": "counts",
+  "formal_observation": {
+    "phase_timers": false,
+    "heavy_capture": false,
+    "etw": false,
+    "added_sync": false
   }
 }

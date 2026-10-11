@@ -92,7 +92,8 @@ def calibrate(design, export):
             'calibration_sha256':closeout.digest(export),'calibration_task_ids':cfg['calibration_task_ids'],
             'source_identity_sha256':sources,'coefficients_ms_per_unit':coefficients,
             'coefficient_scope':'conditional on actual measured work; finite exposed calibration; not online prediction',
-            'timing_scope':'lite completed exclusive wall spans; no heavy or invented GPU costs',
+            'timing_scope':'lite completed spans calibrated; counts-only wall validated; observer transfer remains in residuals',
+            'calibration_profile_mode':'lite','validation_profile_mode':'counts',
             'fit_on_confirmation':False,'native_evidence_verification':'REQUIRES_INDEPENDENT_RAW_AND_SOURCE_VERIFIER'}
 
 def predict(design, model, record):
@@ -138,6 +139,7 @@ def validate_model(design,model):
         assert model.get('reason')
         return
     assert model['status']=='COEFFICIENTS_REQUIRE_F0B_SEAL'
+    assert model['calibration_profile_mode']=='lite' and model['validation_profile_mode']=='counts'
     assert sha(model['calibration_sha256'])
     assert set(model['coefficients_ms_per_unit'])==set(design['families'])
     assert set(model['source_identity_sha256'])==set(design['families'])
@@ -181,7 +183,7 @@ def analyse(design,plan,inputs,records,freeze,model,residency=None):
             expected=12*2*len(arms)
             covered=[p for p in panel if p['measured_wall_ms'] is not None and p['predicted_wall_ms'] is not None]
             complete=len(panel)==len(covered)==expected
-            qualified=all(primary['families'][f]['qualification'][a]['qualified'] for a in arms)
+            qualified=all(primary['families'][f]['qualification'][a]['request_cost_qualified'] for a in arms)
             errors=[p['predicted_wall_ms']-p['measured_wall_ms'] for p in covered]
             mape=statistics.mean(abs(e)/p['measured_wall_ms'] for e,p in zip(errors,covered)) if complete else None
             directions=[]
@@ -213,7 +215,9 @@ def analyse(design,plan,inputs,records,freeze,model,residency=None):
                             ('PASS' if mape<=cfg['max_validation_mape'] and all(z['status']=='PASS' for z in directions) else 'FAIL_OR_INSUFFICIENT')),
                             'MAE_ms':statistics.mean(abs(e) for e in errors) if complete else None,
                             'MAPE':mape,'signed_residual_ms':statistics.mean(errors) if complete else None,
-                            'directions':directions})
+                            'directions':directions,
+                            'qualification_scope':'observed request cost; does not certify physical residency',
+                            'observer_transfer':'lite calibration to counts-only confirmation; inspect exposed paired overhead'})
     return {'primary_cost_and_output':primary,'model_validation':domains,'task_session_matrix':matrix,
             'per_request_predictions':details,'model_sha256':closeout.digest(model),
             'unexecuted_or_failed_slots':primary['unexecuted_slots']+[r['slot'] for r in records if r['status']!='COMPLETED'],

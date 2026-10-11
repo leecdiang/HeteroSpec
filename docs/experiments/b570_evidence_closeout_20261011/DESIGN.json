@@ -254,7 +254,6 @@
   "selected_k": 1,
   "signed_dedicated_headroom_bytes": 536870912,
   "required_physical_residency": true,
-  "residency_stop_is_final_for_this_study": true,
   "zero_forward_trace_attempt_limit": 6,
   "trace_setup_minutes_limit": 60,
   "conditions": [
@@ -341,11 +340,13 @@
   ],
   "no_reselection": true,
   "budgets": {
-    "engineering_units": 256,
+    "engineering_units": 384,
     "formal_requests": 1200,
     "formal_warmups": 50,
     "owned_gpu_hours": 8,
-    "outer_calendar_days": 7
+    "outer_calendar_days": 7,
+    "profile_units_per_family": 128,
+    "core_engineering_per_family": 256
   },
   "memory_proof_claim_scope": "only actual traced worker intervals and bound allocations; no general B570 capacity claim",
   "scope_boundaries": "distinct Q6 target reference; physical UB1 target continuation; not RTX query-batch algorithm",
@@ -370,9 +371,10 @@
       "GSM8K/test/1198",
       "GSM8K/test/1257"
     ],
-    "profile_units_per_family": 72,
+    "profile_units_per_family": 128,
     "profile_modes": [
       "baseline",
+      "counts",
       "lite",
       "heavy"
     ],
@@ -396,7 +398,23 @@
       64,
       127,
       128
-    ]
+    ],
+    "validation_source_mode": "counts",
+    "profile_reserved_separately": true,
+    "profile_request_slots_per_family": 96
   },
-  "profile_units_per_family": 72
+  "profile_units_per_family": 128,
+  "execution_short_command": "完成 PR90",
+  "execution_deliverable": "IMPLEMENT_RUN_VERIFY_AND_CREATE_SEPARATE_DRAFT_RESULT_PR",
+  "formal_observation_mode": "counts",
+  "formal_observation": {
+    "phase_timers": false,
+    "heavy_capture": false,
+    "etw": false,
+    "added_sync": false
+  },
+  "physical_residency_required_for": "fully_resident_claim_only",
+  "unknown_residency_blocks_request_study": false,
+  "formal_etw_required": false,
+  "operational_memory_gate_required": true
 }

@@ -1,12 +1,14 @@
 # B570 最终证据补全方案
 
-本PR给出最新#84正式结果之后的最后证据计划及CPU复算。GPU/trace/native新实验尚未执行。
+**执行入口：用户说“完成 PR90”即按 [EXECUTION_PROMPT.md](EXECUTION_PROMPT.md) 在本平台实现、运行、复算并创建独立结果 Draft PR。请读取最新 HEAD 和 [FINAL_REVIEW.md](FINAL_REVIEW.md)，不要只审查或合并设计。**
+
+本PR给出最新RTX #84与B570 #88之后的最后证据计划及CPU复算。GPU/trace/native新实验尚未执行。
 
 入口：[整体判断](ASSESSMENT.md)、[主张与证据](CLAIM_EVIDENCE.md)、[执行协议](PROTOCOL.md)、[工作量与盈亏模型](MECHANISM_PROTOCOL.md)、[执行端交接](EXECUTION_PROMPT.md)、[机器设计](DESIGN.json)、[资产](ASSETS.json)、[源码绑定](SOURCE_BINDINGS.json)、[最小排除](MINIMUM_EXCLUSIONS.json)、[现有证据CPU复算](EVIDENCE_AUDIT.json)、[记录接口](RECORD_SCHEMA.md)、[CPU验证](CPU_VALIDATION.json)。
 
-接在 B570 #88 实际结果分支上。固定Q6/Q4 k1，先有界补物理驻留观测，准入后完成五条件正式成本；准入失败亦作为最终证据收尾。
+接在 B570 #88 实际结果分支上。固定Q6/Q4 k1，有界补物理驻留观测，并在输出和实际运行门槛满足后完成五条件正式费用。物理UNKNOWN限制其驻留主张，不取消费用研究。
 
-所有旧结果与冻结、论文和release保持原有状态。结果必须新建独立目录/账本和Draft PR；该设计PR不合并、不启动GPU、不宣称新加速。代码位于scripts/platform/b570_evidence_closeout_v1，仅CPU plan/select/analyse及审计。
+所有旧结果与冻结、论文和release保持原有状态。结果必须新建独立目录/账本和Draft PR；设计准备阶段未启动GPU；执行端已获授权在协议范围运行，设计PR不合并，不预先宣称新加速。代码位于scripts/platform/b570_evidence_closeout_v1，仅CPU plan/select/analyse及审计。
 
 CPU验证命令：
 ```bash

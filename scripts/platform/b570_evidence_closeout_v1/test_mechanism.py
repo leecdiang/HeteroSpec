@@ -74,7 +74,7 @@ class MechanismGuards(unittest.TestCase):
             self.assertEqual(panel['expected'],96);self.assertEqual(panel['covered'],96)
             self.assertEqual(panel['MAPE'],0)
             self.assertTrue(all(d['direction_accuracy']==1.0 for d in panel['directions']))
-            self.assertEqual(panel['status'],'PASS' if PLATFORM=='rtx' else 'EVIDENCE_NOT_QUALIFIED')
+            self.assertEqual(panel['status'],'PASS')  # request-cost model, not a residency certificate
         row=next(r for r in rr if r['condition']==D['mechanism']['candidate_arm'])
         del row['feature_units']
         out=mechanism.analyse(D,p,i,rr,f,m)

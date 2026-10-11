@@ -1,0 +1,78 @@
+{
+  "status": "BUILT_NOT_ENGINEERING_QUALIFIED",
+  "binary_sha256": "f0058b0a45d528ff115c9c8649f27afe8b659a30cc3cbf61f347312698346087",
+  "compiler_sha256": "086ce9d47ba42f33a514e1a6e04eb1d4a8fa1d75e0868e0213caad447c91e864",
+  "runtime_dlls": {
+    "cublas64_12.dll": "e40202fe4223c1cd2d2dce7beec59e1ed61c7801bd827309183be9b50e358f4c",
+    "cublasLt64_12.dll": "2a896460bef60ed57ef32b0875812f355a6984e671d638bb632f5e8c1d7a831f",
+    "cudart64_12.dll": "d28e42265da7462162a54da6b7a99ea4fa2caf8139d862bb500db875d0b32dfc",
+    "ggml-base.dll": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+    "ggml-cpu-alderlake.dll": "828294f25fb13ce3e85626be36817266b1fb186ef358fabd3307cbdacab75382",
+    "ggml-cpu-cannonlake.dll": "d9cb9580ad7756488a3ac30d5b0e3088c0fedff309ded7fed614d4c41559b212",
+    "ggml-cpu-cascadelake.dll": "1d01b1dab6dd19dab5b26fbf5d065cec8fa7862ec853a842ab21ef091032c2cd",
+    "ggml-cpu-cooperlake.dll": "27accf4887cd023390b2fbf46264cfd6c2c2db9e2cedcd3c4dd07b9af637833e",
+    "ggml-cpu-haswell.dll": "0c2157069d7a6634e40c1450f60fb96dd98741a042db7d066e46f716f0970c40",
+    "ggml-cpu-icelake.dll": "c1520000395fe3b5b0dd16c15eb5d5f3ba1126b0cb8c522d21e7462c544385b0",
+    "ggml-cpu-ivybridge.dll": "c4f0a4e20451f653f83f2c30b0426e463019c5864d79dc917d5d9f4ee64bce9a",
+    "ggml-cpu-piledriver.dll": "904c3e6fa24fdd964cf7648caefbdc9740df9f5085513f072b1355f241e6cf38",
+    "ggml-cpu-sandybridge.dll": "2f41f55427086a020d978d9bff425dd1e76ba4bfb5ef959d58a9d5d2e4b86f0e",
+    "ggml-cpu-sapphirerapids.dll": "1f45e161132f8180d379ed4c3a12de186bec3f49c41d90ff79e24e857666c618",
+    "ggml-cpu-skylakex.dll": "3505979a9ac1a21eccb054df27402f171ffe0d50a303a0db3b39163a82b3a3c0",
+    "ggml-cpu-sse42.dll": "b221c80c0a2f1cdc5669ec01f45c8ceb388f5f3cae1b33674e5b934231e54c89",
+    "ggml-cpu-x64.dll": "7c2b08a83dbd900bc1190ff40096b0c75718ecab6573441009d44b87321e492a",
+    "ggml-cpu-zen4.dll": "f08ea2b0dfb05ca03c3cdab74eb14e1318f8a69cfeeefc924b0cfff36710edf6",
+    "ggml-cuda.dll": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+    "ggml.dll": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+    "libomp.dll": "a12116ba72d1d6820407cf30be23da04ce79d6bb8a71a5ee71759c5a1faa6f1c"
+  },
+  "published_numerical_stack_unchanged": true,
+  "source_inventory_sha256": "ca6322fc21926df60a66d1b50df80e12a88f67e16b907694dca98ef58025fa26",
+  "source_files": 3530,
+  "patch": {
+    "upstream": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "restored_archive_sha256": "522dc59a5e7e35c5a752b615f41586f7264ed5dfead79431a038384f069f4d57",
+    "old_source_contract": {
+      "files_sha256": {
+        "common/speculative.cpp": "12696be36a70fee8097f947863e32e4a60b9a2858c63999b31d7285e2b46ffea",
+        "common/sampling.cpp": "5ac59f40882c8b0eb444379043dbdc3adab75b3ecce3b07f460c4f36f66bddcc",
+        "common/common.h": "6e678df90075831853a3b509a7a3fe01e5aa4cbeb1b3ae4364c0ac51442b36c3",
+        "tools/server/server-common.h": "bdc72be7321bebbcbc203d8eeef4d46f7a04bbceb106a946eeb71a21d6b8a902",
+        "tools/server/server-context.cpp": "72ffc1f9950a3e7c520a53b9bf9b6e91b64e63592114e87c7d2e3f42cb4b3383",
+        "src/hs_scope.h": "be813ea9ee446a49ded5f906461e5c5bd0da2dc11e15c2da307382690c54dcb2",
+        "src/llama-graph.cpp": "5e4dc981538b4737fb3d20a3c8ff57a1bcf42d86138063ff0e626e096790f227"
+      },
+      "target_sampling": "actual model suppression plus native ordinary temperature0 greedy; request seed123; native greedy E suppression uses same actual model list",
+      "draft_sampling": "draft-simple constructs common top_k10 chain with default random seed; sampler may draw dist but speculative.cpp discards selected ID and uses sorted cur_p->data[0].id; p_min0; acceptance0 minimum, maximum3; effective proposal choice is rank0, not RNG draw. No change to original S implementation.",
+      "seed_scope": "123 is the target request seed; do not claim it is the draft constructor seed",
+      "KV": "F16 K/V;ctx4096;single sequence; fullGPU; one shared target weight object with two contexts for E only",
+      "S_and_native_generation_timer": "server_slot_stats t_gen_ms based on native slot generation clock; same old server boundary in all S conditions; generation is secondary only",
+      "E_generation_timer": "custom prefill boundary then generation through state clearing/content construction differs; no E/native generation ratios",
+      "shared_primary": "client perf_counter before completion submission through full nonstreaming HTTP response JSON parsing",
+      "engineering_capture": "graph callbacks and state byte comparisons only in engineering; E formal retains minimal block counts/owner metadata plus native committed arrays",
+      "graph_scope": "four actual target/draft prefill/decode bits; graph reuse key includes scope state; original Qwen branch unchanged; separate Llama branch guarded for supported dense shapes"
+    },
+    "original_server_context_sha256": "72ffc1f9950a3e7c520a53b9bf9b6e91b64e63592114e87c7d2e3f42cb4b3383",
+    "patched_server_context_sha256": "cec3e8e04fae4c3b12b56e4735ee75fc5180e3833fa2c2e52be31cdf31007444",
+    "changes": [
+      {
+        "before": "common_params params_dft = common_base_params_to_speculative(params_base);",
+        "after": "common_params params_dft = common_base_params_to_speculative(params_base);\n                params_dft.n_ubatch = 1; // PR83 fixed draft physical batch; no algorithm change"
+      },
+      {
+        "before": "            slot.stats.n_draft_tokens += draft.size();",
+        "after": "            slot.stats.n_draft_tokens += draft.size();\n            if (hs::enabled()) hs::emit({{\"event\",\"draft_proposal\"},{\"slot\",slot.id},{\"ids\",draft},{\"pending\",slot.sampled},{\"n_past\",slot.prompt.n_tokens()}});"
+      },
+      {
+        "before": "                slot.spec_i_batch.clear();",
+        "after": "                if (hs::enabled()) hs::emit({{\"event\",\"verify_result\"},{\"slot\",slot.id},{\"proposed_ids\",slot.spec_draft},{\"accepted_plus_last\",accepted},{\"query_indices\",slot.spec_i_batch},{\"replay\",slot.spec_is_replay},{\"rollback_count\",slot.spec_draft.size()+1-accepted.size()}});\n                slot.spec_i_batch.clear();"
+      },
+      {
+        "before": "            slot.mem.seq_rm(slot.id, slot.prompt.tokens.pos_next(), -1);\n\n            for (size_t i = 0; i < ids.size(); ++i)",
+        "after": "            slot.mem.seq_rm(slot.id, slot.prompt.tokens.pos_next(), -1);\n            if (hs::enabled()) hs::emit({{\"event\",\"verify_rollback\"},{\"slot\",slot.id},{\"kept_position_next\",slot.prompt.tokens.pos_next()},{\"actual_positions\",hs::position(slot.ctx_tgt)},{\"accepted_ids\",ids}});\n\n            for (size_t i = 0; i < ids.size(); ++i)"
+      }
+    ],
+    "scope": "Required draft UB1 parameter binding and capture-only integer/token/state-position records; original dense Llama/Qwen graphs, arithmetic, sampling and CUDA DLLs unchanged",
+    "model_forwards": 0
+  },
+  "model_forwards": 0
+}

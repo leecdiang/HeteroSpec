@@ -1,0 +1,50 @@
+{
+  "status": "PASS_ZERO_FORWARD_ENTRY_POINTS_ONLY",
+  "sources": {
+    "C:\\hs\\b570-opt-run-v1\\native\\memory_load.cpp": {
+      "sha256": "996ed141e29fd1a5236bf7c6a56842a70336843f895701059ddc6fcb8d648aaa",
+      "bytes": 4557
+    },
+    "C:\\hs\\b570-opt-run-v1\\native\\CMakeLists.txt": {
+      "sha256": "28bdaa3b972a00d1e54a8ff2643c7c171d3eb26605c3310ce482dbaf40df38e7",
+      "bytes": 823
+    },
+    "C:\\hs\\b570-opt-v1\\docs\\experiments\\b570_optimization_20261011\\PROTOCOL.md": {
+      "sha256": "1ab50645cf893404c8ebb9c0881a61d703f6f40c61d1c2cb7c8773c128a4549f",
+      "bytes": 8049
+    },
+    "C:\\hs\\b570-opt-v1\\docs\\experiments\\b570_optimization_20261011\\POLICY.json": {
+      "sha256": "9b5272c740fb69a17e55a0aaffd294406770756e01d9d31509851186b9c1078f",
+      "bytes": 1659
+    },
+    "C:\\hs\\b570-opt-v1\\scripts\\platform\\b570_optimization_v1\\native_memory_budget.h": {
+      "sha256": "0a1afc5609c61d698ae0d86c7dab35b150b7aeef2bcad7d30b2d31069dcb1e5b",
+      "bytes": 2127
+    },
+    "C:\\hs\\b570-direct-id-v1-src\\include\\llama.h": {
+      "sha256": "3d1b18eda626c1b9ecf5bda0798e65b974a8f70f30d56726610633a980cb4160",
+      "bytes": 84829
+    },
+    "C:\\hs\\b570-direct-id-v1-src\\src\\llama-context.cpp": {
+      "sha256": "820a63007426d6c63afc8a453a01aa144281692accf786cdf30491168e9950b8",
+      "bytes": 154202
+    },
+    "C:\\hs\\b570-direct-id-v1-src\\src\\llama.cpp": {
+      "sha256": "12934eb2230fafb0ba9ae97f4dddff3fe46b0003cade2c4a11817d12358884f6",
+      "bytes": 22112
+    },
+    "C:\\hs\\b570-direct-id-v1-src\\ggml\\src\\ggml-vulkan\\ggml-vulkan.cpp": {
+      "sha256": "04615c97998a76d2d0b15d2ebb93bf381eb3fb565492d7714d3fc9d1c333b98d",
+      "bytes": 1067780
+    }
+  },
+  "review": [
+    "Probe uses direct model_load/context-init; no common_init_from_params warmup or llama_decode/encode calls.",
+    "llama_context constructor reserves graphs; it does not execute token forward. Numerical DLLs are exact restored PR82 originals.",
+    "Memory query executes in model-owning PID on actual PCI Intel B570 physical device, not an external probe PID.",
+    "The device-local heap is separate from the non-device-local system heap; both heaps are retained without claiming all shared allocations are spill.",
+    "Full offload and KV placement must also be parsed from actual load stderr; requested n_gpu_layers alone is not proof."
+  ],
+  "numerical_backend_changed": false,
+  "model_forward_calls": 0
+}

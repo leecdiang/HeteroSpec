@@ -20,7 +20,7 @@ STANDARD_Q6：目标Q6_K，草稿Q8_0/Q4_K_M，阈值536870912 bytes（512MiB）
 
 必须加载各候选实际的target/draft上下文、输出容量与工作区。batched验证至少能容纳k_max+1个实际输出（k3至少4），同时检查n_outputs_max及per_seq和实际图；顺序native模式按审核源码登记所需容量，不将它的1-output样本继承到batched模式。TIGHT_Q8的target prefill UB固定32；STANDARD_Q6的candidate prefill UB取已选R_prod的UB。draft UB1。不同模式的M_match与C保持目标路径、prefill UB、容量和数值设置相同；R_stock/R_prod维持真实普通实现，不为了匹配而降低普通基线效率。
 
-加载余量只允许进入有限工程。在实际最长prompt768、cap128、k3验证、拒绝/rollback、自然EOG、capture on/off与reset工程运行中测峰值；LOADED及整个已观测ENGINEERING_PEAK均须满足profile阈值，无实际allocation failure。内存记录须覆盖工程分配路径并声明采样分辨率；请求前后两点不等于覆盖峰值。工程trace关闭后再次核验无隐藏decode、输出与边界行为。
+加载余量只允许进入有限工程。在实际最长prompt768、cap128、所选候选最大k对应的验证、拒绝/rollback、自然EOG、capture on/off与reset工程运行中测峰值；LOADED及整个已观测ENGINEERING_PEAK均须满足profile阈值，无实际allocation failure。k3路径须独立核验其容量和峰值；若它不合格而k1/k2合格，可以按冻结排名选择小k，结论只覆盖该实际配置，不能声称k3也可运行。内存记录须覆盖工程分配路径并声明采样分辨率；请求前后两点不等于覆盖峰值。工程trace关闭后再次核验无隐藏decode、输出与边界行为。
 
 分开登记：全GPU执行、权重/KV分配映射、观察到的local/nonlocal/paging范围。host输出数组、CPU tokenizer/控制器及显式staging不计为CPU模型offload；系统heap上的权重/KV/目标计算不允许。未能独立核验驻留范围则 `RESIDENCY_UNKNOWN`，可继续收集受控的原始正确性/成本诊断，但不得给出qualified驻留GPU速度结论或作为“放宽后显存可行”的正式证据。原始负预算、分配失败或实际offload则停止该配置，不继续正式确认。该区别不能用人工true字段代替。
 

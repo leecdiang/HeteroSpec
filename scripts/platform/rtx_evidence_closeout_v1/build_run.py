@@ -19,7 +19,11 @@ def patch():
       '    auto before=position(c);int rc=llama_decode(c,b);hsc::decode_end();llama_synchronize(c);')
     replace('src/llama-context.cpp','#include "llama-context.h"','#include "llama-context.h"\n#include "hsc_counter.h"')
     replace('src/llama-context.cpp','    const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);',
-      '    hsc::physical(this,ubatch.n_tokens);\n    const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);')
+      '''    // The inherited scheduler callback path synchronizes even when ask=false.
+    // Only heavy requests may enter it. Pointer assignment adds no GPU wait.
+    ggml_backend_sched_set_eval_callback(sched.get(), hsc::is_heavy() && hsc::w.context==this ? cparams.cb_eval : nullptr, cparams.cb_eval_user_data);
+    hsc::physical(this,ubatch.n_tokens);
+    const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);''')
     replace('src/llama-context.cpp','        n_reused++;','        hsc::reused(this);\n        n_reused++;')
     replace('src/llama-graph.cpp','#include "llama-graph.h"','#include "llama-graph.h"\n#include "hsc_counter.h"')
     replace('src/llama-graph.cpp','if (std::getenv("HS_NATIVE_CAPTURE"))','if (hsc::is_heavy())')
@@ -40,6 +44,19 @@ def patch():
     add((new field_bool("return_tokens", params.return_tokens))''')
     replace('tools/server/server-task.cpp','        {"tokens",              tokens},','        {"tokens",              tokens},\n        {"hs_closeout",         hs_closeout},')
     replace('tools/server/server-context.cpp','#include "live_capture.h"','#include "live_capture.h"\n#include "hsc_export.h"')
+    replace('tools/server/server-context.cpp','    bool load_model(common_params & params) {',
+      '''    bool load_model(common_params & params) {
+        // Native llama INFO maps to verbosity4. Capture load identity only, then
+        // restore normal request verbosity before /health becomes ready.
+        struct hs_load_log_guard {
+            int previous=common_log_get_verbosity_thold();
+            hs_load_log_guard(){common_log_set_verbosity_thold(std::max(previous,4));}
+            ~hs_load_log_guard(){common_log_flush(common_log_main());common_log_set_verbosity_thold(previous);}
+        } hs_load_log_scope;''')
+    replace('tools/server/server-context.cpp','        if(hs::enabled()){params_base.cb_eval=hs::callback;params_base.cb_eval_user_data=(void*)"target";}',
+      '        params_base.cb_eval=hs::callback;params_base.cb_eval_user_data=(void*)"target"; // native scheduler enables callback only in heavy requests')
+    replace('tools/server/server-context.cpp','                if(hs::enabled())params_dft.cb_eval_user_data=(void*)"draft";',
+      '                params_dft.cb_eval_user_data=(void*)"draft";')
     replace('tools/server/server-context.cpp','                        hs::phase="prefill";',
       '                        hs::phase="prefill";\n                        hsc::begin(slot.task->params.hs_closeout_mode,slot.task->n_tokens());')
     replace('tools/server/server-context.cpp','            slot.generated_tokens.push_back(result.tok);',

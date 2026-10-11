@@ -33,7 +33,10 @@ def status(stage, **extra):
     os.replace(tmp,p);print(stage,json.dumps(extra,ensure_ascii=False),flush=True)
 def git(*args): return subprocess.check_output(['git',*args],cwd=REPO).decode('utf-8').strip()
 def api(route): return json.loads(subprocess.check_output(['gh','api','repos/leecdiang/HeteroSpec/'+route]))
-def models(): return {f:v['models'] for f,v in read(OLDPUB/'MODEL_CONTRACT.json')['families'].items()}
+def models():
+    contract=PUB/'MODEL_CONTRACT.json'
+    if not contract.exists():contract=OLDPUB/'MODEL_CONTRACT.json'
+    return {f:v['models'] for f,v in read(contract)['families'].items()}
 def clean_env(mask, trace):
     e={k:v for k,v in os.environ.items() if not k.startswith(('HS_','LLAMA_ARG_','GGML_','CUDA_'))}
     e['HS_SCOPE_MASK']=str(mask)

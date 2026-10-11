@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "utc": "2026-10-11T17:22:14.114751+00:00",
+  "family": "Qwen",
+  "command": [
+    "D:\\hsc89\\native\\build\\bin\\llama-server.exe",
+    "--model",
+    "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-8B-Q8_0.gguf",
+    "--device",
+    "CUDA0",
+    "--n-gpu-layers",
+    "all",
+    "--fit",
+    "off",
+    "--ctx-size",
+    "1024",
+    "--batch-size",
+    "2048",
+    "--ubatch-size",
+    "1",
+    "--flash-attn",
+    "off",
+    "--parallel",
+    "1",
+    "--threads",
+    "24",
+    "--threads-batch",
+    "24",
+    "--cache-ram",
+    "0",
+    "--cache-type-k",
+    "f16",
+    "--cache-type-v",
+    "f16",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18789",
+    "--no-webui",
+    "--no-warmup",
+    "--no-cache-prompt"
+  ],
+  "actual_loaded_identity": {
+    "layers": [
+      [
+        "37",
+        "37"
+      ]
+    ],
+    "contexts": [
+      "1024",
+      "1024"
+    ],
+    "ubs": [
+      "1"
+    ],
+    "output_capacity_per_seq": [
+      "1"
+    ],
+    "log_sha256_at_readiness": "4250febba67fe3c75b532898c46c4c44780974b16e0cc46b503db521df0b949d",
+    "native_parameters": [
+      "0.00.366.176 I print_info: n_ctx_train           = 40960",
+      "0.00.366.220 I print_info: n_ctx_orig_yarn       = 40960",
+      "0.03.679.755 I llama_context: n_ctx                 = 1024",
+      "0.03.679.755 I llama_context: n_ctx_seq             = 1024",
+      "0.03.679.755 I llama_context: n_batch               = 1024",
+      "0.03.679.755 I llama_context: n_ubatch              = 1",
+      "0.03.679.756 I llama_context: flash_attn            = disabled",
+      "0.03.679.760 I llama_context: n_outputs_max         = 1",
+      "0.03.679.761 I llama_context: n_outputs_max_per_seq = 1",
+      "0.03.679.761 I llama_context: n_ctx_seq (1024) < n_ctx_train (40960) -- the full capacity of the model will not be utilized",
+      "0.03.680.533 I llama_kv_cache:      CUDA0 KV buffer size =   144.00 MiB",
+      "0.03.687.377 I sched_reserve:      CUDA0 compute buffer size =     0.60 MiB",
+      "0.03.687.380 I sched_reserve:  CUDA_Host compute buffer size =     0.04 MiB",
+      "0.03.795.233 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 1024, kv_unified = 'false'",
+      "0.03.795.257 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 1024"
+    ]
+  },
+  "loaded_host": {
+    "utc": "2026-10-11T17:22:14.101749+00:00",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "driver": "616.92",
+    "total_MiB": 12227.0,
+    "used_MiB": 7974.0,
+    "util": 0.0,
+    "temp": 41.0,
+    "power_W": "22.99",
+    "AC": 1,
+    "power_scheme_guid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+  },
+  "native_build_sha256": "1ca15e55edd8572441ef6d7a0dc93666c56b14ea829623d28ba902276c71342e",
+  "requested_forwards": 0,
+  "warmups": 0,
+  "only_routes": [
+    "GET /health"
+  ]
+}

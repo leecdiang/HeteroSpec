@@ -45,5 +45,14 @@ class ExecutionGuards(unittest.TestCase):
             with patch.object(deliver,'PUB',pub),patch.object(deliver,'DESIGN',design),patch.object(deliver,'figures'):
                 deliver.reports()
             self.assertTrue((pub/'RESULTS.md').exists());self.assertTrue((pub/'LENGTH_DOMAIN_STOP_RECORDS.json').exists())
+    def test_actual_load_log_restores_request_verbosity_and_offload(self):
+        # Real zero-forward repair probe, if present; no GPU is launched by this test.
+        path=run_common.PUB/'LOAD_METADATA_REPAIR_PROOF.json'
+        if not path.exists():self.skipTest('execution host load proof not present')
+        proof=run_common.read(path)
+        self.assertEqual(proof['status'],'PASS');self.assertEqual(proof['requested_forwards'],0)
+        layers=proof['actual_loaded_identity']['layers'];self.assertEqual(len(layers),1)
+        self.assertTrue(all(a==b for a,b in layers))
+        self.assertEqual(int(proof['actual_loaded_identity']['ubs'][0]),1)
 
 if __name__=='__main__':unittest.main()

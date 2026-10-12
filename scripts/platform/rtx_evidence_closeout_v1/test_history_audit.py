@@ -7,6 +7,21 @@ from pathlib import Path
 import history_inputs
 
 class ReachableTreesTest(unittest.TestCase):
+    def test_parallel_host_reader_keeps_bytes_and_hash_based_reuse(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);old=root/'old.txt';old.write_bytes(b'old')
+            (root/'new.json').write_bytes(b'{"historical":"text"}')
+            (root/'models').mkdir();(root/'models'/'excluded.txt').write_bytes(b'ignored directory')
+            known=frozenset({hashlib.sha256(b'old').hexdigest()})
+            rows=list(history_inputs.host_objects([root],known))
+            names={p.name:(kind,value) for p,(kind,value) in rows}
+            self.assertEqual(set(names),{'old.txt','new.json'})
+            self.assertEqual(names['old.txt'],('reused_text',hashlib.sha256(b'old').hexdigest()))
+            self.assertEqual(names['new.json'],('text',b'{"historical":"text"}'))
+            old.write_bytes(b'new') # same size must still be freshly hashed
+            names={p.name:(kind,value) for p,(kind,value) in history_inputs.host_objects([root],known)}
+            self.assertEqual(names['old.txt'],('text',b'new'))
+
     def test_missing_blob_authenticated_bytes_are_verified_and_cached(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo=Path(tmp)/'repo';repo.mkdir();local=Path(tmp)/'audit';local.mkdir()

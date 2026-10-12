@@ -2,6 +2,8 @@
 from run_common import *
 import ahocorasick, collections, tarfile, zipfile
 import closeout
+from concurrent.futures import ThreadPoolExecutor
+from collections import deque
 
 TEXT={'.json','.jsonl','.md','.txt','.csv','.log','.yaml','.yml','.py','.toml','.cpp','.h','.tex'}
 SKIP={'.git','__pycache__','node_modules','vendor','third_party','models','tools','hf-cache','datasets','env','python311','pinned-source','native-build','native-source','source','c-source','x-source','build','c-build','x-build','bin','dependencies','site-packages','llm-42','static-native','restored84'}
@@ -44,6 +46,32 @@ def reachable_text_objects(known_git):
             if kind==b'blob' and Path(name).suffix.lower() in TEXT and oid not in known_git:objects.setdefault(oid,name)
     save(LOCAL/'REACHABLE_TEXT_TREES.json',dict(complete_reachable_snapshot_trees=sorted(trees),additional_text_objects=objects,enumeration='all reachable commit root trees; recursive ls-tree; no binary lazy-fetch'))
     return objects
+
+def host_objects(roots,prior_seen):
+    def paths():
+        for root in roots:
+            for dirname,dirs,files in os.walk('\\\\?\\'+str(root.resolve())):
+                dirs[:]=[n for n in dirs if n not in SKIP and not n.startswith('.venv')]
+                for name in files:
+                    p=Path(dirname)/name
+                    if p.suffix.lower() in TEXT or p.suffix.lower()=='.zip' or p.suffixes[-2:]==['.tar','.gz']:yield p
+    def load(p):
+        try:
+            if p.suffix.lower() in TEXT:
+                b=p.read_bytes();h=hashlib.sha256(b).hexdigest()
+                return ('reused_text',h) if h in prior_seen else ('text',b)
+            return 'archive',sha(p)
+        except OSError as e:return 'error',repr(e)
+    # Only reads/hashes run concurrently. One ordered collector owns all
+    # exclusions, descriptions, inventories and archive traversal.
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        pending=deque()
+        for p in paths():
+            pending.append((p,pool.submit(load,p)))
+            if len(pending)>=4:
+                q,f=pending.popleft();yield q,f.result()
+        while pending:
+            q,f=pending.popleft();yield q,f.result()
 
 def main():
     prior=read(OLDPUB/'EXPOSURE_AUDIT.json');assert prior['status']=='PASS' and not prior['errors']
@@ -108,30 +136,32 @@ def main():
     for oid,name in newobjects.items():
         scan(load_git_blob(oid,name),'gitblob:'+oid+':'+name)
     roots=[Path('C:/Users/ASUS/Documents/Codex'),Path('D:/HeteroSpec-PC'),Path('D:/HeteroSpec-RTX-Target-V1'),LOCAL]
-    for root in roots:
-        for dirname,dirs,files in os.walk('\\\\?\\'+str(root.resolve())):
-            dirs[:]=[n for n in dirs if n not in SKIP and not n.startswith('.venv')]
-            for name in files:
-                p=Path(dirname)/name;label=str(p)[4:]
-                try:
-                    if p.suffix.lower() in TEXT:scan(p.read_bytes(),label)
-                    elif p.suffix.lower()=='.zip':
-                        h=sha(p)
-                        if h in known_archive:archives.append(dict(path=label,sha256=h,prior_verified_logical_objects_reused=True));continue
-                        known_archive.add(h)
-                        with zipfile.ZipFile(p) as z:
-                            for n in z.namelist():
-                                q=Path(n)
-                                if q.suffix.lower() in TEXT and not any(part in SKIP for part in q.parts):scan(z.read(n),label+'!'+n)
-                        archives.append(dict(path=label,sha256=h))
-                    elif p.suffixes[-2:]==['.tar','.gz']:
-                        h=sha(p)
-                        if h in known_archive:archives.append(dict(path=label,sha256=h,prior_verified_logical_objects_reused=True));continue
-                        with tarfile.open(p,'r:gz') as z:
-                            for m in z:
-                                if m.isfile() and Path(m.name).suffix.lower() in TEXT:scan(z.extractfile(m).read(),label+'!'+m.name)
-                        archives.append(dict(path=label,sha256=h));known_archive.add(h)
-                except (OSError,ValueError,EOFError,zipfile.BadZipFile,tarfile.TarError) as e:errors.append(dict(path=label,error=repr(e)))
+    progress=time.monotonic();host_count=0
+    for p,(kind,payload) in host_objects(roots,frozenset(seen)):
+        label=str(p)[4:];host_count+=1
+        if time.monotonic()-progress>=15:
+            status('CPU_HISTORY_LOCAL_SCAN',host_files=host_count,logical_objects=counter['accessible_objects'],errors=len(errors),formal_forwards=0);progress=time.monotonic()
+        try:
+            if kind=='error':errors.append(dict(path=label,error=payload));continue
+            if kind=='reused_text':counter['accessible_objects']+=1;counter['prior_verified_bytes_reused']+=1;continue
+            if kind=='text':scan(payload,label)
+            elif p.suffix.lower()=='.zip':
+                h=payload
+                if h in known_archive:archives.append(dict(path=label,sha256=h,prior_verified_logical_objects_reused=True));continue
+                known_archive.add(h)
+                with zipfile.ZipFile(p) as z:
+                    for n in z.namelist():
+                        q=Path(n)
+                        if q.suffix.lower() in TEXT and not any(part in SKIP for part in q.parts):scan(z.read(n),label+'!'+n)
+                archives.append(dict(path=label,sha256=h))
+            else:
+                h=payload
+                if h in known_archive:archives.append(dict(path=label,sha256=h,prior_verified_logical_objects_reused=True));continue
+                with tarfile.open(p,'r:gz') as z:
+                    for m in z:
+                        if m.isfile() and Path(m.name).suffix.lower() in TEXT:scan(z.extractfile(m).read(),label+'!'+m.name)
+                archives.append(dict(path=label,sha256=h));known_archive.add(h)
+        except (OSError,ValueError,EOFError,zipfile.BadZipFile,tarfile.TarError) as e:errors.append(dict(path=label,error=repr(e)))
     save(LOCAL/'HISTORY_NEW_OBJECTS.json',new)
     pool=[];domaincounts=collections.Counter();textcounts=collections.Counter(closeout.normalized_text(t['description']) for t in data)
     for t in data:

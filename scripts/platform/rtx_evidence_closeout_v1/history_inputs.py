@@ -5,6 +5,32 @@ import closeout
 
 TEXT={'.json','.jsonl','.md','.txt','.csv','.log','.yaml','.yml','.py','.toml','.cpp','.h','.tex'}
 SKIP={'.git','__pycache__','node_modules','vendor','third_party','models','tools','hf-cache','datasets','env','python311','pinned-source','native-build','native-source','source','c-source','x-source','build','c-build','x-build','bin','dependencies','site-packages','llm-42','static-native','restored84'}
+def cpu_remote_retry(operation,label):
+    deadline=datetime.fromisoformat(read(PUB/'F0A.json')['utc']).timestamp()+7*86400
+    attempts=0
+    while True:
+        try:return operation()
+        except (subprocess.CalledProcessError,OSError) as e:
+            attempts+=1
+            if time.time()+60>=deadline:raise
+            status('CPU_HISTORY_REMOTE_RETRY',operation=label,attempt=attempts,error=repr(e),formal_forwards=0)
+            time.sleep(min(60,5*attempts))
+
+def load_git_blob(oid,name):
+    # Missing text blobs use the authenticated API endpoint, with durable cache
+    # and CPU-only retry, rather than another per-object Git HTTPS lazy fetch.
+    env=dict(os.environ,GIT_NO_LAZY_FETCH='1')
+    local=subprocess.run(['git','cat-file','blob',oid],cwd=REPO,env=env,capture_output=True)
+    if local.returncode==0:return local.stdout
+    blob=cpu_remote_retry(lambda:api('git/blobs/'+oid),'authenticated-text-blob:'+oid)
+    assert blob['encoding']=='base64' and blob['sha']==oid
+    b=base64.b64decode(blob['content']);assert len(b)==blob['size']
+    assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()==oid
+    stored=subprocess.check_output(['git','hash-object','-w','--stdin'],input=b,cwd=REPO).decode().strip();assert stored==oid
+    p=LOCAL/'authenticated-text-blobs'/(oid+'.json')
+    if not p.exists():save(p,dict(oid=oid,path=name,bytes=len(b),sha256=hashlib.sha256(b).hexdigest(),actual_authenticated_remote_bytes=True,utc=now()))
+    return b
+
 def reachable_text_objects(known_git):
     # Enumerate all reachable snapshots without fetching unrelated binary blobs
     # from this partial clone merely to discover their object type.
@@ -73,17 +99,14 @@ def main():
             exclusions.add(i);matches.setdefault(i,[])
             if len(matches[i])<8:matches[i].append(dict(path=label,sha256=h))
     sha_mb=sha(mbpath);sha_gs=sha(gspath)
-    pulls=api('pulls?state=all&per_page=100');assert len(pulls)>=89 and len(pulls)<100
+    pulls=cpu_remote_retry(lambda:api('pulls?state=all&per_page=100'),'pull-heads');assert len(pulls)>=89 and len(pulls)<100
     assert next(p['head']['sha'] for p in pulls if p['number']==89)==DESIGN_HEAD,'design changed, stop instead of executing stale design'
     save(LOCAL/'AUDIT_PULL_HEADS.json',[dict(number=p['number'],head=p['head']['sha'],base=p['base']['sha']) for p in pulls])
-    subprocess.run(['git','fetch','origin',*[f'refs/pull/{p["number"]}/head:refs/closeout-audit/pr-{p["number"]}' for p in pulls]],cwd=REPO,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    cpu_remote_retry(lambda:subprocess.run(['git','-c','gc.auto=0','-c','maintenance.auto=false','fetch','origin',*[f'refs/pull/{p["number"]}/head:refs/closeout-audit/pr-{p["number"]}' for p in pulls]],cwd=REPO,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL),'complete-pull-head-fetch')
     assert git('rev-parse','--is-shallow-repository')=='false','complete reachable history required'
     newobjects=reachable_text_objects(known_git)
-    proc=subprocess.Popen(['git','cat-file','--batch'],cwd=REPO,stdin=subprocess.PIPE,stdout=subprocess.PIPE)
     for oid,name in newobjects.items():
-        proc.stdin.write((oid+'\n').encode());proc.stdin.flush();head=proc.stdout.readline().split();assert len(head)==3 and head[1]==b'blob'
-        b=proc.stdout.read(int(head[2]));assert proc.stdout.read(1)==b'\n';scan(b,'gitblob:'+oid+':'+name)
-    proc.stdin.close();assert proc.wait()==0
+        scan(load_git_blob(oid,name),'gitblob:'+oid+':'+name)
     roots=[Path('C:/Users/ASUS/Documents/Codex'),Path('D:/HeteroSpec-PC'),Path('D:/HeteroSpec-RTX-Target-V1'),LOCAL]
     for root in roots:
         for dirname,dirs,files in os.walk('\\\\?\\'+str(root.resolve())):

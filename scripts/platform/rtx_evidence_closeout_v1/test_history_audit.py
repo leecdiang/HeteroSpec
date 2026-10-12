@@ -1,10 +1,29 @@
 import subprocess
+import base64
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
 import history_inputs
 
 class ReachableTreesTest(unittest.TestCase):
+    def test_missing_blob_authenticated_bytes_are_verified_and_cached(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo=Path(tmp)/'repo';repo.mkdir();local=Path(tmp)/'audit';local.mkdir()
+            subprocess.run(['git','init',str(repo)],check=True,capture_output=True)
+            body=b'complete historical exposure text'
+            oid=hashlib.sha1(b'blob '+str(len(body)).encode()+b'\0'+body).hexdigest()
+            saved=(history_inputs.REPO,history_inputs.LOCAL,history_inputs.api)
+            try:
+                history_inputs.REPO=repo;history_inputs.LOCAL=local
+                history_inputs.api=lambda route:dict(encoding='base64',sha=oid,size=len(body),content=base64.b64encode(body).decode())
+                self.assertEqual(history_inputs.load_git_blob(oid,'history.md'),body)
+                history_inputs.api=lambda route: self.fail('cached blob must not request the remote again')
+                self.assertEqual(history_inputs.load_git_blob(oid,'history.md'),body)
+                self.assertTrue((local/'authenticated-text-blobs'/(oid+'.json')).exists())
+            finally:
+                history_inputs.REPO,history_inputs.LOCAL,history_inputs.api=saved
+
     def test_all_historical_text_blobs_and_quoted_paths(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo=Path(tmp)/'repo';repo.mkdir();local=Path(tmp)/'audit';local.mkdir()

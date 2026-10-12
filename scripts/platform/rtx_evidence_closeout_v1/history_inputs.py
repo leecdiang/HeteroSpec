@@ -64,13 +64,13 @@ def confirmation_pool(data,exclusions):
         pool.append({**t,'raw_prompt':prefix+t['description'],'selection_hash':hashlib.sha256(key.encode()).hexdigest(),'cap':128})
     return sorted(pool,key=lambda t:(t['selection_hash'],t['id']))
 
-def seal_audited_panel(audit):
+def seal_audited_panel(audit,reuse_static=False):
     assert audit['status']=='PASS' and audit['completed'] and not audit['errors']
     d=read(DESIGN/'DESIGN.json');mb=Path('D:/HeteroSpec-RTX-Target-V1/work/rtx-target-v1/sanitized-mbpp.json');gs=PRIMARY/'work/third-family/datasets/gsm8k-test.jsonl'
     assert sha(mb)=='ca95deaa9a01ef0a6f439f88bcf0dd3db3563d22f22aad6cae04ebb9a8d8c8e9' and sha(gs)==d['dataset_pins']['GSM8K']['sha256']
     data=[dict(id='MBPP/'+str(t['task_id']),domain='MBPP',description=t['prompt']) for t in read(mb)]
     data += [dict(id='GSM8K/test/'+str(i),domain='GSM8K',description=json.loads(line)['question']) for i,line in enumerate(gs.read_text(encoding='utf-8').splitlines())]
-    pool=confirmation_pool(data,set(audit['excluded_ids']));native=__import__('native_inputs').tokenize(pool,'confirmation-pool')
+    pool=confirmation_pool(data,set(audit['excluded_ids']));native=__import__('native_inputs').tokenize(pool,'confirmation-pool',reuse=reuse_static)
     valid={t['id'] for t in pool if all(0<len(next(r for r in native[f] if r['id']==t['id'])['prompt_ids'])<=768 for f in d['families'])};selected=[]
     for domain in ['MBPP','GSM8K']:
         rows=[t for t in pool if t['domain']==domain and t['id'] in valid];assert len(rows)>=12;selected+=rows[:12]

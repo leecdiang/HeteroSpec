@@ -47,7 +47,7 @@ def reports():
     for f,entry in result['families'].items():
         for c in entry['comparisons']:
             ratio=c.get('qualified_ratio');lines.append(f'|{f}|{c["comparison"]}|{ratio if ratio is not None else "未合格 / 缺项"}|')
-    lines+=['','比值>1表示候选请求费用更低。R_prod/C3用于普通部署基线比较，M3/C3用于目标路径匹配的增量draft收益。完整域、任务、会话和退化项见 RESULTS.json；不据此按域在线分流。','','分阶段盈亏模型：MODEL_TIMING_UNAVAILABLE。72个真实lite请求已保留enqueue与自然采样就绪标记；异步完成与重叠不能证明规定的互斥完成wall分解。没有增加同步，没有编造系数，也没有用新确认费用拟合。轻量原生计数、四模式输出核验和配对观测扰动另见机制报告。','','公开转换文件的完整字节已认证；官方checkpoint转换血缘仍未认证。其他私有主机、不可达历史和预训练内容未观测，不宣称全局未见任务。跨日期置信区间、能源、多请求吞吐不属于本次证据。','','完整记录、源码和计数语义、实际命令/模块/内存日志、已支付失败、原始ID与生命周期收录于 RAW_EVIDENCE.zip 与本地作者档案。独立CPU及实际本地/远端档案恢复核验收据随结果保留。']
+    lines+=['','比值>1表示候选请求费用更低。R_prod/C3用于普通部署基线比较，M3/C3用于目标路径匹配的增量draft收益。完整域、任务、会话和退化项见 RESULTS.json；不据此按域在线分流。','','分阶段盈亏模型：MODEL_TIMING_UNAVAILABLE。72个真实lite请求已保留enqueue与自然采样就绪标记；异步完成与重叠不能证明规定的互斥完成wall分解。没有增加同步，没有编造系数，也没有用新确认费用拟合。轻量原生计数、四模式输出核验和配对观测扰动另见机制报告。','','公开转换文件的完整字节已认证；官方checkpoint转换血缘仍未认证。其他私有主机、不可达历史和预训练内容未观测，不宣称全局未见任务。跨日期置信区间、能源、多请求吞吐不属于本次证据。','','完整记录、源码和计数语义、实际命令/模块/内存日志、已支付失败、原始ID与生命周期收录于 RAW_EVIDENCE 档案与本地作者档案。超过单文件上限时，按 RAW_EVIDENCE_PARTS.json 的顺序连接分片为 ZIP；逐片和完整 SHA256 及 ZIP 内 INDEX 均须一致。独立CPU及实际本地/远端档案恢复核验收据随结果保留。']
     (PUB/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
     bins=[];work=[]
     for r in rows:
@@ -78,7 +78,7 @@ def pack_files():
     files={}
     for root,prefix in [(PUB,'repository/benchmarks/rtx_evidence_closeout_v1'),(Path(__file__).parent,'repository/scripts/platform/rtx_evidence_closeout_v1'),(DESIGN,'repository/docs/experiments/rtx_evidence_closeout_20261011')]:
         for p in root.rglob('*'):
-            if p.is_file() and '__pycache__' not in p.parts and p.name!='RAW_EVIDENCE.zip':files[prefix+'/'+p.relative_to(root).as_posix()]=p
+            if p.is_file() and '__pycache__' not in p.parts and not p.name.startswith('RAW_EVIDENCE'):files[prefix+'/'+p.relative_to(root).as_posix()]=p
     for root in [LOCAL/'runs',LOCAL/'ledger',LOCAL/'cooldown',LOCAL/'static-native']:
         for p in root.rglob('*'):
             if p.is_file():files['closeout/'+p.relative_to(LOCAL).as_posix()]=p
@@ -86,7 +86,29 @@ def pack_files():
         p=LOCAL/n
         if p.exists():files['closeout/'+n]=p
     files['repository/scripts/platform/jsa_third_family_v1/gguf.py']=REPO/'scripts/platform/jsa_third_family_v1/gguf.py'
+    for p in (LOCAL/'cpu-independent-live').rglob('*'):
+        if p.is_file():files['closeout/'+p.relative_to(LOCAL).as_posix()]=p
     return files
+
+def split_archive(source,part_bytes=64*1024**2):
+    source=Path(source);assert 0<part_bytes<95*1024**2;parts=[]
+    with source.open('rb') as stream:
+        while data:=stream.read(part_bytes):
+            path=source.with_name(source.stem+f'.part{len(parts)+1:03d}')
+            with path.open('xb') as out:out.write(data)
+            parts.append(dict(name=path.name,bytes=len(data),sha256=sha(path)))
+    return dict(format='ordered-binary-split-of-complete-ZIP-v1',archive_bytes=source.stat().st_size,archive_sha256=sha(source),parts=parts,reconstruction='Concatenate parts in listed order; verify each size/SHA256 and complete ZIP size/SHA256, then restore and verify every INDEX entry.')
+
+def assemble_archive(folder,manifest,destination):
+    folder=Path(folder);destination=Path(destination)
+    with destination.open('xb') as out:
+        for a in manifest['parts']:
+            assert Path(a['name']).name==a['name'] and '/' not in a['name'] and '\\' not in a['name']
+            p=folder/a['name'];assert p.stat().st_size==a['bytes'] and sha(p)==a['sha256']
+            with p.open('rb') as stream:
+                while data:=stream.read(1024**2):out.write(data)
+    assert destination.stat().st_size==manifest['archive_bytes'] and sha(destination)==manifest['archive_sha256']
+    return destination
 
 def restore(source,root,with_analysis):
     root.mkdir(exist_ok=False)
@@ -113,23 +135,38 @@ def publish(stop=None):
         save(PUB/'STOP_REPORT.json',stop)
         (PUB/'RESULTS.md').write_text('# RTX closeout 协议停止报告\n\n'+stop['reason']+'\n\n没有扩大预算或换k/mask/家族来追正结果。已有真实请求、失败、加载及生命周期全部保留。原始正式计划3600槽；未执行槽和缺项不伪造成完成。\n',encoding='utf-8',newline='\n')
     files=pack_files();info=archive(PUB/'RAW_EVIDENCE.zip',files)
-    assert info['bytes']<95*1024**2,'scientific CAS exceeds single GitHub file ceiling; split delivery required'
+    transport=[PUB/'RAW_EVIDENCE.zip'];parts=None
+    if info['bytes']>=95*1024**2:
+        parts=split_archive(PUB/'RAW_EVIDENCE.zip');save(PUB/'RAW_EVIDENCE_PARTS.json',parts)
+        transport=[PUB/a['name'] for a in parts['parts']]
+        assert all(p.stat().st_size<95*1024**2 for p in transport)
+        assemble_archive(PUB,parts,LOCAL/'split-roundtrip-CAS.zip')
     full=dict(files)
     for p in (LOCAL/'native').rglob('*'):
         if p.is_file() and 'build' not in p.parts and p.suffix not in ['.obj','.o','.a','.dll','.exe']:full['closeout/'+p.relative_to(LOCAL).as_posix()]=p
     full['closeout/native/build/bin/llama-server.exe']=LOCAL/'native/build/bin/llama-server.exe'
     full['closeout/native/vocabulary.exe']=LOCAL/'native/vocabulary.exe'
     output=PRIMARY/'outputs/HeteroSpec_RTX_PR89_完整记录.zip';author=archive(output,full)
-    save(PUB/'ARCHIVE_MANIFEST.json',dict(scientific=info,private_author=dict(path=str(output),**author),weights_and_numerical_DLLs_external_pinned_full_bytes=True))
+    save(PUB/'ARCHIVE_MANIFEST.json',dict(scientific=info,transport=parts or dict(format='single-ZIP'),private_author=dict(path=str(output),**author),weights_and_numerical_DLLs_external_pinned_full_bytes=True))
     localreceipt=restore(PUB/'RAW_EVIDENCE.zip',LOCAL/'restored-result-local',with_analysis=not bool(stop));save(PUB/'RESTORE_LOCAL.json',localreceipt)
-    subprocess.run(['git','add','--sparse','scripts/platform/rtx_evidence_closeout_v1','benchmarks/rtx_evidence_closeout_v1'],cwd=REPO,check=True)
-    subprocess.run(['git','add','--sparse','-f','benchmarks/rtx_evidence_closeout_v1/RAW_EVIDENCE.zip'],cwd=REPO,check=True)
+    # Explicit paths prevent accidentally staging the oversized local assembled ZIP.
+    paths=[p.relative_to(REPO).as_posix() for root in [Path(__file__).parent,PUB] for p in root.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.name!='RAW_EVIDENCE.zip']
+    if not parts:paths.append((PUB/'RAW_EVIDENCE.zip').relative_to(REPO).as_posix())
+    subprocess.run(['git','add','--sparse','-f','--',*paths],cwd=REPO,check=True)
     subprocess.run(['git','commit','-m','Deliver RTX closeout '+('protocol stop evidence' if stop else 'complete request cost and workload results')],cwd=REPO,check=True)
     network_retry(lambda:subprocess.run(['git','push','origin',git('branch','--show-current')],cwd=REPO,check=True),'result-CAS-push')
-    commit=git('rev-parse','HEAD');path='benchmarks/rtx_evidence_closeout_v1/RAW_EVIDENCE.zip';tree=api('git/trees/'+commit+'?recursive=1');item=next(x for x in tree['tree'] if x['path']==path)
-    b=base64.b64decode(api('git/blobs/'+item['sha'])['content']);assert hashlib.sha256(b).hexdigest()==info['sha256']
-    remote=LOCAL/'authenticated-remote-CAS.zip';remote.write_bytes(b)
-    receipt=restore(remote,LOCAL/'restored-result-remote',with_analysis=not bool(stop));receipt.update(actual_authenticated_remote_bytes=True,remote_commit=commit,git_blob=item['sha']);save(PUB/'RESTORE_REMOTE.json',receipt)
+    commit=git('rev-parse','HEAD');tree=api('git/trees/'+commit+'?recursive=1');assert not tree.get('truncated');items={x['path']:x for x in tree['tree']};checked=[]
+    remote=LOCAL/'authenticated-remote-CAS.zip';remote_parts=LOCAL/'authenticated-remote-parts';remote_parts.mkdir(exist_ok=False)
+    for path in transport+([PUB/'RAW_EVIDENCE_PARTS.json'] if parts else []):
+        item=items[path.relative_to(REPO).as_posix()];b=base64.b64decode(api('git/blobs/'+item['sha'])['content'])
+        assert len(b)==path.stat().st_size and hashlib.sha256(b).hexdigest()==sha(path)
+        with (remote_parts/path.name).open('xb') as out:out.write(b)
+        checked.append(dict(path=path.relative_to(REPO).as_posix(),git_blob=item['sha'],bytes=len(b),sha256=sha(path)))
+    if parts:assemble_archive(remote_parts,read(remote_parts/'RAW_EVIDENCE_PARTS.json'),remote)
+    else:
+        with remote.open('xb') as out:out.write((remote_parts/'RAW_EVIDENCE.zip').read_bytes())
+    assert sha(remote)==info['sha256']
+    receipt=restore(remote,LOCAL/'restored-result-remote',with_analysis=not bool(stop));receipt.update(actual_authenticated_remote_bytes=True,remote_commit=commit,transport_blobs=checked);save(PUB/'RESTORE_REMOTE.json',receipt)
     subprocess.run(['git','add','--sparse','benchmarks/rtx_evidence_closeout_v1/RESTORE_REMOTE.json'],cwd=REPO,check=True);subprocess.run(['git','commit','-m','Record authenticated remote CAS restoration'],cwd=REPO,check=True);network_retry(lambda:subprocess.run(['git','push'],cwd=REPO,check=True),'restoration-receipt-push')
     body=LOCAL/'PR_BODY.md';body.write_text(('PR #89 的真实 RTX 执行结果。'+('触发具体协议停止线；保留所有已付记录与未完成项。' if stop else '完成固定普通 UB 筛选、四模式机制尝试及 3600 正式请求与 150 预热；保留逐比较完整资格、负收益和退化任务。')+'\n\n固定三家族、k3、Q8、ctx1024、counts通道。F0A/F0B在对应推理前commit/push并逐GitHub blob读回。完整科学CAS和作者源码档案、独立CPU复算、本地与认证远端实际恢复收据随结果交付。\n\n原生计数、分母及物理micrograph行数单独审计。真实lite仅提供异步API/自然就绪标记，不能证明互斥完成wall分解，因此模型保留 MODEL_TIMING_UNAVAILABLE，不增加同步、不用正式费用拟合。\n\n请从 benchmarks/rtx_evidence_closeout_v1/RESULTS.md 阅读结果/停止原因；此PR不合并或修改论文/release。\n'),encoding='utf-8')
     title='RTX closeout: '+('protocol stop and complete paid evidence' if stop else 'strong ordinary baselines and verified request workload')

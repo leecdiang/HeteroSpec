@@ -156,7 +156,41 @@ def main():
           'sample':records[0] if isinstance(records,list) else list(records)})[:16000])
     first_raw=next(p for p in file_entries if p.startswith('raw/formal') and p.endswith('.RESULT.json'))
     print('RAW_SCHEMA '+json.dumps({'path':first_raw,'sample':read(first_raw)})[:16000])
+    raw_paths=set()
+    prompts={}
+    for r in records:
+        path=r['raw_path'].replace('\\', '/')
+        assert path not in raw_paths
+        raw_paths.add(path)
+        assert file_entries[path]['sha256']==r['raw_evidence_sha256']
+        native=read(path)
+        assert native['event']=='RESULT' and native['pid']==r['worker_pid']
+        for normalized,key in [('ids','ids'),('eog_flags','eog'),('length','length'),
+                               ('terminal_id','terminal_id'),('stop_reason','stop_reason')]:
+            assert r['output'][normalized]==native[key]
+        assert native['cap']==128
+        assert native['workload']==r['workload']
+        assert native['observation']==r['observation']
+        assert native['observation_mode']==r['measurement_mode']
+        assert len(native['prompt_ids'])==r['workload']['prompt_ids_count']
+        previous=prompts.setdefault(r['task'],native['prompt_ids'])
+        assert previous==native['prompt_ids']
     result=pairwise(records)
+    result['native_crosscheck']={'unique_raw_results':len(raw_paths),
+        'all_full_outputs_and_workload_equal':True,'same_prompt_ids_per_task':True}
+    work=[]
+    for domain,arm in itertools.product(['MBPP','GSM8K'],ARMS):
+        group=[r for r in records if r['task'].startswith(domain+'/') and r['condition']==arm]
+        keys=['output_ids_count','proposal_verified','accepted_committed','draft_continuation_rows',
+              'target_verification_rows','target_ordinary_rows','target_micrographs','verify_cycles']
+        totals={k:sum(r['workload'][k] for r in group) for k in keys}
+        work.append({'domain':domain,'arm':arm,'requests':len(group),'totals':totals,
+            'acceptance':totals['accepted_committed']/totals['proposal_verified'] if totals['proposal_verified'] else None,
+            'per_output':{k:totals[k]/totals['output_ids_count'] for k in keys if k!='output_ids_count'},
+            'median_output_length':statistics.median(r['output']['length'] for r in group),
+            'cap_requests':sum(r['output']['stop_reason']=='CAP' for r in group),
+            'physical_continuation_widths':sorted({int(w) for r in group for w in r['workload']['target_continuation_physical_width_hist']})})
+    result['work_summary']=work
     result['archive_verification']={'status':'ALL_MANIFEST_FILES_HASH_VERIFIED',
         'manifest_sha256':MANIFEST_SHA,'archive_sha256':CAS_SHA,
         'logical_files':len(file_entries),'unique_objects':len(objects),

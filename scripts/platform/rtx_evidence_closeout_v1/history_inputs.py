@@ -47,6 +47,37 @@ def reachable_text_objects(known_git):
     save(LOCAL/'REACHABLE_TEXT_TREES.json',dict(complete_reachable_snapshot_trees=sorted(trees),additional_text_objects=objects,enumeration='all reachable commit root trees; recursive ls-tree; no binary lazy-fetch'))
     return objects
 
+def aggregate_availability_ids(obj,coord):
+    if obj.get('status')!='PASS_ACCESSIBLE_ID_AUDIT' or obj.get('confirmation_selection')!='NOT_PERFORMED':return set()
+    assert coord['schema']=='heterospec.jsa.b570.coordination.v1'
+    remaining=set(coord['remaining_ranked_candidates'])
+    reserved=set(coord['provisional_b570_reservation'])|set(coord['rtx_reserved_ids'])
+    return {i for i,paths in obj['hits'].items() if paths and i in remaining and i not in reserved and all(Path(p.replace('\\','/')).name in ['TOKENIZATION.stdout.jsonl','COORDINATION_SNAPSHOT.json'] for p in paths)}
+
+def confirmation_pool(data,exclusions):
+    counts=collections.Counter(closeout.normalized_text(t['description']) for t in data);pool=[]
+    for t in data:
+        if t['id'] in exclusions or (t['domain']=='MBPP' and not 11<=int(t['id'].split('/')[-1])<=510) or counts[closeout.normalized_text(t['description'])]!=1:continue
+        if closeout.cohort_parity(t['domain'],t['description'])!=0:continue
+        key='heterospec-final-closeout-v1|'+t['domain']+'|'+closeout.normalized_text(t['description'])
+        prefix='Solve the following problem and explain your reasoning.\n\n' if t['domain']=='GSM8K' else 'Complete the following Python programming task. Return only the completed Python code, without Markdown fences.\n\n'
+        pool.append({**t,'raw_prompt':prefix+t['description'],'selection_hash':hashlib.sha256(key.encode()).hexdigest(),'cap':128})
+    return sorted(pool,key=lambda t:(t['selection_hash'],t['id']))
+
+def seal_audited_panel(audit):
+    assert audit['status']=='PASS' and audit['completed'] and not audit['errors']
+    d=read(DESIGN/'DESIGN.json');mb=Path('D:/HeteroSpec-RTX-Target-V1/work/rtx-target-v1/sanitized-mbpp.json');gs=PRIMARY/'work/third-family/datasets/gsm8k-test.jsonl'
+    assert sha(mb)=='ca95deaa9a01ef0a6f439f88bcf0dd3db3563d22f22aad6cae04ebb9a8d8c8e9' and sha(gs)==d['dataset_pins']['GSM8K']['sha256']
+    data=[dict(id='MBPP/'+str(t['task_id']),domain='MBPP',description=t['prompt']) for t in read(mb)]
+    data += [dict(id='GSM8K/test/'+str(i),domain='GSM8K',description=json.loads(line)['question']) for i,line in enumerate(gs.read_text(encoding='utf-8').splitlines())]
+    pool=confirmation_pool(data,set(audit['excluded_ids']));native=__import__('native_inputs').tokenize(pool,'confirmation-pool')
+    valid={t['id'] for t in pool if all(0<len(next(r for r in native[f] if r['id']==t['id'])['prompt_ids'])<=768 for f in d['families'])};selected=[]
+    for domain in ['MBPP','GSM8K']:
+        rows=[t for t in pool if t['domain']==domain and t['id'] in valid];assert len(rows)>=12;selected+=rows[:12]
+    inputs=dict(tasks=selected,families={f:[next(r for r in native[f] if r['id']==t['id']) for t in selected] for f in d['families']},history_audit={**{k:audit[k] for k in ['completed','by_id_and_description','unknown_hosts_disclosed','training_unseen_claim','excluded_ids']},'evidence_sha256':sha(PUB/'HISTORY_AUDIT.json')},forwards=0)
+    save(PUB/'CONFIRMATION_INPUTS.json',inputs);save(PUB/'FORMAL_PLAN.json',closeout.schedule(d,inputs,read(PUB/'SELECTED_ORDINARY.json')))
+    status('NEW_PANEL_SEALED',tasks=[t['id'] for t in selected],forwards=0)
+
 def host_objects(roots,prior_seen):
     def paths():
         for root in roots:
@@ -94,6 +125,7 @@ def main():
     for p,ids in patterns.items():auto.add_word(p,ids)
     auto.make_automaton();regexp=re.compile(r'\b(?:MBPP[/_\-](\d{1,4})|GSM8K/test/(\d{1,4}))\b',re.I)
     new=[];errors=[];availability=[];archives=[];matches={};counter=collections.Counter()
+    coord=json.loads(load_git_blob('856a06913df1f4699aca073b9a6fbc1a4bbb2f25','docs/experiments/jsa_b570_validation_20261010/COORDINATION_SNAPSHOT.json'))
     def strings(obj):
         if isinstance(obj,str):yield obj
         elif isinstance(obj,list):
@@ -109,6 +141,10 @@ def main():
         except (ValueError,UnicodeDecodeError):obj=None
         lower=label.lower()
         if isinstance(obj,dict):
+            if obj.get('status')=='PASS_ACCESSIBLE_ID_AUDIT' and isinstance(obj.get('hits'),dict):
+                population=aggregate_availability_ids(obj,coord)
+                availability.append(dict(path=label,sha256=h,reason='aggregate tokenization/coordination hits for verified unreserved remaining population',ids=sorted(population)))
+                obj=dict(excluded_ids=sorted(set(obj['excluded_ids'])-population))
             if isinstance(obj.get('files'),dict) and all(isinstance(v,dict) and 'sha256' in v for v in obj['files'].values()):return
             if ('description_matches' in obj and 'project_records' in obj) or ('descriptions' in obj and 'identifiers' in obj):return
             if 'eligible_pool' in obj or 'eligible_ranked' in obj or ('rows' in obj and any(k in obj for k in ['selected','chosen','eligible_count','known_executed_planned'])):
@@ -149,6 +185,10 @@ def main():
                 h=payload
                 if h in known_archive:archives.append(dict(path=label,sha256=h,prior_verified_logical_objects_reused=True));continue
                 known_archive.add(h)
+                if not zipfile.is_zipfile(p):
+                    b=p.read_bytes();text=b.decode('utf-8')
+                    if b.startswith(b'PK') or not text.isprintable():raise zipfile.BadZipFile('invalid binary archive')
+                    scan(b,label+'!actual-plain-text');availability.append(dict(path=label,sha256=h,reason='actual printable UTF8 text with .zip suffix'));continue
                 with zipfile.ZipFile(p) as z:
                     for n in z.namelist():
                         q=Path(n)
@@ -163,24 +203,9 @@ def main():
                 archives.append(dict(path=label,sha256=h));known_archive.add(h)
         except (OSError,ValueError,EOFError,zipfile.BadZipFile,tarfile.TarError) as e:errors.append(dict(path=label,error=repr(e)))
     save(LOCAL/'HISTORY_NEW_OBJECTS.json',new)
-    pool=[];domaincounts=collections.Counter();textcounts=collections.Counter(closeout.normalized_text(t['description']) for t in data)
-    for t in data:
-        if t['id'] in exclusions or (t['domain']=='MBPP' and not 11<=int(t['id'].split('/')[-1])<=510) or textcounts[closeout.normalized_text(t['description'])]!=1:continue
-        if closeout.cohort_parity(t['domain'],t['description'])!=0:continue
-        key='heterospec-final-closeout-v1|'+t['domain']+'|'+closeout.normalized_text(t['description'])
-        prefix='Solve the following problem and explain your reasoning.\n\n' if t['domain']=='GSM8K' else 'Complete the following Python programming task. Return only the completed Python code, without Markdown fences.\n\n'
-        pool.append({**t,'raw_prompt':prefix+t['description'],'selection_hash':hashlib.sha256(key.encode()).hexdigest(),'cap':128});domaincounts[t['domain']]+=1
+    pool=confirmation_pool(data,exclusions);domaincounts=collections.Counter(t['domain'] for t in pool)
     audit=dict(status='PASS' if not errors and all(domaincounts[x]>=12 for x in ['MBPP','GSM8K']) else 'INPUT_POOL_BLOCKED',utc=now(),completed=not errors,by_id_and_description=True,unknown_hosts_disclosed=True,training_unseen_claim=False,excluded_ids=sorted(exclusions),prior_audit_sha256=sha(OLDPUB/'EXPOSURE_AUDIT.json'),prior_catalog_sha256=sha(catpath),prior_reachable_history_sha256=sha(historypath),prior_verified_git_objects=len(known_git),additional_reachable_text_objects=len(newobjects),pull_heads=len(pulls),host_roots=list(map(str,roots)),counts=dict(counter),new_object_inventory_sha256=sha(LOCAL/'HISTORY_NEW_OBJECTS.json'),matches=matches,archives=archives,availability=availability,errors=errors,eligible_counts=dict(domaincounts),unknown_history='Other private hosts, unreachable force-pushed states and pretraining corpora unavailable')
     save(PUB/'HISTORY_AUDIT.json',audit);assert audit['status']=='PASS','complete host/history audit or input pool blocked'
-    pool.sort(key=lambda t:(t['selection_hash'],t['id']));native=__import__('native_inputs').tokenize(pool,'confirmation-pool')
-    valid={t['id'] for t in pool if all(0<len(next(r for r in native[f] if r['id']==t['id'])['prompt_ids'])<=768 for f in d['families'])}
-    selected=[]
-    for domain in ['MBPP','GSM8K']:
-        rows=[t for t in pool if t['domain']==domain and t['id'] in valid];assert len(rows)>=12
-        selected+=rows[:12]
-    inputs=dict(tasks=selected,families={f:[next(r for r in native[f] if r['id']==t['id']) for t in selected] for f in d['families']},history_audit={**{k:audit[k] for k in ['completed','by_id_and_description','unknown_hosts_disclosed','training_unseen_claim','excluded_ids']},'evidence_sha256':sha(PUB/'HISTORY_AUDIT.json')},forwards=0)
-    save(PUB/'CONFIRMATION_INPUTS.json',inputs)
-    save(PUB/'FORMAL_PLAN.json',closeout.schedule(d,inputs,read(PUB/'SELECTED_ORDINARY.json')))
-    status('NEW_PANEL_SEALED',tasks=[t['id'] for t in selected],forwards=0)
+    seal_audited_panel(audit)
 
 if __name__=='__main__': main()

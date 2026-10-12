@@ -7,6 +7,13 @@ from pathlib import Path
 import history_inputs
 
 class ReachableTreesTest(unittest.TestCase):
+    def test_aggregate_population_keeps_reservations_and_operational_hits(self):
+        coord=dict(schema='heterospec.jsa.b570.coordination.v1',remaining_ranked_candidates=['MBPP/11','MBPP/12','MBPP/13'],provisional_b570_reservation=['MBPP/12'],rtx_reserved_ids=[])
+        obj=dict(status='PASS_ACCESSIBLE_ID_AUDIT',confirmation_selection='NOT_PERFORMED',hits={'MBPP/11':['C:\\hs\\TOKENIZATION.stdout.jsonl','C:\\hs\\COORDINATION_SNAPSHOT.json'],'MBPP/12':['C:\\hs\\COORDINATION_SNAPSHOT.json'],'MBPP/13':['C:\\hs\\ACTUAL_REQUEST.json']})
+        self.assertEqual(history_inputs.aggregate_availability_ids(obj,coord),{'MBPP/11'})
+        obj['confirmation_selection']='PERFORMED'
+        self.assertEqual(history_inputs.aggregate_availability_ids(obj,coord),set())
+
     def test_parallel_host_reader_keeps_bytes_and_hash_based_reuse(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);old=root/'old.txt';old.write_bytes(b'old')

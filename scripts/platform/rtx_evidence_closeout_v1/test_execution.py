@@ -7,6 +7,19 @@ import deliver, closeout
 from test_closeout import fixture,D
 
 class ExecutionGuards(unittest.TestCase):
+    def test_network_retry_recovers_without_retrying_scientific_checks(self):
+        import subprocess
+        calls=[]
+        def operation():
+            calls.append(1)
+            if len(calls)<3:raise subprocess.CalledProcessError(1,['network'])
+            return 'verified'
+        with patch.object(run_common.time,'sleep'),patch.object(run_common,'status'):
+            self.assertEqual(run_common.network_retry(operation,'CPU-test'),'verified')
+            self.assertEqual(len(calls),3)
+            with self.assertRaises(AssertionError):
+                run_common.network_retry(lambda:(_ for _ in ()).throw(AssertionError('identity mismatch')),'scientific-gate')
+
     def test_raw_eog_suffix_is_retained_and_invalid(self):
         c=stages.ordinary(1,'R');task={'cap':3,'prompt_ids':[1,2]}
         obs=dict(adapter='hsc89-v1',mode='counts',scope_mask=0,context=1024,effective_batch=1024,target_ub=1,phase_timers=False,heavy_capture=False,etw=False,added_sync=False)

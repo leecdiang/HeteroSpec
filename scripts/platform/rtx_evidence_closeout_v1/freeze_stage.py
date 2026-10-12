@@ -82,7 +82,7 @@ def freeze(phase):
     subprocess.run(['git','add','--sparse','scripts/platform/rtx_evidence_closeout_v1','benchmarks/rtx_evidence_closeout_v1'],cwd=REPO,check=True)
     subprocess.run(['git','add','--sparse','-f','benchmarks/rtx_evidence_closeout_v1/SOURCE_RUNTIME.zip'],cwd=REPO,check=True)
     subprocess.run(['git','commit','-m','Freeze RTX closeout '+phase+' before paid '+('engineering' if phase=='F0A' else 'confirmation')],cwd=REPO,check=True)
-    branch=git('branch','--show-current');subprocess.run(['git','push','-u','origin',branch],cwd=REPO,check=True)
+    branch=git('branch','--show-current');network_retry(lambda:subprocess.run(['git','push','-u','origin',branch],cwd=REPO,check=True),'prospective-freeze-push:'+phase)
     commit=git('rev-parse','HEAD');assert api('git/ref/heads/'+branch)['object']['sha']==commit
     tree=api('git/trees/'+commit+'?recursive=1');assert not tree.get('truncated');items={x['path']:x for x in tree['tree']}
     wanted={**payload,(PUB/(phase+'.json')).relative_to(REPO).as_posix():sha(PUB/(phase+'.json'))};checked={}

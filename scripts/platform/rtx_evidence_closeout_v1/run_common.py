@@ -32,7 +32,20 @@ def status(stage, **extra):
     tmp.write_text(json.dumps({'utc':now(),'stage':stage,**extra},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     os.replace(tmp,p);print(stage,json.dumps(extra,ensure_ascii=False),flush=True)
 def git(*args): return subprocess.check_output(['git',*args],cwd=REPO).decode('utf-8').strip()
-def api(route): return json.loads(subprocess.check_output(['gh','api','repos/leecdiang/HeteroSpec/'+route]))
+def network_retry(operation,label):
+    boundary=PUB/'F0A.json'
+    deadline=(datetime.fromisoformat(read(boundary)['utc']).timestamp() if boundary.exists() else time.time())+7*86400
+    attempts=0
+    while True:
+        try:return operation()
+        except (subprocess.CalledProcessError,OSError) as e:
+            attempts+=1
+            if time.time()+60>=deadline:raise
+            status('NETWORK_RETRY',operation=label,attempt=attempts,error=repr(e))
+            time.sleep(min(60,5*attempts))
+
+def api(route):
+    return json.loads(network_retry(lambda:subprocess.check_output(['gh','api','repos/leecdiang/HeteroSpec/'+route]),'authenticated-GitHub:'+route))
 def models():
     contract=PUB/'MODEL_CONTRACT.json'
     if not contract.exists():contract=OLDPUB/'MODEL_CONTRACT.json'

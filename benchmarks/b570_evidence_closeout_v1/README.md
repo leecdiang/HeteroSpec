@@ -2,6 +2,10 @@
 
 The fixed Q6_K target/Q4_K_M draft, k1 study completed1200/1200 formal requests and50/50 warmups across24 new inputs,5 arms,5 rounds and2 consecutive sessions. Engineering used334 units (core234, profiling100), giving1584/1634 total paid units. There were no formal retries, overwritten slots, endpoint crops or outcome-dependent choices.
 
+The stable R_stock reference passed all 240 native requests. R_prod, M_match and C_k1 each diverged on GSM8K/test/1248 and GSM8K/test/831 in every round/session (20 mismatching requests per arm). Their first differing output ID indices are 47 and 81, respectively (zero-based). N_k1 has 80 mismatching requests. Consequently, every preregistered comparison has request_qualified_ratio = null under the frozen R_stock reference gate. No baseline reanchoring or task exclusion is used to admit a ratio.
+
+The measured diagnostic R_prod/C_k1 ratio is 0.719264 and M_match/C_k1 is 0.727927; C_k1 therefore costs about 39% and 37% more per measured output window. Both comparisons regress on all 24 tasks. These are diagnostic costs of the actual windows, not qualified same-output speedups. The new-cohort result does not certify the engineering sample's complete-output equivalence.
+
 Complete-output qualification and operational memory are assessed per comparison. Physical residency remains UNKNOWN: no same-scope ETL/allocation certificate exists, so strict resident qualified ratios remain null. The following request ratios include all required native and host work in the frozen counts channel.
 
 | Comparison | Request-qualified ratio | Diagnostic complete cost ratio | MBPP qualified | GSM8K qualified | Negative tasks |

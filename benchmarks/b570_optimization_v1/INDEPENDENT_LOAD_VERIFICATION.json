@@ -1,0 +1,549 @@
+{
+  "status": "PASS_ZERO_FORWARD_EVIDENCE_PARSER",
+  "checks": 561324,
+  "loads": {
+    "LLAMA_Q4_UB32_OUT1_LOAD.stdout.jsonl": {
+      "pid": 42824,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 219439104,
+      "loaded_headroom_MiB": 209.2734375,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -317431808,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 33,
+          "n_ctx": 1024,
+          "n_ubatch": 32,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 17,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "33",
+          "33"
+        ],
+        [
+          "17",
+          "17"
+        ]
+      ],
+      "actual_KV_layer_records": 48,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "LLAMA_Q8_LOGFIX_UB32_OUT1_LOAD.stdout.jsonl": {
+      "pid": 11324,
+      "status": "BLOCKED_LOAD_ERROR",
+      "error": "Device budget overrun; actual signed sample retained",
+      "last_memory_point": "DRAFT_WEIGHTS",
+      "last_observed_headroom_bytes": -218660902,
+      "overrun_numeric_sample_retained": true,
+      "qualified_speedup": null
+    },
+    "LLAMA_Q8_UB32_OUT1_LOAD.stdout.jsonl": {
+      "pid": 6876,
+      "status": "BLOCKED_LOAD_ERROR",
+      "error": "Device budget overrun",
+      "last_memory_point": "TARGET_CONTEXT",
+      "last_observed_headroom_bytes": 1109819392,
+      "overrun_numeric_sample_retained": false,
+      "qualified_speedup": null
+    },
+    "QWEN_Q4_LOAD.stdout.jsonl": {
+      "pid": 32884,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 509444096,
+      "loaded_headroom_MiB": 485.84375,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -27426816,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 128,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q4_UB128_OUT1_LOAD.stdout.jsonl": {
+      "pid": 3396,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 460029952,
+      "loaded_headroom_MiB": 438.71875,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -76840960,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 128,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q4_UB32_LOAD.stdout.jsonl": {
+      "pid": 240,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 513114112,
+      "loaded_headroom_MiB": 489.34375,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -23756800,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 32,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q4_UB32_OUT1_LOAD.stdout.jsonl": {
+      "pid": 33572,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 527925248,
+      "loaded_headroom_MiB": 503.46875,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -8945664,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 32,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q4_UB512_LOAD.stdout.jsonl": {
+      "pid": 3652,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 369655808,
+      "loaded_headroom_MiB": 352.53125,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -167215104,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 512,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q4_UB512_OUT1_LOAD.stdout.jsonl": {
+      "pid": 35560,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 465076224,
+      "loaded_headroom_MiB": 443.53125,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -71794688,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 512,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q8_LOAD.stdout.jsonl": {
+      "pid": 21832,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 316047360,
+      "loaded_headroom_MiB": 301.40625,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -220823552,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 128,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    },
+    "QWEN_Q8_UB32_OUT1_LOAD.stdout.jsonl": {
+      "pid": 18104,
+      "status": "BLOCKED_INSUFFICIENT_LOADED_HEADROOM",
+      "loaded_headroom_bytes": 302088192,
+      "loaded_headroom_MiB": 288.09375,
+      "required_headroom_bytes": 536870912,
+      "margin_bytes": -234782720,
+      "contexts": [
+        {
+          "event": "CONTEXT",
+          "role": "target",
+          "layers": 37,
+          "n_ctx": 1024,
+          "n_ubatch": 32,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        },
+        {
+          "event": "CONTEXT",
+          "role": "draft",
+          "layers": 29,
+          "n_ctx": 1024,
+          "n_ubatch": 1,
+          "n_outputs_max": 1,
+          "hidden_warmup_disabled_by_direct_API": true,
+          "decode_calls": 0
+        }
+      ],
+      "actual_gpu_layers": [
+        [
+          "37",
+          "37"
+        ],
+        [
+          "29",
+          "29"
+        ]
+      ],
+      "actual_KV_layer_records": 64,
+      "all_layers_and_KV_actual_Vulkan": true,
+      "model_forwards": 0,
+      "qualified_speedup": null,
+      "limits": [
+        "Zero-forward loaded memory only; engineering peak, no-spill, native mode, raw boundary and performance gates remain untested."
+      ]
+    }
+  },
+  "load_combinations_by_family": {
+    "Qwen": 8,
+    "Llama": 3
+  },
+  "independently_compared_full_native_vocab_pairs": [
+    {
+      "family": "Qwen",
+      "draft": "Q8_0",
+      "tokens": 151936,
+      "status": "PASS"
+    },
+    {
+      "family": "Qwen",
+      "draft": "Q4_K_M",
+      "tokens": 151936,
+      "status": "PASS"
+    },
+    {
+      "family": "Llama",
+      "draft": "Q8_0",
+      "tokens": 128256,
+      "status": "PASS"
+    },
+    {
+      "family": "Llama",
+      "draft": "Q4_K_M",
+      "tokens": 128256,
+      "status": "PASS"
+    }
+  ],
+  "independently_rehashed_external_models": [
+    {
+      "asset": "Qwen_target_Q8_0",
+      "bytes": 8709518112,
+      "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+      "status": "PASS"
+    },
+    {
+      "asset": "Qwen_draft_Q8_0",
+      "bytes": 639446688,
+      "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+      "status": "PASS"
+    },
+    {
+      "asset": "Qwen_draft_Q4_K_M",
+      "bytes": 484220320,
+      "sha256": "9acfc1e001311f34b4252001b626f2e466d592a42065f66571bff3790d4e1b14",
+      "status": "PASS"
+    },
+    {
+      "asset": "Llama_target_Q8_0",
+      "bytes": 8540775840,
+      "sha256": "9da71c45c90a821809821244d4971e5e5dfad7eb091f0b8ff0546392393b6283",
+      "status": "PASS"
+    },
+    {
+      "asset": "Llama_draft_Q8_0",
+      "bytes": 1321083008,
+      "sha256": "432f310a77f4650a88d0fd59ecdd7cebed8d684bafea53cbff0473542964f0c3",
+      "status": "PASS"
+    },
+    {
+      "asset": "Llama_draft_Q4_K_M",
+      "bytes": 807694464,
+      "sha256": "6f85a640a97cf2bf5b8e764087b1e83da0fdb51d7c9fab7d0fece9385611df83",
+      "status": "PASS"
+    }
+  ],
+  "negative_tests": [
+    {
+      "case": "external_pid",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "External memory PID"
+    },
+    {
+      "case": "shared_headroom",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "Shared heap was added to headroom or invalid budget"
+    },
+    {
+      "case": "threshold_false",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "Wrong512MiB predicate"
+    },
+    {
+      "case": "wrong_device",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "Wrong/non-discrete physical GPU"
+    },
+    {
+      "case": "hidden_forward",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "Non-zero or unknown forward"
+    },
+    {
+      "case": "partial_gpu",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "Requested full offload differs from actual layers"
+    },
+    {
+      "case": "unknown_kv",
+      "status": "REJECTED_AS_REQUIRED",
+      "reason": "KV placement not fully Vulkan"
+    }
+  ],
+  "forward_requests_started": 0,
+  "formal_requests_started": 0,
+  "performance_qualified_ratios": null,
+  "model_forwards": 0,
+  "utc": "2026-10-11T07:07:53Z"
+}

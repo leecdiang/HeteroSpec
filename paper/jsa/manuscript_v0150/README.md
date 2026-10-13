@@ -1,49 +1,47 @@
 # Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 
-**Version 0.15.0 — complete reconstructed author-review manuscript (13 October 2026).**
+**Version 0.15.1, author-review final revision, 13 October 2026.** The title and central method are unchanged. This revision updates the v0.15.0 paper in PR102, pinned at `b9e23fd8a5309151dc3e71cb2b79311589bcdbe3`. The directory name remains stable for existing links. It is not a journal submission or an approval of the pending author declarations.
 
-The paper's core is a specific runtime method: decouple attention query geometry from target-wide batching using query/mask views, phase activation and layout-sensitive graph reuse. The numerical-replay, complete-output and implementation-cost claims are distinct. B570 PR101 is incorporated as a complementary projection/state-boundary study, not a Vulkan QB port.
+## Reading and delivery
 
-## Files
-- `main.tex` + `sections/`: complete English main article.
-- `supplement.tex` + `supplement/`: contracts, all reported primary costs, failed controls and the complete28-group legacy disposition index.
-- `figures/`: five original, editable TikZ/PGF vector figures (not screenshots).
-- `references.bib`: related-work and commit-pinned companion evidence references.
-- `psql-num.bst`: renamed LPPL-compatible derivative of `elsarticle-num`; retains linked reference titles and DOIs but removes redundant printed long URL lines. Revert to the official journal style if required at submission.
-- `data/`: reported-value CSV/JSON, task regressions, historical ledger destinations.
-- `CLAIM_EVIDENCE.md`:16 bounded main claims and evidence pointers.
-- `RECONSTRUCTION_REVIEW_ZH.md`: structural decisions and author-side consistency review.
-- `AUTHOR_CHECKLIST.md`: items requiring author judgment before submission.
-- `PR_BODY.md`: ready-to-use description of a future documentation/manuscript PR.
-- `scripts/build.py`: portable PDF build with BibTeX executable fallback.
-- `scripts/check_reported_data.py`: count/ratio/contract/citation consistency checks; not a raw GPU audit.
-- `scripts/install_into_repo.py`: opt-in copy into a NEW repository directory; refuses overwrite. It does not commit, push, merge or create a PR.
+- `output/main.pdf`: revised article, 11 pages.
+- `output/supplement.pdf`: supplementary material, 9 pages, including the new session-ratio table.
+- `output/figures/`: five separate vector PDFs; editable TikZ/PGFPlots sources are in `figures/`.
+- `output/JSA_v0151_author_package.zip`: complete review package, including sources, figures, data, checks, PDFs and author worksheets.
+- `output/JSA_v0151_flat_sources.zip`: source files with no subdirectories, independently compiled for Elsevier Editorial Manager preparation.
+- `Highlights.txt`, `Figure_captions.tex`, `Title_page.txt`: editable submission support files.
+- `JSA_REQUIREMENTS_20261013.md` and `AUTHOR_CHECKLIST.md`: verified publisher guidance, current JSA guide access limitation, and remaining author decisions.
 
-## Build
-Install a TeX distribution with `elsarticle`, TikZ/PGFPlots, `microtype`, `booktabs`, `tabularx`, `longtable`, `enumitem`, `xurl`, `flushend` and standard Times-compatible fonts.
+Build outputs and ZIPs are generated locally, not committed. The final package's exact file hashes are in `output/FINAL_MANIFEST.json`.
+
+## Changes and verification
+
+The B570 full-output pairing now cites PR93 directly; its 563 physical verification cycles cite PR97. Target-only Qwen3 and Llama PQ/QB session reversals are disclosed separately from the consistently directed speculative session aggregates. The introduction and discussion connect graph layout, actual execution partitions and retained-state formation. Stage-Replay is credited for cache transplantation, common suffix controls and the same-initial-token boundary.
+
+All five figures retain the existing restrained palette, with larger labels, explicit ratio directions and redundant line/shape cues. Tables use clearer comparison groups and prose alignment. The incorrect S7 pointer now targets the historical endpoint discussion in S6. The final prose pass uses the humanizer skill while preserving claims and limitations.
+
+The local checker passes 186 reported-value and manuscript checks. An independent author-side cross-review re-fetched the pinned reports and matched all 21 aggregate ratios, 42 session ratios, 252 task ratios and 21 regression lists. It found no scientific blocker; two wording ambiguities were corrected. This is AI-assisted author-side scrutiny, not journal peer review. See `provenance/FINAL_REVIEW_V0151.json` for scope and `provenance/FINAL_QA_V0151.json` for automated PDF/transcription checks.
+
+No GPU experiment, full native timing-record audit or 675 MB raw-archive reconstruction was performed. The current package contains reported task/session medians and their provenance; these are not individual native timing records. Failed stock qualification, eight rejected scale/MUL shams, the driver-freeze gap, task regressions and limits on portability remain explicit.
+
+## Build and package
+
+Use Python 3.10+ and a TeX distribution with pdfLaTeX, BibTeX, `elsarticle`, TikZ/PGFPlots, `microtype`, `booktabs`, `tabularx`, `longtable`, `enumitem`, `xurl`, `flushend`, `preview` and standard Times-compatible fonts. PDF QA also needs `pdfplumber` and Poppler (`pdffonts`).
 
 ```sh
-python scripts/check_reported_data.py
-python scripts/build.py
+python3 scripts/check_reported_data.py
+python3 scripts/build.py
+python3 scripts/export_figures.py
+python3 scripts/qa_final.py
+python3 scripts/package_submission.py
 ```
 
-The script produces `output/main.pdf` and `output/supplement.pdf`. On Overleaf, upload the source directory and choose `main.tex` or `supplement.tex`; use pdfLaTeX. The source does not require shell escape or an external image service.
+The package helper rebuilds both flat manuscripts in a clean temporary directory before creating the archives. No GPU, network or shell escape is required. On Overleaf, choose `main.tex` or `supplement.tex` with pdfLaTeX. The bibliography uses the existing renamed `psql-num.bst` derivative; current JSA reference-style acceptance still needs confirmation.
 
-## Evidence and provenance
-Pinned reconstruction main: `f5b7b8e9a6d02b228cb0e7b7b3932e89327cfb63`.
-Core CUDA evidence: PR91/94 and PR98; final B570 evidence: PR99 and PR101, the latter pinned at `26706c9fb4818ec3465e45acea029c4ab88a390f`.
-`provenance/SOURCE_MANIFEST.json` identifies report texts and original Git blobs. The named earlier review Markdown was not located in the available Library; its user-quoted recommendations, retrieved source reports and ledger are the reconstruction brief.
+## Submission status and provenance
 
-The companion tables here are **transcribed reported results**. The local checker verifies arithmetic, denominators, source keys and stated boundaries. No new GPU experiment was run, no full675MB native archive was downloaded/re-audited here, and original-host PASS reports are not represented as new independent audits. Historical evidence is retained through all28 explicit destinations and immutable repository pointers; it is not all embedded in this ZIP. Original repository files are untouched.
+Chengzhan Li remains the sole and corresponding author, with the confirmed UESTC full name and Qingshuihe campus. Funding, competing interests, CRediT roles, historical AI-tool details, final human review and public evidence access require author confirmation. `Author_declarations_pending.txt` is a worksheet, not a completed journal declaration. No other author is added based on a possible future conversation.
 
-## Repository integration
-This directory is the source import of the delivered v0.15.0 author package, proposed on a separate Draft PR. The earlier statement that GitHub writing was unavailable was incorrect; the current connector provides branch/commit/PR creation.
+Official Elsevier policies were checked on 13 October 2026. The JSA-specific Guide for Authors returned access errors/human verification, so anonymity, numerical length limits and journal-specific upload rules remain unverified. The present package must not be described as fully JSA-compliant until those checks and author declarations are complete.
 
-The PR adds only `paper/jsa/manuscript_v0150/`; prior papers and experimental data remain unchanged. PR101 is cited by immutable commit rather than merged by this import. This is not a new GPU experiment, raw-archive audit, journal submission or arXiv update.
-
-Prebuilt `output/main.pdf` and `output/supplement.pdf` remain in the delivered conversation package rather than the Git source change. Run `python scripts/build.py` to generate them locally. The original delivery manifest is retained as `PACKAGE_MANIFEST.json` and therefore includes those two intentionally untracked PDFs and the original README hash; use `GITHUB_IMPORT.json` for the exact imported-source byte inventory. Original PDF QA records describe the delivered build, not a new GitHub CI run.
-
-`PR_BODY.md` remains the supplied review-description template. `scripts/install_into_repo.py` is retained for offline package users; it is not necessary inside this repository directory.
-
-## Publication status
-This is an author-review draft, not an accepted/submitted paper. Confirm scientific wording, exact converted-model descriptions, funding/conflicts, AI-use disclosure, public artifact access and current venue requirements. There is no fourth-family, general determinism, exact kernel-schedule or cross-platform QB claim.
+The original `GITHUB_IMPORT.json`, `PACKAGE_MANIFEST.json`, `RECONSTRUCTION_REVIEW_ZH.md`, `provenance/RECONSTRUCTION_QA.json`, `provenance/PDF_CHECKS.json` and original font reports describe the **historical v0.15.0 import/build only**. They are retained as provenance, not current-file integrity certificates. Use the v0.15.1 checks and final manifest for this revision. Experiment records and earlier paper directories are unchanged.

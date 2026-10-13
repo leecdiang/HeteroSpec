@@ -1,16 +1,16 @@
-\section{Vulkan Partition, Projection and Retained-State Evidence}
+\section{Vulkan partition, projection and retained-state evidence}
 \label{supp:b570}
 \subsection{The original three-arm intervention}
 The partition study uses the same native prompt within each A/B/C comparison. A uses UB512/capacity 1 and one full prompt submission; B keeps the same context and submits 128+remainder; C uses UB128/capacity 1 with one submission internally divided by the runtime. Only the final absolute prompt position requests logits; intermediate B calls have zero requested outputs. The continuation always occupies one row, even when its configured capacity is greater~\cite{bpartition}.
 
 \begin{table}[t]\centering\small
-\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based.}
+\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based; a dash means no output difference.}
 \begin{tabular}{@{}lrrl@{}}\toprule
 Input&Prompt IDs&First difference&A/B initial state\\\midrule
 GSM1248&161&47&Different\\
 GSM831&133&81&Different\\
 GSM1011&190&---&Different\\
-GSM1249&163&---&Different\\
+GSM1249&163&---&Different\\\addlinespace[2pt]
 Prefix 1248/127&127&---&Equal\\
 Prefix 1248/128&128&---&Equal\\
 Prefix 1248/129&129&57&Different\\\bottomrule
@@ -25,26 +25,26 @@ The two stable long controls demonstrate that a numerical state difference is no
 The final follow-up executes 133 whole requests:21 fourth-arm observations, 38 sweep observations, 18 native operator-capture requests, 16 restoration shams and 40 donor crosses. A zero-forward load probe is separate. There are no native request failures, warmups or scientific retries~\cite{bfinal}. Table~\ref{tab:allpart} retains all 19 caller schedules; ``all'' denotes equal full A/B/C endpoints, not necessarily equal numerical states.
 
 \begin{table}[t]\centering\small
-\caption{All frozen exposed partition schedules. The final column is first output difference from A; no numerical monotonicity is inferred.}
+\caption{All frozen exposed partition schedules. The final column is the first output difference from A (zero-based); a dash means no output difference. No numerical monotonicity is inferred.}
 \label{tab:allpart}
 \begin{tabular}{@{}lllr@{}}\toprule
 Input&Caller widths&Endpoint class&First diff.\\\midrule
 1248&64+64+33&A&---\\
 1248&96+65&A&---\\
 1248&128+33&B/C&47\\
-1248&160+1&A&---\\
+1248&160+1&A&---\\\addlinespace[2pt]
 831&64+64+5&A&---\\
 831&96+37&A&---\\
 831&128+5&B/C&81\\
-831&132+1&Third class&40\\
+831&132+1&Third class&40\\\addlinespace[2pt]
 1011&64+64+62&All&---\\
 1011&96+94&All&---\\
 1011&128+62&All&---\\
-1011&160+30&All&---\\
+1011&160+30&All&---\\\addlinespace[2pt]
 1249&64+64+35&All&---\\
 1249&96+67&All&---\\
 1249&128+35&All&---\\
-1249&160+3&All&---\\
+1249&160+3&All&---\\\addlinespace[2pt]
 Prefix 129&64+65&A&---\\
 Prefix 129&96+33&A&---\\
 Prefix 129&128+1&B/C&57\\\bottomrule
@@ -79,8 +79,8 @@ The 16 own-path shams cover four historical inputs, A/B donors and two repeats. 
 The KV manipulation identifies conditional suffix sensitivity under this receiver. It does not isolate one K/V layer, one token position, a K-only versus V-only mediator or a necessary mechanism in every possible implementation. The stable controls remain output-invariant even with different KV bytes. The result is narrower than full causal identification of every arrow from projection difference to final token, but stronger than merely correlating Prefill hashes with output.
 
 \subsection{Physical work, cost and non-admitted timing}
-The previous speculative actor executes a logical seed+proposal verification as two occupied width-one micrographs at $k=1$. The 563 successful observed cycles in the small work-witness study retain separate draft proposal/catch-up counts. One API-observer request failed a logging threshold in that earlier study and was not replayed; its partial dispatch metadata is not a completed endpoint or GPU stage timing~\cite{bcost}.
+The previous speculative actor executes a logical seed+proposal verification as two occupied width-one micrographs at $k=1$. The 563 cycles across 11 completed candidate witnesses in the physical-work study retain separate draft proposal/catch-up counts. One API-observer request failed a logging threshold in that earlier study and was not replayed; its partial dispatch metadata is not a completed endpoint or GPU stage timing~\cite{bwork}.
 
-The original stock-relative qualification remains failed. A later independent post-hoc full-output audit supports a distinct production-path pairing across 24 tasks and 240 repetitions: $R_{\rm prod}/C=0.7192637597463166$, $M_{\rm match}/C=0.7279267978304574$, and $R_{\rm prod}/M_{\rm match}=0.988099025740$. These are negative same-output descriptive economics, not newly certified stock-preserving speedups. They were not remeasured in the causal follow-up.
+The original stock-relative qualification remains failed. A later independent post-hoc full-output audit~\cite{bpostaudit} supports a distinct production-path pairing across 24 tasks and 240 repetitions: $R_{\rm prod}/C=0.7192637597463166$, $M_{\rm match}/C=0.7279267978304574$, and $R_{\rm prod}/M_{\rm match}=0.988099025740$. These are negative same-output descriptive economics, not newly certified stock-preserving speedups. They were not remeasured in the causal follow-up.
 
 No completed GPU timeline is admitted. Hardware timestamp support is present, but the pinned backend does not expose the absolute queue/query/fence intervals required by the declared timeline contract. No alternative numerical DLL was substituted to force an observation. Continuous physical residency and exclusive or overlapping GPU stage times remain unknown. Original negative paid results and new causal observations retain their separate denominators and interpretation.

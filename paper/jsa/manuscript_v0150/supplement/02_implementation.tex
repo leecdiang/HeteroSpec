@@ -1,4 +1,4 @@
-\section{Implementation Obligations and Historical Scope Selection}
+\section{Implementation obligations and historical scope selection}
 \label{supp:implementation}
 \subsection{Lowering the attention view}
 For logical query $j$, QB preserves the original query channel and head strides and assigns its original query-column stride to the query-batch axis. The singleton column dimension is not an additional logical token. The mask undergoes the same transformation in its query dimension. K/V retain their source layout and broadcast over this added query-batch index, while the native head map preserves grouped-query sharing. The result must be returned to the original query order before batched output projection.
@@ -13,7 +13,7 @@ A phase guard enters at the decode interface before the capture-disabled branch.
 The source binding includes the attention builder, role/phase guard, graph parameter/context structures, reuse predicate and request reset. These components implement the design jointly. The method is not an algorithm that derives the smallest constraint from an arbitrary new model. Instead, a finite phase experiment motivated a fixed configuration, which later campaigns qualified without outcome-driven mask selection.
 
 \subsection{The complete historical mask experiment}
-The historical experiment uses four HumanEval probes, two repeats, $k=3$, UB4 and cap128:128 native requests~\cite{history}. Table~\ref{tab:masks} reproduces the full pattern. Masks 3/7/11/15 pass the whole panel. Mask 3 is inclusion-minimal within this four-bit family; the experiment neither rules out other graph designs nor proves cross-family minimality. Different earlier UB2/UB1 interventions need not have the same probe outcomes.
+The historical experiment uses four HumanEval probes, two repeats, $k=3$, UB4 and cap128: 128 native requests~\cite{history}. Table~\ref{tab:masks} reproduces the full pattern. Masks 3/7/11/15 pass the whole panel. Mask 3 is inclusion-minimal within this four-bit family; the experiment neither rules out other graph designs nor proves cross-family minimality. Different earlier UB2/UB1 interventions need not have the same probe outcomes.
 
 \begin{table}[t]\centering\small
 \caption{Historical finite four-switch pattern. TP/TC/DP/DC are target/draft prefill/continuation bits. ``Y'' means full-reference match on that probe in the tested repeats.}

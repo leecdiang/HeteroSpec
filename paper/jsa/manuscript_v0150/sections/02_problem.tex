@@ -1,4 +1,4 @@
-\section{Reference Contract and Execution Model}
+\section{Reference contract and execution model}
 \label{sec:problem}
 \subsection{What is held fixed}
 Let $\rho$ identify a reference configuration: model and tokenizer bytes, prompt construction, numerical runtime and backend, sampler, context settings, stopping convention and ordinary execution recipe. For input $x$, define the observable endpoint
@@ -6,7 +6,7 @@ Let $\rho$ identify a reference configuration: model and tokenizer bytes, prompt
 \mathcal O_\rho(x)=(\boldsymbol y,\boldsymbol e,n,y_{\rm last},s),
 \label{eq:contract}
 \end{equation}
-where $\boldsymbol y$ is the full generated native token-ID array, $\boldsymbol e$ its EOG flags, $n$ its length, and $s$ the stop reason. For the principal new campaigns, generation ends at native EOG or cap128. Complete output here means complete under that registered window, not an arbitrarily long answer. Earlier campaigns with first-EOG endpoints and additional raw suffixes retain their original, weaker comparison scope in Supplement~S 7.
+where $\boldsymbol y$ is the full generated native token-ID array, $\boldsymbol e$ its EOG flags, $n$ its length, and $s$ the stop reason. For the principal new campaigns, generation ends at native EOG or cap128. Complete output here means complete under that registered window, not an arbitrarily long answer. Earlier campaigns with first-EOG endpoints and additional raw suffixes retain their original, weaker comparison scope in Supplement~S6.
 
 For an evaluation set $\mathcal X$ and its registered repetitions, empirical qualification requires $\mathcal O_c(x)=\mathcal O_\rho(x)$ for every required candidate/reference pair, as well as reference stability and complete records. Qualification is indexed by $\rho$ and $\mathcal X$: it is not a statement about all future inputs. A missing endpoint is not imputed; a divergent shorter response cannot qualify a latency ratio. Repeated measurements are not additional independent tasks.
 

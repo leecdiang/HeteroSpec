@@ -1,10 +1,10 @@
-\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize,
+  box/.append style={font=\footnotesize,line width=.65pt,text width=1.8cm,minimum height=.74cm}]
 \node[anchor=west,font=\bfseries\small] at (0,3.35) {Common receiver; first natural token = 1271};
-\node at (3.0,2.78) {Initial logits $L_A$};\node at (5.35,2.78) {Initial logits $L_B$};
+\node at (3.0,2.78) {Initial logits {\normalsize $L_A$}};\node at (5.35,2.78) {Initial logits {\normalsize $L_B$}};
 \node[anchor=east] at (1.53,2.1) {KV donor A};\node[anchor=east] at (1.53,1.13) {KV donor B};
 \foreach \x in {3.0,5.35}{
- \node[box,draw=target,text=target,text width=1.7cm,minimum height=.64cm] at (\x,2.1) {Full trajectory A};
- \node[box,draw=draft,text=draft,text width=1.7cm,minimum height=.64cm] at (\x,1.13) {Full trajectory B};}
-\draw[qualified,line width=.6pt] (1.84,.56)--(6.46,.56);
-\node[align=center,text=aux,font=\scriptsize] at (4.0,.16) {16 own-path shams pass before 40 cross requests\\Conditional suffix sensitivity; no general opaque-state clone};
+ \node[box,draw=target,fill=target!5,text=target] at (\x,2.1) {Trajectory A};
+ \node[box,draw=draft,fill=draft!6,text=draft,densely dashed] at (\x,1.13) {Trajectory B};}
+\node[align=center,text=aux,font=\footnotesize] at (3.35,.26) {Single-query continuation in all cells\\16 own-path shams pass before 40 cross requests};
 \end{tikzpicture}

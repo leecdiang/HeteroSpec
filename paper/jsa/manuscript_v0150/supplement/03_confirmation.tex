@@ -1,4 +1,4 @@
-\section{Larger Three-Family Confirmation}
+\section{Larger three-family confirmation}
 \label{supp:confirmation}
 The confirmation campaign contains 3,600 required complete requests: three families, five arms, 24 tasks, two adjacent sessions and five repetitions. There are 150 excluded warmups. Its output test and formal counts-channel timer are distinct from heavy profiling. The 12-task implementation panel reported in the main paper does not replace this larger test or become a fresh-input panel through reuse~\cite{rtxconfirm}.
 
@@ -22,10 +22,10 @@ $R_{\rm prod}/M_3$&1.382970&---&---\\\bottomrule
 
 For Qwen3, $M_0$ differs on five distinct GSM8K tasks (141,443,562,660,722), repeated 10 times each. For SmolLM2 it differs on 14 tasks; for Llama on 9. $M_3$ and $C_3$ each match all 240 required endpoints in every family. The ordinary-production path matches all 240 for Qwen3 but fails 140 SmolLM2 and 80 Llama requests. Identical failure counts between $M_0$ and $R_{\rm prod}$ in SmolLM2 do not mean that the affected tasks or execution paths coincide.
 
-The failed $M_0/M_3$ comparisons have diagnostic ratios 0.968456,0.948603 and 0.936943 for Qwen3, SmolLM2 and Llama. Failed SmolLM2 and Llama $R_{\rm prod}/C_3$ diagnostics are 0.512333 and 0.842790. They may describe measured work but cannot establish a reference-preserving deployment gain, because the measured trajectories differ from the registered reference.
+The failed $M_0/M_3$ comparisons have diagnostic ratios 0.968456, 0.948603 and 0.936943 for Qwen3, SmolLM2 and Llama. Failed SmolLM2 and Llama $R_{\rm prod}/C_3$ diagnostics are 0.512333 and 0.842790. They may describe measured work but cannot establish a reference-preserving deployment gain, because the measured trajectories differ from the registered reference.
 
 \subsection{Task failures and repeated observations}
-The $M_3/C_3$ aggregate has 0/24 regressed tasks for Qwen3,24/24 for SmolLM2 and 4/24 for Llama. Llama's slower tasks are MBPP418,476,79 and 99. This task-level pattern should not be replaced by a claim that every configuration benefits from speculative execution. Repeats improve precision for the selected tasks and expose instability, but do not produce 240 independent examples of cross-family transfer.
+The $M_3/C_3$ aggregate has 0/24 regressed tasks for Qwen3, 24/24 for SmolLM2 and 4/24 for Llama. Llama's slower tasks are MBPP418,476,79 and 99. This task-level pattern should not be replaced by a claim that every configuration benefits from speculative execution. Repeats improve precision for the selected tasks and expose instability, but do not produce 240 independent examples of cross-family transfer.
 
 The source's input eligibility audit concerns accessible project history, not training data. The confirmation uses a frozen recipe; the ordinary baseline was selected only on prior exposed engineering inputs. New confirmation failures therefore constrain that selection rather than justify another round of post-outcome tuning. The paper reports the unchanged selection and failed qualification.
 

@@ -1,27 +1,11 @@
-# Reconstruct paper: Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
+## Paper v0.15.1 final revision
 
-## Status
-Complete manuscript/documentation reconstruction. No new GPU/model runs, scientific data changes, prior-PR merges, release update or journal submission. This file is a **proposed PR description**, not an existing GitHub PR.
+Keeps **Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding** and its central runtime-method argument. This author-review revision fixes the PR93/PR97 evidence citations and the S6 historical-endpoint pointer, discloses target-only PQ/QB session reversals, and separates them from speculative session results. It clarifies the partition/projection/state boundary and credits Stage-Replay's existing cache-transplantation and common-suffix controls.
 
-## Change set
-Add `paper/jsa/manuscript_v0150/` with full English main article and supplement, editable vector figures, bibliography, reported-value data, source/claim maps, build/check scripts and author checklist. Preserve all earlier manuscripts and experimental archives unchanged.
+All five editable vector figures are refined; tables have clearer comparison groups, whitespace and alignment. The paper receives a final humanizer pass. Sole/corresponding author and the UESTC Qingshuihe address are retained from the author's confirmation. Source packaging now supplies separate vector exports, highlights, captions and a flat source archive that rebuilds independently.
 
-## Scientific storyline
-Reference contract → explicit Query/Mask/GQA/layout design → phase guard and cache reuse → identical-input attention correspondence → frozen three-family complete-output confirmation → same-reference PQ/QB/GS repair costs → distinct draft increment → B570 projection/retained-state boundaries.
+Validation: 186 local consistency checks; independent pinned-report recomputation of 21 overall, 42 session and 252 task ratios plus all regression lists; all five figures and all tables visually checked; 11-page article and 9-page supplement; no overfull boxes or unresolved references; embedded fonts. No new GPU experiment or full raw-archive audit.
 
-Core evidence uses pinned PR91/94, PR98, PR99 and PR101. The latest B570 result remains separately sourced even if not merged into main. The paper does not use the repository's historical name in its title because of the unrelated ACL HeteroSpec article.
+Submission remains pending author funding/conflict/CRediT/AI-use/access declarations and direct confirmation of current JSA-specific rules. Official Elsevier general policies were verified; JSA's Guide for Authors returned 403/human verification. Keep this PR in Draft; no journal submission or PR merge is performed.
 
-## Important retained limits
-- Bitwise operator correspondence is finite and not a numerical determinism theorem.
-- QB's Vulkan portability is untested; the B570 projection frontier motivates that boundary.
-- Only32/40 B570 operator calls qualify; all8 scale/MUL sham failures remain excluded.
-- Driver-body preregistration gap for P1A/B remains disclosed.
-- KV-source suffix sensitivity is conditional on the validated necessary-state boundary0 receiver, not arbitrary opaque cloning.
-- Existing stock-reference failures/null speedups remain unchanged; no diagnostic timer promoted to paid performance.
-- Small PQ/QB benefits and per-task regressions remain visible; no invented CI or cross-date claim.
-
-## Verification
-Run `python scripts/check_reported_data.py` and `python scripts/build.py` in the new directory. Review `provenance/RECONSTRUCTION_QA.json` for the actual local checks. They verify reported data and the manuscript, **not** a new GPU reproduction or full raw native archive rerun.
-
-## Review requested
-Scientific scope, source correspondence, method lowering/cache obligations, fair comparator definitions, B570 state contract, author declarations and public artifact accessibility. No merge is requested automatically.
+Sources and reproducible checks remain in `paper/jsa/manuscript_v0150/`. Build artifacts are generated locally and included in the delivered author package. Historical v0.15.0 provenance files are explicitly distinguished from current QA.

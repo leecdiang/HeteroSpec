@@ -1,11 +1,11 @@
-\section{Phase-Scoped Query-Layout Design}
+\section{Phase-scoped query-layout design}
 \label{sec:method}
 \subsection{Separating attention from target-wide batching}
 Figure~\ref{fig:design} contrasts the three repair organizations. GS processes target rows one at a time throughout projection, attention and the feed-forward network. PQ retains batched surrounding work but explicitly constructs an attention subgraph for each query and concatenates the results. QB retains that local one-column organization through a view: queries become separate batch instances of the existing attention operators. It does not serialize the surrounding layers or construct a distinct attention subgraph per query.
 
 \begin{figure*}[t]
 \centering\input{figures/design.tex}
-\caption{Three same-reference implementation alternatives. Boxes indicate logical graph organization, not measured kernel occupancy. QB changes the attention representation while keeping surrounding target computation batched. The lower control path makes the phase decision part of graph construction and reuse. Draft proposal and target reconciliation are unchanged across speculative arms.}
+\caption{Three same-reference implementation alternatives. Boxes indicate logical graph organization, not measured kernel occupancy. QB changes the attention representation while keeping surrounding target computation batched. The lower control path makes the phase decision part of graph construction and reuse. Draft proposal and target reconciliation are unchanged across speculative arms. TikZ layout edited with OpenAI Codex (GPT-6, OpenAI).}
 \label{fig:design}
 \end{figure*}
 
@@ -56,7 +56,7 @@ Graph caching creates a second obligation. Two calls can share nominal capacity 
 \begin{table}[t]
 \caption{Phase-scoped dispatch and reuse obligations.}
 \label{alg:scope}
-\begin{tabularx}{\columnwidth}{@{}rX@{}}\toprule
+\begin{tabularx}{\columnwidth}{@{}rY@{}}\toprule
 1 & On request reset, establish target/draft ownership and set phase to prefill.\\
 2 & Compute the role/phase bit and save the previous scope flag.\\
 3 & Set the active flag before both observed and unobserved decode paths.\\

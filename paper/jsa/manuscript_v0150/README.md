@@ -15,6 +15,16 @@
 
 Build outputs and ZIPs are generated locally, not committed. The final package's exact file hashes are in `output/FINAL_MANIFEST.json`.
 
+## JSA first-submission access preparation
+
+The author selected JSA as the first target and confirmed that this preparation should retain a single author. The scientific article and its PDFs remain v0.15.3. `SUBMISSION_CONFIRMATIONS_ZH.txt` collects the remaining author facts in seven reply fields; it does not repeat the coauthor decision or fill unknown declarations with “none”.
+
+`REVIEW_ACCESS_PLAN_ZH.txt` describes the proposed reviewer route. Two local packages are prepared: `output/JSA_v0153_review_core.zip` for offline report/figure review and `output/JSA_v0153_native_source.zip` for inspection of the fixed CUDA native source. The core includes source reports retrieved at their cited commits, rather than requiring a reviewer to open the private GitHub links. The native source is extracted from the hash-verified PR98 V02 capsule with upstream notices preserved. Model acquisition information is in `review_access/MODEL_ACCESS.json`; all eight named GGUF files match the pinned publisher metadata by size and SHA256. No model weights were downloaded.
+
+See `review_access/ACCESS_STATUS.json` for the exact package hashes, coverage and uncompleted work. Raw archive parts remain separately inventoried; these packages do not constitute a complete native-record restoration or GPU reproduction. `review_access/DATA_AVAILABILITY_DRAFT.txt` and `DEPOSIT_METADATA_DRAFT.json` are author worksheets, not claims that a deposit exists. No live reviewer link or DOI has been created, no repository has been made public, and project sharing rights/licenses remain to be confirmed. Original manuscript availability language is unchanged pending a real deposit.
+
+The new access preparation does not supersede the earlier scientific/PDF QA; it changes support materials only. The author package can be regenerated to include this preparation. Historical delivery manifests and reviews describe their original package versions, not the expanded package's current file count or hash.
+
 ## Layout and reference finalization
 
 The seven-row supplementary comparison matrix preserves all 21 ratios and regression counts. Removing the S4 float barrier and the forced one-column ledger transition eliminates the large unused column areas on pages 5 and 9. Both historical ledgers remain full-width, complete tables. Figure S2 names its Section S4 provenance even when it floats into the following section. Fonts and plotted values are unchanged.

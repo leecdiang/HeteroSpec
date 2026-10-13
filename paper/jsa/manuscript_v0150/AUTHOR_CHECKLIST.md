@@ -1,18 +1,22 @@
 # Before submission
 
-The scientific draft can be finalized before the remaining author declarations are settled. JSA-specific requirements were recovered from the repository's full-guide verification dated 9 October 2026; see [the reconciled requirements audit](JSA_REQUIREMENTS_20261013.md). Live retrieval remained blocked on 13 October, so changes since that snapshot and portal-specific requirements remain unverified. Do not describe the draft as submitted or all author and access obligations as complete.
+This package is being prepared for the author's first submission to JSA, with Chengzhan Li as the sole author for this preparation. Both choices are confirmed; no further question about adding a mentor is pending. The remaining personal facts can be answered once in [the Chinese confirmation sheet](SUBMISSION_CONFIRMATIONS_ZH.txt), then carried into the manuscript, submission metadata and declaration files.
+
+The scientific draft can be finalized before the remaining author declarations are settled. JSA-specific requirements were recovered from the repository's full-guide verification dated 9 October 2026; see [the reconciled requirements audit](JSA_REQUIREMENTS_20261013.md). Live retrieval of the journal guide remained blocked on 13 October, so changes since that snapshot and portal-specific requirements remain unverified. The publisher's general authorship policy was accessible and checked on 13 October. Do not describe the draft as submitted or all author and access obligations as complete.
 
 ## Author information and declarations
 
-- [x] Retain Chengzhan Li as the current sole author. The author confirmed the University of Electronic Science and Technology of China, Qingshuihe campus. A possible future discussion with a company mentor does not authorize adding an author or affiliation now.
-- [ ] Confirm the final author spelling and correspondence email, currently `chengzhan.li@std.uestc.edu.cn`, and approve the corresponding-author designation already added to the draft. The full Qingshuihe postal address is included; confirm a department only if one should be listed. The official university address is identified in the requirements audit.
-- [ ] Supply the actual funding sources and grant identifiers, and state any sponsor role in the study or manuscript. Use a no-funding statement only after the author confirms it.
-- [ ] Confirm any financial or personal relationships relevant to the work, including relevant company employment, advice, support, equipment, or access. The contemplated mentor discussion alone is not a competing-interest finding. Use a no-conflict statement only after author confirmation.
+- [x] Prepare for the first JSA submission with Chengzhan Li as the sole author. Retain the confirmed University of Electronic Science and Technology of China, Qingshuihe Campus affiliation. No additional author or company affiliation is authorized by a possible future conversation.
+- [ ] Confirm the final name spelling and correspondence email, currently `Chengzhan Li` and `chengzhan.li@std.uestc.edu.cn`, and the corresponding-author designation. The full Qingshuihe postal address is included; record any correction. A department is optional if applicable; supply an ORCID only if the author has one. Do not invent either field.
+- [ ] Supply actual funding sources and grant identifiers, any cash or in-kind sponsorship, and the sponsor's role in design, experiments, analysis, writing or the decision to submit. Include actual company involvement and provision of equipment, compute, data or access. If there was no specific funding, obtain that confirmation rather than assuming it from sole authorship.
+- [ ] Confirm relevant financial or personal relationships that could influence, or appear to influence, this work: for example employment, consulting, payment, ownership or a related patent. Reuse facts supplied for funding/company involvement rather than asking for them twice. A relationship is a disclosure fact, not by itself a finding of misconduct; a contemplated mentor discussion is not evidence of an existing conflict. Use a no-conflict statement only after author confirmation.
 - [ ] Complete the journal's competing-interest declarations tool and provide its generated `.doc`/`.docx`, including when there is nothing to declare. The pending worksheet is not the required upload document; the saved guide does not require a signature.
-- [ ] Approve the sole author's applicable CRediT roles. Do not assign roles from an inferred biography or automatically assign all 14 roles.
+- [ ] Confirm work actually performed by the sole author and any substantive assistance from others, then map those facts to the applicable CRediT roles and acknowledgements. A short description in Chinese is sufficient to prepare the statement. Do not assign roles from an inferred biography or automatically assign all 14 roles.
 - [ ] Supply an editable author biography of at most 100 words and a separate passport-type photograph. Confirm the upload item and stage in Editorial Manager; do not infer biographical facts from the affiliation.
-- [ ] Approve the full AI-use account and review the resulting manuscript. Name the tools and purposes used for writing, code, analysis and visualization; supply versions and developers where required for research or figure workflows. Resolve historical tool/version details that are not recorded. Keep explanatory-figure disclosures, the Methods disclosure and the general manuscript declaration consistent. Humanizer editing is part of AI-assisted manuscript preparation.
-- [ ] Confirm publication consent and final responsibility for the manuscript and its declarations. Revisit authorship and contributions if another person subsequently makes a qualifying contribution before submission.
+- [ ] Approve the complete AI-use account, including historical use for code, experiments, analysis, writing and figures. The current revision records OpenAI Codex (GPT-6, OpenAI) and the humanizer editing pass; this does not establish the earlier tool history. Supply known tools, versions, developers and purposes, flag unknown details and resolve them from records where possible. Keep Methods, relevant captions and the manuscript declaration consistent.
+- [ ] After reading the final manuscript and supplement, confirm approval of the submission version and human responsibility for its facts, interpretation, citations and declarations. Do not record this review as completed in advance.
+
+The author list must be settled at initial submission. Under [Elsevier's publishing-ethics policy](https://www.elsevier.com/en-gb/about/policies-and-standards/publishing-ethics), checked 13 October 2026, changes after submission are considered only exceptionally at the editor's discretion and require agreement of all authors; authorship changes after acceptance are not allowed. The confirmed sole-author preparation does not assume that a name can simply be added later.
 
 ## Journal and submission files
 
@@ -43,3 +47,15 @@ The scientific draft can be finalized before the remaining author declarations a
 - Recheck related-work versions at submission. Do not infer a missing page range or present an unverified preprint identifier as a verified source.
 - Do not claim all-input determinism, cross-date significance, a Vulkan QB port, universal mask minimality, exact GPU-kernel causality or measured component-time attribution.
 - Keep experiments and earlier manuscript directories immutable. A manuscript PR should contain only the reviewed new manuscript and its support files, plus an optional reviewed index link.
+
+## Access preparation for the selected first submission
+
+- [x] Prepare the Chinese author confirmation worksheet, preserving the confirmed temporary single-author arrangement.
+- [x] Verify the repository is private and has no approved project-wide public license; keep limited reviewer access and public reuse as separate author decisions.
+- [x] Bind eight GGUF artifacts to recorded byte lengths/SHA256 and matching pinned publisher metadata; no weight download was performed.
+- [x] Prepare fixed-source report review and native-source inspection packages with per-file checksums. Exact completed checks and current coverage are in `review_access/ACCESS_STATUS.json`.
+- [ ] Author confirms the sharing scope and applicable rights/licenses for the concrete local packages and supporting raw archives.
+- [ ] Retrieve, reconstruct and validate the remaining raw/source-runtime archives before claiming a complete raw reproduction deposit.
+- [ ] Create an actual repository record/reviewer link, verify downloads without author login, then replace the pending availability language and add the real dataset citation.
+
+See `SUBMISSION_CONFIRMATIONS_ZH.txt` and `REVIEW_ACCESS_PLAN_ZH.txt`. Local preparation is not journal submission or external release.

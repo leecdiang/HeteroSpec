@@ -9,3 +9,13 @@ The repository's complete 9 October JSA guide verification is preserved and appl
 Validation: 186 reported-value checks; 2,032 supplementary-coordinate checks; all 42 main/supplement cost-table cells; 26 article and 14 supplementary references with actual PDF links; rendered 12-page article and 11-page supplement; seven separate vector figures with embedded fonts; and successful compilation of both documents from the extracted flat source ZIP. No new GPU experiment or complete native/raw-archive audit.
 
 Keep this PR in Draft. Funding, conflicts, CRediT, biography/photo, the declarations-tool document, final author review, the public-preprint version update and Option C access arrangement remain pending. No journal submission or PR merge is performed. Sources remain in `paper/jsa/manuscript_v0150/`; PDFs and ZIPs are delivered locally and reproduce from committed sources.
+
+## First-submission preparation
+
+JSA remains the selected first target and Chengzhan Li remains the sole author for this preparation. A seven-item Chinese worksheet collects the remaining author facts without inventing funding, conflicts, contribution roles or sharing rights.
+
+Adds local reviewer-access packages and a deposit plan: 507 fixed-commit report/source files; 3,534 native source files extracted from the verified PR98 V02 capsule with upstream notices; eight model artifacts matched to fixed publisher metadata; and six primary raw-archive manifests covering 638 parts (1,646,803,532 bytes). The raw archives are inventoried, not newly restored or re-audited.
+
+Both local ZIPs pass post-extraction integrity checks; the offline core passes the 186 reported-value and 2,032 supplementary-coordinate checks and matches all 21 extracted comparisons to the original PR98 report. Negative controls reject changed package data, corrupted archive parts and a wrong full-archive hash. Article and supplement PDF bytes are unchanged.
+
+No reviewer URL or DOI has been created. The repository remains private, and the project license, author sharing rights, raw/source-runtime restoration, external deposit and logged-out download checks remain pending. No journal submission or new GPU experiment.

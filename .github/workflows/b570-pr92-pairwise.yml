@@ -1,0 +1,39 @@
+name: B570 PR92 sealed-output CPU audit
+on:
+  push:
+    branches: [audit/b570-pr92-pairwise-20261012]
+    paths:
+      - scripts/audit/b570_pr92_pairwise.py
+      - scripts/audit/test_b570_pr92_pairwise.py
+      - .github/workflows/b570-pr92-pairwise.yml
+permissions:
+  contents: read
+concurrency:
+  group: b570-pr92-pairwise-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/audit/b570_pr92_pairwise.py
+            scripts/audit/test_b570_pr92_pairwise.py
+          sparse-checkout-cone-mode: false
+      - name: Check full-output audit rejection cases
+        run: python3 -m unittest discover -s scripts/audit -p 'test_b570_pr92_pairwise.py'
+      - name: Verify sealed bytes and compare full outputs on CPU
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -B scripts/audit/b570_pr92_pairwise.py --output audit-output
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: b570-pr92-pairwise-${{ github.run_id }}
+          path: audit-output/
+          if-no-files-found: warn
+          retention-days: 30

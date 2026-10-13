@@ -1,0 +1,728 @@
+{
+  "design_head": "50047214d4e3f97c992c3f07454e29c13449c95b",
+  "parent_audit": "57da177c3b63a714d6e6b5e5d7a7dc1f1393e662",
+  "parent_result": "82946adf946491e6cf7fef761bcc1ec0772e914e",
+  "arms": {
+    "O128": {
+      "mode": "ordinary",
+      "ub": 128,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 128,
+      "source_role": "R_stock-compatible own-path"
+    },
+    "O512": {
+      "mode": "ordinary",
+      "ub": 512,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 512,
+      "source_role": "R_prod-original own-path"
+    },
+    "B128": {
+      "mode": "vulkan_batched_repair",
+      "ub": 128,
+      "spec": false,
+      "capacity": 4,
+      "continuation_ub": 1,
+      "source_role": "whole-recipe UB128 prefill with existing bind+capacity4"
+    },
+    "B512": {
+      "mode": "vulkan_batched_repair",
+      "ub": 512,
+      "spec": false,
+      "capacity": 4,
+      "continuation_ub": 1,
+      "source_role": "M_match-original own-path"
+    },
+    "C512": {
+      "mode": "vulkan_batched_repair",
+      "ub": 512,
+      "spec": true,
+      "capacity": 4,
+      "continuation_ub": 1,
+      "source_role": "C_k1-original work witness"
+    }
+  },
+  "blocks": [
+    {
+      "name": "p1_r0_p0_O128",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "O128",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/O128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r0/O128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r0/O128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r0/O128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r0/O128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r0/O128|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p1_r0_p1_O512",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "O512",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/O512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r0/O512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r0/O512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r0/O512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r0/O512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r0/O512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        }
+      ]
+    },
+    {
+      "name": "p1_r0_p2_B128",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "B128",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/B128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r0/B128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r0/B128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r0/B128|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r0/B128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r0/B128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r0_p3_B512",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "B512",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/B512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r0/B512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r0/B512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r0/B512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r0/B512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r0/B512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p0_O512",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "O512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/O512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r1/O512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r1/O512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r1/O512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r1/O512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r1/O512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p1_B128",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "B128",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/B128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r1/B128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r1/B128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r1/B128|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r1/B128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r1/B128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p2_B512",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "B512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/B512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r1/B512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r1/B512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r1/B512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r1/B512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r1/B512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p3_O128",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "O128",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/O128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r1/O128|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r1/O128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r1/O128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r1/O128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r1/O128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p0_B128",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "B128",
+      "observation_mode": "heavy",
+      "own_bind_sham": true,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/B128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r2/B128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r2/B128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r2/B128|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r2/B128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/B128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p1_B512",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "B512",
+      "observation_mode": "heavy",
+      "own_bind_sham": true,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/B512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r2/B512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r2/B512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r2/B512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/B512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r2/B512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p2_O128",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "O128",
+      "observation_mode": "heavy",
+      "own_bind_sham": true,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/O128|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P1/r2/O128|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r2/O128|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/O128|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r2/O128|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r2/O128|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p3_O512",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "O512",
+      "observation_mode": "heavy",
+      "own_bind_sham": true,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/O512|MBPP/8",
+          "task": "MBPP/8"
+        },
+        {
+          "slot": "P1/r2/O512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/O512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r2/O512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P1/r2/O512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P1/r2/O512|MBPP/3",
+          "task": "MBPP/3"
+        }
+      ]
+    },
+    {
+      "name": "p2_s0_p0_O512",
+      "phase": "P2",
+      "repeat": 0,
+      "arm": "O512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s0/O512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P2/s0/O512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s0/O512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s0/O512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s0/O512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s0/O512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p2_s0_p1_B512",
+      "phase": "P2",
+      "repeat": 0,
+      "arm": "B512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s0/B512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P2/s0/B512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s0/B512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s0/B512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s0/B512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s0/B512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p2_s0_p2_C512_dispatch",
+      "phase": "P2",
+      "repeat": 0,
+      "arm": "C512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": true,
+      "slots": [
+        {
+          "slot": "P2/s0/C512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        }
+      ]
+    },
+    {
+      "name": "p2_s0_p2_C512_remaining",
+      "phase": "P2",
+      "repeat": 0,
+      "arm": "C512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s0/C512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s0/C512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s0/C512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s0/C512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s0/C512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p2_s1_p0_C512",
+      "phase": "P2",
+      "repeat": 1,
+      "arm": "C512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s1/C512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P2/s1/C512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s1/C512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s1/C512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s1/C512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s1/C512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p2_s1_p1_B512",
+      "phase": "P2",
+      "repeat": 1,
+      "arm": "B512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s1/B512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P2/s1/B512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s1/B512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s1/B512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s1/B512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s1/B512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    },
+    {
+      "name": "p2_s1_p2_O512",
+      "phase": "P2",
+      "repeat": 1,
+      "arm": "O512",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P2/s1/O512|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P2/s1/O512|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P2/s1/O512|GSM8K/test/196",
+          "task": "GSM8K/test/196"
+        },
+        {
+          "slot": "P2/s1/O512|GSM8K/test/435",
+          "task": "GSM8K/test/435"
+        },
+        {
+          "slot": "P2/s1/O512|MBPP/3",
+          "task": "MBPP/3"
+        },
+        {
+          "slot": "P2/s1/O512|MBPP/8",
+          "task": "MBPP/8"
+        }
+      ]
+    }
+  ],
+  "load_probes": [
+    {
+      "name": "p0_probe_O128",
+      "arm": "O128"
+    },
+    {
+      "name": "p0_probe_C512",
+      "arm": "C512"
+    }
+  ],
+  "limits": {
+    "P1": 72,
+    "P2": 36,
+    "fork_forwards": 0,
+    "new_request_starts": 108,
+    "load_probes": 2,
+    "total_charged_new_units": 110,
+    "protocol_total_cap": 256,
+    "owned_gpu_seconds": 18000,
+    "api_dump_bytes": 134217728
+  },
+  "warmups": 0,
+  "retries": 0,
+  "factorial_status": "PHASE_FACTOR_NOT_ISOLATABLE",
+  "factorial_reason": "Target-only continuation physically submits one occupied token for ordinary UB128/512 and binding UB1; C128 versus C1 is not a different occupied physical-width factor. Binding path also couples capacity4, synchronizations and scheduler reserve; ordinary paths capacity1. No UB-only randomized causal claim.",
+  "fork_status": "FORK_NOT_IMPLEMENTABLE",
+  "fork_reason": "Current inherited actor has no validated full target+pending+sampler+scheduler/reservation clone/restore contract. Sequence/full-context serialization captures KV/logits but not the whole frontend retained recipe state. Do not use partial state for donor crosses.",
+  "hypotheses": {
+    "prefill_recipe_causality": "UNRESOLVED_WITH_WHOLE_RECIPE_DIAGNOSTICS",
+    "state_continuation_interaction": "UNRESOLVED_NO_SAFE_DONOR_FORK",
+    "physical_geometry": "Test VERIFY caller2 -> two successful occupied width1 micrographs, plus draft proposal and catchup",
+    "same_output_negative_cost": "Independently rederive immutable PR92 whole fees with PR93 posthoc pairwise equality; no new formal prices"
+  },
+  "cost_scope": "All new request elapsed fields diagnostic only; sole paid price evidence inherited PR92 counts fees",
+  "residency": "UNKNOWN_UNLESS_NEW_VALID_SAME_SCOPE_PROOF",
+  "model": "MODEL_TIMING_UNAVAILABLE",
+  "capture_guard": "3 independent P1 repeats: counts/capture-off; heavy/capture-on; heavy plus same-context same-UB binding noop, explicitly not clone/restore shams",
+  "api_dump_scope": "One prospective P2 C512 request on GSM8K/test/1248 in session0; its own native worker has SDK API dump. Remaining five requests use a separate capture worker without this layer. No model/shader memory dumping; API dispatch metadata only, not GPU completion."
+}

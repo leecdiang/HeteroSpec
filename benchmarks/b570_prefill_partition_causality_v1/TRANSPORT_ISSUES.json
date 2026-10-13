@@ -1,0 +1,32 @@
+{
+  "scope": "Post-seal evidence transport only; no native requests or actor changes",
+  "issues": [
+    {
+      "stage": "anonymous HTTPS probe",
+      "status": 404,
+      "resolution": "Used authenticated contents API scoped download URLs for actual remote bytes"
+    },
+    {
+      "stage": "bulk Node persistence probe",
+      "reason": "64000-byte strict tool input limit",
+      "resolution": "Transferred small scoped download URL batches in memory; native HTTPS downloader writes actual data and verifies hashes"
+    },
+    {
+      "stage": "Node context",
+      "reason": "File helper binding unavailable after long upload",
+      "resolution": "Reimported fs and child-process helpers; native experiment not restarted"
+    },
+    {
+      "stage": "initial scoped download",
+      "reason": "Some issued URLs returned404 after47 verified files",
+      "resolution": "Kept all original downloaded bytes and failure logs; refreshed URLs in40-file batches; all302 actual files verified"
+    },
+    {
+      "stage": "CPU helper invocation",
+      "reason": "One execFile call did not send JSON stdin and timed out; kernel reset closed helper stdin",
+      "resolution": "Confirmed no helper remained, corrected spawn+stdin invocation; no native rerun"
+    }
+  ],
+  "archive_unchanged": true,
+  "credentials_in_archive": false
+}

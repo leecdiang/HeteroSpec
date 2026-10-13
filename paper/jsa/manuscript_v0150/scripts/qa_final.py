@@ -36,6 +36,17 @@ def main() -> None:
             row = values[family, pair]
             assert ratio == f"{float(row['ratio']):.3f}"
             assert int(regressions) == int(row["regressed_tasks"])
+    supplement_text = (root / "supplement/04_cost.tex").read_text()
+    supplement_table = supplement_text.split(r"\label{tab:allrepair}")[1].split(r"\end{table*}")[0]
+    table_rows = [line for line in supplement_table.splitlines() if line.startswith("$")]
+    assert len(table_rows) == len(comparisons)
+    for pair, line in zip(comparisons, table_rows):
+        cells = re.findall(r"([0-9]+\.[0-9]+) & (\d+)/12", line)
+        assert len(cells) == 3
+        for family, (ratio, regressions) in zip(("Qwen3", "SmolLM2", "Llama"), cells):
+            row = values[family, pair]
+            assert ratio == f"{float(row['ratio']):.6f}"
+            assert int(regressions) == int(row["regressed_tasks"])
     figure = (root / "figures/cost.tex").read_text()
     plotted = re.findall(r"\((\.?\d+(?:\.\d+)?),([123])\)\s*\[([\d.]+)\]", figure)
     assert len(plotted) == 9
@@ -45,9 +56,9 @@ def main() -> None:
         assert abs(float(ratio) - float(values[families[y], pair]["ratio"])) < 1e-9
         assert label == f"{float(ratio):.3f}"
     report = {
-        "version": "0.15.2", "date": "2026-10-13",
+        "version": "0.15.3", "date": "2026-10-13",
         "scope": "Final manuscript/figure transcription and PDF checks; no GPU or full raw-archive audit.",
-        "main_cost_cells_checked": 21, "cost_figure_points_checked": 9,
+        "main_cost_cells_checked": 21, "supplement_cost_cells_checked": 21, "cost_figure_points_checked": 9,
         "documents": {},
     }
     files = [root / "output/main.pdf", root / "output/supplement.pdf"]
@@ -75,8 +86,8 @@ def main() -> None:
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
     report["status"] = "PASS_AUTOMATED_CHECKS_VISUAL_REVIEW_RECORDED_SEPARATELY"
-    (root / "provenance/FINAL_QA_V0152.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("Checked 21 cost cells, 9 main cost-figure points, 9 PDFs, embedded fonts and page text bounds.")
+    (root / "provenance/FINAL_QA_V0153.json").write_text(json.dumps(report, indent=2) + "\n")
+    print("Checked 42 main/supplement cost cells, 9 main cost-figure points, 9 PDFs, embedded fonts and page text bounds.")
 
 
 if __name__ == "__main__":

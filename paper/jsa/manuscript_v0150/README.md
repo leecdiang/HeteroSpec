@@ -1,18 +1,27 @@
 # Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 
-**Version 0.15.2, author-review revision, 13 October 2026.** The title, main method and five main figures are retained. This revision builds on PR102 at `2dce88ea37194beb1b4b09f139e5bc48000af3ba`. The directory name remains stable for existing links. It is not a journal submission or an approval of the pending author declarations.
+**Version 0.15.3, author-review revision, 13 October 2026.** The title, main method and five main figures are retained. This revision builds on PR102 at `e22c3565366094baa2980594b42223e57565455f`. The directory name remains stable for existing links. It is not a journal submission or an approval of the pending author declarations.
 
 ## Reading and delivery
 
-- `output/main.pdf`: 11-page article with explicit pointers to the supplementary figures and completed bibliographic fields.
-- `output/supplement.pdf`: 11-page supplement with evidence contracts, all reported comparisons, two new task-level figures, causal boundaries and the historical ledger.
+- `output/main.pdf`: 12-page article with explicit pointers to the supplementary figures and completed bibliographic fields.
+- `output/supplement.pdf`: 11-page supplement with evidence contracts, all reported comparisons, two task-level figures, causal boundaries and the historical ledger.
 - `output/figures/`: seven separately numbered vector PDFs, five main and two supplementary; editable sources remain in `figures/`.
-- `output/JSA_v0152_author_package.zip`: complete review package, including sources, figure PDFs, data, checks, manuscript PDFs and author worksheets.
-- `output/JSA_v0152_flat_sources.zip`: source files with no subdirectories, compiled after extraction for Elsevier Editorial Manager preparation.
+- `output/JSA_v0153_author_package.zip`: complete review package, including sources, figure PDFs, data, checks, manuscript PDFs and author worksheets.
+- `output/JSA_v0153_flat_sources.zip`: source files with no subdirectories, compiled after extraction for Elsevier Editorial Manager preparation.
 - `Highlights.txt`, `Figure_captions.tex`, `Supplement_figure_captions.tex`, `Title_page.txt`: editable submission support files.
+- `REFERENCE_AUDIT_20261013.md`: source-linked audit of every existing reference and the missing-work search.
 - `JSA_REQUIREMENTS_20261013.md` and `AUTHOR_CHECKLIST.md`: recovered journal rules, verified publisher guidance and remaining author decisions.
 
 Build outputs and ZIPs are generated locally, not committed. The final package's exact file hashes are in `output/FINAL_MANIFEST.json`.
+
+## Layout and reference finalization
+
+The seven-row supplementary comparison matrix preserves all 21 ratios and regression counts. Removing the S4 float barrier and the forced one-column ledger transition eliminates the large unused column areas on pages 5 and 9. Both historical ledgers remain full-width, complete tables. Figure S2 names its Section S4 provenance even when it floats into the following section. Fonts and plotted values are unchanged.
+
+The fresh audit covers all 22 prior bibliography entries, including the unused Qwen3 library entry. LLM-42 now uses its verified SOSP 2026 publication; the MLSys paper has complete pages. PR91 and PR94 have distinct direct citations, and source-account attributions replace unsupported personal-name attribution for the audits and historical ledger. Full URLs and access dates are displayed for web/software/companion sources. Complete author lists remain in the bibliography source with consistent six-name abbreviation in print.
+
+Five relevant papers and a primary Vulkan diagnostic report are added with specific methodological comparisons. The same-project early public report is identified by a matching frozen-prediction SHA256 and cited as historical work, not independent replication. The resulting library has 30 entries; the article prints 26 and the supplement 14. The only unused library entry is Qwen3. See `provenance/REFERENCE_AUDIT_V0153.json` for versions, formal publication status, checked primary sources, unresolved access limits and omitted candidates. `provenance/REFERENCE_CHECKS_V0153.json` checks citation coverage and actual PDF hyperlinks, not literature completeness.
 
 ## Why two supplementary figures
 
@@ -23,7 +32,7 @@ The main figures already cover graph design, fixed-input correspondence, aggrega
 
 Both use the existing palette and typography, fixed task ordering, explicit ratio directions, parity lines and redundant point shapes. Figure S1 uses a shared logarithmic ratio axis; Figure S2 uses a shared linear axis. Neither includes fitted relationships, fabricated uncertainty, pooled campaigns or new measurements. The near-parity Llama GSM8K141 regression remains at full coordinate precision and is identified at six decimals in the caption.
 
-The generator derives all supplementary coordinates directly from the pinned report's arm medians. A separate checker recomputes them without importing the generator, verifies the actual plotted coordinates and connecting segments, and checks shared denominators, task qualification, axis coverage and regression directions. See `provenance/SUPPLEMENT_FIGURE_CHECKS_V0152.json`. PDF checks and final author-side review are recorded in `provenance/FINAL_QA_V0152.json` and `provenance/FINAL_REVIEW_V0152.json`.
+The generator derives all supplementary coordinates directly from the pinned report's arm medians. A separate checker recomputes them without importing the generator, verifies the actual plotted coordinates and connecting segments, and checks shared denominators, task qualification, axis coverage and regression directions. See `provenance/SUPPLEMENT_FIGURE_CHECKS_V0153.json`. PDF checks and final author-side review are recorded in `provenance/FINAL_QA_V0153.json` and `provenance/FINAL_REVIEW_V0153.json`.
 
 The v0.15.1 scientific corrections remain: PR93/PR97 direct evidence citations, the S6 historical-endpoint pointer, aggregate session reversals, Stage-Replay's prior cache-transplantation controls, and the partition/projection/state boundary. The 186 reported-value checks and the prior independent recomputation of 21 aggregate, 42 session and 252 task ratios remain applicable. No GPU experiment, native timing-record audit or complete 675 MB raw-archive reconstruction was performed.
 
@@ -37,7 +46,7 @@ Funding, competing interests, CRediT roles, the declarations-tool document, auth
 
 ## Build and package
 
-Use Python 3.10+ and a TeX distribution with pdfLaTeX, BibTeX, `elsarticle`, TikZ/PGFPlots, `microtype`, `booktabs`, `tabularx`, `longtable`, `enumitem`, `xurl`, `flushend`, `preview` and standard Times-compatible fonts. PDF QA also needs `pdfplumber` and Poppler (`pdffonts`).
+Use Python 3.10+ and a TeX distribution with pdfLaTeX, BibTeX, `elsarticle`, TikZ/PGFPlots, `microtype`, `booktabs`, `tabularx`, `longtable`, `enumitem`, `xurl`, `flushend`, `preview` and standard Times-compatible fonts. PDF and reference QA also need `pdfplumber`, `pypdf` and Poppler (`pdffonts`).
 
 ```sh
 python3 scripts/check_reported_data.py
@@ -46,11 +55,12 @@ python3 scripts/check_supplement_figures.py
 python3 scripts/build.py
 python3 scripts/export_figures.py
 python3 scripts/qa_final.py
+python3 scripts/check_references.py
 python3 scripts/package_submission.py
 ```
 
-To regenerate the supplementary TikZ sources from the fixed medians, run the generator without `--check`. The source package helper builds both documents from the extracted flat ZIP in a clean temporary directory. No GPU, network or shell escape is required. On Overleaf, choose `main.tex` or `supplement.tex` with pdfLaTeX. The existing renamed `psql-num.bst` derivative retains numbered, first-citation-order references and linked titles; the saved JSA guide allows consistent initial-submission reference formatting.
+To regenerate the supplementary TikZ sources from the fixed medians, run the generator without `--check`. The source package helper builds both documents from the extracted flat ZIP in a clean temporary directory. No GPU, network or shell escape is required. On Overleaf, choose `main.tex` or `supplement.tex` with pdfLaTeX. The renamed `psql-num.bst` derivative retains numbered references in first-citation order and linked titles, displays complete web URLs/access dates, and abbreviates lists longer than six authors; the saved JSA guide allows consistent initial-submission reference formatting.
 
 ## Historical records
 
-The original `GITHUB_IMPORT.json`, `PACKAGE_MANIFEST.json`, `RECONSTRUCTION_REVIEW_ZH.md`, `provenance/RECONSTRUCTION_QA.json`, `provenance/PDF_CHECKS.json` and original font reports describe the v0.15.0 import/build only. The v0.15.1 QA/review files describe that earlier revision. They are retained as history, not current-file integrity certificates. Use the v0.15.2 QA and final manifest for this revision. Experiment records and earlier manuscript directories are unchanged.
+The original `GITHUB_IMPORT.json`, `PACKAGE_MANIFEST.json`, `RECONSTRUCTION_REVIEW_ZH.md`, `provenance/RECONSTRUCTION_QA.json`, `provenance/PDF_CHECKS.json` and original font reports describe the v0.15.0 import/build only. The v0.15.1 and v0.15.2 QA/review files describe those earlier revisions. The narrower v0.15.2 bibliography recheck is superseded by the comprehensive v0.15.3 source audit. They are retained as history, not current-file integrity certificates. Use the v0.15.3 QA and final manifest for this revision. Experiment records and earlier manuscript directories are unchanged.

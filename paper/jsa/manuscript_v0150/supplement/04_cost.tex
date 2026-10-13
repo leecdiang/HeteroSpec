@@ -2,33 +2,21 @@
 \label{supp:cost}
 The implementation comparison uses 12 exposed tasks, two adjacent sessions and four repetitions in every one of seven arms and three families: 2,016 formal requests. Each arm/family has 96 complete qualified endpoints. Its panel contains MBPP123,140,255,401,413,418 and GSM8K111,120,1308,141,322,443. The formal timer includes complete nonstreaming request handling, not heavy numerical readback~\cite{rtxrepair}. Table~\ref{tab:allrepair} gives all qualified comparisons.
 
-\begin{table}[t]\centering\small
-\caption{All 21 qualified implementation comparisons at reported six-decimal precision. Regressions count tasks on which the denominator is slower.}\label{tab:allrepair}
-\begin{tabular}{@{}llrr@{}}\toprule
-Family&Comparison&Ratio&Regressions\\\midrule
-Qwen3 & $M_{\PQ}/M_{\QB}$ & 1.026676 & 2/12 \\
-Qwen3 & $C_{\PQ}/C_{\QB}$ & 1.043676 & 0/12 \\
-Qwen3 & $M_{\GS}/M_{\QB}$ & 1.330106 & 0/12 \\
-Qwen3 & $C_{\GS}/C_{\QB}$ & 2.143525 & 0/12 \\
-Qwen3 & $M_{\QB}/C_{\QB}$ & 1.143749 & 1/12 \\
-Qwen3 & $R/M_{\QB}$ & 1.334051 & 0/12 \\
-Qwen3 & $R/C_{\QB}$ & 1.525820 & 0/12 \\\addlinespace[2pt]
-SmolLM2 & $M_{\PQ}/M_{\QB}$ & 1.038478 & 0/12 \\
-SmolLM2 & $C_{\PQ}/C_{\QB}$ & 1.068111 & 0/12 \\
-SmolLM2 & $M_{\GS}/M_{\QB}$ & 1.366008 & 0/12 \\
-SmolLM2 & $C_{\GS}/C_{\QB}$ & 1.462530 & 0/12 \\
-SmolLM2 & $M_{\QB}/C_{\QB}$ & 0.633948 & 12/12 \\
-SmolLM2 & $R/M_{\QB}$ & 1.369890 & 0/12 \\
-SmolLM2 & $R/C_{\QB}$ & 0.868439 & 10/12 \\\addlinespace[2pt]
-Llama & $M_{\PQ}/M_{\QB}$ & 1.013407 & 1/12 \\
-Llama & $C_{\PQ}/C_{\QB}$ & 1.021848 & 2/12 \\
-Llama & $M_{\GS}/M_{\QB}$ & 1.411508 & 0/12 \\
-Llama & $C_{\GS}/C_{\QB}$ & 2.175941 & 0/12 \\
-Llama & $M_{\QB}/C_{\QB}$ & 1.116620 & 1/12 \\
-Llama & $R/M_{\QB}$ & 1.426161 & 0/12 \\
-Llama & $R/C_{\QB}$ & 1.592480 & 0/12 \\
+\begin{table*}[t]\centering\small
+\caption{All 21 qualified implementation comparisons at reported six-decimal precision. Regressions count tasks on which the denominator is slower, out of 12.}\label{tab:allrepair}
+\begin{tabular}{@{}lrrrrrr@{}}\toprule
+&\multicolumn{2}{c}{Qwen3}&\multicolumn{2}{c}{SmolLM2}&\multicolumn{2}{c}{Llama}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
+Comparison&Ratio&Regressions&Ratio&Regressions&Ratio&Regressions\\\midrule
+$M_{\PQ}/M_{\QB}$ & 1.026676 & 2/12 & 1.038478 & 0/12 & 1.013407 & 1/12\\
+$C_{\PQ}/C_{\QB}$ & 1.043676 & 0/12 & 1.068111 & 0/12 & 1.021848 & 2/12\\
+$M_{\GS}/M_{\QB}$ & 1.330106 & 0/12 & 1.366008 & 0/12 & 1.411508 & 0/12\\
+$C_{\GS}/C_{\QB}$ & 2.143525 & 0/12 & 1.462530 & 0/12 & 2.175941 & 0/12\\
+$M_{\QB}/C_{\QB}$ & 1.143749 & 1/12 & 0.633948 & 12/12 & 1.116620 & 1/12\\
+$R/M_{\QB}$ & 1.334051 & 0/12 & 1.369890 & 0/12 & 1.426161 & 0/12\\
+$R/C_{\QB}$ & 1.525820 & 0/12 & 0.868439 & 10/12 & 1.592480 & 0/12\\
 \bottomrule\end{tabular}
-\end{table}
+\end{table*}
 
 Qwen3's two $M_{\PQ}/M_{\QB}$ regressions are GSM8K141 and 322. Its $C_{\PQ}/C_{\QB}$ comparison has none. Llama has one target-only local-repair regression (MBPP418) and two speculative local-repair regressions (GSM8K120,141). Both SmolLM2 local-repair comparisons favor QB on every task. All GS/QB comparisons favor QB on all 12 tasks in every family.
 
@@ -63,7 +51,7 @@ Figure~\ref{fig:sessiontasks} resolves the session change by task. In target-onl
 
 \begin{figure*}[t]
 \centering\input{figures/session_tasks.tex}
-\caption{Task-level PQ/QB request ratios in two adjacent sessions. Columns identify families; the upper and lower rows show target-only and speculative execution. An open circle and a filled square give the first and second session ratios of four-repeat arm medians; each gray segment connects the same task. Markers are vertically offset only to prevent overlap. All six panels use the same linear axis and the same task order; values above one favor QB. The 72 paired segments are descriptive session comparisons, not independent-day replicates, confidence intervals or a measured temporal trend.}
+\caption{Task-level PQ/QB request ratios for the CUDA implementation panel (Section~\ref{supp:cost}) in two adjacent sessions. Columns identify families; the upper and lower rows show target-only and speculative execution. An open circle and a filled square give the first and second session ratios of four-repeat arm medians; each gray segment connects the same task. Markers are vertically offset only to prevent overlap. All six panels use the same linear axis and the same task order; values above one favor QB. The 72 paired segments are descriptive session comparisons, not independent-day replicates, confidence intervals or a measured temporal trend.}
 \label{fig:sessiontasks}
 \end{figure*}
 
@@ -78,5 +66,3 @@ Four PQ engineering warm requests on SmolLM2/Llama failed and remained charged. 
 A QB eligibility check was corrected to accept the actually compiled final tensor alias when its geometry and existing full-output checks established the intended layout. The correction did not rerun GPU science or consult timings to select a faster condition. A final archive repair restored missing inherited package inclusion and corrected auditor metadata after the formal requests had completed. Original failed packaging logs and frozen files remain in the source archive. These corrections should be included in artifact review because a perfect-looking end table alone does not establish protocol compliance.
 
 The original host reports independent standard-library recomputation, 14 synthetic rejection tests, and local/authenticated remote restoration. The finalization check independently recomputed all 21 aggregate and 42 session ratios from the pinned report's task/session median times and checked denominators, qualifications and table rounding; it did \emph{not} rerun the full native/raw scientific archive. That division of responsibility is explicit in the reconstruction QA record.
-
-\FloatBarrier

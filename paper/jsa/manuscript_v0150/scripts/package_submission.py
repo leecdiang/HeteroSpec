@@ -71,7 +71,7 @@ def main() -> None:
              for p in sources}
     assert len(set(names.values())) == len(names)
     assert all(len(name) <= 80 for name in names.values())
-    source_zip = OUTPUT / "JSA_v0152_flat_sources.zip"
+    source_zip = OUTPUT / "JSA_v0153_flat_sources.zip"
     latex, bibtex = shutil.which("pdflatex"), shutil.which("bibtex")
     if not latex or not bibtex:
         raise SystemExit("pdfLaTeX and BibTeX are required to verify the flat package.")
@@ -110,7 +110,7 @@ def main() -> None:
                    r"LaTeX Warning: (?:Reference|Citation) .* undefined"]
             assert not any(re.search(pattern, log) for pattern in bad), stem
             shutil.copy2(rebuild / f"{stem}.log", OUTPUT / f"flat_{stem}.log")
-    package = OUTPUT / "JSA_v0152_author_package.zip"
+    package = OUTPUT / "JSA_v0153_author_package.zip"
     files = sorted(p for p in ROOT.rglob("*") if p.is_file()
                    and "output" not in p.relative_to(ROOT).parts
                    and "__pycache__" not in p.relative_to(ROOT).parts
@@ -119,8 +119,8 @@ def main() -> None:
     files += [OUTPUT / "figures" / f"Figure_{number}_{name}.pdf" for number, name, _ in FIGURES]
     assert all(p.exists() for p in files)
     manifest = {
-        "version": "0.15.2", "date": "2026-10-13",
-        "base_pr": 102, "base_head": "2dce88ea37194beb1b4b09f139e5bc48000af3ba",
+        "version": "0.15.3", "date": "2026-10-13",
+        "base_pr": 102, "base_head": "e22c3565366094baa2980594b42223e57565455f",
         "status": "AUTHOR_REVIEW_REQUIRED_NOT_SUBMITTED",
         "flat_source_rebuild": "PASS: both documents, extracted ZIP in clean temporary directory",
         "highlight_character_counts": list(map(len, highlights)),

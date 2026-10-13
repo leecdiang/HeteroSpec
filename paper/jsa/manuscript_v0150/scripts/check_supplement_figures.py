@@ -16,7 +16,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORT = ROOT / "provenance/SUPPLEMENT_FIGURE_CHECKS_V0152.json"
+REPORT = ROOT / "provenance/SUPPLEMENT_FIGURE_CHECKS_V0153.json"
 FAMILIES = ("Qwen3", "SmolLM2", "Llama")
 ALL_PAIRS = {
     "M_PQ/M_QB", "C_PQ/C_QB", "M_GS/M_QB", "C_GS/C_QB",
@@ -62,7 +62,7 @@ def session_direction(first: float, second: float) -> str:
 def main() -> None:
     tests: list[dict] = []
     result: dict = {
-        "version": "0.15.2",
+        "version": "0.15.3",
         "status": "RUNNING",
         "scope": (
             "Independently recomputes task/session ratios from the pinned report's "

@@ -473,7 +473,8 @@ MACRO {toplas} {"ACM Trans. Prog. Lang. Syst."}
 
 MACRO {tcs} {"Theoretical Comput. Sci."}
 
-% Local author-package modification: titles remain hyperlinked; do not repeat long URLs.
+% Local author-package modification: titles are hyperlinked. Web records
+% with lastchecked also display their complete URL and access date.
 FUNCTION {write.url}
 { skip$ }
 
@@ -488,6 +489,10 @@ FUNCTION {format.names}
     { s nameptr
       "{f.~}{vv~}{ll}{, jj}" format.name$
     't :=
+      nameptr #7 = numnames #6 > and
+        { "others" 't := #1 'namesleft := }
+        'skip$
+      if$
       nameptr #1 >
         {
           namesleft #1 >
@@ -1053,7 +1058,7 @@ FUNCTION {make.href}
 }
 
 FUNCTION {format.url}
-{ inlinelinks #1 = url empty$ or
+{ inlinelinks #1 = lastchecked empty$ and url empty$ or
    { "" }
    { hrefform #1 =
        { % special case -- add HyperTeX specials

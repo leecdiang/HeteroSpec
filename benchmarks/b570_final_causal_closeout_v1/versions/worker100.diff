@@ -1,0 +1,113 @@
+--- PR99-worker
++++ PR100-closeout-worker
+@@ -50,6 +50,7 @@
+  }
+ };
+ Work * work=nullptr;
++std::vector<int> schedule100; bool op100=false; int layer100=0; json tensors100=json::array(); uint64_t opbytes100=0; std::string opdir100;
+ int partition98=512;std::string payload_dir98;json payloads98=json::object();
+ bool diagnostic96=false,sham96=false;int boundary96=0,sham_count96=0;
+ std::vector<int> prefix96;std::set<int>cuts96;json boundaries96=json::array();
+@@ -99,7 +100,38 @@
+  ~Memory(){bool failed=active;auto last=stop();if(failed&&!failure_file.empty()){std::ofstream f(failure_file);f<<last.dump()<<"\n";}if(instance)vkDestroyInstance(instance,nullptr);}
+ };
+ struct Context {
+- llama_model *model=nullptr;llama_context *ctx=nullptr;llama_sampler *sampler=nullptr;int ub,capacity;std::string role;Memory *memory;int decodes=0,reset_min=0,reset_max=0;bool capture=false,compute_violation=false,continuation_seen=false;json trace=json::array();std::vector<int>last_input96;int last_pos96=-1;std::string last_phase96;std::set<int> observed_ops;
++ llama_model *model=nullptr;llama_context *ctx=nullptr;llama_sampler *sampler=nullptr;int ub,capacity;std::string role;Memory *memory;int decodes=0,reset_min=0,reset_max=0;bool capture=false,compute_violation=false,continuation_seen=false;json trace=json::array();int opcaller100=-1,opoffset100=0,opstart100=0,opwidth100=0;std::vector<int>last_input96;int last_pos96=-1;std::string last_phase96;std::set<int> observed_ops;
++
++ static json capture100(ggml_tensor*t,const std::string&kind){
++  auto*base=t;while(base->view_src)base=base->view_src;
++  auto bt=base->buffer?ggml_backend_buffer_get_type(base->buffer):nullptr;auto dev=bt?ggml_backend_buft_get_device(bt):nullptr;
++  json ne=json::array(),nb=json::array();for(int i=0;i<4;++i){ne.push_back(t->ne[i]);nb.push_back(t->nb[i]);}
++  json j={{"kind",kind},{"name",t->name},{"op",ggml_op_name(t->op)},{"dtype",ggml_type_name(t->type)},{"type",int(t->type)},{"ne",ne},{"nb",nb},{"buffer_identity",uint64_t(reinterpret_cast<uintptr_t>(base->buffer))},{"tensor_identity",uint64_t(reinterpret_cast<uintptr_t>(t))},{"buffer_type",bt?ggml_backend_buft_name(bt):"UNKNOWN"},{"device",dev?ggml_backend_dev_name(dev):"UNKNOWN"},{"view_offset",t->view_offs},{"op_params_sha256",sha96(t->op_params,sizeof(t->op_params))}};
++  j["op_params"]=json::array();for(auto p:t->op_params)j["op_params"].push_back(p);
++  bool weight=std::string(t->name).find(".weight")!=std::string::npos;
++  bool permitted=!weight||std::string(t->name)=="blk.0.attn_q.weight"||std::string(t->name)=="blk.0.attn_k.weight"||std::string(t->name)=="blk.0.attn_v.weight"||ggml_nbytes(t)<=65536;
++  if(!permitted||ggml_nbytes(t)>33554432){j["payload"]=nullptr;j["scope"]="SOURCE_GGUF_PIN_NOT_RAW_CAPTURE";return j;}
++  size_t n=ggml_nbytes(t);std::vector<uint8_t>b(n);ggml_backend_tensor_get(t,b.data(),0,n);auto h=sha96(b.data(),n);auto p=std::filesystem::path(opdir100)/(h+".tensor");
++  if(!std::filesystem::exists(p)){if(opbytes100+n>536870912)throw std::runtime_error("SYNCHRONOUS_P1C_PAYLOAD_CAP");opbytes100+=n;std::ofstream f(p,std::ios::binary);f.write((char*)b.data(),n);f.close();if(!f)throw std::runtime_error("P1C_PAYLOAD_WRITE");}
++  j["payload"]={{"path","operator_payloads/"+h+".tensor"},{"bytes",n},{"sha256",h}};return j;
++ }
++ static bool observe100(ggml_tensor*t,bool ask,void*data){
++  auto*self=static_cast<Context*>(data);std::string name=t->name,suffix="-"+std::to_string(layer100);
++  bool embedding=t->op==GGML_OP_GET_ROWS&&t->src[0]&&std::string(t->src[0]->name)=="token_embd.weight";
++  bool selected=op100&&self->last_phase96=="PREFILL"&&(embedding||name=="inp_embd"||(name.size()>=suffix.size()&&name.compare(name.size()-suffix.size(),suffix.size(),suffix)==0));
++  if(ask)return selected;
++  if(!selected)return true;
++  if(embedding){if(self->opcaller100!=self->decodes){self->opcaller100=self->decodes;self->opoffset100=0;}self->opstart100=self->last_pos96+self->opoffset100;self->opwidth100=int(t->ne[1]);self->opoffset100+=self->opwidth100;}
++  json operands=json::array();for(int i=0;i<GGML_MAX_SRC;++i)if(t->src[i])operands.push_back(capture100(t->src[i],"src"+std::to_string(i)));
++  auto r=capture100(t,"output");r["operands"]=operands;r["micrograph_pos"]=self->opstart100;r["micrograph_width"]=self->opwidth100;r["caller_decode_ordinal"]=self->decodes;r["caller_pos"]=self->last_pos96;r["caller_ids"]=self->last_input96;r["native_context_ub"]=llama_n_ubatch(self->ctx);r["logical_mapping_rule"]="ne1=n_tokens for2D,ne2=n_tokens for Q/K/3D; verify against source and per-micrograph input IDs; raw offset not position";r["actual_shader_pipeline"]=nullptr;r["dispatch_dimensions"]=nullptr;
++  tensors100.push_back(r);if(tensors100.dump().size()>4194304)throw std::runtime_error("SYNCHRONOUS_METADATA_CAP");return true;
++ }
++ void clean_receiver100(){
++  llama_synchronize(ctx);llama_free(ctx);llama_sampler_free(sampler);
++  auto p=llama_context_default_params();p.n_ctx=1024;p.n_batch=512;p.n_ubatch=ub;p.n_seq_max=1;p.n_outputs_max=capacity;p.n_outputs_max_per_seq=capacity;p.n_threads=10;p.n_threads_batch=10;p.type_k=GGML_TYPE_F16;p.type_v=GGML_TYPE_F16;p.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;p.offload_kqv=true;p.cb_eval=observe100;p.cb_eval_user_data=this;
++  ctx=llama_init_from_model(model,p);sampler=llama_sampler_init_greedy();if(!ctx||!sampler)throw std::runtime_error("Fresh receiver allocation");reset();
++ }
++
+  static bool observe_compute(ggml_tensor *tensor,bool ask,void *data){auto *self=static_cast<Context*>(data);int op=int(tensor->op);bool needed=tensor->op==GGML_OP_GET_ROWS||tensor->op==GGML_OP_MUL_MAT||tensor->op==GGML_OP_MUL_MAT_ID||tensor->op==GGML_OP_RMS_NORM||tensor->op==GGML_OP_SOFT_MAX;
+   if(ask)return needed&&self->observed_ops.count(op)==0;
+   self->observed_ops.insert(op);auto *base=tensor;while(base->view_src)base=base->view_src;auto type=base->buffer?ggml_backend_buffer_get_type(base->buffer):nullptr;auto dev=type?ggml_backend_buft_get_device(type):nullptr;bool gpu=dev&&ggml_backend_dev_type(dev)==GGML_BACKEND_DEVICE_TYPE_GPU&&std::string(ggml_backend_dev_name(dev))=="Vulkan0";
+@@ -115,7 +147,7 @@
+   while(std::getline(map,row)){std::istringstream fields(row);std::string name,buffer,device,gpu_flag,bytes;std::getline(fields,name,'\t');std::getline(fields,buffer,'\t');std::getline(fields,device,'\t');std::getline(fields,gpu_flag,'\t');std::getline(fields,bytes,'\t');bool match=device=="Vulkan0"&&gpu_flag=="1";all_gpu=all_gpu&&match;weights.push_back({{"name",name},{"buffer_type",buffer},{"backend_device",device},{"gpu_backend_buffer",gpu_flag=="1"},{"tensor_bytes",std::stoull(bytes)}});}
+   emit({{"event","WEIGHT_MAP"},{"role",role},{"pid",GetCurrentProcessId()},{"tensors",weights},{"all_weights_Vulkan0",all_gpu},{"physical_residency","UNKNOWN_NOT_PROVEN_BY_BUFFER_DEVICE"}});
+   if(weights.empty()||!all_gpu)throw std::runtime_error("RESIDENCY_VIOLATION_CPU_MODEL_WEIGHT");memory->require(role+"_WEIGHTS");
+-  auto cp=llama_context_default_params();cp.n_ctx=1024;cp.n_batch=512;cp.n_ubatch=ub;cp.n_seq_max=1;cp.n_outputs_max=capacity;cp.n_outputs_max_per_seq=capacity;cp.n_threads=10;cp.n_threads_batch=10;cp.type_k=GGML_TYPE_F16;cp.type_v=GGML_TYPE_F16;cp.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;cp.offload_kqv=true;cp.cb_eval=nullptr;cp.cb_eval_user_data=nullptr;
++  auto cp=llama_context_default_params();cp.n_ctx=1024;cp.n_batch=512;cp.n_ubatch=ub;cp.n_seq_max=1;cp.n_outputs_max=capacity;cp.n_outputs_max_per_seq=capacity;cp.n_threads=10;cp.n_threads_batch=10;cp.type_k=GGML_TYPE_F16;cp.type_v=GGML_TYPE_F16;cp.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;cp.offload_kqv=true;cp.cb_eval=observe100;cp.cb_eval_user_data=this;
+   ctx=llama_init_from_model(model,cp);if(!ctx)throw std::runtime_error("Context allocation failure");sampler=llama_sampler_init_greedy();
+   emit({{"event","CONTEXT"},{"role",role},{"n_ctx",llama_n_ctx(ctx)},{"ub",llama_n_ubatch(ctx)},{"outputs_max",capacity},{"outputs_per_seq",capacity},{"layers",llama_model_n_layer(model)+1},{"numeric_path","Vulkan0_F16_KV_FAoff"},{"sampler","native_greedy_seed123_no_stochastic_state"},{"load_forward_calls",0}});memory->require(role+"_CONTEXT");
+  }
+@@ -146,8 +178,8 @@
+ }
+  }
+  void prefill(const std::vector<int>&ids){
+- for(size_t i=0;i<ids.size();i+=partition98){size_t end=std::min(ids.size(),i+partition98);
+- decode(std::vector<int>(ids.begin()+i,ids.begin()+end),int(i),false,"PREFILL",end==ids.size());}
++ size_t pos=0;for(int n:schedule100){if(n<=0||n>512||pos+n>ids.size())throw std::runtime_error("Frozen schedule invalid");size_t end=pos+n;decode(std::vector<int>(ids.begin()+pos,ids.begin()+end),int(pos),false,"PREFILL",end==ids.size());pos=end;}
++ if(pos!=ids.size())throw std::runtime_error("Incomplete prompt schedule");
+ }
+  void boundary_snapshot96(int index,int sampled){
+  if(!diagnostic96||!capture||role!="TARGET"||cuts96.count(boundary96)==0)return;
+@@ -211,15 +243,31 @@
+  if((partition98!=128&&partition98!=512)||draft!="NONE"||mode!="ordinary")throw std::runtime_error("Diagnostic target-only partition contract");
+  if(capture&&payload_dir98.empty())throw std::runtime_error("Missing diagnostic payload directory");
+  payloads98=json::object();
++
++ schedule100=req.at("prefill_schedule").get<std::vector<int>>();op100=req.value("operator_capture",false);layer100=req.value("operator_layer",0);opdir100=req.value("operator_dir","");tensors100=json::array();opbytes100=req.value("operator_bytes_existing",uint64_t(0));
++ if(op100&&(!capture||opdir100.empty()||layer100!=0))throw std::runtime_error("Operator capture contract");
+  diagnostic96=req.value("phase96_diagnostic",false);sham96=req.value("own_bind_sham",false);cuts96.clear();boundaries96=json::array();prefix96.clear();boundary96=0;sham_count96=0;
+  if(diagnostic96&&!heavy())throw std::runtime_error("Boundary capture needs heavy");
+  if(sham96&&!diagnostic96)throw std::runtime_error("Sham needs capture");
+  if(req.contains("boundary_cuts"))for(int c:req["boundary_cuts"].get<std::vector<int>>()){if(c<0||c>127)throw std::runtime_error("Cut out of range");cuts96.insert(c);}
+    if(inp.empty()||inp.size()>768||cap<1||cap>128||inp.size()+cap+k+1>1024)throw std::runtime_error("Request bounds");
+    auto *v=llama_model_get_vocab(tgt.model);for(int id:inp)if(id<0||id>=llama_vocab_n_tokens(v))throw std::runtime_error("Prompt ID invalid");
+-   tgt.capture=capture;tgt.reset();if(dft){dft->capture=capture;dft->reset();}memory.failure_file=dir+"/"+rid+".failed-memory.json";memory.start();tgt.prefill(inp);memory.require("TARGET_PREFILL");if(dft){dft->prefill(inp);memory.require("DRAFT_PREFILL");}
++   tgt.capture=capture;tgt.reset();if(dft){dft->capture=capture;dft->reset();}memory.failure_file=dir+"/"+rid+".failed-memory.json";memory.start();json restored100=nullptr;std::vector<float>initial100;
++ if(req.contains("restore100")){
++  if(ub!=512||!schedule100.empty()||op100)throw std::runtime_error("Receiver geometry contract");tgt.clean_receiver100();
++  auto rd=[&](std::string key){auto path=req["restore100"][key]["path"].get<std::string>();std::ifstream f(path,std::ios::binary);std::vector<uint8_t>b((std::istreambuf_iterator<char>(f)),{});if(b.size()!=req["restore100"][key]["bytes"].get<size_t>()||sha96(b.data(),b.size())!=req["restore100"][key]["sha256"].get<std::string>())throw std::runtime_error("Invalid donor payload pin");return b;};
++  auto kv=rd("KV"),l=rd("logits");if(l.size()!=size_t(llama_vocab_n_tokens(v))*4)throw std::runtime_error("Invalid logits shape");initial100.resize(l.size()/4);memcpy(initial100.data(),l.data(),l.size());for(float x:initial100)if(!std::isfinite(x))throw std::runtime_error("Invalid FP32 logits");
++  auto size=llama_state_seq_set_data(tgt.ctx,kv.data(),kv.size(),0);llama_synchronize(tgt.ctx);if(size!=kv.size())throw std::runtime_error("Incomplete sequence import");
++  std::vector<uint8_t>check(llama_state_seq_get_size(tgt.ctx,0));check.resize(llama_state_seq_get_data(tgt.ctx,check.data(),check.size(),0));
++  if(check!=kv||llama_memory_seq_pos_min(llama_get_memory(tgt.ctx),0)!=0||llama_memory_seq_pos_max(llama_get_memory(tgt.ctx),0)!=int(inp.size())-1)throw std::runtime_error("KV import differs");
++  restored100={{"contract","BOUNDARY0_CLEAN_RECEIVER_NATIVE_GREEDY_EQUIVALENT_NOT_GENERAL_OPAQUE_CLONE"},{"KV_source",req["restore100"]["KV"]},{"logits_source",req["restore100"]["logits"]},{"post_restore_KV_sha256",sha96(check.data(),check.size())},{"post_restore_logits_sha256",sha96(initial100.data(),l.size())},{"KV_min",0},{"KV_max",int(inp.size())-1},{"extra_forward_calls",0},{"clean_context_and_scheduler",true},{"output_slot_reconstruction","initial FP32 consumed through same native apply/accept; next native decode recreates row0; no private dynamic-logit pointer injection"},{"committed_prefix",json::array()},{"pending_before_sample",nullptr},{"receiver_ub",512},{"capacity",1}};
++ }else{tgt.prefill(inp);}memory.require("TARGET_PREFILL");if(dft){dft->prefill(inp);memory.require("DRAFT_PREFILL");}
+    if(mode=="vulkan_batched_repair"){work->inc("phase_binding_calls");auto bind_begin=timed()?clock_type::now():clock_type::time_point{};auto pos=llama_memory_seq_pos_max(llama_get_memory(tgt.ctx),0);std::vector<uint8_t>before,after;if(capture){before.resize(llama_state_get_size(tgt.ctx));before.resize(llama_state_get_data(tgt.ctx,before.data(),before.size()));}llama_b570_pilot_bind_phase_ubatch(tgt.ctx,1);if(llama_memory_seq_pos_max(llama_get_memory(tgt.ctx),0)!=pos)throw std::runtime_error("Phase KV position changed");if(capture){after.resize(llama_state_get_size(tgt.ctx));after.resize(llama_state_get_data(tgt.ctx,after.data(),after.size()));if(before!=after)throw std::runtime_error("Phase KV bytes changed");tgt.trace.push_back({{"phase","BINDING"},{"before_bytes",before.size()},{"after_bytes",after.size()},{"actual_full_state_bytes_equal",before==after},{"from_ub",ub},{"to_ub",1}});}work->span("PHASE_BINDING",bind_begin,"INHERITED_COMPLETION_SYNC_AND_POSSIBLE_RESERVATION_NOT_EXCLUSIVE_WALL");memory.require("AFTER_PHASE_BINDING");}
+-   std::vector<int> out;std::vector<bool> flags;json verifies=json::array();int proposed=0,accepted=0,rollbacks=0;int next=tgt.sample(-1);int base=int(inp.size());
++   std::vector<int> out;std::vector<bool> flags;json verifies=json::array();int proposed=0,accepted=0,rollbacks=0;int next=-1;
++ if(!initial100.empty()){
++  std::vector<llama_token_data>cur;for(int i=0;i<int(initial100.size());++i)cur.push_back({i,initial100[i],0.0f});
++  llama_token_data_array a={cur.data(),cur.size(),-1,false};llama_sampler_apply(tgt.sampler,&a);if(a.selected<0||a.selected>=int64_t(cur.size()))throw std::runtime_error("Native equivalent sample failed");next=cur[a.selected].id;llama_sampler_accept(tgt.sampler,next);work->inc("sampling_calls");restored100["natural_first_id"]=next;restored100["sampler_provenance"]="same llama_sampler_init_greedy/apply/accept, source-equivalent full ordered token_data vector";restored100["first_token_consumed_count"]=1;
++ }else next=tgt.sample(-1);int base=int(inp.size());
+    auto commit=[&](int id){if(out.size()>=size_t(cap)||(!flags.empty()&&flags.back()))throw std::runtime_error("Native suffix prevented");out.push_back(id);flags.push_back(llama_vocab_is_eog(v,id));return flags.back()||out.size()==size_t(cap);};
+    work->inc("initial_target_committed");bool done=commit(next);
+    while(!done){
+@@ -241,6 +289,8 @@
+    result["observation"]={{"phase_timers",timed()},{"heavy_capture",capture},{"etw",false},{"added_sync",heavy()}};
+    result["elapsed_hooks"]=timed()?work->spans:json(nullptr);result["component_completed_wall"]=nullptr;result["GPU_completion_event_ms"]=nullptr;
+    result["phase96"]={{"diagnostic_capture",diagnostic96},{"requested_boundary_indices",cuts96},{"boundaries",boundaries96},{"own_bind_sham",sham96},{"own_bind_sham_calls",sham_count96},{"fork_status","FORK_NOT_IMPLEMENTABLE_CURRENT_ACTOR_NO_VALIDATED_FULL_CLONE"},{"evidence_scope","EXPOSED_DIAGNOSTIC_OUTPUT_WORK_NOT_PAID_FORMAL_COST"},{"GPU_completed_stage_wall",nullptr}};
++ result["restore100"]=restored100;result["operator100"]={{"enabled",op100},{"layer",layer100},{"tensors",tensors100},{"new_unique_payload_total_bytes",opbytes100},{"shader_pipeline","UNKNOWN_NO_PUBLIC_BACKEND_DISPATCH_HOOK"}};
++ result["partition100"]={{"caller_lengths",schedule100},{"final_only_logits",true}};
+  result["partition98"]={{"external_submission_limit",partition98},{"context_ub_fixed",ub},{"prefill_logits_policy","ONLY_COMPLETE_PROMPT_FINAL_POSITION"},{"full_payloads",payloads98},{"cost_scope","DIAGNOSTIC_ONLY"}};
+  result["component_timing_status"]=timed()?"ASYNC_ENQUEUE_SPANS_NOT_COMPLETED_WALL_PARTITION":"DISABLED_COUNTS_CHANNEL";
+    emit(result); // Complete IDs travel before any disk persistence; controller hashes afterward.

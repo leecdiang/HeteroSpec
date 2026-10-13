@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "output"
-FIGURES = ("design", "numeric", "cost", "partition", "state")
+from figure_catalog import FIGURES
 
 
 def sha256(path: Path) -> str:
@@ -46,6 +46,24 @@ def main() -> None:
     highlights = (ROOT / "Highlights.txt").read_text().splitlines()
     assert 3 <= len(highlights) <= 5
     assert all(0 < len(line) <= 85 for line in highlights)
+    caption_files = []
+    for document, folder, filename in (
+        ("main", "sections", "Figure_captions.tex"),
+        ("supplement", "supplement", "Supplement_figure_captions.tex"),
+    ):
+        captions = []
+        for path in sorted((ROOT / folder).glob("*.tex")):
+            for match in re.finditer(r"\\begin\{figure\*?\}.*?\\end\{figure\*?\}", path.read_text(), re.S):
+                block = match.group()
+                start = block.index(r"\caption{") + len(r"\caption")
+                captions.append(brace_argument(block, start)[0])
+        identifiers = [number for number, _, doc in FIGURES if doc == document]
+        assert len(captions) == len(identifiers), document
+        caption_text = "\n\n".join(f"Figure {number}. {caption}"
+                                   for number, caption in zip(identifiers, captions)) + "\n"
+        (ROOT / filename).write_text(
+            "% Editable figure captions; inline mathematics uses LaTeX notation.\n" + caption_text)
+        caption_files.append(filename)
     sources = sorted([*ROOT.glob("*.tex"), *ROOT.glob("sections/*.tex"),
                       *ROOT.glob("supplement/*.tex"), *ROOT.glob("figures/*.tex"),
                       ROOT / "references.bib", ROOT / "psql-num.bst"])
@@ -53,18 +71,7 @@ def main() -> None:
              for p in sources}
     assert len(set(names.values())) == len(names)
     assert all(len(name) <= 80 for name in names.values())
-    captions = []
-    for path in sorted((ROOT / "sections").glob("*.tex")):
-        text = path.read_text()
-        for match in re.finditer(r"\\begin\{figure\*?\}.*?\\end\{figure\*?\}", text, re.S):
-            block = match.group()
-            start = block.index(r"\caption{") + len(r"\caption")
-            captions.append(brace_argument(block, start)[0])
-    assert len(captions) == len(FIGURES)
-    caption_text = "\n\n".join(f"Figure {i}. {caption}" for i, caption in enumerate(captions, 1)) + "\n"
-    (ROOT / "Figure_captions.tex").write_text(
-        "% Editable figure captions; inline mathematics uses LaTeX notation.\n" + caption_text)
-    source_zip = OUTPUT / "JSA_v0151_flat_sources.zip"
+    source_zip = OUTPUT / "JSA_v0152_flat_sources.zip"
     latex, bibtex = shutil.which("pdflatex"), shutil.which("bibtex")
     if not latex or not bibtex:
         raise SystemExit("pdfLaTeX and BibTeX are required to verify the flat package.")
@@ -80,7 +87,7 @@ def main() -> None:
                 return r"\input{" + names[key] + "}"
             text = re.sub(r"\\input\{([^}]+)\}", flatten, text)
             (flat / names[path.relative_to(ROOT).as_posix()]).write_text(text)
-        for filename in ("Highlights.txt", "Figure_captions.tex"):
+        for filename in ("Highlights.txt", *caption_files):
             shutil.copy2(ROOT / filename, flat / filename)
         members = sorted(p.name for p in flat.iterdir())
         with zipfile.ZipFile(source_zip, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -103,17 +110,17 @@ def main() -> None:
                    r"LaTeX Warning: (?:Reference|Citation) .* undefined"]
             assert not any(re.search(pattern, log) for pattern in bad), stem
             shutil.copy2(rebuild / f"{stem}.log", OUTPUT / f"flat_{stem}.log")
-    package = OUTPUT / "JSA_v0151_author_package.zip"
+    package = OUTPUT / "JSA_v0152_author_package.zip"
     files = sorted(p for p in ROOT.rglob("*") if p.is_file()
                    and "output" not in p.relative_to(ROOT).parts
                    and "__pycache__" not in p.relative_to(ROOT).parts
                    and p.suffix not in {".pyc", ".spl"})
     files += [OUTPUT / "main.pdf", OUTPUT / "supplement.pdf", source_zip]
-    files += [OUTPUT / "figures" / f"Figure_{i}_{name}.pdf" for i, name in enumerate(FIGURES, 1)]
+    files += [OUTPUT / "figures" / f"Figure_{number}_{name}.pdf" for number, name, _ in FIGURES]
     assert all(p.exists() for p in files)
     manifest = {
-        "version": "0.15.1", "date": "2026-10-13",
-        "base_pr": 102, "base_head": "b9e23fd8a5309151dc3e71cb2b79311589bcdbe3",
+        "version": "0.15.2", "date": "2026-10-13",
+        "base_pr": 102, "base_head": "2dce88ea37194beb1b4b09f139e5bc48000af3ba",
         "status": "AUTHOR_REVIEW_REQUIRED_NOT_SUBMITTED",
         "flat_source_rebuild": "PASS: both documents, extracted ZIP in clean temporary directory",
         "highlight_character_counts": list(map(len, highlights)),

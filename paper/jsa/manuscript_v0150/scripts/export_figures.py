@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 
 
-FIGURES = ("design", "numeric", "cost", "partition", "state")
+from figure_catalog import FIGURES
 
 
 def main() -> None:
@@ -27,7 +27,7 @@ def main() -> None:
     # the vector artwork at its original scale.
     with tempfile.TemporaryDirectory(prefix="heterospec-figures-") as temporary:
         scratch = Path(temporary)
-        for number, stem in enumerate(FIGURES, start=1):
+        for number, stem, _ in FIGURES:
             wrapper = scratch / f"{stem}.tex"
             wrapper.write_text(
                 r"\documentclass[final,5p,times,twocolumn]{elsarticle}" "\n"

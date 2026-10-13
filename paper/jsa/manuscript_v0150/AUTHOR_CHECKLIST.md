@@ -1,6 +1,6 @@
 # Before submission
 
-The scientific draft can be finalized before the remaining author declarations are settled. Do not describe it as submitted or fully compliant with the latest JSA guide until the journal-specific checks below are complete. See [the dated requirements audit](JSA_REQUIREMENTS_20261013.md) for official sources and the access limitation.
+The scientific draft can be finalized before the remaining author declarations are settled. JSA-specific requirements were recovered from the repository's full-guide verification dated 9 October 2026; see [the reconciled requirements audit](JSA_REQUIREMENTS_20261013.md). Live retrieval remained blocked on 13 October, so changes since that snapshot and portal-specific requirements remain unverified. Do not describe the draft as submitted or all author and access obligations as complete.
 
 ## Author information and declarations
 
@@ -8,21 +8,28 @@ The scientific draft can be finalized before the remaining author declarations a
 - [ ] Confirm the final author spelling and correspondence email, currently `chengzhan.li@std.uestc.edu.cn`, and approve the corresponding-author designation already added to the draft. The full Qingshuihe postal address is included; confirm a department only if one should be listed. The official university address is identified in the requirements audit.
 - [ ] Supply the actual funding sources and grant identifiers, and state any sponsor role in the study or manuscript. Use a no-funding statement only after the author confirms it.
 - [ ] Confirm any financial or personal relationships relevant to the work, including relevant company employment, advice, support, equipment, or access. The contemplated mentor discussion alone is not a competing-interest finding. Use a no-conflict statement only after author confirmation.
+- [ ] Complete the journal's competing-interest declarations tool and provide its generated `.doc`/`.docx`, including when there is nothing to declare. The pending worksheet is not the required upload document; the saved guide does not require a signature.
 - [ ] Approve the sole author's applicable CRediT roles. Do not assign roles from an inferred biography or automatically assign all 14 roles.
+- [ ] Supply an editable author biography of at most 100 words and a separate passport-type photograph. Confirm the upload item and stage in Editorial Manager; do not infer biographical facts from the affiliation.
 - [ ] Approve the full AI-use account and review the resulting manuscript. Name the tools and purposes used for writing, code, analysis and visualization; supply versions and developers where required for research or figure workflows. Resolve historical tool/version details that are not recorded. Keep explanatory-figure disclosures, the Methods disclosure and the general manuscript declaration consistent. Humanizer editing is part of AI-assisted manuscript preparation.
 - [ ] Confirm publication consent and final responsibility for the manuscript and its declarations. Revisit authorship and contributions if another person subsequently makes a qualifying contribution before submission.
 
 ## Journal and submission files
 
-- [ ] Open the current [JSA Guide for Authors](https://www.sciencedirect.com/journal/journal-of-systems-architecture/publish/guide-for-authors) and check the selected article type, review anonymity, abstract/keyword limits, length restrictions, reference style, highlights and graphical-abstract requirements, and supplementary/data rules. Official retrieval on 13 October 2026 was blocked; publisher-wide guidance is not a substitute for these journal-specific checks.
-- [x] Retain editable LaTeX tables, five separately exported vector figures and an editable figure-caption source file.
-- [ ] Check the actual upload item types in Editorial Manager.
-- [x] Prepare a flat LaTeX source archive with no subfolders, including bibliography, editable figures and the nonstandard style; compile both documents after extraction.
+- [x] Recover and preserve the 9 October full-guide audit with original paths, commit/blob identities and checksums. The original PDF was not committed; the preserved audit is identified as a prior verification, not a new PDF reading.
+- [x] Use the saved single-anonymized policy and permitted two-column LaTeX format. The complete saved guide states no body word/page ceiling or mandatory font/line-spacing setting. `elsarticle` is consistent with its template recommendation.
+- [x] Check the current 217-word abstract and five English keywords against the saved limits of 250 words and 1–7 keywords.
+- [ ] Check for changes since 9 October in the current [JSA Guide for Authors](https://www.sciencedirect.com/journal/journal-of-systems-architecture/publish/guide-for-authors) and confirm the actual article type, upload item types and mandatory questions in Editorial Manager. Official retrieval on 13 October was blocked; this does not erase the saved rules.
+- [x] Retain editable LaTeX tables without vertical rules or shading and editable figure/caption sources.
+- [x] Export and inspect all seven final vector figures (five main and two supplementary), with embedded fonts, captions, consecutive numbering and explicit prose references. All four missing supplementary table references are supplied and verified.
+- [x] Rebuild the v0.15.2 flat LaTeX source archive with no subfolders, including bibliography, all editable figures and the nonstandard style; compile both documents after extraction. Both documents in the v0.15.2 extracted archive compile independently.
 - [ ] Upload LaTeX sources under the appropriate manuscript/source item, not as supplementary material.
 - [x] Prepare four editable highlights, each at most 85 characters including spaces.
-- [ ] Verify whether JSA requires highlights and preserve the separate supplement as supplementary research content.
-- [x] Inspect the final PDF at normal reading size: all five figures, all main and supplementary tables, captions, symbols, page breaks, references and links. Keep ledger headings with their tables, and retain distinct meanings for a failed-qualification dash and a no-difference dash.
-- [ ] Supply an accessible route to the implementation, evidence and exact model assets, with licenses and any access restrictions. A private repository pointer is not public artifact availability. Confirm whether a permanent repository record or DOI will be used; do not invent one.
+- [x] Record that highlights and a graphical abstract are encouraged, not mandatory, in the saved JSA guide. Preserve the separate supplement as supplementary research content.
+- [x] Identify every supplementary file in the main manuscript and provide a brief description for each upload. Check all figure/table references after the final layout revision.
+- [x] Inspect the v0.15.2 PDFs at normal reading size: all figures, main and supplementary tables, captions, symbols, page breaks, references and links. Keep ledger headings with their tables and distinguish failed-qualification from no-difference dashes. The final article and supplement are each 11 pages; the isolated closing pages were removed through prose editing, without shrinking the type.
+- [x] Complete verified preprint DOIs, actual web-access dates and software-version identifiers in the bibliography; preserve consistent square-bracket citation order.
+- [ ] Fulfil JSA's saved **Option C** policy: deposit supporting research data in an appropriate repository, cite/link it and finalize the availability statement, or explain an actual inability to share. Supply a usable route to code, evidence and exact model assets, with licenses and any restrictions. A private repository pointer or unspecified separate access does not complete this obligation. Do not invent a public record, DOI or restriction.
 
 ## Scientific checks to preserve
 

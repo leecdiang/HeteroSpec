@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 
 import pdfplumber
+from figure_catalog import FIGURES
 
 
 def main() -> None:
@@ -44,14 +45,15 @@ def main() -> None:
         assert abs(float(ratio) - float(values[families[y], pair]["ratio"])) < 1e-9
         assert label == f"{float(ratio):.3f}"
     report = {
-        "version": "0.15.1", "date": "2026-10-13",
+        "version": "0.15.2", "date": "2026-10-13",
         "scope": "Final manuscript/figure transcription and PDF checks; no GPU or full raw-archive audit.",
         "main_cost_cells_checked": 21, "cost_figure_points_checked": 9,
         "documents": {},
     }
     files = [root / "output/main.pdf", root / "output/supplement.pdf"]
-    files.extend(sorted((root / "output/figures").glob("*.pdf")))
-    assert len(files) == 7
+    files.extend(root / "output/figures" / f"Figure_{number}_{stem}.pdf"
+                 for number, stem, _ in FIGURES)
+    assert len(files) == 9
     for path in files:
         font_output = subprocess.check_output([args.pdffonts, str(path)], text=True)
         font_lines = font_output.splitlines()[2:]
@@ -73,8 +75,8 @@ def main() -> None:
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
     report["status"] = "PASS_AUTOMATED_CHECKS_VISUAL_REVIEW_RECORDED_SEPARATELY"
-    (root / "provenance/FINAL_QA_V0151.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("Checked 21 cost cells, 9 plotted points, 7 PDFs, embedded fonts and page text bounds.")
+    (root / "provenance/FINAL_QA_V0152.json").write_text(json.dumps(report, indent=2) + "\n")
+    print("Checked 21 cost cells, 9 main cost-figure points, 9 PDFs, embedded fonts and page text bounds.")
 
 
 if __name__ == "__main__":

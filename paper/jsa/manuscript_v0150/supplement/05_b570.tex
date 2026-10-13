@@ -1,10 +1,10 @@
 \section{Vulkan partition, projection and retained-state evidence}
 \label{supp:b570}
 \subsection{The original three-arm intervention}
-The partition study uses the same native prompt within each A/B/C comparison. A uses UB512/capacity 1 and one full prompt submission; B keeps the same context and submits 128+remainder; C uses UB128/capacity 1 with one submission internally divided by the runtime. Only the final absolute prompt position requests logits; intermediate B calls have zero requested outputs. The continuation always occupies one row, even when its configured capacity is greater~\cite{bpartition}.
+The partition study uses the same native prompt within each A/B/C comparison. A uses UB512/capacity 1 and one full prompt submission; B keeps the same context and submits 128+remainder; C uses UB128/capacity 1 with one submission internally divided by the runtime. Only the final absolute prompt position requests logits; intermediate B calls have zero requested outputs. The continuation always occupies one row, even when its configured capacity is greater~\cite{bpartition}. Table~\ref{tab:partitioninputs} lists the seven inputs and their observed state/output differences.
 
 \begin{table}[t]\centering\small
-\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based; a dash means no output difference.}
+\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based; a dash means no output difference.}\label{tab:partitioninputs}
 \begin{tabular}{@{}lrrl@{}}\toprule
 Input&Prompt IDs&First difference&A/B initial state\\\midrule
 GSM1248&161&47&Different\\

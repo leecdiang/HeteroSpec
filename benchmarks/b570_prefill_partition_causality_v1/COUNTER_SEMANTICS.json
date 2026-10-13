@@ -1,0 +1,13 @@
+{
+  "schema": "heterospec.b570.pr90.counter_semantics.v1",
+  "proposal_fate": "five mutually exclusive final fates; accepted means committed before cap/EOG; first mismatch and unexamined separated",
+  "output_conservation": "initial+accepted+bonus+correction+fallback; EOG included",
+  "draft_continuation": "actual proposal decode plus sync/catch-up calls and rows; draft UB1",
+  "target_physical_work": "actual successful process_ubatch calls in llama_context::decode and actual ubatch.n_tokens; not logical k+1 concurrency",
+  "rollback_calls": "one reconciled speculative cycle; kv_trim_calls retains both target/draft trim calls",
+  "width_hist": "actual occupied query rows from native ubatch execution; no GPU completion time inferred",
+  "observation": "baseline disables new work counters; counts integer summaries only; lite enqueue/sample timestamps without added sync; heavy explicit sync/full KV state and periodic memory/readbacks/cycles; compute callbacks disabled in all modes, ETW unavailable",
+  "memory": "counts/lite/baseline native load/pre-request/request begin/prefill/phase/end checkpoints; heavy retains5ms and per-decode observations; minima are sampled/checkpoint scope, never continuous residency",
+  "timing": "Whole request always includes mandatory checks, control, synchronization and pipe endpoint parsing. Per-decode added observer sync removed outside heavy; original reset/final lifecycle and native sampler logits waits preserved.",
+  "mode_switch": "request-level mode switch before reset, same worker/context per profile arm; formal adapter forces counts"
+}

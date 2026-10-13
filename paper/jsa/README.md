@@ -1,5 +1,7 @@
 # Journal of Systems Architecture — current manuscript v0.14.5
 
+Prospective [Llama third-family design and three-family common controls](../../docs/experiments/jsa_third_family_20261011/README.md) (2026-10-11) separate complete reference equality, ordinary request gain and matched speculative increment; the design has no new experimental results and retains the RTX/B570 Smol limits.
+
 Updated 2026-10-10 after the reviewed merge of PRs #69–#77. The current author manuscript is [manuscript_v0145](manuscript_v0145/README.md): a 12-page main paper, 13-page independent supplement, complete editable/rebuildable author sources and separate flat journal sources. Its arXiv delivery is a 26-page combined document with a single-entry source archive.
 
 The [2026-10-10 independent B570 validation plan](../../docs/experiments/jsa_b570_validation_20261010/README.md) specifies bounded SmolLM2 model-family transfer under the B570/Vulkan ordinary-reference contract, separate RTX input reservations and four fresh-process rounds. It can start without RTX result completion and contains no new model results.

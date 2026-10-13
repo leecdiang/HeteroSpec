@@ -1,0 +1,47 @@
+\section{Complete Repair-Cost Comparisons}
+\label{supp:cost}
+The implementation comparison uses 12 exposed tasks, two adjacent sessions and four repetitions in every one of seven arms and three families:2,016 formal requests. Each arm/family has 96 complete qualified endpoints. Its panel contains MBPP123,140,255,401,413,418 and GSM8K111,120,1308,141,322,443. The formal timer includes complete nonstreaming request handling, not heavy numerical readback~\cite{rtxrepair}.
+
+\begin{table}[t]\centering\small
+\caption{All 21 qualified implementation comparisons at reported six-decimal precision. Regressions count tasks on which the denominator is slower.}
+\begin{tabular}{@{}llrr@{}}\toprule
+Family&Comparison&Ratio&Regressions\\\midrule
+Qwen3 & $M_{\PQ}/M_{\QB}$ & 1.026676 & 2/12 \\
+Qwen3 & $C_{\PQ}/C_{\QB}$ & 1.043676 & 0/12 \\
+Qwen3 & $M_{\GS}/M_{\QB}$ & 1.330106 & 0/12 \\
+Qwen3 & $C_{\GS}/C_{\QB}$ & 2.143525 & 0/12 \\
+Qwen3 & $M_{\QB}/C_{\QB}$ & 1.143749 & 1/12 \\
+Qwen3 & $R/M_{\QB}$ & 1.334051 & 0/12 \\
+Qwen3 & $R/C_{\QB}$ & 1.525820 & 0/12 \\
+SmolLM2 & $M_{\PQ}/M_{\QB}$ & 1.038478 & 0/12 \\
+SmolLM2 & $C_{\PQ}/C_{\QB}$ & 1.068111 & 0/12 \\
+SmolLM2 & $M_{\GS}/M_{\QB}$ & 1.366008 & 0/12 \\
+SmolLM2 & $C_{\GS}/C_{\QB}$ & 1.462530 & 0/12 \\
+SmolLM2 & $M_{\QB}/C_{\QB}$ & 0.633948 & 12/12 \\
+SmolLM2 & $R/M_{\QB}$ & 1.369890 & 0/12 \\
+SmolLM2 & $R/C_{\QB}$ & 0.868439 & 10/12 \\
+Llama & $M_{\PQ}/M_{\QB}$ & 1.013407 & 1/12 \\
+Llama & $C_{\PQ}/C_{\QB}$ & 1.021848 & 2/12 \\
+Llama & $M_{\GS}/M_{\QB}$ & 1.411508 & 0/12 \\
+Llama & $C_{\GS}/C_{\QB}$ & 2.175941 & 0/12 \\
+Llama & $M_{\QB}/C_{\QB}$ & 1.116620 & 1/12 \\
+Llama & $R/M_{\QB}$ & 1.426161 & 0/12 \\
+Llama & $R/C_{\QB}$ & 1.592480 & 0/12 \\
+\bottomrule\end{tabular}
+\end{table}
+
+Qwen3's two $M_{\PQ}/M_{\QB}$ regressions are GSM8K141 and 322. Its $C_{\PQ}/C_{\QB}$ comparison has none. Llama has one target-only local-repair regression (MBPP418) and two speculative local-repair regressions (GSM8K120,141). Both SmolLM2 local-repair comparisons favor QB on every task. All GS/QB comparisons favor QB on all 12 tasks in every family.
+
+For the draft increment, Qwen3's slower task is \textbf{MBPP413}; Llama's is \textbf{MBPP418}. SmolLM2 regresses on all 12 tasks. Its ordinary-to-candidate comparison regresses on 10/12, while ordinary-to-matched target-only improves on all 12. These distinctions are why the article separates a cheaper repair from a profitable draft protocol.
+
+\subsection{A fair comparison is not a component profile}
+PQ constructs separate attention subgraphs and concatenates their results; QB batches one-column attention instances; GS physically serializes active target rows across the network. The speculative arms retain the same draft protocol and reconciliation obligations. All three repairs satisfy the full output requirement in this panel, making their total request costs comparable. The table does not measure the isolated cost of attention or quantify how much of the advantage comes from graph construction, projection, FFN or synchronization.
+
+For a ratio $r=T_a/T_b$, the corresponding denominator latency reduction relative to the numerator is $1-1/r$, not $r-1$. For example, a 2.144 ratio is not a 114.4\% reduction in latency. The main paper intentionally reports time ratios to avoid that ambiguity. The point estimates also have no fabricated error bars: the present reconstruction did not derive new date-level uncertainty from unavailable independent-day measurements.
+
+\subsection{Implementation corrections and the final evidence scope}
+Four PQ engineering warm requests on SmolLM2/Llama failed and remained charged. A resource correction increased host graph metadata capacity by a factor bounded by the predeclared maximum query count. Numerical backend libraries and operators were unchanged; the model, precision, mask, draft width and panel were unchanged. Previously started Qwen rows were retained, and affected unstarted arms were requalified. This is a disclosed amendment rather than a claim that no implementation issue occurred.
+
+A QB eligibility check was corrected to accept the actually compiled final tensor alias when its geometry and existing full-output checks established the intended layout. The correction did not rerun GPU science or consult timings to select a faster condition. A final archive repair restored missing inherited package inclusion and corrected auditor metadata after the formal requests had completed. Original failed packaging logs and frozen files remain in the source archive. These corrections should be included in artifact review because a perfect-looking end table alone does not establish protocol compliance.
+
+The original host reports independent standard-library recomputation, 14 synthetic rejection tests, and local/authenticated remote restoration. This reconstruction checked the published table values, denominators, qualifications and ratio identities at their stated rounding precision; it did \emph{not} rerun the full native/raw scientific archive. That division of responsibility is explicit in the reconstruction QA record.

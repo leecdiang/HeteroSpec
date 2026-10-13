@@ -1,0 +1,22 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+\node[anchor=west,font=\bfseries\small] at (0,4.05) {A\quad Attention organization versus target-wide batching};
+\foreach \y/\lab in {3.35/GS,2.25/PQ,1.10/QB} {
+ \node[anchor=east,font=\bfseries] at (1.05,\y) {\lab};
+}
+\node[box,draw=target,text width=3.0cm] (g1) at (3.05,3.35) {Projection: one token};
+\node[box,draw=target,text width=4.15cm] (g2) at (7.70,3.35) {Attention: one query};
+\node[box,draw=target,text width=3.55cm] (g3) at (12.65,3.35) {Output / FFN: one token};
+\node[box,draw=target,text width=3.0cm] (p1) at (3.05,2.25) {Projection:\\batched tokens};
+\node[box,draw=qualified,text width=4.15cm] (p2) at (7.70,2.25) {$q$ attention subgraphs + concat};
+\node[box,draw=target,text width=3.55cm] (p3) at (12.65,2.25) {Output / FFN:\\batched tokens};
+\node[box,draw=target,text width=3.0cm] (b1) at (3.05,1.10) {Projection:\\batched tokens};
+\node[box,draw=qualified,line width=.9pt,text width=4.15cm] (b2) at (7.70,1.10) {Query view $(d,q,h,1)\to(d,1,h,q)$};
+\node[box,draw=target,text width=3.55cm] (b3) at (12.65,1.10) {Output / FFN:\\batched tokens};
+\foreach \a/\b in {g1/g2,g2/g3,p1/p2,p2/p3,b1/b2,b2/b3}\draw[flow] (\a)--(\b);
+\node[anchor=west,font=\bfseries\small] at (0,.33) {B\quad Phase and reuse contract};
+\node[box,draw=qualified,text width=3.0cm,font=\footnotesize] (phase) at (3.05,-.40) {Role + phase\quad(mask3: target P/C)};
+\node[box,draw=qualified,text width=4.15cm,font=\footnotesize] (cache) at (7.70,-.40) {Layout flag in graph key\\Mismatch: reject cached topology};
+\node[box,draw=aux,text width=3.55cm,font=\footnotesize] (native) at (12.65,-.40) {Native transaction unchanged\\No extra consistency-recovery replay};
+\draw[flow] (phase)--(cache);\draw[flow] (cache)--(native);
+\draw[flow,qualified] (cache.north)--(b2.south);
+\end{tikzpicture}

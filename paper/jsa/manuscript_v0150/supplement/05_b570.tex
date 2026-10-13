@@ -1,0 +1,86 @@
+\section{Vulkan Partition, Projection and Retained-State Evidence}
+\label{supp:b570}
+\subsection{The original three-arm intervention}
+The partition study uses the same native prompt within each A/B/C comparison. A uses UB512/capacity 1 and one full prompt submission; B keeps the same context and submits 128+remainder; C uses UB128/capacity 1 with one submission internally divided by the runtime. Only the final absolute prompt position requests logits; intermediate B calls have zero requested outputs. The continuation always occupies one row, even when its configured capacity is greater~\cite{bpartition}.
+
+\begin{table}[t]\centering\small
+\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based.}
+\begin{tabular}{@{}lrrl@{}}\toprule
+Input&Prompt IDs&First difference&A/B initial state\\\midrule
+GSM1248&161&47&Different\\
+GSM831&133&81&Different\\
+GSM1011&190&---&Different\\
+GSM1249&163&---&Different\\
+Prefix 1248/127&127&---&Equal\\
+Prefix 1248/128&128&---&Equal\\
+Prefix 1248/129&129&57&Different\\\bottomrule
+\end{tabular}
+\end{table}
+
+There are 63 complete requests, three repeats per input/arm, with one capture-off and two capture-on repeats. Full FP32 logits and complete source-defined sequence K/V payloads are archived at prefill completion; later cuts retain complete logits but only KV hashes. Later KV hash comparisons must not be called offline rehashes of absent payloads. Initial sequence serialization contains 64 F16 K/V tensors over 32 layers and logical positions, not complete opaque frontend state.
+
+The two stable long controls demonstrate that a numerical state difference is not sufficient for an output difference on every input. Prefix 129's first difference 57 was not retroactively added as a capture cut; its predeclared diagnostic cuts remained 0/1/47. No cropped reference suffix was forced into any candidate. The original 160 historical native records used for the four full tasks were checked against the appropriate A/production and C/stock paths.
+
+\subsection{The final fourth arm and all partition schedules}
+The final follow-up executes 133 whole requests:21 fourth-arm observations, 38 sweep observations, 18 native operator-capture requests, 16 restoration shams and 40 donor crosses. A zero-forward load probe is separate. There are no native request failures, warmups or scientific retries~\cite{bfinal}. Table~\ref{tab:allpart} retains all 19 caller schedules; ``all'' denotes equal full A/B/C endpoints, not necessarily equal numerical states.
+
+\begin{table}[t]\centering\small
+\caption{All frozen exposed partition schedules. The final column is first output difference from A; no numerical monotonicity is inferred.}
+\label{tab:allpart}
+\begin{tabular}{@{}lllr@{}}\toprule
+Input&Caller widths&Endpoint class&First diff.\\\midrule
+1248&64+64+33&A&---\\
+1248&96+65&A&---\\
+1248&128+33&B/C&47\\
+1248&160+1&A&---\\
+831&64+64+5&A&---\\
+831&96+37&A&---\\
+831&128+5&B/C&81\\
+831&132+1&Third class&40\\
+1011&64+64+62&All&---\\
+1011&96+94&All&---\\
+1011&128+62&All&---\\
+1011&160+30&All&---\\
+1249&64+64+35&All&---\\
+1249&96+67&All&---\\
+1249&128+35&All&---\\
+1249&160+3&All&---\\
+Prefix 129&64+65&A&---\\
+Prefix 129&96+33&A&---\\
+Prefix 129&128+1&B/C&57\\\bottomrule
+\end{tabular}
+\end{table}
+
+The follow-up's initial freeze omitted full external driver-body hashes for the fourth-arm and sweep stages, despite pinning model/numerical DLL/executable bytes and live driver versions/capabilities. Those stage results are therefore explicitly not presented as fully compliant confirmatory evidence. Later actual-body authentication preceded the native-operator and restoration stages and cannot retroactively repair the earlier gap. No native conditions were changed after observing outcomes to produce a favorable partition.
+
+\subsection{Projection frontier and qualified operator replay}
+Native logical alignment uses actual embedding token inputs and RoPE position payloads, rather than a stale wrapper micrograph-position field. The pre-attention RMS node is selected by producer identity because the same textual norm label occurs elsewhere. These amendments were authenticated before the affected runs. They prevent comparison of different logical positions or the wrong normalization node under a superficially matching name.
+
+Table~\ref{tab:projection} records the main projection comparisons. Topological first divergence is Vcur for 1248 and Qcur for 831 in the tested source; listing K before V in an audit loop does not identify K as a unique causal root. Exact shader or pipeline identity is not available.
+
+\begin{table}[t]\centering\small
+\caption{Native layer-0 A/B projection differences. Values are maximum absolute differences for the stated tensors, not model-logit perturbation bounds.}
+\label{tab:projection}
+\begin{tabular}{@{}lrr@{}}\toprule
+Projection&1248&831\\\midrule
+Q&0&0.0207662582\\
+K&0.0527343750&0.0703125000\\
+V&0.0023193359&0.0021639541\\\bottomrule
+\end{tabular}
+\end{table}
+
+The fixed-operand replay includes RMS, scale/MUL and Q/K/V projections for two tasks, two full/split geometries and two repeats:40 actual GPU calls. Thirty-two are qualified by same-arm native correspondence. Eight scale/MUL calls are retained but blocked because post-consumer capture observed an in-place aliased operand, not pristine input. Their repeated outputs or identical readbacks do not make them valid replays of the intended native operator. The admitted projection-input comparisons and RMS controls support a bounded frontier statement; no successful scale-replay claim is used.
+
+\subsection{Necessary-state receiver, shams and crosses}
+A clean UB512 receiver imports complete source-defined sequence KV with exact positions. It consumes the complete initial 128,256-element FP32 vector through the same stateless native greedy apply/accept semantics, reconstructs the empty generated prefix, and evaluates the first pending output at the correct continuation position. Dynamic logit/output buffers are recreated as needed; opaque graph-cache pointers are not copied. This is a prospectively specified necessary-state boundary contract, not a claim that old public sequence serialization captured every runtime object.
+
+The 16 own-path shams cover four historical inputs, A/B donors and two repeats. Every sham matches original complete output and the admitted raw-state checks with no extra model forward. Only after this gate passes are 40 cross requests interpreted: two affected inputs times four cells times three repeats, plus two stable controls times four cells times two repeats. The two affected tasks satisfy AA=AB=A and BA=BB=B; all cells choose initial top 1 token 1271. Thus the initial-logit swap is a negative control for first greedy sampling. It cannot establish that future logits do not matter or that arbitrary initial-logit perturbations are harmless.
+
+The KV manipulation identifies conditional suffix sensitivity under this receiver. It does not isolate one K/V layer, one token position, a K-only versus V-only mediator or a necessary mechanism in every possible implementation. The stable controls remain output-invariant even with different KV bytes. The result is narrower than full causal identification of every arrow from projection difference to final token, but stronger than merely correlating Prefill hashes with output.
+
+\subsection{Physical work, cost and non-admitted timing}
+The previous speculative actor executes a logical seed+proposal verification as two occupied width-one micrographs at $k=1$. The 563 successful observed cycles in the small work-witness study retain separate draft proposal/catch-up counts. One API-observer request failed a logging threshold in that earlier study and was not replayed; its partial dispatch metadata is not a completed endpoint or GPU stage timing~\cite{bcost}.
+
+The original stock-relative qualification remains failed. A later independent post-hoc full-output audit supports a distinct production-path pairing across 24 tasks and 240 repetitions: $R_{\rm prod}/C=0.7192637597463166$, $M_{\rm match}/C=0.7279267978304574$, and $R_{\rm prod}/M_{\rm match}=0.988099025740$. These are negative same-output descriptive economics, not newly certified stock-preserving speedups. They were not remeasured in the causal follow-up.
+
+No completed GPU timeline is admitted. Hardware timestamp support is present, but the pinned backend does not expose the absolute queue/query/fence intervals required by the declared timeline contract. No alternative numerical DLL was substituted to force an observation. Continuous physical residency and exclusive or overlapping GPU stage times remain unknown. Original negative paid results and new causal observations retain their separate denominators and interpretation.

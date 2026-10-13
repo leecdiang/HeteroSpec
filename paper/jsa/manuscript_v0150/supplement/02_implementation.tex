@@ -1,0 +1,45 @@
+\section{Implementation Obligations and Historical Scope Selection}
+\label{supp:implementation}
+\subsection{Lowering the attention view}
+For logical query $j$, QB preserves the original query channel and head strides and assigns its original query-column stride to the query-batch axis. The singleton column dimension is not an additional logical token. The mask undergoes the same transformation in its query dimension. K/V retain their source layout and broadcast over this added query-batch index, while the native head map preserves grouped-query sharing. The result must be returned to the original query order before batched output projection.
+
+A correct implementation must check more than equal tensor element counts. Its view bounds must fit the allocated source span; offsets and alignment must remain valid; masked keys must match each logical position; no write may corrupt an operand shared across views; and recombination must not permute query/head axes. Additional sequences, nonstandard attention bias, sinks, MLA state or fused attention require their own lowering and numerical tests. The reported build does not admit those cases merely because a view can be constructed.
+
+PQ is a meaningful comparator only when each subgraph uses the same logical query, key range, mask, positional semantics and output recombination. GS must actually serialize the active target computation rather than set a flag on an otherwise unchanged QB graph. Conversely, neither comparator may change draft width, model representation, acceptance, rollback or stopping to manufacture a slower baseline. Successful full-output qualification helps check these obligations but does not prove every internal operation identical.
+
+\subsection{Phase and cache hazards}
+A phase guard enters at the decode interface before the capture-disabled branch. Its active bit is copied into graph parameters, and the graph topology cache checks that bit before reuse. The process-fixed implementation choice prevents one compiled cached graph from silently serving a different PQ/QB/GS organization. Reset restores prefill phase and clears the relevant request state. A diagnostic-only implementation that happens to apply the guard while capturing tensors would not support a capture-off latency claim.
+
+The source binding includes the attention builder, role/phase guard, graph parameter/context structures, reuse predicate and request reset. These components implement the design jointly. The method is not an algorithm that derives the smallest constraint from an arbitrary new model. Instead, a finite phase experiment motivated a fixed configuration, which later campaigns qualified without outcome-driven mask selection.
+
+\subsection{The complete historical mask experiment}
+The historical experiment uses four HumanEval probes, two repeats, $k=3$, UB4 and cap128:128 native requests~\cite{history}. Table~\ref{tab:masks} reproduces the full pattern. Masks 3/7/11/15 pass the whole panel. Mask 3 is inclusion-minimal within this four-bit family; the experiment neither rules out other graph designs nor proves cross-family minimality. Different earlier UB2/UB1 interventions need not have the same probe outcomes.
+
+\begin{table}[t]\centering\small
+\caption{Historical finite four-switch pattern. TP/TC/DP/DC are target/draft prefill/continuation bits. ``Y'' means full-reference match on that probe in the tested repeats.}
+\label{tab:masks}
+\begin{tabular}{@{}rccccccccc@{}}\toprule
+Mask&TP&TC&DP&DC&HE15&HE18&HE25&HE31&Panel\\\midrule
+0&0&0&0&0&Y&N&N&Y&N\\
+1&1&0&0&0&Y&N&Y&Y&N\\
+2&0&1&0&0&Y&N&Y&Y&N\\
+3&1&1&0&0&Y&Y&Y&Y&Y\\
+4&0&0&1&0&Y&N&N&Y&N\\
+5&1&0&1&0&Y&N&Y&Y&N\\
+6&0&1&1&0&Y&N&Y&Y&N\\
+7&1&1&1&0&Y&Y&Y&Y&Y\\
+8&0&0&0&1&Y&N&N&Y&N\\
+9&1&0&0&1&Y&N&Y&Y&N\\
+10&0&1&0&1&Y&N&Y&Y&N\\
+11&1&1&0&1&Y&Y&Y&Y&Y\\
+12&0&0&1&1&Y&N&N&Y&N\\
+13&1&0&1&1&Y&N&Y&Y&N\\
+14&0&1&1&1&Y&N&Y&Y&N\\
+15&1&1&1&1&Y&Y&Y&Y&Y\\\bottomrule
+\end{tabular}
+\end{table}
+
+Removing constraints is not automatically a speed improvement. A separate historical 19-task/six-repeat cost study found only 1.003569 generation speed over the all-phase mask15, below its frozen 1.03 additional-generation gate. The descriptive interval included parity. A smaller passing phase set is therefore a qualification result, not itself an efficiency theorem. The new repair-cost comparison changes implementation organization, rather than repurposing that failed phase-removal speed claim.
+
+\subsection{Mathematical mapping versus observed numerical behavior}
+Exact-arithmetic equivalence follows query by query from preservation of operands and summation sets. Floating-point equivalence is not established by that argument. A view can change the library's selected algorithm, batching strategy or reduction association. The CUDA replay is consequently a separate empirical test: bitwise PQ/QB correspondence at three sampled stages is informative even though the exact device schedule is unavailable. The Vulkan study further demonstrates why one cannot assume that surrounding projection operators have the same numerical behavior across all partitions.

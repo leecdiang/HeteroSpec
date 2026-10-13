@@ -1,0 +1,30 @@
+\section{Reference Contract and Execution Model}
+\label{sec:problem}
+\subsection{What is held fixed}
+Let $\rho$ identify a reference configuration: model and tokenizer bytes, prompt construction, numerical runtime and backend, sampler, context settings, stopping convention and ordinary execution recipe. For input $x$, define the observable endpoint
+\begin{equation}
+\mathcal O_\rho(x)=(\boldsymbol y,\boldsymbol e,n,y_{\rm last},s),
+\label{eq:contract}
+\end{equation}
+where $\boldsymbol y$ is the full generated native token-ID array, $\boldsymbol e$ its EOG flags, $n$ its length, and $s$ the stop reason. For the principal new campaigns, generation ends at native EOG or cap128. Complete output here means complete under that registered window, not an arbitrarily long answer. Earlier campaigns with first-EOG endpoints and additional raw suffixes retain their original, weaker comparison scope in Supplement~S 7.
+
+For an evaluation set $\mathcal X$ and its registered repetitions, empirical qualification requires $\mathcal O_c(x)=\mathcal O_\rho(x)$ for every required candidate/reference pair, as well as reference stability and complete records. Qualification is indexed by $\rho$ and $\mathcal X$: it is not a statement about all future inputs. A missing endpoint is not imputed; a divergent shorter response cannot qualify a latency ratio. Repeated measurements are not additional independent tasks.
+
+Three levels of equality must remain separate. A tensor view may preserve mathematical values and indices while changing finite-precision evaluation. Selected operators may agree bitwise without proving agreement elsewhere in the network. Finally, identical output IDs may coexist with different logits and KV values. The method supplies a mathematical indexing argument and empirical numerical and endpoint tests, not a deduction that the first level guarantees the other two.
+
+\subsection{A stateful speculative transaction}
+A target context owns its KV state, sequence positions, pending sampled token or logits, and relevant sampler/loop state. A draft context owns separate state. In each speculative cycle, the draft proposes up to $k$ tokens; the target evaluates the pending token and proposal positions; acceptance, correction and any bonus determine the committed prefix. Rejected positions are reconciled before continuing. A sampled token may already be committed to the visible output but still be pending evaluation into KV. Resampling it or consuming it twice changes the transaction.
+
+Our transformation does not change this protocol. It changes how admitted target attention work is represented. In particular, the measured CUDA candidate introduces no additional replay whose purpose is to repair numerical consistency; normal speculative verification and reconciliation still execute and are charged. This distinction prevents the phrase ``no replay'' from being mistaken for removal of target verification.
+
+Microbatch capacity $U$, occupied query count $q$, caller width and output reservation are distinct. We use UB$n$ as shorthand for a configured microbatch capacity of $n$ tokens. A target-only continuation may occupy one query under either $U=1$ or $U=512$. A speculative caller can contain $k+1$ logical rows yet execute several physical micrographs. Output reservation affects the available result interface, not simply the number of active queries. The experimental arms record all four notions rather than treating a configured capacity as actual GPU work.
+
+\subsection{The design problem}
+For fixed $\rho$, our engineering goal is to reduce measured request time subject to qualification:
+\begin{equation}
+\min_{c\in\mathcal C_{\rm tested}} T_c
+\quad\text{subject to}\quad
+\mathcal O_c(x)=\mathcal O_\rho(x)\;(x\in\mathcal X).
+\label{eq:designproblem}
+\end{equation}
+Equation~\eqref{eq:designproblem} defines a finite design comparison, not an optimizer or global optimum claim. The tested candidate set contains ordinary execution and three repair organizations: per-query attention (PQ), query-batch attention (QB), and global target serialization (GS). Each organization is assessed with and without a draft. The contribution is the specified QB implementation and its measured trade-off against these alternatives.

@@ -6,6 +6,8 @@ The current argument is diagnosis → finite implementation/qualification → me
 
 The dated [requirements audit](JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md), [verified guide record](JSA_REQUIREMENTS_VERIFIED_20261009.json) and [later layout recheck](manuscript_v0145/JSA_REQUIREMENTS_RECHECK.md) retain their original verification scope. This merge is not journal or arXiv submission. Earlier JSA and MLSys manuscripts remain historical artifacts.
 
+The [2026-10-10 RTX validation plan](../../docs/experiments/jsa_rtx_validation_20261010/README.md) specifies new independent session replication, a second model family, and a same-contract external-method adaptation. It is an execution design for a separate experiment task and contains no new model results. The frozen v0.14.5 manuscript and its delivery files are unchanged.
+
 <details>
 <summary>Original v0.13.0 working-manuscript entry</summary>
 

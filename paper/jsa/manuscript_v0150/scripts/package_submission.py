@@ -116,6 +116,7 @@ def main() -> None:
                    and "__pycache__" not in p.relative_to(ROOT).parts
                    and p.suffix not in {".pyc", ".spl"})
     files += [OUTPUT / "main.pdf", OUTPUT / "supplement.pdf", source_zip]
+    files += [OUTPUT / n for n in ("arxiv-source-v0.15.3.zip", "arxiv-combined-v0.15.3.pdf", "ARXIV_SOURCE_QA.json", "arxiv-title-v0.15.3.txt", "arxiv-abstract-v0.15.3.txt", "arxiv-comments-v0.15.3.txt")]
     files += [OUTPUT / "figures" / f"Figure_{number}_{name}.pdf" for number, name, _ in FIGURES]
     assert all(p.exists() for p in files)
     manifest = {

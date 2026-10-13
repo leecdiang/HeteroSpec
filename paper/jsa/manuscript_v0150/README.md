@@ -21,7 +21,7 @@ The author selected JSA as the first target and confirmed that this preparation 
 
 `REVIEW_ACCESS_PLAN_ZH.txt` describes the proposed reviewer route. Two local packages are prepared: `output/JSA_v0153_review_core.zip` for offline report/figure review and `output/JSA_v0153_native_source.zip` for inspection of the fixed CUDA native source. The core includes source reports retrieved at their cited commits, rather than requiring a reviewer to open the private GitHub links. The native source is extracted from the hash-verified PR98 V02 capsule with upstream notices preserved. Model acquisition information is in `review_access/MODEL_ACCESS.json`; all eight named GGUF files match the pinned publisher metadata by size and SHA256. No model weights were downloaded.
 
-See `review_access/ACCESS_STATUS.json` for the exact package hashes, coverage and uncompleted work. Raw archive parts remain separately inventoried; these packages do not constitute a complete native-record restoration or GPU reproduction. `review_access/DATA_AVAILABILITY_DRAFT.txt` and `DEPOSIT_METADATA_DRAFT.json` are author worksheets, not claims that a deposit exists. No live reviewer link or DOI has been created, no repository has been made public, and project sharing rights/licenses remain to be confirmed. Original manuscript availability language is unchanged pending a real deposit.
+See `review_access/ACCESS_STATUS.json` for the exact package hashes, coverage and uncompleted work. The six primary raw archives have been separately restored and CPU-audited; the lightweight packages contain the audit receipts, not the large raw ZIPs. No GPU rerun or external model-weight rehash was performed. `review_access/DATA_AVAILABILITY_DRAFT.txt` and `DEPOSIT_METADATA_DRAFT.json` are author worksheets, not claims that a deposit exists. No live reviewer link or DOI has been created, no repository has been made public, and project sharing rights/licenses remain to be confirmed. The availability language records the local CPU audit while external access remains pending.
 
 The new access preparation does not supersede the earlier scientific/PDF QA; it changes support materials only. The author package can be regenerated to include this preparation. Historical delivery manifests and reviews describe their original package versions, not the expanded package's current file count or hash.
 
@@ -44,7 +44,7 @@ Both use the existing palette and typography, fixed task ordering, explicit rati
 
 The generator derives all supplementary coordinates directly from the pinned report's arm medians. A separate checker recomputes them without importing the generator, verifies the actual plotted coordinates and connecting segments, and checks shared denominators, task qualification, axis coverage and regression directions. See `provenance/SUPPLEMENT_FIGURE_CHECKS_V0153.json`. PDF checks and final author-side review are recorded in `provenance/FINAL_QA_V0153.json` and `provenance/FINAL_REVIEW_V0153.json`.
 
-The v0.15.1 scientific corrections remain: PR93/PR97 direct evidence citations, the S6 historical-endpoint pointer, aggregate session reversals, Stage-Replay's prior cache-transplantation controls, and the partition/projection/state boundary. The 186 reported-value checks and the prior independent recomputation of 21 aggregate, 42 session and 252 task ratios remain applicable. No GPU experiment, native timing-record audit or complete 675 MB raw-archive reconstruction was performed.
+The v0.15.1 scientific corrections remain: PR93/PR97 direct evidence citations, the S6 historical-endpoint pointer, aggregate session reversals, Stage-Replay's prior cache-transplantation controls, and the partition/projection/state boundary. The 186 reported-value checks and the prior independent recomputation of 21 aggregate, 42 session and 252 task ratios remain applicable. The later raw-restoration closeout additionally checks all six primary archives, including the final 675 MB B570 archive, and reruns CPU audits; see RAW_RESTORATION_REPORT_ZH.txt. It adds no GPU experiment.
 
 ## Recovered JSA guide
 
@@ -74,3 +74,11 @@ To regenerate the supplementary TikZ sources from the fixed medians, run the gen
 ## Historical records
 
 The original `GITHUB_IMPORT.json`, `PACKAGE_MANIFEST.json`, `RECONSTRUCTION_REVIEW_ZH.md`, `provenance/RECONSTRUCTION_QA.json`, `provenance/PDF_CHECKS.json` and original font reports describe the v0.15.0 import/build only. The v0.15.1 and v0.15.2 QA/review files describe those earlier revisions. The narrower v0.15.2 bibliography recheck is superseded by the comprehensive v0.15.3 source audit. They are retained as history, not current-file integrity certificates. Use the v0.15.3 QA and final manifest for this revision. Experiment records and earlier manuscript directories are unchanged.
+
+## Raw-restoration and arXiv preparation
+
+`RAW_RESTORATION_REPORT_ZH.txt` summarizes the six primary archive checks and CPU rederivation. `review_access/RAW_REPRODUCTION.txt` gives the local reconstruction commands and their model-weight, portability and historical-scope limits. Original experimental bytes are not edited.
+
+`LICENSE_AND_DEPOSIT_RECOMMENDATION_ZH.txt` recommends licenses and Zenodo staging without granting a new license or publishing files. Personal declarations remain in the existing confirmation worksheet.
+
+Run `python3 scripts/package_arxiv.py` with pdfLaTeX, BibTeX and Poppler (`pdftotext`, `pdffonts`) available on PATH to generate `output/arxiv-source-v0.15.3.zip` and its combined PDF. The ZIP has one `arxiv.tex` entry, a shared bibliography and continuous main/supplement page numbers. `ARXIV_UPDATE_PREPARATION_ZH.txt` records the pending-version boundary and the recommendation to review the announced version before replacing it.

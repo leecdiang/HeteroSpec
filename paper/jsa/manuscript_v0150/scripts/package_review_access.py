@@ -57,6 +57,8 @@ def main() -> None:
                      "RAW_ARCHIVE_ACCESS.json", "assemble_raw_archive.py",
                      "verify_review_package.py", "run_report_checks.py"):
             shutil.copy2(ACCESS / name, core / name)
+        for name in ("RAW_RESTORE_VERIFICATION.json", "RAW_SCIENTIFIC_AUDIT.json", "RAW_RESTORE_HELPER_QA.json", "RAW_REPRODUCTION.txt"):
+            if (ACCESS / name).exists():shutil.copy2(ACCESS / name, core / name)
         paper = core / "paper"
         paper.mkdir()
         for directory in ("data", "figures", "sections", "supplement"):
@@ -111,6 +113,15 @@ def main() -> None:
               "remaining": ["author facts and sharing rights", "full raw/source-runtime archive retrieval and restoration",
                             "publisher-authorized model acquisition by the hardware reproducer", "workload and raw-content redistribution review",
                             "real deposit/link and logged-out download check", "data citation/availability update and journal portal checks"]}
+    raw_receipt = ACCESS / "RAW_RESTORE_VERIFICATION.json"
+    scientific_receipt = ACCESS / "RAW_SCIENTIFIC_AUDIT.json"
+    if raw_receipt.exists():
+        status["raw_restore"] = json.loads(raw_receipt.read_text())
+        status["remaining"].remove("full raw/source-runtime archive retrieval and restoration")
+        status["not_performed"].remove("full raw archive restore/audit")
+        if scientific_receipt.exists():status["raw_scientific_audit"] = json.loads(scientific_receipt.read_text())
+        else:status["not_performed"].append("raw scientific rederivation")
+        status["not_performed"].append("external model weight rehash on this host")
     (ACCESS / "ACCESS_STATUS.json").write_text(json.dumps(status, indent=2) + "\n")
     print(json.dumps({"packages": packages, "native_source_files": len(extraction["files"])}, indent=2))
 

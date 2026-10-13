@@ -33,11 +33,11 @@ Evidence folders
 - evidence/b570101/: projection frontier, partition classes, eight failed scale controls, validated KV receiver, initial-logit negative control and limitations.
 - evidence/historical/: the destinations of the 28 earlier experiment groups. The review-core package does not duplicate every earlier experiment archive.
 
-SOURCE_ACCESS_INVENTORY.json records each selected campaign's commit, original path, Git blob identity, byte size and retrieval status. A file marked not_fetched or failed_retry_required is not included. Raw archive parts and raw subdirectories are inventoried separately from the report/source files. NATIVE_SOURCE_EXTRACTION.json links the native-source package to the original capsule SHA256. MODEL_ACCESS.json records model identity and acquisition status; model weights are obtained from their publishers under their respective terms.
+SOURCE_ACCESS_INVENTORY.json records each selected campaign's commit, original path, Git blob identity, byte size and retrieval status. A file marked not_fetched or failed_retry_required is not included. verified_raw_part_separate_local_store identifies parts restored in the separate raw staging directory, not files inside the lightweight core ZIP. Raw archive parts and raw subdirectories are inventoried separately from the report/source files. NATIVE_SOURCE_EXTRACTION.json links the native-source package to the original capsule SHA256. MODEL_ACCESS.json records model identity and acquisition status; model weights are obtained from their publishers under their respective terms.
 
 Full raw audit and hardware execution
 
-RAW_ARCHIVE_ACCESS.json lists the six primary archives and all 638 ordered parts, with per-part and full-archive SHA256 values. The six archives total 1,646,803,532 bytes before extraction. These are manifest totals, not newly restored byte counts. Once the named parts have been obtained, verify and assemble one archive with:
+RAW_ARCHIVE_ACCESS.json lists the six primary archives and all 638 ordered parts, with per-part and full-archive SHA256 values. The six archives total 1,646,803,532 bytes before extraction. All six archives have now been restored locally and every indexed logical file rehashed; see RAW_RESTORE_VERIFICATION.json and RAW_SCIENTIFIC_AUDIT.json for the CPU rederivation and its limits. These large ZIPs remain separate from the core package. Once the named parts have been obtained, verify and assemble one archive with:
 
    python3 assemble_raw_archive.py --archive b570101 --parts-dir /path/to/parts --output /path/to/new-archive.bin
 

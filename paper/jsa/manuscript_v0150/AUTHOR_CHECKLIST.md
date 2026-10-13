@@ -55,7 +55,7 @@ The author list must be settled at initial submission. Under [Elsevier's publish
 - [x] Bind eight GGUF artifacts to recorded byte lengths/SHA256 and matching pinned publisher metadata; no weight download was performed.
 - [x] Prepare fixed-source report review and native-source inspection packages with per-file checksums. Exact completed checks and current coverage are in `review_access/ACCESS_STATUS.json`.
 - [ ] Author confirms the sharing scope and applicable rights/licenses for the concrete local packages and supporting raw archives.
-- [ ] Retrieve, reconstruct and validate the remaining raw/source-runtime archives before claiming a complete raw reproduction deposit.
+- [x] Restore and validate the six primary archives and retained nested source/runtime materials; rerun CPU checks with explicit model-weight and platform limits. This does not certify an external deposit or every historical campaign.
 - [ ] Create an actual repository record/reviewer link, verify downloads without author login, then replace the pending availability language and add the real dataset citation.
 
 See `SUBMISSION_CONFIRMATIONS_ZH.txt` and `REVIEW_ACCESS_PLAN_ZH.txt`. Local preparation is not journal submission or external release.

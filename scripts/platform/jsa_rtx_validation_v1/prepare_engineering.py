@@ -1,0 +1,22 @@
+"""Bind final native sources and finite engineering budgets before F/E forwards."""
+from common import *
+import shutil
+def main():
+    cfg=read(LOCAL/'CONFIG.json');src=LOCAL/'native/source';baseline=Path(cfg['restored'])/'phase2/experiment/generated/source';changes={}
+    for p in src.rglob('*'):
+        if p.is_file():
+            rel=p.relative_to(src);old=baseline/rel
+            if not old.exists() or sha(old)!=sha(p):changes[rel.as_posix()]=sha(p)
+    save(PUB/'NATIVE_PATCH.json',{'upstream':'0cae43063cf15170e91a2ff4d034da0ecef4a1b2','source':'byte-restored Phase2 private native source','changes_from_phase2':changes,'graph_recipe':'separate dense Llama GQA/MHA query-axis view branch, four role/phase masks and graph reuse key retained','original_Qwen_branch_retained':True,'published_numerical_Dlls_retained':True,'CUDA_arithmetic_unchanged':True,'E':'ordinary mask0 core; target weight shared by independent fast UB4 and verifier UB32 contexts; native model-specific suppression and greedy sampler','applicable_source_AGENTS':'private fork exempt from upstream submission rules; no upstream contribution'})
+    build=LOCAL/'native/build/bin';identity={n:sha(build/n) for n in ['llama-cli.exe','llama-server.exe','jsa-dvr-server.exe','ggml-cuda.dll','ggml.dll','ggml-base.dll']}
+    save(PUB/'NATIVE_BUILD.json',{'status':'BUILT_FOR_ENGINEERING','binaries':identity,'compiler_sha256':sha(Path(cfg['asset'])/'.venv-analysis/Lib/site-packages/ziglang/zig.exe'),'patch_sha256':sha(PUB/'NATIVE_PATCH.json'),'published_cuda_sha256':read(PUB/'ASSET_CHECK.json')['runtime_S_files']['ggml-cuda.dll'],'all_runtime_dlls':{p.name:sha(p) for p in build.glob('*.dll')},'build_logs':str(LOCAL/'native'),'numeric_stack':'original pinned GGML/CUDA backend + new private core frontend; R/N/M/C/E share final native build; original S executable untouched'})
+    version=sha(PUB/'NATIVE_BUILD.json');snapshot=LOCAL/'native/versions'/version;snapshot.mkdir(parents=True,exist_ok=False)
+    for name in changes:
+        dest=snapshot/'source'/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src/name,dest)
+    for name in ['llama-cli.exe','llama-server.exe','jsa-dvr-server.exe']:
+        dest=snapshot/name;shutil.copyfile(build/name,dest)
+    save(snapshot/'IDENTITY.json',{'native_build_sha256':version,'patch':read(PUB/'NATIVE_PATCH.json'),'binaries':identity,'utc':now()})
+    code={p.name:sha(p) for p in Path(__file__).parent.glob('*') if p.suffix in ['.py','.cpp'] and p.name not in ['prepare_engineering.py','verify_s.py']}
+    save(PUB/'F_E_ENGINEERING_F0.json',{'utc':now(),'design_head':'0e1949eaf1289f96e2ffaa83babb3b22c8c3e322','study':'JSA_RTX_VALIDATION_V1_FAST_S','model_choice_sha256':sha(PUB/'MODEL_CHOICE.json'),'input_pool_sha256':sha(PUB/'CONFIRMATION_INPUTS.json'),'exposure_sha256':sha(PUB/'EXPOSURE_AUDIT.json'),'native_build_sha256':sha(PUB/'NATIVE_BUILD.json'),'code_sha256':code,'engineer_only_exposed_synthetic':True,'planned_new_core_bridge':16,'planned_family_graph':16,'planned_family_discovery':504,'planned_E_engineering_per_model':48,'planned_F_warmups':50,'planned_E_warmups':2,'family_full_request_budget':1024,'E_full_request_budget':256,'E_per_model_budget':128,'F_auxiliary_decode_budget':2048,'E_auxiliary_decode_budget':512,'note':'method-required fast/verify decodes inside complete requests are included online work, not separately paid diagnostic auxiliary calls; synthetic complete requests count as requests; six explicit verified-EOG decision injections preserve native predictions but do not claim natural model choices or consistent continuation','F_candidate_selection':'all16 masks and4 matched target masks; output-only rank bit_count/integer; fixedC3 retained','confirmation_not_started':True,'wait_for_S_to_release_all_contexts':True})
+    print('F/E engineering inputs/build/budgets bound',flush=True)
+if __name__=='__main__':main()

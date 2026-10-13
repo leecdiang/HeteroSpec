@@ -84,7 +84,10 @@ def main() -> None:
             "Source extracted from native/source in the pinned SOURCE_RUNTIME_V02 capsule.\n"
             "Model weights, archived executable and runtime DLLs are not included.\n"
             "For environment, build records and numerical-runtime obligations, see the companion core package.\n"
-            "Author review/public-sharing rights remain pending; upstream notices are preserved.\n")
+            "Author-owned code is MIT; upstream notices and LICENSE_SCOPE.txt remain applicable.\n")
+        for folder in (core, native):
+            shutil.copytree(ACCESS / "licenses", folder / "licenses")
+            shutil.copy2(ACCESS / "LICENSE_SCOPE.txt", folder / "LICENSE_SCOPE.txt")
         packages = [deliver(core, ROOT / "output/JSA_v0153_review_core.zip", "offline_report_review"),
                     deliver(native, ROOT / "output/JSA_v0153_native_source.zip", "native_source_inspection")]
         for package, command in zip(packages, ("run_report_checks.py", "verify_review_package.py")):
@@ -105,12 +108,12 @@ def main() -> None:
     status = {"date": "2026-10-13", "manuscript_version": "0.15.3",
               "status": "LOCAL_PACKAGES_VERIFIED_EXTERNAL_ACCESS_PENDING", "published": False,
               "live_reviewer_url": None, "registered_deposit_doi": None,
-              "author_review_access_grant": "PENDING", "public_project_license": "PENDING",
+              "author_review_access_grant": "AUTHORIZED_UNPUBLISHED_READ_ONLY_ZENODO", "public_project_license": "MIT_CODE_CC_BY_4_0_AUTHOR_DATA_THIRD_PARTY_EXCLUDED",
               "packages": packages, "campaigns": groups,
               "native_source_files": len(extraction["files"]),
               "verification": "Both ZIPs extracted; file hashes checked; core report/figure checks passed",
               "not_performed": ["full raw archive restore/audit", "GPU rerun", "external deposit", "logged-out access test"],
-              "remaining": ["author facts and sharing rights", "full raw/source-runtime archive retrieval and restoration",
+              "remaining": ["remaining personal author declarations", "full raw/source-runtime archive retrieval and restoration",
                             "publisher-authorized model acquisition by the hardware reproducer", "workload and raw-content redistribution review",
                             "real deposit/link and logged-out download check", "data citation/availability update and journal portal checks"]}
     raw_receipt = ACCESS / "RAW_RESTORE_VERIFICATION.json"
@@ -122,6 +125,15 @@ def main() -> None:
         if scientific_receipt.exists():status["raw_scientific_audit"] = json.loads(scientific_receipt.read_text())
         else:status["not_performed"].append("raw scientific rederivation")
         status["not_performed"].append("external model weight rehash on this host")
+    previous = json.loads((ACCESS / "ACCESS_STATUS.json").read_text()) if (ACCESS / "ACCESS_STATUS.json").exists() else {}
+    for key in ("zenodo_drafts", "review_access_verification", "confidential_link_location"):
+        if key in previous: status[key] = previous[key]
+    if previous.get("zenodo_drafts"):
+        status["status"] = "LOCAL_PACKAGES_REBUILT_REMOTE_UPLOAD_NEEDS_RECONCILIATION"
+        status["not_performed"] = [item for item in status["not_performed"]
+                                   if item not in ("external deposit", "logged-out access test")]
+        status["not_performed"].append("remote upload/download reconciliation for these newly built ZIP hashes")
+        status["remaining"].append("Compare new ZIP hashes with the draft; previous download receipts describe the prior bytes")
     (ACCESS / "ACCESS_STATUS.json").write_text(json.dumps(status, indent=2) + "\n")
     print(json.dumps({"packages": packages, "native_source_files": len(extraction["files"])}, indent=2))
 

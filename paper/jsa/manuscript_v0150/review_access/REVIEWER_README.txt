@@ -8,7 +8,7 @@ JSA_v0153_review_core.zip contains the article and supplement, editable figure s
 
 JSA_v0153_native_source.zip contains the CUDA study's patched native source extracted from its SOURCE_RUNTIME_V02 capsule, its upstream license notices, and a file-level extraction manifest. It does not include model weights or archived executables/DLLs. It is a source-inspection package. Rebuilding it on a different runtime does not by itself reproduce the study's numerical contract.
 
-Both packages are prepared for author review of sharing rights. Their manifests provide integrity checks, not an open-source license. Public redistribution and the review-access grant remain to be confirmed by the author. Upstream licenses remain in effect for their respective components.
+The author has authorized unpublished Zenodo drafts for read-only review. Author-owned code uses MIT; author-owned experimental data and figures use CC BY 4.0. See LICENSE_SCOPE.txt and licenses/. Upstream licenses remain in effect for their respective components. Draft URLs are confidential access tokens, not registered DOIs.
 
 Start here
 

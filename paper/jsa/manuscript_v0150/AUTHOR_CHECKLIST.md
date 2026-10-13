@@ -51,10 +51,10 @@ The author list must be settled at initial submission. Under [Elsevier's publish
 ## Access preparation for the selected first submission
 
 - [x] Prepare the Chinese author confirmation worksheet, preserving the confirmed temporary single-author arrangement.
-- [x] Verify the repository is private and has no approved project-wide public license; keep limited reviewer access and public reuse as separate author decisions.
+- [x] Verify the repository remains private; apply the author-approved MIT and CC BY 4.0 scopes while retaining third-party terms.
 - [x] Bind eight GGUF artifacts to recorded byte lengths/SHA256 and matching pinned publisher metadata; no weight download was performed.
 - [x] Prepare fixed-source report review and native-source inspection packages with per-file checksums. Exact completed checks and current coverage are in `review_access/ACCESS_STATUS.json`.
-- [ ] Author confirms the sharing scope and applicable rights/licenses for the concrete local packages and supporting raw archives.
+- [x] Author selects MIT for own code, CC BY 4.0 for own data/figures, Zenodo unpublished drafts and read-only access; public publication is not authorized.
 - [x] Restore and validate the six primary archives and retained nested source/runtime materials; rerun CPU checks with explicit model-weight and platform limits. This does not certify an external deposit or every historical campaign.
 - [ ] Create an actual repository record/reviewer link, verify downloads without author login, then replace the pending availability language and add the real dataset citation.
 

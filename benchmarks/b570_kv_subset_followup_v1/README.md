@@ -1,6 +1,8 @@
 # B570 boundary-0 KV subset follow-up
 
-**Status: implementation Draft; native host integration and GPU results PENDING.** This PR includes executable CPU preparation, a Windows adapter to the pinned PR101 worker, CPU result analysis and synthetic tests. It does not contain a new inference result or a new full-archive restoration certificate. The local synthetic suite has 16 test methods; passing it does not establish native import correctness.
+**Status: native study COMPLETE; PR remains Draft.** See [RESULTS.md](RESULTS.md), [ANALYSIS.json](ANALYSIS.json) and [causal interpretation](CAUSAL_INTERPRETATION.md). All 32 controls pass, all 160 subset requests complete, all 80 independent repeat pairs agree, and scientific failures/retries are zero. Final local raw archive restoration and CPU reanalysis pass; raw archive remote publication is not performed.
+
+The following implementation description predates host execution; original synthetic validation remains separate evidence. This PR includes executable CPU preparation, a Windows adapter to the pinned PR101 worker, CPU result analysis and synthetic tests. The new host results and local restoration certificate are added separately under this benchmark directory. The local synthetic suite has 16 test methods; passing it does not establish native import correctness.
 
 ## Scientific question and fixed scope
 
@@ -40,7 +42,7 @@ python experiment.py run --out "C:/hs/b570-kv-subset-v1" --repo "C:/path/to/new-
 python experiment.py analyze --out "C:/hs/b570-kv-subset-v1"
 ```
 
-A stale execution lock, failed load/request or incomplete started slot is evidence to investigate, not permission to delete/retry a scientific coordinate. Analysis recomputes large state mixtures and may take appreciable CPU/disk time. Host-native execution has not been exercised by the code author in this environment.
+A stale execution lock, failed load/request or incomplete started slot is evidence to investigate, not permission to delete/retry a scientific coordinate. Analysis recomputes large state mixtures and may take appreciable CPU/disk time. The original implementation author had not exercised host-native execution; this follow-up records the completed native host validation separately.
 
 ## Agent handoff and acceptance
 

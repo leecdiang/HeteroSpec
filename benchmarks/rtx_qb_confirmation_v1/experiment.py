@@ -33,6 +33,13 @@ RESULT_BLOBS = {
     'NATIVE_BUILD.json': 'd46555368bba38eeff3bd2940c629870d4538f63',
     'MODEL_CONTRACT.json': '43f8ab27dceb8c559c4045c194c4913bca911a0d',
 }
+ROUTING_BLOBS = {
+    'NATIVE_BUILD_V02.json': '02c2110d532c227e844188b324456de3669a6d1b',
+    'RESOURCE_CORRECTION.json': 'f09219d0695ed52732150b2c6e1a7b0c7fd8b07f',
+    'LIVE_PREFLIGHT.json': 'ebb03677fbd619240610ddc82144d834da571eef',
+    'EXECUTION_DEPENDENCIES.json': '0084373c1de6e6bcc5d13355c81dbb89da0978c3',
+}
+ARMS = ('R', 'M_PQ', 'M_QB', 'C_PQ', 'C_QB')
 CAPTURE_BLOB = 'd56faa2d4f6c904c1d583ae31c85dda87ebb2ca1'
 REPLAY_BLOB = '7c4cb5bb51cadff7b6b829c5ad4aee855e1d0396'
 
@@ -79,6 +86,90 @@ def condition(name):
                 mask=3, spec=prefix == 'C', required_output_rows=4 if prefix == 'C' else 1, layout=layout)
 
 
+def runtime_manifest(root):
+    """The exact PR98 corrected routing, independent of observed performance."""
+    builds = {name: read(root/name) for name in ('NATIVE_BUILD.json', 'NATIVE_BUILD_V02.json')}
+    for name, build in builds.items():
+        expected = (RESULT_BLOBS | ROUTING_BLOBS)[name]
+        require(blob((root/name).read_bytes()) == expected, 'runtime build manifest differs: '+name)
+    require(builds['NATIVE_BUILD.json']['numerical_DLL_sha256'] == builds['NATIVE_BUILD_V02.json']['numerical_DLL_sha256'], 'corrected runtime changed numerical DLLs')
+    routes = []
+    for family in FAMILIES:
+        for arm in ARMS:
+            corrected = family in ('SmolLM2', 'Llama') and arm.endswith('_PQ')
+            name = 'NATIVE_BUILD_V02.json' if corrected else 'NATIVE_BUILD.json'
+            build = builds[name]
+            routes.append(dict(family=family, arm=arm,
+                               binary='llama-server-pq-metadata4.exe' if corrected else 'llama-server.exe',
+                               binary_sha256=build['server_sha256'], build_manifest=name,
+                               build_manifest_sha256=sha(root/name),
+                               source_inventory_sha256=build['source_inventory_sha256']))
+    return dict(schema=1, baseline_commit=BASELINE_COMMIT, routes=routes,
+                numerical_DLL_sha256=builds['NATIVE_BUILD.json']['numerical_DLL_sha256'],
+                selection='PR98: metadata4 only for SmolLM2/Llama M_PQ/C_PQ; original for all other arms')
+
+
+def verify_runtime_manifest(out):
+    expected = runtime_manifest(out)
+    require(read(out/'RUNTIME_MANIFEST.json') == expected, 'family/arm runtime routing changed')
+    for route in expected['routes']:
+        require(sha(out/'native/build/bin'/route['binary']) == route['binary_sha256'], 'selected binary differs')
+    return expected
+
+
+def runtime_worker(native, out, ledger, family, c, phase, name):
+    """Bind command, source identity and module verification to one fixed arm.
+
+    The inherited helper files remain byte-pinned and unmodified. The selected
+    build view is active only while this single owned worker is in its context.
+    """
+    manifest = read(out/'RUNTIME_MANIFEST.json')
+    route = next(r for r in manifest['routes'] if (r['family'], r['arm']) == (family, c['name']))
+    build = read(out/route['build_manifest'])
+    executable = (out/'native/build/bin'/route['binary']).resolve()
+    require(sha(executable) == route['binary_sha256'], 'arm executable changed')
+    original_read = native.read
+
+    class BoundResident(native.Resident):
+        def __init__(self):
+            super().__init__(ledger, family, c, phase, name)
+            self.cmd[0] = str(executable)
+            self.runtime_route = route
+        def __enter__(self):
+            def selected_read(path):
+                return build if Path(path).resolve() == (out/'NATIVE_BUILD.json').resolve() else original_read(path)
+            native.read = selected_read
+            try:
+                result = super().__enter__()
+                save(self.d/'RUNTIME_ROUTE.json', route)
+                return result
+            except BaseException:
+                self.__exit__(None, None, None)
+                raise
+        def verify_modules(self, obs):
+            # The legacy verifier recognizes only the original executable name.
+            matches = [Path(p).resolve() for p in obs['modules'] if Path(p).name.lower() == executable.name.lower()]
+            require(matches == [executable], 'actual loaded executable differs from arm manifest')
+            require(sha(matches[0]) == route['binary_sha256'], 'loaded executable bytes differ')
+            super().verify_modules(obs)
+        def __exit__(self, *args):
+            try:
+                p = getattr(self, 'p', None)
+                if p is not None and p.poll() is None:
+                    p.terminate()
+                    try: p.wait(timeout=10)
+                    except subprocess.TimeoutExpired: p.kill(); p.wait(timeout=10)
+                if hasattr(self, 'log') and not self.log.closed: self.log.close()
+                if hasattr(self, 'start') and not (self.d/'LIFETIME.json').exists():
+                    seconds = time.perf_counter()-self.start
+                    save(self.d/'LIFETIME.json', dict(seconds=seconds, utc=utc(), pid=p.pid if p else None,
+                                                   exit_code=p.returncode if p else None, phase=self.phase))
+                    self.ledger.life += seconds
+            finally:
+                native.read = original_read
+    return BoundResident()
+
+
 def validate_panel(panel):
     require(set(panel) == set(FAMILIES), 'exactly three inherited families required')
     for family, tasks in panel.items():
@@ -116,6 +207,10 @@ def prepare(results: Path, legacy: Path, runtime: Path, out: Path, holdout: Path
     require(not out.exists(), 'new isolated work directory required')
     for root, registry in ((results, RESULT_BLOBS), (legacy, SOURCE_BLOBS)):
         for name, expected in registry.items(): require(blob((root/name).read_bytes()) == expected, 'baseline changed: ' + name)
+    for name, expected in ROUTING_BLOBS.items():
+        require(blob((results/name).read_bytes()) == expected, 'corrected baseline changed: '+name)
+    for name, expected in read(results/'EXECUTION_DEPENDENCIES.json')['reused_authenticated_parent_code'].items():
+        require(sha(legacy/name) == expected, 'inherited helper differs: '+name)
     old = read(results/'P0_PLAN.json')
     panel = read(holdout) if holdout else old['P2_panel']
     validate_panel(panel)
@@ -133,8 +228,13 @@ def prepare(results: Path, legacy: Path, runtime: Path, out: Path, holdout: Path
     for name, expected in {'llama-server.exe': build['server_sha256'], **build['numerical_DLL_sha256']}.items():
         require(sha(runtime/name) == expected, 'runtime bytes differ: ' + name)
         shutil.copy2(runtime/name, target/name)
-    for name in ('MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'COUNTER_SEMANTICS.md'):
+    corrected = read(results/'NATIVE_BUILD_V02.json')
+    name = 'llama-server-pq-metadata4.exe'
+    require(sha(runtime/name) == corrected['server_sha256'], 'corrected runtime bytes differ')
+    shutil.copy2(runtime/name, target/name)
+    for name in ('MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'NATIVE_BUILD_V02.json', 'RESOURCE_CORRECTION.json', 'COUNTER_SEMANTICS.md'):
         shutil.copy2(results/name, out/name)
+    save(out/'RUNTIME_MANIFEST.json', runtime_manifest(out))
     plan = dict(schema=1, study='rtx-pq-qb-independent-blocks-v1', baseline_commit=BASELINE_COMMIT,
                 legacy=str(legacy), results=str(results), panel=panel, warmups=old['warmups'], blocks=schedule(panel),
                 input_exposure='USER_SUPPLIED_DISJOINT_FROM_P2_ONLY' if holdout else 'EXPOSED_PANEL_NEW_EXECUTION_BLOCKS',
@@ -144,12 +244,38 @@ def prepare(results: Path, legacy: Path, runtime: Path, out: Path, holdout: Path
                 stopping='six registered sessions or explicit failure/budget stop; no significance-dependent extension')
     save(out/'PLAN.json', plan)
     files = list(legacy.glob('*.py')) + list(Path(__file__).parent.glob('*.py'))
-    files += list(target.iterdir()) + [out/n for n in ('PLAN.json', 'MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'COUNTER_SEMANTICS.md')]
+    files += [Path(__file__).parent/'RUNTIME_ADAPTER_AMENDMENT.md', Path(__file__).parent/'runtime_adapter_v02/CPU_TESTS.log']
+    files += list(target.iterdir()) + [out/n for n in ('PLAN.json', 'MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'NATIVE_BUILD_V02.json', 'RESOURCE_CORRECTION.json', 'COUNTER_SEMANTICS.md', 'RUNTIME_MANIFEST.json')]
     for family in FAMILIES:
         for role, item in contract['families'][family]['models'].items():
             p = Path(item['path']); require(p.stat().st_size == item['bytes'] and sha(p) == item['sha256'], 'model pin differs')
             files.append(p)
-    save(out/'FREEZE.json', dict(created_utc=utc(), new_gpu_forwards=0, files=[pin(p) for p in sorted(set(files))]))
+    sys.path.insert(0, str(legacy))
+    common = importlib.import_module('run_common')
+    host = common.host(); inherited = read(results/'LIVE_PREFLIGHT.json')['sample']
+    identity = ('gpu', 'driver', 'total_MiB', 'power_scheme_guid')
+    require(all(host[k] == inherited[k] for k in identity), 'host identity differs from PR98')
+    require(host['AC'] == 1, 'AC power required')
+    host['clock_and_power_raw'] = subprocess.check_output(['nvidia-smi','--query-gpu=uuid,clocks.sm,clocks.mem,power.limit','--format=csv,noheader,nounits'],timeout=15).decode().strip()
+    save(out/'PHASE0_HOST.json', host); files.append(out/'PHASE0_HOST.json')
+    files.extend((Path(sys.executable), Path(os.environ['SystemRoot'])/'System32/nvcuda.dll'))
+    frozen_files = [pin(p) for p in sorted(set(files))]
+    manifest = verify_runtime_manifest(out)
+    prior = read(Path(__file__).parent/'execution_20261014/UNREGISTERED_PLAN.json')
+    require(plan['blocks'] == prior['blocks'] and plan['panel'] == prior['panel'], 'registered study design differs from stopped attempt')
+    gate = dict(schema=2, status='PASS', created_utc=utc(), native_requests_started=0,
+                checks=dict(baseline_blobs='PASS', inherited_helpers='PASS', binary_and_DLL_hashes='PASS',
+                            model_hashes='PASS', host_identity='PASS', AC='PASS', runtime_routes='PASS',
+                            unchanged_panel_schedule_budget='PASS'),
+                routes_checked=len(manifest['routes']), files_checked=len(frozen_files),
+                preserved_failure_commit='ccfbc2e4c3ab3026a6bbec5caf4c98646781913c',
+                loaded_module_full_offload='DEFERRED_TO_EACH_OWNED_E2_WORKER')
+    save(out/'PHASE0_GATE.json', gate); frozen_files.append(pin(out/'PHASE0_GATE.json'))
+    save(out/'FREEZE.json', dict(schema=2, study='rtx-pq-qb-independent-blocks-v1', baseline_commit=BASELINE_COMMIT,
+                                created_utc=utc(), new_gpu_forwards=0, phase0_admitted=True,
+                                runtime_manifest_sha256=sha(out/'RUNTIME_MANIFEST.json'),
+                                host_identity={k:host[k] for k in identity},
+                                phase0_gate_sha256=sha(out/'PHASE0_GATE.json'), files=frozen_files))
     print('PREPARED: 864 PQ/QB + 432 reference + 324 warmup = 1620 native request starts. Commit FREEZE.json before execution.')
 
 
@@ -161,7 +287,13 @@ def verify_freeze(out, repo, commit, registration, remote=True):
     if remote:
         actual = subprocess.check_output(['gh', 'api', f'repos/leecdiang/HeteroSpec/contents/{registration}?ref={commit}', '-H', 'Accept: application/vnd.github.raw+json'], cwd=repo)
         require(actual == body, 'authenticated remote freeze differs')
-    for item in read(out/'FREEZE.json')['files']:
+    frozen = read(out/'FREEZE.json')
+    require(frozen.get('schema') == 2, 'schema-2 family/arm freeze required')
+    require(frozen.get('phase0_admitted') is True, 'Phase 0 not admitted')
+    require(sha(out/'PHASE0_GATE.json') == frozen['phase0_gate_sha256'] and read(out/'PHASE0_GATE.json')['status']=='PASS', 'Phase 0 gate differs')
+    require(sha(out/'RUNTIME_MANIFEST.json') == frozen['runtime_manifest_sha256'], 'runtime manifest freeze differs')
+    verify_runtime_manifest(out)
+    for item in frozen['files']:
         p = Path(item['path'])
         require(p.stat().st_size == item['bytes'] and sha(p) == item['sha256'], 'frozen file changed: ' + str(p))
 
@@ -231,16 +363,16 @@ def run_session(out, repo, commit, registration, session):
                 require(time.time()-read(out/'SESSION-0.json')['epoch'] >= 86400, 'last session must be >=24h after first')
             save(session_path, dict(utc=utc(), epoch=time.time(), session=session))
         ledger = Ledger(out)
-        host_file = out/'HOST.json'; expected = read(host_file) if host_file.exists() else None
+        host_file = out/'HOST.json'; expected = read(host_file) if host_file.exists() else read(out/'PHASE0_HOST.json')
         tasks = {f:{t['id']:t for t in plan['panel'][f]} for f in FAMILIES}
         for block in (b for b in plan['blocks'] if b['session'] == session):
             result_path = out/'blocks'/(block['id'].replace('/', '_')+'.json')
             if result_path.exists():
                 require(read(result_path)['status'] == 'COMPLETED', 'failed block cannot be retried'); continue
             sample = cool(native, out/'cooldown'/(block['id'].replace('/', '_')+'.json'), expected)
-            if expected is None: expected=sample; save(host_file, sample)
+            if not host_file.exists(): save(host_file, sample)
             c = condition(block['arm']); active.clear(); active.update(c)
-            worker = native.Resident(ledger, block['family'], c, 'formal', block['id'])
+            worker = runtime_worker(native, out, ledger, block['family'], c, 'formal', block['id'])
             stop = threading.Event(); watch = None; records = []
             try:
                 with worker as w:
@@ -251,10 +383,11 @@ def run_session(out, repo, commit, registration, session):
                                 if w.p.poll() is None: w.p.kill()
                                 return
                     watch = threading.Thread(target=watchdog, daemon=True); watch.start()
-                    w.complete(plan['warmups'][block['family']], block['id']+'/WARM', warmup=True, meta={'followup_block':block, 'excluded_warmup':True})
+                    meta = dict(pid=w.p.pid, environment_snapshot=sample, runtime_route=w.runtime_route)
+                    w.complete(plan['warmups'][block['family']], block['id']+'/WARM', warmup=True, meta={'followup_block':block, 'excluded_warmup':True, **meta})
                     for position, task in enumerate(block['tasks']):
                         records.append(w.complete(tasks[block['family']][task], block['id']+'|'+task,
-                                                  meta={'followup_block':block, 'task_position':position}))
+                                                  meta={'followup_block':block, 'task_position':position, **meta}))
                 save(result_path, dict(status='COMPLETED', block=block, records=records, after_host=telemetry(native)))
             except BaseException as error:
                 if not result_path.exists(): save(result_path, dict(status='FAILED', block=block, records=records, error=repr(error), utc=utc()))
@@ -316,23 +449,34 @@ def analyze_blocks(plan, blocks):
                     else:
                         coord = key+(b['arm'],); require(coord not in times, 'duplicate arm/task')
                         times[coord] = r
-            session_logs = []; task_rows = []; global_refs = {}
+            session_logs = []; task_rows = []; global_refs = {}; session_rows = []; task_failures = []
             for session in range(SESSIONS):
                 logs = []
                 for t in plan['panel'][family]:
                     key = (session, t['id']); ref = refs.get(key, [])
                     pair = [times.get(key+(path+'_'+a,)) for a in ('PQ','QB')]
-                    if len(ref) != 2 or ref[0] != ref[1] or any(r is None for r in pair): continue
+                    if len(ref) != 2 or ref[0] != ref[1] or any(r is None for r in pair):
+                        task_failures.append(dict(session=session,task=t['id'],reason='missing_pair_or_unstable_serial_endpoints',
+                                                  reference_count=len(ref),reference_signatures=ref,
+                                                  missing_arms=[path+'_'+a for a,r in zip(('PQ','QB'),pair) if r is None]))
+                        continue
                     previous = global_refs.setdefault(t['id'], ref[0])
                     if previous != ref[0] or any(signature(r) != ref[0] for r in pair):
-                        mismatches.append(f'{family}/{session}/{t["id"]}'); continue
+                        mismatches.append(f'{family}/{session}/{t["id"]}')
+                        task_failures.append(dict(session=session,task=t['id'],reason='output_mismatch_or_cross_session_reference_change',
+                                                  reference=ref[0],PQ=signature(pair[0]),QB=signature(pair[1])))
+                        continue
                     value = math.log(pair[0]['wall_ms']/pair[1]['wall_ms']); logs.append(value)
-                    task_rows.append(dict(session=session, task=t['id'], speed_ratio=math.exp(value)))
+                    task_rows.append(dict(session=session, task=t['id'], speed_ratio=math.exp(value),
+                                          log_latency_contrast=value, PQ_latency_ms=pair[0]['wall_ms'],QB_latency_ms=pair[1]['wall_ms']))
                 if len(logs) == 12: session_logs.append(statistics.fmean(logs))
+                session_rows.append(dict(session=session,qualified_task_count=len(logs),
+                                         log_latency_contrast=statistics.fmean(logs) if len(logs)==12 else None))
             qualified = not missing and not bad and not mismatches and len(session_logs) == SESSIONS
             answers.append(dict(family=family, path=path, status='QUALIFIED_FINITE_PANEL' if qualified else 'PENDING_OR_NONQUALIFIED',
                                 estimate=contrast(session_logs) if qualified else None, missing=missing, failed=bad,
                                 mismatches=mismatches, task_ratios=task_rows,
+                                session_log_contrasts=session_rows,task_failures=task_failures,
                                 task_regressions=sum(r['speed_ratio'] < 1 for r in task_rows)))
     return dict(comparisons=answers, extra_block_failure_count=len(failures), input_exposure=plan['input_exposure'])
 
@@ -341,8 +485,9 @@ def analyze(out):
     plan = read(out/'PLAN.json')
     frozen = read(out/'FREEZE.json')
     for p in frozen['files']:
-        if Path(p['path']).name in ('PLAN.json', 'MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'COUNTER_SEMANTICS.md'):
+        if Path(p['path']).name in ('PLAN.json', 'MODEL_CONTRACT.json', 'NATIVE_BUILD.json', 'NATIVE_BUILD_V02.json', 'RUNTIME_MANIFEST.json', 'COUNTER_SEMANTICS.md'):
             require(sha(Path(p['path'])) == p['sha256'], 'frozen analysis input differs')
+    manifest=verify_runtime_manifest(out)
     blocks = [read(p) for p in sorted((out/'blocks').glob('*.json'))]
     contract = read(out/'MODEL_CONTRACT.json')['families']
     tasks = {f:{t['id']:t for t in plan['panel'][f]} for f in FAMILIES}
@@ -351,6 +496,17 @@ def analyze(out):
             slug = hashlib.sha256(record['slot'].encode()).hexdigest()[:24]
             p = out/'runs/formal'/record['family']/block['block']['id']/'requests'/slug/'RECORD.json'
             require(read(p) == record and read(p.parent/'COMPLETED.json')['record_sha256'] == sha(p), 'native record/export mismatch')
+            route=next(r for r in manifest['routes'] if (r['family'],r['arm'])==(record['family'],record['condition']))
+            require(record['runtime_route']==route, 'record family/arm runtime differs')
+            build=read(out/route['build_manifest'])
+            identity=dict(native_source=build['source_inventory_sha256'],server=build['server_sha256'],
+                          DLLs=build['numerical_DLL_sha256'],models=contract[record['family']]['models'],
+                          contract_sha256=sha(out/'MODEL_CONTRACT.json'))
+            identity_hash=digest(json.dumps(identity,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode())
+            require(record['source_identity_sha256']==identity_hash, 'selected runtime source identity differs')
+            worker=p.parents[2]
+            require(read(worker/'RUNTIME_ROUTE.json')==route and read(worker/'COMMAND.json')['command'][0]==str((out/'native/build/bin'/route['binary']).resolve()), 'worker executable selection differs')
+            require(read(worker/'PROCESS.json')['pid']==record['pid']==read(worker/'MODULE_IDENTITY.json')['pid'], 'request process identity differs')
             body = read(p.parent/'REQUEST_STARTED.json')['body']
             task = tasks[record['family']][record['task']]
             require(body['prompt'] == task['prompt_ids'] and body['n_predict'] == 128 and body['cache_prompt'] is False, 'native request differs from frozen IDs/cap/cache contract')

@@ -5,7 +5,7 @@ Figure~\ref{fig:design} contrasts the three repair organizations. GS processes t
 
 \begin{figure*}[t]
 \centering\input{figures/design.tex}
-\caption{Three same-reference implementation alternatives. Boxes indicate logical graph organization, not measured kernel occupancy. QB changes the attention representation while keeping surrounding target computation batched. The lower control path makes the phase decision part of graph construction and reuse. Draft proposal and target reconciliation are unchanged across speculative arms. TikZ layout edited with OpenAI Codex (GPT-6, OpenAI).}
+\caption{Three same-reference implementation alternatives. Boxes indicate logical graph organization, not measured kernel occupancy. QB changes the attention representation while keeping surrounding target computation batched. Numbered tiles in panel B label corresponding query and mask columns; they illustrate logical indexing, not memory copies or independent sequences. K/V remain shared, and recombination restores query order. Panel C makes the phase decision part of graph construction and reuse. Draft proposal and target reconciliation are unchanged across speculative arms. TikZ layout edited with OpenAI Codex (GPT-6, OpenAI).}
 \label{fig:design}
 \end{figure*}
 

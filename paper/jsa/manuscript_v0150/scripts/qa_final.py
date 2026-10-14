@@ -56,7 +56,7 @@ def main() -> None:
         assert abs(float(ratio) - float(values[families[y], pair]["ratio"])) < 1e-9
         assert label == f"{float(ratio):.3f}"
     report = {
-        "version": "0.15.3", "date": "2026-10-13",
+        "version": "0.15.3", "date": "2026-10-14",
         "scope": "Final manuscript/figure transcription and PDF checks; no GPU or full raw-archive audit.",
         "main_cost_cells_checked": 21, "supplement_cost_cells_checked": 21, "cost_figure_points_checked": 9,
         "documents": {},

@@ -3,7 +3,7 @@ Figure 1. Three same-reference implementation alternatives. Boxes indicate logic
 
 Figure 2. Fixed-input CUDA attention replay. Entries count contexts with bitwise-equal outputs out of 24. These are sampled layer-0 prefill/continuation contexts, not 24 independent model shapes. PQ/QB correspondence does not establish a general device reduction-order theorem.
 
-Figure 3. Repair efficiency and speculation are different comparisons. Panels A/B: PQ/QB and GS/QB ratios with a draft; both compare qualified repairs. Panel C: adding a draft to the QB target-only path. Axis ranges differ across panels. Points are reported aggregate request ratios; no unmeasured confidence intervals are drawn. SmolLM2 benefits from QB over both repair alternatives while still losing to its own draft-free QB path.
+Figure 3. Repair efficiency and speculation are different comparisons. Panels A/B: PQ/QB and GS/QB ratios with a draft; both compare qualified repairs. Panel C: adding a draft to the QB target-only path. Axis ranges differ across panels. Points are aggregate request-time estimates from the balanced two-session campaign. SmolLM2 benefits from QB over both repair alternatives while still losing to its own draft-free QB path.
 
 Figure 4. Observed partition/output classes for two exposed Vulkan inputs. A denotes whole UB512 prefill and B/C the 128-split reference class. Numbers indicate the first output difference from A; ``new'' is a third endpoint. Dashed outlines mark B/C and the dotted outline marks the third endpoint. This map does not imply a universal 128-token threshold. The follow-up sweep has the driver-hash preregistration limitation stated in the text.
 

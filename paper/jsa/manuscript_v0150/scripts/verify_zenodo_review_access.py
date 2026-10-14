@@ -28,6 +28,7 @@ for kind,url in links.items():
   target=d/name
   local=p/'output'/name
   if not local.exists():local=p/'output/JSA_v0153_raw_archives'/name
+  if not local.exists():local=p/'output/zenodo_transfer_parts'/name
   if target.exists() and target.stat().st_size==local.stat().st_size:
    with target.open('rb') as f: got=hashlib.file_digest(f,'sha256').hexdigest()
    with local.open('rb') as f: want=hashlib.file_digest(f,'sha256').hexdigest()
@@ -37,6 +38,7 @@ for kind,url in links.items():
   if q.returncode:print(name,'download exit',q.returncode,flush=True);continue
   h=hashlib.sha256(target.read_bytes()).hexdigest();local=p/'output'/name
   if not local.exists():local=p/'output/JSA_v0153_raw_archives'/name
+  if not local.exists():local=p/'output/zenodo_transfer_parts'/name
   with local.open('rb') as f:expected=hashlib.file_digest(f,'sha256').hexdigest()
   assert target.stat().st_size==local.stat().st_size and h==expected,name
   print('ANONYMOUS_DOWNLOAD_SHA256_PASS',name,h,flush=True)

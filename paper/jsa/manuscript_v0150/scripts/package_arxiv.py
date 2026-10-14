@@ -74,7 +74,7 @@ def main():
         assert len(start)==1
         fonts=run(['pdffonts',str(pdf)],extracted);assert 'Type 3' not in fonts
         assert all(re.search(r'\s+yes\s+(?:yes|no)\s+(?:yes|no)\s+',line) for line in fonts.splitlines()[2:])
-        qa=dict(status='PASS_LOCAL_CLEAN_ZIP_COMPILATION',date='2026-10-13',entry='arxiv.tex',zip_files=len(payload),zip_sha256=sha(package.read_bytes()),pdf_sha256=sha(pdf.read_bytes()),pages=len(pages),supplement_starts=start[0],continuous_page_numbers=True,all_fonts_embedded=True,type3_fonts=0,unresolved_references=0,overfull_boxes=0,shared_bibliography_entries=len(re.findall(r'\\bibitem\{',payload['arxiv.bbl'].decode())),unchanged_scientific_inputs={n:sha(b) for n,b in payload.items() if n.startswith(('sections/','supplement/','figures/'))},submitted=False,server_compilation_checked=False)
+        qa=dict(status='PASS_LOCAL_CLEAN_ZIP_COMPILATION',date='2026-10-14',entry='arxiv.tex',zip_files=len(payload),zip_sha256=sha(package.read_bytes()),pdf_sha256=sha(pdf.read_bytes()),pages=len(pages),supplement_starts=start[0],continuous_page_numbers=True,all_fonts_embedded=True,type3_fonts=0,unresolved_references=0,overfull_boxes=0,shared_bibliography_entries=len(re.findall(r'\\bibitem\{',payload['arxiv.bbl'].decode())),unchanged_scientific_inputs={n:sha(b) for n,b in payload.items() if n.startswith(('sections/','supplement/','figures/'))},submitted=False,server_compilation_checked=False)
         (OUT/'ARXIV_SOURCE_QA.json').write_text(json.dumps(qa,indent=2)+'\n')
         title=re.search(r'\\title\{([^}]+)\}',main).group(1)
         (OUT/'arxiv-title-v0.15.3.txt').write_text(title+'\n')

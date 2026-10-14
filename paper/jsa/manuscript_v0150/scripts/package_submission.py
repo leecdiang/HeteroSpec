@@ -120,7 +120,7 @@ def main() -> None:
     files += [OUTPUT / "figures" / f"Figure_{number}_{name}.pdf" for number, name, _ in FIGURES]
     assert all(p.exists() for p in files)
     manifest = {
-        "version": "0.15.3", "date": "2026-10-13",
+        "version": "0.15.3", "date": "2026-10-14",
         "base_pr": 102, "base_head": "e22c3565366094baa2980594b42223e57565455f",
         "status": "AUTHOR_REVIEW_REQUIRED_NOT_SUBMITTED",
         "flat_source_rebuild": "PASS: both documents, extracted ZIP in clean temporary directory",

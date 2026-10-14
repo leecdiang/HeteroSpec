@@ -29,3 +29,5 @@ Adds a local single-entry arXiv source ZIP and combined main-plus-supplement PDF
 ## 14 October follow-up
 
 arXiv v2 is now visible and has been compared with local v0.15.3. A substantive update is recommended: the current manuscript centers the query-layout design, adds three-family and seven-arm evidence, and sharpens the B570 boundary argument. The existing combined PDF/source ZIP match their clean-compilation checksums and current packaged source files. No replacement was submitted. Zenodo retains five verified downloads; four incomplete file slots are Pending after transfer interruption, with recovery awaiting the requested deletion authorization. Both records remain unpublished; secret access links are excluded.
+
+Upload recovery was subsequently authorized and started in the same draft. Four stale slots were removed; b57097 was also inadvertently removed during asynchronous UI updates and is being restored from its original archive. The earlier verified local copy is retained, but current acceptance requires a fresh download. No publication or sharing change occurred.

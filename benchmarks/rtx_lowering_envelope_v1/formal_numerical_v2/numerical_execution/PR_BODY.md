@@ -32,3 +32,16 @@ GPU1414complete/0failed unchanged. No newGPU or oldslot restart.
 CaseC: CPU closure/minimal next-stage engineering preparation; SOFTWARE_FIRST/HOLD.
 S1B/profile,actor,S2/S3 remain unadmitted. Keep Draft; no main/paper/PR104/110/B570/
 release/automation changes.
+
+Actual remote/fresh closure complete: authenticated `db32bbc60c5c0f86be2540c87713ab3ab5c9b972` archive
+andmanifest,all19343member hashes,newdirectory fullrestore and unchanged archived
+CPU analyzer output exactly match. SHA`ae4b90a591a3dc8b4bca1bcbe77537eb3a34f2ac8accf882e93016197115a741`;conservative
+derived1958861937B<4GiB. Complete raw
+ZIP77.8MiB was accepted by ordinaryGit;no shards/thirdarchive. One CPU Git-accounting
+path failure and corrected helper are preserved,with no science retry/change.
+CaseC CPU preparation completed19pureplanner/negative tests,original24selector
+(15ready/9missing),actual actor static-link/phase/cache source review and bounded
+future engineering/budget proposal. No production patch,newF0 or GPU authorization.
+Full results,per-coordinate/stage tables,claim/evidence and actual closure receipts
+are under formal_numerical_v2/numerical_execution. Future S1B/profile/actor/S2/S3
+stayNO_GO/NOT_ADMITTED;currentnumericalrun permanentlystopped.

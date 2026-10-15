@@ -176,3 +176,34 @@ analyzer/input/wire/layout/precision/configuration change,no automated retry and
 no extra GPU/model/query start. Keep PR113 Draft,main/paper/PR104/110/B570/release/
 automation untouched. A future GPU phase requires a new reviewed F0 and explicit
 author confirmation; the old720v2 ledger is permanently stopped.
+
+## Actual completed delivery and CPU follow-up
+
+Data commit `db32bbc60c5c0f86be2540c87713ab3ab5c9b972` was pushed and actually downloaded with
+authentication. All19343manifest members were verified. The downloaded archive
+was physically moved into the frozen restore tool's source path;the original
+localarchive remains separately preserved. Exactly two archive copies and two
+raw copies. New directory `D:\hs113-formal-numerical-v2-fresh-v1` restored everyfile and
+ran the archived unchanged frozen analyzer: full output JSON SHA256
+`25224db92f20caa28906ac01298f2b43af7861ff3da9a33f68b9d974ea67c378` is byte-identical to the original post-stop
+reconstruction and the archived CPU analysis. This is actual restoration,not a
+manifest-only or summary-only check. AUTHENTICATED_FORMAL.json,FRESH_AUDIT.json
+andDELIVERY_CLOSURE.json record it. Conservative derived bound including deliberate
+double-counting and delivery reserve is1958861937B
+<4294967296B. No full old archive/model/runtime copy or extra GPU run was created.
+
+One CPU delivery accounting failure occurred after the raw/frozen audit passed:
+a relative Git object path was evaluated from a nested directory. The failed
+source and stderr remain in cpu_delivery_failures;only this unbound CPU resource
+accounting helper was corrected,then succeeded. No scientific raw/F0/analyzer,
+standards or qualification changed. Ordinary Git accepted the77.8MiBarchive with
+its advisory50MiBwarning;the100MiBsinglefilecap was not exceeded.
+
+Actual CaseC CPU work completed:19planner/negative tests;original24contextselector
+instantiated and15/24ready,9missing;actor static-link/core/phase/cache constraints
+read and pinned;concrete stop-receipt/hot-watcher/final-analysis engineering scope
+and independent future budget proposal calculated. NEXT_STAGE.md and
+NEXT_CPU_PREPARATION.json contain the work and blockers. No production patch or
+newexecutionF0 was generated. No timing/profile/actor/S2/S3 admitted. The future
+4500wall/13500owned proposal is not a current budget extension or author grant.
+CLAIM_EVIDENCE.csv separates finite supported claims,counterexamples andUNKNOWN.

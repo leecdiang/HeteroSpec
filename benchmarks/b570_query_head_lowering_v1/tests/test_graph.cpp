@@ -17,4 +17,5 @@ int main(){
   }
  }
  std::cout<<"DESCRIPTOR_MOCK_ONLY cases="<<cases<<" numerical_compute=0 gpu=0\n";
+ return 0;
 }

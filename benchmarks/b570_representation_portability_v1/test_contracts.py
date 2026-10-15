@@ -28,7 +28,8 @@ def main():
         if fault=='q3':x['q']=3
         r=evaluate(x);assert r['errors'];rejects.append(dict(fault=fault,errors=r['errors']))
     assert evaluate(example())['representations']['QB']['vulkan_mul_mat_support'] is False
-    assert evaluate(example(1))['representations']['QB']['vulkan_mul_mat_support'] is True
+    assert evaluate(example(1))['representations']['QB']['vulkan_mul_mat_batch3_equal'] is True
+    assert evaluate(example(1))['representations']['QB']['vulkan_mul_mat_support'] is None
     # Source key includes role,phase,layout,ub,capacity; shape reuse belongs to upstream reuse checks.
     transitions=[];previous=None;epoch=0
     seq=[('target','PREFILL','MQ',128,4,1),('target','VERIFY','QB',4,4,2),

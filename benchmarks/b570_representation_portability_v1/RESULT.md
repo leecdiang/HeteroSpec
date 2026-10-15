@@ -142,3 +142,28 @@ or fallback would not be counted as a GPU numerical counterexample.
 table, strong PQ comparison, source/unknown boundaries and prior batch-invariance
 context. No hardware necessity, proprietary arithmetic, RTL, simulator or PPA
 claim is made. Stop this B570 investigation here; reuse the tools and finding.
+
+## Author-approved final checker closeout
+
+After acceptance of CLOSE_B570_PORT_WITH_REUSABLE_FINDINGS, the author requested
+only input-validation/support-field corrections and CPU regressions. The checker
+now rejects non-object roots, missing/mistyped fields, boolean/float numeric
+descriptors, malformed vectors and values outside nonnegative int64 bounds.
+Malformed JSON returns structured CLI errors (exit2). Q overlap checking uses
+constant-space row-interval arithmetic, checked against independent integer
+address enumeration; enormous declared head counts no longer allocate memory
+proportional to that count.
+
+Schema2 splits `vulkan_mul_mat_batch3_equal` from `vulkan_mul_mat_support`.
+The former records the necessary dimension condition; the latter is false for
+its source-proven violation and null otherwise, never true based on equality.
+Full-support and batch-condition evidence levels are separate. Unknown backend
+versions or disallowed role/phase bindings cannot inherit a support claim.
+
+CHECKER_CLOSEOUT_TESTS.json records 13 passing regression methods, including all
+72 geometry descriptors, malformed CLI inputs, type/range rejections, overlap
+cross-checks and support/unknown/binding semantics. These are descriptor-only
+tests, not another attention run. Original fixtures/results, sources, F0 and
+NO-GO accounting remain unchanged. Earlier checker receipts retain their prior
+hashes/semantics as history; the closeout receipt binds the current checker.
+No GPU/model request, shader/KV/backend change, experiment restart or new PR.

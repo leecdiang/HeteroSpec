@@ -22,6 +22,23 @@ are declarations, not observed snapshots. The checker is limited to reviewed
 D=128, contiguous singleton-batch F16 K/V and F32 masks. Wider/unbound families
 are rejected or remain UNKNOWN. It cannot authorize a model/GPU run.
 
+Final closeout (schema_version=2): every numeric descriptor must be an actual
+nonnegative int64, not a boolean or float; shapes/strides are four-element JSON
+arrays. Invalid roots, missing fields and malformed JSON return structured
+errors (CLI exit2), without a traceback. Q alias checking uses a constant-space
+row-interval test, so declared head counts do not allocate an address list.
+
+`vulkan_mul_mat_batch3_equal` reports only the reviewed necessary batch3
+condition. `vulkan_mul_mat_support` is **false** for a source-proven rejection,
+and **null** otherwise: equality does not certify complete Vulkan support.
+The batch3 evidence level and full-support evidence level are separate.
+Unbound backends and rejected role/phase bindings leave both predicates null.
+Backend assignment, CPU operand correspondence, request qualification and cost
+remain separate. Historical CHECKER_TESTS.json keeps the earlier field semantics;
+CHECKER_CLOSEOUT_TESTS.json records the current checker hash and 13 regression
+test methods. Run `python test_checker_closeout.py` in a fresh result workspace
+to reproduce these descriptor-only tests; it executes no attention fixtures.
+
 The committed outputs intentionally refuse overwrite (`common.save` uses
 exclusive creation). To independently reproduce, copy the source files (`*.py`,
 `native/`, CPU_PLAN.md) into a fresh benchmark workspace in a Git checkout and

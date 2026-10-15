@@ -2,6 +2,12 @@
 
 **NEW independent study; design and locally tested CPU prototypes, not completed B570 inference.**
 
+**Host update:** [host/RESULT.md](host/RESULT.md) now records432 actual frozen-GGML
+CPU fixtures /2592 graph computations, full PQ/QH vector relations, native-actor
+offline compilation and retained integration failures. S1's exact executable,
+16 inputs,161-slot plan and [F0](host/S1_F0.json) are ready for separate author
+approval. No device support query, GPU/model execution or S2/S3 start occurred.
+
 The research object is a class of reference-constrained attention representations, not a fix for four GSM8K answers. The candidate encodes `r=h*q+j` and changes Q from `[d,q,H,1]` to `[d,1,H*q,1]`, retaining the original K/V objects. It avoids the *specific fourth-axis mismatch* found in PR111; it does **not** yet establish full Vulkan admission, native placement, numerical equivalence or speed.
 
 ## Start here

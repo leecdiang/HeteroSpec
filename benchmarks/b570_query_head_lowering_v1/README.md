@@ -1,12 +1,14 @@
 # Query/head lowering under a fixed reference
 
-**NEW independent study; design and locally tested CPU prototypes, not completed B570 inference.**
+**Independent study: S0 complete; S1 stopped on a reference-runtime assertion.**
 
 **Host update:** [host/RESULT.md](host/RESULT.md) now records432 actual frozen-GGML
 CPU fixtures /2592 graph computations, full PQ/QH vector relations, native-actor
-offline compilation and retained integration failures. S1's exact executable,
-16 inputs,161-slot plan and [F0](host/S1_F0.json) are ready for separate author
-approval. No device support query, GPU/model execution or S2/S3 start occurred.
+offline compilation and retained integration failures. After author approval of
+the exact [F0](host/S1_F0.json), S1 completed the80-row full support census and
+selected QH_C. The first q1/MQ graph aborted on a Vulkan alignment assertion:
+2 charged attempts,159 unstarted slots,0 completed numerical graphs,0 model
+requests. No retry; S2/S3 are not admitted. See [S1 closeout](host/S1_RESULT.json).
 
 The research object is a class of reference-constrained attention representations, not a fix for four GSM8K answers. The candidate encodes `r=h*q+j` and changes Q from `[d,q,H,1]` to `[d,1,H*q,1]`, retaining the original K/V objects. It avoids the *specific fourth-axis mismatch* found in PR111; it does **not** yet establish full Vulkan admission, native placement, numerical equivalence or speed.
 
@@ -15,7 +17,7 @@ The research object is a class of reference-constrained attention representation
 1. [HOST_PROMPT.md](HOST_PROMPT.md): exact B570 agent work order and stop conditions.
 2. [PROTOCOL.md](PROTOCOL.md): complete staged study, reference contracts, budgets, holdout and decision branches.
 3. [DESIGN.md](DESIGN.md): index argument, compact/dense mask alternatives, cost obligations, strong baselines, architecture interface and prior art.
-4. `native/query_head.h`: real GGML graph-builder prototype, six explicit representations; q1/MQ require the caller to execute the original chain. This header has only been compiled against a descriptor test double here.
+4. `native/query_head.h`: real GGML graph builder, six explicit representations; q1/MQ require the caller to execute the original chain. Actual CPU correspondence and the failed Vulkan reference execution are reported separately in host/RESULT.md.
 5. `core.py`, `oracle.py`, `plan.py`, `evidence.py`, `ledger.py`: descriptors, independent scalar/address checks, immutable planned cells, capability-only selection, full-vector/full-panel calculations and attempt accounting.
 
 ```bash
@@ -51,6 +53,10 @@ A new representation must provide a useful same-reference alternative to strong 
 
 Do not modify/resume PR108/109/111, RTX PR104/110, arXiv, models, numerical DLLs, sampler, shader arithmetic or old archives. No donor restore, special-token/head search, speculative-state surgery or live-KV switch to reference. This PR adds only a new directory on fixed main.
 
-The host must still implement/adapt: **real GGML CPU harness, full supports_op census, actual operator placement audit, Vulkan execution, native actor integration, real wire/request mapping, independent raw reconstruction, role-specific monitoring and owned-process watchdog, exact execution F0**. None is silently replaced by a synthetic result or a template PASS.
+The host evidence includes the real CPU harness, complete supports_op census,
+actual precompute buffer/device ownership, serialized owned-process execution,
+raw reconstruction, watchdog and exact F0. Vulkan computation did not return;
+native actor integration was compiled but model execution/role qualification
+was not started. Neither compilation nor buffer assignment certifies that work.
 
 This exploration is not another prerequisite for the current arXiv update. Its output can be `SOFTWARE_FIRST`, `BOUNDED_POSITIVE_METHOD_EVIDENCE`, `NO_GAIN_OVER_PQ`, or `HOLD/STOP_WITH_COUNTEREXAMPLE`. No gain, fixed q-domain failure or narrow task-specific effect is an acceptable stopping result.

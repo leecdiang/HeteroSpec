@@ -3,6 +3,14 @@
 Start with RESULT.md. S0 actual CPU results differ from the delivered toy tests.
 All host files are additions inside PR112; old PR109/111 restores are read-only.
 
+Current status: **STOP_S1_REFERENCE_RUNTIME_ASSERTION**. The author confirmed
+the exact F0 below; the one permitted S1 run completed the80-row support census
+and stopped on the first q1/MQ Vulkan graph's alignment assertion.2 charged
+attempts,159 unstarted,0 completed numerical graphs,0 model requests. See
+S1_RESULT.json, S1_SUPPORT_MATRIX.json, S1_SLOT_ACCOUNTING.json and S1_RAW.zip.
+No retry/resume is authorized; the launch command below is historical. S2/S3
+are not admitted. Prior readiness/FINAL_VALIDATION receipts describe pre-S1 state.
+
 Main evidence: HOST_SOURCE_BINDINGS.json, HOST_RULE_LOCK.json, S0_RESULT.json,
 S0_FULL_VECTOR_RELATIONS.json, S0_RAW_MANIFEST.json, S0_RESTORE_RECEIPT.json,
 OLD_ASSET_RECHECK.json, ACTOR_BUILD.json (retained failure), ACTOR_REPAIR_01.json,
@@ -28,7 +36,7 @@ requires a new prospective F0; a source-compatible rebuild does not inherit its
 old binary hash or approval.
 
 After explicit human approval of that exact SHA, and only then, the intended
-command on this qualified host is:
+command was (now executed once; do not rerun):
 
 ```
 python host/run_s1.py --author-approved-f0-sha 8935c7cb5369ec052d074f060d9519ac51311620830819b74be5e3c49d3a0fb7

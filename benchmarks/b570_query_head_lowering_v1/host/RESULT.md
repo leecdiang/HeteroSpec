@@ -1,7 +1,14 @@
-# S0 real-GGML result and S1 admission request
+# S0 real-GGML result and executed S1 closeout
 
-**S0_COMPUTE_COMPLETE / S1_AWAITING_AUTHOR_APPROVAL.** This is a new PR112
+**S0_COMPUTE_COMPLETE / STOP_S1_REFERENCE_RUNTIME_ASSERTION.** This is a new PR112
 candidate study, not a continuation or requalification of PR109/111.
+
+After explicit author confirmation of exact F0 `8935c7cb...3a0fb7`, S1 ran on
+2026-10-15. The support-only census completed; the first q1/MQ reference graph
+aborted in the frozen Vulkan backend. There are **2 charged attempts, 1 complete
+capability host, 1 failed graph host, 159 unstarted slots, 0 completed graphs**.
+No numerical candidate result or native endpoint qualification exists. S2/S3
+are not admitted. See the executed closeout below and S1_RESULT.json.
 
 The recovered frozen GGML base/CPU DLLs actually evaluated all **432 fixtures /
 2592 graphs** across MQ, PQ, QB4, QH_C, QH_D and REPEAT4. q1/q2 development216
@@ -37,7 +44,7 @@ claim is made. No numerical retry, precision change or tolerance search.
   peak RSS21,286,912 bytes. CPU wall includes graph construction, scalar audits
   and raw writes; it is not a GPU/request performance benchmark. All current
   host_outputs (including actor compilation) total about325MB, below2GiB.
-- New model processes/requests=0; GPU operators/forwards=0; device queries=0;
+- During S0: new model processes/requests=0; GPU operators/forwards=0; device queries=0;
   extra probe/warmup/retry=0. Actual CPU process module inventories/hashes are
   recorded. Only explicitly staged frozen ggml-base/cpu are used by S0.
 
@@ -98,9 +105,9 @@ repair2 canonicalized the keys, keeping both unapproved drafts and the failed
 test receipt. Final7 host gate regressions pass. No numerical outputs were used
 for either repair. Offline compile warnings and all build attempts are retained.
 
-## S1 is concrete but not started
+## S1 executable preparation
 
-qh-vulkan.exe is compiled, not launched. It explicitly loads only the frozen
+Before S1 approval, qh-vulkan.exe was compiled without launch. It explicitly loads only the frozen
 Vulkan DLL, queries actual complete supports_op for every executable node,
 waits for a parent runtime-hash gate, and uses direct Vulkan backend execution
 with actual buffer-device checks. Metadata views are separated from executable
@@ -111,8 +118,9 @@ append-only attempts; bounds owned time/RSS/output/host RAM/disk; retains failed
 and unstarted slots separately; gates runtime modules before support/compute;
 freezes support-only selection before numerical outputs; and independently
 checks GPU input-before/after bytes/SHA256, full output dimensions/finiteness,
-q1 controls and repeats. These GPU behaviors remain **UNEXECUTED**, not validated
-by CPU tests. A compile or a static batch condition is not full supports_op.
+q1 controls and repeats. Compilation/CPU tests did not establish these GPU
+behaviors. The executed census, partial graph and missing evidence are separated
+below. A static batch condition is not full supports_op.
 
 Concrete approval object: **S1_F0.json**, SHA256
 `8935c7cb5369ec052d074f060d9519ac51311620830819b74be5e3c49d3a0fb7`.
@@ -123,10 +131,74 @@ checkpoint-based; the100ms supervisor samples owned RSS/host RAM/disk/wall,
 with a prospective1000ms maximum actual gap. No continuous-residency claim.
 First choose QH_C from the full census, otherwise QH_D, otherwise STOP. Actual
 placement, Vulkan numerical correspondence, natural decoder endpoints and useful
-cost remain unknown. All161 S1 slots, all64 S2 requests and S3 are unstarted.
+cost remained unknown before S1. All64 S2 requests and S3 remain unstarted.
 
 No GPU command was run under S0. HOST_PROMPT.md explicitly says
-"准备并申请 S1，不自行启动". Await author confirmation of this exact F0;
-S2/S3 each still need their own gates and approvals. No new automation, merge,
+"准备并申请 S1，不自行启动". The author's subsequent "确认" approved this exact F0;
+S1 was then executed once. S2/S3 still need their own gates and approvals. No new automation, merge,
 old-study restart, RTX/paper/release change, hardware simulator, invented DRAM/
 cache/XMX/timestamp/arithmetic-DAG/residency/PPA result or hardware-necessity claim.
+
+## Executed S1: support API admission did not ensure runtime admission
+
+The immutable F0/source/input/executable/driver hashes were checked before launch
+and independently rechecked after stop. Both actual owned processes identified
+Intel Arc B570 / Vulkan0 and loaded the frozen base/Vulkan numerical DLLs. No
+ggml-cpu numerical module was admitted. The raw parent runtime gate preceded
+the capability or compute activity.
+
+| Representation | Complete cell support queries | Executable-node predicates true | Completed numerical graphs |
+|---|---:|---:|---:|
+| MQ |16/16|64/64|0 (first graph failed)|
+| PQ |16/16|184/184|0 (unstarted)|
+| QH_C |16/16|76/76|0 (unstarted)|
+| QH_D |16/16|88/88|0 (unstarted)|
+| REPEAT4 |16/16|88/88|0 (unstarted)|
+
+The complete80-cell/representation census includes actual supports_op of every
+executable node, with metadata nodes retained separately. All500 executable-node
+queries returned true. The frozen rule chose **QH_C** before the first numerical
+attempt; this choice was not made from numerical outputs or speed. Support-field
+meaning is exactly the backend API response, not successful execution.
+
+The first graph was **MQ, q1, K63, H8/Hkv8, permuted F32 Q with32-byte base
+offset, F16 K/V, causal dyadic input**. It passed the precompute supports_op
+checks; its four executable node buffers belonged to Vulkan0. All four input
+before-readback byte vectors match the frozen serialized source independently.
+After GRAPH_START, the process exited with3221226505 (`0xc0000409`), logging:
+
+```
+ggml-vulkan.cpp:8301: GGML_ASSERT(allow_misalign || misalign_bytes == 0) failed
+```
+
+There is no GRAPH_RETURN, after-readback, stage/final F32 vector, or CLOSE for
+that process. Thus buffer assignment is observed before the call, not proof of
+completed Vulkan arithmetic. No QH graph was launched. The source assertion
+requires descriptor alignment unless its call site allows a misaligned offset;
+the exact faulting tensor/call site and device minimum alignment were not captured
+and remain unknown. The32-byte Q view and K63/V row strides are retained rather
+than changed to make the run pass. No shader/backend/input repair or retry.
+
+This is a bounded runtime/reference admission failure of the frozen experiment,
+**not a QH-versus-PQ numerical counterexample** and not proof that QH is
+intrinsically unusable. It establishes a reusable limitation: a complete positive
+supports_op census is insufficient to certify actual execution for these physical
+layouts. S0's CPU correspondence does not close that gap. There is no evidence
+of useful GPU cost gain, natural-decoder compatibility or transfer, so the present
+study stops with this finding and does not proceed to S2/S3.
+
+Actual S1 accounting: census0.719s + failed graph4.390s = **5.109 owned seconds**;
+2/161 attempts,0/160 numerical graphs completed,159 unstarted,0 skipped as
+unsupported,0 model requests/warmups/retries/extra probes. Max sampled observer
+gap485ms, peak sampled worker RSS253,112,320bytes. GPU memory observations are
+checkpoints only. Initialization/census/failure elapsed time is not graph latency
+or end-to-end speedup; completed per-shader work remains unknown.
+
+`S1_RAW.zip` retains every first-run wire/raw/stdout/stderr/lifecycle, the complete
+census, pre-output choice, ledger, closeout and precompute input bytes:679,680 raw
+bytes in47,582 compressed bytes. `S1_RAW_MANIFEST.json` and
+`S1_RESTORE_RECEIPT.json` verify all archived bytes by streaming rehash.
+`S1_SLOT_ACCOUNTING.json` names every completed/failed/unstarted coordinate;
+`S1_SUPPORT_MATRIX.json` preserves all80 census records. `close_s1.py` reconstructs
+these records without launching a worker. Prior FINAL_VALIDATION/readiness files
+remain historical pre-S1 receipts; S1_RESULT.json is the current status.

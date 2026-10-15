@@ -27,7 +27,7 @@ def main():
            f"E2 request failures={a['failed_requests']}, failed blocks={a['failed_blocks']}, output mismatches={a['output_mismatches']}, invalid contracts={a['invalid_contracts']}, workload errors={a['workload_errors']}, heavy-observer flags={a['heavy_observer_flags']}. E1 request failures={b['failed_requests']}, operator failures={b['operator_failures']}, invalid output contracts={b['invalid_output_contracts']}, workload errors={b['workload_errors']}.",'',
            'The whole E2 ceiling remained324 workers/1,620 requests/43,200 native seconds. E1 remained72 contexts/216 requests including warmups/432 standalone replay starts/21,600 combined native seconds. Unused ceilings cannot be transferred. All failed/started/unstarted coordinates are retained in ledgers and context tables; none is retried.','',
            '## E2 PQ/QB cost confirmation','',
-           'Ratio=T_PQ/T_QB. Equal task weights within each session and equal weights over six sessions; intervals use the original six-session bootstrap. No request-level bootstrap, latency trimming, task pruning or sample expansion.','',
+           'Ratio=T_PQ/T_QB. The original inclusive resident request timer runs in counts mode; it is not isolated kernel/operator time. Equal task weights within each session and equal weights over six sessions; intervals use the original six-session bootstrap. No request-level bootstrap, latency trimming, task pruning or sample expansion.','',
            '| Family | Path | Geometric speed ratio | Approx. six-session interval | QB latency reduction | 1.02 interpretation |',
            '|---|---|---:|---|---:|---|']
     for c in cost['comparisons']:

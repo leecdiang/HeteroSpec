@@ -1,12 +1,12 @@
 """Bounded deterministic CPU fixtures, retained first attempt and actual modules."""
-import argparse, datetime, pathlib, subprocess, time
+import argparse, datetime, os, pathlib, subprocess, time
 from common import ROOT, load, save, sha, modules
 from fixtures import fixtures, write_input
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('group',choices=['dev','holdout']);a=p.parse_args()
     before=modules();host=ROOT/'_host'/a.group;host.mkdir(parents=True,exist_ok=False)
-    git=['C:/hs/pr108-tools/git/cmd/git.exe','-C',str(ROOT),'rev-parse','HEAD']
+    git=[os.environ.get('HETEROSPEC_GIT','git'),'-C',str(ROOT),'rev-parse','HEAD']
     commit=subprocess.check_output(git,text=True).strip()
     if a.group=='holdout':assert (ROOT/'RULE_LOCK.json').exists(), 'Holdout needs committed rule lock'
     inputs=[]

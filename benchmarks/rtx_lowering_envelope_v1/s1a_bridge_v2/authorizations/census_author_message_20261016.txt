@@ -1,0 +1,277 @@
+确认授权 HeteroSpec PR116 的 S1A Bridge v2
+第一阶段正式支持 Census。
+
+本次授权类型：
+BRIDGE_V2_CENSUS_ONLY
+
+仓库：
+https://github.com/leecdiang/HeteroSpec
+
+Draft PR：
+https://github.com/leecdiang/HeteroSpec/pull/116
+
+已审查提交：
+eb99b9328e1d1dc0e34ee2182f83fe2c46e3fec8
+
+Run ID：
+pr114-s1a-bridge-v2
+
+批准的精确 F0 SHA256：
+3da19af573ac4c93e73c4b4d9831f0da94fb2460247471395e4498862a7aada0
+
+目录：
+benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/
+
+一、确认研究范围
+
+继续接受原先针对固定24上下文的有限协议修订：
+
+prospective_24_context_amendment_accepted = true
+
+本次保持原始预注册选择器，
+覆盖三模型家族、两种phase、q1至q4，
+以及全部预定层位置。
+
+QH_C保持固定主候选；
+QH_D保持独立对照。
+
+原PR113、PR114的所有F0、失败、输出、
+历史账本和审计记录保持不变。
+
+不得恢复或重启已终止的PR114 Numerical。
+不得将旧Census结果直接转移为新身份下的资格。
+
+二、本次唯一授权的GPU范围
+
+只允许：
+
+1个Census控制器；
+1个显式GPU就绪查询进程；
+1个原生支持检查宿主；
+最多2个已登记conhost辅助进程。
+
+合计最多5个受控进程启动。
+
+完整检查：
+24个上下文×5种布局＝120张图；
+1806次节点支持API查询。
+
+本次：
+0次graph_compute；
+0个Numerical数值宿主；
+0模型请求；
+0 warmup；
+0额外GPU probe；
+0 profiler；
+0科学retry。
+
+允许本Census明确登记的CUDA加载、
+初始化、图元数据构造和supports_op检查。
+
+不能将这些动作错误报告为零GPU设备活动。
+
+三、严格保持方案A的就绪条件
+
+使用冻结的：
+A_STRICT_IDLE_V1
+
+保持以下条件：
+
+GPU：
+NVIDIA GeForce RTX 5070 Ti Laptop GPU
+
+Driver：
+616.92
+
+GPU利用率≤5%；
+温度≤55°C；
+空闲显存≥512MiB；
+必须AC供电；
+电源方案GUID、设备容量和所有身份必须匹配F0。
+
+仅允许一次正式登记的就绪查询。
+
+本轮不允许：
+自动cooldown；
+等待后再次查询；
+自动retry；
+切换方案B；
+临时将阈值提高至32%、35%或其他数值。
+
+如果就绪检查失败，立即按冻结规则停止，
+完整保留实际准入回执与未启动坐标。
+
+不要将一次GPU利用率读数归因于特定后台进程，
+也不要宣称通过5%检查等于持续独占GPU。
+
+本次授权应在用户安排的独立空闲窗口使用。
+不额外启动任何未登记的GPU查询来筛选窗口。
+
+四、执行前身份与状态核验
+
+先核对：
+当前PR116提交；
+F0精确字节；
+原生宿主EXE及SHA；
+共享GGML核心；
+21个数值DLL；
+CUDA插件与冻结driver；
+Python、环境及模块身份；
+完整PLAN、图描述、输入、wire、CAS、
+分析器、FP64参考和历史证据。
+
+新宿主SHA256必须为：
+b4a3ce1023949cb34ff1293f536b208fc6d6361c013359cea4ac46c50e5b2cad
+
+确认：
+新执行根D:/hs114-s1a-bridge-v2不存在；
+本次Census账本没有启动记录；
+旧PR113/114受控任务已经结束；
+没有冻结规则列出的冲突进程。
+
+任何身份漂移、已启动记录、资源不足或冲突，
+均停止，不覆盖、不修补后继续。
+
+五、创建真实授权记录
+
+收到本条确认后，
+按照真实作者消息和接收时间建立独立批准记录。
+
+必须包含：
+
+stage = BRIDGE_V2_CENSUS_ONLY
+
+run_id = pr114-s1a-bridge-v2
+
+F0_sha256 =
+3da19af573ac4c93e73c4b4d9831f0da94fb2460247471395e4498862a7aada0
+
+prospective_24_context_amendment_accepted = true
+
+同时记录完整作者确认原文、
+实际SHA256和真实接收时间。
+
+不伪造更早授权，不修改旧授权回执。
+
+绝不生成BRIDGE_V2_NUMERICAL_EXACT批准记录。
+
+六、唯一执行入口
+
+必须使用F0绑定Python，以-B模式执行：
+
+& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -B 'D:/hs114-bridge-v2/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/run_bridge.py' --stage census --approval '<本次真实Census批准记录的绝对路径>'
+
+不得直接调用原生EXE。
+
+不得执行：
+--stage numerical
+
+只启动一次冻结Census控制器。
+
+七、预算与监控
+
+本次Census独立预算：
+
+阶段墙钟≤600秒；
+保守owned≤1800秒；
+原生支持宿主≤240秒；
+就绪查询≤10秒。
+
+其余JobObject、进程内存、输出、磁盘、
+模块身份与资源监测约束全部沿F0执行。
+
+不挪用Numerical预算。
+不使用PR114未消耗的额度。
+不因为资源不足删除证据或扩大限制。
+
+任何控制异常、身份漂移、
+支持检查不完整或预算失败，
+均终止并保留全部原始记录。
+
+八、支持判据
+
+独立验证120张实际图：
+
+MQ 24张；
+PQ 24张；
+QB 24张；
+QH_C 24张；
+QH_D 24张。
+
+核对每张图的：
+完整节点数量；
+操作类型、参数、形状与边；
+1806次supports_op结果；
+冻结源码和CUDA模块身份；
+共享核心、宿主IAT及插件导入。
+
+MQ、PQ、QB、QH_C和所有q1公共控制必须支持。
+
+只有q>1的QH_D可以依冻结协议
+保留明确的NOT_SUPPORTED坐标。
+
+QH_D不支持不得引发主候选重新选择。
+不能静默删除缺失坐标。
+
+即使120张图全部支持，
+也只能证明本次实际后端支持查询通过；
+不能宣称GPU数值、完整actor或性能通过。
+
+九、CPU封存和远端认证
+
+若Census正常完整结束：
+
+使用已冻结的CPU-only工作流，
+独立核验并封存：
+
+CENSUS_ENDED；
+原生CENSUS.json；
+CENSUS_DECISION.json；
+进程及JobObject回执；
+实际模块身份；
+完整支持查询记录；
+资源和停止账本。
+
+通过现有seal_census.py、
+offline.py --action seal-census
+及census-readback流程完成真正的远端回读认证。
+
+Census、Decision及必要原始证据推送PR116，
+保持Draft。
+
+不得预填写认证成功；
+不得通过重算替换冻结的科学结果。
+
+十、结束后汇报并停止
+
+直接汇报：
+
+1. 120张图实际支持数量；
+2. 1806次支持查询完成数量；
+3. 五种布局各自结果与不支持坐标；
+4. 实际GPU就绪检查数据；
+5. 控制器、就绪、宿主和辅助进程启动数量；
+6. 墙钟、owned、内存、输出及CPU交付成本；
+7. F0、Census、Decision三个精确SHA；
+8. 远端认证commit及结果状态；
+9. 是否达到申请240图Numerical的技术条件。
+
+完成后立即停止。
+
+即使Census全部成功，
+也不得自动执行Numerical。
+
+240次数值图计算需要：
+真实Census和Decision认证；
+独立作者授权；
+BRIDGE_V2_NUMERICAL_EXACT；
+三个实际哈希绑定。
+
+本次不批准S1B clean timing、profiling、
+actor、自然decoder、S2/S3或硬件RTL。
+
+PR116保持Draft。
+PR113/114、B570、main、论文及发布不动。
+
+按精确F0执行一次。
+任何冻结停止条件触发即终止，不重试。

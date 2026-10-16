@@ -79,7 +79,7 @@ Original analysis SHA256:5084cfe0a98d433ddabcf19ee1d6994d605654a4df45ad4b67efee4
 Raw manifest is closure/RAW_MANIFEST.json. No full old experiment archive was recopied.
 
 Authenticated remote archive readback,fresh restore and new-interpreter reanalysis
-are PENDING here and must actually succeed before final delivery closure. CPU-only
+completed successfully;see actual closure below. CPU-only
 delivery retains its independent900s wall/2700owned cap and includes prior Census
 CPU spending without reset. No GPU process remains;no new GPU task is available
 in the offline workflow. All input/kernel/runtime/source-role hashes remain fixed.
@@ -101,3 +101,27 @@ limited24-context numerical prerequisite to PREPARE/REVIEW same24 S1B. It does n
 authorize216clean hosts,72trace hosts,profiling,actor,natural decoder,S2/S3 or RTL.
 PR116 stays Draft. Main,paper,release,B570,PR113/114/104/110 and automation untouched.
 Stop after CPU delivery;no further GPU work.
+
+## Actual authenticated fresh closure
+
+Archive downloaded by frozen offline.py from data commit17151cd2362494c25a89dcbf5f8c902221f6498a;
+all32,281,862remote bytes have the original SHA256. Frozen restore verified9951
+members into D:/hs114-s1a-bridge-v2-fresh. Fresh new interpreter executed unchanged
+archived analyzer;full analysis is byte-identical, SHA
+5084cfe0a98d433ddabcf19ee1d6994d605654a4df45ad4b67efee4ec64c772e. Archived host hash and14essential source-role
+hashes independently match. Complete CPU actions,actual resources and limits are
+in CLOSURE.json and the compact control packet,not a third full raw/archive copy.
+
+Numerical CPU workflow wall90.694266700s/owned272.082810300s. Cumulative
+frozen CPU owned280.240836300s includes earlier census actions without reset;actual
+registered CPU starts23. Inclusive numerical delivery elapsed at closure
+389.385740s<900. Owned scope is frozen jobs;ordinary interactive Git/OS/Python
+tooling is not globally process-accounted. Conservative all-new storage
+833681329B<4GiB includes source/current outputs,2full raw copies,2archives,earlier
+CPU fresh directories and additional384MiBpreparation/Git allowance.
+
+All1847historical files reverified;old PR113/114 source/branches/raw remain unchanged.
+All GPU-owned processes ended;no further GPU query/load/compute occurred. The
+complete independent24-context panel meets the accepted limited numerical
+prerequisite for later same24 S1B technical review. It does not authorize any
+clean timing,trace,actor,natural decoder,S2/S3 or RTL. Stop here.

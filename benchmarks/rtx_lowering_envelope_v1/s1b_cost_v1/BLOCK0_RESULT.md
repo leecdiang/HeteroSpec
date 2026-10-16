@@ -94,3 +94,11 @@ Block1/2 technical admission:NO. Block0 clean CUDA qualification and cost data d
 ## CPU stop-evidence archive
 
 The unchanged frozen analyzer and packager completed without GPU activity. The archive preserves prerequisite Census/CAS,full stop/author records and frozen source,without claiming new clean outputs. SHA256`b88a698fd0b0ee72378d449d8d7c29610c9fda1746595b25ad9d940110954c26`,bytes21700698,members197. Remote readback and fresh reconstruction remain pending at this data publication.
+
+## Actual delivery outcome
+
+Frozen remote readback09 failed HTTP404 because repository raw/ignore prevented the original archive from being staged. This failure and its stderr are retained;readback was not repeated. Exact existing archive bytes are force-staged for final publication;no source,F0 or raw hash is changed. Remote archive byte authentication remains NOT_ESTABLISHED.
+
+A separate first local fresh restore verified197members from the original archive. The frozen analyzer in a new interpreter reproduced ANALYSIS.json byte-for-byte. This is LOCAL fresh reconstruction,not remote-authenticated reconstruction. All72Block0 hosts remain unstarted,ordinary and QPC samples absent. Block1/2 remain NO-GO.
+
+Registered CPU actions06through11 wall7.924041899997974s/owned90.87067400006345s,including failed HTTP readback. Final publication costs remain in the append-only CPU ledger. CPU delivery failure receipts archive SHA256`b65663fb9ba741374d5e94ea2618327a2499a4d400464078588290e7a64770b9`.

@@ -24,3 +24,9 @@ Zero graph_compute,numeric hosts,model requests,warmups,profilers,extra probes o
 CPU seal ran through frozen offline.py --action seal-census,using seal_census.py. Actual census+decision must now be committed and independently authenticated by offline.py --action census-readback before a separate author request. numerical_admitted=true is technical only. No BRIDGE_NUMERICAL_EXACT approval was generated;the240 numerical slots remain unstarted.
 
 Old PR113 v2 remains474 qualified/246 unstarted;old failure/locks/missing receipts,old720(1 failure/719 unstarted/0complete)andGPU14(14complete/0failure)unchanged. PR113/104/110,B570,paper,main,releases,automations untouched. S1B,actor,S2/S3 and hardware remain unadmitted.
+
+Remote authentication actually completed through frozen offline.py --action census-readback.
+Data commit: e6e671bfba27c576a5ae219be21d9c0672a271e4. Exact returned Census/Decision SHA256 matched.
+Frozen CPU seal+readback conservative owned seconds: 9.876361;actual CPU closure process starts including helpers:8.
+All support/control ZIP members were independently byte/hash checked. Source-role hashes and F0 unchanged.
+No Numerical budget used,no Numerical controller/native/graph starts. Wait for independent author approval.

@@ -24,7 +24,7 @@ natural endpoints remain NO-GO.
 `AMENDMENT.md` prospectively limits a possible S1B numerical prerequisite to the
 original pre-result24 selector; it does not fill or qualify the original72.
 Prepared F0 SHA256:
-`4dcd6bcdbf4facdd92d4d67329bbca1155ea2499827d5ff468a2d2dd1c79a2f9`.
+`c5f980b1a56673145fced02f38864eb8cbff4d793b285705fd66f88b6338c92a`.
 Proposed new census120 graphs/1806 queries,then separately approved240 numerical
 graphs/3612 queries,q1 first. At most966 GPU-stage processes including helpers,
 7200 conservative owned seconds plus separately bounded2700 CPU delivery seconds;
@@ -34,3 +34,8 @@ This PR executed **zero GPU queries,CUDA loads,graph computes,profiling or model
 No census/numerical approval is supplied. Next step is author review of this exact
 F0/amendment for support-only census; its actual authenticated decision must precede
 separate numerical authorization. No timing/actor/S2/S3 or hardware claim is unlocked.
+
+CPU delivery correction before approval:the first unapproved F0/source are retained
+in preparation_candidates/v1. Binary raw readback now uses the non-JSON raw media
+response that actually returned the full matching archive. GPU host/arithmetic,
+plan and budgets remain byte-identical. See CPU_TRANSPORT_FIX.json.

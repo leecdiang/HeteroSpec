@@ -29,7 +29,7 @@ def main():
             for name in ('CENSUS.json','DECISION.json'):
                 endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/census_delivery/'+name+'?ref='+a.commit
                 prefix=d/name
-                worker.run([f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw+json'],prefix,min(60,deadline.remaining()-5),env(''),b['process_commit_bytes'],deadline.guard,log_cap=16*1024**2)
+                worker.run([f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw'],prefix,min(60,deadline.remaining()-5),env(''),b['process_commit_bytes'],deadline.guard,log_cap=16*1024**2)
                 assert sha(prefix.with_suffix('.stdout'))==sha(V/'census_delivery'/name)
             durable(root/'CENSUS_AUTHENTICATED.json',dict(commit=a.commit,authenticated_remote_bytes=True,F0_sha256=sha(V/'F0.json'),census_sha256=sha(V/'census_delivery/CENSUS.json'),decision_sha256=sha(V/'census_delivery/DECISION.json')))
             return
@@ -37,7 +37,7 @@ def main():
             assert a.commit and len(a.commit)==40 and all(x in '0123456789abcdef' for x in a.commit)
             assert not readback.exists() and archive.exists()
             endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/closure/RAW_BRIDGE.zip?ref='+a.commit
-            command=[f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw+json'];prefix=out/'readback';cap=f0['budget']['storage']['archive_upper_bound_bytes']
+            command=[f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw'];prefix=out/'readback';cap=f0['budget']['storage']['archive_upper_bound_bytes']
         else:command=commands[a.action];prefix=d/'worker';cap=32768
         assert (root/'NUMERICAL_ENDED.json').exists() or (root/'CENSUS_ENDED.json').exists(),'sealed stage required'
         durable(d/'COMMAND.json',dict(command=command,prior_conservative_owned_seconds=spent,CPU_only=True))

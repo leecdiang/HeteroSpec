@@ -49,3 +49,24 @@ changed. Old PR113 remains474/720 qualified and246unstarted;old stopped720 and
 GPU14 unchanged. No PR104/110,B570,main,paper,release or automation change.
 S1B numerical prerequisite is NOT_MET. No timing,trace,actor,natural decoder,
 S2/S3,hardware or continuation is authorized. This run remains terminal.
+
+## Actual delivery closure
+
+Remote archive at data commit9e72603599bd87bf9776a099b7da0129f3b01f0e was downloaded by frozen offline.py,
+SHA256 matched the original. Frozen evidence.py restored all322 members into
+D:\hs113-s1a-bridge-v1-fresh;the unchanged archived analyzer independently recomputed all240 unstarted
+coordinates. Original/fresh analyses are byte-identical, SHA256
+7d7dba57cc76cebf9a789cceac1c2b12d7be6d111d073bc7ee335f06e95109c7.
+
+Cumulative frozen CPU delivery owned40.523984s(including earlier census);
+this numerical delivery frozen CPU owned30.647622s. Inclusive current
+delivery wall at capture362.947113s<900. The owned metric covers registered
+frozen offline jobs;ordinary interactive Git/OS/connector tooling is not globally
+process-accounted. Do not interpret it as a precise global tooling lifetime total.
+All new derived conservative storage813228519B<4GiB,including redundant
+preparation/Git allowance. Exactly2full raw/archive copies;control packet contains
+metadata/receipts and does not create a third copy of the full archive.
+
+No further GPU activity occurred after readiness failed. This run remains terminal;
+S1B numerical prerequisite is NOT_MET. No source,F0,precision,input,mask,QH choice,
+criterion or budget was modified. Full missingness and failure receipts remain.

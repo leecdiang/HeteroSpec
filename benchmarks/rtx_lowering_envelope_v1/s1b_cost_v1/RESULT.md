@@ -137,3 +137,15 @@ and SOFTWARE_FIRST/HOLD;no paper/main/PR116/113/114/110/B570/release/automation 
 
 Remote F0/source/test authentication and CPU evidence capsule are recorded separately;
 preparation is not sealed until actual readback succeeds. Stop at author GPU gate.
+
+## Actual CPU preparation closure
+
+Implementation commit8f464c3121e59f5db9823ea6a3639da89faa60bf was pushed. Authenticated
+GitHub API readback matched F0,host,source and key tests byte-for-byte. CPU capsule
+SHA256aa2acba66d3f9d68f75af08875035ad82321cc2bd29c13765c88c5aa6bd061ce,
+8235347bytes/2029members,was downloaded and restored into an absent fresh directory.
+Every member,source-role and host hash verified;new-interpreter reconstruction
+confirms72graphs,216clean/72trace,2088calls and all fixed q1/order controls.
+See PREPARATION_REMOTE_VERIFIED.json and FRESH_CPU_PREPARATION_AUDIT.json.
+PR116 is still Draft at its reviewed head and its worktree is clean. GPU execution
+root/ledger and author approval remain absent. No GPU operation occurred.

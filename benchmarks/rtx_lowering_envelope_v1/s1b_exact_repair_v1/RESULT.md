@@ -29,3 +29,11 @@ Next approval must bind registration_id,new exact F0,native CRLF Census and unch
 Historical Block0 remains0GPUstarts/0graphcalls/72unstarted. There is no new GPU numerical data and this engineering repair establishes no numerical or timing qualification.
 
 CPU repair/audit complete; waiting for independent Block 0 GPU authorization.
+
+## Actual final closure
+
+F0/source/test receipts were authenticated at commit32329ed1c82f7bf8461997ca14bdf75b649bec10. The supplementary49105259B CPU log ZIP hit the unchanged40MiB cap;its32MiB-part transport then recorded an HTTP2stream CANCEL. Both failures remain. A bounded CPU-only transport using GODEBUG=http2client=0 retrieved the two parts without increasing the cap;all2238ZIPmembers matched. No GPU environment or scientific run changed. See CPU_RECORDS_REMOTE_VERIFIED.json and LATE_CPU_TRANSPORT_RECEIPTS.zip. Large partial stream bytes remain locally intact and are remotely recoverable from checked exact byte slices of the authenticated full capsule.
+
+126final CPU checks and the primary197member remote restore pass. All2503historical PR118 files still match the initial inventory. New registration root,controller ledger and independent human approval are absent.
+
+CPU repair/audit complete; waiting for independent Block 0 GPU authorization.

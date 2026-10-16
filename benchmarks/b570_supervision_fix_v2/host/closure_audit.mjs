@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {isDeepStrictEqual} from 'node:util';
 import {evidencePrefix} from './tail_binding.mjs';
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
 // Preserve exact FILETIME integers; JSON.parse alone loses their low bits.
@@ -47,7 +48,7 @@ export async function auditClosure(base,toolExit,auditPath,{write=true}={}) {
   const auditBytes=await fs.readFile(base+'/'+auditPath),raw=exactJson(auditBytes.toString('utf8'));
   try{const prefix=await evidencePrefix(base,raw);if(!Buffer.concat([first,second]).subarray(0,prefix.length).equals(prefix))errors.push('final ledger does not extend selected audit prefix');}catch(e){errors.push('selected raw prefix binding: '+e.message);}
   const close=exactJson(await fs.readFile(base+'/task/BOOTSTRAP_CLOSED.json','utf8'));
-  if(close.broker_exit_code!==0||toolExit.exit_code!==0)errors.push('outer closure failed');
+  if(close.broker_exit_code!==0||toolExit?.broker_exit_code!==0||!isDeepStrictEqual(close,toolExit))errors.push('outer closure failed or returned receipt differs from persisted receipt');
   const missing=[];let bootstrap=null;
   try{bootstrap=exactJson(await fs.readFile(base+'/task/BOOTSTRAP_REGISTRY.json','utf8'));}
   catch(e){missing.push('Prospective bootstrap registry unavailable');}

@@ -1,6 +1,8 @@
 // The caller is the already-running Node tool service, not a task-owned wrapper.
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
+import {taskClock,taskEnvironment} from './tool_capabilities.mjs';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {loadWindowsApi} from './bootstrap_native.mjs';
@@ -23,10 +25,11 @@ export async function verifySource(design){
  if(JSON.stringify(files.sort())!==JSON.stringify(Object.keys(freeze.bound_files).filter(p=>p.startsWith('host/')).sort()))throw Error('host source set drift');
  return {freeze_sha256:digest(await fs.readFile(path.join(design,'SOURCE_REVIEW_FREEZE.json'))),bound_files:freeze.bound_files};
 }
-export async function startCold({python,toolBeginNs}){
- if(process.platform!=='win32'||process.arch!=='x64')throw Error('Windows x64 existing Node service required');
+export async function startCold({python,toolClock,environment}){
+ if(os.platform()!=='win32'||os.arch()!=='x64')throw Error('Windows x64 existing Node service required');
  if(path.win32.resolve(DESIGN).toLowerCase()!==path.win32.resolve(BASE,'repo/benchmarks/b570_supervision_fix_v2').toLowerCase())throw Error('wrong new-task source layout');
- if(typeof toolBeginNs!=='bigint'||toolBeginNs>process.hrtime.bigint())throw Error('capture toolBeginNs before task preparation');
+ const preparationClock=taskClock(toolClock);preparationClock.sample();
+ const childEnvironment=taskEnvironment(environment);
  const binding=await verifySource(DESIGN);
  const pythonStat=await fs.lstat(python);if(!pythonStat.isFile()||pythonStat.isSymbolicLink())throw Error('explicit existing CPU Python executable required');
  const pythonHash=digest(await fs.readFile(python));
@@ -34,17 +37,18 @@ export async function startCold({python,toolBeginNs}){
  await fs.mkdir(path.join(BASE,'queue'));await fs.mkdir(path.join(BASE,'tmp'));
  await fs.mkdir(path.join(DESIGN,'results'),{recursive:true});
  try{
-  const api=await loadWindowsApi(BASE);
-  const setupNs=Number(process.hrtime.bigint()-toolBeginNs);if(!Number.isSafeInteger(setupNs)||setupNs>=28800e9)throw Error('preparation exceeded task wall allowance');
-  const session=new ColdSession(api,{base:BASE,python,pythonHash,binding,setupNs});
+  const api=await loadWindowsApi(BASE,childEnvironment);
+  const session=new ColdSession(api,{base:BASE,python,pythonHash,binding,preparationClock});
   await session.start();return session;
  }catch(error){await writeNew(path.join(BASE,'task','BOOTSTRAP_START_ERROR.json'),{error:String(error),scope:'Admission/creation failure; inspect actual outer receipts, never infer zero starts'});throw error;}
 }
 export class ColdSession {
- constructor(api,{base,python,pythonHash,binding,setupNs=0}){this.api=api;this.base=base;this.python=python;this.pythonHash=pythonHash;this.binding=binding;this.setupNs=setupNs;this.process=null;this.errors=[];this.closed=null;this.timer=null;this.busy=false;this.stopAt=null;this.assigned=false;this.next=1;}
+ constructor(api,{base,python,pythonHash,binding,setupNs=0,preparationClock=null}){this.api=api;this.base=base;this.python=python;this.pythonHash=pythonHash;this.binding=binding;this.setupNs=setupNs;this.preparationClock=preparationClock;this.process=null;this.errors=[];this.closed=null;this.timer=null;this.busy=false;this.stopAt=null;this.assigned=false;this.next=1;}
  file(name){return path.join(this.base,'task',name);}
  async start(){
-  this.begin=this.api.now()-this.setupNs;if(!Number.isSafeInteger(this.begin)||this.begin<0)throw Error('invalid task clock boundary');
+  const qpcSample=this.api.now();
+  if(this.preparationClock)this.setupNs=this.preparationClock.sample(); // Sample after QPC: conservative conversion, never compare clock origins.
+  this.begin=qpcSample-this.setupNs;if(!Number.isSafeInteger(this.begin)||this.begin<0)throw Error('invalid task clock boundary');
   this.observer=this.api.observer();
   const script=path.join(this.base,'repo/benchmarks/b570_supervision_fix_v2/host/broker.py');
   await writeNew(this.file('BOOTSTRAP_INTENT.json'),{schema:1,mode:'cold-win32-v1',task_begin_ns:this.begin,setup_elapsed_ns:this.setupNs,observer:this.observer,python:this.python,python_sha256:this.pythonHash,script,source_review_sha256:this.binding.freeze_sha256,ledger_parts:['task/PROCESS_LEDGER.jsonl'],no_predecessor:true});

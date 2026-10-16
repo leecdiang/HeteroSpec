@@ -1,6 +1,7 @@
 // CPU Win32 binding loaded into the existing Node service. Never spawns a helper.
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
 import crypto from 'node:crypto';
 import {gunzipSync} from 'node:zlib';
 import {createRequire} from 'node:module';
@@ -18,8 +19,8 @@ export function unpackNative(archive,lock){
  if(!result||result.length!==lock.native_bytes||sha(result)!==lock.native_sha256)throw Error('CPU native member identity mismatch');
  return result;
 }
-export async function loadWindowsApi(base){
- if(process.platform!=='win32'||process.arch!=='x64'||Number(process.versions.napi)<8)throw Error('Existing Windows x64 Node-API 8+ tool service required');
+export async function loadWindowsApi(base,environment){
+ if(os.platform()!=='win32'||os.arch()!=='x64')throw Error('Existing Windows x64 tool service required; native load must support the pinned Node-API bridge');
  const lock=JSON.parse(await fs.readFile(new URL('./BOOTSTRAP_DEPENDENCY.json',import.meta.url)));
  const dir=path.join(base,'deps');await fs.mkdir(dir); // Fresh only; no reuse or npm invocation.
  const response=await fetch(lock.tarball,{redirect:'error',signal:AbortSignal.timeout(30000)});
@@ -30,9 +31,9 @@ export async function loadWindowsApi(base){
  const file=path.join(dir,'koffi-win32-x64.node');await fs.writeFile(file,native,{flag:'wx'});
  await fs.writeFile(path.join(dir,'DEPENDENCY_RECEIPT.json'),JSON.stringify({...lock,loaded_path:file,downloaded_utc:new Date().toISOString(),installer_children:0},null,2)+'\n',{flag:'wx'});
  const k=createRequire(import.meta.url)(file);if(k.version!==lock.version)throw Error('CPU dependency version mismatch');
- return windowsApi(k);
+ return windowsApi(k,environment);
 }
-export function windowsApi(k){
+export function windowsApi(k,environment){
  const lib=k.load('C:/Windows/System32/kernel32.dll');
  const FT=k.struct('B570_FT',{low:'uint32_t',high:'uint32_t'});
  const SA=k.struct('B570_SA',{length:'uint32_t',descriptor:'void *',inherit:'int'});
@@ -77,7 +78,7 @@ export function windowsApi(k){
     const size=[0];initAttr(null,1,0,size);if(!Number.isSafeInteger(size[0])||size[0]<=0||size[0]>65536)throw Error('invalid handle-list size');attrs=Buffer.alloc(size[0]);need(initAttr(attrs,1,0,size),'InitializeProcThreadAttributeList');initialized=true;
     const list=Buffer.alloc(24);k.encode(list,k.array('void *',3),io);need(updateAttr(attrs,0,0x20002,list,24,null,null),'UpdateProcThreadAttribute');
     const command=Buffer.from(quoteArg(python)+' -I -S -B '+quoteArg(script)+'\0','utf16le');
-    const env=new Map(Object.entries(process.env).filter(([,v])=>v!==undefined).map(([key,v])=>[key.toUpperCase(),v]));
+    const env=new Map(Object.entries(environment).filter(([,v])=>v!==undefined).map(([key,v])=>[key.toUpperCase(),v]));
     for(const [key,value] of Object.entries({TEMP:path.join(base,'tmp'),TMP:path.join(base,'tmp'),PYTHONDONTWRITEBYTECODE:'1',PYTHONIOENCODING:'utf-8'}))env.set(key,value);
     const block=Buffer.from([...env].sort(([a],[b])=>a.localeCompare(b)).map(([key,value])=>key+'='+value).join('\0')+'\0\0','utf16le');
     const info={si:{cb:k.sizeof(EX),flags:0x100,stdin:io[0],stdout:io[1],stderr:io[2]},attributes:attrs},p={};

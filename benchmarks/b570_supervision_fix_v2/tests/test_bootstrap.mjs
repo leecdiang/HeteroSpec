@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {gzipSync} from 'node:zlib';
+import {auditClosure} from '../host/closure_audit.mjs';
 import {ColdSession} from '../host/bootstrap_cold.mjs';
 import {quoteArg,unpackNative} from '../host/bootstrap_native.mjs';
 async function setup(t,options={}){
@@ -29,3 +30,18 @@ test('Win32 arguments quote embedded quotes and trailing backslashes',()=>{asser
 function archive(){const data=Buffer.from('native fixture'),h=Buffer.alloc(512);h.write('package/win32_x64/koffi.node');h.write(data.length.toString(8).padStart(11,'0')+'\0',124);h[156]=48;const bytes=gzipSync(Buffer.concat([h,data,Buffer.alloc(512-data.length),Buffer.alloc(1024)]));return {bytes,lock:{tarball_bytes:bytes.length,integrity:'sha512-'+crypto.createHash('sha512').update(bytes).digest('base64'),member:'package/win32_x64/koffi.node',native_bytes:data.length,native_sha256:crypto.createHash('sha256').update(data).digest('hex')}};}
 test('pinned dependency can be extracted without installer child',()=>{const a=archive();assert.equal(unpackNative(a.bytes,a.lock).toString(),'native fixture');});
 test('archive or native hash drift is refused before loading code',()=>{const a=archive();assert.throws(()=>unpackNative(Buffer.from('changed'),a.lock));assert.throws(()=>unpackNative(a.bytes,{...a.lock,native_sha256:'other'}));});
+
+test('real ColdSession.stop receipt passes closure auditor; substituted receipts fail',async t=>{
+ const f=await setup(t);await f.session.start();
+ const prefix=Buffer.from(JSON.stringify({seq:1,kind:'BROKER_ARMED'})+'\n');
+ await fs.writeFile(path.join(f.base,'task/prefix.jsonl'),prefix);
+ await fs.writeFile(path.join(f.base,'task/PROCESS_LEDGER.jsonl'),Buffer.concat([prefix,Buffer.from(JSON.stringify({seq:2,kind:'BROKER_CLOSING'})+'\n')]));
+ const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+ const ledger_prefix={path:'task/prefix.jsonl',bytes:prefix.length,sha256:hash(prefix)};
+ const manifest=Buffer.from(JSON.stringify({members:[ledger_prefix]}));await fs.writeFile(path.join(f.base,'input.json'),manifest);
+ await fs.writeFile(path.join(f.base,'audit.json'),JSON.stringify({ledger_prefix,input_manifest_path:'input.json',input_manifest_sha256:hash(manifest)}));
+ f.state.exited=true;const closed=await f.session.stop();
+ assert.equal((await auditClosure(f.base,closed,'audit.json',{write:false})).status,'TAIL_AUDIT_PASS');
+ assert.equal((await auditClosure(f.base,{exit_code:0},'audit.json',{write:false})).status,'TAIL_AUDIT_FAILED');
+ assert.equal((await auditClosure(f.base,{...closed,task_end_ns:closed.task_end_ns+1},'audit.json',{write:false})).status,'TAIL_AUDIT_FAILED');
+});

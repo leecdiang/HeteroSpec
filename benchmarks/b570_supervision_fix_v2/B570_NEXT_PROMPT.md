@@ -1,11 +1,11 @@
 # Cold-start amendment: follow this before the eight-case prompt below
 
 The original results/RESULT.md is immutable BOOTSTRAP_BLOCKED history. Write the
-new outcome to results/COLD_START_RESULT.md. This amendment replaces the old
+new outcome to results/TOOL_INTERFACE_RESULT.md; preserve existing COLD_START_RESULT.md as well. This amendment replaces the old
 unspecified bootstrap setup below. No Windows execution is claimed by source tests.
 
 1. In the ALREADY RUNNING Windows x64 Node tool service, capture
-   `globalThis.b570ToolBegin = process.hrtime.bigint()` before task preparation.
+   `globalThis.b570ToolClock = {beginMs: performance.now(), now: () => performance.now()}` before task preparation.
    Do not start shell, Git, Python, npm, compiler, or a new observer to prepare.
    Use built-in network/fs APIs to fetch the locked remote commit. Exclusively
    create `C:/hs/b570-supervision-fix-v2-20261016`; if it exists, stop without
@@ -13,17 +13,20 @@ unspecified bootstrap setup below. No Windows execution is claimed by source tes
    `BASE/repo/benchmarks/b570_supervision_fix_v2`, excluding historical results,
    caches and binaries. Validate remote Git blob identities, every source-review
    binding, and independent review report identity before importing any code.
-   Record actual existing Node/Python executable paths and identities without
-   spawning a version query. Do not fabricate previous ledgers or success marks.
+   Record the existing service capability probe and Python executable identity without
+   spawning a version query. Do not read a process global or import node:process;
+   use only public performance, nodeRepl.env and node:os interfaces. Native loading
+   must be permitted by the service; stop on any denial, without an indirect bypass. Do not fabricate previous ledgers or success marks.
 2. Use an explicit existing Python absolute path as `pythonAbsolutePath`.
    In that same service:
 
    ```javascript
    const {startCold} = await import('file:///C:/hs/b570-supervision-fix-v2-20261016/repo/benchmarks/b570_supervision_fix_v2/host/bootstrap_cold.mjs');
-   globalThis.b570 = await startCold({python: pythonAbsolutePath, toolBeginNs: globalThis.b570ToolBegin});
+   globalThis.b570 = await startCold({python: pythonAbsolutePath, toolClock: globalThis.b570ToolClock, environment: nodeRepl.env});
    ```
 
-   Node-API 8+ is required. The adapter downloads and authenticates the fixed CPU
+   The pinned bridge requires Node-API 8+; native loading itself must succeed.
+   Do not obtain process.versions through require, a VM or another module. The adapter downloads and authenticates the fixed CPU
    native bridge in BOOTSTRAP_DEPENDENCY.json, without npm/install scripts/helper
    children. This CPU Win32 binding is not a GPU plugin. If unavailable, stop
    admission; do not adapt tools on the machine. Keep this Node session and b570
@@ -42,9 +45,11 @@ unspecified bootstrap setup below. No Windows execution is claimed by source tes
    This is additional startup validation, not one of the eight cases. Failure
    stops subsequent work. Every later new process must use b570.submit with a
    unique ID and wait for its complete result before submitting the next request.
-4. Through that broker run Python tests (`-B -m unittest discover -s <tests>`) and
-   the existing Node executable (`--test <tests>/test_bootstrap.mjs
-   <tests>/test_gates.mjs`). Run `python -B <host>/compile_launcher.py --compiler <existing-csc.exe>`
+4. If no known standalone Node executable is available, stop admission before
+   startup and report that missing prerequisite; do not launch a discovery helper.
+   Through that broker run Python tests (`-B -m unittest discover -s <tests>`) and
+   an explicitly known existing Node executable (do not discover it through process.execPath) (`--test <tests>/test_bootstrap.mjs
+   <tests>/test_gates.mjs <tests>/test_tool_capabilities.mjs`). Run `python -B <host>/compile_launcher.py --compiler <existing-csc.exe>`
    through the broker to CPU-compile LauncherCapture.cs to host/LauncherCapture.dll
    and create results/BUILD_RECORD.json using the existing Windows compiler and preserve exact command, executable
    identity, stdout/stderr, exit status and DLL hash. No version-query helper may
@@ -58,7 +63,9 @@ unspecified bootstrap setup below. No Windows execution is claimed by source tes
 6. In the SAME existing Node service run `const closed = await b570.stop()`.
    Require actual OS exit, zero remaining job descendants, closed handles and
    persisted BOOTSTRAP_CLOSED.json. Load host/closure_audit.mjs in this same service
-   and use its auditClosure interface with the final raw audit to verify the tail.
+   and call `await auditClosure(BASE, closed, finalRawAuditRelativePath)` with that
+   actual returned receipt and the final raw audit to verify the tail. Do not
+   substitute a manually constructed exit-code object.
    Sending STOP alone is not closure. After stop, upload/read back/write results
    using existing-service APIs only; do not start Git/auditor/helper processes.
    On any failure, still attempt stop and preserve evidence. Missing observation

@@ -59,3 +59,9 @@ persists closure. Failed/missing receipts never qualify closure. The pre-existin
 shared service is identified separately; its historical lifetime is not charged
 as a new task process. Preparation elapsed time is included in task wall time.
 FILETIME fields cross Node as decimal strings without floating-point rounding.
+
+The public tool performance clock supplies elapsed preparation duration only, not
+a QPC timestamp. The observer samples QPC first, then the same captured public
+clock; subtracting the rounded-up duration conservatively includes the bridge
+interval. Clock origins are never compared. A reversed/nonfinite clock fails before
+process creation. Environment comes from an explicit public allowlist, not process.

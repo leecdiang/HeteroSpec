@@ -17,3 +17,11 @@ Census SHA256: `1cad65ea1816a6c0e0ae28337c17f737f184034275de4370a2583b29368d844e
 Decision SHA256: `b5ed03a307182a87db18ed588bc852239e52860799034da897b48ce0f391373a`
 
 Remote readback is pending at this data commit;no success is prefilled. After actual authentication,this establishes only the technical basis for asking Clean Block0. It does not authorize that block. All clean blocks remain unstarted;trace stays PROFILE_UNAVAILABLE. Historical PR116/113/114/110,B570,paper,main,releases and automation remain unchanged.
+
+## Actual remote closure and independent reconstruction
+
+Census data commit`60764b0fe7554b7dbdea021b4cb0c771927b3013`was pushed. The frozen offline_s1b census-readback downloaded and byte-authenticated CENSUS,DECISION,RECEIPTS.zip and MANIFEST. CENSUS_AUTHENTICATED is preserved at its execution root and copied below. A separate new Python interpreter restored all26receipt members into an absent fresh root,compared every recovered byte to raw,reran the unchanged support analyzer and independently rechecked shared-core/41IAT,module file identities and both process jobs. Result PASS;no GPU code was loaded by this audit.
+
+CPU delivery through this independent audit: 11.288037599995732s registered wall/94.55730620014947s conservative owned. The separately recorded execution-preflight CPU identity check cost19.922s and issued no GPU query. Final publication/readback costs are appended by the same cumulative ledger;no earlier receipts are overwritten.
+
+Technical condition to REQUEST Clean Block0 is satisfied. Its648calls,72warmups and576measurements are NOT authorized or started. No actual clean ordinary output/allocation or timing qualification was established by this support Census.

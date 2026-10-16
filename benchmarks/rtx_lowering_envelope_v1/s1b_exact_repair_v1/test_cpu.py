@@ -7,7 +7,7 @@ import publication as P
 from lifecycle import Child
 
 def main():
-    out=V/'cpu_raw'/'regression_complete';out.mkdir(exist_ok=False);cases=[]
+    out=V/'cpu_raw'/'regression_bound_final';out.mkdir(exist_ok=False);cases=[]
     def case(name, fn, good=True):
         error=None
         try:fn()
@@ -36,6 +36,7 @@ def main():
     copied=out/'copied.json';shutil.copyfile(artifact,copied);f2=f|dict(execution_bound_census=pin(copied));f2p=out/'F02.json';save(f2p,f2)
     case('authorized_byte_copy',lambda:admit(f2,a|dict(F0_sha256=sha(f2p)),f2p))
     case('F0_hash_mismatch',lambda:admit(f,a|dict(F0_sha256='0'*64),f0),False)
+    case('caller_F0_body_mismatch',lambda:admit(f|dict(registration_id='forged'),a,f0),False)
     case('registration_mismatch',lambda:admit(f,a|dict(registration_id='other'),f0),False)
     case('wrong_Decision_hash',lambda:admit(f,a|dict(decision_sha256='0'*64),f0),False)
     # Actual Git ignore/index/tree boundaries in an isolated CPU fixture repo.

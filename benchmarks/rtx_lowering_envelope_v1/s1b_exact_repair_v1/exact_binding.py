@@ -1,5 +1,5 @@
 """Exact-byte admission. Census JSON is NEVER parsed or normalized here."""
-import hashlib
+import hashlib, json
 from pathlib import Path
 
 def digest(data):
@@ -17,8 +17,12 @@ def exact_file(pin):
 def admit(freeze, approval, f0_path):
     # Hash the F0 bytes too. The caller consumes the returned Census bytes,
     # rather than re-opening a path after a separate semantic/hash check.
-    if digest(Path(f0_path).read_bytes()) != approval['F0_sha256']:
+    f0_bytes = Path(f0_path).read_bytes()
+    if digest(f0_bytes) != approval['F0_sha256']:
         raise ValueError('exact F0 mismatch')
+    exact_freeze = json.loads(f0_bytes)
+    if freeze != exact_freeze:
+        raise ValueError('caller freeze differs from exact F0 content')
     if approval['registration_id'] != freeze['registration_id']:
         raise ValueError('registration mismatch')
     c = freeze['execution_bound_census']

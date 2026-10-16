@@ -1,4 +1,4 @@
-# Bridge v2 Census — complete support, remote certification pending
+# Bridge v2 Census — complete support, remote authenticated
 
 Run pr114-s1a-bridge-v2. One approved census, no retry.
 Actual support120/120 graphs and1806/1806 node queries. MQ/PQ/QB/QH_C/QH_D each24/24.
@@ -42,3 +42,24 @@ Numerical approval is met. This study still needs separate BRIDGE_V2_NUMERICAL_E
 author approval bound to all three actual hashes. No Numerical/S1B/trace/profile/
 actor/natural request/S2/S3/RTL executed or authorized. Old PR113/114 evidence,
 main,paper,releases and automation remain unchanged. PR116 stays Draft.
+
+## Actual CPU certification closure
+
+Frozen offline.py census-readback actually authenticated Census and Decision at
+a148db1def2740345fb6048e42f645616b287abc. Receipt archive and its complete manifest
+were also downloaded/authenticated,all27members restored into an independent CPU
+directory;the independent frozen decision evaluator reproduced the same decision.
+No GPU action occurred after the census. CENSUS_AUTHENTICATED is an actual receipt,
+not a predicted status.
+
+Two frozen CPU workflow actions COMPLETE:registered wall2.719339900s,
+conservative owned8.158026000s,8CPU job process starts including helpers.
+Inclusive delivery elapsed at closure129.907960s<900;owned<2700. This owned count
+covers frozen jobs;ordinary Git/OS/Python tooling is not globally process-accounted.
+A separate compact closure packet preserves original author/prestart/launch/exit,
+CPU job/remote/readback metadata without duplicating full inputCAS.
+
+All1847historical files reverified;old PR113/114 untouched. No Numerical approval,
+controller ledger or output root exists. Technical condition for requesting240graph
+Numerical approval is satisfied;actual numerical execution and correspondence,
+full actor and performance remain NOT_ESTABLISHED. Stop here.

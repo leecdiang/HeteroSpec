@@ -38,9 +38,12 @@ def main():
     for n,good in [('boundary_999999999',True),('boundary_1000000000',True),('boundary_1000000001',False)]:assert (boundaries[n]['error'] is None)==good
     ok('inclusive_exact_nanosecond_boundaries')
     total=0
-    for name in ['CPU_TESTS.json','CPU_MONITOR_TESTS_FINAL.json','CPU_STRICT_AUDIT_TESTS.json','CPU_IDENTITY_CONTRACT_TESTS.json','CPU_POST_FREEZE_TESTS.json']:
+    for name in ['CPU_TESTS.json','CPU_MONITOR_TESTS_FINAL.json','CPU_STRICT_AUDIT_TESTS.json','CPU_IDENTITY_CONTRACT_TESTS.json','CPU_POST_FREEZE_TESTS.json','CPU_RESOURCE_GUARD_TESTS.json']:
         r=load(V/name);assert r['status']=='PASS';total+=r.get('test_count',r.get('test_total',0))
-    assert total==177;ok('177_CPU_tests_recorded_pass_including_negative_expectations')
+    assert total==180;ok('180_CPU_tests_recorded_pass_including_negative_expectations')
+    r=load(V/'CPU_RESOURCE_GUARD_TESTS.json')['cases'][-1]
+    assert r['watchdog_decision']=='FAIL' and r['missing_sample_count']>=1 and r['observed_max_coverage_gap_ns']>1_000_000_000
+    ok('actual_resource_check_stall_is_independently_rejected')
     for row in load(V/'HISTORY_BEFORE.json')['files']:assert sha(row['path'])==row['sha256']
     ok('all4941_historical_files_unchanged')
     assert not Path(f['execution_root']).exists() and not (original/'execution_ledger').exists();ok('new_GPU_execution_never_started')

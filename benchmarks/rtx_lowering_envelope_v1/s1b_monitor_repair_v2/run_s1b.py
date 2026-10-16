@@ -8,6 +8,7 @@ from common import V,RUN,load,save,sha,wire,env
 from bounded import Deadline,ByteLedger,durable
 from identified_state import IdentifiedState
 from strict_lifecycle import StrictChild
+from resource_guard import ResourceGuard
 from monitor_contract import identities,MAX_MONITOR_INTERVAL_NS
 from lifecycle import Child,process_commit
 from admission import owned_conflicts,module_inventory,readiness
@@ -60,6 +61,7 @@ def main():
         state.peak_commit=max(state.peak_commit,process_commit());assert state.peak_commit<=limits['controller_commit']
         assert shutil.disk_usage(root.anchor).free>=limits['disk_free_during']
     deadline=Deadline(state,min(budget['wall_seconds'],budget['owned_seconds']/5),worker.terminate,grace=5,monitor=monitor).start();account=ByteLedger(root,limits['raw_bytes'],root/(stage+'_BYTES.jsonl'))
+    runtime_guard=ResourceGuard(monitor,deadline.guard)
     def settle(producer=None,initial=False):
         fresh=[p for p in (root/'cas').glob('*.bin') if p.relative_to(root).as_posix() not in account.files]
         for p in fresh:assert p.stem==sha(p)
@@ -79,10 +81,10 @@ def main():
         for s in slots:
             deadline.guard();state.reserve_start(s,deadline.remaining(),260 if a.stage=='census' else 80)
             current=root/'census' if a.stage=='census' else root/'clean'/f'{s["index"]:03d}';current.mkdir(parents=True,exist_ok=False);account.reserve(limits['per_host_reserve'])
-            owned_conflicts(f);save(current/'SLOT.json',s);readiness(worker,current,f,deadline.guard,on_start=lambda pid:setattr(state,'active_pid',pid))
+            owned_conflicts(f);save(current/'SLOT.json',s);readiness(worker,current,f,runtime_guard,on_start=lambda pid:setattr(state,'active_pid',pid))
             job=wire(s,V/'F0.json');save(current/'JOB.json',job);host=f['hosts']['clean']['path'];mode='--gpu-census' if a.stage=='census' else '--gpu-clean'
             save(current/'BEFORE_START.json',dict(slot=s['id'],graph_cap=s['graph_computes'],warmups=s['warmups']))
-            worker.run([host,mode,str(current/'JOB.json'),s['native_output']],current/'native',240 if a.stage=='census' else 60,env(f['runtime_directory']),limits['native_commit'],deadline.guard,on_start=state.native_start)
+            worker.run([host,mode,str(current/'JOB.json'),s['native_output']],current/'native',240 if a.stage=='census' else 60,env(f['runtime_directory']),limits['native_commit'],runtime_guard,on_start=state.native_start)
             n=current/'native';r=load(n/('CENSUS.json' if a.stage=='census' else 'RECORD.json'));inventory=module_inventory(r['modules'],f);save(current/'MODULE_FILES.json',inventory)
             if a.stage=='census':
                 I.process_identity(current,'native',dict(f,executable=host),240);I.process_identity(current,'readiness',f);I.verify_modules(n,r,dict(f,executable=host,executable_sha256=f['hosts']['clean']['sha256']),inventory);decision=audit.census(r,plan,expected);save(root/'CENSUS_DECISION.json',decision)

@@ -24,7 +24,7 @@ requires the previous case to have closed without an unexplained failure;
 events outside cases are fatal and cannot be reassigned to a previous fault.
 
 BOOTSTRAP_REGISTRY.json must prospectively identify each task-owned outer
-process and the task start boundary. BOOTSTRAP_V2_CLOSED.json must contain
+process and the task start boundary. BOOTSTRAP_CLOSED.json must contain
 actual OS exit evidence for precisely those identities and the task end
 boundary. The old PR117 missing fields cannot satisfy this schema retrospectively.
 
@@ -50,3 +50,12 @@ the snapshot's compiled evidence directory with byte/hash/source identity, while
 excluding that DLL from the packaged source-only import tree. Runtime source caps
 and build logs remain authenticated members. Full confirmation snapshots keep
 the separately frozen DLL in their ordinary source set.
+
+Cold bootstrap uses one new PROCESS_LEDGER.jsonl and no predecessor. The existing
+Node tool service loads the hash-pinned CPU Win32 bridge, creates Python suspended,
+records actual PID/creation FILETIME before resuming, and retains its OS handle
+through exit. It observes zero remaining outer-job processes, closes handles, then
+persists closure. Failed/missing receipts never qualify closure. The pre-existing
+shared service is identified separately; its historical lifetime is not charged
+as a new task process. Preparation elapsed time is included in task wall time.
+FILETIME fields cross Node as decimal strings without floating-point rounding.

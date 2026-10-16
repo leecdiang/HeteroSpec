@@ -39,6 +39,12 @@ if args.round<0:
     full=not args.cases
     need(sum(r['full_suite'] for r in previous)+int(full)<=2,'full suite quota')
     need(sum(r['targeted_cases'] for r in previous)+(0 if full else len(chosen))<=24,'targeted quota')
+    review_path=DESIGN/'SOURCE_REVIEW_FREEZE.json';build_path=DESIGN/'results/BUILD_RECORD.json'
+    review=load(review_path);build=load(build_path)
+    from development_binding import source_hashes
+    need(review.get('scope')=='source_review_only' and review.get('review_status')=='scoped-clean','reviewed development source required')
+    need(build['source_review_sha256']==sha(review_path) and build['source_hashes']==source_hashes(review),'reviewed build binding required')
+    need(hashes=={**source_hashes(review),'host/LauncherCapture.dll':build['dll_sha256']},'development runtime source drift')
     registration=dict(id=args.id,revision=args.revision,full_suite=full,targeted_cases=0 if full else len(chosen),code_hashes=hashes,registered_ns=now(),purpose='CPU development; all attempts retained')
     with registry_path.open('a',encoding='utf-8',newline='\n') as f:f.write(json.dumps(registration,sort_keys=True)+'\n');f.flush();os.fsync(f.fileno())
 else:
@@ -57,5 +63,6 @@ caps=external/'source_caps';caps.mkdir()
 for rel,digest in hashes.items():
     p=caps/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((DESIGN/rel).read_bytes());need(sha(p)==digest,'source cap changed during registration')
 cfg=dict(schema=1,id=args.id,root=str(root),revision=args.revision,round=args.round,order=args.order,freeze_sha256=args.freeze,cases=cases,registry=registry,code_hashes=hashes,registered_ns=now(),storage_admission=storage_admission,GPU_queries=0,GPU_initializations=0,model_file_reads=0,model_requests=0,graph_computes=0,scientific_native_starts=0,launcher_log_dir=str(external/'launcher'),launcher_seconds=180,protected_roots=[str(protected),str(DESIGN)])
+if args.round<0:cfg.update(source_review_sha256=sha(review_path),build_record_sha256=sha(build_path))
 write_new(root/'CONFIG.json',cfg);write_new(external/'BOUNDARY_TESTS.json',boundary_tests())
 print(json.dumps(dict(config=str(root/'CONFIG.json'),code_hashes=hashes,cases=[r['id'] for r in cases],registered_ns=cfg['registered_ns'])))

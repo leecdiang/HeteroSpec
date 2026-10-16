@@ -21,7 +21,7 @@ export async function tailBinding(base,raw,closing,auditBytes){
  try{
   if(closing.raw_audit_sha256!==hash(auditBytes)||closing.input_manifest_sha256!==raw.input_manifest_sha256||JSON.stringify(closing.ledger_prefix)!==JSON.stringify(raw.ledger_prefix))return false;
   const prefix=await evidencePrefix(base,raw),parts=[];
-  const names=['task/PROCESS_LEDGER.jsonl','task/PROCESS_LEDGER_v2.jsonl'];
+  const names=['task/PROCESS_LEDGER.jsonl'];
   if(closing.ledger_parts?.length!==names.length)return false;
   for(let i=0;i<names.length;i++){const r=closing.ledger_parts[i],bytes=await member(base,names[i]);if(r.path!==names[i]||r.sha256!==hash(bytes))return false;parts.push(bytes);}
   if(!Buffer.concat(parts).subarray(0,prefix.length).equals(prefix))return false;

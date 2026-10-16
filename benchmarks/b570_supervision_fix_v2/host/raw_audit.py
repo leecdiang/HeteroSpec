@@ -14,6 +14,7 @@ from evidence_io import Evidence, strict_json
 from audit_integrity import round_integrity
 from output_integrity import positive_output, capture_files
 from diagnostics import diagnostic
+from development_binding import validate as development_binding
 
 ORIGINAL=PureWindowsPath('C:/hs/b570-supervision-fix-v2-20261016')
 def digest(data):return hashlib.sha256(data).hexdigest()
@@ -110,6 +111,17 @@ def audit(root,manifest_relative='AUDIT_INPUT_MANIFEST.json',ledger_relative='ta
                 caps_ok=caps_ok and all(digest(inputs.bytes(local(r['downloaded_path'])))==r['sha256'] for r in remote['members'])
                 caps_ok=caps_ok and cfg['id']==freeze['rounds'][cfg['round']]['id'] and cfg['order']==freeze['rounds'][cfg['round']]['order']
             else:caps_ok=False
+        else:
+            try:
+                design=root/'repo/benchmarks/b570_supervision_fix_v2'
+                review_path=design/'SOURCE_REVIEW_FREEZE.json';build_path=design/'results/BUILD_RECORD.json'
+                caps_ok=caps_ok and development_binding(cfg,read_json(review_path),digest(inputs.bytes(review_path)),
+                    read_json(build_path),digest(inputs.bytes(build_path)),ledger)
+                build=read_json(build_path)
+                artifacts=[root/name for name in inputs.members if name.startswith('task/snapshots/') and name.endswith('/compiled/LauncherCapture.dll')]
+                caps_ok=caps_ok and bool(artifacts) and any(digest(inputs.bytes(p))==build['dll_sha256'] for p in artifacts)
+            except (ValueError,KeyError,OSError,TypeError) as error:
+                caps_ok=False;problems.append(cfg['id']+': development binding: '+diagnostic(error,root))
         actual_order=[r['case_id'] for r in rows if r['event']=='CASE_BEGIN']
         if actual_order!=[r['id'] for r in cfg['cases']][:len(actual_order)]:problems.append(cfg['id']+': case order mismatch')
         if cfg['round']>=0 and actual_order!=confirmation_order(cfg['round'])[:len(actual_order)]:problems.append(cfg['id']+': confirmation order differs from fixed matrix')

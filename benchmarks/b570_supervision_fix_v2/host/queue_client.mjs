@@ -5,17 +5,17 @@ import crypto from 'node:crypto';
 const base='C:/hs/b570-supervision-fix-v2-20261016';
 export async function publish(index,id,argv,extra={}) {
   if(!/^[A-Za-z0-9_-]+$/.test(id)) throw Error('invalid request ID');
-  const lock=base+'/queue-v2/.publish-lock';
+  const lock=base+'/queue/.publish-lock';
   await fs.mkdir(lock);
   try {
   // Submission is serialized, including the broker's between-command inventory.
   // A result must be completely parseable before another publication starts.
-  for(const name of await fs.readdir(base+'/queue-v2')) {
+  for(const name of await fs.readdir(base+'/queue')) {
     if(!name.endsWith('.request.json')) continue;
-    const result=base+'/queue-v2/'+name.replace('.request.json','.result.json');
+    const result=base+'/queue/'+name.replace('.request.json','.result.json');
     try {JSON.parse(await fs.readFile(result,'utf8'));} catch(e) {throw Error('prior command has not closed: '+name);}
   }
-  const stem=base+'/queue-v2/'+String(index).padStart(4,'0')+'-'+id;
+  const stem=base+'/queue/'+String(index).padStart(4,'0')+'-'+id;
   const data=Buffer.from(JSON.stringify({id,argv,...extra,env:{TEMP:base+'/tmp',TMP:base+'/tmp',PYTHONDONTWRITEBYTECODE:'1',PYTHONIOENCODING:'utf-8',...extra.env}}));
   if(data.length>65536) throw Error('request reservation');
   try {await fs.access(stem+'.request.json');throw Error('request already registered');} catch(e) {if(e.code!=='ENOENT')throw e;}

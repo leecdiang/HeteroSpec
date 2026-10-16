@@ -6,13 +6,13 @@ from common import BASE,DESIGN,write_new,sha
 p=argparse.ArgumentParser();p.add_argument('--id',required=True);p.add_argument('--source-only',action='store_true');a=p.parse_args()
 folder=BASE/'task/snapshots'/a.id;folder.mkdir(parents=True,exist_ok=False)
 parts=[BASE/'task/PROCESS_LEDGER.jsonl']
-if (BASE/'task/PROCESS_LEDGER_v2.jsonl').exists():parts.append(BASE/'task/PROCESS_LEDGER_v2.jsonl')
+# Cold run has exactly one real ledger; never an empty predecessor placeholder.
 lines=[]
 for part in parts:lines.extend(part.read_bytes().splitlines(keepends=True))
 ends=[i for i,line in enumerate(lines) if json.loads(line)['kind']=='COMMAND_END'];assert ends
 (folder/'LEDGER.jsonl').write_bytes(b''.join(lines[:ends[-1]+1]))
 paths=[]
-for sub in ('runs','e0','sources','frozen_remote','queue','queue-v2'):
+for sub in ('runs','e0','sources','frozen_remote','queue','deps'):
     if (BASE/sub).exists():paths.extend(p for p in (BASE/sub).rglob('*') if p.is_file())
 paths.extend(source_members(DESIGN,folder,source_only=a.source_only))
 paths.extend(p for p in DESIGN.iterdir() if p.is_file() and p.suffix in ('.py','.json','.md') and p.name not in ('IMPLEMENTATION_STATUS.md',))

@@ -1,3 +1,80 @@
+# Cold-start amendment: follow this before the eight-case prompt below
+
+The original results/RESULT.md is immutable BOOTSTRAP_BLOCKED history. Write the
+new outcome to results/COLD_START_RESULT.md. This amendment replaces the old
+unspecified bootstrap setup below. No Windows execution is claimed by source tests.
+
+1. In the ALREADY RUNNING Windows x64 Node tool service, capture
+   `globalThis.b570ToolBegin = process.hrtime.bigint()` before task preparation.
+   Do not start shell, Git, Python, npm, compiler, or a new observer to prepare.
+   Use built-in network/fs APIs to fetch the locked remote commit. Exclusively
+   create `C:/hs/b570-supervision-fix-v2-20261016`; if it exists, stop without
+   cleaning or reusing it. Materialize this directory at
+   `BASE/repo/benchmarks/b570_supervision_fix_v2`, excluding historical results,
+   caches and binaries. Validate remote Git blob identities, every source-review
+   binding, and independent review report identity before importing any code.
+   Record actual existing Node/Python executable paths and identities without
+   spawning a version query. Do not fabricate previous ledgers or success marks.
+2. Use an explicit existing Python absolute path as `pythonAbsolutePath`.
+   In that same service:
+
+   ```javascript
+   const {startCold} = await import('file:///C:/hs/b570-supervision-fix-v2-20261016/repo/benchmarks/b570_supervision_fix_v2/host/bootstrap_cold.mjs');
+   globalThis.b570 = await startCold({python: pythonAbsolutePath, toolBeginNs: globalThis.b570ToolBegin});
+   ```
+
+   Node-API 8+ is required. The adapter downloads and authenticates the fixed CPU
+   native bridge in BOOTSTRAP_DEPENDENCY.json, without npm/install scripts/helper
+   children. This CPU Win32 binding is not a GPU plugin. If unavailable, stop
+   admission; do not adapt tools on the machine. Keep this Node session and b570
+   object alive through closure; never reset it. The adapter creates the broker
+   suspended, registers its OS identity, then resumes it. No predecessor required.
+3. Poll `await b570.ready()` for at most 10 seconds in the existing service.
+   On failure stop and preserve startup receipts/stdout/stderr. Before any tests,
+   submit exactly one smoke request:
+
+   ```javascript
+   await b570.submit('bootstrap-smoke', [pythonAbsolutePath,'-I','-S','-B','-c',"print('BOOTSTRAP_OK')"], {role:'bootstrap-smoke',timeout:10});
+   ```
+
+   Wait for `await b570.result('bootstrap-smoke')`; require real exit zero,
+   correct output, actual creation/exit ledger records and no open descendants.
+   This is additional startup validation, not one of the eight cases. Failure
+   stops subsequent work. Every later new process must use b570.submit with a
+   unique ID and wait for its complete result before submitting the next request.
+4. Through that broker run Python tests (`-B -m unittest discover -s <tests>`) and
+   the existing Node executable (`--test <tests>/test_bootstrap.mjs
+   <tests>/test_gates.mjs`). Run `python -B <host>/compile_launcher.py --compiler <existing-csc.exe>`
+   through the broker to CPU-compile LauncherCapture.cs to host/LauncherCapture.dll
+   and create results/BUILD_RECORD.json using the existing Windows compiler and preserve exact command, executable
+   identity, stdout/stderr, exit status and DLL hash. No version-query helper may
+   bypass the broker. Continue with exactly the eight cases below, once each,
+   serially using `run_dev.py --id <unique-id> --revision 0 --cases <exact-case>`;
+   stop at the first failure/control-point miss. Do not run confirm.py.
+5. Run every snapshot, raw audit, archive and download/restore child through the
+   same broker BEFORE stop. Development snapshots require --source-only. Authenticate
+   the package source against this commit's SOURCE_REVIEW_FREEZE, and retain the
+   last raw audit's exact ledger prefix. No old freeze or results may be reused.
+6. In the SAME existing Node service run `const closed = await b570.stop()`.
+   Require actual OS exit, zero remaining job descendants, closed handles and
+   persisted BOOTSTRAP_CLOSED.json. Load host/closure_audit.mjs in this same service
+   and use its auditClosure interface with the final raw audit to verify the tail.
+   Sending STOP alone is not closure. After stop, upload/read back/write results
+   using existing-service APIs only; do not start Git/auditor/helper processes.
+   On any failure, still attempt stop and preserve evidence. Missing observation
+   remains missing; never launch a replacement observer to invent closure.
+
+Acceptance: frozen reviewed source; real cold smoke; all eight cases reach their
+registered control points and satisfy raw evidence; complete process/OS closure,
+budgets, remote recovery and exact audit reproduction. Only then report
+SMALL_WINDOWS_VALIDATION_PASS. Otherwise ENGINEERING_BLOCKED (or BOOTSTRAP_BLOCKED
+when no case can be admitted), remaining cases UNSTARTED. No ENGINEERING_READY,
+scientific performance result or paper claim. Preserve PR115/117 and old PR119
+result; remain Draft. The operator must report source/bridge identities and the
+pre-existing observer separately from task-owned processes.
+
+---
+
 # B570 小规模 Windows 验证执行 prompt
 
 本文件供负责人确认本 PR 最终独立审查通过后，手动发给 B570 执行。它不是本次本地修复已运行 Windows 的记录，也不自动启动任务。

@@ -26,7 +26,7 @@ async function inventory(root) {
 }
 export async function auditClosure(base,toolExit,auditPath,{write=true}={}) {
   const first=await fs.readFile(base+'/task/PROCESS_LEDGER.jsonl');
-  const second=await fs.readFile(base+'/task/PROCESS_LEDGER_v2.jsonl');
+  const second=Buffer.alloc(0); // Cold ledger: no predecessor, no fabricated empty file.
   const rows=exactJson('['+Buffer.concat([first,second]).toString().trim().split('\n').join(',')+']');
   const starts=new Map(),ends=new Map(),errors=[];let lastSeq=0,life=0;
   for(const r of rows){
@@ -46,11 +46,14 @@ export async function auditClosure(base,toolExit,auditPath,{write=true}={}) {
   for(const key of starts.keys())if(!ends.has(key))errors.push('unclosed task child '+key);
   const auditBytes=await fs.readFile(base+'/'+auditPath),raw=exactJson(auditBytes.toString('utf8'));
   try{const prefix=await evidencePrefix(base,raw);if(!Buffer.concat([first,second]).subarray(0,prefix.length).equals(prefix))errors.push('final ledger does not extend selected audit prefix');}catch(e){errors.push('selected raw prefix binding: '+e.message);}
-  const close=exactJson(await fs.readFile(base+'/task/BOOTSTRAP_V2_CLOSED.json','utf8'));
+  const close=exactJson(await fs.readFile(base+'/task/BOOTSTRAP_CLOSED.json','utf8'));
   if(close.broker_exit_code!==0||toolExit.exit_code!==0)errors.push('outer closure failed');
   const missing=[];let bootstrap=null;
   try{bootstrap=exactJson(await fs.readFile(base+'/task/BOOTSTRAP_REGISTRY.json','utf8'));}
   catch(e){missing.push('Prospective bootstrap registry unavailable');}
+  if(bootstrap?.mode!=='cold-win32-v1'||close.mode!=='cold-win32-v1'||close.status!=='OUTER_CLOSED_SUCCESS'||close.handles_closed!==true||close.job_active_processes!==0||!Array.isArray(close.errors)||close.errors.length)errors.push('cold outer closure not successful');
+  if(JSON.stringify(bootstrap?.ledger_parts)!==JSON.stringify(['task/PROCESS_LEDGER.jsonl']))errors.push('incorrect cold ledger set');
+  if(close.task_begin_ns!==bootstrap?.task_begin_ns)errors.push('outer wall boundary mismatch');
   const observed=close.outer_processes??[];
   const expected=bootstrap?.outer_processes??[];
   if(!expected.length)missing.push('No prospective outer-process identities');
@@ -79,7 +82,7 @@ export async function auditClosure(base,toolExit,auditPath,{write=true}={}) {
     task_child_lifetime_sum_seconds:life,outer_container_starts_separately:outerSeen.size,
     charged_process_lifetime_seconds:missing.length?null:chargedLife,engineering_wall_seconds:wall,
     storage,closing_delivery_reserve_bytes:64*1024**2,
-    ledger_parts:[{path:'task/PROCESS_LEDGER.jsonl',sha256:hash(first)},{path:'task/PROCESS_LEDGER_v2.jsonl',sha256:hash(second)}],
+    ledger_parts:[{path:'task/PROCESS_LEDGER.jsonl',sha256:hash(first)}],
     closing_tool_receipt:toolExit,bootstrap_missing_fields:missing,
     scope:'Only actual once-per-process OS lifetimes. Missing observations are failures, never fixed allowances.'};
   if(write)await fs.writeFile(base+'/repo/benchmarks/b570_supervision_fix_v2/results/TASK_CLOSING.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});

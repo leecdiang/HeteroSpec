@@ -96,3 +96,18 @@ required. Only after actual census/decision seal and authenticated readback can
 separate BRIDGE_V2_NUMERICAL_EXACT authorize the same entry with --stage numerical.
 No automatic next stage,performance timing,trace,actor,natural request,S2/S3 or
 hardware authority. Historical PRs/main/paper/releases/automation are unchanged.
+
+## Actual preparation closure
+
+At data commit d07cd246f9898ff89deee7e27aaa2eabe7aab57d, authenticated GitHub
+readback matched complete F0,PLAN,implementation review and CPU archive bytes.
+Fresh CPU restore D:/hs114-s1a-bridge-v2-cpu-fresh verified all941members and29
+source-role hashes;actual archived CPU records/240slots were reconstructed. This
+is CPU preparation evidence only,not actual CUDA support or numerical execution.
+AUTHENTICATED_F0.json and REMOTE_F0_BYTES.json are real readback receipts.
+The first delivery command had an incorrect working directory and sparse-index
+add refusal;no commit/experiment resulted. Recovery stayed CPU-only;original
+failure details retained in DELIVERY_PREPARATION_FAILURES.json.
+
+Final status: CPU_READY_FOR_SEPARATE_CENSUS_REVIEW. No GPU activity in this task;
+no real stage approval. A quiet window is not guaranteed or probed here.

@@ -80,6 +80,8 @@ operation_timestamp=null
 
 [RAW_EVIDENCE.zip](results/RAW_EVIDENCE.zip) 为933,333B，SHA256 `db488f200650f7a41f88dd026e5ccef97331514b97546ef3a9ab92c7017cb3ed`；[RAW_MANIFEST.json](results/RAW_MANIFEST.json) 列出600个成员、3,753,991B解压字节，包含两轮已保留的每case原始记录/输出、原始通知、源码快照、配置、资产恢复证明、设计/实际审查日志及独立审计源码；上述总stderr与生命周期缺口不能被归档成功追认补齐。全部本地成员已解压验哈希。继承模型/数值资产由固定来源和准确哈希引用，不伪称已装入这个CPU证据包。
 
-存储采用保守口径，连整个新managed worktree的12,136,101,863B checkout都计入；外部准备127,893,187B，第二份远端下载933,333B、完整解压恢复3,753,991B及16MiB交付余量合计12,285,459,590B，低于12,884,901,888B。旧主工作区、旧证据和其他任务未删除或改动。最终远端实际下载、恢复重算与最新存储回执在 results/REMOTE_RESTORE.json 及PR正文认证；这里不预先声称尚未完成的网络操作。
+存储采用保守口径，连整个新managed worktree的12,136,101,863B checkout都计入；外部准备127,893,187B，第二份远端下载933,333B、完整解压恢复3,753,991B及16MiB交付余量合计12,285,459,590B，低于12,884,901,888B。旧主工作区、旧证据和其他任务未删除或改动。
+
+已从实际推送提交 `372c016e73b09d1abba790baa87888b3be777a62` 下载完整远端933,333B归档，保存到新的 remote_recovery 目录，逐一认证600成员并实际写入全新恢复树。远端Git blob为 `f83af9a8c716ea1fde2fb6c76cae0d2aadbbef3a`。执行的是下载包内未修改的独立审计器（SHA256 `1f73617068bb4fc81fe802c2b3eb9a54d7ad5ba0e5a3fda3f14176960904c278`），重算输出与远端及本地原独立报告逐字节一致，SHA256 `63330a92181b4f25ff018e6f0a0d9bd5bd21fcc1725b82892f22dfc0530cbf93`。见 [REMOTE_RESTORE.json](results/REMOTE_RESTORE.json)。保留两份完整归档，未第三次运行集成测试或执行科学程序；缺失证据仍然缺失。
 
 科学执行F0未生成，也没有新的GPU运行命令。仅封存 [S0_EVIDENCE_SNAPSHOT.json](results/S0_EVIDENCE_SNAPSHOT.json)，明确是已结束的CPU工程证据，不是前瞻执行许可。保持所有后续坐标未准入，在本次协议内停止，不另开修复轮或研究方向。

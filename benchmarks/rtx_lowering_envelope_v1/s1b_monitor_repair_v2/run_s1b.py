@@ -9,6 +9,7 @@ from bounded import Deadline,ByteLedger,durable
 from identified_state import IdentifiedState
 from strict_lifecycle import StrictChild
 from resource_guard import ResourceGuard
+from clock_source import require_clock
 from monitor_contract import identities,MAX_MONITOR_INTERVAL_NS
 from lifecycle import Child,process_commit
 from admission import owned_conflicts,module_inventory,readiness
@@ -16,6 +17,7 @@ import identity as I
 import audit
 
 def check(f,p):
+    assert require_clock()==f['monitor_contract']['actual_clock']
     assert f['run_id']==p['run_id']==RUN and f['stage']=='S1B_COST_V1' and not f.get('CPU_fixture_only')
     identities(f,p)
     identities(f,f['monitor_contract'])

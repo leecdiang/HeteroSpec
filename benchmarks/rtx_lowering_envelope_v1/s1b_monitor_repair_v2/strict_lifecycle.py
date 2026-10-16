@@ -4,6 +4,7 @@ No GPU or device-query API is imported or executed by this module. Actual GPU
 commands can only be supplied by the separately gated stage controller.
 """
 import ctypes,os,subprocess,threading,time,uuid,json,hashlib,sys
+from clock_source import clock_ns,require_clock
 from monitor_contract import MAX_MONITOR_INTERVAL_NS,encode_sample
 from ctypes import wintypes as W
 from pathlib import Path
@@ -16,6 +17,7 @@ def process_commit():
     assert ps.GetProcessMemoryInfo(W.HANDLE(-1),ctypes.byref(c),ctypes.sizeof(c));return c.private
 class StrictChild:
     def __init__(self,helper,contract):
+        require_clock()
         self.contract=contract
         assert contract["max_monitor_interval_ns"]==MAX_MONITOR_INTERVAL_NS
         self.k=ctypes.WinDLL('kernel32',use_last_error=True);k=self.k
@@ -84,7 +86,7 @@ class StrictChild:
             assert k.AssignProcessToJobObject(job,int(p._handle)),'assign owned child job'
             for pipe,suffix in ((p.stdout,'.stdout'),(p.stderr,'.stderr')):
                 t=threading.Thread(target=consume,args=(pipe,prefix.with_suffix(suffix)),daemon=True);t.start();threads.append(t)
-            armed=time.monotonic_ns();token=uuid.uuid4().hex
+            armed=clock_ns();token=uuid.uuid4().hex
             mon_paths={key:str(prefix.with_suffix('.'+suffix)) for key,suffix in [('samples_path','MONITOR_SAMPLES.jsonl'),('ready_path','MONITOR_READY.json'),('result_path','MONITOR.json'),('monitor_error_path','MONITOR_ERROR.json'),('resume_path','RESUME.json')]}
             config=dict(mon_paths,CPU_fixture_only=self.contract.get('CPU_fixture_only',False),test_hooks_enabled=bool(hooks),run_id=self.contract['run_id'],execution_id=self.contract['execution_id'],token=token,target_pid=p.pid,target_creation_filetime=creation,job_name=job_name,armed_ns=armed,native_timeout_ns=int(timeout*1e9),max_interval_ns=MAX_MONITOR_INTERVAL_NS,config_token_sha256=hashlib.sha256(token.encode()).hexdigest())
             config_path=prefix.with_suffix('.MONITOR_CONFIG.json');save(config_path,config)
@@ -108,7 +110,7 @@ class StrictChild:
                         observed=Extended();assert k.QueryInformationJobObject(job,9,ctypes.byref(observed),ctypes.sizeof(observed),None)
                         assert observed.peak_job<=memory+128*1024**2
                         if not alive():break
-                        stamp=time.monotonic_ns()
+                        stamp=clock_ns()
                         row=dict(run_id=config['run_id'],execution_id=config['execution_id'],token=token,target_pid=p.pid,sequence=sequence,monotonic_ns=stamp,target_alive=True,resource_valid=True,private_commit_bytes=counters.private,job_peak_commit_bytes=observed.peak_job)
                         line,previous=encode_sample(row,previous)
                         assert sequence<1500 and len(line)<2048
@@ -116,7 +118,7 @@ class StrictChild:
                         sequence+=1
                         if monitor_stop.wait(.05):break
                 except BaseException as e:
-                    if alive() and not Path(mon_paths['monitor_error_path']).exists():save(mon_paths['monitor_error_path'],dict(error=repr(e),monotonic_ns=time.monotonic_ns()))
+                    if alive() and not Path(mon_paths['monitor_error_path']).exists():save(mon_paths['monitor_error_path'],dict(error=repr(e),monotonic_ns=clock_ns()))
             k.WaitForSingleObject.argtypes=[W.HANDLE,W.DWORD]
             monitor_thread=threading.Thread(target=collect,daemon=True);monitor_thread.start()
             worker=Path(self.contract['watchdog_path']);assert sha(worker)==self.contract['watchdog_sha256']
@@ -129,15 +131,15 @@ class StrictChild:
                 thread=threading.Thread(target=consume,args=(pipe,prefix.with_suffix(suffix)),daemon=True);thread.start();threads.append(thread)
             resume=ctypes.WinDLL('ntdll').NtResumeProcess;resume.argtypes=[W.HANDLE];assert resume(int(watch._handle))==0
             while not Path(mon_paths['ready_path']).exists() or not Path(mon_paths['samples_path']).exists():
-                assert time.monotonic_ns()-armed<5_000_000_000,'monitor/watchdog startup deadline'
+                assert clock_ns()-armed<5_000_000_000,'monitor/watchdog startup deadline'
                 assert watch.poll() is None,'watchdog died before admission'
                 if Path(mon_paths['result_path']).exists():assert json.loads(Path(mon_paths['result_path']).read_bytes())['watchdog_decision']=='PASS'
                 guard();time.sleep(.01)
-            resume_ns=time.monotonic_ns();save(mon_paths['resume_path'],dict(monotonic_ns=resume_ns,run_id=config['run_id'],execution_id=config['execution_id']))
+            resume_ns=clock_ns();save(mon_paths['resume_path'],dict(monotonic_ns=resume_ns,run_id=config['run_id'],execution_id=config['execution_id']))
             assert resume(int(p._handle))==0
             while p.poll() is None:
                 guard();assert not overflow.is_set(),'child log overflow';assert not event_errors,event_errors
-                assert time.monotonic_ns()-resume_ns<int(timeout*1e9),'native running deadline'
+                assert clock_ns()-resume_ns<int(timeout*1e9),'native running deadline'
                 if Path(mon_paths['result_path']).exists():assert json.loads(Path(mon_paths['result_path']).read_bytes())['watchdog_decision']=='PASS','independent watchdog failed'
                 assert watch.poll() is None,'watchdog terminated while target alive'
                 time.sleep(.05)
@@ -146,7 +148,7 @@ class StrictChild:
             assert not event_errors,event_errors
             monitor_record=json.loads(Path(mon_paths['result_path']).read_bytes());assert monitor_record['watchdog_decision']=='PASS',monitor_record
             assert watch.wait(timeout=1)==0
-            exit_ns=monitor_record['exit_observed_monotonic_ns'];post_start_ns=time.monotonic_ns()
+            exit_ns=monitor_record['exit_observed_monotonic_ns'];post_start_ns=clock_ns()
             if hooks.get('post_audit_sleep'):time.sleep(hooks['post_audit_sleep'])
             for t in threads:t.join(3);assert not t.is_alive(),'log completion deadline'
             assert not overflow.is_set(),'child log overflow'
@@ -173,7 +175,7 @@ class StrictChild:
                 run_id=self.contract['run_id'],execution_id=self.contract['execution_id'],watchdog_pid=watch_pid,
                 native_resume_monotonic_ns=resume_ns,native_exit_observed_monotonic_ns=exit_ns,
                 native_runtime_seconds=(exit_ns-resume_ns)/1e9 if exit_ns is not None and resume_ns is not None else None,
-                post_exit_audit_seconds=(time.monotonic_ns()-exit_ns)/1e9 if exit_ns is not None else None,
+                post_exit_audit_seconds=(clock_ns()-exit_ns)/1e9 if exit_ns is not None else None,
                 monitor='Independent process;actual monotonic sample intervals and terminal coverage<=1000000000ns;no exit sample fabrication'))
             if self.job:k.CloseHandle(self.job)
             k.CloseHandle(port)

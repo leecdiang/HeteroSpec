@@ -3,7 +3,7 @@ import io,hashlib,json,zipfile,bisect
 from pathlib import Path,PurePosixPath
 from common import V,save,load,sha
 ESSENTIAL=['F0.json','PLAN.json','CPU_EXPECTED.json','CAS_INDEX.json','ABI_EXPORTS.json','common.py','audit.py','identity.py','admission.py','readiness_policy.py','bounded.py','lifecycle.py','transport_lifecycle.py','run_s1b.py','offline_s1b.py','archive.py','evidence_s1b.py','native_cost.cpp','graph_base.h','hs113_graph.h','core_gate.h','s1b_gate.h','timing_loop.h','s1b_clean.exe','s1b_trace.exe','BUDGET.json','AMENDMENT.md','PROTOCOL.md','AUTHENTICATED_F0.json','REMOTE_F0_BYTES.json','strict_lifecycle.py','monitor_contract.py','monitor_worker.py','monitor_audit.py','identified_state.py','exact_binding.py','CENSUS_EXACT_AUTHENTICATED.json']
-ESSENTIAL += ['cpu_job.py','resource_guard.py'] # Actual sampler resource checks and Job structures.
+ESSENTIAL += ['cpu_job.py','resource_guard.py','clock_source.py'] # Actual checks, QPC clock, Job structures.
 class SplitWriter(io.RawIOBase):
     def __init__(self,root,cap):self.root=Path(root);self.root.mkdir(exist_ok=False);self.cap=cap;self.pos=0;self.files=[];self.f=None;self.total_hash=hashlib.sha256()
     def writable(self):return True

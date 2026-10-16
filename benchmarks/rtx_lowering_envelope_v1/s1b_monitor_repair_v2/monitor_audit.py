@@ -2,6 +2,7 @@
 from pathlib import Path
 from common import load,sha
 from monitor_contract import Window,decode_sample,MAX_MONITOR_INTERVAL_NS
+from clock_source import require_clock
 
 def verify(prefix,contract,cpu_fixture=False):
     prefix=Path(prefix);p=lambda suffix:prefix.with_suffix('.'+suffix)
@@ -15,7 +16,7 @@ def verify(prefix,contract,cpu_fixture=False):
     assert ready['config_sha256']==r['config_sha256'] and ready['pid']==watch['pid']
     assert ready['monotonic_ns']>=c['armed_ns']
     assert watch['script_sha256']==contract['watchdog_sha256'] and watch['python_sha256']==contract['python']['sha256']
-    assert r['clock']['monotonic'] and not r['clock']['adjustable']
+    assert r['clock']==ready['clock']==require_clock()
     w=Window(c['armed_ns']);previous=c['config_token_sha256'];sequence=0;discarded=0
     for line in p('MONITOR_SAMPLES.jsonl').read_bytes().splitlines(keepends=True):
         assert line.endswith(b'\n');row,previous=decode_sample(line,previous,c);assert row['sequence']==sequence;sequence+=1

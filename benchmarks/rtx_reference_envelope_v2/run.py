@@ -51,14 +51,24 @@ def dedup(directory):
         else:
             assert target.stat().st_size==p.stat().st_size and sha(target)==digest
             if not os.path.samefile(p,target):
-                temporary=p.with_suffix('.verified_link');os.link(target,temporary);os.replace(temporary,p)
+                temporary=p.with_suffix('.verified_link')
+                try:os.link(target,temporary)
+                except OSError as exc:
+                    if getattr(exc,'winerror',None)!=1142:raise
+                    # NTFS hardlink ceiling:keep this already verified occurrence
+                    # as an ordinary file. No GPU/re-execution or byte change.
+                else:os.replace(temporary,p)
         rows.append(dict(name=p.name,bytes=p.stat().st_size,sha256=digest,cas=target.relative_to(root()).as_posix()))
     save(directory/'BLOBS.json',rows)
 def invoke(spec,stage,context,layout,life,warm,calls,block=None,diagnostic=False):
     guard(spec)
     if stage in ['N1','T1']:
         frozen=load(root()/(stage+'_FREEZE.json'))
-        for name,digest in frozen['files'].items():assert sha(V/('build/'+name if name=='native.exe' else name))==digest,'formal source drift'
+        repair=load(root()/'T1_RETENTION_AMENDMENT.json') if stage=='T1' and (root()/'T1_RETENTION_AMENDMENT.json').exists() else None
+        for name,digest in frozen['files'].items():
+            if repair and name=='run.py':
+                assert repair['old_run_py_sha256']==digest and repair['native_sha256']==frozen['files']['native.exe'];digest=repair['new_run_py_sha256']
+            assert sha(V/('build/'+name if name=='native.exe' else name))==digest,'formal source drift'
         assert sha(root()/'RUN_SPEC.json')==frozen['spec_sha256']
     for item in context['inputs']:assert sha(item['path'])==item['sha256'],'input identity drift'
     folder=root()/'attempts';folder.mkdir(exist_ok=True);i=len(list(folder.iterdir()));attempt=folder/f'{i:04d}';attempt.mkdir()

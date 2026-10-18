@@ -40,7 +40,7 @@ def freeze():
     print('FROZEN',sha(r/'FREEZE.json'),flush=True)
 
 def verify_freeze():
-    r=root();f=load(r/'FREEZE.json');s=load(r/'RUN_SPEC.json');assert s['run_id']=='rtx-mechanism-baselines-v1' and s['execution_id']==r.name
+    r=root();f=load(r/('FREEZE_REPAIR1.json' if (r/'FREEZE_REPAIR1.json').exists() else 'FREEZE.json'));s=load(r/'RUN_SPEC.json');assert s['run_id']=='rtx-mechanism-baselines-v1' and s['execution_id']==r.name
     for name,d in f['files'].items():assert sha(V/('build/'+name if name.endswith('.exe') else name))==d,'source drift '+name
     for key,name in [('plan_exact_sha256','plan.json'),('spec_sha256','RUN_SPEC.json'),('runtime_manifest_sha256','RUNTIME_MANIFEST.json'),('input_index_sha256','INPUTS.json'),('policy_sha256','EXECUTION_POLICY.json'),('mode_sha256','MODE_EVIDENCE.json')]:assert sha(r/name)==f[key],name+' drift'
     return s,f
@@ -77,15 +77,18 @@ def stage(name):
                 with dest.open('xb') as file:file.write(b''.join(x[0] for x in pieces))
                 refs[cid]=dict(path=str(dest),sha256=sha(dest),bytes=dest.stat().st_size,independent_hosts=2*c['q'])
             save(r/('PRODUCER_REFERENCES.json' if optional else 'REFERENCES.json'),refs)
-        elif name=='capability':
+        elif name in ['capability','capability2']:
             telemetry(s,'capability/pre');outcomes=[]
-            for mode in ['OFF','ON']:
+            for mode in (['OFF','ON'] if name=='capability' else ['ON']):
                 for layout in ['QB','QH_C']:
-                    c=rows['q2-k256-v0'];alt=rows['q2-k256-v1'];t=dict(task_id='capability-'+mode+'-'+layout,stage='capability',graph_mode=mode,case_id=c['case_id'],layout=layout,warmups=2,measured_calls=6,profile=mode=='ON',alternating=True,alternate_context=dict(root=alt['root'],reference=alt['references'][layout]['path']))
+                    c=rows['q2-k256-v0'];alt=rows['q2-k256-v1'];t=dict(task_id=name+'-'+mode+'-'+layout,stage='capability',graph_mode=mode,case_id=c['case_id'],layout=layout,warmups=2,measured_calls=6,profile=mode=='ON',alternating=True,alternate_context=dict(root=alt['root'],reference=alt['references'][layout]['path']))
                     result,a=execute(t,c,'H1',session);done.append(t['task_id']);assert result['numerical_qualified'],'alternating value control failed'
                     if mode=='ON':assert load(a/'MODE_AUDIT.json')['verified'],'actual ON capability not established'
                     outcomes.append(dict(mode=mode,layout=layout,qualified=True,attempt=t['task_id']))
-            save(r/'CAPABILITY_ADMISSION.json',dict(outcomes=outcomes,status='PASS',profile_hosts=2,native_hosts=4,graph_calls=32))
+            if name=='capability2':
+                for layout in ['QB','QH_C']:
+                    a=r/'attempts'/('capability-OFF-'+layout);assert load(a/'EVIDENCE.json')['numerical_qualified'];outcomes.append(dict(mode='OFF',layout=layout,qualified=True,explicit_original_attempt=a.name,original_freeze_sha256=sha(r/'FREEZE.json'),tool_only_change_not_loaded_in_OFF=True))
+            save(r/'CAPABILITY_ADMISSION.json',dict(outcomes=outcomes,status='PASS',profile_hosts=2,native_hosts=len(done),graph_calls=8*len(done)))
         elif name in ['qualification','producer_qualification']:
             assert load(r/'CAPABILITY_ADMISSION.json')['status']=='PASS','capability first'
             if optional:
@@ -124,4 +127,4 @@ def stage(name):
         (r/'WORKER.lock').rename(r/(name+'_WORKER_CLOSED.json'))
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('action',choices=['freeze','reference','capability','qualification','confirm0','confirm1','producer_reference','producer_qualification','producer0','producer1']);a=ap.parse_args();freeze() if a.action=='freeze' else stage(a.action)
+    ap=argparse.ArgumentParser();ap.add_argument('action',choices=['freeze','reference','capability','capability2','qualification','confirm0','confirm1','producer_reference','producer_qualification','producer0','producer1']);a=ap.parse_args();freeze() if a.action=='freeze' else stage(a.action)

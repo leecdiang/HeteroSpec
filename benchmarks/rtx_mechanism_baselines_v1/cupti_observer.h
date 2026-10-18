@@ -27,7 +27,9 @@ struct Observer {
     static void CUPTIAPI callback(void* user,CUpti_CallbackDomain domain,CUpti_CallbackId id,const void* info){
         auto*o=(Observer*)user;auto*d=(const CUpti_CallbackData*)info;std::lock_guard<std::mutex>lock(o->mutex);
         if(o->events.size()>=100000){o->overflow=true;return;}
-        o->events.push_back({{"QPC",qpc()},{"call",o->call.load()},{"domain",int(domain)},{"cbid",id},{"site",int(d->callbackSite)},{"name",d->functionName?d->functionName:""},{"symbol",d->symbolName?d->symbolName:""},{"correlation",d->correlationId},{"status",d->callbackSite==CUPTI_API_EXIT&&d->functionReturnValue?J(*(int*)d->functionReturnValue):J(nullptr)}});
+        // symbolName is only valid for specific launch callbacks. Never read it
+        // for arbitrary runtime/driver APIs (including device initialization).
+        o->events.push_back({{"QPC",qpc()},{"call",o->call.load()},{"domain",int(domain)},{"cbid",id},{"site",int(d->callbackSite)},{"name",d->functionName?d->functionName:""},{"correlation",d->correlationId},{"status",d->callbackSite==CUPTI_API_EXIT&&d->functionReturnValue?J(*(int*)d->functionReturnValue):J(nullptr)}});
     }
     static void CUPTIAPI request(uint8_t**buffer,size_t*size,size_t*maxRecords){*size=4*1024*1024;*buffer=(uint8_t*)_aligned_malloc(*size,8);*maxRecords=0;}
     static void CUPTIAPI complete(CUcontext ctx,uint32_t stream,uint8_t*buffer,size_t size,size_t valid){

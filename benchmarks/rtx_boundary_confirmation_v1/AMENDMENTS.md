@@ -43,3 +43,10 @@ DLL, arithmetic, reference tolerance or fixed geometry was changed.
   frozen input/reference bytes, serial query/mask/fullKV derivation and serial
   concatenation are checked. Successful outputs cannot override a lifecycle error.
   These are postcollection verification checks, not changed numerical tolerance.
+
+- Compact execution artifacts are exported with per-file `-text` attributes so
+  Git preserves their original exact bytes, including CRLF. The live UUID freeze,
+  method/prediction and all runtime files remain unchanged. Earlier Git-normalized
+  representations remain in history; EXACT_ARTIFACTS.json names the actual byte
+  hashes. Ordinary code remains conventional LF Git text; exact consumed source
+  bytes are separately retained under raw/SOURCE and verified by the CPU audit.

@@ -1,6 +1,18 @@
 # RTX reference envelope v2 — research and execution design
 
-Status: **DESIGN_READY; IMPLEMENTATION_AND_RTX_EXECUTION_PENDING** (2026-10-18).
+Status: **D0_COMPLETE; N1/T1_PENDING** (2026-10-18).
+
+PR120 now has a new native host and runnable Python entrypoint, offline build,
+72 actual CPU graphs, 15 CPU self-tests and 12 D0 hosts / 216 graph calls.
+Original resident allocation reproduces the PR118 symptom in all three runs
+and all three reversal runs. Re-upload restores output but does not preserve
+input storage. Separately allocated persistent inputs retain full input/output
+bytes over 3 fresh processes ×34 calls. Actual input/node address overlap is
+recorded in the original allocation and absent with persistent inputs.
+This is a host allocation/lifetime intervention, not a CUDA arithmetic change
+or a QB-specific fault. Full-panel qualification and costs remain pending.
+See COMMANDS.md, INVENTORY.json and CPU_TESTS.json. Raw stays in the UUID root
+recorded in INVENTORY; historical PR118 evidence is unchanged.
 
 This new lane turns the existing results into a testable chain:
 **reference constraints → admissible mappings → measured cost boundary → hardware decision**.

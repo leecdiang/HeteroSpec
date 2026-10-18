@@ -20,7 +20,7 @@ def remap(c,raw,original):
         if Path(row['path']).exists():row['sha256']=sha(row['path'])
     return c
 
-def export(out,draws=1000):
+def export(out,draws=4000):
     raw=root();out=Path(out);out.mkdir(exist_ok=False);plan=load(raw/'plan.json');spec=load(raw/'RUN_SPEC.json');frozen=load(raw/'FREEZE.json');cases=load(raw/'INPUTS.json');refs=load(raw/'REFERENCES.json');observations=[];hosts=[];coverage=[];runtime=spec['numerical_DLLs'];attempts=raw/'attempts'
     if (raw/'HOLDOUT_INPUTS.json').exists():cases.update(load(raw/'HOLDOUT_INPUTS.json'));refs.update(load(raw/'HOLDOUT_REFERENCES.json'))
     for cid,row in refs.items():
@@ -47,11 +47,11 @@ def export(out,draws=1000):
     with (out/'observations.jsonl').open('x',encoding='utf-8') as file:
         for x in observations:file.write(json.dumps(x,separators=(',',':'))+'\n')
     rows_csv(out/'HOSTS.csv',hosts);rows_csv(out/'COVERAGE.csv',coverage);result=analyze(plan,observations,draws=draws);save(out/'ANALYSIS.json',result)
-    summary=dict(hosts=len(hosts),graph_calls=sum(x['actual_calls'] or 0 for x in hosts),by_stage={k:dict(hosts=len(v),calls=sum(x['actual_calls'] or 0 for x in v),qualified=sum(x['numerical_qualified'] for x in v)) for k,v in _group(hosts,'stage').items()},observed_timing_hosts=len(observations),raw_byte_audit='ALL_OCCURRENCES_CHECKED',external_independent_review=False,raw_root_location_only=str(raw));save(out/'AUDIT.json',summary);print(json.dumps(summary),flush=True);return result
+    summary=dict(hosts=len(hosts),graph_calls=sum(x['actual_calls'] or 0 for x in hosts),by_stage={k:dict(hosts=len(v),calls=sum(x['actual_calls'] or 0 for x in v),qualified=sum(x['numerical_qualified'] for x in v)) for k,v in _group(hosts,'stage').items()},observed_timing_hosts=len(observations),bootstrap_draws=draws,raw_byte_audit='ALL_OCCURRENCES_CHECKED',external_independent_review=False,raw_root_location_only=str(raw));save(out/'AUDIT.json',summary);print(json.dumps(summary),flush=True);return result
 
 def _group(rows,key):
     groups=collections.defaultdict(list)
     for r in rows:groups[r[key]].append(r)
     return groups
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--draws',type=int,default=1000);a=ap.parse_args();export(a.out,a.draws)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--draws',type=int,default=4000);a=ap.parse_args();export(a.out,a.draws)

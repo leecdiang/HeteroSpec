@@ -1,0 +1,219 @@
+{
+  "d0": {
+    "actual": 11,
+    "reservations": [
+      {
+        "actual": 1,
+        "reserved": 1,
+        "run": "processes/review-smoke-ok"
+      },
+      {
+        "actual": 1,
+        "reserved": 1,
+        "run": "processes/case-smoke-limit"
+      },
+      {
+        "actual": 1,
+        "reserved": 1,
+        "run": "processes/review-smoke-limit"
+      },
+      {
+        "actual": 3,
+        "reserved": 3,
+        "run": "development/healthy-r0-a1"
+      },
+      {
+        "actual": 4,
+        "reserved": 4,
+        "run": "development/freeze-r1"
+      },
+      {
+        "actual": 1,
+        "reserved": 2,
+        "run": "development/stall-r2-a1"
+      }
+    ]
+  },
+  "execution_freeze": null,
+  "formal_cases": [
+    {
+      "case_id": "normal_single",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "normal_transition",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "terminal_pending_completion",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "frozen_input",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "late_closed_slot_write",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "resource_read_failure",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "directory_read_timeout",
+      "status": "UNSTARTED"
+    },
+    {
+      "case_id": "journal_write_failure",
+      "status": "UNSTARTED"
+    }
+  ],
+  "legacy_raw": {
+    "budget_prefix": {
+      "child_lifetime_sum_seconds": 490.2769318,
+      "child_starts": 159,
+      "ledger_prefix_end_ns": 28336634461100,
+      "ledger_prefix_start_ns": 28064210757400,
+      "scope": "Closed task-command prefix only; broker and future audit/delivery tail separately closed"
+    },
+    "cases": [],
+    "confirmation_status": "RAW_CONFIRMATION_INCOMPLETE_OR_FAILED",
+    "process_ledger_valid": true
+  },
+  "native": {
+    "freeze_cases": [
+      {
+        "case": "source_and_manifest",
+        "reason": "FREEZE_REPLACED"
+      },
+      {
+        "case": "before_child_manifest",
+        "reason": "initial freeze digest mismatch"
+      },
+      {
+        "case": "source_only",
+        "reason": "SOURCE_DRIFT: src/rev2/actor.py"
+      },
+      {
+        "case": "missing_pin",
+        "reason": "initial freeze digest required"
+      }
+    ],
+    "gate_booleans_are_not_the_only_source": true,
+    "healthy_cases": [
+      {
+        "actors": 1,
+        "begin_ns": 28121003974000,
+        "case": "C1",
+        "end_ns": 28122197295700,
+        "identities": [
+          [
+            11352,
+            "134367910841474990"
+          ]
+        ],
+        "label": "D0_C1",
+        "lifetime_seconds": 1.1526452,
+        "nonce": "e8c51b4bf9f0055be17fcb91a686f0e2"
+      },
+      {
+        "actors": 1,
+        "begin_ns": 28122225905200,
+        "case": "C2",
+        "end_ns": 28124524720100,
+        "identities": [
+          [
+            13376,
+            "134367910853689922"
+          ]
+        ],
+        "label": "D0_C2",
+        "lifetime_seconds": 2.2573741,
+        "nonce": "ed08034a03ee45c525d93f182c4bbae0"
+      },
+      {
+        "actors": 3,
+        "begin_ns": 28124553619400,
+        "case": "C3",
+        "end_ns": 28125041957700,
+        "identities": [
+          [
+            21904,
+            "134367910876975120"
+          ],
+          [
+            20340,
+            "134367910878187874"
+          ],
+          [
+            42956,
+            "134367910879424979"
+          ]
+        ],
+        "label": "D0_C3",
+        "lifetime_seconds": 0.925951,
+        "nonce": "aa0508a785bdcf6ee285755b15c00eee"
+      }
+    ],
+    "healthy_sampling": {
+      "SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1005547200,
+        "samples": 7
+      },
+      "WATCHDOG_SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1020153600,
+        "samples": 5
+      }
+    },
+    "stale_detection_age_ns": 5001125500,
+    "status": "NATIVE_GATES_RECONSTRUCTED"
+  },
+  "review": {
+    "attempts": 1,
+    "clean": false,
+    "error": "RuntimeError('duplicate PID')",
+    "event_seq": 144,
+    "final_report": null,
+    "identity_coverage_complete": false,
+    "job_empty_observed": true,
+    "known_recorded_closes": 43,
+    "known_recorded_creates": 43,
+    "unmatched_exit_observations": [
+      {
+        "pid": 22360,
+        "seq": 154
+      }
+    ]
+  },
+  "scope": "Unmodified original smoke/native/legacy auditors reconstruct this blocked finite prefix; no Windows CPU8 acceptance or complete task accounting",
+  "smokes": [
+    {
+      "closed": 21,
+      "expected_rejection": false,
+      "kind": "review",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 21,
+      "expected_rejection": true,
+      "kind": "case",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 65,
+      "expected_rejection": true,
+      "kind": "review",
+      "observed": 65,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    }
+  ],
+  "source_entry_manifest_sha256": "8d84d317a268c64c1ae62fc9d94805db6ae3cdc36e7acab69978a43d32aa7b70",
+  "status": "ENGINEERING_BLOCKED",
+  "task_total_ledger": "UNKNOWN"
+}

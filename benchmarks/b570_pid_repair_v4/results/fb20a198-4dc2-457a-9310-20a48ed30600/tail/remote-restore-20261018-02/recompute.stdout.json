@@ -1,0 +1,588 @@
+{
+  "command_identity_checks": {
+    "case-smoke-limit": {
+      "closed_recorded_identities": 21,
+      "reason": "INCOMPLETE",
+      "status": "REJECTED_RETAINED"
+    },
+    "csharp-build": {
+      "identities": 3,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "d0-journal": {
+      "identities": 6,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "d0-normal": {
+      "closed_recorded_identities": 1,
+      "reason": "expected root outcome",
+      "status": "REJECTED_RETAINED"
+    },
+    "d0-normal-console": {
+      "identities": 6,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "d0-normal-r2": {
+      "identities": 2,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "freeze-gate": {
+      "identities": 1,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "full-review": {
+      "identities": 174,
+      "reused_pids": 4,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "full-review-2": {
+      "identities": 110,
+      "reused_pids": 3,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "healthy-gate": {
+      "identities": 2,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "review-breakpoint": {
+      "identities": 1,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "review-churn": {
+      "closed_recorded_identities": 217,
+      "reason": "expected root outcome",
+      "status": "REJECTED_RETAINED"
+    },
+    "review-churn-r1": {
+      "identities": 201,
+      "reused_pids": 2,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "review-smoke-limit": {
+      "closed_recorded_identities": 65,
+      "reason": "INCOMPLETE",
+      "status": "REJECTED_RETAINED"
+    },
+    "review-smoke-ok": {
+      "identities": 21,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    },
+    "stall-gate": {
+      "identities": 3,
+      "reused_pids": 0,
+      "status": "IDENTITY_STREAM_PASS"
+    }
+  },
+  "d0": {
+    "actual": 18,
+    "reservations": [
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\review-smoke-ok\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/review-smoke-ok"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\case-smoke-limit\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/case-smoke-limit"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\review-smoke-limit\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/review-smoke-limit"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\review-churn\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/review-churn"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\review-churn-r1\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/review-churn-r1"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\review-breakpoint\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "processes/review-breakpoint"
+      },
+      {
+        "actual": 3,
+        "evidence": [
+          "processes\\healthy-gate\\OS_EVENTS.jsonl",
+          "development\\healthy-r0-a1\\WATCHDOG.jsonl",
+          "development/healthy-r0-a1/D0_C1/EVENTS.jsonl",
+          "development/healthy-r0-a1/D0_C2/EVENTS.jsonl",
+          "development/healthy-r0-a1/D0_C3/EVENTS.jsonl"
+        ],
+        "reserved": 3,
+        "run": "development/healthy-r0-a1"
+      },
+      {
+        "actual": 4,
+        "evidence": [
+          "processes\\freeze-gate\\OS_EVENTS.jsonl",
+          "development/freeze-r1/before_child_manifest/EVENTS.jsonl",
+          "development/freeze-r1/missing_pin/EVENTS.jsonl",
+          "development/freeze-r1/source_and_manifest/EVENTS.jsonl",
+          "development/freeze-r1/source_only/EVENTS.jsonl"
+        ],
+        "reserved": 4,
+        "run": "development/freeze-r1"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\stall-gate\\OS_EVENTS.jsonl",
+          "development\\stall-r2-a1\\WATCHDOG.jsonl",
+          "development/stall-r2-a1/D0_C1/EVENTS.jsonl"
+        ],
+        "reserved": 2,
+        "run": "development/stall-r2-a1"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\d0-normal\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "legacy/runs/d0-smoke-r2-normal"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\d0-normal-r2\\OS_EVENTS.jsonl"
+        ],
+        "reserved": 1,
+        "run": "legacy/runs/d0-smoke-r2-normal-r2"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\d0-normal-console\\OS_EVENTS.jsonl",
+          "legacy\\runs\\d0-smoke-normal-console\\external\\ROUND.jsonl"
+        ],
+        "reserved": 1,
+        "run": "legacy/runs/d0-smoke-normal-console"
+      },
+      {
+        "actual": 1,
+        "evidence": [
+          "processes\\d0-journal\\OS_EVENTS.jsonl",
+          "legacy\\runs\\d0-smoke-r2-journal\\external\\ROUND.jsonl"
+        ],
+        "reserved": 1,
+        "run": "legacy/runs/d0-smoke-r2-journal"
+      }
+    ],
+    "unregistered": []
+  },
+  "d0_raw_qualifications": {
+    "journal": {
+      "case_checks": {
+        "cleanup_checked": true,
+        "coverage_checked": true,
+        "detector_object_match": true,
+        "freeze_binding": false,
+        "independent_outer_receipt": true,
+        "process_ledger": true,
+        "raw_hashes": true,
+        "trigger_side_effect": true
+      },
+      "case_id": "journal_write_failure",
+      "case_os": {
+        "all_actual_closed": true,
+        "identities": 6,
+        "journal": "processes/d0-journal/OS_EVENTS.jsonl",
+        "scope": "Case command tree only; unrelated incomplete review/outer roots are not removed or synthesized",
+        "sha256": "162335d03ecd4d1c3de12ffc0103b4f237ff8e6a31b1d40c100d99b6cdb4c20a"
+      },
+      "original_raw_reason": "fixture/control point not reached",
+      "original_raw_status": "NOT_REACHED",
+      "original_task_process_ledger_valid": true,
+      "phase": "D0",
+      "run": "d0-smoke-r2-journal",
+      "scope": "Strict original controls/coverage/detectors plus independent case OS tree. Original whole-prefix ledger failure remains unchanged and visible.",
+      "status": "D0_BRIDGE_SMOKE_PASS",
+      "task_total_ledger_status": "UNKNOWN"
+    },
+    "normal": {
+      "case_checks": {
+        "cleanup_checked": true,
+        "coverage_checked": true,
+        "freeze_binding": false,
+        "post_audit_separated": true,
+        "process_ledger": true,
+        "raw_hashes": true,
+        "work_completed": true
+      },
+      "case_id": "normal_single",
+      "case_os": {
+        "all_actual_closed": true,
+        "identities": 6,
+        "journal": "processes/d0-normal-console/OS_EVENTS.jsonl",
+        "scope": "Case command tree only; unrelated incomplete review/outer roots are not removed or synthesized",
+        "sha256": "7fb094b8f1dc5a82cb581e1f6fc522b67ee0e553e71fc0a1dc55efebfd67f8b9"
+      },
+      "original_raw_reason": "fixture/control point not reached",
+      "original_raw_status": "NOT_REACHED",
+      "original_task_process_ledger_valid": true,
+      "phase": "D0",
+      "run": "d0-smoke-normal-console",
+      "scope": "Strict original controls/coverage/detectors plus independent case OS tree. Original whole-prefix ledger failure remains unchanged and visible.",
+      "status": "D0_BRIDGE_SMOKE_PASS",
+      "task_total_ledger_status": "UNKNOWN"
+    }
+  },
+  "engineering_wall_at_stop_seconds": 4020.011,
+  "forbidden": {
+    "GPU_initializations": 0,
+    "GPU_plugin_loads": 0,
+    "GPU_queries": 0,
+    "graph_computes": 0,
+    "model_file_reads": 0,
+    "model_requests": 0,
+    "scientific_native_starts": 0
+  },
+  "formal_freeze": null,
+  "formal_matrix": [
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "NORMAL_COMPLETE",
+      "fault_id": "-1:normal_single",
+      "id": "normal_single",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-01-normal_single",
+      "status": "UNSTARTED",
+      "target": "positive"
+    },
+    {
+      "case_seconds": 180,
+      "cleanup_seconds": 30,
+      "detector": "TRANSITIONS_COMPLETE",
+      "fault_id": "-1:normal_transition",
+      "id": "normal_transition",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-02-normal_transition",
+      "status": "UNSTARTED",
+      "target": "positive"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "SEALED_WRITE_REJECTED",
+      "fault_id": "-1:terminal_pending_completion",
+      "id": "terminal_pending_completion",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-03-terminal_pending_completion",
+      "status": "UNSTARTED",
+      "target": "C:/hs/b570-capability-v1/fb20a198-4dc2-457a-9310-20a48ed30600/legacy/runs/cpu8-03-terminal_pending_completion/protected/sealed/terminal_pending_completion.bin"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "SEALED_WRITE_REJECTED",
+      "fault_id": "-1:frozen_input",
+      "id": "frozen_input",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-04-frozen_input",
+      "status": "UNSTARTED",
+      "target": "C:/hs/b570-capability-v1/fb20a198-4dc2-457a-9310-20a48ed30600/legacy/runs/cpu8-04-frozen_input/protected/inputs/frozen_input.bin"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "SEALED_WRITE_REJECTED",
+      "fault_id": "-1:late_closed_slot_write",
+      "id": "late_closed_slot_write",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-05-late_closed_slot_write",
+      "status": "UNSTARTED",
+      "target": "C:/hs/b570-capability-v1/fb20a198-4dc2-457a-9310-20a48ed30600/legacy/runs/cpu8-05-late_closed_slot_write/protected/slots/cpu8-05-late_closed_slot_write__late_closed_slot_write_0/BASELINE.bin"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "RESOURCE_READ_REJECTED",
+      "fault_id": "-1:resource_read_failure",
+      "id": "resource_read_failure",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-06-resource_read_failure",
+      "status": "UNSTARTED",
+      "target": "resource"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "COVERAGE_GAP_REJECTED",
+      "fault_id": "-1:directory_read_timeout",
+      "id": "directory_read_timeout",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-07-directory_read_timeout",
+      "status": "UNSTARTED",
+      "target": "directory"
+    },
+    {
+      "case_seconds": 90,
+      "cleanup_seconds": 30,
+      "detector": "JOURNAL_FAILURE_REJECTED",
+      "fault_id": "-1:journal_write_failure",
+      "id": "journal_write_failure",
+      "reason": "No valid final scoped-clean adapter review",
+      "run_id": "cpu8-08-journal_write_failure",
+      "status": "UNSTARTED",
+      "target": "journal"
+    }
+  ],
+  "formal_started": 0,
+  "legacy_raw_case_statuses": [
+    {
+      "case_id": "normal_single",
+      "run": "d0-smoke-normal-console",
+      "status": "NOT_REACHED"
+    },
+    {
+      "case_id": "journal_write_failure",
+      "run": "d0-smoke-r2-journal",
+      "status": "NOT_REACHED"
+    },
+    {
+      "case_id": null,
+      "run": "d0-smoke-r2-normal-r2",
+      "status": "EVIDENCE_MISSING"
+    }
+  ],
+  "legacy_raw_process_ledger_valid": true,
+  "legacy_raw_sha256": "621164ff39ee75f36b1be9e010a8f946e94599a0d92f60b8c4ce9f9f9f39dae1",
+  "native_gates": {
+    "freeze_cases": [
+      {
+        "case": "source_and_manifest",
+        "reason": "FREEZE_REPLACED"
+      },
+      {
+        "case": "before_child_manifest",
+        "reason": "initial freeze digest mismatch"
+      },
+      {
+        "case": "source_only",
+        "reason": "SOURCE_DRIFT: src/rev2/actor.py"
+      },
+      {
+        "case": "missing_pin",
+        "reason": "initial freeze digest required"
+      }
+    ],
+    "gate_booleans_are_not_the_only_source": true,
+    "healthy_cases": [
+      {
+        "actors": 1,
+        "begin_ns": 41137378795000,
+        "case": "C1",
+        "end_ns": 41138507885500,
+        "identities": [
+          [
+            27880,
+            "134368041029002036"
+          ]
+        ],
+        "label": "D0_C1",
+        "lifetime_seconds": 1.1164795,
+        "nonce": "86fd937053adab3efa7102cf719b279c"
+      },
+      {
+        "actors": 1,
+        "begin_ns": 41138515456200,
+        "case": "C2",
+        "end_ns": 41140757349100,
+        "identities": [
+          [
+            6072,
+            "134368041040373422"
+          ]
+        ],
+        "label": "D0_C2",
+        "lifetime_seconds": 2.2290162,
+        "nonce": "55a1240aad8feff2b9b176ac49a8ffbc"
+      },
+      {
+        "actors": 3,
+        "begin_ns": 41140765085200,
+        "case": "C3",
+        "end_ns": 41141138299900,
+        "identities": [
+          [
+            42760,
+            "134368041062867888"
+          ],
+          [
+            45728,
+            "134368041063856999"
+          ],
+          [
+            46316,
+            "134368041064910626"
+          ]
+        ],
+        "label": "D0_C3",
+        "lifetime_seconds": 0.7601778,
+        "nonce": "69b94181389ff7ae9dfed7f30947aa2d"
+      }
+    ],
+    "healthy_sampling": {
+      "SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1010370900,
+        "samples": 7
+      },
+      "WATCHDOG_SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1010252900,
+        "samples": 4
+      }
+    },
+    "stale_detection_age_ns": 5015408300,
+    "status": "NATIVE_GATES_RECONSTRUCTED"
+  },
+  "observed_closed_identities": 834,
+  "observed_command_tree_identities": 834,
+  "observed_lifetime_seconds": 9423.0304473,
+  "observer_smokes": [
+    {
+      "closed": 21,
+      "expected_rejection": false,
+      "kind": "review",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 21,
+      "expected_rejection": true,
+      "kind": "case",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 65,
+      "expected_rejection": true,
+      "kind": "review",
+      "observed": 65,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    }
+  ],
+  "outer_gaps": [
+    "observer own exit",
+    "watchdog own exit",
+    "shell/tool host",
+    "preflight/portable and delivery roots"
+  ],
+  "reason": "ADAPTER_REVIEW_BLOCKED",
+  "review_wall_seconds": 1127.2952043999999,
+  "reviews": [
+    {
+      "candidate_manifest_sha256": "4b7d0445f9060d39aff22cde5e4bf3e5e462fca023ef4bf1e7613002a8f5c899",
+      "closed_identities": 174,
+      "findings": [
+        {
+          "effect": "check() still returns ALL_INTEGRATION_GATES_RECONSTRUCTED. Neither this function nor freeze_cpu8.py reruns the selected D0 raw audits and qualification checks, allowing stale summaries to satisfy mandatory prerequisites.",
+          "file": "candidate/source/integration_gates.py",
+          "line": 38,
+          "priority": "P2",
+          "recommendation": "Authenticate each selected raw input manifest, rerun raw_audit.audit and cpu8_audit.qualify in D0 mode, and reconcile their results with the stored qualification. Preserve the explicitly permitted freeze_binding exclusion.",
+          "title": "D0 bridge prerequisites trust qualification statuses instead of reconstructing raw evidence",
+          "trigger": "A selected D0 qualification retains D0_BRIDGE_SMOKE_PASS while its underlying control, OS-exit, pending-completion, or independent journal-failure evidence is missing or changed."
+        },
+        {
+          "effect": "The progress-validation loop can perform zero checks, and WATCHDOG_SAMPLES.jsonl is never read. The verifier can reach CPU8_INTEGRATION_PASS without reconstructing outer sampling coverage, five-second gaps, or applicable resource limits.",
+          "file": "candidate/source/verify_cpu8.py",
+          "line": 44,
+          "priority": "P2",
+          "recommendation": "Require nonempty supervisor and watchdog sample streams and reconstruct their start, inter-sample, read-duration, and terminal gaps, resource limits, and progress linkage using the CPU8 schemas.",
+          "title": "CPU8 verification accepts missing outer monitoring evidence",
+          "trigger": "SAMPLES.jsonl is empty or lacks SAMPLE records, or WATCHDOG_SAMPLES.jsonl is absent."
+        },
+        {
+          "effect": "Both terminal branches can set tool_exit_verified=true without matching the request to WATCHDOG_START.command, the selected run, or the watchdog closure output. An unrelated successful tool invocation can satisfy the terminal-binding requirement.",
+          "file": "candidate/source/verify_cpu8.py",
+          "line": 53,
+          "priority": "P2",
+          "recommendation": "Bind the prospective request and actual terminal response to the recorded watchdog command, root, run, and freeze argument, and reconcile the terminal closure output.",
+          "title": "Successful tool receipts are not linked to the observed watchdog invocation",
+          "trigger": "The supplied tool records describe another successful command or session whose command text contains the freeze digest and whose working directory matches the root."
+        },
+        {
+          "effect": "actual_d0() iterates only supplied registrations. Its bridge-observer scan also counts only matching registered run names, so retained unregistered attempts contribute nothing and the twenty-attempt check can pass incorrectly.",
+          "file": "candidate/source/source_guard.py",
+          "line": 22,
+          "priority": "P2",
+          "recommendation": "Inventory raw D0 starts independently, reconcile every applicable start to exactly one prospective reservation, and reject unregistered attempts before calculating totals.",
+          "title": "D0 accounting ignores attempts absent from the reservation list",
+          "trigger": "An observed D0 attempt exists under an unregistered run, including a bridge failure before CASE_BEGIN."
+        }
+      ],
+      "report": "FINAL_REVIEW.json",
+      "status": "findings",
+      "wall_seconds": 629.7793706
+    },
+    {
+      "candidate_manifest_sha256": "3251aaa6a7b0bd10f153441d01ae229878f7df3f9d1bba42d6d3a6d072eb478c",
+      "closed_identities": 110,
+      "findings": [
+        {
+          "effect": "The verifier checks only listed members; it never reconciles the manifest against the evidence inventory or consumed inputs. It can report restoration_verified=true and CPU8_INTEGRATION_PASS without authenticating the complete delivered evidence. Omitted failed-attempt diagnostics can disappear without rejection.",
+          "file": "candidate/source/verify_cpu8.py",
+          "line": 18,
+          "priority": "P2",
+          "recommendation": "Require unique canonical members, exact inventory coverage with explicit delivery-tail exclusions, and coverage of consumed inputs. The existing src/rev2/verify.py inventory checks provide the relevant pattern.",
+          "title": "Delivery verification accepts an incomplete evidence manifest",
+          "trigger": "Supply a nonempty manifest that omits retained evidence or consumed outer-monitor/tool files while keeping every listed member valid."
+        },
+        {
+          "effect": "Neither verify_cpu8.py, cpu8_monitor.py nor tool_binding.py compares the two receipts. wall_budget therefore accepts the altered closure frontier: advancing it two minutes can make an actual 31-minute delivery appear to take 29 minutes and pass the 1,800-second limit.",
+          "file": "candidate/source/verify_cpu8.py",
+          "line": 47,
+          "priority": "P2",
+          "recommendation": "Require equality with WATCHDOG_END.receipt and reconcile its identity, OS-exit fields and closure interval against the raw lifecycle before calculating budgets.",
+          "title": "Unreconciled watchdog receipt can bypass the delivery deadline",
+          "trigger": "Advance standalone WATCHDOG_RECEIPT.json.end_ns while leaving WATCHDOG_END.receipt and its raw terminal timestamp unchanged."
+        }
+      ],
+      "report": "FINAL_REVIEW_2.json",
+      "status": "findings",
+      "wall_seconds": 497.5158338
+    }
+  ],
+  "scope": "Authenticated retained CPU engineering evidence and bounded D0 gates; no final clean review, execution freeze, formal CPU8, full task accounting, ENGINEERING_READY or paper result",
+  "source_manifest_sha256": "ed7f285d86c7028758e08ac5ccd7fda4e7652e7036718187c78f97582cb3bd12",
+  "status": "ENGINEERING_BLOCKED",
+  "task_total_lifetime_seconds": "UNKNOWN",
+  "task_total_processes": "UNKNOWN"
+}

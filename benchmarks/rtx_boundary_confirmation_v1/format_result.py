@@ -33,9 +33,9 @@ def main():
     f"选用H1，保留8warmups+30测量。pilot逐anchor A/A区间包络中位比例尺度：H0 {method['method_evidence']['H0']['approximate_median_ratio_scale']:.3%}，H1 {method['method_evidence']['H1']['approximate_median_ratio_scale']:.3%}；不能据此认证2%分辨率。H1预分配输出/固定计时记录，循环后写文件，仍逐调用readback、精确比较和保留每次字节。H0是已独立资格的legacy-style变体，并非旧二进制逐指令复刻，见[AMENDMENTS.md](AMENDMENTS.md)。方法选择只依据QB A/A。",'',
     '## 2. 超过同尺度A/A波动的成本差异','',
     '比值大于1有利于分母。宿主内30次为技术重复；按固定input/block配对，再等权汇总两值模式和几何。bootstrap重采集整个块并按实际session分层，两session不是独立日期。主/次比较均用QB_B重算，绝不择快。','',
-    '|面板|QB_A/QH_C|QB_B/QH_C|QB_A/QB_B|PQ/QB_A|描述性屏障|','|---|---:|---:|---:|---:|---|']
+    '|面板|QB_A/QH_C|QB_B/QH_C|QB_A/QB_B|QB_A−QH_C µs|PQ/QB_A|描述性屏障|','|---|---:|---:|---:|---:|---:|---|']
     for x in result['full_panel']:
-        c=x['comparisons'];text.append(f"|{x['stage']}/{x['stratum']}|{c['QB_QH']['ratio']:.6f}|{c['QB_QH_alt']['ratio']:.6f}|{c['AA']['ratio']:.6f}|{c['PQ_QB']['ratio']:.6f}|{x['QB_QH_decision']['status']}|")
+        c=x['comparisons'];text.append(f"|{x['stage']}/{x['stratum']}|{c['QB_QH']['ratio']:.6f}|{c['QB_QH_alt']['ratio']:.6f}|{c['AA']['ratio']:.6f}|{c['QB_QH']['difference_us']:.3f}|{c['PQ_QB']['ratio']:.6f}|{x['QB_QH_decision']['status']}|")
     text+=['',f"24个q2/q4几何中，**{len(result['stable_QB_geometries'])}个**同时满足两QB、同尺度A/A+2%/1µs屏障及两模式/两session同向；其余{len(result['unresolved_geometries'])}个未解决。没有合格局部QH优势，q1未出现越过该屏障的假优势。未解决不等于等价。完整坐标、区间、块对比与遗漏见[GEOMETRY.csv](results/GEOMETRY.csv)及[ANALYSIS.json](results/ANALYSIS.json)。屏障是描述性保守启发式，不是校准显著性/等价检验。",'',
     '本轮24个几何汇总均值没有有利于QH的方向，但更细input/block中的反转、尾部全部保留。PR120输入和observer不同，不将本轮解释为直接推翻旧点；结论限于这次已声明条件。','',
     '## 3. 哪些几何效应保留，能否预测留出','',

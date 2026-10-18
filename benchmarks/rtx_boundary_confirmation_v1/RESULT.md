@@ -22,11 +22,11 @@
 
 比值大于1有利于分母。宿主内30次为技术重复；按固定input/block配对，再等权汇总两值模式和几何。bootstrap重采集整个块并按实际session分层，两session不是独立日期。主/次比较均用QB_B重算，绝不择快。
 
-|面板|QB_A/QH_C|QB_B/QH_C|QB_A/QB_B|PQ/QB_A|描述性屏障|
-|---|---:|---:|---:|---:|---|
-|confirm/q>1|0.900826|0.901081|0.999717|1.729291|NUMERATOR_LOWER_COST|
-|confirm/q1|1.013365|0.999445|1.013928|1.003203|UNRESOLVED_AT_TARGET_SCALE|
-|holdout/q>1|0.962421|0.959883|1.002644|1.631725|NUMERATOR_LOWER_COST|
+|面板|QB_A/QH_C|QB_B/QH_C|QB_A/QB_B|QB_A−QH_C µs|PQ/QB_A|描述性屏障|
+|---|---:|---:|---:|---:|---:|---|
+|confirm/q>1|0.900826|0.901081|0.999717|-7.499|1.729291|NUMERATOR_LOWER_COST|
+|confirm/q1|1.013365|0.999445|1.013928|0.438|1.003203|UNRESOLVED_AT_TARGET_SCALE|
+|holdout/q>1|0.962421|0.959883|1.002644|-4.674|1.631725|NUMERATOR_LOWER_COST|
 
 24个q2/q4几何中，**19个**同时满足两QB、同尺度A/A+2%/1µs屏障及两模式/两session同向；其余5个未解决。没有合格局部QH优势，q1未出现越过该屏障的假优势。未解决不等于等价。完整坐标、区间、块对比与遗漏见[GEOMETRY.csv](results/GEOMETRY.csv)及[ANALYSIS.json](results/ANALYSIS.json)。屏障是描述性保守启发式，不是校准显著性/等价检验。
 

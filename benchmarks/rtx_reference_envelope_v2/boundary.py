@@ -101,7 +101,14 @@ def run():
         reference=b''.join(parts);path=Path(c['root'])/'ordinary_reference.bin'
         with path.open('xb') as f:f.write(reference)
         if c['maskkind']=='single_visible':
-            D=c['metadata']['Q']['ne'][0];H=32;Hkv=c['metadata']['K']['ne'][2];S=c['metadata']['K']['ne'][1];v=np.fromfile(Path(c['root'])/'V.bin',dtype='<f2').reshape(Hkv,D,S);oracle=np.stack([np.stack([v[h//(H//Hkv),:,(S-c['q']+j)%S].astype('<f4') for h in range(H)]) for j in range(c['q'])]).tobytes();assert oracle==reference,'independent full single-key oracle mismatch'
+            D=c['metadata']['Q']['ne'][0];H=32;Hkv=c['metadata']['K']['ne'][2];S=c['metadata']['K']['ne'][1];v=np.fromfile(Path(c['root'])/'V.bin',dtype='<f2').reshape(Hkv,D,S);out=[]
+            # Ordered FP32 zero-initialized AV,including signed-zero behavior;
+            # do not assume selecting a -0 input must emit -0 after a dot sum.
+            for j in range(c['q']):
+                acc=np.zeros((H,D),dtype='<f4');selected=(S-c['q']+j)%S
+                for k in range(S):acc=np.float32(acc+np.float32(v[np.arange(H)//(H//Hkv),:,k].astype('<f4')*np.float32(k==selected)))
+                out.append(acc)
+            oracle=np.stack(out).tobytes();assert oracle==reference,'independent full single-key oracle mismatch'
         for l in LAYOUTS:c['references'][l]['sha256']=sha(path)
         refs.append(dict(case=c['id'],reference_sha256=sha(path),bytes=len(reference),q1_reference_processes=2*c['q'],single_key_oracle=c['maskkind']=='single_visible'))
         for l in LAYOUTS:

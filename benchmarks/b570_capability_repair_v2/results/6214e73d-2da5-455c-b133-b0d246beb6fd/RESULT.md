@@ -68,3 +68,11 @@ D0预约15/20，已保留7个原生CASE_BEGIN（健康3＋冻结4），另有1�
 远端上传、实际下载到全新目录、逐成员认证、包内未修改核验器在-I/-S/-B隔离导入环境重算的实际结果由REMOTE_RESTORE.json和FINAL_DELIVERY.json记录；当前文档前沿不预填成功。没有旧归档重新打包，也没有恢复旧三小时运行。
 
 GPU查询/初始化/插件、工作负载模型读取/请求、科学原生启动与图计算全部0。1次代码复审控制服务调用另列，不是工作负载模型实验。PR115/117、旧三小时UUID和历史PR119字节与结论不变；论文/main/RTX/release/自动化不动。最终状态为ENGINEERING_BLOCKED，不是CPU8_INTEGRATION_PASS、旧完整确认、ENGINEERING_READY或论文资格。任务收尾后不自动执行任何后续。
+
+## 最终交付前沿与未闭合范围
+
+根外不可变回执：`C:/hs/b570-capability-v1/tail-6214e73d-2da5-455c-b133-b0d246beb6fd/COMPLETION_RECEIPT.json`，SHA256 `ebae2a133ea62571b039f0e0fc6eeb1b82c756ae528a61e128cc27f448394d4f`。它绑定真实失败工具结束（exit1）、审计/恢复结束（exit0）、worker清单、源码快照及恢复报告摘要；execution_freeze_sha256明确为null，required_execution_gates_satisfied=false。它是**阻断结果的交付回执**，不填缺失执行F0，也不能授予PASS。
+
+实际观察前沿 2026-10-18T07:44:33.311Z：总任务2663.311秒；从最后原生失败起的保守交付时间860.042秒。两个受控新根共5393185B逻辑数据、按实际4096B簇及逐文件/目录保留计账8624128B；连同256MiB证据/恢复预留为277059584B <1GiB。只有两份ZIP（原归档和真实下载），尾部采用独立JSON证据包。后续发布/回读开销继续由FINAL_DELIVERY_STATE.json记录；如最终超过6小时，必须改报预算阻断。
+
+实际post-stop工具文件哈希、18次正式命令请求和所有原始结果另列尾部；缺失的外侧OS创建/退出仍为null，未用session或exit_code冒充。不会再启动开发用例、独立复审或任何实验。PR115/117与历史三小时字节保持不变，PR119保留Draft。

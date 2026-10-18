@@ -5,7 +5,7 @@ from common import V,load,save,sha
 from lifecycle import Child
 
 LAYOUTS=['PQ','QB','QH_C']
-def root():return Path(os.environ.get('HETEROSPEC_RUN_ROOT',load(V/'LOCAL_RUN.json')['root']))
+def root():return Path(os.environ.get('HETEROSPEC_RUN_ROOT') or load(V/'LOCAL_RUN.json')['root'])
 def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def env(spec):
     e=os.environ.copy();e['GGML_CUDA_DISABLE_GRAPHS']='1';e['PATH']=spec['runtime_directory']+';'+e['PATH'];e['PYTHONDONTWRITEBYTECODE']='1';return e

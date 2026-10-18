@@ -1,5 +1,20 @@
 # PR120 dispatch continuation
 
+## FINAL CPU DELIVERY STATUS (supersedes progress notes below)
+
+All GPU work ended. DO NOT launch any GPU entrypoint or resume this UUID.
+D0=12hosts/216calls;N1=216/7344;T1=432/16416(all numerical,five validcostblocks);
+R1=672/15504,all144mappingcells qualified;total1332GPUhosts/39480graphcalls.
+M1 CPU revision1 complete;revision0 retained for scope correction.
+Primary QB/QH_C=0.885627;secondary PQ/QB=1.814620 onq>1residentgraph.
+Archive110693members,127743318bytes,SHAab94591015b609df057c1b3edc99784f0a066e8eb9bba56e266097b783e17c3d.
+Allmembers fresh-restored;15scientifictables byte-equal innewinterpreter.
+Additional48fullFP64oracles(409600words) also byte-recomputed fromfreshCAS.
+Raw LOCAL_ONLY;no externalindependentreview orremote raw upload.
+RESULT.md/RESULT.json andcompacttables generated. Remaining onlyfinalGit
+commit/push/readback andPR120descriptionupdate;no furtherexperiment needed.
+The older text below preserves implementation/progress context only.
+
 User forwarded RTX_PROMPT and authorizes this lane autonomously within8h,
 reserve final1h for delivery. No B570/main/paper/release/automation/W1 changes.
 

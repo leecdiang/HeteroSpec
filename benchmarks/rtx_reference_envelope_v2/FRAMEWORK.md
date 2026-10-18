@@ -148,5 +148,6 @@ URLs are in SOURCES.json; verify implementation-specific claims before coding.
 
 The eventual chapter can be titled *Architectural Constraints and Opportunities
 for Reference-Preserving Verification*. Its claims should follow the completed
-evidence levels: constraints, costs, model, implementation. This PR writes a
-research framework, not new paper results or an asserted novelty theorem.
+evidence levels: constraints, costs, model, implementation. The initial design
+wrote this framework; subsequent bounded RTX execution is reported in RESULT.md.
+Those observations are not paper changes or an asserted novelty theorem.

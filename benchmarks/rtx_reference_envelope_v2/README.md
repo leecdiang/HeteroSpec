@@ -1,18 +1,22 @@
-# RTX reference envelope v2 — research and execution design
+# RTX reference envelope v2 — measured reference and cost boundary
 
-Status: **D0_COMPLETE; N1/T1_PENDING** (2026-10-18).
+Status: **PARTIAL_QUALIFIED_COST; SOFTWARE_FIRST/HOLD** (2026-10-18).
 
-PR120 now has a new native host and runnable Python entrypoint, offline build,
-72 actual CPU graphs, 15 CPU self-tests and 12 D0 hosts / 216 graph calls.
-Original resident allocation reproduces the PR118 symptom in all three runs
-and all three reversal runs. Re-upload restores output but does not preserve
-input storage. Separately allocated persistent inputs retain full input/output
-bytes over 3 fresh processes ×34 calls. Actual input/node address overlap is
-recorded in the original allocation and absent with persistent inputs.
-This is a host allocation/lifetime intervention, not a CUDA arithmetic change
-or a QB-specific fault. Full-panel qualification and costs remain pending.
-See COMMANDS.md, INVENTORY.json and CPU_TESTS.json. Raw stays in the UUID root
-recorded in INVENTORY; historical PR118 evidence is unchanged.
+See **[RESULT.md](RESULT.md)** and [generated tables](results/).
+D0 located destructive K/V input-storage reuse with byte witnesses and reversal;
+separately owned persistent inputs restored repeated execution. N1 completed
+216/216 hosts and 7,344 calls. T1 completed 432/432 numerical hosts and 16,416 calls;
+five of six timing blocks remain eligible after a post-exit CPU retention pause.
+No completed GPU coordinate was repeated. R1 completed 24 logical synthetic
+fixtures × two value realizations, independent serial references, and 144 qualified
+mapping cells up to selected 4096-visible-key coordinates. M1 is an explicitly
+abstract finite-resource model, not RTX hardware qualification.
+
+For eligible q2–q4 pairs, T_QB/T_QH_C=0.885627 and T_PQ/T_QB=1.814620
+(resident completed graph). This favors QB; it is not a decoder speedup claim.
+All failures, reversals, tails and missing scope are retained. Full raw stays
+local: 110,693 archived members, fresh-restored and CPU-recomputed; no remote raw
+or external independent review. Historical PR118 evidence remains unchanged.
 
 This new lane turns the existing results into a testable chain:
 **reference constraints → admissible mappings → measured cost boundary → hardware decision**.
@@ -20,6 +24,9 @@ It first addresses PR118's repeated-execution failure. It does not assume QH win
 that KV commit is a bottleneck, or that a hardware contribution is inevitable.
 
 ## Start here
+
+Actual results: [RESULT.md](RESULT.md), [RAW_LOCATION.json](RAW_LOCATION.json),
+[COMMANDS.md](COMMANDS.md). The following are the original research framework.
 
 1. [FRAMEWORK.md](FRAMEWORK.md): established evidence, research questions, falsifiers,
    generalization limits, prior work, and the hardware decision.
@@ -31,12 +38,10 @@ that KV commit is a bottleneck, or that a hardware contribution is inevitable.
 5. [EVIDENCE.md](EVIDENCE.md): compact evidence contract and required output tables.
 6. [SOURCES.json](SOURCES.json): immutable repository evidence and external references.
 
-The present PR delivers a protocol, not a repaired native host, runnable GPU
-entrypoint, new measurements, or an independent implementation review. No RTX
-task is dispatched by publishing these files. The author will dispatch the
-platform separately. After that dispatch, the executor may implement, diagnose,
-qualify, and progress within this lane and the selected budget without seeking
-permission for every routine repair or stage.
+The initial design was dispatched by the author and is now accompanied by actual
+Windows/CUDA implementation and measurements. Self-tests and same-host fresh
+recomputation are not external independent review. Publishing this result does
+not authorize another execution or any W1/actor/RTL work.
 
 ## Branch and historical scope
 

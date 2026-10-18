@@ -1,4 +1,4 @@
-# Actual RTX entrypoints
+# Actual RTX commands — dispatch complete; do not rerun GPU
 
 Worktree `D:/hs121`; Python is the frozen executable in RUN_SPEC.json.
 Run from this directory with `-B` (no old entrypoints):
@@ -28,3 +28,37 @@ H1 pays CUDA packing/materialization/restoration inside the graph. Its completed
 call includes direct readback into a preallocated per-call buffer. Initialization,
 input-copy/upload and output-buffer allocation are reported separately. QPC and
 numerical comparisons remain observers and can affect subsequent replay.
+
+## Completed CPU delivery
+
+After all GPU tasks ended, the actual CPU-only commands were:
+
+```powershell
+& $py -B cpu_preparation.py
+& $py -B export_rtx.py --out '<UUID>/analysis_final' --draws 4000
+& $py -B factor_review.py --plan '<UUID>/plan.json' --analysis '<UUID>/analysis_final/ANALYSIS.json' --out '<UUID>/analysis_final/FACTOR_REVIEW.csv'
+& $py -B cost_views.py --plan '<UUID>/plan.json' --hosts '<UUID>/analysis_final/HOSTS.csv' --out '<UUID>/analysis_final/OTHER_COST_VIEWS.json'
+& $py -B cpu_prepare_audit.py --out '<UUID>/cpu_preparation_analysis'
+& $py -B seal_rtx.py sources
+& $py -B seal_rtx.py package
+& $py -B seal_rtx.py restore
+& $py -B seal_rtx.py replay
+& $py -B report_rtx.py
+& $py -B format_result.py
+```
+
+The archive/restore commands already ran once and require fresh destinations. Do
+not delete prior directories or run GPU tasks to repair transport/formatting.
+
+CPU-only new reanalysis can use the retained fresh restore with a NEW output:
+
+```powershell
+$env:HETEROSPEC_RUN_ROOT='D:/hs121-0cd72634-266d-4b57-9b00-1d7df2327735-fresh/raw'
+& $py -B "$env:HETEROSPEC_RUN_ROOT/source_runtime/export_rtx.py" --out '<new CPU output directory>' --draws 4000
+& $py -B "$env:HETEROSPEC_RUN_ROOT/source_runtime/cpu_prepare_audit.py" --out '<new CPU preparation output directory>'
+```
+
+The adapter remaps case/serial paths in memory only and checks original exact
+source/input/reference bytes; it does not edit raw specs or recapture references.
+Actual independent-process logs and every QPC/input/output occurrence are local.
+The separate AUX_FRESH_RECOMPUTE.json records factor/cost/prediction table replay.

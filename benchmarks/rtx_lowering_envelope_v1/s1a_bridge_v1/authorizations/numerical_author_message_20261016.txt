@@ -1,0 +1,235 @@
+确认授权 HeteroSpec PR114 的 S1A Bridge v1 正式 Numerical 阶段。
+
+本次授权类型：
+BRIDGE_NUMERICAL_EXACT
+
+仓库：
+https://github.com/leecdiang/HeteroSpec
+
+PR：
+https://github.com/leecdiang/HeteroSpec/pull/114
+
+已审查结果提交：
+375950f8cf661da79d3f221973a0fdfe57a6b22e
+
+Run ID：
+pr113-s1a-bridge-v1
+
+本次授权严格绑定三个实际SHA256：
+
+F0：
+c5f980b1a56673145fced02f38864eb8cbff4d793b285705fd66f88b6338c92a
+
+Census：
+a72b1f5de3678b992e28be303ddedc50059d94974d83a7038d0bdc2dc63ee364
+
+Decision：
+3b621d5686044a0ea7bcef9f2a7861c22d234bf0d27c0910c4849f0c807129a6
+
+已经接受的有限24上下文协议修订继续有效：
+prospective_24_context_amendment_accepted = true
+
+一、正式授权范围
+
+Census已经完成：
+120/120图支持；
+1806/1806节点查询成功；
+denied_slots为空；
+numerical_admitted=true。
+
+不重新执行Census。
+
+现批准独立Numerical阶段：
+
+原预注册24个上下文；
+MQ、PQ、QB、QH_C、QH_D五种真实表示；
+每个上下文/表示由两个独立新进程执行。
+
+合计：
+240个数值宿主；
+240次图计算；
+3612次节点支持查询。
+
+先完成全部60个q1公共控制，
+再执行180个q>1槽位。
+
+QH_C保持固定主候选；
+QH_D保持预注册对照；
+不得依据任何结果临时替换。
+
+正常通过内部控制节点时无需重新申请批准。
+任何冻结停止条件触发后，不得重试或追加GPU任务。
+
+二、实际Numerical批准记录
+
+根据当前真实收到的本条确认，
+创建独立作者授权记录。
+
+必须准确记录：
+
+stage = BRIDGE_NUMERICAL_EXACT
+
+run_id = pr113-s1a-bridge-v1
+
+F0_sha256 =
+c5f980b1a56673145fced02f38864eb8cbff4d793b285705fd66f88b6338c92a
+
+census_sha256 =
+a72b1f5de3678b992e28be303ddedc50059d94974d83a7038d0bdc2dc63ee364
+
+decision_sha256 =
+3b621d5686044a0ea7bcef9f2a7861c22d234bf0d27c0910c4849f0c807129a6
+
+prospective_24_context_amendment_accepted = true
+
+另记录实际作者消息原文、SHA256和接收时间。
+
+不得复用旧Census批准记录，
+不得伪造此前Numerical授权时间。
+
+三、执行前核验
+
+核对：
+PR114当前提交及冻结F0；
+Census、Decision、CENSUS_ENDED；
+实际CENSUS_AUTHENTICATED；
+Numerical尚未启动；
+新阶段controller ledger不存在；
+冻结EXE、共享核心DLL及21个数值DLL；
+完整PLAN、输入、CAS、参考、wire和分析器；
+CUDA设备、driver、电源和环境身份；
+原PR113与其他GPU任务已经结束。
+
+以上任何检查失败立即停止。
+
+不覆盖、不修改、不重新生成F0；
+不重新执行Census；
+不借用旧PR113或GPU14的进程重复。
+
+四、唯一执行入口
+
+使用F0绑定的Python，采用 -B 模式：
+
+& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -B 'D:/hs113-bridge/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/run_bridge.py' --stage numerical --approval '<本次真实Numerical批准记录的绝对路径>'
+
+只启动这一个冻结Numerical控制器。
+不得直接调用原生EXE，不使用其他GPU入口。
+
+五、固定数值规则
+
+保留原始完整Q/K/V/mask；
+原精度、shape、stride、GQA和scale；
+原始PQ/QB实现；
+QH_C/QH_D真实查询表示；
+所有必要CONT、REPEAT和输出恢复；
+CUDA数值DLL及原算术节点。
+
+不得：
+修改shader、kernel或精度；
+修改输入、mask和参考；
+调节数值容差；
+按结果重新选择QH；
+删除失败或不支持坐标。
+
+所有宿主必须检查：
+
+实际CUDA模块、共享核心及41个插件IAT导入；
+真实buffer/device归属；
+完整图节点支持和实际绑定；
+输入前后字节；
+graph_compute返回与设备同步；
+完整QK、softmax、AV、ordinary输出；
+MQ自身原路径；
+PQ/QB历史参考字节；
+q1公共路径；
+同布局独立进程重复。
+
+任何身份漂移、控制不一致、错误绑定、
+非有限输出、q1失败、重复失败、
+设备执行错误或资源超限均停止。
+
+q>1有限有效的QH/PQ/QB差异，
+按冻结规则保留为科学证据，
+不因它不符合预期就修改算法或容差。
+
+MQ与候选不要求普遍逐位相同。
+
+六、执行成本与停止规则
+
+Numerical阶段：
+墙钟≤1800秒；
+保守owned≤5400秒。
+
+最多：
+1控制器；
+240个原生数值宿主；
+240个就绪查询进程；
+480个已登记conhost辅助进程。
+
+每原生宿主≤60秒；
+每就绪查询≤10秒。
+
+继续执行冻结Windows JobObject限制、
+进程commit、输出字节、设备就绪和完整资源监测。
+
+保留预算边界前的持久化停止回执，
+避免控制器退出导致已完成槽位被误记失败。
+
+已完成槽位必须完整保留资格和原始证据；
+未启动槽位明确标记未启动；
+不能以预算耗尽为理由重置或续跑。
+
+零模型请求；
+零warmup；
+零额外probe；
+零科学retry；
+零profiling。
+
+Numerical预算不得挪给S1B、actor或S2/S3。
+
+七、结束后独立CPU重构
+
+Numerical完成或按冻结规则停止后，
+结束所有GPU-owned进程，
+再使用已冻结的CPU-only交付程序。
+
+CPU交付独立预算：
+墙钟≤900秒；
+保守owned≤2700秒。
+
+执行完整原始记录重建、归档、
+真实远端字节认证、独立fresh restore和分析复核。
+
+使用项目已有offline.py / evidence.py / analyzer.py，
+不得修改原数值判据或重做GPU实验。
+
+原始输入、原始四阶段字节和失败证据完整保留。
+不通过丢弃失败槽位获得更好结果。
+
+最终将结果推送PR114，保持Draft。
+
+八、最终直接汇报
+
+1. 240个槽位的完成、失败及未启动数量；
+2. 三模型家族、两phase、q1至q4的覆盖；
+3. 60个q1公共控制结果；
+4. 所有同布局独立重复是否逐位一致；
+5. PQ、QB、QH_C、QH_D完整四阶段对应；
+6. MQ与候选的全部有效差异及首次分歧阶段；
+7. 实际支持、CUDA归属、同步及模块身份；
+8. 时间、进程、资源、存储及交付预算；
+9. 原始归档、远端认证和fresh restore；
+10. 实际结果commit，以及是否满足准备S1B的数值前置条件。
+
+即使240/240全部完成，
+也只能申请后续S1B的技术审查，
+不能自动启动性能计时。
+
+S1B clean timing、trace、actor、自然decoder、
+S2/S3、RTL和其他GPU任务均未授权。
+
+原PR113的474/720与246未启动保持不变。
+PR104、PR110、B570、main、论文和发布不动。
+
+按精确授权执行一次。
+失败即停止，不重试。

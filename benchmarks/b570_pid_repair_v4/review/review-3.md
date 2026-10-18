@@ -1,0 +1,3 @@
+autoreview scoped-clean: no accepted/actionable findings in the selected Git scope and priority
+overall: patch is correct (0.84)
+No actionable P0–P2 defects were identified in the supplied overlay and handoff. Reviewed imports, ctypes layouts, identity and resource cleanup, exception handling, acceptance checks, and tests; continuation semantics were cross-checked against [Microsoft documentation](https://learn.microsoft.com/windows/win32/api/debugapi/nf-debugapi-continuedebugevent). No project code was executed. This source assessment does not certify native Windows behavior or the unavailable legacy adapter; both still require separate B570 validation.

@@ -13,13 +13,13 @@ OUT=Path(__file__).resolve().parent
 REL='benchmarks/rtx_lowering_envelope_v1/s1b_monitor_repair_v2'
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--phase',required=True,choices=['forensic','package','push-data','readback','restore','recompute','push-closure','verify-closure','remote-head','publish-api','report','multipart']);ap.add_argument('--commit');a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--phase',required=True,choices=['forensic','package','push-data','readback','restore','recompute','push-closure','verify-closure','remote-head','publish-api','report','multipart','finish-closure','publish-final']);ap.add_argument('--commit');a=ap.parse_args()
     f=load(V/'F0.json');root=Path(f['execution_root']);budget=f['budget']['offline_CPU_delivery'];assert load(root/'CLEAN0_ENDED.json')['status']=='INCOMPLETE_STOPPED';owned_conflicts(f)
     ledger=OUT/'cpu_ledger';ledger.mkdir(exist_ok=True)
     prior=list(ledger.iterdir())+list((V/'delivery/cpu_ledger').iterdir())
     assert all((p/'CPU_ENDED.json').exists() for p in prior),'unresolved CPU action;no overwrite'
     wall=sum(load(p/'CPU_ENDED.json')['seconds'] for p in prior);spent=sum(load(p/'CPU_ENDED.json')['conservative_owned_seconds'] for p in prior)
-    factor=17 if a.phase.startswith('push-') or a.phase in ['multipart','publish-api'] else 3
+    factor=17 if a.phase.startswith('push-') or a.phase in ['multipart','publish-api','finish-closure','publish-final'] else 3
     remaining=min(budget['wall_seconds']-wall,(budget['conservative_owned_seconds']-spent)/factor);assert remaining>15
     d=ledger/f'{len(list(ledger.iterdir())):02d}-{a.phase}';d.mkdir();begin=time.perf_counter()
     class CPUState(State):
@@ -38,7 +38,11 @@ def main():
         assert p.read_bytes()==(V/name).read_bytes(),'remote exact bytes mismatch';return p
     layout=load(OUT/'TRANSPORT_LAYOUT.json') if (OUT/'TRANSPORT_LAYOUT.json').exists() else dict(active_archive_directory='raw',manifest='RAW_MANIFEST.json')
     try:
-        if a.phase=='forensic':
+        if a.phase=='publish-final':
+            run([f['python']['path'],'-B',str(OUT/'publish_final_cpu.py'),'--seconds',str(deadline.remaining()-8),'--ledger',str(d)],'CPU-final-publication',32768)
+        elif a.phase=='finish-closure':
+            run([f['python']['path'],'-B',str(OUT/'finish_cpu_closure.py'),'--seconds',str(deadline.remaining()-8),'--ledger',str(d)],'CPU-closure',32768)
+        elif a.phase=='forensic':
             run([f['python']['path'],'-B',str(OUT/'forensic_block0.py'),'--root',str(root),'--frozen',str(V),'--out',str(OUT/'FORENSIC.json')],'forensic')
             run([f['python']['path'],'-B',str(V/'run_s1b.py'),'--dry-check'],'post-stop-freeze-check')
             shutil.copyfile(V/'delivery/ANALYSIS.json',OUT/'ANALYSIS.json')

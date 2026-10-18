@@ -52,7 +52,8 @@ def sources():
     raw=root();dest=raw/'source_runtime';dest.mkdir(exist_ok=False);spec=load(raw/'RUN_SPEC.json')
     for p in V.iterdir():
         if p.is_file() and p.suffix in ['.py','.h','.cpp','.md','.json']:shutil.copyfile(p,dest/p.name)
-    for name in ['collector.exe','address_cpu.exe','libggml.dll.a','libggml-base.dll.a']:shutil.copyfile(V/'build'/name,dest/name)
+    for name in ['collector.exe','address_cpu.exe','libggml.dll.a','libggml-base.dll.a','cpu_preparation.exe']:
+        if (V/'build'/name).exists():shutil.copyfile(V/'build'/name,dest/name)
     headers={}
     for source in [Path(spec['ggml_include']),Path(spec['vendor_include'])]:
         for p in source.rglob('*'):
@@ -66,6 +67,9 @@ def replay():
     files=['observations.jsonl','HOSTS.csv','COVERAGE.csv','ANALYSIS.json']
     for name in files:assert (raw/'analysis_final'/name).read_bytes()==(fresh/'reanalysis'/name).read_bytes(),name
     left=load(raw/'analysis_final/AUDIT.json');right=load(fresh/'reanalysis/AUDIT.json');left.pop('raw_root_location_only');right.pop('raw_root_location_only');assert left==right
-    save(dest/'FRESH_RECOMPUTE.json',dict(status='VERIFIED',all_member_bytes_exact=True,scientific_files_byte_equal=files,summary_equal_except_explicit_location=True,new_interpreter=True,same_host=True,external_independent_review=False,remote_raw_uploaded=False,new_GPU_calls=0))
+    cpu_script=fresh/'raw/source_runtime/cpu_prepare_audit.py';cpu_start=time.monotonic();cp=subprocess.run([spec['python'],'-B',str(cpu_script),'--out',str(fresh/'cpu_reanalysis')],env=environ,capture_output=True,timeout=900);save(fresh/'CPU_PREPARATION_REPLAY.json',dict(exit=cp.returncode,stdout=cp.stdout.decode(errors='replace'),stderr=cp.stderr.decode(errors='replace'),seconds=time.monotonic()-cpu_start,GPU_calls=0));assert cp.returncode==0
+    cpu_files=['CPU_HOSTS.csv','COMMON_PRODUCER_PHASE_SUMS.csv','COMMON_PRODUCER_AGGREGATES.csv','AUDIT.json']
+    for name in cpu_files:assert (raw/'cpu_preparation_analysis'/name).read_bytes()==(fresh/'cpu_reanalysis'/name).read_bytes(),name
+    save(dest/'FRESH_RECOMPUTE.json',dict(status='VERIFIED',CPU_preparation_files_byte_equal=cpu_files,all_member_bytes_exact=True,scientific_files_byte_equal=files,summary_equal_except_explicit_location=True,new_interpreter=True,same_host=True,external_independent_review=False,remote_raw_uploaded=False,new_GPU_calls=0))
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('action',choices=['sources','package','restore','replay']);a=ap.parse_args();globals()[a.action]()

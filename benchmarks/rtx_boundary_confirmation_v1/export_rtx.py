@@ -59,11 +59,21 @@ def export(out,draws=4000):
         life=load(path/'host.LIFETIME.json');assert life['exit_code'] in [0,3] and not load(path/'host.JOB_EVENTS.json')['errors']
         if receipt['numerical_qualified']:assert life['exit_code']==0 and life['error'] is None and end['error'] is None,'monitor/lifecycle exception invalidates successful bytes'
         samples=[(x['sync_return']-x['begin'])*1e6/rr['QPC_frequency'] for x in rr['calls'] if not x['warmup']];calls=[(x['readback_return']-x['begin'])*1e6/rr['QPC_frequency'] for x in rr['calls'] if not x['warmup']];init={k:v*1e6/rr['QPC_frequency'] for k,v in rr['cost_ticks'].items()}
-        record=dict(**row,numerical_qualified=receipt['numerical_qualified'],actual_method=rr['observer_method'],host_seconds=life['seconds'],peak_job_commit_bytes=life['peak_job_commit_bytes'],job_processes=life['job_total_processes'],ordinary_occurrences=len(rr['calls']),graph_nodes=len(load(path/'native/GRAPH.json')['nodes']),resident_mean_us=statistics.mean(samples) if samples else None,resident_median_us=statistics.median(samples) if samples else None,resident_p95_us=sorted(samples)[math.ceil(.95*len(samples))-1] if samples else None,resident_max_us=max(samples) if samples else None,completed_call_mean_us=statistics.mean(calls) if calls else None,input_inclusive_first_call_phase_sum_us=init['CPU_materialize']+init['upload_and_sync']+(rr['calls'][0]['readback_return']-rr['calls'][0]['begin'])*1e6/rr['QPC_frequency'],**{k+'_us':v for k,v in init.items()});hosts.append(record)
+        active=[x for x in rr['calls'] if not x['warmup']]
+        component=lambda left,right:statistics.mean((x[right]-x[left])*1e6/rr['QPC_frequency'] for x in active) if active else None
+        record=dict(**row,compute_return_interval_mean_us=component('begin','compute_return'),explicit_sync_interval_mean_us=component('compute_return','sync_return'),post_sync_to_readback_return_mean_us=component('sync_return','readback_return'),numerical_qualified=receipt['numerical_qualified'],actual_method=rr['observer_method'],host_seconds=life['seconds'],peak_job_commit_bytes=life['peak_job_commit_bytes'],job_processes=life['job_total_processes'],ordinary_occurrences=len(rr['calls']),graph_nodes=len(load(path/'native/GRAPH.json')['nodes']),resident_mean_us=statistics.mean(samples) if samples else None,resident_median_us=statistics.median(samples) if samples else None,resident_p95_us=sorted(samples)[math.ceil(.95*len(samples))-1] if samples else None,resident_max_us=max(samples) if samples else None,completed_call_mean_us=statistics.mean(calls) if calls else None,input_inclusive_first_call_phase_sum_us=init['CPU_materialize']+init['upload_and_sync']+(rr['calls'][0]['readback_return']-rr['calls'][0]['begin'])*1e6/rr['QPC_frequency'],**{k+'_us':v for k,v in init.items()});hosts.append(record)
         if (path/'OBSERVATION.json').exists():
             obs=load(path/'OBSERVATION.json');assert obs['numerical_qualified']==receipt['numerical_qualified'] and obs['measured_us']==samples and obs['evidence_receipt_sha256']==sha(path/'EVIDENCE.json')
             stage=t['stage'];name='aa_pilot' if stage=='aa_pilot' else 'confirm0' if stage=='confirm' and t['block']<4 else 'confirm1' if stage=='confirm' else 'holdout0' if t['block']<4 else 'holdout1';bp=raw/f'{name}_BLOCK_{t["block"]}.json';block=load(bp) if bp.exists() else None
             obs['environment_qualified']=bool(block and block['environment_qualified']);record['environment_qualified']=obs['environment_qualified'];record['session_id']=obs['session_id'];observations.append(obs)
+    for stage_name in ['aa_pilot','confirm','holdout']:
+        for block in range(8):
+            planned=[t['task_id'] for t in plan['tasks'] if t['stage']==stage_name and t['block']==block]
+            starts=[]
+            for tid in planned:
+                process=attempts/tid/'host.PROCESS.json'
+                if process.exists():starts.append((load(process)['creation_filetime_100ns'],tid))
+            actual=[tid for stamp,tid in sorted(starts)];present=set(actual);assert actual==[tid for tid in planned if tid in present],'actual acquisition order differs from frozen plan'
     for cid,reference in refs.items():
         q=cases[cid]['q'];pieces=[]
         for query in range(q):
@@ -72,7 +82,7 @@ def export(out,draws=4000):
     with (out/'observations.jsonl').open('x',encoding='utf-8') as file:
         for x in observations:file.write(json.dumps(x,separators=(',',':'))+'\n')
     rows_csv(out/'HOSTS.csv',hosts);rows_csv(out/'COVERAGE.csv',coverage);result=analyze(plan,observations,draws=draws);save(out/'ANALYSIS.json',result)
-    summary=dict(hosts=len(hosts),graph_calls=sum(x['actual_calls'] or 0 for x in hosts),by_stage={k:dict(hosts=len(v),calls=sum(x['actual_calls'] or 0 for x in v),qualified=sum(x['numerical_qualified'] for x in v)) for k,v in _group(hosts,'stage').items()},observed_timing_hosts=len(observations),bootstrap_draws=draws,raw_byte_audit='ALL_OCCURRENCES_CHECKED',external_independent_review=False,raw_root_location_only=str(raw));save(out/'AUDIT.json',summary);print(json.dumps(summary),flush=True);return result
+    summary=dict(hosts=len(hosts),graph_calls=sum(x['actual_calls'] or 0 for x in hosts),by_stage={k:dict(hosts=len(v),calls=sum(x['actual_calls'] or 0 for x in v),qualified=sum(x['numerical_qualified'] for x in v)) for k,v in _group(hosts,'stage').items()},observed_timing_hosts=len(observations),bootstrap_draws=draws,actual_started_order_matches_plan=True,serial_derivation_and_full_reference_pairs_checked=True,raw_byte_audit='ALL_OCCURRENCES_CHECKED',external_independent_review=False,raw_root_location_only=str(raw));save(out/'AUDIT.json',summary);print(json.dumps(summary),flush=True);return result
 
 def _group(rows,key):
     groups=collections.defaultdict(list)

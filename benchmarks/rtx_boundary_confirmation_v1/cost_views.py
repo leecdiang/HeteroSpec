@@ -17,7 +17,7 @@ def analyze_views(plan_path,host_path,out):
             for (cid,b),arms in groups.items():
                 if set(arms)!=set(ARMS):continue
                 for label,x,y in [('AA','QB_A','QB_B'),('QB_QH','QB_A','QH_C'),('QB_QH_alt','QB_B','QH_C'),('PQ_QB','PQ','QB_A'),('PQ_QB_alt','PQ','QB_B')]:
-                    a,z=float(arms[x][column]),float(arms[y][column]);pairs[cid,label].append(dict(block=b,session=f'{stage}-session{b//4}',log_ratio=math.log(a/z),difference_us=a-z))
+                    a,z=float(arms[x][column]),float(arms[y][column]);pairs[cid,label].append(dict(block=b,session=arms[x]['session_id'],log_ratio=math.log(a/z),difference_us=a-z))
             geom={}
             selected=[c for c in plan['cases'] if c['cohort']==('confirmation' if stage=='confirm' else 'holdout')]
             for gid in sorted({c['geometry_id'] for c in selected}):

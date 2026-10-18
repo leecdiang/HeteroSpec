@@ -43,7 +43,7 @@ def export(out,draws=4000):
         if (path/'OBSERVATION.json').exists():
             obs=load(path/'OBSERVATION.json');assert obs['numerical_qualified']==receipt['numerical_qualified'] and obs['measured_us']==samples and obs['evidence_receipt_sha256']==sha(path/'EVIDENCE.json')
             stage=t['stage'];name='aa_pilot' if stage=='aa_pilot' else 'confirm0' if stage=='confirm' and t['block']<4 else 'confirm1' if stage=='confirm' else 'holdout0' if t['block']<4 else 'holdout1';bp=raw/f'{name}_BLOCK_{t["block"]}.json';block=load(bp) if bp.exists() else None
-            obs['environment_qualified']=bool(block and block['environment_qualified']);record['environment_qualified']=obs['environment_qualified'];observations.append(obs)
+            obs['environment_qualified']=bool(block and block['environment_qualified']);record['environment_qualified']=obs['environment_qualified'];record['session_id']=obs['session_id'];observations.append(obs)
     with (out/'observations.jsonl').open('x',encoding='utf-8') as file:
         for x in observations:file.write(json.dumps(x,separators=(',',':'))+'\n')
     rows_csv(out/'HOSTS.csv',hosts);rows_csv(out/'COVERAGE.csv',coverage);result=analyze(plan,observations,draws=draws);save(out/'ANALYSIS.json',result)

@@ -11,8 +11,8 @@ from common import V,load,save,sha
 from analyze import writecsv
 def tasks(w):
     D,H,G,S,q=(w[k] for k in ['d','Hq','Hkv','keys','q']);nodes=[]
-    def add(stage,owner,mac,scalar,depth,operands,deps,outbytes):
-        i=len(nodes);nodes.append(dict(id=i,stage=stage,owner=owner,mac=mac,scalar=scalar,depth=depth,operands=operands,deps=deps,outbytes=outbytes));return i
+    def add(stage,owner,mac,scalar,depth,operands,deps,outbytes,onchip_read=0):
+        i=len(nodes);nodes.append(dict(id=i,stage=stage,owner=owner,mac=mac,scalar=scalar,depth=depth,operands=operands,deps=deps,outbytes=outbytes,onchip_read=onchip_read));return i
     av_by_query=collections.defaultdict(list);first=collections.defaultdict(list)
     # Strong baselines see independent heads/queries,not a head0 serial feed.
     for start in range(0,S,64):
@@ -21,17 +21,22 @@ def tasks(w):
                 n=min(64,S-start);first[h,j].append(add('QK',h*q+j,n*D,0,4*D,[(f'K/{h//(H//G)}/{start}',n*D*2),(f'Q/{h}/{j}',D*4)],[],n*4))
     for h in range(H):
         for j in range(q):
-            owner=h*q+j;soft=add('SOFTMAX',owner,0,5*S,8*S+16,[(f'mask/{j}',S*4)],first[h,j],S*4)
+            owner=h*q+j;soft=add('SOFTMAX',owner,0,5*S,8*S+16,[(f'mask/{j}',S*4)],first[h,j],S*4,16*S)
             for start in range(0,D,64):
-                n=min(64,D-start);av_by_query[j].append(add('AV',owner,n*S,0,4*S,[(f'V/{h//(H//G)}/{start}',n*S*2)],[soft],n*4))
+                n=min(64,D-start);parent=soft
+                # Same ordered dot,now explicitly streamed so strong baselines
+                # can reuse/multicast bounded V tiles across GQA/query contexts.
+                for key in range(0,S,64):
+                    nk=min(64,S-key);parent=add('AV',owner,n*nk,0,4*nk,[(f'V/{h//(H//G)}/{start}/{key}',n*nk*2)],[parent],n*4,nk*4+(n*4 if key else 0))
+                av_by_query[j].append(parent)
     for j,parents in av_by_query.items():add('RESTORE',j,0,0,1,[],parents,D*H*4)
     assert sum(n['mac'] for n in nodes)==2*q*H*D*S
     assert sum(n['scalar'] for n in nodes)==5*q*H*S
     return nodes
 def simulate(w,r,policy):
-    nodes=tasks(w);P=r['engines'];score=w['q']*w['Hq']*w['keys']*4;context=P*64*16;descriptors=len(nodes)*32;queue=r['queue']*32;candidate=policy.startswith('candidate');control_extra=512 if candidate and policy!='candidate_no_overhead' else 0
+    nodes=tasks(w);P=r['engines'];score=w['q']*w['Hq']*w['keys']*4;context=w['q']*w['Hq']*w['d']*16;descriptors=len(nodes)*32;queue=r['queue']*32;candidate=policy.startswith('candidate');control_extra=512 if candidate and policy!='candidate_no_overhead' else 0
     memory=score+w['q']*w['Hq']*w['d']*4+context+descriptors+queue+r['cache_bytes']+control_extra
-    result=dict(policy=policy,context_bytes=context,score_bytes=score,descriptor_bytes=descriptors,queue_bytes=queue,cache_bytes=r['cache_bytes'],total_storage_bytes=memory,storage_limit_bytes=r['storage_bytes'])
+    result=dict(policy=policy,context_bytes=context,score_bytes=score,descriptor_bytes=descriptors,queue_bytes=queue,cache_bytes=r['cache_bytes'],total_storage_bytes=memory,storage_limit_bytes=r['storage_bytes'],workspace_scope='all-resident partial accumulators,score and finite ready table;capacity failure is not physical impossibility',queue_scope='bounded dispatch window over finite resident DAG table')
     if memory>r['storage_bytes']:return dict(result,status='UNSUPPORTED_CAPACITY',cycles=None)
     children=[[] for _ in nodes];remaining=[len(n['deps']) for n in nodes];finish=[0]*len(nodes);ready=[]
     for n in nodes:
@@ -44,7 +49,7 @@ def simulate(w,r,policy):
         for release,i in choices:
             n=nodes[i];engine=min(range(P),key=lambda p:engines[p]) if dynamic else n['owner']%P
             operands=n['operands'];miss=sum(size for key,size in operands if not use_reuse or key not in cache);available=max([release]+[cache[key][0] for key,size in operands if use_reuse and key in cache]);bank=zlib.crc32(str(n['owner']).encode())%r['banks'];start=max(engines[engine],available,banks[bank],dispatch)
-            transfer=math.ceil((miss+32+(n['outbytes'] if n['stage']=='RESTORE' else 0))/r['BW']);mem_begin=max(release,dram);ready_at=max(available,mem_begin+transfer);read_cycles=math.ceil((sum(size for key,size in operands)+n['outbytes'])/r['bank_BW']);start=max(start,ready_at,banks[bank]+read_cycles)
+            transfer=math.ceil((miss+32+(n['outbytes'] if n['stage']=='RESTORE' else 0))/r['BW']);mem_begin=max(release,dram);ready_at=max(available,mem_begin+transfer);read_cycles=math.ceil((sum(size for key,size in operands)+n['outbytes']+n['onchip_read'])/r['bank_BW']);start=max(start,ready_at,banks[bank]+read_cycles)
             cycles=max(math.ceil(n['mac']/r['mac_per_engine']),math.ceil(n['scalar']/r['scalar_per_engine']),n['depth']);end=start+cycles+math.ceil(n['outbytes']/r['bank_BW'])
             hits=sum(size for key,size in operands if use_reuse and key in cache)
             # Strong dynamic minimizes predicted finish in bounded ready window.
@@ -72,7 +77,8 @@ def simulate(w,r,policy):
     for engine in range(P):
         ordered=sorted((a,b) for e,a,b in events if e==engine);assert all(a[1]<=b[0] for a,b in zip(ordered,ordered[1:]))
     assert all(a[1]<=b[0] for a,b in zip(memory_events,memory_events[1:]))
-    return dict(result,status='SIMULATED',cycles=max(finish),modeled_DRAM_bytes=traffic,MACs=sum(n['mac'] for n in nodes),scalar_ops=sum(n['scalar'] for n in nodes),jobs=len(nodes),finite_resource_invariants=True,schedule_sha256=__import__('hashlib').sha256(str(events).encode()).hexdigest())
+    setup=math.ceil((context+descriptors+queue+control_extra)/r['BW'])+math.ceil(len(nodes)/8)
+    return dict(result,status='SIMULATED',cycles=max(finish),setup_cycles_assumed=setup,setup_scope='cold descriptor/context state initialization;not calibrated;input cache remains cold per modeled call',amortized_call_cycles={n:max(finish)+setup/n for n in [1,8,32]},modeled_DRAM_bytes=traffic,MACs=sum(n['mac'] for n in nodes),scalar_ops=sum(n['scalar'] for n in nodes),jobs=len(nodes),finite_resource_invariants=True,schedule_sha256=__import__('hashlib').sha256(str(events).encode()).hexdigest())
 def bound(w,r):
     q,H,G,D,S=(w[k] for k in ['q','Hq','Hkv','d','keys']);mac=2*q*H*D*S;scalar=5*q*H*S;B=q*H*D*4+2*S*G*D*2+S*q*4+q*H*D*4
     return dict(MAC_bound=mac/(r['engines']*r['mac_per_engine']),scalar_bound=scalar/(r['engines']*r['scalar_per_engine']),dependency_bound=4*D+12*S+16,compulsory_B_min=B,bandwidth_bound=B/r['BW'],cycles_lower_bound=max(mac/(r['engines']*r['mac_per_engine']),scalar/(r['engines']*r['scalar_per_engine']),4*D+12*S+16,B/r['BW']))

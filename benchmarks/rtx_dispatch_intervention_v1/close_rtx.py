@@ -56,11 +56,17 @@ def restore():
     save(fresh/'RESTORE.json',dict(status='ALL_MEMBERS_EXACT',members=len(index),archive_sha256=info['archive_sha256'],manifest_sha256=info['manifest_sha256'],same_host=True,external_review=False,seconds=time.monotonic()-start,storage=usage));print('restored',len(index),flush=True)
 def replay():
     r=root();fresh=Path(str(r)+'-fresh');arc=Path(str(r)+'-archive');s=load(r/'RUN_SPEC.json');environ=os.environ.copy();environ['HETEROSPEC_RUN_ROOT']=str(fresh/'raw');source=fresh/'raw/source_runtime';start=time.monotonic()
-    cmd=[s['python'],'-B',str(source/'audit_rtx.py'),'--out',str(fresh/'analysis')];p=subprocess.run(cmd,env=environ,capture_output=True,timeout=900)
+    cmd=[s['python'],'-B',str(source/'audit_final_rtx.py'),'--out',str(fresh/'analysis')];p=subprocess.run(cmd,env=environ,capture_output=True,timeout=900)
     save(fresh/'CPU_REPLAY.json',dict(command=cmd,exit=p.returncode,seconds=time.monotonic()-start,stdout=p.stdout.decode(errors='replace'),stderr=p.stderr.decode(errors='replace')));assert p.returncode==0,'fresh new-interpreter CPU audit failure'
     equality={}
     for file in (r/'analysis').iterdir():
         if file.is_file():assert file.read_bytes()==(fresh/'analysis'/file.name).read_bytes(),file.name;equality[file.name]=sha(file)
+    extra=[]
+    for label,cmd in [('trace',[str(source/'trace_summary.py'),'--out',str(fresh/'trace_analysis')]),('identity',[str(source/'identity_audit.py'),'--out',str(fresh/'IDENTITY_AUDIT.json')]),('archival',[str(source/'verify_archival.py'),'--out',str(fresh/'ARCHIVAL_AUDIT.json')])]:
+        began=time.monotonic();q=subprocess.run([s['python'],'-B',*cmd],env=environ,capture_output=True,timeout=900);save(fresh/(label+'_REPLAY.json'),dict(command=cmd,exit=q.returncode,seconds=time.monotonic()-began,stdout=q.stdout.decode(errors='replace'),stderr=q.stderr.decode(errors='replace')));assert q.returncode==0,label
+        if label=='trace':
+            for file in (r/'trace_analysis').iterdir():assert file.read_bytes()==(fresh/'trace_analysis'/file.name).read_bytes();equality['trace/'+file.name]=sha(file)
+        else:assert load(r/(label.upper()+'_AUDIT.json'))==load(fresh/(label.upper()+'_AUDIT.json'));equality[label]=sha(r/(label.upper()+'_AUDIT.json'))
     save(arc/'FRESH_RECOMPUTE.json',dict(status='PASS',all_member_bytes_exact=True,new_interpreter=True,same_host=True,external_review=False,scientific_files_byte_equal=equality,remote_raw_uploaded=False,CPU_seconds=time.monotonic()-start,GPU_calls=0));print('fresh CPU recomputation PASS',flush=True)
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('action',choices=['snapshot','package','restore','replay']);a=ap.parse_args();globals()[a.action]()

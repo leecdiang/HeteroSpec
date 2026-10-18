@@ -1,3 +1,24 @@
+# RTX dispatch intervention v1 — completed with negative qualification
+
+Actual result: **302 native hosts / 9,228 graph calls**; both sessions and8 blocks
+finished. **208/256 clean slots qualified;48 never started** after twelve planned
+qualification hosts exposed exact-reference mismatches. All failures retained.
+
+L1023→S1024 does not preserve reference bytes. L1023→S1025 qualifies, retains8
+kernels and costs about1.5% more than both controls. T0 ON compact-QH integrated
+transactions show no practical benefit against both identical QB controls.
+Keep QB and **SOFTWARE_FIRST/HOLD**. No further precision hunting for these inputs.
+
+Read [RESULT.md](RESULT.md), [EVIDENCE_NOTES.md](EVIDENCE_NOTES.md), generated
+[results](results/) and exact [execution artifacts](execution/). Full raw is local;
+all7,860 members restored and a new interpreter reproduced scientific exports.
+Local restore, remote compact-artifact verification and external review are
+separate claim levels. UUID is permanently closed; no old experiment resumed.
+
+The original design below is historical. No model/decoder/actor/hardware tasks.
+
+---
+
 # RTX dispatch intervention v1
 
 DESIGN_ONLY; stacked on PR122. Read [PROTOCOL.md](PROTOCOL.md) for the scientific

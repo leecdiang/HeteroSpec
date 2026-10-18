@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-18",
+  "repository": "leecdiang/HeteroSpec",
+  "repository_evidence": [
+    {
+      "id": "PR104",
+      "commit": "f997262d6b0accb126a1217c9356745cc8bbf708",
+      "path": "benchmarks/rtx_qb_confirmation_v1/final_20261015/RESULT.md",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/f997262d6b0accb126a1217c9356745cc8bbf708/benchmarks/rtx_qb_confirmation_v1/final_20261015/RESULT.md",
+      "scope": "72 exposed full-tensor contexts and six-session request costs; not long unmasked context or universal equivalence",
+      "checkout_dependency": "fetch selected artifacts separately if needed"
+    },
+    {
+      "id": "PR110",
+      "commit": "dae5aea9f9009a686196dd89981c0ae9699ae612",
+      "path": "benchmarks/rtx_reference_packing_v1/model.py",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/dae5aea9f9009a686196dd89981c0ae9699ae612/benchmarks/rtx_reference_packing_v1/model.py",
+      "result_path": "benchmarks/rtx_reference_packing_v1/RESULT.md",
+      "scope": "Shared scheduler across mapping labels; cropped inputs; abstract numerical reference, not recovered RTX DAG",
+      "checkout_dependency": "optional M1 source; not a core RTX execution dependency"
+    },
+    {
+      "id": "PR111",
+      "commit": "9fafc4ba49119f1c52e1606d295bd0b9a55a06d1",
+      "path": "benchmarks/b570_representation_portability_v1/RESULT.md",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/9fafc4ba49119f1c52e1606d295bd0b9a55a06d1/benchmarks/b570_representation_portability_v1/RESULT.md",
+      "scope": "Frozen Vulkan necessary support-condition violation and CPU semantics; actual GPU placement unknown",
+      "checkout_dependency": "read-only research evidence; no B570 execution"
+    },
+    {
+      "id": "PR116",
+      "commit": "2b5ed1552263907df3adfdff9b0121d115734a6c",
+      "path": "benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/numerical_delivery/RESULT.md",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/2b5ed1552263907df3adfdff9b0121d115734a6c/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/numerical_delivery/RESULT.md",
+      "reference_index_path": "benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/REFERENCE_INDEX.json",
+      "plan_path": "benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/PLAN.json",
+      "scope": "24 contexts, five layouts, two fresh-process repetitions; instrumented numerical evidence only",
+      "checkout_dependency": "inherited source; resolve actual CAS/input bytes and hashes"
+    },
+    {
+      "id": "PR118_R2",
+      "commit": "8a4cbb4246323a3f159f94cae8c92544d5a215dc",
+      "path": "benchmarks/rtx_lowering_envelope_v1/s1b_monitor_repair_v2/delivery/block0_r2/RESULT.md",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/8a4cbb4246323a3f159f94cae8c92544d5a215dc/benchmarks/rtx_lowering_envelope_v1/s1b_monitor_repair_v2/delivery/block0_r2/RESULT.md",
+      "forensic_path": "benchmarks/rtx_lowering_envelope_v1/s1b_monitor_repair_v2/delivery/block0_r2/FORENSIC.json",
+      "native_source_path": "benchmarks/rtx_lowering_envelope_v1/s1b_cost_v1/native_cost.cpp",
+      "graph_source_path": "benchmarks/rtx_lowering_envelope_v1/s1b_cost_v1/hs113_graph.h",
+      "allocator_source_path": "benchmarks/rtx_lowering_envelope_v1/s1b_cost_v1/graph_base.h",
+      "scope": "Terminal failed second execution, zero qualified timing; opening PR body is stale relative to r2",
+      "checkout_dependency": "pinned parent; preserve old runs and guards"
+    }
+  ],
+  "external_primary_sources": [
+    {
+      "id": "batch_invariant_inference",
+      "title": "Defeating Nondeterminism in LLM Inference",
+      "url": "https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/",
+      "use": "Reduction behavior and batch invariance; not proof for HeteroSpec"
+    },
+    {
+      "id": "vosti",
+      "arxiv": "2609.38981v1",
+      "url": "https://arxiv.org/html/2609.38981v1",
+      "use": "Prior kernel/state compositional determinism work"
+    },
+    {
+      "id": "llm42",
+      "arxiv": "2601.17768",
+      "url": "https://arxiv.org/abs/2601.17768",
+      "code_url": "https://github.com/microsoft/llm-42",
+      "use": "Reference verification and rollback; distinct from direct mapping compatibility"
+    },
+    {
+      "id": "dash",
+      "title": "DASH: Deterministic Attention Scheduling for High-throughput Reproducible LLM Training",
+      "arxiv": "2601.21824v1",
+      "url": "https://arxiv.org/html/2601.21824v1",
+      "use": "Prior deterministic backward-attention DAG scheduling; not a forward verification benchmark"
+    },
+    {
+      "id": "spectra",
+      "arxiv": "2609.24847v1",
+      "url": "https://arxiv.org/html/2609.24847v1",
+      "use": "FPGA speculative-decoding mapping and multicast prior art"
+    },
+    {
+      "id": "specstream",
+      "title": "Resource-Efficient Speculative Decoding for Long-Context LLM Serving",
+      "arxiv": "2609.33184v1",
+      "url": "https://arxiv.org/pdf/2609.33184",
+      "use": "Committed-history streaming and speculative local state prior art; not named LongSpec"
+    },
+    {
+      "id": "flashinfer_attention",
+      "url": "https://docs.flashinfer.ai/api/attention.html",
+      "use": "Fixed split/merge and deterministic configuration options; pin actual version before any comparison"
+    },
+    {
+      "id": "windows_qpc",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps",
+      "use": "Completed host-latency clock semantics"
+    },
+    {
+      "id": "cuda_async",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html",
+      "use": "Completion/synchronization and event timing boundaries"
+    },
+    {
+      "id": "cupti",
+      "url": "https://docs.nvidia.com/cupti/",
+      "use": "Optional physical activity collection; logical graph counts do not substitute"
+    }
+  ]
+}

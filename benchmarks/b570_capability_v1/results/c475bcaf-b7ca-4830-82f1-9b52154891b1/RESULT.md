@@ -37,10 +37,18 @@ supervisor样本10612条，最大有效间隔2.2297033秒；watchdog样本10703�
 EVIDENCE_MANIFEST.json：SHA256 `8e6bb5086571e1b00f7a0978913d42f0be4e52ae4e8d8d207eb7a7ed6ed3e1b5`，7241个文件、25195882B逻辑字节。它在所有worker退出后建立，不包含自身及delivery/post_manifest/；该收尾前沿单独认证，避免自我哈希递归。
 
 RAW_EVIDENCE.zip：4956702B，7242成员（含清单自身），SHA256 `0df8d09fa4f79329964d4db8dbe2cbb8e47ba80863b451761efd2d99e525c07f`，Git blob `f8b427b1f6a9cd8b8e64c97195cd051636556f67`。完整保留所有开发失败、源码修订、审查、Q/S原始事件、样本和每身份寿命。
-本地根：`C:/hs/b570-capability-v1/c475bcaf-b7ca-4830-82f1-9b52154891b1`。远端实际回读/下载状态见 REMOTE_AUTHENTICATION.json，尚未发生的步骤不预填成功。
+实际从GitHub远端Base64传输blob `ce5128dd53e95c49bbbdaf0fe3d8c42cc350d33c` 下载并解码到全新目录，ZIP字节/SHA256与上述原始binary blob一致；7242成员全部逐一验哈希，清单本身逐字节一致。恢复包内未修改 `verify.py` 再执行 `audit()`，全部非工具绑定字段与本地重算一致。迁移后未传入原绝对root/cwd的tool_receipt，故其自身返回CAPABILITY_3CHECK_PASS/tool_exit_checked=false；不声称迁移后的完整ENDURANCE_PASS或原始输出逐字节一致。原位置完整工具链绑定已单独通过。16份实际源码/配置/回执和报告/清单均已远端回读认证。
+
+本地根：`C:/hs/b570-capability-v1/c475bcaf-b7ca-4830-82f1-9b52154891b1`。远端实际回读/下载状态与接口失败见 REMOTE_AUTHENTICATION.json。完整收尾命令、认证、恢复、逐身份/逐用例导出另存 TAIL_EVIDENCE.json，尾部清单明确排除自身与后续远端回执。
 
 ## 观测与结论边界
 
 watchdog自己的OS退出、命令shell、工具服务及部分预检/开发/审查/交付进程没有外部OS生命周期覆盖；未知字段为null，工具退出码不冒充OS闭合。两次审查根进程有独立退出记录，其瞬时后代没有完整逐身份寿命。OUTER_COVERAGE.json逐项列出命令与覆盖边界。因此本结果**不是**旧任务完整总账、旧八项验收、ENGINEERING_READY、GPU适用性或论文结论。
 
 GPU查询/初始化/插件、工作负载模型文件读取/请求、科学图执行均0。2次独立代码审查服务调用另列，不是B570模型实验。未调用startCold或旧审计器。旧PR119、PR115、PR117保持不变；论文/main/RTX/release/自动化未修改。没有自动启动任何后续验证或科学任务。
+
+## 最终收尾计账与状态
+
+2026-10-18T05:58:50.122Z实际计账前沿：从首次准备起12876.6776294单调秒（约3小时34分37秒），R阶段417.0038817秒。14508文件、2224目录，逻辑65982988B；实际卷簇4096B，逐文件簇向上取整加目录保留后117256192B。另保留64MiB给本次尾部封装与连接器交付，计账184365056B < 1GiB。后续只使用现有文件/GitHub服务，不再创建本地任务子命令；最后截止前沿另见 DELIVERY_STATE.json。命令015清单、016只读核验、017归档、018下载恢复分别记录，生命周期未知字段保持null，不隐藏尾部工具成本。
+
+远端完整worker/raw包已交付，恢复哈希认证完成；尾部采用单独JSON证据包和清单，避免把不存在的外层OS回执写成已证明。结论为 **CAPABILITY_ENDURANCE_PASS（限定范围）**，不是ENGINEERING_READY。任务至此收尾，无后续执行授权。

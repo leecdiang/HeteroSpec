@@ -1,5 +1,45 @@
 # RTX mechanism and strong software baselines v1
 
+**EXECUTED / FRESH_CPU_RECOMPUTATION_PASS / SOFTWARE_FIRST_HOLD.**
+Actual results: [RESULT.md](RESULT.md), [SCIENTIFIC_FINDINGS.json](SCIENTIFIC_FINDINGS.json),
+[results/](results/). All historical UUIDs remain sealed.
+
+Actual1137 GPU-native hosts /40124 explicit GGML graph calls: core956 hosts/34124
+calls, five capability attempts/32calls(including one preserved pre-graph CUPTI
+startup failure), and a separately frozen OFF producer cohort176hosts/5968calls.
+Core includes44 fresh serial references,144 numerical qualifications and768
+timing hosts/two independent cycle starts. Optional OFF includes16 new q4 serial
+captures,32 qualifications and128 timing hosts. No scientific reruns.
+
+Actual CUPTI capture/end/instantiate/replay verifies16 distinct ON signatures
+across18 layout coordinates(q1 shares a path). Clean hosts do not load CUPTI.
+24 profile attempts include the failure;23 actual timelines complete. All formal
+ordinary outputs and complete input bytes qualify against new references.
+
+QB_A ON/OFF completed-cost ratios range0.615–0.849 on these selected geometries.
+The OFF QB/QH cost gap narrows greatly with replay; fine mapping differences need
+same-unit A/A caution. Actual QB kernel counts change8→3→8 at1023/1024/1025 keys;
+compact Q removes one repeated copy kernel from QH_C at256. No physical traffic,
+occupancy,TensorCore utilization or hardware benefit is established.
+
+The continuous Q copy/transpose→upload→compute/sync→readback experiment charges
+conversion in one actual interval. QH compact/permuted ratios0.965833(q2) and
+0.947658(q4) are **OFF-only**, without an identical-arm A/A certificate. Natural Q
+production, ON integrated transactions, actor/decoder/system benefit remain UNKNOWN.
+
+All26545 archive members restore byte-exact; all scientific tables and raw audits
+recompute in new interpreters on this host. This is not external review or remote
+raw authentication. [RAW_LOCATION.json](RAW_LOCATION.json) supplies hashes/location.
+[execution/](execution/) contains byte-copied consumed JSON with text conversion
+disabled, bound by [EXACT_ARTIFACTS.json](EXACT_ARTIFACTS.json). Actual consumed
+code/binaries are retained in raw SOURCE/SOURCE_REPAIR1; ordinary Git text can useLF.
+[COMMANDS.md](COMMANDS.md) records actual commands and CPU-only reconstruction.
+
+**Permanently closed UUID. Do not resume any GPU stage. No actor/decoder/W1,
+weights,B570,paper/main,RTL/FPGA,merge or release was performed.**
+
+## Initial design text (historical; actual status is above)
+
 **CPU_DESIGN_READY / NATIVE_IMPLEMENTATION_PENDING / GPU_NOT_RUN.**
 Parent: PR121, `d82ec4097adfa032886040e075e71e41cfeb5855`.
 

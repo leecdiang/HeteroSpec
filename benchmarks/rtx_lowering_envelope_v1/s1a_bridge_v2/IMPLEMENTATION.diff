@@ -1,0 +1,151 @@
+--- closed_v1/common.py
++++ independent_v2/common.py
+@@ -2,7 +2,7 @@
+ import hashlib,json,os
+ from pathlib import Path
+ V=Path(__file__).resolve().parent
+-RUN='pr113-s1a-bridge-v1'
++RUN='pr114-s1a-bridge-v2'
+ def load(p):return json.loads(Path(p).read_bytes())
+ def sha(p):
+     h=hashlib.sha256()
+--- closed_v1/evidence.py
++++ independent_v2/evidence.py
+@@ -4,7 +4,7 @@
+ from common import V,load,save,sha
+ ESSENTIAL=('F0.json','PLAN.json','REFERENCE_INDEX.json','CPU_GRAPH_EXPECTED.json','ABI_EXPORTS.json',
+     'analyzer.py','raw_math.py','common.py','native_formal.cpp','formal_gate.h','hs113_graph.h','core_gate.h','lowering113_formal.exe',
+-    'run_bridge.py','bounded.py','lifecycle.py','cpu_job.py','evidence.py','offline.py','AMENDMENT.md','BUDGET_FINAL.json','AUTHENTICATED_F0.json','REMOTE_F0_BYTES.json')
++    'readiness_policy.py','READINESS_REVIEW.md','run_bridge.py','bounded.py','lifecycle.py','cpu_job.py','evidence.py','offline.py','AMENDMENT.md','BUDGET_FINAL.json','AUTHENTICATED_F0.json','REMOTE_F0_BYTES.json')
+ 
+ def package(root,out,frozen=V):
+     root=Path(root);out=Path(out);assert not out.exists()
+--- closed_v1/formal_gate.h
++++ independent_v2/formal_gate.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ // Included after the unchanged Graph/address interpreter. No arithmetic here.
+ namespace formal113 {
+-static constexpr const char* RUN="pr113-s1a-bridge-v1";
++static constexpr const char* RUN="pr114-s1a-bridge-v2";
+ static std::string file_hash(const fs::path&p){
+     HANDLE f=CreateFileW(p.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+     hs113::require(f!=INVALID_HANDLE_VALUE,"hash input missing");auto s=repair113::hash_handle(f);CloseHandle(f);return s;
+@@ -17,7 +17,7 @@
+     hs113::require(f0path.is_absolute(),"absolute F0 required");
+     if(!cpu)hs113::require(repair113::same_path(f0path,repair113::module_path(nullptr).parent_path()/"F0.json"),"registered F0 path required");
+     auto digest=job.at("approved_stage_F0").get<std::string>();hs113::require(digest.size()==64&&file_hash(f0path)==digest,"exact F0 SHA binding");
+-    J f0=read(f0path);hs113::require(f0.at("run_id")==RUN&&f0.at("stage")=="S1A_BRIDGE_V1","F0 stage/run binding");
++    J f0=read(f0path);hs113::require(f0.at("run_id")==RUN&&f0.at("stage")=="S1A_BRIDGE_V2","F0 stage/run binding");
+     hs113::require(cpu||!f0.value("CPU_fixture_only",false),"CPU fixture is never GPU authorization");
+     hs113::require(file_hash(repair113::module_path(nullptr))==f0.at("executable_sha256"),"actual host SHA binding");
+     fs::path pp=f0.at("plan_path").get<std::string>();hs113::require(file_hash(pp)==f0.at("plan_sha256"),"frozen plan SHA");J plan=read(pp);
+--- closed_v1/offline.py
++++ independent_v2/offline.py
+@@ -27,7 +27,7 @@
+         if a.action=='census-readback':
+             assert a.commit and len(a.commit)==40 and all(x in '0123456789abcdef' for x in a.commit)
+             for name in ('CENSUS.json','DECISION.json'):
+-                endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/census_delivery/'+name+'?ref='+a.commit
++                endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/census_delivery/'+name+'?ref='+a.commit
+                 prefix=d/name
+                 worker.run([f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw'],prefix,min(60,deadline.remaining()-5),env(''),b['process_commit_bytes'],deadline.guard,log_cap=16*1024**2)
+                 assert sha(prefix.with_suffix('.stdout'))==sha(V/'census_delivery'/name)
+@@ -36,7 +36,7 @@
+         if a.action=='readback':
+             assert a.commit and len(a.commit)==40 and all(x in '0123456789abcdef' for x in a.commit)
+             assert not readback.exists() and archive.exists()
+-            endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/closure/RAW_BRIDGE.zip?ref='+a.commit
++            endpoint='repos/leecdiang/HeteroSpec/contents/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/closure/RAW_BRIDGE.zip?ref='+a.commit
+             command=[f0['gh']['path'],'api',endpoint,'--header','Accept: application/vnd.github.raw'];prefix=out/'readback';cap=f0['budget']['storage']['archive_upper_bound_bytes']
+         else:command=commands[a.action];prefix=d/'worker';cap=32768
+         assert (root/'NUMERICAL_ENDED.json').exists() or (root/'CENSUS_ENDED.json').exists(),'sealed stage required'
+--- closed_v1/prepare_plan.py
++++ independent_v2/prepare_plan.py
+@@ -4,7 +4,7 @@
+ from pathlib import Path
+ B=Path('D:/hs113/benchmarks/rtx_lowering_envelope_v1')
+ import importlib.util
+-spec=importlib.util.spec_from_file_location('reviewed_design',Path('D:/hs113-bridge/docs/experiments/rtx_lowering_envelope_20261015/design_checks.py'))
++spec=importlib.util.spec_from_file_location('reviewed_design',Path('D:/hs114-bridge-v2/docs/experiments/rtx_lowering_envelope_20261015/design_checks.py'))
+ design=importlib.util.module_from_spec(spec);spec.loader.exec_module(design)
+ def main():
+     old=load(B/'repair_timer_v1/GPU14_F0.json');source=load(B/'DESCRIPTOR_PLAN.json')
+@@ -18,7 +18,7 @@
+     assert len(ds)==24 and len(chosen)==24
+     original_graphs=load(B/'repair_timer_v1/CPU_REGISTRY_release.json')['records']
+     graphs={(g['descriptor_id'],g['layout']):g for g in original_graphs if g['stage_outputs']}
+-    root='D:/hs113-s1a-bridge-v1';refs={};slots=[];unique_inputs={};immutable={};max_input=0
++    root='D:/hs114-s1a-bridge-v2';refs={};slots=[];unique_inputs={};immutable={};max_input=0
+     for d in ds:
+         p=Path(d['root']);m=load(p/'snapshot.json');assert m==d['metadata']
+         input_files=[];files={}
+--- closed_v1/run_bridge.py
++++ independent_v2/run_bridge.py
+@@ -10,6 +10,7 @@
+ from lifecycle import Child,process_commit
+ import analyzer
+ from bounded import State,Deadline,ByteLedger,BudgetStop,durable
++from readiness_policy import validate_policy,validate_observation
+ 
+ def size(root,exclude_cas=False):
+     total=0
+@@ -18,15 +19,18 @@
+         if p.is_file() and not (exclude_cas and p.relative_to(root).parts[0]=='cas'):total+=p.stat().st_size
+     return total
+ def check(f0,plan):
+-    assert f0['run_id']==plan['run_id']==RUN and f0['stage']=='S1A_BRIDGE_V1' and not f0.get('CPU_fixture_only')
++    assert f0['run_id']==plan['run_id']==RUN and f0['stage']=='S1A_BRIDGE_V2' and not f0.get('CPU_fixture_only')
+     assert f0['plan_sha256']==sha(V/'PLAN.json') and len(plan['descriptors'])==24 and len(plan['numerical_slots'])==240
+     slots=plan['numerical_slots'];assert all(s['q']==1 for s in slots[:60]) and all(s['q']>1 for s in slots[60:])
+     assert len({(s['descriptor'],s['layout'],s['repeat']) for s in slots})==240
+     assert sum(s['registered_support_queries'] for s in slots)==3612
+     assert f0['budget']==load(V/'BUDGET_FINAL.json')
++    validate_policy(f0['admission_policy'])
++    assert f0['execution_root']==plan['execution_root']=='D:/hs114-s1a-bridge-v2'
++    assert f0['support_inheritance']=='NEW_CENSUS_REQUIRED_NO_TRANSFER'
+     for p in f0['files']:assert sha(p['path'])==p['sha256'],p['path']
+ def approval_gate(stage,f0_path,approval):
+-    assert approval['stage']=={'census':'BRIDGE_CENSUS_ONLY','numerical':'BRIDGE_NUMERICAL_EXACT'}[stage]
++    assert approval['stage']=={'census':'BRIDGE_V2_CENSUS_ONLY','numerical':'BRIDGE_V2_NUMERICAL_EXACT'}[stage]
+     assert approval['F0_sha256']==sha(f0_path) and approval['run_id']==RUN
+     assert approval['author_message'] and approval['author_message_sha256']==hashlib.sha256(approval['author_message'].encode()).hexdigest()
+     authenticated=load(V/'AUTHENTICATED_F0.json')
+@@ -72,7 +76,8 @@
+     result=dict(gpu=name,driver=driver,total_MiB=float(total),used_MiB=float(used),util=float(util),temperature_C=float(temp),AC=power.AC,power_scheme_guid=scheme)
+     save(d/'ADMISSION.json',result)
+     assert (name,driver,float(total))==(policy['gpu'],policy['driver'],policy['total_MiB'])
+-    assert power.AC==1 and scheme==policy['power_scheme_guid'] and float(util)<=5 and float(temp)<=55 and float(total)-float(used)>=512,'readiness gate: no cooldown/retry'
++    decision=validate_observation(result,policy)
++    save(d/'READINESS_DECISION.json',decision)
+ 
+ def main():
+     begin=time.perf_counter()
+@@ -140,6 +145,7 @@
+             current_dir=root/'census' if a.stage=='census' else root/'numerical'/('%03d'%slot['index'])
+             current_dir.mkdir(parents=True,exist_ok=False)
+             account.reserve(limits['census_nonCAS_bytes'] if a.stage=='census' else limits['numeric_producer_reservation_bytes'])
++            owned_conflicts(f0) # OS metadata only, no free GPU probe
+             save(current_dir/'SLOT_PLANNED.json',slot);readiness(worker,current_dir,f0,deadline.guard,on_start=lambda pid:setattr(state,'active_pid',pid))
+             job=wire(slot,V/'F0.json');save(current_dir/'ADMITTED_JOB.json',job)
+             command=[f0['executable'],'--gpu-census' if a.stage=='census' else '--gpu-run',str(current_dir/'ADMITTED_JOB.json'),slot['native_output']]
+--- closed_v1/test_native_cpu.py
++++ independent_v2/test_native_cpu.py
+@@ -15,7 +15,7 @@
+ def main():
+     plan=load(V/'PLAN.json');F=V/'CPU_FIXTURE';F.mkdir(exist_ok=False)
+     runtime=plan['census_wire']['runtime_directory'];dlls=load(Path('D:/hs113/benchmarks/rtx_lowering_envelope_v1/repair_timer_v1/GPU14_F0.json'))['numerical_DLLs']
+-    fixture=dict(run_id=RUN,stage='S1A_BRIDGE_V1',CPU_fixture_only=True,executable_sha256=sha(V/'lowering113_formal.exe'),plan_path=str(V/'PLAN.json'),plan_sha256=sha(V/'PLAN.json'),runtime_directory=runtime,numerical_DLLs=dlls)
++    fixture=dict(run_id=RUN,stage='S1A_BRIDGE_V2',CPU_fixture_only=True,executable_sha256=sha(V/'lowering113_formal.exe'),plan_path=str(V/'PLAN.json'),plan_sha256=sha(V/'PLAN.json'),runtime_directory=runtime,numerical_DLLs=dlls)
+     save(F/'F0.json',fixture);paths=[]
+     for i,s in enumerate(plan['numerical_slots']):
+         p=F/'wires'/('%03d.json'%i);save(p,wire(s,F/'F0.json'));paths.append(str(p))
+@@ -45,7 +45,7 @@
+     save(F/'CAS.json',dict(input=plan['numerical_slots'][0]['input_files'][0]['path']))
+     native('native_CAS_full_bytes','--cpu-cas',F/'CAS.json',V/'cpu_tests/CAS')
+     base=wire(plan['numerical_slots'][0],F/'F0.json');negative=[]
+-    changes=[('wrong_run','run_id','pr113-timer-gpu-regression-v1'),('wrong_F0_hash','approved_stage_F0','0'*64),('missing_F0','F0_path',str(F/'absent.json')),
++    changes=[('wrong_run','run_id','pr113-s1a-bridge-v1'),('wrong_F0_hash','approved_stage_F0','0'*64),('missing_F0','F0_path',str(F/'absent.json')),
+         ('wrong_stage','stage','TIMING'),('wrong_layout','layout','QH_C'),('wrong_repeat','repeat',True),('wrong_index','index',240),
+         ('wrong_root','root',str(F)),('wrong_runtime','runtime_directory',str(F)),('wrong_core_hash','core_sha256','0'*64),
+         ('wrong_CAS','cas_root',str(F)),('wrong_output','native_output',str(F)),('hidden_warmup','warmups',1),('two_calls','graph_computes',2),('clean_mode','kind','clean')]

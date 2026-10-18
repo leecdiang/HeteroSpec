@@ -1,6 +1,6 @@
 """Prospective six-feature smooth cost rule; no holdout bytes read during fitting.
 
-Source registered before B0 results. Fit once on complete confirmation; no model
+Source added during B0 acquisition before inspecting its costs. Fit once on complete confirmation; no model
 selection/retraining on optional outputs. Prediction is a charged offline phase sum,
 not an integrated runtime selector or new decoder implementation.
 """

@@ -106,7 +106,8 @@ def main():
     for family in ['Qwen','SmolLM2','Llama']:
         m=next(c for c in s['contexts'] if c['family']==family)['metadata']
         for q in range(1,5):
-            for S in [256,128,1024,4096]:workloads.append(dict(family=family,d=m['Q']['ne'][0],Hq=m['Q']['ne'][2],Hkv=m['K']['ne'][2],q=q,keys=S,cohort='authentic_geometry_padded_extent' if S==256 else 'synthetic_full_visible_extension',reference_kind='ABSTRACT_REFERENCE'))
+            source=next(c for c in s['contexts'] if c['family']==family and c['q']==q);mask=Path(source['root'],'mask.bin').read_bytes();mm=source['metadata']['mask'];visible=[sum(math.isfinite(struct.unpack_from('<f',mask,k*mm['nb'][0]+j*mm['nb'][1])[0]) for k in range(256)) for j in range(q)]
+            for S in [256,128,1024,4096]:workloads.append(dict(family=family,d=m['Q']['ne'][0],Hq=m['Q']['ne'][2],Hkv=m['K']['ne'][2],q=q,keys=S,visible_min=min(visible) if S==256 else S,visible_max=max(visible) if S==256 else S,dense_masked_work_not_skipped=True,cohort='authentic_geometry_padded_extent' if S==256 else 'synthetic_full_visible_extension',reference_kind='ABSTRACT_REFERENCE',bound_scope='cold full numerical-DAG contract;every declared operand input exposed;not an ordinary-only algebraic lower bound'))
     common=dict(engines=8,mac_per_engine=16,scalar_per_engine=16,banks=8,cache_bytes=32768,queue=32,storage_bytes=8*1024**2,BW=4096,bank_BW=512)
     regimes={'compute':common,'bandwidth':dict(common,BW=32),'context_port':dict(common,BW=512,bank_BW=16,storage_bytes=256*1024,queue=8)}
     policies=['strong_static','strong_dynamic','candidate','candidate_no_dynamic','candidate_no_reuse','candidate_no_overhead'];rows=[];oracle=oracle_tests()
@@ -116,6 +117,7 @@ def main():
             for policy in policies:
                 assert time.monotonic()-started<3600
                 result=simulate(w,r,policy);assert result['cycles'] is None or result['cycles']>=lower['cycles_lower_bound'];rows.append(dict(w,regime=regime,resources=r,**lower,**result))
+            rows.append(dict(w,regime=regime,resources=r,**lower,policy='optimistic_bound',status='LOWER_BOUND_ONLY_NOT_FEASIBILITY',cycles=lower['cycles_lower_bound']))
     writecsv(V,'MODEL.csv',rows)
     save(V/'MODEL_REVIEW.json',dict(status='ABSTRACT_MODEL_COMPLETE',rows=len(rows),workloads=len(workloads),unique_original_geometries=len({(w['d'],w['Hq'],w['Hkv']) for w in workloads}),policies=policies,regimes=regimes,oracle=oracle,seconds=time.monotonic()-started,source_sha256=sha(V/'model.py'),source_PR110_review='one shared scheduler under5labels;not reused as distinct baselines',finite_context_storage_and_queue=True,full_geometry=True,RTX_calibrated=False,RTX_numerical_DAG='UNKNOWN',area_frequency_PPA='UNKNOWN',claim='illustrative finite-resource attention model;cannot identify RTX hardware headroom from host latency'))
     print('M1',len(rows),'rows',time.monotonic()-started,'seconds')

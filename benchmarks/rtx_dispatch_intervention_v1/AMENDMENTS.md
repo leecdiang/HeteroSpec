@@ -25,3 +25,8 @@
   sparse checkout; then missing NVCC-header path. Both fixed before any GPU call.
 - Statistical screen is prospective and implements BOTH controls, both values,
   both sessions, all8 blocks, stratified block intervals and matched A/A scale.
+
+- Pre-graph verifier path correction: F0 included import libraries/PDB files;
+  verifier now resolves all actual build artifacts, not just EXE. Initial F0
+  and failed admission retained. No GPU stage or query had started. Native
+  binary, numerical semantics, inputs and plan remain byte-identical.

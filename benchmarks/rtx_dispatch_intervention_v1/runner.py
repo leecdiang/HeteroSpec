@@ -150,8 +150,8 @@ def guard(s):
         _last_storage=time.monotonic()
 
 def verify_freeze():
-    r=root();f=load(r/'FREEZE.json');s=load(r/'RUN_SPEC.json');assert s['run_id']=='rtx-dispatch-intervention-v1' and s['execution_id']==r.name
-    for name,d in f['files'].items():assert sha(V/('build/'+name if name.endswith('.exe') else name))==d,'source drift '+name
+    r=root();f=load(r/('FREEZE_REPAIR1.json' if (r/'FREEZE_REPAIR1.json').exists() else 'FREEZE.json'));s=load(r/'RUN_SPEC.json');assert s['run_id']=='rtx-dispatch-intervention-v1' and s['execution_id']==r.name
+    for name,d in f['files'].items():assert sha(V/('build/'+name if (V/'build'/name).exists() else name))==d,'source drift '+name
     for key,name in [('plan_exact_sha256','plan.json'),('spec_sha256','RUN_SPEC.json'),('runtime_manifest_sha256','RUNTIME_MANIFEST.json'),('input_index_sha256','INPUTS.json'),('policy_sha256','EXECUTION_POLICY.json')]:assert sha(r/name)==f[key],name+' drift'
     return s,f
 

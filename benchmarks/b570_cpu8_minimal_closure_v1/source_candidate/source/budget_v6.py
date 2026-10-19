@@ -52,7 +52,8 @@ def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
    need(z['charged_process_seconds']>=charge and z['charged_starts']==actual_starts and
         charge<=x['lifetime_bound_seconds'],'settlement undercharge or envelope overrun')
    # Distinct observed + outside charging; no unexplained +2 or zero-cost provider.
-   life+=charge;starts+=actual_starts
+   # A larger saved conservative settlement must never reduce later cumulative billing.
+   life+=max(charge,z['charged_process_seconds']);starts+=actual_starts
   else:life+=x['lifetime_bound_seconds'];starts+=x['starts_bound'];open_ops.append(x['id'])
  wall=math.ceil((datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(c['first_preparation_utc'].replace('Z','+00:00'))).total_seconds())
  need(wall>=0,'clock')

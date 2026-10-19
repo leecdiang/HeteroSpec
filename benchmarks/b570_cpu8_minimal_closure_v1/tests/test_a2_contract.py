@@ -1,5 +1,6 @@
 """Static source-contract regressions. Synthetic fixtures; never Windows/native/GPU."""
 import copy
+import ast
 import hashlib
 import json
 import sys
@@ -288,6 +289,53 @@ class IndependentReviewerCapture(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source author identity required"):
             self.check()
 
+
+
+
+class RecoverySourceContracts(unittest.TestCase):
+    """Parse-only and source-contract regression; never imports Win32 or launches a fixture."""
+
+    def test_all_candidate_python_overlays_parse(self):
+        root = SRC.parent
+        files = sorted(root.rglob("*.py"))
+        self.assertGreaterEqual(len(files), 16)
+        for path in files:
+            with self.subTest(path=path.relative_to(root)):
+                ast.parse(path.read_text(encoding="utf8"), filename=str(path))
+
+    def test_guard_prebooks_unsettled_operation_before_native_job(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("state['open_operations'].count(x['id'])==1", code)
+        self.assertLess(code.index("state=snapshot(ROOT,x['stage'])"), code.index("job=make_job()"))
+        self.assertIn("fresh task/stage operation binding", code)
+        self.assertIn("and code==0 else 'FAILED'", code)
+
+    def test_guard_has_native_deadline_event(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("j.emit('OPERATION_DEADLINE'", code)
+        self.assertIn("source='GUARD_MONOTONIC_CHECK'", code)
+        self.assertIn("j.emit('OPERATION_FAILURE'", code)
+
+    def test_budget_never_discounts_higher_settled_charge(self):
+        code = (SRC / "budget_v6.py").read_text(encoding="utf8")
+        self.assertIn("max(charge,z['charged_process_seconds'])", code)
+
+    def test_b_negative_roles_bind_noninterchangeable_producers(self):
+        code = (SRC / "b_negative_binding_v7.py").read_text(encoding="utf8")
+        for value in ("FIXTURE_NATIVE_EVENTS.jsonl", "GUARD_MONOTONIC_CHECK",
+                      "EXTERNAL_NATIVE_OWNER", "frozen_contract_sha256",
+                      "job_total_starts"):
+            self.assertIn(value, code)
+        self.assertNotIn('row.get("outer_witness_sha256")', code)
+
+    def test_frozen_negative_template_has_no_future_witness_digest(self):
+        template = json.loads((SRC.parents[1] / "B_NEGATIVE_CONTRACT.template.json").read_text())
+        self.assertEqual(
+            {k: row["detector_source"] for k, row in template["cases"].items()},
+            {"B02": "FIXTURE_NATIVE", "B03": "GUARD_MONOTONIC",
+             "B04": "EXTERNAL_NATIVE_OWNER"})
+        self.assertTrue(all("outer_witness_sha256" not in row
+                            for row in template["cases"].values()))
 
 if __name__ == "__main__":
     unittest.main()

@@ -90,9 +90,10 @@ def native_gate_paths(root, required=("healthy", "freeze", "stall", "stall_harne
     task = load(rel(root, "CAMPAIGN.json"))
     need(paths.get("schema") == "B570_NATIVE_GATE_PATHS_V2"
          and paths.get("task_uuid") == task.get("task_uuid"), "native map current UUID")
-    need(len(set(paths[k] for k in required)) == len(required), "native gate alias")
     for key in required:
         need(key in paths and isinstance(paths[key], str), "missing native gate role")
+    need(len(set(paths[k] for k in required)) == len(required), "native gate alias")
+    for key in required:
         p = rel(root, paths[key])
         need(p.parent != root and p.exists(), "native gate artifact absent")
     return {key: rel(root, paths[key]) for key in required}

@@ -40,11 +40,16 @@ def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
    elapsed=captured_interval(x,events)
    receipt=load(root/'operations'/x['id']/'RECEIPT.json')
    need(receipt['intent_sha256']==z['operation_sha256'] and receipt['job_empty'],'settlement native closure')
-   need(z['charged_process_seconds']>=(x['max_job_processes']+2)*elapsed and z['charged_starts']==receipt['total_job_processes']+2,'settlement undercharge')
-   need(type(receipt['total_job_processes']) is int and receipt['total_job_processes']>=0,'native total starts')
-   # Closed operation upper bound uses every actual start for the entire captured interval.
-   # Original settlements remain immutable evidence, not the cumulative budget source.
-   life+=(receipt['total_job_processes']+2)*elapsed;starts+=z['charged_starts']
+   from operation_pricing_v7 import envelope
+   quote=envelope(x)
+   need(type(receipt['total_job_processes']) is int and
+        0<=receipt['total_job_processes']<=quote['owned_job_starts_limit'],'native actual starts exceed quote')
+   actual_starts=receipt['total_job_processes']+quote['owned_outer_starts_limit']
+   charge=actual_starts*elapsed+quote['provider_lifetime_reserve_seconds']
+   need(z['charged_process_seconds']>=charge and z['charged_starts']==actual_starts and
+        charge<=x['lifetime_bound_seconds'],'settlement undercharge or envelope overrun')
+   # Distinct observed + outside charging; no unexplained +2 or zero-cost provider.
+   life+=charge;starts+=actual_starts
   else:life+=x['lifetime_bound_seconds'];starts+=x['starts_bound'];open_ops.append(x['id'])
  wall=math.ceil((datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(c['first_preparation_utc'].replace('Z','+00:00'))).total_seconds())
  need(wall>=0,'clock')

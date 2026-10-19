@@ -50,7 +50,7 @@ def verify(root):
          "source composition identity")
     source_rows = composition.get("source_import_composition")
     reference_rows = composition.get("a2_references")
-    need(type(source_rows) is list and len(source_rows) >= 122
+    need(type(source_rows) is list and len(source_rows) >= 123
          and type(reference_rows) is list and len(reference_rows) >= 10,
          "A2 full source and auxiliary inputs absent")
     required = {
@@ -58,7 +58,7 @@ def verify(root):
         "source/verify_cpu8.py", "source/integration_gates.py",
         "source/native_gate_audit.py", "source/engineering_gates_v6.py",
         "source/operation_roles_v7.py", "source/operation_pricing_v7.py",
-        "source/b_negative_binding_v7.py", "src/rev2/win.py",
+        "source/b_negative_binding_v7.py", "source/source_review_origin_v7.py", "src/rev2/win.py",
     }
     need(required.issubset({x["path"] for x in source_rows}), "A2 required modules absent")
     expected = {x["path"]: (x["sha256"], x["bytes"]) for x in source_rows + reference_rows}

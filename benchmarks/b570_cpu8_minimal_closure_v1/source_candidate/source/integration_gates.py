@@ -68,8 +68,10 @@ def check(root):
          and approval.get('candidate_manifest_sha256')==review_result['candidate_manifest_sha256'], 'separate A source approval required')
     # Approval origin is checked externally before C admission; these fields only bind its bytes.
     need(approval.get('external_provider_reference') and approval.get('independent_reviewer_identity'), 'independent A provenance required')
+    from source_review_origin_v7 import check as review_origin_check
+    review_origin=review_origin_check(root,approval,review_result)
     native=native_gate_audit.check(root)
     from engineering_gates_v6 import check as engineering_check
     engineering=engineering_check(root)
     d0=d0_reconstruct(root,bind)
-    return dict(status='ALL_INTEGRATION_GATES_RECONSTRUCTED',smokes=smokes,churn=churn_result,breakpoint=breakpoint_result,source_review=review_result,source_review_provider_authentication='REQUIRES_EXTERNAL_C_ADMISSION_CHECK',native=native,engineering=engineering,d0_reconstructed=d0)
+    return dict(status='ALL_INTEGRATION_GATES_RECONSTRUCTED',smokes=smokes,churn=churn_result,breakpoint=breakpoint_result,source_review=review_result,source_review_origin=review_origin,source_review_provider_authentication='REQUIRES_INDEPENDENT_PLATFORM_AUTHENTICATION',native=native,engineering=engineering,d0_reconstructed=d0)

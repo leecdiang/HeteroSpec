@@ -3,7 +3,6 @@
 Requires frozen B task contract, real provider export/capture, Job identities,
 and independent outer cleanup evidence. This is source-only and NOT native-tested.
 """
-import datetime
 import hashlib
 import json
 import re
@@ -60,7 +59,11 @@ def check(root, role):
     row = contract["cases"][role]
     expected_detector, os_code = EXPECTED[role]
     need(row.get("detector") == expected_detector and type(row.get("provider_exit_code")) is int
-         and row["provider_exit_code"] != 0, "B frozen role/negative terminal")
+         and row["provider_exit_code"] != 0 and type(row.get("provider_is_error")) is bool,
+         "B frozen role/negative terminal")
+    sources = {"B02": "FIXTURE_NATIVE", "B03": "GUARD_MONOTONIC",
+               "B04": "EXTERNAL_NATIVE_OWNER"}
+    need(row.get("detector_source") == sources[role], "B frozen detector origin")
     operation_id, op = operation(root, role, "B", "entry_negative")
     need(row.get("operation_id") == operation_id, "B negative operation identity")
     initial = capture(root, operation_id, "initial")
@@ -92,11 +95,11 @@ def check(root, role):
          and terminal.get("isError") == row["provider_is_error"], "B exact expected terminal")
     native = rows(rel(root, "operations/" + operation_id + "/EVENTS.jsonl"))
     start = exactly(native, "GUARD_START")
-    detection = exactly(native, expected_detector)
-    need(start["at_ns"] < detection["at_ns"], "B detector timing")
-    if os_code is not None:
-        need(detection.get("native_error") == os_code, "B native cap rejection error")
-    # Never trust the failing guard to certify its own successful cleanup.
+    created = exactly(native, "OP_CREATED_SUSPENDED")
+    need(type(start.get("at_ns")) is int and type(created.get("at_ns")) is int
+         and start["at_ns"] < created["at_ns"], "B real owner startup")
+    # The external owner must authenticate its own bytes after execution.
+    # A prospective frozen contract cannot know the future witness SHA256.
     original = Path(campaign["original_root"]).resolve()
     outside = Path(campaign["external_root"]).resolve()
     need(outside != original and outside not in original.parents and original not in outside.parents,
@@ -105,16 +108,23 @@ def check(root, role):
     need(witness_path.is_file() and not witness_path.is_symlink()
          and not witness_path.is_junction() and witness_path.stat().st_nlink == 1,
          "B external cleanup record")
-    need(row.get("outer_witness_sha256") == sha(witness_path), "B witness frozen bytes")
     witness = load(witness_path)
+    need(witness.get("frozen_contract_sha256") == sha(root / "B_NEGATIVE_CONTRACT.json"),
+         "B outside witness prospective contract identity")
     need(witness.get("operation_id") == operation_id
          and witness.get("job_empty") is True
          and witness.get("all_owned_handles_closed") is True, "B observed outside cleanup")
     known = {(x["pid"], x["created_filetime"]) for x in native
              if x.get("event") in ("MEMBER_IDENTITY", "OP_CREATED_SUSPENDED")}
-    exited = {(x["pid"], x["created_filetime"]) for x in witness.get("member_exits", [])
+    identities = witness.get("member_exits")
+    need(type(identities) is list and identities, "B external full member exits")
+    exited = {(x["pid"], x["created_filetime"]) for x in identities
               if int(x["exit_filetime"]) > int(x["created_filetime"])}
-    need(known and known.issubset(exited), "B missing native descendant exits")
+    need(known and known.issubset(exited) and len(exited) == len(identities),
+         "B incomplete/duplicate native descendant exits")
+    need(type(witness.get("job_total_starts")) is int
+         and witness["job_total_starts"] == len(exited),
+         "B external job total starts and exits disagree")
     need(witness.get("owner_exit_filetime") and witness.get("owner_created_filetime")
          and int(witness["owner_exit_filetime"]) > int(witness["owner_created_filetime"]),
          "B owner OS exit unknown")
@@ -124,15 +134,45 @@ def check(root, role):
     need(witness.get("capture_source") == "EXTERNAL_NATIVE_OWNER"
          and witness.get("task_uuid") == campaign["task_uuid"],
          "B independent owner record absent")
-    if role == "B04":
-        need(witness.get("owner_exit_class") == "ABNORMAL"
+    if role == "B02":
+        # A fixed, reviewed native fixture must record the rejected CreateProcess
+        # OS result. The ordinary guard cannot infer error 1816 from Job census.
+        fixture_path = rel(root, "operations/" + operation_id + "/FIXTURE_NATIVE_EVENTS.jsonl")
+        native_attempts = rows(fixture_path)
+        detector = exactly(native_attempts, "JOB_CAP_DENIED")
+        reporter = (detector.get("writer_pid"), detector.get("writer_created_filetime"))
+        need(detector.get("native_error") == os_code and reporter in exited
+             and type(detector.get("at_ns")) is int
+             and start["at_ns"] < detector["at_ns"], "B02 actual native refused create")
+        need(witness.get("fixture_native_sha256") == sha(fixture_path)
+             and witness.get("termination_reason") == "JOB_CAP_DENIED",
+             "B02 fixture byte capture and negative reason")
+    elif role == "B03":
+        detector = exactly(native, "OPERATION_DEADLINE")
+        failed = exactly(native, "OPERATION_FAILURE")
+        need(detector.get("source") == "GUARD_MONOTONIC_CHECK"
+             and type(detector.get("at_ns")) is int
+             and start["at_ns"] < detector["at_ns"] <= failed["at_ns"]
+             and "OPERATION_DEADLINE" in failed.get("error", ""),
+             "B03 actual monotonic deadline detector")
+        need(witness.get("termination_reason") == "OPERATION_DEADLINE",
+             "B03 independent timeout cause missing")
+    else:
+        # Abrupt owner death means it CANNOT be the author of its own successful
+        # cleanup event. Only an external native owner may attest this detector.
+        outside_events = witness.get("independent_events")
+        need(type(outside_events) is list, "B04 outside events missing")
+        detector = exactly(outside_events, "OWNER_ABORT_CLEANUP")
+        need(detector.get("source") == "EXTERNAL_NATIVE_OWNER"
+             and witness.get("owner_exit_class") == "ABNORMAL"
              and not any(x.get("event") == "GUARD_END" for x in native),
-             "B04 must observe owner abnormal exit")
+             "B04 external abnormal-owner cleanup not proven")
     return {
         "status": "B_EXPECTED_FAILURE_EVIDENCE_CONSISTENT",
         "role": role, "operation_id": operation_id,
         "provider_exit_code": terminal["exit_code"],
-        "detector": expected_detector,
+        "detector": expected_detector, "detector_source": sources[role],
+        "external_witness_sha256": sha(witness_path),
         "known_members": len(known), "externally_reported_exits": len(exited),
         "scope": "Evidence consistency only; B actual hard cap/provenance needs native approval",
     }

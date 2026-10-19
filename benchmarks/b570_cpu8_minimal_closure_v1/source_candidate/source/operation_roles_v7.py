@@ -9,7 +9,7 @@ import re
 from pathlib import Path
 
 SCHEMA = "B570_TASK_OPERATION_ROLES_V1"
-IDENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,79}\\Z")
+IDENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,79}$")
 HISTORICAL = {
     "037-final-review", "036-final-regressions", "026-budget-negatives",
     "025-bridge-negatives", "021-build-launcher-windows-path",

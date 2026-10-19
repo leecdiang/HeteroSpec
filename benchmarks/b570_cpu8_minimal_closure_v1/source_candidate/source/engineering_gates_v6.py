@@ -55,7 +55,7 @@ def check(root):
     else:
         event_path = rel(root, binding["compiler_os_events"])
         data = event_path.read_bytes()
-        need(data.endswith(b"\\n"), "partial native compiler journal")
+        need(data.endswith(bytes([10])), "partial native compiler journal")
         events = [json.loads(x) for x in data.splitlines()]
         need(build.get("compiler") in events and build.get("exit") in events,
              "native compiler begin/exit absent")

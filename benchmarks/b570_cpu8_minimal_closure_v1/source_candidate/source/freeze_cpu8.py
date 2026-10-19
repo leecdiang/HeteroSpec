@@ -16,6 +16,8 @@ approval_path=ROOT/'review/A_EXTERNAL_APPROVAL.json'
 approval=json.loads(approval_path.read_bytes())
 assert approval.get('status')=='SOURCE_REVIEW_PASS' and approval.get('review_report_sha256')==review['report_sha256'] and approval.get('candidate_manifest_sha256')==review['candidate_manifest_sha256'],'independently approved A identity'
 assert approval.get('external_provider_reference') and approval.get('independent_reviewer_identity'),'A external attribution absent; provider must be verified before C admission'
+from source_review_origin_v7 import check as review_origin_check
+review_origin=review_origin_check(ROOT,approval,review)
 native=native_check(ROOT)
 from engineering_gates_v6 import check as engineering_check
 engineering=engineering_check(ROOT)

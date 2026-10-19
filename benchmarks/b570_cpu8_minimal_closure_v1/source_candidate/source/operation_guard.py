@@ -8,11 +8,15 @@ from budget_v6 import snapshot
 p=__import__('argparse').ArgumentParser();p.add_argument('--intent',required=True);p.add_argument('--intent-sha256',required=True);a=p.parse_args()
 fp=Path(a.intent).resolve();need(fp.parent==ROOT/'tools','intent confinement');need(sha(fp)==a.intent_sha256,'intent pin');x=json.loads(fp.read_bytes())
 need(Path(x['root']).resolve()==ROOT and x['id'].replace('-','').isalnum(),'root/id')
+need(x.get('stage') in ('B','C') and x.get('task_uuid')==json.loads((ROOT/'CAMPAIGN.json').read_bytes()).get('task_uuid'),'fresh task/stage operation binding')
 need(type(x['seconds']) is int and 0<x['seconds']<=1200 and x['cleanup_seconds']==5,'deadline')
 need(type(x['max_job_processes']) is int and 1<=x['max_job_processes']<=128,'job cap')
 from operation_pricing_v7 import envelope as price_operation
 pricing=price_operation(x) # arithmetic only: provider proof still requires external native admission
 state=snapshot(ROOT,x['stage'])
+# snapshot already reserves every registered, unsettled operation at full ceiling.
+# Do not add this quote twice, but refuse a missing or already settled operation.
+need(state['open_operations'].count(x['id'])==1,'current operation not prospectively reserved')
 from campaign_budget import storage_check
 storage=storage_check(ROOT)
 folder=ROOT/'operations'/x['id'];folder.mkdir(parents=True,exist_ok=False)
@@ -41,7 +45,7 @@ retained={};member_exits_complete=True
 readback=limit_readback();j.emit('JOB_LIMIT_READBACK',configured_active=x['max_job_processes'],actual=readback)
 need(readback['active_limit']==x['max_job_processes'] and readback['flags']&0x2008==0x2008,'JOB_LIMIT_READBACK_MISMATCH')
 
-child=None;error=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
+child=None;error=None;code=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
 done=threading.Event();deadline_fired=threading.Event()
 def rescue_deadline():
  if not done.wait(x['seconds']):
@@ -66,7 +70,11 @@ try:
  need(not deadline_fired.is_set() and now()<=deadline+1_000_000_000,'exit deadline');code=exit_code(child.process);j.emit('OP_OS_EXIT',pid=int(child.pid),exit_code=code,**os_times(child.process))
  need(not job_pids(job),'OPERATION_DESCENDANTS_REMAIN')
 except BaseException as e:
- error=repr(e);j.emit('OPERATION_FAILURE',error=error);terminate_job(job)
+ error=repr(e)
+ if 'OPERATION_DEADLINE' in error:
+  j.emit('OPERATION_DEADLINE',source='GUARD_MONOTONIC_CHECK',error=error)
+ j.emit('OPERATION_FAILURE',error=error)
+ terminate_job(job)
 finally:
  if child and child.process:
   if alive(child.process):terminate_job(job)
@@ -91,10 +99,10 @@ finally:
  else:empty=not job_pids(job)
  acct=C.create_string_buffer(48);checked(job_query(job,1,acct,48,None),'job accounting');total_job_processes=C.c_uint32.from_buffer(acct,36).value
  need(total_job_processes<=pricing['owned_job_starts_limit'],'OPERATION_OWNED_START_BOUND')
-need(total_job_processes+pricing['owned_outer_starts_limit']<=x['starts_bound'],'OPERATION_TOTAL_START_BOUND')
+ need(total_job_processes+pricing['owned_outer_starts_limit']<=x['starts_bound'],'OPERATION_TOTAL_START_BOUND')
  done.set();rescue.join(timeout=1);need(not rescue.is_alive(),'deadline thread not closed')
  checked(close(job),'operation job close');j.emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
- receipt=dict(status='CLOSED' if error is None and empty and member_exits_complete else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code if 'code' in globals() else None,intent_sha256=a.intent_sha256)
+ receipt=dict(status='CLOSED' if error is None and empty and member_exits_complete and code==0 else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code,intent_sha256=a.intent_sha256)
  dump_new(folder/'RECEIPT.json',receipt);j.emit('GUARD_END',receipt=receipt);j.end();r.end()
 print(json.dumps(dict(operation=x['id'],status=receipt['status'],error=error,job_empty=empty,child_exit_code=receipt['child_exit_code'])),flush=True)
 sys.exit(0 if error is None and empty and member_exits_complete and receipt['child_exit_code']==0 else 1)

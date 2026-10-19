@@ -310,6 +310,13 @@ class RecoverySourceContracts(unittest.TestCase):
         self.assertIn("fresh task/stage operation binding", code)
         self.assertIn("and code==0 else 'FAILED'", code)
 
+    def test_owned_start_overrun_does_not_skip_job_close(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("bound_errors.append('OPERATION_OWNED_START_BOUND')", code)
+        self.assertIn("bound_errors.append('OPERATION_TOTAL_START_BOUND')", code)
+        self.assertLess(code.index("if bound_errors:"), code.index("checked(close(job)"))
+        self.assertNotIn("need(total_job_processes<=pricing", code)
+
     def test_guard_has_native_deadline_event(self):
         code = (SRC / "operation_guard.py").read_text(encoding="utf8")
         self.assertIn("j.emit('OPERATION_DEADLINE'", code)

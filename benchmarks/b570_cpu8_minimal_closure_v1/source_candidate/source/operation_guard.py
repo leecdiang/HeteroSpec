@@ -10,7 +10,8 @@ fp=Path(a.intent).resolve();need(fp.parent==ROOT/'tools','intent confinement');n
 need(Path(x['root']).resolve()==ROOT and x['id'].replace('-','').isalnum(),'root/id')
 need(type(x['seconds']) is int and 0<x['seconds']<=1200 and x['cleanup_seconds']==5,'deadline')
 need(type(x['max_job_processes']) is int and 1<=x['max_job_processes']<=128,'job cap')
-need(x['lifetime_bound_seconds']==(x['max_job_processes']+2)*(x['seconds']+5),'whole operation envelope')
+from operation_pricing_v7 import envelope as price_operation
+pricing=price_operation(x) # arithmetic only: provider proof still requires external native admission
 state=snapshot(ROOT,x['stage'])
 from campaign_budget import storage_check
 storage=storage_check(ROOT)
@@ -89,7 +90,8 @@ finally:
   checked(close(child.process),'root handle close')
  else:empty=not job_pids(job)
  acct=C.create_string_buffer(48);checked(job_query(job,1,acct,48,None),'job accounting');total_job_processes=C.c_uint32.from_buffer(acct,36).value
- need(total_job_processes+2<=x['starts_bound'],'OPERATION_START_BOUND')
+ need(total_job_processes<=pricing['owned_job_starts_limit'],'OPERATION_OWNED_START_BOUND')
+need(total_job_processes+pricing['owned_outer_starts_limit']<=x['starts_bound'],'OPERATION_TOTAL_START_BOUND')
  done.set();rescue.join(timeout=1);need(not rescue.is_alive(),'deadline thread not closed')
  checked(close(job),'operation job close');j.emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
  receipt=dict(status='CLOSED' if error is None and empty and member_exits_complete else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code if 'code' in globals() else None,intent_sha256=a.intent_sha256)

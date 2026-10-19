@@ -213,5 +213,81 @@ class TaskRoleSelection(unittest.TestCase):
             roles.operation(self.root, "B01", "B")
 
 
+class IndependentReviewerCapture(unittest.TestCase):
+    """Outside-candidate index consistency, NOT provider authority certification."""
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name) / "candidate"
+        self.ext = Path(tmp.name) / "external-capture"
+        self.root.mkdir(); self.ext.mkdir()
+        dump(self.root / "CAMPAIGN.json", {
+            "original_root": str(self.root), "external_root": str(self.ext),
+            "candidate_author": "synthetic-author",
+        })
+        self.source = {
+            "candidate_commit": "a" * 40,
+            "report_sha256": "b" * 64,
+            "candidate_manifest_sha256": "c" * 64,
+        }
+        self.raw = {
+            "request": {"repository_full_name": "leecdiang/HeteroSpec",
+                        "candidate_commit": "a" * 40,
+                        "scope": "FULL_P0_P2_SOURCE_REVIEW"},
+            "response": {"report_sha256": "b" * 64,
+                         "candidate_manifest_sha256": "c" * 64,
+                         "reviewer_identity": "synthetic-independent",
+                         "review_url": "synthetic://review-not-real",
+                         "status": "COMPLETED"},
+            "registered_utc": "2026-10-19T00:00:00+00:00",
+            "observed_utc": "2026-10-19T00:01:00+00:00",
+            "capture_meta": {"callId": "SYNTHETIC_CALL", "itemId": "SYNTHETIC_ITEM"},
+        }
+        self.approval = {
+            "independent_reviewer_identity": "synthetic-independent",
+            "external_provider_reference": "synthetic://review-not-real",
+        }
+
+    def persisted(self):
+        provider = dump(self.ext / "source-review" / "A01-provider.json", self.raw)
+        self.approval["provider_capture_sha256"] = sha(provider)
+        dump(self.ext / "source-review" / "A01-index.json", {
+            "sha256": sha(provider), "bytes": provider.stat().st_size,
+            "capture_meta": self.raw["capture_meta"],
+        })
+
+    def check(self):
+        import source_review_origin_v7 as origin
+        self.persisted()
+        return origin.check(self.root, self.approval, self.source)
+
+    def test_consistent_synthetic_index_is_not_authority(self):
+        self.assertEqual(self.check()["status"], "A_REVIEW_PROVIDER_CAPTURE_BOUND")
+        self.assertIn("external authority", self.check()["scope"])
+
+    def test_wrong_review_commit_fails(self):
+        self.raw["request"]["candidate_commit"] = "f" * 40
+        with self.assertRaisesRegex(ValueError, "actual provider review request"):
+            self.check()
+
+    def test_reviewer_same_as_author_fails(self):
+        self.raw["response"]["reviewer_identity"] = "synthetic-author"
+        self.approval["independent_reviewer_identity"] = "synthetic-author"
+        with self.assertRaisesRegex(ValueError, "not independent"):
+            self.check()
+
+    def test_reverse_time_fails(self):
+        self.raw["observed_utc"] = "2026-10-18T23:59:59+00:00"
+        with self.assertRaisesRegex(ValueError, "captured interval"):
+            self.check()
+
+    def test_missing_author_fails(self):
+        dump(self.root / "CAMPAIGN.json", {
+            "original_root": str(self.root), "external_root": str(self.ext),
+        })
+        with self.assertRaisesRegex(ValueError, "source author identity required"):
+            self.check()
+
+
 if __name__ == "__main__":
     unittest.main()

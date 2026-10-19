@@ -42,7 +42,7 @@ class SourceReviewOnly(unittest.TestCase):
             "source/b_negative_binding_v7.py", "src/rev2/win.py",
         ]
         paths = ["source/candidate.py"] + required + [
-            "source/synthetic%03d.py" % i for i in range(111)
+            "source/synthetic%03d.py" % i for i in range(112)
         ]
         source_rows = []
         for name in paths:

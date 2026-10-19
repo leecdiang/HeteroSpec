@@ -144,5 +144,8 @@ def freeze_check(root, expected):
     need(Path(__file__).resolve().parent==(root/source).resolve(),'RUNTIME_SOURCE_PATH')
     for p,h in f['files'].items():
         need(not Path(p).is_absolute() and '..' not in Path(p).parts and ':' not in p,'freeze member path');need(sha(root/p)==h,'SOURCE_DRIFT')
-    approved=Path('C:/Users/DIANG/AppData/Local/Programs/Python/Python312/python.exe').resolve()
-    need(Path(f['python']).resolve()==approved==Path(sys.executable).resolve(),'EXECUTING_PYTHON_PATH');need(sha(approved)==f['python_sha256'],'PYTHON_DRIFT');return f
+    tools=json.loads((root/'preflight/TOOLS.json').read_bytes())
+    python=tools['python'];approved=Path(python['path']).resolve()
+    need(Path(f['python']).resolve()==approved==Path(sys.executable).resolve(),'EXECUTING_PYTHON_PATH')
+    need(python['sha256']==f['python_sha256'] and sha(approved)==f['python_sha256'],'PYTHON_DRIFT')
+    return f

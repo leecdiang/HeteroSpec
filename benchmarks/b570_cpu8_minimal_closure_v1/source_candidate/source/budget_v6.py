@@ -40,6 +40,9 @@ def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
    elapsed=captured_interval(x,events)
    receipt=load(root/'operations'/x['id']/'RECEIPT.json')
    need(receipt['intent_sha256']==z['operation_sha256'] and receipt['job_empty'],'settlement native closure')
+   need(type(receipt.get('begin_ns')) is int and type(receipt.get('end_ns')) is int and
+        0<=receipt['begin_ns']<=receipt['end_ns'], 'native monotonic interval missing')
+   elapsed=max(elapsed,math.ceil((receipt['end_ns']-receipt['begin_ns'])/1_000_000_000))
    from operation_pricing_v7 import envelope
    quote=envelope(x)
    need(type(receipt['total_job_processes']) is int and

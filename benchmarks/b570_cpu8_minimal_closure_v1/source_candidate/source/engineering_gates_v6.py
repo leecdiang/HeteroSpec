@@ -1,33 +1,73 @@
-"""Derived engineering gates from actual native operations, never receipt booleans alone."""
-import json,re,sys,hashlib
+"""Prospective C engineering evidence; old A regression IDs are never promoted."""
+import hashlib
+import json
+import re
 from pathlib import Path
-def need(x,m):
- if not x:raise ValueError(m)
-def load(p):return json.loads(Path(p).read_bytes())
-def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def operation(root,id):
- from delivery_binding_v6 import invocation
- argv=load(root/'tools'/(id+'.operation.json'))['argv']
- return invocation(root,id,argv,root/'operations'/id/'stdout.log')
+from operation_roles_v7 import operation, rel
+
+
+def need(v, reason):
+    if not v:
+        raise ValueError(reason)
+
+
+def load(path):
+    return json.loads(Path(path).read_bytes())
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
 def check(root):
- root=Path(root);out={}
- for id,count in [('036-final-regressions',91),('026-budget-negatives',11)]:
-  actual=operation(root,id);text=(root/'operations'/id/'stderr.log').read_text()
-  need(re.search(r'Ran '+str(count)+r' tests? in ',text) is not None and text.rstrip().endswith('OK'),'actual test count/result '+id)
-  out[id]=dict(actual=actual,tests=count,stderr_sha256=sha(root/'operations'/id/'stderr.log'))
- raw=load(root/'development/BRIDGE_REGRESSIONS.json');need(len(raw['cases'])==7 and all(x['status']=='EXPECTED_RAW_REJECTION' for x in raw['cases']),'actual bridge counterfactuals')
- operation(root,'025-bridge-negatives')
- original=load(root/'CAMPAIGN.json');ext=Path(original['external_root'])
- from delivery_binding_v6 import download,invocation
- row=load(ext/'probe-download-row.json');intent=load(ext/'download-intents/probe-download-01.json')
- out['download']=download(root,'probe-download-01',row,intent['request']['ref'])
- argv=load(root/'tools/030-isolated-probe-recompute.operation.json')['argv']
- out['restore']=invocation(root,'030-isolated-probe-recompute',argv,ext/'probe-remote-restore-01/REPORT.json')
- need((ext/'probe-original-report.json').read_bytes()==(ext/'probe-remote-restore-01/REPORT.json').read_bytes(),'actual independent probe bytes')
- # CPU-only build must be from the actual observed compiler command.
- build=load(root/'compiled/BUILD_CURRENT.json')
- compiler_events=[json.loads(line) for line in (root/'processes/compile-v6-2/OS_EVENTS.jsonl').read_bytes().splitlines()]
- need(build['compiler'] in compiler_events and build['exit'] in compiler_events,'compiler original native records')
- need(build['exit']['exit_code']==0 and int(build['exit']['exit_filetime'])>int(build['compiler']['created_filetime']),'actual compiler closure')
- need(build['dll_sha256']==sha(root/'compiled/candidate/LauncherCapture.dll') and build['source_sha256']==sha(root/'legacy/repo/benchmarks/b570_supervision_fix_v2/host/LauncherCapture.cs'),'actual source/compiled binding')
- return dict(status='ENGINEERING_RAW_GATES_RECONSTRUCTED',operations=out,scope='Engineering only, not formal native qualification or external certification')
+    root = Path(root).resolve()
+    campaign = load(root / "CAMPAIGN.json")
+    binding = load(rel(root, "ENGINEERING_GATE_BINDING.json"))
+    need(binding.get("schema") == "B570_C_ENGINEERING_BINDING_V2"
+         and binding.get("task_uuid") == campaign.get("task_uuid")
+         and campaign.get("task_uuid"), "wrong C engineering task")
+    # C's native compiler/load proof is a fresh operation, never 'compile-v6-2'.
+    operation_id, op = operation(root, "C-compiled-identity", "C", "native_build_or_load")
+    from delivery_binding_v6 import invocation
+    result = invocation(root, operation_id, op["argv"],
+                        rel(root, "operations/" + operation_id + "/stdout.log"))
+    need(result["status"] == "ACTUAL_PROVIDER_RESTORE_BOUND",
+         "current native tool chain not bound")
+    build_path = rel(root, binding["build_record"])
+    build = load(build_path)
+    source = rel(root, "legacy/repo/benchmarks/b570_supervision_fix_v2/host/LauncherCapture.cs")
+    dll = rel(root, binding["compiled_dll"])
+    need(build.get("source_sha256") == sha(source)
+         and build.get("dll_sha256") == sha(dll)
+         and build.get("candidate_task_uuid") == campaign["task_uuid"],
+         "compiled/source/current task identity")
+    need(build.get("provenance") in ("CURRENT_NATIVE_BUILD", "B_NATIVE_LOAD_VALIDATED"),
+         "historical build alone cannot qualify")
+    if build["provenance"] == "B_NATIVE_LOAD_VALIDATED":
+        b_file = rel(root, binding["b_entry_proof"])
+        proof = load(b_file)
+        need(proof.get("status") == "ENTRY_ADMITTED"
+             and proof.get("dll_sha256") == build["dll_sha256"]
+             and proof.get("source_sha256") == build["source_sha256"]
+             and sha(b_file) == binding["b_entry_proof_sha256"],
+             "pinned B native proof drift")
+        # Its real provider/OS provenance is authenticated separately by C's admission.
+    else:
+        event_path = rel(root, binding["compiler_os_events"])
+        data = event_path.read_bytes()
+        need(data.endswith(b"\\n"), "partial native compiler journal")
+        events = [json.loads(x) for x in data.splitlines()]
+        need(build.get("compiler") in events and build.get("exit") in events,
+             "native compiler begin/exit absent")
+        need(build["exit"].get("exit_code") == 0
+             and int(build["exit"]["exit_filetime"]) >
+             int(build["compiler"]["created_filetime"]), "native compiler closure")
+    return {
+        "status": "C_ENGINEERING_NATIVE_IDENTITY_BOUND",
+        "compiled_mode": build["provenance"],
+        "source_sha256": build["source_sha256"],
+        "dll_sha256": build["dll_sha256"],
+        "native_operation": operation_id,
+        "actual_tool": result,
+        "scope": "C native prerequisite only; no A reviewer PID; no formal CPU8 performance",
+    }

@@ -37,7 +37,9 @@ def check(root):
     root=Path(root).resolve();sys.path[:0]=[str(root/'source'),str(root/'src/rev2')]
     import startup_preflight,check_observer_smoke,audit_identity_stream,native_gate_audit,entry_bootstrap
     bind=load(root/'INTEGRATION_GATE_BINDING.json')
-    for name in ['startup_manifest','startup_receipt','startup_intent','full_review_report']:
+    campaign=load(root/'CAMPAIGN.json')
+    need(bind.get('schema')=='B570_C_NATIVE_BINDING_V2' and bind.get('task_uuid')==campaign.get('task_uuid') and campaign.get('task_uuid'),'current C task binding')
+    for name in ['startup_manifest','startup_receipt','startup_intent','source_review_report']:
         confined(root,bind[name])
     receipt=load(root/bind['startup_receipt']);manifest=root/bind['startup_manifest']
     need(receipt['status']=='STARTUP_PREFLIGHT_PASS' and receipt['manifest_sha256']==sha(manifest),'real startup receipt')
@@ -49,19 +51,25 @@ def check(root):
         d=json.loads(r['stdout']);entry=original/'source'/r['entry']
         need(r['exit_code']==0 and d['status']=='ENTRY_IMPORT_READY' and Path(d['entry'])==entry,'actual entry outcome')
         need(d['modules']=={n:str(p) for n,p in entry_bootstrap.expected_modules(original,entry).items()},'entry module origins')
-    smokes=[check_observer_smoke.check(root/'processes'/n,k,negative) for n,k,negative in [('review-smoke-ok','review',False),('case-smoke-limit','case',True),('review-smoke-limit','review',True)]]
-    churn=bind['churn'];need(churn in ('review-churn','review-churn-r1'),'registered churn selection')
-    churn_result=audit_identity_stream.check(root/'processes'/churn,churn=True)
-    breakpoint_result=audit_identity_stream.check(root/'processes/review-breakpoint',breakpoint=True)
-    review_process=bind['full_review_process'];need(__import__('continuation_policy').review_id(review_process,__import__('continuation_policy').load(root)),'registered review')
-    review_result=audit_identity_stream.check(root/'processes'/review_process)
-    review=load(root/bind['full_review_report']);need(review['status']=='scoped-clean' and review['findings']==[],'completed full review')
-    need(review['candidate_manifest_sha256']==bind['candidate_manifest_sha256'],'review candidate pin')
-    final=load(root/'source/FINAL_REVIEW_BINDING.json')
-    need(final['report_sha256']==sha(root/bind['full_review_report']),'review report bytes')
-    for row in final['files']:need(sha(confined(root,row['path']))==row['sha256'],'reviewed input drift')
+    # Native observer/churn/interrupt requirements remain mandatory, but names are
+    # explicitly frozen by C rather than inherited from a source-review task.
+    smoke_rows=bind['observer_smokes']
+    need(type(smoke_rows) is list and len(smoke_rows)==3,'exact observer smoke roles')
+    smokes=[check_observer_smoke.check(confined(root,item['path']),item['kind'],item['negative']) for item in smoke_rows]
+    churn_result=audit_identity_stream.check(confined(root,bind['churn']),churn=True)
+    breakpoint_result=audit_identity_stream.check(confined(root,bind['breakpoint']),breakpoint=True)
+    # A's reviewer process is NOT part of the Windows native integration tree.
+    from finalize_review_v6 import verify as verify_source_review
+    review_result=verify_source_review(root)
+    need(sha(root/bind['source_review_report'])==review_result['report_sha256'], 'exact A review report')
+    need(review_result['candidate_manifest_sha256']==bind['candidate_manifest_sha256'], 'A candidate pin')
+    approval=load(confined(root,bind['a_external_approval_record']))
+    need(approval.get('status')=='SOURCE_REVIEW_PASS' and approval.get('review_report_sha256')==review_result['report_sha256']
+         and approval.get('candidate_manifest_sha256')==review_result['candidate_manifest_sha256'], 'separate A source approval required')
+    # Approval origin is checked externally before C admission; these fields only bind its bytes.
+    need(approval.get('external_provider_reference') and approval.get('independent_reviewer_identity'), 'independent A provenance required')
     native=native_gate_audit.check(root)
     from engineering_gates_v6 import check as engineering_check
     engineering=engineering_check(root)
     d0=d0_reconstruct(root,bind)
-    return dict(status='ALL_INTEGRATION_GATES_RECONSTRUCTED',smokes=smokes,churn=churn_result,breakpoint=breakpoint_result,full_review_identity=review_result,native=native,engineering=engineering,d0_reconstructed=d0)
+    return dict(status='ALL_INTEGRATION_GATES_RECONSTRUCTED',smokes=smokes,churn=churn_result,breakpoint=breakpoint_result,source_review=review_result,source_review_provider_authentication='REQUIRES_EXTERNAL_C_ADMISSION_CHECK',native=native,engineering=engineering,d0_reconstructed=d0)

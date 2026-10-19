@@ -34,16 +34,17 @@ class SourceReviewOnly(unittest.TestCase):
         code.parent.mkdir()
         code.write_text("answer = 1\n")
         # A fabricated one-file manifest must NOT qualify: enumerate the
-        # complete 122-source plus ten auxiliary review input inventory.
+        # complete 123-source plus ten auxiliary synthetic review inputs.
         required = [
             "source/operation_guard.py", "source/finalize_review_v6.py",
             "source/verify_cpu8.py", "source/integration_gates.py",
             "source/native_gate_audit.py", "source/engineering_gates_v6.py",
             "source/operation_roles_v7.py", "source/operation_pricing_v7.py",
-            "source/b_negative_binding_v7.py", "src/rev2/win.py",
+            "source/b_negative_binding_v7.py", "source/source_review_origin_v7.py",
+            "src/rev2/win.py",
         ]
         paths = ["source/candidate.py"] + required + [
-            "source/synthetic%03d.py" % i for i in range(112)
+            "source/synthetic%03d.py" % i for i in range(111)
         ]
         source_rows = []
         for name in paths:

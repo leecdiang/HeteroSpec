@@ -42,8 +42,30 @@ def verify(root):
     need(manifest.get("schema") == "B570_SOURCE_CANDIDATE_V2", "source manifest schema")
     need(re.fullmatch(r"[0-9a-f]{40}", manifest.get("candidate_commit", "")) is not None,
          "immutable source commit")
+    # A self-authored short manifest is not a complete review scope. Bind its
+    # EXACT inventory to the independently pinned 122+ source and input list.
+    composition_path = confined(root, "review/PINNED_SOURCE_COMPOSITION.json")
+    composition = load(composition_path)
+    need(manifest.get("source_composition_sha256") == digest(composition_path),
+         "source composition identity")
+    source_rows = composition.get("source_import_composition")
+    reference_rows = composition.get("a2_references")
+    need(type(source_rows) is list and len(source_rows) >= 122
+         and type(reference_rows) is list and len(reference_rows) >= 10,
+         "A2 full source and auxiliary inputs absent")
+    required = {
+        "source/operation_guard.py", "source/finalize_review_v6.py",
+        "source/verify_cpu8.py", "source/integration_gates.py",
+        "source/native_gate_audit.py", "source/engineering_gates_v6.py",
+        "source/operation_roles_v7.py", "source/operation_pricing_v7.py",
+        "source/b_negative_binding_v7.py", "src/rev2/win.py",
+    }
+    need(required.issubset({x["path"] for x in source_rows}), "A2 required modules absent")
+    expected = {x["path"]: (x["sha256"], x["bytes"]) for x in source_rows + reference_rows}
+    need(len(expected) == len(source_rows) + len(reference_rows), "duplicate full review input")
     files = manifest.get("files")
-    need(type(files) is list and files, "complete source candidate inventory")
+    need(type(files) is list and len(files) == len(expected),
+         "complete source candidate inventory")
     names = []
     for row in files:
         need(type(row) is dict and set(row) == {"path", "sha256", "bytes"}, "source row schema")
@@ -53,6 +75,10 @@ def verify(root):
              "review source byte drift: " + row["path"])
         names.append(row["path"])
     need(len(names) == len(set(names)), "duplicate reviewed file")
+    need(set(names) == set(expected) and
+         all((row["sha256"], row["bytes"]) == expected[row["path"]] for row in files),
+         "manifest omits or substitutes pinned review inputs")
+
     need(report.get("status") == "scoped-clean" and report.get("complete") is True,
          "no completed exact scoped-clean")
     need(report.get("scope") == "A_SOURCE_ONLY", "source review scope")

@@ -24,6 +24,8 @@
 | review-smoke-*; review-churn*; review-breakpoint | native observer/smoke/churn/breakpoint roles | Actual B/C native artifacts, no reviewer OS identity |
 | 1120/1125; cap10; (cap+2) | C execution plan & per-op prospective_envelope | Independent pre-start proof, no guessed service costs |
 
+A approval must also pass the new `source_review_origin_v7.py` binding against the independent provider request, response, actual capture index and reviewer identity outside candidate-owned root. A candidate-authored approval or matching hashes alone **cannot** prove an independent reviewer. The platform must authenticate the provider identity separately; no new native reviewer PID requirement is introduced.
+
 ## A review request and cost ledger
 
 One complete independent source-only review of the **new fully composed code and configs**, not just patch. Candidate preparation is tracked separately. No B570 native/GPU/model/actor/RTL process is authorized in A.

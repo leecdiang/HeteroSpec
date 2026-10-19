@@ -98,9 +98,20 @@ finally:
   checked(close(child.process),'root handle close')
  else:empty=not job_pids(job)
  acct=C.create_string_buffer(48);checked(job_query(job,1,acct,48,None),'job accounting');total_job_processes=C.c_uint32.from_buffer(acct,36).value
- need(total_job_processes<=pricing['owned_job_starts_limit'],'OPERATION_OWNED_START_BOUND')
- need(total_job_processes+pricing['owned_outer_starts_limit']<=x['starts_bound'],'OPERATION_TOTAL_START_BOUND')
- done.set();rescue.join(timeout=1);need(not rescue.is_alive(),'deadline thread not closed')
+ # Bounds discovered at closeout must FAIL the operation, not raise before
+ # the Job handle and retained evidence can be closed.
+ bound_errors=[]
+ if total_job_processes>pricing['owned_job_starts_limit']:
+  bound_errors.append('OPERATION_OWNED_START_BOUND')
+ if total_job_processes+pricing['owned_outer_starts_limit']>x['starts_bound']:
+  bound_errors.append('OPERATION_TOTAL_START_BOUND')
+ if bound_errors:
+  error=(error+'; ' if error else '')+'; '.join(bound_errors)
+  j.emit('OPERATION_FAILURE',error=error)
+ done.set();rescue.join(timeout=1)
+ if rescue.is_alive():
+  error=(error+'; ' if error else '')+'DEADLINE_THREAD_NOT_CLOSED'
+  j.emit('OPERATION_FAILURE',error=error)
  checked(close(job),'operation job close');j.emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
  receipt=dict(status='CLOSED' if error is None and empty and member_exits_complete and code==0 else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code,intent_sha256=a.intent_sha256)
  dump_new(folder/'RECEIPT.json',receipt);j.emit('GUARD_END',receipt=receipt);j.end();r.end()

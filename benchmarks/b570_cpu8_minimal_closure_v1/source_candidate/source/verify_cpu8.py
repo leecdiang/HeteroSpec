@@ -47,8 +47,11 @@ def audit(root,run,manifest=None,tool_binding=None,completion=None,completion_sh
     from evidence_contract import manifest_check,watchdog_check,member
     if manifest:manifest_check(root,manifest)
     index=load(root/'D0_GATE_INDEX.json');need(index['all_required_passed'] is True,'native gates');native_gate_audit.check(root)
-    review=load(root/'source/FINAL_REVIEW_BINDING.json');need(review['status']=='scoped-clean','adapter review not clean')
-    for r in review['files']:need(h(member(root,r['path']))==r['sha256'],'review drift')
+    review=integration['source_review']
+    need(review['status']=='SOURCE_REVIEW_EVIDENCE_CONSISTENT' and
+         f.get('a_review_report_sha256')==review['report_sha256'] and
+         f.get('a_external_approval_sha256')==h(root/'review/A_EXTERNAL_APPROVAL.json'),
+         'A source review or external approval binding drift')
     legacy=root/'legacy';design=legacy/'repo/benchmarks/b570_supervision_fix_v2'
     sys.path.insert(0,str(design/'host'));import raw_audit
     final_manifest=load(root/'FINAL_RAW_AUDIT_BINDING.json');member(legacy,final_manifest['manifest_relative']);raw=raw_audit.audit(legacy,final_manifest['manifest_relative'])

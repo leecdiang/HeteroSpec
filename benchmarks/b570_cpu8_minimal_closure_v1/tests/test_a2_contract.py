@@ -1,0 +1,175 @@
+"""Static source-contract regressions. Synthetic fixtures; never Windows/native/GPU."""
+import copy
+import hashlib
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+SRC = Path(__file__).resolve().parents[1] / "source_candidate" / "source"
+sys.path.insert(0, str(SRC))
+import finalize_review_v6 as source_review
+import operation_roles_v7 as roles
+import operation_pricing_v7 as pricing
+
+
+def dump(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value), encoding="utf8")
+    return path
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+class SourceReviewOnly(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        code = self.root / "source" / "candidate.py"
+        code.parent.mkdir()
+        code.write_text("answer = 1\n")
+        self.manifest = {
+            "schema": "B570_SOURCE_CANDIDATE_V2",
+            "candidate_commit": "a" * 40,
+            "files": [{"path": "source/candidate.py", "sha256": sha(code),
+                       "bytes": code.stat().st_size}],
+        }
+        self.manifest_path = dump(self.root / "review" / "CANDIDATE_MANIFEST.json",
+                                  self.manifest)
+        self.review = {
+            "status": "scoped-clean", "complete": True, "scope": "A_SOURCE_ONLY",
+            "candidate_commit": "a" * 40,
+            "candidate_manifest_sha256": sha(self.manifest_path),
+            "severity_coverage": ["P0", "P1", "P2"],
+            "reviewed_files": ["source/candidate.py"],
+            "findings": [],
+            "reviewer": {"identity": "SYNTHETIC_ONLY",
+                         "session_or_review_url": "synthetic://not-authentic"},
+            "transcript_sha256": "b" * 64,
+        }
+        dump(self.root / "review" / "FINAL_REVIEW.json", self.review)
+
+    def test_composition_consistent_not_external_pass(self):
+        result = source_review.verify(self.root)
+        self.assertEqual(result["status"], "SOURCE_REVIEW_EVIDENCE_CONSISTENT")
+        self.assertEqual(result["native_qualification"], "NOT_PERFORMED")
+        self.assertEqual(result["independent_review_authentication"],
+                         "REQUIRES_EXTERNAL_VERIFICATION")
+
+    def test_unreviewed_file_fails(self):
+        self.review["reviewed_files"] = []
+        dump(self.root / "review" / "FINAL_REVIEW.json", self.review)
+        with self.assertRaisesRegex(ValueError, "full file coverage"):
+            source_review.verify(self.root)
+
+    def test_unresolved_priority_fails(self):
+        self.review["findings"] = [{"severity": "P2", "disposition": "open"}]
+        dump(self.root / "review" / "FINAL_REVIEW.json", self.review)
+        with self.assertRaisesRegex(ValueError, "unresolved P0-P2"):
+            source_review.verify(self.root)
+
+    def test_removed_p2_scope_fails(self):
+        self.review["severity_coverage"] = ["P0", "P1"]
+        dump(self.root / "review" / "FINAL_REVIEW.json", self.review)
+        with self.assertRaisesRegex(ValueError, "complete P0-P2"):
+            source_review.verify(self.root)
+
+    def test_modified_source_fails(self):
+        (self.root / "source" / "candidate.py").write_text("answer = 999\n")
+        with self.assertRaisesRegex(ValueError, "source byte drift"):
+            source_review.verify(self.root)
+
+    def test_wrong_commit_fails(self):
+        self.review["candidate_commit"] = "c" * 40
+        dump(self.root / "review" / "FINAL_REVIEW.json", self.review)
+        with self.assertRaisesRegex(ValueError, "review commit identity"):
+            source_review.verify(self.root)
+
+
+class ProspectivePricing(unittest.TestCase):
+    def setUp(self):
+        self.op = {
+            "seconds": 20, "cleanup_seconds": 5, "max_job_processes": 4,
+            "starts_bound": 7, "lifetime_bound_seconds": 180,
+            "prospective_envelope": {
+                "schema": "B570_OWNED_ENVELOPE_V1",
+                "provider_bound_status": "BOUNDARY_EVIDENCE_REQUIRED",
+                "owned_job_starts_limit": 5, "owned_outer_starts_limit": 2,
+                "provider_lifetime_reserve_seconds": 5,
+                "provider_proof_sha256": "a" * 64,
+            },
+        }
+        self.op["lifetime_bound_seconds"] = 7 * 25 + 5
+
+    def test_explicit_starts_price_is_conditional_not_proof(self):
+        result = pricing.envelope(self.op)
+        self.assertEqual(result["max_process_seconds"], 180)
+        self.assertEqual(result["status"], "CONDITIONAL_QUOTE_NOT_BOUNDARY_PROOF")
+
+    def test_hidden_plus_two_price_rejected(self):
+        self.op["lifetime_bound_seconds"] = (4 + 2) * 25
+        with self.assertRaisesRegex(ValueError, "full operation prospective cost"):
+            pricing.envelope(self.op)
+
+    def test_zero_unknown_service_rejected(self):
+        self.op["prospective_envelope"]["provider_lifetime_reserve_seconds"] = 0
+        with self.assertRaisesRegex(ValueError, "provider reserve"):
+            pricing.envelope(self.op)
+
+    def test_cumulative_starts_smaller_than_cap_rejected(self):
+        self.op["prospective_envelope"]["owned_job_starts_limit"] = 3
+        with self.assertRaisesRegex(ValueError, "Job cumulative starts"):
+            pricing.envelope(self.op)
+
+
+class TaskRoleSelection(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        dump(self.root / "CAMPAIGN.json", {"task_uuid": "FRESH-B-UUID"})
+        self.op = {"id": "fresh-b01", "task_uuid": "FRESH-B-UUID", "stage": "B"}
+        path = dump(self.root / "tools" / "fresh-b01.operation.json", self.op)
+        self.roles = {
+            "schema": "B570_TASK_OPERATION_ROLES_V1", "task_uuid": "FRESH-B-UUID",
+            "phase": "B", "roles": {"B01": {
+                "phase": "B", "kind": "entry_positive", "operation_id": "fresh-b01",
+                "sha256": sha(path),
+            }},
+        }
+        dump(self.root / "OPERATION_ROLE_MAP.json", self.roles)
+
+    def test_exact_current_role(self):
+        opid, op = roles.operation(self.root, "B01", "B", "entry_positive")
+        self.assertEqual(opid, "fresh-b01")
+        self.assertEqual(op["task_uuid"], "FRESH-B-UUID")
+
+    def test_wrong_uuid_fails(self):
+        self.roles["task_uuid"] = "OLD-UUID"
+        dump(self.root / "OPERATION_ROLE_MAP.json", self.roles)
+        with self.assertRaisesRegex(ValueError, "current task identity"):
+            roles.operation(self.root, "B01", "B")
+
+    def test_old_role_id_cannot_be_promoted(self):
+        self.roles["roles"]["B01"]["operation_id"] = "038-final-startup"
+        dump(self.root / "OPERATION_ROLE_MAP.json", self.roles)
+        with self.assertRaisesRegex(ValueError, "current operation id"):
+            roles.operation(self.root, "B01", "B")
+
+    def test_wrong_phase_fails(self):
+        with self.assertRaisesRegex(ValueError, "current task identity"):
+            roles.operation(self.root, "B01", "C")
+
+    def test_wrong_operation_bytes_fails(self):
+        self.op["extra"] = "unreviewed"
+        dump(self.root / "tools" / "fresh-b01.operation.json", self.op)
+        with self.assertRaisesRegex(ValueError, "operation exact bytes not frozen"):
+            roles.operation(self.root, "B01", "B")
+
+
+if __name__ == "__main__":
+    unittest.main()

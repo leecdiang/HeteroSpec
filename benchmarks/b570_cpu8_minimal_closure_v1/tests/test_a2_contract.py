@@ -32,11 +32,42 @@ class SourceReviewOnly(unittest.TestCase):
         code = self.root / "source" / "candidate.py"
         code.parent.mkdir()
         code.write_text("answer = 1\n")
+        # A fabricated one-file manifest must NOT qualify: enumerate the
+        # complete 122-source plus ten auxiliary review input inventory.
+        required = [
+            "source/operation_guard.py", "source/finalize_review_v6.py",
+            "source/verify_cpu8.py", "source/integration_gates.py",
+            "source/native_gate_audit.py", "source/engineering_gates_v6.py",
+            "source/operation_roles_v7.py", "source/operation_pricing_v7.py",
+            "source/b_negative_binding_v7.py", "src/rev2/win.py",
+        ]
+        paths = ["source/candidate.py"] + required + [
+            "source/synthetic%03d.py" % i for i in range(111)
+        ]
+        source_rows = []
+        for name in paths:
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if name != "source/candidate.py":
+                path.write_text("synthetic = True\\n")
+            source_rows.append({"path": name, "sha256": sha(path),
+                                "bytes": path.stat().st_size})
+        reference_rows = []
+        for i in range(10):
+            name = "review-inputs/aux%02d.md" % i
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("SYNTHETIC ONLY\\n")
+            reference_rows.append({"path": name, "sha256": sha(path),
+                                   "bytes": path.stat().st_size})
+        composition = {"source_import_composition": source_rows,
+                       "a2_references": reference_rows}
+        cp = dump(self.root / "review" / "PINNED_SOURCE_COMPOSITION.json", composition)
         self.manifest = {
             "schema": "B570_SOURCE_CANDIDATE_V2",
             "candidate_commit": "a" * 40,
-            "files": [{"path": "source/candidate.py", "sha256": sha(code),
-                       "bytes": code.stat().st_size}],
+            "source_composition_sha256": sha(cp),
+            "files": source_rows + reference_rows,
         }
         self.manifest_path = dump(self.root / "review" / "CANDIDATE_MANIFEST.json",
                                   self.manifest)
@@ -45,7 +76,7 @@ class SourceReviewOnly(unittest.TestCase):
             "candidate_commit": "a" * 40,
             "candidate_manifest_sha256": sha(self.manifest_path),
             "severity_coverage": ["P0", "P1", "P2"],
-            "reviewed_files": ["source/candidate.py"],
+            "reviewed_files": [x["path"] for x in self.manifest["files"]],
             "findings": [],
             "reviewer": {"identity": "SYNTHETIC_ONLY",
                          "session_or_review_url": "synthetic://not-authentic"},
@@ -59,6 +90,17 @@ class SourceReviewOnly(unittest.TestCase):
         self.assertEqual(result["native_qualification"], "NOT_PERFORMED")
         self.assertEqual(result["independent_review_authentication"],
                          "REQUIRES_EXTERNAL_VERIFICATION")
+
+    def test_short_manifest_cannot_qualify(self):
+        self.manifest["files"] = self.manifest["files"][:1]
+        dump(self.root / "review" / "CANDIDATE_MANIFEST.json", self.manifest)
+        with self.assertRaisesRegex(ValueError, "complete source candidate inventory"):
+            source_review.verify(self.root)
+
+    def test_tampered_auxiliary_input_cannot_qualify(self):
+        (self.root / "review-inputs" / "aux00.md").write_text("MODIFIED")
+        with self.assertRaisesRegex(ValueError, "source byte drift"):
+            source_review.verify(self.root)
 
     def test_unreviewed_file_fails(self):
         self.review["reviewed_files"] = []

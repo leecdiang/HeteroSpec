@@ -60,7 +60,9 @@ def check(root, approval, source_review):
     t2 = datetime.fromisoformat(raw["observed_utc"].replace("Z", "+00:00"))
     need(t1.tzinfo is not None and t2.tzinfo is not None and t1 <= t2,
          "A source review captured interval")
-    need(response["reviewer_identity"] != campaign.get("candidate_author"),
+    need(isinstance(campaign.get("candidate_author"), str) and campaign["candidate_author"],
+         "A source author identity required")
+    need(response["reviewer_identity"] != campaign["candidate_author"],
          "A reviewer identity not independent")
     return {
         "status": "A_REVIEW_PROVIDER_CAPTURE_BOUND",

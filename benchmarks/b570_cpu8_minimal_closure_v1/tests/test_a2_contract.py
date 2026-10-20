@@ -551,7 +551,7 @@ class BNegativeIdentityContracts(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         self.root = Path(tmp.name)
         self.sha = "a" * 64
-        self.start = {"pid": 41, "created_filetime": "1000",
+        self.start = {"pid": 41, "created_filetime": "1000", "parent_pid": 40,
                       "intent_sha256": self.sha, "command_sha256": "b" * 64}
         argv = ["C:/Python/python.exe", "-I", "-S", "-B", "fixture.py"]
         self.op = {"root": str(self.root), "task_uuid": "FRESH-B",
@@ -561,7 +561,7 @@ class BNegativeIdentityContracts(unittest.TestCase):
                         "command": subprocess.list2cmdline(argv)}
         self.terminal = {"exit_code": 1, "isError": True, "output": "FAIL"}
         self.witness = {
-            "owner_pid": 41, "owner_created_filetime": "1000",
+            "owner_pid": 41, "owner_created_filetime": "1000", "guard_parent_pid": 40,
             "guard_command_sha256": "b" * 64,
             "guard_operation_sha256": self.sha,
             "root_pid": 42, "root_created_filetime": "1010",
@@ -599,6 +599,11 @@ class BNegativeIdentityContracts(unittest.TestCase):
             self.verify_child()
         self.start["intent_sha256"] = self.sha
         self.witness["owner_pid"] = 99
+        with self.assertRaisesRegex(ValueError, "owner/guard/child/provider"):
+            self.verify_owner()
+
+    def test_witness_guard_parent_mismatch_rejected(self):
+        self.witness["guard_parent_pid"] = 9876
         with self.assertRaisesRegex(ValueError, "owner/guard/child/provider"):
             self.verify_owner()
 

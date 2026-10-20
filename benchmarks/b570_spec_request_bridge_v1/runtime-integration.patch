@@ -1,0 +1,34 @@
+--- a/src/llama-graph.cpp
++++ b/src/llama-graph.cpp
+@@ -1,3 +1,4 @@
++#include "query_head.h"
+ #include "llama-graph.h"
+ 
+ #include "llama-impl.h"
+@@ -2612,6 +2613,26 @@
+ 
+     ggml_tensor * cur;
+ 
++    // Private request bridge: immutable layout per fresh context, single-threaded host.
++    const char * hs_layout = getenv("HS_REQUEST_LAYOUT");
++    if (hs_layout && q->ne[0] == 128 && q->ne[2] == 32 && k->ne[2] == 8 &&
++        (q->ne[1] == 2 || q->ne[1] == 4) && (k->ne[1] == 256 || k->ne[1] == 512) &&
++        q->ne[3] == 1 && k->ne[3] == 1 && v->ne[3] == 1 &&
++        !cparams.flash_attn && !kq_b && !sinks && !v_mla && v_trans &&
++        !hparams.attn_soft_cap && hparams.f_max_alibi_bias == 0 && cparams.offload_kqv) {
++        const bool qb = strcmp(hs_layout, "QB") == 0;
++        GGML_ASSERT(qb || strcmp(hs_layout, "PQ") == 0);
++        auto b = hs_qh::build(ctx0, qb ? hs_qh::Mode::QB4 : hs_qh::Mode::PQ,
++                              q, k, v, kq_mask, kq_scale);
++        GGML_ASSERT(!b.common_original && !b.copied_kv);
++        for (auto * t : b.scores) cb(t, qb ? "hs_qb_qk" : "hs_pq_qk", il);
++        for (auto * t : b.probs) cb(t, qb ? "hs_qb_prob" : "hs_pq_prob", il);
++        for (auto * t : b.values) cb(t, qb ? "hs_qb_av" : "hs_pq_av", il);
++        cb(b.out, qb ? "hs_qb_final" : "hs_pq_final", il);
++        ggml_build_forward_expand(gf, b.out);
++        return b.out;
++    }
++
+     const bool use_flash_attn = cparams.flash_attn && kq_b == nullptr;
+     if (use_flash_attn) {
+         GGML_ASSERT(kq_b == nullptr && "Flash attention does not support KQ bias yet");

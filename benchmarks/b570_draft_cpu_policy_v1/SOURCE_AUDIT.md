@@ -21,3 +21,7 @@ Target remains8. Same compiled backend/model graph DLLs, CPU instruction impleme
 Every candidate target/draft logits vector must match the original PR134 QB file byte for byte, including rejected verification rows. Complete output and state traces must match. Only then measure BASE_A/BASE_B/DRAFT1/R complete service under balanced orders.
 
 A cost reduction under this one-factor intervention supports CPU backend parallelism policy as a contributor under this environment. It would not prove a unique OpenMP implementation defect, physical GPU bottleneck, or that all models/backends should use one CPU thread. No requested inference relies on template pool allocations as a proxy for OS thread counts.
+
+## Subsequent source check during the registered experiment
+
+`ggml_get_n_tasks` already assigns GET_ROWS and SET_ROWS one task (`ggml-cpu.c`, around2362), and `ggml_graph_plan` clamps `cplan.n_threads = MIN(max_tasks, n_threads)` (around3055). Therefore changing the context parameter8 ->1 need not alter actual worker count for the embedding-only CPU subgraph. This materially weakens the initial parallel-overhead hypothesis. The registered experiment remains a parameter-policy counterfactual; no claim of measured worker-count reduction is made. All registered samples are retained rather than terminating based on observed performance.

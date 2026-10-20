@@ -10,7 +10,7 @@ permissions:
   contents: read
 concurrency:
   group: b570-a3-source-only-review
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   source-only:
     runs-on: ubuntu-24.04
@@ -19,6 +19,9 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          sparse-checkout: |
+            benchmarks/b570_cpu8_minimal_closure_v1
+            benchmarks/b570_cpu8_closeout_v6/results/48d45054-1838-4d55-9f3a-e15476dc4423
       - name: Reconstruct pinned historical source and check every review byte
         env:
           PYTHONDONTWRITEBYTECODE: '1'

@@ -313,6 +313,13 @@ class RecoverySourceContracts(unittest.TestCase):
         self.assertIn("fresh task/stage operation binding", code)
         self.assertIn("and code==0 else 'FAILED'", code)
 
+    def test_guard_requires_existing_a2_operation_role_before_native_create(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("from operation_roles_v7 import role_map", code)
+        self.assertIn("'unregistered current task operation role'", code)
+        self.assertLess(code.index("roles=role_map(ROOT,x['stage'])"),
+                        code.index("job=make_job()"))
+
     def test_owned_start_overrun_does_not_skip_job_close(self):
         code = (SRC / "operation_guard.py").read_text(encoding="utf8")
         self.assertIn("bound_errors.append('OPERATION_OWNED_START_BOUND')", code)

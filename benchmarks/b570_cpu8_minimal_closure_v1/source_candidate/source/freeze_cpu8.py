@@ -7,9 +7,11 @@ from budget_v6 import snapshot
 snapshot(ROOT,'C') # independently authorized C task, never historical development budget
 from operation_roles_v7 import formal_template
 formal_id, formal_template_path, _formal_pre_f0 = formal_template(ROOT)
+def require(ok, message):
+    if not ok:raise ValueError(message)
 # A runtime operation contains F0's digest, so it must not exist before F0
 # and must never be listed in F0's own byte inventory.
-assert not (ROOT/'tools'/(formal_id+'.operation.json')).exists(), 'post-F0 operation exists before freeze'
+require(not (ROOT/'tools'/(formal_id+'.operation.json')).exists(), 'post-F0 operation exists before freeze')
 from source_guard import actual_d0
 from native_gate_audit import check as native_check
 def h(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -47,10 +49,10 @@ for rel in ['source','src/rev2','legacy/repo/benchmarks/b570_supervision_fix_v2'
 for rel in ['CAMPAIGN.json','OPERATION_POLICY.json','FILESYSTEM_IDENTITY.json','NATIVE_GATE_PATHS.json','OPERATION_ROLE_MAP.json','CPU8_EXECUTION_ENVELOPE.json','ENGINEERING_GATE_BINDING.json','review/CANDIDATE_MANIFEST.json','review/FINAL_REVIEW.json','review/A_EXTERNAL_APPROVAL.json','CPU8_PLAN.json','CONFIG.json','ACQUISITION.json','D0_RESERVATIONS.json','D0_GATE_INDEX.json','legacy/ROOT_BINDING.json','D0_BRIDGE_PLAN.json','INTEGRATION_GATE_BINDING.json','ENTRY_SOURCE_MANIFEST.final.json','preflight/STARTUP.final.json','D0_EVIDENCE_SNAPSHOT/EXPECTED.json','D0_EVIDENCE_SNAPSHOT/PROVENANCE.json','D0_EVIDENCE_SNAPSHOT/legacy/AUDIT_INPUT_MANIFEST-d0-snapshot.json']:
     files[rel]=h(ROOT/rel)
 for p in (ROOT/'tools').glob('*.json'):
-    assert p.name != formal_id+'.operation.json', 'F0 cannot hash its own runtime operation'
+    require(p.name != formal_id+'.operation.json', 'F0 cannot hash its own runtime operation')
     files[p.relative_to(ROOT).as_posix()]=h(p)
-assert files.get(formal_template_path.relative_to(ROOT).as_posix())==h(formal_template_path), 'formal template not pinned by F0'
-assert files.get('OPERATION_ROLE_MAP.json')==h(ROOT/'OPERATION_ROLE_MAP.json'), 'formal role map not pinned by F0'
+require(files.get(formal_template_path.relative_to(ROOT).as_posix())==h(formal_template_path), 'formal template not pinned by F0')
+require(files.get('OPERATION_ROLE_MAP.json')==h(ROOT/'OPERATION_ROLE_MAP.json'), 'formal role map not pinned by F0')
 # win.freeze_check retains its original required inventory names; all are real source/review bytes.
 mapping={'PROTOCOL.md':'CPU8_INTEGRATION.md','B570_PROMPT.md':'B570_PROMPT.md','REVIEW_BINDING.json':'REVIEW_BINDING.json','review/REPORT.json':'review/review-2.json','review/STATUS.json':'review/review-2-status.json'}
 for dst,src in mapping.items():

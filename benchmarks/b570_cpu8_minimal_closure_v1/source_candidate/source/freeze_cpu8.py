@@ -12,6 +12,9 @@ def require(ok, message):
 # A runtime operation contains F0's digest, so it must not exist before F0
 # and must never be listed in F0's own byte inventory.
 require(not (ROOT/'tools'/(formal_id+'.operation.json')).exists(), 'post-F0 operation exists before freeze')
+for artifact in (ROOT/'tools').glob(formal_id+'.*.json'):
+    require(artifact == formal_template_path,
+            'formal runtime request, capture or settlement exists before F0')
 from source_guard import actual_d0
 from native_gate_audit import check as native_check
 def h(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()

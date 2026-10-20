@@ -4,6 +4,7 @@ import ast
 import datetime
 import hashlib
 import json
+import os
 import sys
 import subprocess
 import tempfile
@@ -12,6 +13,11 @@ from pathlib import Path
 
 SRC = Path(__file__).resolve().parents[1] / "source_candidate" / "source"
 sys.path.insert(0, str(SRC))
+# The real archived evidence_contract dependency is required by the B-negative
+# source verifier. Staging it is mandatory; no invented stub is accepted.
+ARCHIVED = os.environ.get("B570_A_HISTORICAL_ROOT")
+if ARCHIVED:
+    sys.path.insert(1, str(Path(ARCHIVED).resolve() / "source"))
 import finalize_review_v6 as source_review
 import operation_roles_v7 as roles
 import operation_pricing_v7 as pricing

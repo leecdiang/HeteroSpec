@@ -1,0 +1,41 @@
+\section{Phase-scoped query-layout design}
+\label{sec:method}
+\subsection{From per-query graphs to query views}
+GS serializes target rows through projection, attention and feed-forward layers. PQ retains batching in surrounding layers but constructs a separate attention subgraph for each query and concatenates results. QB expresses the same local separation as a view: it maps the query tensor from $(d,q,h_Q,1)$ to $(d,1,h_Q,q)$ and transforms the mask view in parallel. The query values are not copied or re-encoded; the query index becomes a batch coordinate for independent instances of the existing attention operators.
+
+\begin{figure}[t]
+\centering
+\input{figures/design.tex}
+\caption{Logical organization of GS, PQ and QB. QB changes only the attention query representation while retaining surrounding batching. Tiles depict logical indices, not copied K/V or independent sequences.}
+\label{fig:design}
+\end{figure}
+
+Let the original query base pointer be $b_Q$ and byte strides be $s_0,s_1,s_2,s_3$. The original scalar address is
+\[
+\operatorname{addr}_{\MQ}(i,j,a)=b_Q+i s_0+j s_1+a s_2.
+\]
+The transformed view reads
+\[
+\operatorname{addr}_{\QB}(i,0,a,j)=b_Q+i s_0+a s_2+j s_1,
+\]
+which selects the same scalar. The mask is transformed from $(n,q,1,1)$ to $(n,1,1,q)$ while preserving the original key and query strides. Query-dependent causal mask columns cannot be collapsed into one shared column, and logical token positions remain unchanged.
+
+Let $\kappa(a)$ map query head $a$ to its native K/V head. QB retains the original mapping and K/V storage. For scale $\alpha$, key $t$, query $j$ and head $a$, the logical operations are
+\[
+z_{tja}=\alpha\sum_i K_{it\kappa(a)}Q_{ija}+m_{tj},
+\quad p_{tja}=\operatorname{softmax}_t(z_{tja}),
+\]
+\[
+O_{vja}=\sum_t V_{vt\kappa(a)}p_{tja}.
+\]
+The native runtime may store or permute V differently; the implementation must preserve its actual layout rather than infer strides from these logical equations.
+
+\begin{proposition}[Exact-arithmetic view equivalence]
+For a supported single-stream graph, if query and mask address mappings preserve every scalar, K/V broadcasting preserves $\kappa$, operator parameters are unchanged and output recombination restores query order, QB computes the same logical attention output as the original graph in exact arithmetic.
+\end{proposition}
+This proposition does not establish floating-point correspondence. Different kernels, accumulation orders or reduction trees may differ. That is why the implementation is qualified against the deployed reference rather than accepted from shape algebra alone.
+
+\subsection{Phase and graph-cache obligations}
+The layout is selected by target/draft role and prefill/continuation phase. The guard must execute before both observed and observation-disabled paths. The active layout participates in graph-cache compatibility: two graphs with nominally equal dimensions cannot be reused if their required layouts differ. The implementation retains the native speculative transaction and uses explicit guards for unsupported graph features, strides and head configurations.
+
+The evaluated domain is bounded by the actual source guards and backend support. Attention bias, sinks, MLA and other unsupported fused or positional-bias paths cannot inherit the result without separate qualification. Multiple sequences also require distinguishing the true sequence-batch dimension from the new query dimension.

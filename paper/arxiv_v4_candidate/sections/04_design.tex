@@ -1,0 +1,27 @@
+\section{Experimental design}
+\label{sec:design}
+The evidence consists of experiments with different roles; counts are not pooled as if they represented independent inputs or dates.
+\begin{table}[t]
+\centering\small
+\caption{Evidence groups and their distinct roles.}
+\label{tab:evidence}
+\begin{tabularx}{\columnwidth}{@{}p{.25\columnwidth}Y@{}}
+\toprule
+Study & Question answered \\
+\midrule
+CUDA confirmation & Complete registered outputs across three model families \\
+CUDA replay & Fixed-operand QK, softmax and AV correspondence across 72 contexts \\
+RTX E2 replication & PQ/QB request costs across six process sessions and two dates \\
+RTX mapping controls & CUDA Graph replay, dispatch boundary, padding qualification and complete Q representation cost \\
+B570 state studies & Prefill partitioning, retained-state composition and component substitution \\
+B570 operator/request panels & Version-bound Vulkan admission, actual q=2 execution and full service economics \\
+RTX closure & Four exposed inputs, actual q=2, complete reference/state checks and a balanced four-arm service panel \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The original CUDA experiments use pinned Q8_0 target/draft pairs for Qwen3, SmolLM2 and Llama, F16 KV, non-flash attention and the registered phase policy. The six-session replication uses fresh workers and counterbalanced PQ/QB blocks. The later RTX mapping experiments use their own fixed synthetic geometries and cost windows; they do not inherit request-level conclusions automatically.
+
+B570 experiments use a separate Vulkan frontend and Llama-family quantized runtime for state and backend studies. The latest request panels use Qwen3-8B Q8_0 target and Qwen3-0.6B Q8_0 draft. The B570 and RTX closure panels have separate prospective references, service definitions, context policies and device environments. Their ratios answer within-panel questions; they must not be pooled into a cross-device speedup.
+
+All studies retain failed or weak outcomes and use fixed input panels. Repeated requests and fresh processes improve measurement coverage but do not turn four exposed inputs into a population sample. The later RTX closure uses one machine/date and $k=1$; its conclusions are limited to that policy and panel.

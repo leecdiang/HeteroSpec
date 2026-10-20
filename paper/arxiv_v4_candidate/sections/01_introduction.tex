@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:intro}
+Speculative decoding uses a draft model to propose tokens and a target model to verify them, reducing sequential target invocations when proposals are accepted~\cite{leviathan2023}. Verification changes the target's execution geometry: several query positions may be evaluated together, whereas ordinary continuation evaluates one position at a time. In finite-precision implementations, mathematically equivalent organizations can produce different intermediate values and, near a greedy decision boundary, different tokens. Correct acceptance logic therefore does not by itself reproduce a deployed quantized reference.
+
+This paper studies a specific deployment requirement: preserve the full native output of an existing execution recipe while reducing its execution cost. The reference includes model and tokenizer bytes, prompt construction, numerical runtime, sampling and stopping rules. We distinguish endpoint agreement from bitwise operator correspondence and exact-arithmetic equivalence. A candidate is eligible for a reference-preserving performance comparison only after its registered output and state checks pass.
+
+Our method, phase-scoped query-to-batch attention (QB), changes the representation of independent attention queries without serializing the surrounding target computation. It uses matched query and mask views, shared K/V storage, output-order restoration, phase guards and a layout-sensitive graph-cache check. The original speculative transaction—including proposal, acceptance, correction and KV reconciliation—remains unchanged. QB is compared with explicit per-query attention (PQ), while global serialization (GS) provides a broader repair alternative.
+
+The original CUDA results establish two complementary facts. First, QB and PQ agree bitwise at QK, softmax and AV on a fixed 72-context replay. Second, across six sessions and three model families, QB reduces speculative request latency by 3.06\%, 6.17\% and 2.83\%, respectively, on the registered panel. These are finite-panel results, not claims about all inputs or all runtimes.
+
+The later experiments ask what those results do—and do not—imply for transfer and further optimization. RTX controls expose the effect of CUDA Graph replay, reference-inadmissible padding, and the cost of preparing a compact query representation. Vulkan experiments investigate prefill-state formation, backend admission and real speculative requests. The latest B570 and RTX panels both qualify actual q=2 requests, but they reach different conclusions about the net value of speculation under their respective policies.
+
+The contributions are:
+\begin{enumerate}
+\item A concrete query/mask view transformation with shared-KV, grouped-head, output-order, phase and graph-reuse obligations.
+\item Matched numerical and request-cost evidence that separates QB's local representation benefit, broader repair choices and the incremental cost of drafting.
+\item Controlled state, backend and full-request experiments that define transfer boundaries and show why reference qualification, a faster local phase and a useful end-to-end optimization are distinct claims.
+\end{enumerate}

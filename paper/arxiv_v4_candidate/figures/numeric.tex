@@ -1,0 +1,14 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+\node[anchor=west,font=\bfseries] at (0,2.35) {Bitwise-equal contexts (out of 72)};
+\foreach \x/\t in {3.5/QK,5.2/Softmax,6.9/AV}\node at (\x,1.85) {\t};
+\foreach \y/\t in {1.2/MQ vs PQ,.55/MQ vs QB,-.1/PQ vs QB}\node[anchor=west] at (0,\y) {\t};
+\foreach \y in {1.2,.55}{\foreach \x in {3.5,5.2,6.9}{
+ \draw[draft,line width=.7pt] (\x-.58,\y-.19) rectangle (\x+.58,\y+.19);
+ \node[text=draft] at (\x,\y) {18/72};
+}}
+\foreach \x in {3.5,5.2,6.9}{
+ \draw[qualified,fill=qualified!8,line width=.7pt] (\x-.58,-.29) rectangle (\x+.58,.09);
+ \node[text=qualified] at (\x,-.1) {72/72};
+}
+\node[anchor=west,text=aux] at (0,-.65) {The 18 MQ agreements are q=1 common-path controls; all PQ/QB pairs agree.};
+\end{tikzpicture}

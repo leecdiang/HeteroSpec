@@ -462,7 +462,7 @@ class ProtectedOperationLedger(unittest.TestCase):
     def test_negative_or_underquoted_lifetime_cannot_credit_budget(self):
         self.op["lifetime_bound_seconds"] = -100
         self.persist()
-        with self.assertRaisesRegex(ValueError, "full operation prospective cost"):
+        with self.assertRaisesRegex(ValueError, "operation upper nonnegative integer"):
             budgets.snapshot(self.root, "B")
 
     def test_wrong_task_uuid_is_rejected(self):
@@ -620,7 +620,7 @@ class BNegativeIdentityContracts(unittest.TestCase):
         code = (SRC / "b_negative_binding_v7.py").read_text(encoding="utf8")
         self.assertIn("request_check(root, operation_id, intent, initial, start, operation_sha)",code)
         self.assertLess(code.index("request_check(root, operation_id"),
-                        code.index("outside_owner_binding(witness, start"))
+                        code.index("terminal_sha = outside_owner_binding(witness, start"))
 
 
 class NonCircularFormalFreeze(unittest.TestCase):

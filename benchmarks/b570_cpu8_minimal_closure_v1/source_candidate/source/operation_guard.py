@@ -1,6 +1,19 @@
 """Hard-bounded CPU operation guard; outside the candidate command Job."""
 import sys,json,time,os,hashlib,threading
 from pathlib import Path
+
+# Pure, source-reviewable predicates; not a native B/C approval.
+def _deadline_expired(rescue_fired, observed_ns, cutoff_ns):
+ return bool(rescue_fired) or observed_ns>cutoff_ns
+
+def _complete_member_inventory(job_total_starts, root_key, observed_keys):
+ if type(job_total_starts) is not int or job_total_starts<0:
+  return False
+ members=set(observed_keys)
+ if root_key is not None:
+  members.add(root_key)
+ return len(members)==job_total_starts
+
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'source'),str(ROOT/'src/rev2')]
 from win import *
@@ -45,7 +58,7 @@ retained={};member_exits_complete=True
 readback=limit_readback();j.emit('JOB_LIMIT_READBACK',configured_active=x['max_job_processes'],actual=readback)
 need(readback['active_limit']==x['max_job_processes'] and readback['flags']&0x2008==0x2008,'JOB_LIMIT_READBACK_MISMATCH')
 
-child=None;error=None;code=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
+child=None;error=None;code=None;root_key=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
 done=threading.Event();deadline_fired=threading.Event()
 def rescue_deadline():
  if not done.wait(x['seconds']):
@@ -56,7 +69,7 @@ def rescue_deadline():
 rescue=threading.Thread(target=rescue_deadline,name='V6_OPERATION_DEADLINE',daemon=True);rescue.start()
 try:
  j.emit('GUARD_START',pid=os.getpid(),intent_sha256=a.intent_sha256,budget=state,storage=storage,**identity(current()))
- child=spawn_suspended(x['argv'],ROOT,folder/'stdout.log',folder/'stderr.log');ident=identity(child.process);j.emit('OP_CREATED_SUSPENDED',pid=int(child.pid),argv=x['argv'],**ident)
+ child=spawn_suspended(x['argv'],ROOT,folder/'stdout.log',folder/'stderr.log');ident=identity(child.process);root_key=(int(child.pid),ident['created_filetime']);j.emit('OP_CREATED_SUSPENDED',pid=int(child.pid),argv=x['argv'],**ident)
  checked(job_assign(job,child.process),'operation Job assignment');need(resume(child.thread)!=0xffffffff,'resume');checked(close(child.thread),'thread close');child.thread=None
  while alive(child.process):
   start=now();need(start<=deadline,'OPERATION_DEADLINE');need(last is None or start-last<=10**9,'OPERATION_RESOURCE_GAP')
@@ -71,8 +84,13 @@ try:
  need(not job_pids(job),'OPERATION_DESCENDANTS_REMAIN')
 except BaseException as e:
  error=repr(e)
- if 'OPERATION_DEADLINE' in error:
-  j.emit('OPERATION_DEADLINE',source='GUARD_MONOTONIC_CHECK',error=error)
+ observed_ns=now()
+ # An exception text containing OPERATION_DEADLINE is not enough.
+ if _deadline_expired(deadline_fired.is_set(),observed_ns,deadline):
+  j.emit('OPERATION_DEADLINE',source='GUARD_MONOTONIC_CHECK',
+         deadline_ns=deadline,observed_ns=observed_ns,
+         rescue_fired=deadline_fired.is_set(),original_error=error)
+  error='OPERATION_DEADLINE: '+error
  j.emit('OPERATION_FAILURE',error=error)
  terminate_job(job)
 finally:
@@ -101,6 +119,14 @@ finally:
  # Bounds discovered at closeout must FAIL the operation, not raise before
  # the Job handle and retained evidence can be closed.
  bound_errors=[]
+ # Polling may miss short-lived children. A successful closeout must account
+ # for every cumulative Job start using preserved native identities.
+ if not _complete_member_inventory(total_job_processes,root_key,retained.keys()):
+  observed_keys=set(retained)
+  if root_key is not None:observed_keys.add(root_key)
+  bound_errors.append('OPERATION_MEMBER_CENSUS_GAP')
+  j.emit('OPERATION_MEMBER_CENSUS_GAP',job_total=total_job_processes,
+         observed_identity_count=len(observed_keys))
  if total_job_processes>pricing['owned_job_starts_limit']:
   bound_errors.append('OPERATION_OWNED_START_BOUND')
  if total_job_processes+pricing['owned_outer_starts_limit']>x['starts_bound']:

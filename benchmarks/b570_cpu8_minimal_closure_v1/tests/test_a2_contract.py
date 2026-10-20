@@ -1,6 +1,7 @@
 """Static source-contract regressions. Synthetic fixtures; never Windows/native/GPU."""
 import copy
 import ast
+import datetime
 import hashlib
 import json
 import sys
@@ -13,6 +14,7 @@ sys.path.insert(0, str(SRC))
 import finalize_review_v6 as source_review
 import operation_roles_v7 as roles
 import operation_pricing_v7 as pricing
+import budget_v6 as budgets
 
 
 def dump(path, value):
@@ -346,6 +348,137 @@ class RecoverySourceContracts(unittest.TestCase):
              "B04": "EXTERNAL_NATIVE_OWNER"})
         self.assertTrue(all("outer_witness_sha256" not in row
                             for row in template["cases"].values()))
+
+
+class GuardPurePredicates(unittest.TestCase):
+    """Run only AST-extracted pure guard predicates; never import win or the runner."""
+
+    def setUp(self):
+        path = SRC / "operation_guard.py"
+        tree = ast.parse(path.read_text(encoding="utf8"), filename=str(path))
+        names = {"_deadline_expired", "_complete_member_inventory"}
+        methods = [node for node in tree.body
+                   if isinstance(node, ast.FunctionDef) and node.name in names]
+        self.assertEqual({m.name for m in methods}, names)
+        namespace = {}
+        isolated = ast.fix_missing_locations(ast.Module(body=methods, type_ignores=[]))
+        exec(compile(isolated, "<source-only-guard-predicates>", "exec"), namespace)
+        self.deadline = namespace["_deadline_expired"]
+        self.census = namespace["_complete_member_inventory"]
+
+    def test_deadline_text_without_elapsed_time_cannot_qualify(self):
+        # An unrelated error that merely says OPERATION_DEADLINE is not evidence.
+        self.assertFalse(self.deadline(False, 50, 100))
+        self.assertFalse(self.deadline(False, 100, 100))
+
+    def test_deadline_monotonic_expiry_or_rescue(self):
+        self.assertTrue(self.deadline(False, 101, 100))
+        self.assertTrue(self.deadline(True, 99, 100))
+
+    def test_member_census_rejects_missing_short_lived_child(self):
+        root = (123, "134000000000000000")
+        observed = [(456, "134000000000000001")]
+        self.assertTrue(self.census(2, root, observed))
+        self.assertFalse(self.census(3, root, observed))
+        self.assertFalse(self.census(1, root, observed))
+        self.assertTrue(self.census(2, root, [root] + observed))
+        self.assertFalse(self.census(True, root, observed))
+
+    def test_native_source_census_fails_closed_before_closed_receipt(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("bound_errors.append('OPERATION_MEMBER_CENSUS_GAP')", code)
+        self.assertIn("if not _complete_member_inventory(total_job_processes", code)
+        self.assertLess(code.index("OPERATION_MEMBER_CENSUS_GAP"),
+                        code.index("checked(close(job)"))
+        self.assertIn("if _deadline_expired(deadline_fired.is_set()", code)
+        self.assertNotIn("if 'OPERATION_DEADLINE' in error:", code)
+
+
+class ProtectedOperationLedger(unittest.TestCase):
+    """Actual source-only budget snapshot tests with synthetic, no-child data."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        stamp = (datetime.datetime.now(datetime.timezone.utc) -
+                 datetime.timedelta(seconds=5)).isoformat()
+        dump(self.root / "CAMPAIGN.json", {
+            "task_uuid": "NEW-B-ONLY", "first_preparation_utc": stamp,
+        })
+        dump(self.root / "OPERATION_POLICY.json", {
+            "total_process_seconds": 10000, "total_wall_seconds": 3600,
+            "starts_limit": 1000,
+            "reserves": {
+                "B": {"process_seconds": 0, "wall_seconds": 0, "starts": 0},
+                "delivery": {"process_seconds": 0, "wall_seconds": 0, "starts": 0},
+            },
+        })
+        self.op = {
+            "id": "b01-native", "task_uuid": "NEW-B-ONLY", "stage": "B",
+            "seconds": 5, "cleanup_seconds": 5, "max_job_processes": 2,
+            "starts_bound": 3, "lifetime_bound_seconds": 32,
+            "prospective_envelope": {
+                "schema": "B570_OWNED_ENVELOPE_V1",
+                "provider_bound_status": "BOUNDARY_EVIDENCE_REQUIRED",
+                "owned_job_starts_limit": 2, "owned_outer_starts_limit": 1,
+                "provider_lifetime_reserve_seconds": 2,
+                "provider_proof_sha256": "a" * 64,
+            },
+        }
+        self.operation_path = self.root / "tools" / "b01-native.operation.json"
+        self.persist()
+
+    def persist(self):
+        dump(self.operation_path, self.op)
+
+    def test_exact_new_operation_is_reserved_once(self):
+        result = budgets.snapshot(self.root, "B")
+        self.assertEqual(result["charged_process_seconds"], 32)
+        self.assertEqual(result["charged_starts"], 3)
+        self.assertEqual(result["open_operations"], ["b01-native"])
+        self.assertEqual(result["scope"].split(";")[0],
+                         "Conservative envelope accounting")
+
+    def test_reserved_delivery_stage_reads_current_b_ledger(self):
+        result = budgets.snapshot(self.root, "delivery")
+        self.assertEqual(result["charged_process_seconds"], 32)
+
+    def test_negative_or_underquoted_lifetime_cannot_credit_budget(self):
+        self.op["lifetime_bound_seconds"] = -100
+        self.persist()
+        with self.assertRaisesRegex(ValueError, "full operation prospective cost"):
+            budgets.snapshot(self.root, "B")
+
+    def test_wrong_task_uuid_is_rejected(self):
+        self.op["task_uuid"] = "CLOSED-OLD-UUID"
+        self.persist()
+        with self.assertRaisesRegex(ValueError, "foreign task operation"):
+            budgets.snapshot(self.root, "B")
+
+    def test_wrong_phase_is_rejected(self):
+        self.op["stage"] = "C"
+        self.persist()
+        with self.assertRaisesRegex(ValueError, "wrong phase operation"):
+            budgets.snapshot(self.root, "B")
+
+    def test_wrong_filename_identity_is_rejected(self):
+        wrong = self.operation_path.with_name("unregistered.operation.json")
+        self.operation_path.rename(wrong)
+        with self.assertRaisesRegex(ValueError, "filename/id mismatch"):
+            budgets.snapshot(self.root, "B")
+
+    def test_hidden_outer_starts_underquoted_is_rejected(self):
+        self.op["starts_bound"] = 2
+        self.persist()
+        with self.assertRaisesRegex(ValueError, "complete owned starts bound"):
+            budgets.snapshot(self.root, "B")
+
+    def test_unpriced_zero_service_cannot_enter_budget(self):
+        self.op["prospective_envelope"]["provider_lifetime_reserve_seconds"] = 0
+        self.persist()
+        with self.assertRaisesRegex(ValueError, "provider reserve"):
+            budgets.snapshot(self.root, "B")
 
 if __name__ == "__main__":
     unittest.main()

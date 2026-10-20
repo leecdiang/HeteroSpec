@@ -171,3 +171,10 @@ def native_gate_paths(root, required=("healthy", "freeze", "stall", "stall_harne
         p = rel(root, paths[key])
         need(p.parent != root and p.exists(), "native gate artifact absent")
     return {key: rel(root, paths[key]) for key in required}
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Materialize one post-F0 C operation (not native admission)")
+    parser.add_argument("--root", required=True)
+    options = parser.parse_args()
+    print(json.dumps(materialize_formal_operation(options.root),sort_keys=True))

@@ -533,6 +533,30 @@ class UnassignedSuspendedRoot(unittest.TestCase):
                                         lambda: calls.append("DIRECT")), "ALREADY_EXITED")
         self.assertFalse(calls)
 
+    def test_unassigned_exception_does_not_job_kill_before_direct_root_recovery(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        tree = ast.parse(code)
+        handlers = [handler for node in ast.walk(tree) if isinstance(node, ast.Try)
+                    for handler in node.handlers if isinstance(handler.type, ast.Name)
+                    and handler.type.id == "BaseException"]
+        recovery = [handler for handler in handlers
+                    if any(isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                           and node.func.attr == "emit"
+                           and node.args and isinstance(node.args[0], ast.Constant)
+                           and node.args[0].value == "OPERATION_FAILURE"
+                           for node in ast.walk(handler))]
+        self.assertEqual(len(recovery), 1)
+        calls = [node for node in ast.walk(recovery[0])
+                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                 and node.func.id == "terminate_job"]
+        self.assertEqual(len(calls), 1)
+        self.assertTrue(any(isinstance(node, ast.If)
+                            and isinstance(node.test, ast.Name)
+                            and node.test.id == "job_assigned"
+                            and any(call in ast.walk(node) for call in calls)
+                            for node in recovery[0].body))
+        self.assertIn("lambda:checked(terminate_process(child.process,125)", code)
+
     def test_native_source_retains_real_wait_and_filetime_for_unassigned_root(self):
         code = (SRC / "operation_guard.py").read_text(encoding="utf8")
         self.assertIn("UNASSIGNED_SUSPENDED_ROOT_TERMINATION", code)

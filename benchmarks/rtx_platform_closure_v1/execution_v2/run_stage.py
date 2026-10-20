@@ -1,5 +1,5 @@
 """Sequential owned-process runner; no same-slot retry."""
-import hashlib,json,subprocess,sys,time
+import hashlib,json,os,subprocess,sys,time
 from datetime import datetime,timezone
 from pathlib import Path
 CODE=Path(__file__).resolve().parent
@@ -28,7 +28,11 @@ def main():
         save(receipt_path,receipt);ledger['native_process_starts']+=1;save(ledger_path,ledger)
         start=time.perf_counter()
         with (root/(slot+'.stdout.log')).open('wb') as out,(root/(slot+'.stderr.log')).open('wb') as err:
-            p=subprocess.Popen(cmd,cwd=exe.parent,stdout=out,stderr=err,creationflags=subprocess.CREATE_NO_WINDOW)
+            env=os.environ.copy()
+            removed={k:v for k,v in env.items() if k.startswith(('HS_','GGML_','LLAMA_','CUDA_','OMP_'))}
+            for key in removed:env.pop(key)
+            save(root/(slot+'.ENVIRONMENT.json'),dict(removed_execution_controls=removed,policy='default CUDA graph mode; explicit executable-local backend DLLs; no observer environment'))
+            p=subprocess.Popen(cmd,cwd=exe.parent,stdout=out,stderr=err,env=env,creationflags=subprocess.CREATE_NO_WINDOW)
             receipt['pid']=p.pid;receipt['status']='STARTED';save(receipt_path,receipt)
             while p.poll() is None:
                 if ledger['owned_native_seconds']+time.perf_counter()-start>reg['budget']['owned_native_seconds_cap']:

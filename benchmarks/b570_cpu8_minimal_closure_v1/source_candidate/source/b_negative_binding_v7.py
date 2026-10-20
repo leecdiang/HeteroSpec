@@ -47,6 +47,47 @@ def exactly(events, name):
     return found[0]
 
 
+def native_child_binding(start, created, op, original, operation_sha, task_uuid):
+    # Native command and parent identity are evidence separate from the shell
+    # provider request, which request_check authenticates.
+    need(type(start.get("pid")) is int and type(created.get("pid")) is int
+         and type(start.get("created_filetime")) is str
+         and type(created.get("created_filetime")) is str,
+         "B guard and child native identity type")
+    need(type(op.get("argv")) is list and op["argv"]
+         and all(type(x) is str for x in op["argv"]), "B child argv type")
+    need(op["argv"] == created.get("argv")
+         and created.get("command") == subprocess.list2cmdline(op["argv"])
+         and created.get("parent_pid") == start["pid"]
+         and int(created["created_filetime"]) >= int(start["created_filetime"])
+         and created.get("image") == op["argv"][0],
+         "B native child argv/parent identity")
+    need(start.get("intent_sha256") == operation_sha
+         and op.get("task_uuid") == task_uuid
+         and Path(op["root"]).resolve() == Path(original).resolve(),
+         "B guard operation identity binding")
+    return True
+
+
+def outside_owner_binding(witness, start, created, operation_sha, terminal):
+    terminal_sha = hashlib.sha256(
+        json.dumps(terminal, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    need(witness.get("owner_pid") == start["pid"]
+         and witness.get("owner_created_filetime") == start["created_filetime"]
+         and witness.get("guard_command_sha256") == start["command_sha256"]
+         and witness.get("guard_operation_sha256") == operation_sha
+         and witness.get("root_pid") == created["pid"]
+         and witness.get("root_created_filetime") == created["created_filetime"]
+         and witness.get("provider_terminal_sha256") == terminal_sha,
+         "B outside owner/guard/child/provider identities disagree")
+    need(type(witness.get("external_owner_pid")) is int
+         and witness["external_owner_pid"] != start["pid"]
+         and int(witness.get("external_owner_created_filetime", "0")) > 0,
+         "B independent outside owner identity absent")
+    return terminal_sha
+
+
 def check(root, role):
     root = Path(root).resolve()
     need(role in EXPECTED, "no generic allowed-failure switch")
@@ -103,16 +144,7 @@ def check(root, role):
     original = request_check(root, operation_id, intent, initial, start, operation_sha)
     # Exact workload argv, native command line and parent relationship are
     # authenticated separately from the outer PowerShell/guard request.
-    need(op.get("argv") == created.get("argv")
-         and created.get("command") == subprocess.list2cmdline(op["argv"])
-         and created.get("parent_pid") == start.get("pid")
-         and int(created["created_filetime"]) >= int(start["created_filetime"])
-         and created.get("image") == op["argv"][0],
-         "B native child argv/parent identity")
-    need(start.get("intent_sha256") == operation_sha
-         and op.get("task_uuid") == campaign["task_uuid"]
-         and Path(op["root"]).resolve() == original.resolve(),
-         "B guard operation identity binding")
+    native_child_binding(start, created, op, original, operation_sha, campaign["task_uuid"])
     # The external owner must authenticate its own bytes after execution.
     # A prospective frozen contract cannot know the future witness SHA256.
     outside = Path(campaign["external_root"]).resolve()
@@ -125,25 +157,11 @@ def check(root, role):
     witness = load(witness_path)
     need(witness.get("frozen_contract_sha256") == sha(root / "B_NEGATIVE_CONTRACT.json"),
          "B outside witness prospective contract identity")
-    terminal_sha = hashlib.sha256(
-        json.dumps(terminal,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode("utf-8")
-    ).hexdigest()
     need(witness.get("operation_id") == operation_id
          and witness.get("job_empty") is True
          and witness.get("all_owned_handles_closed") is True,
          "B observed outside cleanup")
-    need(witness.get("owner_pid") == start["pid"]
-         and witness.get("owner_created_filetime") == start["created_filetime"]
-         and witness.get("guard_command_sha256") == start["command_sha256"]
-         and witness.get("guard_operation_sha256") == operation_sha
-         and witness.get("root_pid") == created["pid"]
-         and witness.get("root_created_filetime") == created["created_filetime"]
-         and witness.get("provider_terminal_sha256") == terminal_sha,
-         "B outside owner/guard/child/provider identities disagree")
-    need(type(witness.get("external_owner_pid")) is int
-         and witness["external_owner_pid"] != start["pid"]
-         and int(witness.get("external_owner_created_filetime","0")) > 0,
-         "B independent outside owner identity absent")
+    terminal_sha = outside_owner_binding(witness, start, created, operation_sha, terminal)
     known = {(x["pid"], x["created_filetime"]) for x in native
              if x.get("event") in ("MEMBER_IDENTITY", "OP_CREATED_SUSPENDED")}
     identities = witness.get("member_exits")

@@ -1,0 +1,86 @@
+name: B570 A3 source-only qualification checks
+on:
+  push:
+    branches: [research/b570-cpu8-a2-recovery-fix-20261020]
+    paths:
+      - 'benchmarks/b570_cpu8_minimal_closure_v1/**'
+      - '.github/workflows/b570-a3-source-only.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: b570-a3-source-only-review
+  cancel-in-progress: false
+jobs:
+  source-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Reconstruct pinned historical source and check every review byte
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 - <<'PY'
+          import ast, base64, hashlib, io, json, pathlib, zipfile
+          repo=pathlib.Path.cwd()
+          area=repo/'benchmarks/b570_cpu8_minimal_closure_v1'
+          run=repo/'_source_only'
+          historical=run/'historical'
+          composed=run/'composed'
+          archive=repo/'benchmarks/b570_cpu8_closeout_v6/results/48d45054-1838-4d55-9f3a-e15476dc4423'
+          spec=json.loads((archive/'ARCHIVE.json').read_bytes())
+          encoded=[]
+          for part in spec['parts']:
+              p=archive/part['path']
+              data=p.read_bytes()
+              assert len(data)==part['chars'] and hashlib.sha256(data).hexdigest()==part['sha256'],p
+              encoded.append(data)
+          data=b''.join(encoded)
+          assert len(data)==spec['encoded_chars']
+          zipped=base64.b64decode(data,validate=True)
+          assert len(zipped)==spec['archive_bytes']
+          assert hashlib.sha256(zipped).hexdigest()==spec['archive_sha256']
+          composition=json.loads((area/'SOURCE_COMPOSITION.json').read_bytes())
+          source=composition['source_import_composition']
+          references=composition['a2_references']
+          assert len(source)==123 and len(references)==14, 'current A3 review scope'
+          parsed=0
+          with zipfile.ZipFile(io.BytesIO(zipped)) as z:
+              for item in source:
+                  rel=pathlib.PurePosixPath(item['path'])
+                  assert '..' not in rel.parts and not rel.is_absolute()
+                  if item['origin'].startswith('prospective_A2_'):
+                      raw=(area/'source_candidate'/rel).read_bytes()
+                  else:
+                      raw=z.read(item['path'])
+                      legacy=historical/rel
+                      legacy.parent.mkdir(parents=True,exist_ok=True)
+                      legacy.write_bytes(raw)
+                  assert len(raw)==item['bytes'] and hashlib.sha256(raw).hexdigest()==item['sha256'],item['path']
+                  dest=composed/rel
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  dest.write_bytes(raw)
+                  if rel.suffix=='.py':
+                      ast.parse(raw,filename=str(dest))
+                      parsed+=1
+          for item in references:
+              rel=pathlib.PurePosixPath(item['path'])
+              assert '..' not in rel.parts and not rel.is_absolute()
+              raw=(area/rel).read_bytes()
+              assert len(raw)==item['bytes'] and hashlib.sha256(raw).hexdigest()==item['sha256'],item['path']
+              target=composed/rel
+              target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_bytes(raw)
+          print('A3 SOURCE_INTEGRITY_PASS:',len(source),'source/import,',len(references),
+                'auxiliary,',parsed,'Python AST files; historical ZIP SHA verified')
+          PY
+      - name: Pure source tests (no Windows/native/model/GPU entry)
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          B570_A_HISTORICAL_ROOT: ${{ github.workspace }}/_source_only/historical
+        run: |
+          python3 -B -m unittest discover -s benchmarks/b570_cpu8_minimal_closure_v1/tests -p 'test_a2_contract.py' -v
+          python3 -B benchmarks/b570_cpu8_minimal_closure_v1/tests/test_source_boundaries.py --historical-root "$B570_A_HISTORICAL_ROOT" -v

@@ -75,6 +75,8 @@ def outside_owner_binding(witness, start, created, operation_sha, terminal):
     ).hexdigest()
     need(witness.get("owner_pid") == start["pid"]
          and witness.get("owner_created_filetime") == start["created_filetime"]
+         and witness.get("guard_parent_pid") == start.get("parent_pid")
+         and type(start.get("parent_pid")) is int and start["parent_pid"] > 0
          and witness.get("guard_command_sha256") == start["command_sha256"]
          and witness.get("guard_operation_sha256") == operation_sha
          and witness.get("root_pid") == created["pid"]

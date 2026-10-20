@@ -339,9 +339,9 @@ class RecoverySourceContracts(unittest.TestCase):
 
     def test_guard_has_native_deadline_event(self):
         code = (SRC / "operation_guard.py").read_text(encoding="utf8")
-        self.assertIn("j.emit('OPERATION_DEADLINE'", code)
+        self.assertIn("_cleanup_emit('OPERATION_DEADLINE'", code)
         self.assertIn("source='GUARD_MONOTONIC_CHECK'", code)
-        self.assertIn("j.emit('OPERATION_FAILURE'", code)
+        self.assertIn("_cleanup_emit('OPERATION_FAILURE'", code)
         self.assertIn("need(not deadline_fired.is_set() and now()<=deadline+1_000_000_000,'OPERATION_DEADLINE')", code)
         self.assertNotIn("'exit deadline'", code)
 
@@ -566,7 +566,7 @@ class UnassignedSuspendedRoot(unittest.TestCase):
         self.assertIn("UNASSIGNED_SUSPENDED_ROOT_TERMINATION", code)
         self.assertIn("terminate_process(child.process,125)", code)
         self.assertIn("wait_handle(child.process", code)
-        self.assertIn("j.emit('OP_TERMINAL_OS'", code)
+        self.assertIn("_cleanup_emit('OP_TERMINAL_OS'", code)
         self.assertLess(code.index("checked(job_assign(job,child.process)"),
                         code.index("job_assigned=True"))
 
@@ -1049,7 +1049,7 @@ class SealedPostDeliveryExternalEvidence(unittest.TestCase):
         import base64 as _b64
         encoded=_b64.b64encode(content)
         chunk.write_bytes(encoded)
-        git_sha=hashlib.sha1(b"blob "+str(len(encoded)).encode()+b"\\0"+encoded).hexdigest()
+        git_sha=hashlib.sha1(b"blob "+str(len(encoded)).encode()+b"\0"+encoded).hexdigest()
         row={"path":str(chunk),"remote_path":"benchmarks/delivery/chunk.b64",
              "remote_blob_sha":git_sha}
         commit="a"*40

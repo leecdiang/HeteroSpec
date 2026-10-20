@@ -14,6 +14,15 @@ def _complete_member_inventory(job_total_starts, root_key, observed_keys):
   members.add(root_key)
  return len(members)==job_total_starts
 
+def _terminate_owned_root(job_assigned,child_alive,job_kill,root_kill):
+ # When AssignProcessToJobObject fails, TerminateJobObject cannot reach
+ # the CREATE_SUSPENDED root. TerminateProcess on the retained root handle
+ # is mandatory; the caller still waits for its real OS exit before closing.
+ if not child_alive:return 'ALREADY_EXITED'
+ if job_assigned:
+  job_kill();return 'ASSIGNED_JOB'
+ root_kill();return 'UNASSIGNED_ROOT'
+
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'source'),str(ROOT/'src/rev2')]
 from win import *
@@ -63,19 +72,23 @@ retained={};member_exits_complete=True
 readback=limit_readback();j.emit('JOB_LIMIT_READBACK',configured_active=x['max_job_processes'],actual=readback)
 need(readback['active_limit']==x['max_job_processes'] and readback['flags']&0x2008==0x2008,'JOB_LIMIT_READBACK_MISMATCH')
 
-child=None;error=None;code=None;root_key=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
+child=None;job_assigned=False;error=None;code=None;root_key=None;begin=now();deadline=begin+x['seconds']*10**9;last=None;peak=0
 done=threading.Event();deadline_fired=threading.Event()
 def rescue_deadline():
  if not done.wait(x['seconds']):
   deadline_fired.set()
-  try:terminate_job(job)
+  try:
+   if child and child.process and not job_assigned and alive(child.process):
+    checked(terminate_process(child.process,125),'rescue unassigned suspended root')
+   else:terminate_job(job)
   finally:
    if not done.wait(4):os._exit(125)
 rescue=threading.Thread(target=rescue_deadline,name='V6_OPERATION_DEADLINE',daemon=True);rescue.start()
 try:
  j.emit('GUARD_START',pid=os.getpid(),intent_sha256=a.intent_sha256,budget=state,storage=storage,**identity(current()))
  child=spawn_suspended(x['argv'],ROOT,folder/'stdout.log',folder/'stderr.log');ident=identity(child.process);root_key=(int(child.pid),ident['created_filetime']);j.emit('OP_CREATED_SUSPENDED',pid=int(child.pid),argv=x['argv'],**ident)
- checked(job_assign(job,child.process),'operation Job assignment');need(resume(child.thread)!=0xffffffff,'resume');checked(close(child.thread),'thread close');child.thread=None
+ checked(job_assign(job,child.process),'operation Job assignment');job_assigned=True
+ need(resume(child.thread)!=0xffffffff,'resume');checked(close(child.thread),'thread close');child.thread=None
  while alive(child.process):
   start=now();need(start<=deadline,'OPERATION_DEADLINE');need(last is None or start-last<=10**9,'OPERATION_RESOURCE_GAP')
   ps=job_pids(job);peak=max(peak,len(ps));members=sample_members(ps)
@@ -100,7 +113,16 @@ except BaseException as e:
  terminate_job(job)
 finally:
  if child and child.process:
-  if alive(child.process):terminate_job(job)
+  if alive(child.process):
+   if not job_assigned:
+    j.emit('UNASSIGNED_SUSPENDED_ROOT_TERMINATION',pid=int(child.pid),
+           created_filetime=root_key[1] if root_key else os_times(child.process)['created_filetime'])
+   # Actual kernel call uses the preserved process handle when Job assignment
+   # failed; the native wait and FILETIME below are mandatory in both cases.
+   cleanup_route=_terminate_owned_root(job_assigned,True,
+       lambda:terminate_job(job),
+       lambda:checked(terminate_process(child.process,125),'terminate unassigned suspended root'))
+  else:cleanup_route='ALREADY_EXITED'
   stop=now()+5_000_000_000
   while job_pids(job) and now()<stop:time.sleep(.01)
   empty=not job_pids(job)
@@ -144,7 +166,7 @@ finally:
   error=(error+'; ' if error else '')+'DEADLINE_THREAD_NOT_CLOSED'
   j.emit('OPERATION_FAILURE',error=error)
  checked(close(job),'operation job close');j.emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
- receipt=dict(status='CLOSED' if error is None and empty and member_exits_complete and code==0 else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code,intent_sha256=a.intent_sha256)
+ receipt=dict(job_assignment_confirmed=job_assigned,cleanup_route=cleanup_route if child and child.process else 'NO_CHILD',status='CLOSED' if error is None and empty and member_exits_complete and code==0 else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code,intent_sha256=a.intent_sha256)
  dump_new(folder/'RECEIPT.json',receipt);j.emit('GUARD_END',receipt=receipt);j.end();r.end()
 print(json.dumps(dict(operation=x['id'],status=receipt['status'],error=error,job_empty=empty,child_exit_code=receipt['child_exit_code'])),flush=True)
 sys.exit(0 if error is None and empty and member_exits_complete and receipt['child_exit_code']==0 else 1)

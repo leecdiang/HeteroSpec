@@ -6,9 +6,10 @@ and independent outer cleanup evidence. This is source-only and NOT native-teste
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 from operation_roles_v7 import operation, rel
-from delivery_binding_v6 import capture, utc
+from delivery_binding_v6 import capture, utc, request_check
 
 
 EXPECTED = {
@@ -98,9 +99,22 @@ def check(root, role):
     created = exactly(native, "OP_CREATED_SUSPENDED")
     need(type(start.get("at_ns")) is int and type(created.get("at_ns")) is int
          and start["at_ns"] < created["at_ns"], "B real owner startup")
+    operation_sha = sha(root / "tools" / (operation_id + ".operation.json"))
+    original = request_check(root, operation_id, intent, initial, start, operation_sha)
+    # Exact workload argv, native command line and parent relationship are
+    # authenticated separately from the outer PowerShell/guard request.
+    need(op.get("argv") == created.get("argv")
+         and created.get("command") == subprocess.list2cmdline(op["argv"])
+         and created.get("parent_pid") == start.get("pid")
+         and int(created["created_filetime"]) >= int(start["created_filetime"])
+         and created.get("image") == op["argv"][0],
+         "B native child argv/parent identity")
+    need(start.get("intent_sha256") == operation_sha
+         and op.get("task_uuid") == campaign["task_uuid"]
+         and Path(op["root"]).resolve() == original.resolve(),
+         "B guard operation identity binding")
     # The external owner must authenticate its own bytes after execution.
     # A prospective frozen contract cannot know the future witness SHA256.
-    original = Path(campaign["original_root"]).resolve()
     outside = Path(campaign["external_root"]).resolve()
     need(outside != original and outside not in original.parents and original not in outside.parents,
          "B outer capture distinct from candidate")
@@ -111,9 +125,25 @@ def check(root, role):
     witness = load(witness_path)
     need(witness.get("frozen_contract_sha256") == sha(root / "B_NEGATIVE_CONTRACT.json"),
          "B outside witness prospective contract identity")
+    terminal_sha = hashlib.sha256(
+        json.dumps(terminal,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
     need(witness.get("operation_id") == operation_id
          and witness.get("job_empty") is True
-         and witness.get("all_owned_handles_closed") is True, "B observed outside cleanup")
+         and witness.get("all_owned_handles_closed") is True,
+         "B observed outside cleanup")
+    need(witness.get("owner_pid") == start["pid"]
+         and witness.get("owner_created_filetime") == start["created_filetime"]
+         and witness.get("guard_command_sha256") == start["command_sha256"]
+         and witness.get("guard_operation_sha256") == operation_sha
+         and witness.get("root_pid") == created["pid"]
+         and witness.get("root_created_filetime") == created["created_filetime"]
+         and witness.get("provider_terminal_sha256") == terminal_sha,
+         "B outside owner/guard/child/provider identities disagree")
+    need(type(witness.get("external_owner_pid")) is int
+         and witness["external_owner_pid"] != start["pid"]
+         and int(witness.get("external_owner_created_filetime","0")) > 0,
+         "B independent outside owner identity absent")
     known = {(x["pid"], x["created_filetime"]) for x in native
              if x.get("event") in ("MEMBER_IDENTITY", "OP_CREATED_SUSPENDED")}
     identities = witness.get("member_exits")
@@ -178,6 +208,8 @@ def check(root, role):
         "provider_exit_code": terminal["exit_code"],
         "detector": expected_detector, "detector_source": sources[role],
         "external_witness_sha256": sha(witness_path),
+        "guard_pid": start["pid"], "guard_created_filetime": start["created_filetime"],
+        "provider_terminal_sha256": terminal_sha,
         "known_members": len(known), "externally_reported_exits": len(exited),
         "scope": "Evidence consistency only; B actual hard cap/provenance needs native approval",
     }

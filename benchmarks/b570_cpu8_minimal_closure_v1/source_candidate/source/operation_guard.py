@@ -113,7 +113,12 @@ except BaseException as e:
          rescue_fired=deadline_fired.is_set(),original_error=error)
   error='OPERATION_DEADLINE: '+error
  j.emit('OPERATION_FAILURE',error=error)
- terminate_job(job)
+ # An unassigned CREATE_SUSPENDED root is not reachable by this Job.
+ # Let the mandatory retained-handle cleanup in finally terminate and wait
+ # for it directly. An assigned Job is terminated here even when its root
+ # has exited but descendants may remain.
+ if job_assigned:
+  terminate_job(job)
 finally:
  if child and child.process:
   if alive(child.process):

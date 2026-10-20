@@ -13,3 +13,7 @@ Start here to save platform context:
 A independent P0–P2 review must bind every pinned source/config/test/input byte against the exact **review/PINNED_SOURCE_COMPOSITION.json** and current immutable Git commit. Hidden reviewer provider process counts and costs stay UNKNOWN, separately reported, not part of B/C Windows Job. A's source-only finalizer can only emit SOURCE_REVIEW_EVIDENCE_CONSISTENT; source_review_origin_v7 requires outside-candidate provider request/response capture and an independently authenticated reviewer before SOURCE_REVIEW_PASS. Both are UNVERIFIED.
 
 No B570/native, GPU, model, actor, RTL, F0 or formal test executed, no PR merge. Old v6/PR119 raw and closed UUIDs unchanged.
+
+## Three-P1 source-repair candidate (not approved)
+
+The stacked Draft PR127 now fixes the unassigned suspended root cleanup route, B failure guard/child/outside-owner identity, and the pre-/post-F0 hash cycle using a pinned formal template. Source-only targeted regressions and runtime-independent archive checks are required before review; the complete current A review packet contains 123 source/import files plus 14 auxiliary inputs, including the updated native-entry and C acceptance plans. Previous 12-input inventories are historical snapshots, not current approval. Full independent P0–P2 and B/C native gates remain NOT_RUN.

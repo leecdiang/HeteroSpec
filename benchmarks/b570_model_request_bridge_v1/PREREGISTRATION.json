@@ -1,0 +1,36 @@
+{
+  "study": "COMPLETE_CONCURRENT_TIMESTAMP_AND_ACTIVE_NODE_LABELS",
+  "frozen_before_profile": true,
+  "baseline": "New clean process using the same tail-fixed runtime as profile and final clean.",
+  "adaptive_scope": "Clean baseline already observed. This is an exploratory observer calibration, not a blinded confirmatory performance study.",
+  "native_identity": "Identical executable and runtime to successful model bridge; only whitelisted GGML_VK_PERF_LOGGER environment differs.",
+  "design": "Three NEW processes CLEAN_A / FIXED_CONCURRENT_PROFILE / CLEAN_B, same executable, same tail-fixed DLL. Each3 fresh contexts; third-context15 decode medians for coarse calibration.",
+  "profile_env": {
+    "GGML_VK_PERF_LOGGER": "1",
+    "GGML_VK_PERF_LOGGER_FREQUENCY": "1000000",
+    "GGML_VK_PERF_LOGGER_CONCURRENT": "1"
+  },
+  "qualification": "All48 complete logits must match original clean reference bytes across process; all greedy IDs identical; first mismatch stops next GPU process.",
+  "calibration": "Unchanged: third-context median decode clean A/B and profile vs EACH clean all within [0.90,1.10]. Only coarse necessary observer gate; no per-op perturbation or critical-path proof.",
+  "attribution": "Parse groups delimited by existing synchronization. Only groups containing exclusively attention-core operations may count as pure attention. Mixed groups stay mixed; no per-op apportionment or Amdahl extrapolation.",
+  "failure": "Preserve failed process/qualification; no automatic GPU retry. Scientific calibration rejection is a result, not permission to retune the screen.",
+  "budget": {
+    "total_seconds": 300,
+    "prior_charged_seconds": 195.7685326,
+    "remaining_seconds": 104.2314674,
+    "parent_deadline_seconds": 30,
+    "minimum_remaining_admission": 45,
+    "charge": "full native parent wall incl initialization, capture and cleanup"
+  },
+  "excluded": [
+    "actor",
+    "RTL",
+    "CPU8",
+    "new model",
+    "PR merge"
+  ],
+  "previous_observer_rejection": "Nonconcurrent logger slowed median decode by12.03-12.54%; failed frozen10% gate. Preserve rejection. New observer uses existing synchronization groups, same10% gate, same binary; no threshold retuning.",
+  "repair": "Terminal timestamp closes final group; attribution filters empty/non-compute nodes with same predicate as executor. Previous tail-fixed log counted n=0 inactive nodes in group labels; preserve it.",
+  "completeness": "All3 profile-context tables must contain output projection m151936 n1 k4096 exactly16 times; QK/AV/softmax each5004 effective occurrences; all raw full logits equal original clean reference. Mixed groups not fractionally apportioned. No reported matrix group may have n=0. Three new same-DLL processes must retain exact logits, counter invariants, unchanged10% observer gate.",
+  "decision": "If corrected coarse observer passes and full output/reference and counter checks pass, report instrumented group costs with strict limits; otherwise retain failure and do not claim bottleneck."
+}

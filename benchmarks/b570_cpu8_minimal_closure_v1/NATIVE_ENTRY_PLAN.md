@@ -63,3 +63,11 @@ guard 的 prospective intent 内只允许预先审查的 workload argv。正式 
 ## 不扩展的范围
 
 不解释所有 Windows 控制台豁免机理，不为通用 reviewer 树制造更多 observer 嵌套，不重复完整旧 19/57 项或三小时 soak。仍须保留已有 native gates（原入口导入、observer/身份/断点/冻结/停滞/D0）到新的明确 gate mapping，不能用这四行替代原 CPU8 内层资格。只运行 A 最终 gate mapping 明确要求、且另获授权的项目。
+
+## Post-A native qualification details (prospective only)
+
+**Pre-execution source contract is now different from native proof.** The guard tracks the `CreateProcessW(CREATE_SUSPENDED)` root handle and a separately acknowledged `AssignProcessToJobObject` outcome. If assignment fails, it requests direct `TerminateProcess` on that exact retained root process, then waits for real exit FILETIME and closes the thread/process handles; `TerminateJobObject` alone is NOT enough. Before accepting B, price and execute one bounded B00 fault-injected assignment-failure cleanup negative with an outside-owner exit witness, including a deliberately failed direct-termination/exit-query counterexample. This B00 negative has nonzero starts, wall, storage and provider reserve; the old B01–B04 1200-process-second target DOES NOT cover it automatically.
+
+B02/B03/B04 use frozen success/failure-specific contracts, not a generic allow-failure flag. B's outside owner must authenticate exact guard PowerShell request/terminal, true guard PID+creation+native parent, child image/argv/parent PID+creation and the outside owner's own distinct identity; the candidate witness JSON itself is only consistency evidence, not external authenticity. Count every short-lived Job start independently of 100ms polling; native cumulative starts that cannot be matched to preserved identities remain ENTRY_BLOCKED.
+
+C's post-F0 runtime operation is materialized only after A/B approval and a separately authorized C freeze. Its actual bytes must equal the F0-pinned pre-freeze template with exactly one F0-hash substitution. B01–B04 and C remain **NOT_RUN** under this design.

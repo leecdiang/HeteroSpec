@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import json
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +16,7 @@ import finalize_review_v6 as source_review
 import operation_roles_v7 as roles
 import operation_pricing_v7 as pricing
 import budget_v6 as budgets
+import b_negative_binding_v7 as negative_binding
 
 
 def dump(path, value):
@@ -486,6 +488,247 @@ class ProtectedOperationLedger(unittest.TestCase):
         self.persist()
         with self.assertRaisesRegex(ValueError, "provider reserve"):
             budgets.snapshot(self.root, "B")
+
+
+class UnassignedSuspendedRoot(unittest.TestCase):
+    """Mock-controlled root recovery: no Win32 backend is imported or started."""
+
+    def setUp(self):
+        source = SRC / "operation_guard.py"
+        parsed = ast.parse(source.read_text(encoding="utf8"), filename=str(source))
+        methods = [node for node in parsed.body
+                   if isinstance(node, ast.FunctionDef) and node.name == "_terminate_owned_root"]
+        self.assertEqual(len(methods), 1)
+        isolated = ast.fix_missing_locations(ast.Module(body=methods, type_ignores=[]))
+        scope = {}
+        exec(compile(isolated, "<pure-unassigned-root-recovery>", "exec"), scope)
+        self.terminate = scope["_terminate_owned_root"]
+
+    def test_failed_job_assignment_directly_kills_suspended_root(self):
+        calls = []
+        route = self.terminate(False, True,
+                               lambda: calls.append("JOB"),
+                               lambda: calls.append("DIRECT"))
+        self.assertEqual(route, "UNASSIGNED_ROOT")
+        self.assertEqual(calls, ["DIRECT"])
+
+    def test_assigned_child_uses_job_termination(self):
+        calls = []
+        route = self.terminate(True, True,
+                               lambda: calls.append("JOB"),
+                               lambda: calls.append("DIRECT"))
+        self.assertEqual(route, "ASSIGNED_JOB")
+        self.assertEqual(calls, ["JOB"])
+
+    def test_already_exited_root_does_not_get_killed_twice(self):
+        calls = []
+        self.assertEqual(self.terminate(False, False,
+                                        lambda: calls.append("JOB"),
+                                        lambda: calls.append("DIRECT")), "ALREADY_EXITED")
+        self.assertFalse(calls)
+
+    def test_native_source_retains_real_wait_and_filetime_for_unassigned_root(self):
+        code = (SRC / "operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("UNASSIGNED_SUSPENDED_ROOT_TERMINATION", code)
+        self.assertIn("terminate_process(child.process,125)", code)
+        self.assertIn("wait_handle(child.process", code)
+        self.assertIn("j.emit('OP_TERMINAL_OS'", code)
+        self.assertLess(code.index("checked(job_assign(job,child.process)"),
+                        code.index("job_assigned=True"))
+
+
+class BNegativeIdentityContracts(unittest.TestCase):
+    """Actual B negative verifiers on synthetic identities; no provider/network/native."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.sha = "a" * 64
+        self.start = {"pid": 41, "created_filetime": "1000",
+                      "intent_sha256": self.sha, "command_sha256": "b" * 64}
+        argv = ["C:/Python/python.exe", "-I", "-S", "-B", "fixture.py"]
+        self.op = {"root": str(self.root), "task_uuid": "FRESH-B",
+                   "argv": argv}
+        self.created = {"pid": 42, "created_filetime": "1010",
+                        "parent_pid": 41, "image": argv[0], "argv": argv,
+                        "command": subprocess.list2cmdline(argv)}
+        self.terminal = {"exit_code": 1, "isError": True, "output": "FAIL"}
+        self.witness = {
+            "owner_pid": 41, "owner_created_filetime": "1000",
+            "guard_command_sha256": "b" * 64,
+            "guard_operation_sha256": self.sha,
+            "root_pid": 42, "root_created_filetime": "1010",
+            "external_owner_pid": 43, "external_owner_created_filetime": "900",
+            "provider_terminal_sha256": hashlib.sha256(
+                json.dumps(self.terminal, sort_keys=True,
+                           separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+        }
+
+    def verify_child(self):
+        return negative_binding.native_child_binding(
+            self.start, self.created, self.op, self.root, self.sha, "FRESH-B")
+
+    def verify_owner(self):
+        return negative_binding.outside_owner_binding(
+            self.witness, self.start, self.created, self.sha, self.terminal)
+
+    def test_both_independent_bindings_accept_consistent_fixture(self):
+        self.assertTrue(self.verify_child())
+        self.assertEqual(self.verify_owner(), self.witness["provider_terminal_sha256"])
+
+    def test_changed_argv_or_parent_pid_rejected(self):
+        self.created["parent_pid"] = 99
+        with self.assertRaisesRegex(ValueError, "child argv/parent"):
+            self.verify_child()
+        self.created["parent_pid"] = 41
+        self.created["argv"] = ["surprise.exe"]
+        with self.assertRaisesRegex(ValueError, "child argv/parent"):
+            self.verify_child()
+
+    def test_wrong_guard_intent_and_parent_identity_rejected(self):
+        self.start["intent_sha256"] = "c" * 64
+        with self.assertRaisesRegex(ValueError, "guard operation identity"):
+            self.verify_child()
+        self.start["intent_sha256"] = self.sha
+        self.witness["owner_pid"] = 99
+        with self.assertRaisesRegex(ValueError, "owner/guard/child/provider"):
+            self.verify_owner()
+
+    def test_foreign_external_owner_or_provider_terminal_rejected(self):
+        self.witness["external_owner_pid"] = 41
+        with self.assertRaisesRegex(ValueError, "independent outside owner"):
+            self.verify_owner()
+        self.witness["external_owner_pid"] = 43
+        self.terminal["exit_code"] = 2
+        with self.assertRaisesRegex(ValueError, "owner/guard/child/provider"):
+            self.verify_owner()
+
+    def test_guard_request_check_runs_before_negative_witness(self):
+        code = (SRC / "b_negative_binding_v7.py").read_text(encoding="utf8")
+        self.assertIn("request_check(root, operation_id, intent, initial, start, operation_sha)",code)
+        self.assertLess(code.index("request_check(root, operation_id"),
+                        code.index("outside_owner_binding(witness, start"))
+
+
+class NonCircularFormalFreeze(unittest.TestCase):
+    """Pre-F0 quote -> immutable F0 -> post-F0 exact operation, entirely synthetic."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.uid = "C-TEST-NONCYCLIC"
+        self.opid = "formal-fresh-c"
+        dump(self.root/"CAMPAIGN.json", {
+            "task_uuid": self.uid,
+            "original_root": str(self.root),
+            "first_preparation_utc": (datetime.datetime.now(datetime.timezone.utc)-
+                                      datetime.timedelta(seconds=3)).isoformat(),
+        })
+        dump(self.root/"OPERATION_POLICY.json", {
+            "total_process_seconds": 10000,
+            "total_wall_seconds": 3600,
+            "starts_limit": 300,
+            "reserves": {"C": {"process_seconds": 0, "wall_seconds": 0, "starts": 0}},
+        })
+        self.template = {
+            "id": self.opid, "task_uuid": self.uid, "stage": "C",
+            "root": str(self.root),
+            "argv": ["C:/Python/python.exe", "-I", "-S", "-B", "outer_watchdog.py",
+                     "--freeze-sha256", roles.F0_SENTINEL],
+            "seconds": 10, "cleanup_seconds": 5, "max_job_processes": 2,
+            "starts_bound": 3, "lifetime_bound_seconds": 47,
+            "prospective_envelope": {
+                "schema": "B570_OWNED_ENVELOPE_V1",
+                "provider_bound_status": "BOUNDARY_EVIDENCE_REQUIRED",
+                "owned_job_starts_limit": 2, "owned_outer_starts_limit": 1,
+                "provider_lifetime_reserve_seconds": 2,
+                "provider_proof_sha256": "f" * 64,
+            },
+        }
+        self.template_path = dump(
+            self.root/"tools"/(self.opid+".operation.template.json"),self.template)
+        rolemap = {
+            "schema":"B570_TASK_OPERATION_ROLES_V1",
+            "task_uuid":self.uid,"phase":"C",
+            "roles":{"C-formal-watchdog":{
+                "phase":"C","kind":"formal_cpu8",
+                "operation_id":self.opid,
+                "post_freeze_template":True,
+                "template_sha256":sha(self.template_path),
+            }},
+        }
+        self.rolemap_path=dump(self.root/"OPERATION_ROLE_MAP.json",rolemap)
+        self.runtime_path=self.root/"tools"/(self.opid+".operation.json")
+
+    def freeze(self,cycle=False):
+        files={
+            "tools/"+self.opid+".operation.template.json":sha(self.template_path),
+            "OPERATION_ROLE_MAP.json":sha(self.rolemap_path),
+        }
+        if cycle:
+            files["tools/"+self.opid+".operation.json"]="0"*64
+        dump(self.root/"CAPABILITY_FREEZE.json",{"files":files,"scope":"SYNTHETIC"})
+        return self.root/"CAPABILITY_FREEZE.json"
+
+    def test_prefreeze_reserve_once_and_postfreeze_exact_operation(self):
+        before=budgets.snapshot(self.root,"C")
+        self.assertEqual(before["charged_process_seconds"],47)
+        self.assertEqual(before["open_operations"],[self.opid])
+        frozen=self.freeze()
+        result=roles.materialize_formal_operation(self.root)
+        self.assertEqual(result["freeze_sha256"],sha(frozen))
+        self.assertEqual(result["status"],"POST_F0_OPERATION_MATERIALIZED_NOT_ADMITTED")
+        name,op=roles.operation(self.root,"C-formal-watchdog","C","formal_cpu8")
+        self.assertEqual(name,self.opid)
+        self.assertIn(sha(frozen),op["argv"])
+        self.assertNotIn(roles.F0_SENTINEL,op["argv"])
+        after=budgets.snapshot(self.root,"C")
+        self.assertEqual(after["charged_process_seconds"],47)
+        self.assertEqual(after["charged_starts"],3)
+        self.assertEqual(after["open_operations"],[self.opid])
+        with self.assertRaises(FileExistsError):
+            roles.materialize_formal_operation(self.root)
+
+    def test_runtime_argument_substitution_rejected(self):
+        self.freeze()
+        roles.materialize_formal_operation(self.root)
+        op=json.loads(self.runtime_path.read_text())
+        op["argv"][0]="different_python.exe"
+        dump(self.runtime_path,op)
+        with self.assertRaisesRegex(ValueError,"formal runtime operation"):
+            roles.operation(self.root,"C-formal-watchdog","C")
+
+    def test_frozen_runtime_hash_cycle_rejected(self):
+        self.freeze(cycle=True)
+        with self.assertRaisesRegex(ValueError,"F0 hash cycle"):
+            roles.materialize_formal_operation(self.root)
+
+    def test_role_map_or_template_drift_rejected(self):
+        self.freeze()
+        self.template["argv"][0]="tampered"
+        dump(self.template_path,self.template)
+        with self.assertRaisesRegex(ValueError,"formal template exact"):
+            roles.materialize_formal_operation(self.root)
+
+    def test_changed_f0_bytes_invalidate_runtime(self):
+        self.freeze()
+        roles.materialize_formal_operation(self.root)
+        # A different freeze hash cannot be accepted by an older runtime op.
+        frozen=self.root/"CAPABILITY_FREEZE.json"
+        doc=json.loads(frozen.read_text())
+        doc["extra"]="mutated"
+        dump(frozen,doc)
+        with self.assertRaisesRegex(ValueError,"formal runtime operation"):
+            roles.operation(self.root,"C-formal-watchdog","C")
+
+    def test_freezer_never_seals_postfreeze_runtime_bytes(self):
+        code=(SRC/"freeze_cpu8.py").read_text(encoding="utf8")
+        self.assertIn("formal_template(ROOT)",code)
+        self.assertIn("post-F0 operation exists before freeze",code)
+        self.assertIn("F0 cannot hash its own runtime operation",code)
 
 if __name__ == "__main__":
     unittest.main()

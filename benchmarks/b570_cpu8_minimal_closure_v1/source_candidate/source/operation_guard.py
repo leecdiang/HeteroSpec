@@ -22,6 +22,11 @@ p=__import__('argparse').ArgumentParser();p.add_argument('--intent',required=Tru
 fp=Path(a.intent).resolve();need(fp.parent==ROOT/'tools','intent confinement');need(sha(fp)==a.intent_sha256,'intent pin');x=json.loads(fp.read_bytes())
 need(Path(x['root']).resolve()==ROOT and x['id'].replace('-','').isalnum(),'root/id')
 need(x.get('stage') in ('B','C') and x.get('task_uuid')==json.loads((ROOT/'CAMPAIGN.json').read_bytes()).get('task_uuid'),'fresh task/stage operation binding')
+# Consume the existing A2 operation-role map rather than inventing a second map.
+from operation_roles_v7 import role_map
+roles=role_map(ROOT,x['stage'])['roles']
+need(any(row.get('operation_id')==x['id'] and row.get('sha256')==a.intent_sha256
+         for row in roles.values()),'unregistered current task operation role')
 need(type(x['seconds']) is int and 0<x['seconds']<=1200 and x['cleanup_seconds']==5,'deadline')
 need(type(x['max_job_processes']) is int and 1<=x['max_job_processes']<=128,'job cap')
 from operation_pricing_v7 import envelope as price_operation

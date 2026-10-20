@@ -323,6 +323,8 @@ class RecoverySourceContracts(unittest.TestCase):
         self.assertIn("j.emit('OPERATION_DEADLINE'", code)
         self.assertIn("source='GUARD_MONOTONIC_CHECK'", code)
         self.assertIn("j.emit('OPERATION_FAILURE'", code)
+        self.assertIn("need(not deadline_fired.is_set() and now()<=deadline+1_000_000_000,'OPERATION_DEADLINE')", code)
+        self.assertNotIn("'exit deadline'", code)
 
     def test_budget_never_discounts_higher_settled_charge(self):
         code = (SRC / "budget_v6.py").read_text(encoding="utf8")

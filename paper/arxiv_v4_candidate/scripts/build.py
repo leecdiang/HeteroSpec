@@ -8,9 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output"
 
-def run(args, cwd, log):
+def run(args, cwd, log, env):
     with log.open("w", encoding="utf-8") as stream:
-        p = subprocess.run(args, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT)
+        p = subprocess.run(args, cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT)
     if p.returncode:
         raise SystemExit(f"Command failed: {args}; inspect {log}")
 
@@ -24,10 +24,10 @@ def main():
     env["BIBINPUTS"] = str(ROOT) + os.pathsep + env.get("BIBINPUTS", "")
     env["BSTINPUTS"] = str(ROOT) + os.pathsep + env.get("BSTINPUTS", "")
     cmd = [latex, "-interaction=nonstopmode", "-halt-on-error", "-output-directory=output", "main.tex"]
-    run(cmd, ROOT, OUT / "pass1.log")
-    run([bibtex, "main"], OUT, OUT / "bibtex.log")
-    run(cmd, ROOT, OUT / "pass2.log")
-    run(cmd, ROOT, OUT / "pass3.log")
+    run(cmd, ROOT, OUT / "pass1.log", env)
+    run([bibtex, "main"], OUT, OUT / "bibtex.log", env)
+    run(cmd, ROOT, OUT / "pass2.log", env)
+    run(cmd, ROOT, OUT / "pass3.log", env)
     pdf = OUT / "main.pdf"
     if not pdf.exists() or pdf.stat().st_size < 10000:
         raise SystemExit("PDF missing or unexpectedly small.")

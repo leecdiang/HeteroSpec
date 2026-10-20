@@ -80,21 +80,6 @@ jobs:
           print('A3 SOURCE_INTEGRITY_PASS:',len(source),'source/import,',len(references),
                 'auxiliary,',parsed,'Python AST files; historical ZIP SHA verified')
           PY
-      - name: Review exact archived P1 P2 source (temporary read-only diagnostic)
-        env:
-          PYTHONDONTWRITEBYTECODE: '1'
-        run: |
-          python3 - <<'PY'
-          import base64, pathlib
-          root=pathlib.Path('_source_only/historical')
-          for relative in ('source/native_freeze_gates.py','src/rev2/guards.py',
-                           'source/delivery_audit.py','source/delivery_probe.py'):
-              p=root/relative
-              if not p.is_file():
-                  print('REVIEW_ARCHIVE_MISSING',relative)
-                  continue
-              print('REVIEW_ARCHIVE_B64',relative,base64.b64encode(p.read_bytes()).decode())
-          PY
       - name: Pure source tests (no Windows/native/model/GPU entry)
         env:
           PYTHONDONTWRITEBYTECODE: '1'

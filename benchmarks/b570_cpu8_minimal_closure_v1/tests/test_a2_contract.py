@@ -9,6 +9,8 @@ import sys
 import subprocess
 import tempfile
 import unittest
+import unittest.mock as mock
+import types
 from pathlib import Path
 
 SRC = Path(__file__).resolve().parents[1] / "source_candidate" / "source"
@@ -540,8 +542,10 @@ class UnassignedSuspendedRoot(unittest.TestCase):
                     for handler in node.handlers if isinstance(handler.type, ast.Name)
                     and handler.type.id == "BaseException"]
         recovery = [handler for handler in handlers
-                    if any(isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                           and node.func.attr == "emit"
+                    if any(isinstance(node, ast.Call)
+                           and ((isinstance(node.func, ast.Attribute) and node.func.attr == "emit")
+                                or (isinstance(node.func, ast.Name)
+                                    and node.func.id == "_cleanup_emit"))
                            and node.args and isinstance(node.args[0], ast.Constant)
                            and node.args[0].value == "OPERATION_FAILURE"
                            for node in ast.walk(handler))]
@@ -590,6 +594,7 @@ class BNegativeIdentityContracts(unittest.TestCase):
             "guard_operation_sha256": self.sha,
             "root_pid": 42, "root_created_filetime": "1010",
             "external_owner_pid": 43, "external_owner_created_filetime": "900",
+            "external_owner_job_member": False,
             "provider_terminal_sha256": hashlib.sha256(
                 json.dumps(self.terminal, sort_keys=True,
                            separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -602,7 +607,8 @@ class BNegativeIdentityContracts(unittest.TestCase):
 
     def verify_owner(self):
         return negative_binding.outside_owner_binding(
-            self.witness, self.start, self.created, self.sha, self.terminal)
+            self.witness, self.start, self.created, self.sha, self.terminal,
+            {(self.created["pid"], self.created["created_filetime"])})
 
     def test_both_independent_bindings_accept_consistent_fixture(self):
         self.assertTrue(self.verify_child())
@@ -633,7 +639,7 @@ class BNegativeIdentityContracts(unittest.TestCase):
 
     def test_foreign_external_owner_or_provider_terminal_rejected(self):
         self.witness["external_owner_pid"] = 41
-        with self.assertRaisesRegex(ValueError, "independent outside owner"):
+        with self.assertRaisesRegex(ValueError, "B outside owner"):
             self.verify_owner()
         self.witness["external_owner_pid"] = 43
         self.terminal["exit_code"] = 2
@@ -764,6 +770,304 @@ class NonCircularFormalFreeze(unittest.TestCase):
         self.assertIn("formal_template(ROOT)",code)
         self.assertIn("post-F0 operation exists before freeze",code)
         self.assertIn("F0 cannot hash its own runtime operation",code)
+
+
+
+def _review_functions(path, names, namespace):
+    tree = ast.parse(Path(path).read_text(encoding="utf8"), filename=str(path))
+    selected = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names]
+    if set(n.name for n in selected) != set(names):
+        raise AssertionError("incomplete isolated source functions: " + str(names))
+    exec(compile(ast.fix_missing_locations(ast.Module(body=selected, type_ignores=[])),
+                 str(path), "exec"), namespace)
+    return namespace
+
+
+class PersistentJournalFailure(unittest.TestCase):
+    def setUp(self):
+        self.events = []
+        class BadJournal:
+            def emit(self, *args, **kwargs):
+                raise OSError("simulated persistent disk/JOURNAL failure")
+        self.state = _review_functions(SRC/"operation_guard.py",
+                     {"_cleanup_emit", "_terminate_owned_root"},
+                     {"j": BadJournal(), "cleanup_log_errors": []})
+
+    def test_logger_failed_before_root_cleanup_cannot_block_direct_kill_wait_close(self):
+        log = self.state["_cleanup_emit"]
+        terminate = self.state["_terminate_owned_root"]
+        log("OPERATION_FAILURE", error="synthetic")
+        route = terminate(False, True,
+                          lambda: self.events.append("WRONG_JOB_ONLY"),
+                          lambda: self.events.append("DIRECT_TERMINATE"))
+        log("UNASSIGNED_SUSPENDED_ROOT_TERMINATION")
+        self.events.extend(("NATIVE_WAIT", "HANDLE_CLOSE"))
+        self.assertEqual(route, "UNASSIGNED_ROOT")
+        self.assertEqual(self.events, ["DIRECT_TERMINATE", "NATIVE_WAIT",
+                                       "HANDLE_CLOSE"])
+        self.assertGreaterEqual(len(self.state["cleanup_log_errors"]), 2)
+
+    def test_no_cleanup_journal_call_can_preempt_direct_root_termination(self):
+        code = (SRC/"operation_guard.py").read_text(encoding="utf8")
+        main_finally = code.index("\nfinally:\n if child and child.process:")
+        end = code.index("\nprint(json.dumps(", main_finally)
+        cleanup = code[main_finally:end]
+        self.assertLess(cleanup.index("cleanup_route=_terminate_owned_root("),
+                        cleanup.index("_cleanup_emit('UNASSIGNED_SUSPENDED_ROOT_TERMINATION'"))
+        self.assertNotIn("j.emit(", cleanup)
+        failure = code[code.index("\nexcept BaseException as e:\n error=repr(e)"):main_finally]
+        self.assertNotIn("j.emit(", failure)
+        self.assertIn("CLEANUP_JOURNAL_FAILURE", code)
+
+    def test_log_error_causes_failed_not_closed_receipt(self):
+        code = (SRC/"operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("if cleanup_log_errors:\n  error=", code)
+        self.assertIn("and not cleanup_log_errors and empty", code)
+
+
+class JobMembershipBeforeRetention(unittest.TestCase):
+    def setUp(self):
+        self.scope = _review_functions(SRC/"operation_guard.py",
+                      {"_require_member_flag"},
+                      {"need": lambda ok, why: ok or (_ for _ in ()).throw(RuntimeError(why))})
+
+    def test_job_member_handle_accept_and_foreign_reused_pid_reject(self):
+        self.assertTrue(self.scope["_require_member_flag"](True))
+        for value in (False, None, 0):
+            with self.assertRaisesRegex(RuntimeError, "FOREIGN_OR_REUSED_JOB_PID"):
+                self.scope["_require_member_flag"](value)
+
+    def test_win32_isprocessinjob_bound_and_checked_before_retaining(self):
+        win = (SRC/"../src/rev2/win.py").resolve().read_text(encoding="utf8")
+        guard = (SRC/"operation_guard.py").read_text(encoding="utf8")
+        self.assertIn("process_in_job=api(K,'IsProcessInJob'", win)
+        self.assertLess(guard.index("checked(process_in_job(h,job,"),
+                        guard.index("retained[key]=h;h=None"))
+
+
+class OutsideOwnerNotJobMember(unittest.TestCase):
+    def test_reject_negative_pid_and_pid_of_real_job_child(self):
+        fixture = BNegativeIdentityContracts()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.witness["external_owner_pid"] = -15
+        with self.assertRaisesRegex(ValueError, "independent outside owner identity"):
+            fixture.verify_owner()
+        fixture.witness["external_owner_pid"] = 42
+        with self.assertRaisesRegex(ValueError, "cannot be guard, child or Job member"):
+            fixture.verify_owner()
+        fixture.witness["external_owner_pid"] = 43
+        fixture.witness["external_owner_job_member"] = True
+        with self.assertRaisesRegex(ValueError, "cannot be guard, child or Job member"):
+            fixture.verify_owner()
+
+
+class NativeFreezeSacrificialBaseline(unittest.TestCase):
+    def test_identity_input_present_before_freeze_inventory(self):
+        code = (SRC/"native_freeze_gates.py").read_text(encoding="utf8")
+        self.assertIn("shutil.copyfile(ROOT/'preflight/TOOLS.json',", code)
+        self.assertIn("sacrifice/'preflight/TOOLS.json'", code)
+        self.assertLess(code.index("shutil.copyfile(ROOT/'preflight/TOOLS.json'"),
+                        code.index("files={p.relative_to(sacrifice)"))
+
+    def test_missing_synthetic_tools_input_cannot_be_baseline(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            def expected():
+                return json.loads((root/"preflight/TOOLS.json").read_bytes())["python"]["path"]
+            with self.assertRaises(FileNotFoundError):
+                expected()
+            dump(root/"preflight/TOOLS.json", {"python": {"path": sys.executable}})
+            self.assertEqual(expected(), sys.executable)
+
+
+class CSpecificFrozenWallLimit(unittest.TestCase):
+    def setUp(self):
+        import math
+        self.scope = _review_functions(SRC/"../src/rev2/guards.py",
+             {"_frozen_c_limits", "wall_budget", "utc", "finite"},
+             {"datetime": datetime, "math": math,
+              "require": lambda ok, reason: ok or (_ for _ in ()).throw(ValueError(reason)),
+              "revision_budget": lambda regs,policy: {}})
+        fake=types.ModuleType("continuation_policy")
+        fake.validate=lambda p: None
+        self.patch=mock.patch.dict(sys.modules, {"continuation_policy":fake})
+        self.patch.start()
+        self.addCleanup(self.patch.stop)
+        self.origin="2026-10-19T00:00:00Z"
+        self.acq={"first_preparation_utc":self.origin}
+        self.freeze={
+            "frozen_utc":"2026-10-19T00:00:05Z",
+            "review_status":"A_SOURCE_ONLY_EXTERNALLY_APPROVED",
+            "cpu8_execution_envelope_sha256":"f"*64,
+            "budget":{"task_seconds":9,"delivery_seconds":2}}
+        self.start={"started_utc":"2026-10-19T00:00:08Z","begin_ns":0}
+        self.receipt={"task_elapsed_before_watchdog_seconds":8,
+                      "begin_ns":0,"end_ns":2_000_000_000}
+
+    def evaluate(self, completion=None):
+        return self.scope["wall_budget"](self.acq,self.freeze,[],self.start,
+                                         self.receipt,completion)
+
+    def test_old_six_hour_constant_cannot_override_frozen_c_limit(self):
+        with self.assertRaisesRegex(ValueError, "C_FROZEN_TASK_WALL_LIMIT"):
+            self.evaluate()
+        self.freeze["budget"]["task_seconds"]=11
+        self.assertEqual(self.evaluate()["task_through_watchdog_seconds"],10)
+
+    def test_real_completion_must_fit_frozen_c_and_delivery_caps(self):
+        completion={"observed_utc":"2026-10-19T00:00:12Z",
+                    "task_elapsed_seconds":12,
+                    "restoration_verified":True,"tool_exit_verified":True}
+        self.freeze["budget"]["task_seconds"]=11
+        with self.assertRaisesRegex(ValueError,"C_FROZEN_TASK_WALL_LIMIT"):
+            self.evaluate(completion)
+        self.freeze["budget"]["task_seconds"]=13
+        self.freeze["budget"]["delivery_seconds"]=1
+        with self.assertRaisesRegex(ValueError,"C_FROZEN_DELIVERY_WALL_LIMIT"):
+            self.evaluate(completion)
+        self.freeze["budget"]["delivery_seconds"]=3
+        self.assertEqual(self.evaluate(completion)["task_through_completion_seconds"],12)
+
+    def test_missing_or_bad_new_c_cap_cannot_fallback_to_21600(self):
+        del self.freeze["budget"]
+        with self.assertRaisesRegex(ValueError,"C_FROZEN_WALL_BUDGET_REQUIRED"):
+            self.evaluate()
+        self.freeze["budget"]={"task_seconds":False,"delivery_seconds":1}
+        with self.assertRaisesRegex(ValueError,"C_FROZEN_TASK_WALL_CAP"):
+            self.evaluate()
+
+
+class SealedPostDeliveryExternalEvidence(unittest.TestCase):
+    """Execute only isolated source functions with synthetic files, no connector/Win32."""
+
+    def setUp(self):
+        tmp=tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root=Path(tmp.name)/"candidate"
+        self.outer=Path(tmp.name)/"platform-owned"
+        self.root.mkdir();self.outer.mkdir()
+        self.uid="NEW-C-TEST"
+        dump(self.root/"CAMPAIGN.json",{
+            "original_root":str(self.root),"external_root":str(self.outer),
+            "task_uuid":self.uid})
+        dump(self.root/"CAPABILITY_FREEZE.json",{"status":"SYNTHETIC_ONLY","files":{}})
+        self.scope=_review_functions(SRC/"delivery_binding_v6.py",
+            {"_postseal_file","postseal_capture","restore_postseal_invocation",
+             "utc","load","h","download"},
+            {"Path":Path,"datetime":datetime,"hashlib":hashlib,"json":json,
+             "subprocess":subprocess,"re":__import__("re"),
+             "base64":__import__("base64"),
+             "need":lambda value,msg:value or (_ for _ in ()).throw(ValueError(msg))})
+        self.op="fresh-restore"
+        self.argv=["C:/Python/python.exe","-I","-S","-B","restore.py"]
+        self.request={"cmd":"synthetic-restore"}
+        self.stdout=b"RECONSTRUCTION_ONLY\\n"
+        self.report=self.outer/"report.json"
+        self.report.write_bytes(self.stdout)
+        self.frozen_sha=sha(self.root/"CAPABILITY_FREEZE.json")
+        self.intent={
+            "schema":"B570_POSTSEAL_RESTORE_V1","operation_id":self.op,
+            "task_uuid":self.uid,"freeze_sha256":self.frozen_sha,
+            "registered_utc":"2026-10-19T00:00:00Z",
+            "argv":self.argv,"request":self.request}
+        self.put("intents",self.op+".json",self.intent)
+        self.make_capture(self.op,"initial",self.request,
+                          {"session_id":None,"exit_code":0,"isError":False,
+                           "output":"RECONSTRUCTION_ONLY\\n"},
+                          "2026-10-19T00:00:04Z")
+        epoch=datetime.datetime(1601,1,1,tzinfo=datetime.timezone.utc)
+        def filetime(iso):
+            stamp=datetime.datetime.fromisoformat(iso.replace("Z","+00:00"))
+            return str(int((stamp-epoch).total_seconds()*10_000_000))
+        self.put("native-exits",self.op+".json",{
+            "created_filetime":filetime("2026-10-19T00:00:01Z"),
+            "exit_filetime":filetime("2026-10-19T00:00:03Z"),
+            "task_uuid":self.uid,"operation_id":self.op,
+            "freeze_sha256":self.frozen_sha,
+            "intent_sha256":sha(self.outer/"postseal"/"intents"/(self.op+".json")),
+            "argv":self.argv,"command":subprocess.list2cmdline(self.argv),
+            "pid":41,"parent_pid":40,"image":self.argv[0],
+            "exit_code":0,"all_owned_handles_closed":True,
+            "descendants_exited":True,"job_empty":True,
+            "report_sha256":sha(self.report),
+            "stdout_sha256":hashlib.sha256(self.stdout).hexdigest()})
+        p=self.outer/"postseal"/"stdout"/(self.op+".bin")
+        p.parent.mkdir(parents=True)
+        p.write_bytes(self.stdout)
+
+    def put(self,kind,name,obj):
+        return dump(self.outer/"postseal"/kind/name,obj)
+
+    def make_capture(self,op,kind,request,response,observed):
+        meta={"callId":"synthetic-provider-call","itemId":"synthetic-item"}
+        cap={"id":op,"kind":kind,"request":request,"response":response,
+             "observed_utc":observed,"capture_meta":meta}
+        p=self.put("captures",op+"."+kind+".json",cap)
+        self.put("capture-index",op+"."+kind+".json",{
+            "path":str(p),"bytes":p.stat().st_size,"sha256":sha(p),
+            "capture_meta":meta})
+        return p
+
+    def test_restore_succeeds_readonly_with_fully_external_receipts(self):
+        before={p.relative_to(self.root).as_posix():sha(p)
+                for p in self.root.rglob("*") if p.is_file()}
+        data=self.scope["restore_postseal_invocation"](
+            self.root,self.op,self.argv,self.report)
+        self.assertEqual(data["status"],"POSTSEAL_RESTORE_CAPTURE_BOUND")
+        after={p.relative_to(self.root).as_posix():sha(p)
+               for p in self.root.rglob("*") if p.is_file()}
+        self.assertEqual(after,before)
+        self.assertFalse((self.root/"tools").exists())
+
+    def test_mutated_outside_capture_index_rejected(self):
+        index=self.outer/"postseal"/"capture-index"/(self.op+".initial.json")
+        record=json.loads(index.read_text())
+        record["path"]=str(self.root/"tools"/(self.op+".initial.json"))
+        dump(index,record)
+        with self.assertRaisesRegex(ValueError,"postseal capture index/bytes"):
+            self.scope["postseal_capture"](self.root,self.op,"initial")
+
+    def test_in_root_postseal_receipt_cannot_replace_missing_external_record(self):
+        outside=self.outer/"postseal"/"captures"/(self.op+".initial.json")
+        fake=dump(self.root/"tools"/(self.op+".initial.json"),
+                  json.loads(outside.read_text()))
+        outside.unlink()
+        self.assertTrue(fake.is_file())
+        with self.assertRaisesRegex(ValueError,"postseal evidence missing"):
+            self.scope["postseal_capture"](self.root,self.op,"initial")
+
+    def test_mismatched_recomputation_stdout_rejected(self):
+        (self.outer/"postseal"/"stdout"/(self.op+".bin")).write_bytes(b"DIFFERENT")
+        with self.assertRaisesRegex(ValueError,"postseal full output bytes"):
+            self.scope["restore_postseal_invocation"](
+                self.root,self.op,self.argv,self.report)
+
+    def test_download_uses_external_provider_capture_not_root_tools(self):
+        content=b"sealed archive chunk"
+        chunk=self.outer/"download-chunk.b64"
+        import base64 as _b64
+        encoded=_b64.b64encode(content)
+        chunk.write_bytes(encoded)
+        git_sha=hashlib.sha1(b"blob "+str(len(encoded)).encode()+b"\\0"+encoded).hexdigest()
+        row={"path":str(chunk),"remote_path":"benchmarks/delivery/chunk.b64",
+             "remote_blob_sha":git_sha}
+        commit="a"*40
+        request={"repository_full_name":"leecdiang/HeteroSpec",
+                 "ref":commit,"path":row["remote_path"]}
+        self.make_capture("fresh-download","download",request,{
+            "isError":False,"structuredContent":{
+                "sha":git_sha,"encoding":"base64","content":_b64.b64encode(encoded).decode()
+            }}, "2026-10-19T00:00:04Z")
+        dump(self.outer/"download-intents"/"fresh-download.json",{
+            "request":request,"registered_utc":"2026-10-19T00:00:00Z"})
+        self.assertEqual(self.scope["download"](self.root,"fresh-download",row,commit)["status"],
+                         "ACTUAL_PROVIDER_DOWNLOAD_BOUND")
+
+    def test_delivery_auditor_binds_restored_tool_outside_root(self):
+        code=(SRC/"delivery_audit.py").read_text(encoding="utf8")
+        self.assertIn("restore_postseal_invocation(root,restore['tool_operation']",code)
+        self.assertNotIn("restore_binding=bind_invocation(root,restore",code)
 
 if __name__ == "__main__":
     unittest.main()

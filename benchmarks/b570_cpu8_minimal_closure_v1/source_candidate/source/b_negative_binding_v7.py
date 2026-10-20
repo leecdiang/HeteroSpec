@@ -69,7 +69,7 @@ def native_child_binding(start, created, op, original, operation_sha, task_uuid)
     return True
 
 
-def outside_owner_binding(witness, start, created, operation_sha, terminal):
+def outside_owner_binding(witness, start, created, operation_sha, terminal, job_members):
     terminal_sha = hashlib.sha256(
         json.dumps(terminal, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     ).hexdigest()
@@ -83,10 +83,22 @@ def outside_owner_binding(witness, start, created, operation_sha, terminal):
          and witness.get("root_created_filetime") == created["created_filetime"]
          and witness.get("provider_terminal_sha256") == terminal_sha,
          "B outside owner/guard/child/provider identities disagree")
-    need(type(witness.get("external_owner_pid")) is int
-         and witness["external_owner_pid"] != start["pid"]
-         and int(witness.get("external_owner_created_filetime", "0")) > 0,
+    outside_pid = witness.get("external_owner_pid")
+    outside_created = witness.get("external_owner_created_filetime")
+    need(type(outside_pid) is int and outside_pid > 0
+         and type(outside_created) is str and outside_created.isdecimal()
+         and int(outside_created) > 0,
          "B independent outside owner identity absent")
+    need(type(job_members) is set
+         and all(type(pid) is int and pid > 0 and type(created_ft) is str
+                 and created_ft.isdecimal() and int(created_ft) > 0
+                 for pid, created_ft in job_members),
+         "B actual Job identities required")
+    need(outside_pid not in ({start["pid"], created["pid"]} |
+                            {pid for pid, _ in job_members})
+         and (outside_pid, outside_created) not in job_members
+         and witness.get("external_owner_job_member") is False,
+         "B outside owner cannot be guard, child or Job member")
     return terminal_sha
 
 
@@ -163,7 +175,6 @@ def check(root, role):
          and witness.get("job_empty") is True
          and witness.get("all_owned_handles_closed") is True,
          "B observed outside cleanup")
-    terminal_sha = outside_owner_binding(witness, start, created, operation_sha, terminal)
     known = {(x["pid"], x["created_filetime"]) for x in native
              if x.get("event") in ("MEMBER_IDENTITY", "OP_CREATED_SUSPENDED")}
     identities = witness.get("member_exits")
@@ -175,6 +186,8 @@ def check(root, role):
     need(type(witness.get("job_total_starts")) is int
          and witness["job_total_starts"] == len(exited),
          "B external job total starts and exits disagree")
+    terminal_sha = outside_owner_binding(witness, start, created,
+                                         operation_sha, terminal, exited)
     need(witness.get("owner_exit_filetime") and witness.get("owner_created_filetime")
          and int(witness["owner_exit_filetime"]) > int(witness["owner_created_filetime"]),
          "B owner OS exit unknown")

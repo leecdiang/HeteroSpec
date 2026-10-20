@@ -52,10 +52,21 @@ storage=storage_check(ROOT)
 folder=ROOT/'operations'/x['id'];folder.mkdir(parents=True,exist_ok=False)
 j=Journal(folder/'EVENTS.jsonl');r=Journal(folder/'RESOURCES.jsonl');job=make_job();lim=LIMIT();lim.basic.flags=0x2000|0x8;lim.basic.active=x['max_job_processes'];checked(job_set(job,9,C.byref(lim),C.sizeof(lim)),'kernel active process cap')
 
+# A failed journal write cannot prevent root termination, OS wait or handle close.
+cleanup_log_errors=[]
+def _cleanup_emit(event,**fields):
+ try:j.emit(event,**fields)
+ except BaseException as logging_error:
+  cleanup_log_errors.append(event+': '+repr(logging_error))
+
 def limit_readback():
  q=LIMIT();checked(job_query(job,9,C.byref(q),C.sizeof(q),None),'Job limit readback')
  b=C.create_string_buffer(48);checked(job_query(job,1,b,48,None),'Job accounting readback')
  return dict(flags=int(q.basic.flags),active_limit=int(q.basic.active),total=C.c_uint32.from_buffer(b,36).value,active=C.c_uint32.from_buffer(b,40).value,terminated=C.c_uint32.from_buffer(b,44).value)
+def _require_member_flag(in_job):
+ need(in_job is True,'FOREIGN_OR_REUSED_JOB_PID')
+ return True
+
 def sample_members(ps):
  rows=[]
  for pid in ps:
@@ -63,6 +74,9 @@ def sample_members(ps):
   if not h:
    e=C.get_last_error();rows.append(dict(pid=pid,query_error=e));continue
   try:
+   is_member=W.BOOL()
+   checked(process_in_job(h,job,C.byref(is_member)),'IsProcessInJob')
+   _require_member_flag(bool(is_member.value))
    ot=os_times(h);key=(pid,ot['created_filetime'])
    if key not in retained:
     retained[key]=h;h=None
@@ -108,11 +122,11 @@ except BaseException as e:
  observed_ns=now()
  # An exception text containing OPERATION_DEADLINE is not enough.
  if _deadline_expired(deadline_fired.is_set(),observed_ns,deadline):
-  j.emit('OPERATION_DEADLINE',source='GUARD_MONOTONIC_CHECK',
+  _cleanup_emit('OPERATION_DEADLINE',source='GUARD_MONOTONIC_CHECK',
          deadline_ns=deadline,observed_ns=observed_ns,
          rescue_fired=deadline_fired.is_set(),original_error=error)
   error='OPERATION_DEADLINE: '+error
- j.emit('OPERATION_FAILURE',error=error)
+ _cleanup_emit('OPERATION_FAILURE',error=error)
  # An unassigned CREATE_SUSPENDED root is not reachable by this Job.
  # Let the mandatory retained-handle cleanup in finally terminate and wait
  # for it directly. An assigned Job is terminated here even when its root
@@ -122,14 +136,18 @@ except BaseException as e:
 finally:
  if child and child.process:
   if alive(child.process):
+   # CRITICAL: do not write to the journal until the suspended root has been
+   # terminated or a termination failure has been captured.
+   try:
+    cleanup_route=_terminate_owned_root(job_assigned,True,
+        lambda:terminate_job(job),
+        lambda:checked(terminate_process(child.process,125),'terminate unassigned suspended root'))
+   except BaseException as kill_error:
+    cleanup_route='TERMINATE_REQUEST_FAILED'
+    error=(error+'; ' if error else '')+'DIRECT_OR_JOB_TERMINATION_FAILED:'+repr(kill_error)
    if not job_assigned:
-    j.emit('UNASSIGNED_SUSPENDED_ROOT_TERMINATION',pid=int(child.pid),
-           created_filetime=root_key[1] if root_key else os_times(child.process)['created_filetime'])
-   # Actual kernel call uses the preserved process handle when Job assignment
-   # failed; the native wait and FILETIME below are mandatory in both cases.
-   cleanup_route=_terminate_owned_root(job_assigned,True,
-       lambda:terminate_job(job),
-       lambda:checked(terminate_process(child.process,125),'terminate unassigned suspended root'))
+    _cleanup_emit('UNASSIGNED_SUSPENDED_ROOT_TERMINATION',pid=int(child.pid),
+          created_filetime=root_key[1] if root_key else os_times(child.process)['created_filetime'])
   else:cleanup_route='ALREADY_EXITED'
   stop=now()+5_000_000_000
   while job_pids(job) and now()<stop:time.sleep(.01)
@@ -138,15 +156,15 @@ finally:
   remaining=max(0,(stop-now())//1_000_000)
   wr=wait_handle(child.process,int(remaining))
   if wr==0:
-   code=exit_code(child.process);j.emit('OP_TERMINAL_OS',pid=int(child.pid),exit_code=code,**os_times(child.process))
+   code=exit_code(child.process);_cleanup_emit('OP_TERMINAL_OS',pid=int(child.pid),exit_code=code,**os_times(child.process))
   else:
-   member_exits_complete=False;j.emit('ROOT_EXIT_UNCONFIRMED',pid=int(child.pid),wait_result=int(wr))
+   member_exits_complete=False;_cleanup_emit('ROOT_EXIT_UNCONFIRMED',pid=int(child.pid),wait_result=int(wr))
   for (pid,created),h in retained.items():
    wr=wait_handle(h,max(0,int((stop-now())//1_000_000)))
-   if wr==0:j.emit('MEMBER_TERMINAL_OS',pid=pid,exit_code=exit_code(h),**os_times(h))
-   else:member_exits_complete=False;j.emit('MEMBER_EXIT_UNCONFIRMED',pid=pid,created_filetime=created,wait_result=int(wr))
+   if wr==0:_cleanup_emit('MEMBER_TERMINAL_OS',pid=pid,exit_code=exit_code(h),**os_times(h))
+   else:member_exits_complete=False;_cleanup_emit('MEMBER_EXIT_UNCONFIRMED',pid=pid,created_filetime=created,wait_result=int(wr))
    checked(close(h),'retained member handle close')
-  j.emit('MEMBER_HANDLES_CLOSED',complete=member_exits_complete,count=len(retained))
+  _cleanup_emit('MEMBER_HANDLES_CLOSED',complete=member_exits_complete,count=len(retained))
   if child.thread:close(child.thread)
   checked(close(child.process),'root handle close')
  else:empty=not job_pids(job)
@@ -160,7 +178,7 @@ finally:
   observed_keys=set(retained)
   if root_key is not None:observed_keys.add(root_key)
   bound_errors.append('OPERATION_MEMBER_CENSUS_GAP')
-  j.emit('OPERATION_MEMBER_CENSUS_GAP',job_total=total_job_processes,
+  _cleanup_emit('OPERATION_MEMBER_CENSUS_GAP',job_total=total_job_processes,
          observed_identity_count=len(observed_keys))
  if total_job_processes>pricing['owned_job_starts_limit']:
   bound_errors.append('OPERATION_OWNED_START_BOUND')
@@ -168,13 +186,15 @@ finally:
   bound_errors.append('OPERATION_TOTAL_START_BOUND')
  if bound_errors:
   error=(error+'; ' if error else '')+'; '.join(bound_errors)
-  j.emit('OPERATION_FAILURE',error=error)
+  _cleanup_emit('OPERATION_FAILURE',error=error)
  done.set();rescue.join(timeout=1)
  if rescue.is_alive():
   error=(error+'; ' if error else '')+'DEADLINE_THREAD_NOT_CLOSED'
-  j.emit('OPERATION_FAILURE',error=error)
- checked(close(job),'operation job close');j.emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
+  _cleanup_emit('OPERATION_FAILURE',error=error)
+ checked(close(job),'operation job close');_cleanup_emit('OP_JOB_HANDLE_CLOSED',job_empty=empty)
+ if cleanup_log_errors:
+  error=(error+'; ' if error else '')+'CLEANUP_JOURNAL_FAILURE:'+'|'.join(cleanup_log_errors)
  receipt=dict(job_assignment_confirmed=job_assigned,cleanup_route=cleanup_route if child and child.process else 'NO_CHILD',status='CLOSED' if error is None and empty and member_exits_complete and code==0 else 'FAILED',member_exits_complete=member_exits_complete,error=error,job_empty=empty,begin_ns=begin,end_ns=now(),peak_job_processes=peak,total_job_processes=total_job_processes,guard_own_exit='UNKNOWN',child_exit_code=code,intent_sha256=a.intent_sha256)
- dump_new(folder/'RECEIPT.json',receipt);j.emit('GUARD_END',receipt=receipt);j.end();r.end()
+ dump_new(folder/'RECEIPT.json',receipt);_cleanup_emit('GUARD_END',receipt=receipt);j.end();r.end()
 print(json.dumps(dict(operation=x['id'],status=receipt['status'],error=error,job_empty=empty,child_exit_code=receipt['child_exit_code'])),flush=True)
-sys.exit(0 if error is None and empty and member_exits_complete and receipt['child_exit_code']==0 else 1)
+sys.exit(0 if error is None and not cleanup_log_errors and empty and member_exits_complete and receipt['child_exit_code']==0 else 1)

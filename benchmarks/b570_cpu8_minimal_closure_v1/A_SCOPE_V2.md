@@ -75,3 +75,16 @@ This is a forward-looking interface repair, **not F0 creation**. The immutable A
 ### Current A review input scope after three P1 fixes
 
 The current immutable `SOURCE_COMPOSITION.json` contains **123 source/import files and 14 auxiliary inputs** (including `NATIVE_ENTRY_PLAN.md` and `CPU8_ACCEPTANCE_PLAN.md`). Earlier 12-input statements are previous candidate snapshots and must never be used for final scoped-clean. The C execution protocol uses a single frozen pre-F0 template, not a circular runtime hash. B00 failed-Job-assignment cleanup requires a separately priced native negative, not a source-only PASS.
+
+## 2026-10-20 independent review six-finding source remediation (candidate, not independently clean)
+
+The external independent review of pinned `8dddac29` reported **COMPLETE_NOT_CLEAN, 2 P1 + 4 P2** over all 123 source/import and 14 auxiliary files. These were real independent findings and are not superseded by passing 59+29 CI. This additive **six-issue** patch must itself be fully re-reviewed; it does not inherit SOURCE_REVIEW_PASS.
+
+- **P1 / guard failed journal:** cleanup events are best-effort only; a persistent disk/journal exception cannot preempt direct termination of an unassigned suspended root, retained-handle wait or handle closure. A logging failure must mark the operation FAILED; independent native B00a/B00b cleanup evidence remains required.
+- **P1 / seal versus postseal delivery:** `delivery_binding_v6.postseal_capture()` and `restore_postseal_invocation()` read provider returns, registered restore intent, native OS exits and full stdout **only from the registered external_root/postseal area**. Downloads and isolated restoration no longer need to append `tools/*` or `operations/*` under the sealed original root. `delivery_audit.py` calls the fixed postseal binder. These are source evidence rules, **not** a claim the platform has already implemented the outside owner or authenticated its provider.
+- **P2 / sacrifice freeze:** native freeze negative fixtures copy the existing preflight/TOOLS.json before computing their sacrificial freeze inventory, so the initial baseline can pass and the intended mutation detector is reached.
+- **P2 / PID reuse:** after opening each sampled PID handle, guard queries `IsProcessInJob(handle,job)` and refuses a foreign/reused PID before retaining its identity; completeness of cumulative Job starts is still mandatory.
+- **P2 / outside owner:** reject nonpositive owner PID, invalid birth time, guard/child/Job-member PID and a witness claiming job membership, even if other field hashes are consistent.
+- **P2 / frozen C clock:** new A2 C freezes bind task and delivery elapsed-frontier limits from `freeze['budget']`; historical v6 budgets retain historical constants for reconstruction only.
+
+All six changes have new pure-source mocks/counterfactuals and explicit negative cases. A source-only GitHub Actions check may pass without proving Windows native behavior, external provider authenticity, disk hard quota, or complete independent review. Do not merge or launch any B or C process until authorized; old terminal UUIDs, UNKNOWN accounting and archived source bytes remain unchanged.

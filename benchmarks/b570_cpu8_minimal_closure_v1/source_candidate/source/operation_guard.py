@@ -67,7 +67,7 @@ try:
   r.emit('SAMPLE',begin_ns=start,end_ns=now(),job_pids=ps,guard_rss=rss(current()))
   for n in ('stdout.log','stderr.log'):need((folder/n).stat().st_size<=16*1024**2,'operation log cap')
   last=now();time.sleep(.1)
- need(not deadline_fired.is_set() and now()<=deadline+1_000_000_000,'exit deadline');code=exit_code(child.process);j.emit('OP_OS_EXIT',pid=int(child.pid),exit_code=code,**os_times(child.process))
+ need(not deadline_fired.is_set() and now()<=deadline+1_000_000_000,'OPERATION_DEADLINE');code=exit_code(child.process);j.emit('OP_OS_EXIT',pid=int(child.pid),exit_code=code,**os_times(child.process))
  need(not job_pids(job),'OPERATION_DESCENDANTS_REMAIN')
 except BaseException as e:
  error=repr(e)

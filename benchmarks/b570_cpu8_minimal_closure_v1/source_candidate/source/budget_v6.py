@@ -38,6 +38,14 @@ def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
        'foreign task operation must not affect current budget')
   if stage in ('B','C'):
    need(x['stage']==stage,'wrong phase operation in current task')
+  if x.get('stage')=='C':
+   from operation_roles_v7 import role_map, operation
+   current=role_map(root,'C')
+   if any(row.get('kind')=='formal_cpu8' and row.get('operation_id')==x['id']
+          for row in current['roles'].values()):
+    # An actual formal operation is admissible only after F0 and only
+    # if its exact bytes derive from the F0-pinned prefreeze template.
+    operation(root,'C-formal-watchdog','C','formal_cpu8')
   # Reject any unknown or underquoted open operation BEFORE it can decrease
   # cumulative balance. The quote is conditional, not provider hard proof.
   quote=envelope(x)
@@ -73,6 +81,24 @@ def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
    # A larger saved conservative settlement must never reduce later cumulative billing.
    life+=max(charge,z['charged_process_seconds']);starts+=actual_starts
   else:life+=x['lifetime_bound_seconds'];starts+=x['starts_bound'];open_ops.append(x['id'])
+ # A formal C operation template exists BEFORE F0. It is fully priced then;
+ # its exact post-F0 runtime counterpart replaces, never doubles, this charge.
+ templates=list((root/'tools').glob('*.operation.template.json'))
+ if templates:
+  from operation_roles_v7 import formal_template
+  form_id,form_path,template=formal_template(root)
+  need(len(templates)==1 and templates[0]==form_path
+       and template['task_uuid']==task_uuid, 'unexpected formal template inventory')
+  if not (root/'tools'/(form_id+'.operation.json')).exists():
+   quote=envelope(template)
+   need(type(template.get('lifetime_bound_seconds')) is int
+        and template['lifetime_bound_seconds']==quote['max_process_seconds']
+        and type(template.get('starts_bound')) is int
+        and template['starts_bound']==quote['owned_job_starts_limit']+quote['owned_outer_starts_limit'],
+        'unpriced pre-F0 formal template')
+   life+=template['lifetime_bound_seconds']
+   starts+=template['starts_bound']
+   open_ops.append(form_id)
  wall=math.ceil((datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(c['first_preparation_utc'].replace('Z','+00:00'))).total_seconds())
  need(wall>=0,'clock')
  for v in (next_bound,next_wall,next_starts):need(type(v) is int and v>=0,'integer ceiling required')

@@ -26,9 +26,27 @@ def captured_interval(operation,events):
 def snapshot(root,stage,next_bound=0,next_wall=0,next_starts=0):
  root=Path(root).resolve();p=load(root/'OPERATION_POLICY.json');c=load(root/'CAMPAIGN.json')
  need(stage in p['reserves'],'stage');reserved=p['reserves'][stage]
+ task_uuid=c.get('task_uuid')
+ need(type(task_uuid) is str and task_uuid,'current task UUID required')
+ from operation_pricing_v7 import envelope
  life=starts=0;open_ops=[]
  for f in (root/'tools').glob('*.operation.json'):
-  x=load(f);r=f.with_name(f.name.replace('.operation.json','.settled.json'))
+  x=load(f)
+  need(type(x) is dict and type(x.get('id')) is str and x['id']+'.operation.json'==f.name,
+       'actual operation filename/id mismatch')
+  need(x.get('task_uuid')==task_uuid and x.get('stage') in ('B','C'),
+       'foreign task operation must not affect current budget')
+  if stage in ('B','C'):
+   need(x['stage']==stage,'wrong phase operation in current task')
+  # Reject any unknown or underquoted open operation BEFORE it can decrease
+  # cumulative balance. The quote is conditional, not provider hard proof.
+  quote=envelope(x)
+  need(type(x.get('lifetime_bound_seconds')) is int and
+       x['lifetime_bound_seconds']==quote['max_process_seconds'] and
+       type(x.get('starts_bound')) is int and
+       x['starts_bound']==quote['owned_job_starts_limit']+quote['owned_outer_starts_limit'],
+       'unpriced operation in protected ledger')
+  r=f.with_name(f.name.replace('.operation.json','.settled.json'))
   if r.exists():
    z=load(r);need(z['operation_sha256']==__import__('hashlib').sha256(f.read_bytes()).hexdigest(),'operation settlement binding')
    need(type(z['charged_process_seconds']) is int and 0<=z['charged_process_seconds']<=x['lifetime_bound_seconds'],'settlement envelope')

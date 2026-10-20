@@ -32,10 +32,13 @@ fp=Path(a.intent).resolve();need(fp.parent==ROOT/'tools','intent confinement');n
 need(Path(x['root']).resolve()==ROOT and x['id'].replace('-','').isalnum(),'root/id')
 need(x.get('stage') in ('B','C') and x.get('task_uuid')==json.loads((ROOT/'CAMPAIGN.json').read_bytes()).get('task_uuid'),'fresh task/stage operation binding')
 # Consume the existing A2 operation-role map rather than inventing a second map.
-from operation_roles_v7 import role_map
+from operation_roles_v7 import role_map,operation as verified_operation
 roles=role_map(ROOT,x['stage'])['roles']
-need(any(row.get('operation_id')==x['id'] and row.get('sha256')==a.intent_sha256
-         for row in roles.values()),'unregistered current task operation role')
+matches=[name for name,row in roles.items() if row.get('operation_id')==x['id']]
+need(len(matches)==1,'unregistered current task operation role')
+verified_id,verified=verified_operation(ROOT,matches[0],x['stage'])
+need(verified_id==x['id'] and verified==x and sha(fp)==a.intent_sha256,
+     'current task operation bytes or post-F0 template drift')
 need(type(x['seconds']) is int and 0<x['seconds']<=1200 and x['cleanup_seconds']==5,'deadline')
 need(type(x['max_job_processes']) is int and 1<=x['max_job_processes']<=128,'job cap')
 from operation_pricing_v7 import envelope as price_operation

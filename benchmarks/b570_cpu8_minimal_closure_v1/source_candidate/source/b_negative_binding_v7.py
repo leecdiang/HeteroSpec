@@ -152,6 +152,11 @@ def check(root, role):
         failed = exactly(native, "OPERATION_FAILURE")
         need(detector.get("source") == "GUARD_MONOTONIC_CHECK"
              and type(detector.get("at_ns")) is int
+             and type(detector.get("deadline_ns")) is int
+             and type(detector.get("observed_ns")) is int
+             and type(detector.get("rescue_fired")) is bool
+             and (detector["observed_ns"] > detector["deadline_ns"]
+                  or detector["rescue_fired"] is True)
              and start["at_ns"] < detector["at_ns"] <= failed["at_ns"]
              and "OPERATION_DEADLINE" in failed.get("error", ""),
              "B03 actual monotonic deadline detector")

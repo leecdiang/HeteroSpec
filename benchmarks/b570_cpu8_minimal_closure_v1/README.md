@@ -17,3 +17,7 @@ No B570/native, GPU, model, actor, RTL, F0 or formal test executed, no PR merge.
 ## Three-P1 source-repair candidate (not approved)
 
 The stacked Draft PR127 now fixes the unassigned suspended root cleanup route, B failure guard/child/outside-owner identity, and the pre-/post-F0 hash cycle using a pinned formal template. Source-only targeted regressions and runtime-independent archive checks are required before review; the complete current A review packet contains 123 source/import files plus 14 auxiliary inputs, including the updated native-entry and C acceptance plans. Previous 12-input inventories are historical snapshots, not current approval. Full independent P0–P2 and B/C native gates remain NOT_RUN.
+
+## Source-only CI evidence and status
+
+The external GitHub Actions workflow `.github/workflows/b570-a3-source-only.yml` executed successfully at `9c4a356b893b5b7193c5f42d96db78b1222df6f1` (run `39360981060`): 123 source/import + 14 auxiliary identity matches, 111 Python AST parses, 58 candidate source-only tests and 29 original boundary tests. **These are real Linux source-level checks; all native fixtures remain synthetic.** Later commits must rerun CI at their own head. A full authenticated independent P0–P2 review is still NOT_DONE; B entry and C CPU8 are NOT_RUN, formal 0/8, no F0. B00 assignment-failure negatives are newly identified prospective native prerequisites with separate, not-yet-proven budgets.

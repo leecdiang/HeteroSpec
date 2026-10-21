@@ -22,3 +22,17 @@ B570 ratios are reconstructed from its saved paired-ratio table. Full raw logits
 remain separately held. The paper contains no new native execution, no imputed
 missing vector, no pooled cross-platform effect, and no synthetic confidence
 interval for the four-input service panels.
+
+## Explicit repair--draft contrast (2026-10-21)
+
+The seven-arm table already supports the draft-parity crossover under local repair.
+`anc/repair_interaction.json` and `scripts/generate_repair_interaction.py` make
+that existing result explicit: `Gamma = (C_GS/C_QB)/(M_GS/M_QB)`. The ratios are
+1.6115444934, 1.0706599083 and 1.5415718508 for Qwen3, SmolLM2 and Llama.
+Both PQ and QB cross draft parity for Qwen3/Llama; SmolLM2 remains below parity.
+This is retrospective common-panel arithmetic, not a new experiment, independent
+confirmation, uncertainty estimate or operator-time attribution. The target-only
+R/M_QB comparisons are also retained from the same original table.
+
+All original scientific result inputs remain unchanged. New TeX table locations
+under `tables/` remove compilation dependencies on ancillary-file handling.

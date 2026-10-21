@@ -92,7 +92,7 @@ def test():
     with (DATA/'historical_disposition.csv').open(newline='',encoding='utf-8') as stream:
         ledger=list(csv.DictReader(stream))
     check('All 28 legacy groups retained',[r['id'] for r in ledger]==[f'E{i:02}' for i in range(1,29)])
-    texfiles=[p for p in ROOT.rglob('*.tex') if 'anc' not in p.parts or p.parent==DATA/'closure']
+    texfiles=[p for p in ROOT.rglob('*.tex') if 'anc' not in p.parts]
     texts='\n'.join(p.read_text() for p in texfiles)
     labels=re.findall(r'\\label\{([^}]+)\}',texts)
     refs=[x for x in re.findall(r'\\(?:ref|eqref|pageref|sref)\{([^}]+)\}',texts) if not x.startswith('#')]
@@ -118,7 +118,9 @@ def test():
     verify(load('portability111.json'),check)
     from check_closure import verify as verify_closure
     closure=verify_closure(check,ROOT)
-    return {'status':'PASS','closure':closure,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,
+    from check_repair_interaction import verify as verify_interaction
+    interaction=verify_interaction(check,ROOT)
+    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,
             'scope':'Reported-value/source checks, not native execution, full-vector reconstruction, all-input correctness or arXiv-server validation.',
             'new_model_executions':0}
 if __name__=='__main__':

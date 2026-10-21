@@ -1,3 +1,5 @@
+Current revision: see `anc/review_round3/QA_FINAL.json` and the repository synthesis. The records below document earlier rounds; they do not describe the current PDF hash or unchanged figure-source status.
+
 # v3 → v4 source reconciliation and release review
 
 Historical first-pass record below. The 2026-10-21 cross-review refinement is recorded in `anc/review_round2/REVIEW.md` and `QA_FINAL.json`; its current figures include documented presentational changes, so the first pass's byte-unchanged-figure statement is not a claim about the refined files. Scientific data are preserved.

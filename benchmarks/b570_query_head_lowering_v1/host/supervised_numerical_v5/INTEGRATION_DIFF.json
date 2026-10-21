@@ -1,0 +1,33 @@
+{
+  "v4_review_base": "a2494a83cd77c18a7fbbb5df40cd7e6ed715a123",
+  "watcher_sha256": "0ca0e18079b4569fee240acac4ff0a5339332b6ecd6de956bfec88158e613c08",
+  "timing_sha256": "5da6630335c619ad0b75c26849cdea9b527e2235546607cb43708725e2e370e4",
+  "watcher_exactly_unchanged": true,
+  "numerical_host_cpp_identical": true,
+  "fixture_only_run_id": true,
+  "supervisor_diff": [
+    "--- v4/supervisor.py\n",
+    "+++ v5/supervisor.py\n",
+    "@@ -14,7 +14,8 @@\n",
+    " from timing import Clock,Coverage,MAX_GAP_NS",
+    " from os_process import Target",
+    " from workers import Tail,rows",
+    "-from storage import Lease,bounded_usage",
+    "+from storage import Lease",
+    "+from v5_usage import bounded_usage",
+    " ",
+    " def supervise(job,command):",
+    "     folder=pathlib.Path(job['folder']);folder.mkdir(parents=True,exist_ok=False)",
+    "@@ -140,7 +141,7 @@\n",
+    "             try:native.stdin.close()",
+    "             except OSError:pass",
+    "         write_begin=clock.now();record('LIFECYCLE_WRITE_BEGIN',write_begin_ns=write_begin)",
+    "-        receipt=dict(schema='SUPERVISION_V4',purpose=job['purpose'],clock='CPU_TEST_SHARED_VIRTUAL' if clock.path else 'SYSTEM_MONOTONIC_NS',",
+    "+        receipt=dict(schema='SUPERVISION_V5',purpose=job['purpose'],clock='CPU_TEST_SHARED_VIRTUAL' if clock.path else 'SYSTEM_MONOTONIC_NS',",
+    "             launch_begin_ns=begin,spawn_returned_ns=next((r['spawn_returned_ns'] for r in states if r['state']=='SPAWN_RETURNED'),None),",
+    "             exit_observed_ns=exit_ns,post_audit_begin_ns=post_begin,post_audit_end_ns=post_end,lifecycle_write_begin_ns=write_begin,",
+    "             pid=native.pid if native else None,creation_FILETIME=job.get('creation_FILETIME'),process_times=native_times,"
+  ],
+  "changes": "External bounded PowerShell pipe capture/job ownership/gate and external budget charge; numerical rules/backends unchanged",
+  "v4_failure_preserved": true
+}

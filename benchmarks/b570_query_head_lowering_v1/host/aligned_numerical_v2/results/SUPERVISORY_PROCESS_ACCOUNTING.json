@@ -1,0 +1,19 @@
+{
+  "experiment_scope": {
+    "census_hosts": 1,
+    "numerical_hosts": 36,
+    "total_experiment_host_attempts": 37,
+    "distinct_PID_creation_FILETIME_pairs": 37,
+    "graph_calls": 36
+  },
+  "separate_control_and_CPU_work": [
+    {"tool": "frozen run_panel.py controller", "Python_invocations": 1, "wall_seconds": 50.2636856, "receipt": "CONTROLLER_PROCESS.json"},
+    {"tool": "frozen reconstruct.py offline CPU audit", "Python_invocations": 1, "wall_seconds": 4.7496293, "receipt": "RECONSTRUCT_PROCESS.json"},
+    {"tool": "read-only inventory and lifecycle summary via Python stdin", "Python_invocations": 1, "PID_not_captured": true},
+    {"tool": "finish_result.py pure CPU FP64 recomputation, analysis and archive delivery", "Python_invocations": 1, "receipt": "DELIVERY_PROCESS.json", "subprocesses_started": 0}
+  ],
+  "other_tools": "PowerShell, Git, file-hash and publication connector tools are supervisory/CPU delivery operations, not experiment hosts; their OS process total is not inferred here.",
+  "not_a_whole_machine_process_count": true,
+  "no_additional_GPU_host_after_stop": true,
+  "no_additional_device_query_after_stop": true
+}

@@ -1,0 +1,48 @@
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+\input{preamble}
+\begin{document}
+\begin{frontmatter}
+\title{Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding}
+\author{Chengzhan Li}
+\address{University of Electronic Science and Technology of China, Chengdu, China\\[2pt]
+{\normalfont\ttfamily\href{mailto:chengzhan.li@std.uestc.edu.cn}{chengzhan.li@std.uestc.edu.cn}}}
+\begin{abstract}\input{abstract}\end{abstract}
+\begin{keyword}
+speculative decoding \sep execution geometry \sep numerical consistency \sep runtime graph transformation \sep state composition
+\end{keyword}
+\end{frontmatter}
+\input{sections/01_introduction}
+\input{sections/02_problem}
+\input{sections/03_method}
+\input{sections/04_design}
+\input{sections/05_evaluation}
+\input{sections/06_boundaries}
+\input{sections/07_mapping_costs}
+\input{sections/08_request_service}
+\input{sections/07_architecture}
+\input{sections/08_related_limits}
+\input{sections/09_conclusion}
+\section*{Data and code availability}
+The source package provides reported data, editable figures and CPU consistency checks, including the saved service blocks used in the later request panels. Exact runtime, model and raw-tensor identities are indexed in the commit-pinned companion records; access to complete runtime and tensor archives is separate from the public manuscript package. Reproduction and access scope are stated in \sref{supp:reproduction}.
+\section*{Declaration of AI-assisted work}
+OpenAI ChatGPT and Codex assisted implementation, analysis-code preparation, figure-code editing and language revision. Measurements come from recorded executions, not generated observations. The author remains responsible for checking the results, interpretations and references and approving the final text.
+\medskip
+\noindent\textit{Supplementary methods and complete result tables follow the shared bibliography (p.~\pageref{supp:start}).}
+\balance
+\setlength{\bibsep}{0pt plus .1pt minus .1pt}
+\bibliographystyle{psql-num}
+\bibliography{references}
+\clearpage
+\nobalance
+\input{supplement_start}
+\input{supplement/01_implementation}
+\input{supplement/02_cuda_cost}
+\input{supplement/03_rtx_replication}
+\input{supplement/04_vulkan_state}
+\input{supplement/05_components}
+\input{supplement/06_backend_port}
+\input{supplement/08_followup_mapping}
+\input{supplement/09_request_service}
+\balance
+\input{supplement/07_reproduction}
+\end{document}

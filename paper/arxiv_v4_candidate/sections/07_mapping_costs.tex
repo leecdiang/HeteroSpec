@@ -1,0 +1,26 @@
+\section{Reference-constrained mapping costs}
+\label{sec:mappingcosts}
+\subsection{A strong execution baseline}
+We next compare QB with other qualified mappings after charging execution and representation costs. The follow-up compares PQ, QB and a compact query-to-head mapping, QH, in which independent queries occupy a head-like dimension before native output order is restored. These operator studies use their own exposed or synthetic inputs, reference outputs and cost windows~\cite{mappingrecords,b570compactrecords}.
+
+Repeated execution exposed an input-lifetime fault: graph allocations had reused K/V storage, so later calls consumed changed operands. Independent persistent input storage restored repeatable input and output bytes. Balanced experiments then used two arms of the same QB implementation to measure A/A variation. On the RTX core panel, QB\_A/QH is 0.900826. A frozen selector predicts the direction of the gap on 12 held-out synthetic geometries, but its measured lookup cost raises the offline estimated selector/fixed-QB ratio to 1.010298. The predicted ordering did not yield a deployable selection benefit.
+
+CUDA Graph capture, instantiation and replay change the relative costs. On selected geometries, QB\_A's completed-graph ON/OFF ratios range from 0.615 to 0.849. For four permuted-$q=2$ coordinates, the QH-minus-QB gap falls from 12.056--12.975 to 0.735--1.627\,$\mu$s. Separate instrumented runs identify the execution mode; clean timing runs share the frozen graph/runtime identity. The intervention measures the effect of execution mode, without identifying every component of CPU submission cost.
+
+\subsection{Path availability and reference preservation}
+The RTX key extents 1023/1024/1025 select observed 8/3/8-kernel paths. Their completed costs with graph replay enabled are 113.085/50.439/114.618\,$\mu$s. That comparison changes logical visibility as well as physical extent. A separate intervention therefore fixes each logical input, preserves the original mask columns, and appends finite zero K/V and fully masked columns~\cite{mappingrecords}.
+
+Padding logical length 1023 to physical extent 1024 reaches the three-kernel path on the observed first call, but all four qualification hosts fail the original unpadded reference. Padding to 1025 passes all four hosts, retains eight kernels and costs about 1.5\% more than either native QB control. Figure~\ref{fig:mappingboundary} separates path availability from admissibility. Failed paths have no qualified steady-state speed estimate. Their numerical differences establish neither incorrect attention mathematics nor degraded answer quality, and kernel count alone does not isolate the source of cost.
+
+\begin{figure*}[t]
+\centering\input{figures/mapping_boundary}
+\caption{Two limits to mapping optimization. A: fixed logical length 1023 on RTX; the faster-path candidate fails the original reference, so no clean cost is reported for it. The three-kernel observation is a first call, not a qualified steady-state replay. B: charged Q-representation transactions, with the comparator shown in each row. The RTX and B570 rows use different geometries and execution modes; the ratios are not a device comparison. The B570 interval is descriptive and family-adjusted.}
+\label{fig:mappingboundary}
+\end{figure*}
+
+\subsection{Charging the representation transaction}
+Compact Q removes a copy from the QH graph at the cost of first producing that representation. The RTX experiment measures one continuous transaction from a common permuted host Q through copy/transpose, upload and completion, graph replay/synchronization, and complete ordinary-output readback. K/V and mask are resident and targets preallocated. Natural model Q production and ongoing KV updates remain outside this window.
+
+For $q=2$ and $q=4$, compact-QH/QB\_A transaction ratios are 1.002216 and 1.001598; relative to QB\_B they are 1.008295 and 1.004167. Neither candidate passes the practical screen against both controls. A separately qualified B570 equal-head study also finds no established practical QH benefit. Its paired compact-QH/dual-QB ratio is 0.992244, with descriptive adjusted interval [0.979908,1.004691]; the paired cost difference is $-1.518\,\mu$s [$-4.168,+0.916$]. The resident-graph result is separate and is retained in \sref{supp:followupmapping}.
+
+Fixed QB remains the baseline in these domains; the comparisons do not demonstrate strict equivalence. A representation that lowers its own graph cost must also remain competitive against a strong qualified baseline over the transaction in which it is produced and consumed.

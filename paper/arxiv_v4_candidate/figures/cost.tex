@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+\begin{axis}[name=pq,width=.325\textwidth,height=4.45cm,title={\textbf{A} Local repair: $C_{\PQ}/C_{\QB}$},title style={font=\small},xmin=.99,xmax=1.087,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={Llama,SmolLM2,Qwen3},xtick={1,1.04,1.08},xlabel={Request-time ratio\\$>1$: QB faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
+\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
+\addplot[only marks,mark=*,mark size=2.4pt,qualified,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(1.043676,3) [1.044] (1.068111,2) [1.068] (1.021848,1) [1.022]};
+\end{axis}
+\begin{axis}[at={(pq.east)},anchor=west,xshift=.58cm,name=gs,width=.325\textwidth,height=4.45cm,title={\textbf{B} Global repair: $C_{\GS}/C_{\QB}$},title style={font=\small},xmin=.92,xmax=2.40,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={,,},xtick={1,1.5,2},xlabel={Request-time ratio\\$>1$: QB faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
+\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
+\addplot[only marks,mark=square*,mark size=2.4pt,qualified,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(2.143525,3) [2.144] (1.462530,2) [1.463] (2.175941,1) [2.176]};
+\end{axis}
+\begin{axis}[at={(gs.east)},anchor=west,xshift=.58cm,width=.325\textwidth,height=4.45cm,title={\textbf{C} Draft increment: $M_{\QB}/C_{\QB}$},title style={font=\small},xmin=.52,xmax=1.28,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={,,},xtick={.6,.8,1,1.2},xlabel={Request-time ratio\\$>1$: drafting faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
+\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
+\addplot[only marks,mark=triangle*,mark size=2.8pt,draft,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(1.143749,3) [1.144] (.633948,2) [0.634] (1.116620,1) [1.117]};
+\end{axis}
+\end{tikzpicture}

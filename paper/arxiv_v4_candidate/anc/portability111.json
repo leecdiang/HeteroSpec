@@ -1,0 +1,235 @@
+{
+  "schema": 1,
+  "evidence_kind": "SELECTED_REPORTED_CPU_AND_SOURCE_FINDINGS_NOT_NEW_RAW_REPRODUCTION",
+  "commit": "9fafc4ba49119f1c52e1606d295bd0b9a55a06d1",
+  "source": "https://github.com/leecdiang/HeteroSpec/blob/9fafc4ba49119f1c52e1606d295bd0b9a55a06d1/benchmarks/b570_representation_portability_v1/RESULT.md",
+  "reviewed_sources": [
+    {
+      "path": "RESULT.md",
+      "git_blob": "57bdff35904f83623dc2295613761260e30b6c3d",
+      "read": "complete"
+    },
+    {
+      "path": "conditions.py",
+      "git_blob": "0b20f25242aa618c10c1c9d2e20ea9d67e970eb1",
+      "read": "complete"
+    },
+    {
+      "path": "backend_map.py",
+      "git_blob": "98906e12ed3361d4a0f72992e3e42dfb1e4cd3a6",
+      "read": "complete; historical positive support fields interpreted only as batch-equality conditions"
+    },
+    {
+      "path": "source_audit.py",
+      "git_blob": "fdd2bb7d563ff311f5ddb1a8947ceca0c793e833",
+      "read": "complete"
+    },
+    {
+      "path": "native/oracle.hpp",
+      "git_blob": "b0f18c2c3eb3f4de4b4ff01a30644e8372d0c6c6",
+      "read": "complete"
+    },
+    {
+      "path": "ENDPOINT_RELATIONS.md",
+      "git_blob": "52d83c296e01b144b7ecf30029231afd13941149",
+      "read": "complete"
+    },
+    {
+      "path": "CPU_RESULT.json",
+      "git_blob": "da8574cc55c56e12329cde34e0a91db6ebb9a9d0",
+      "read": "header and selected coverage entries; summary also cross-checked in RESULT.md"
+    },
+    {
+      "path": "SOURCE_BINDINGS.json",
+      "git_blob": "1c41bd47abf26ca5536cbde7ab10df2a7b1fb31a",
+      "read": "source/DLL identity records"
+    },
+    {
+      "path": "CHECKER_CLOSEOUT_TESTS.json",
+      "git_blob": "2bb140633fc6035c6241275d0c43092420e544f2",
+      "read": "test summary and pinned checker hash"
+    }
+  ],
+  "cpu": {
+    "q": [
+      1,
+      2
+    ],
+    "key_extent": [
+      127,
+      128,
+      129,
+      255,
+      256,
+      257
+    ],
+    "heads": [
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        32,
+        8
+      ]
+    ],
+    "storage_conditions": 2,
+    "mask_conditions": 3,
+    "data_patterns": 2,
+    "feature_dimension": 128,
+    "geometries": 72,
+    "fixtures": 432,
+    "development": 144,
+    "holdout": 288,
+    "graph_computes": 1296,
+    "q1_common_graphs": 648,
+    "q2_distinct_graphs": 648,
+    "structured_fixtures": 216,
+    "single_key_structured": 72,
+    "exact_structured_failures": 0,
+    "crashes": 0,
+    "nonfinite_outputs": 0,
+    "symbolic_faults_detected": 4,
+    "max_abs": {
+      "QK": 0.0,
+      "softmax": 5.36080310351017e-09,
+      "AV_final": 5.513250481611193e-05
+    },
+    "general_pass_tolerance": null,
+    "new_gpu_calls": 0,
+    "new_model_requests": 0,
+    "checker_schema": 2,
+    "closeout_descriptor_tests": 13
+  },
+  "backend": {
+    "source_sha256": "04615c97998a76d2d0b15d2ebb93bf381eb3fb565492d7714d3fc9d1c333b98d",
+    "dll_sha256": "a9bcbe815d0fc1b9a7914fceb55b7275750169ec58dc8c4a09691ea0ea12f92c",
+    "symbol": "ggml_backend_vk_device_supports_op",
+    "source_line": 18976,
+    "condition": "src0.ne[3] == src1.ne[3]",
+    "bound_core_files": 7,
+    "unbound_shader_bodies": 3,
+    "full_source_bytes_restored_here": false,
+    "actual_native_assignment": null,
+    "actual_fallback_transfers": null,
+    "root_cause_of_native_endpoint": null,
+    "rows": [
+      {
+        "layout": "MQ",
+        "q": 2,
+        "QK_src_ne3": [
+          1,
+          1
+        ],
+        "AV_src_ne3": [
+          1,
+          1
+        ],
+        "necessary_condition": true,
+        "full_support": null
+      },
+      {
+        "layout": "PQ",
+        "q": 2,
+        "QK_src_ne3": [
+          1,
+          1
+        ],
+        "AV_src_ne3": [
+          1,
+          1
+        ],
+        "necessary_condition": true,
+        "full_support": null
+      },
+      {
+        "layout": "QB",
+        "q": 2,
+        "QK_src_ne3": [
+          1,
+          2
+        ],
+        "AV_src_ne3": [
+          1,
+          2
+        ],
+        "necessary_condition": false,
+        "full_support": false
+      }
+    ]
+  },
+  "endpoint_classes": {
+    "1011": [
+      [
+        "R",
+        "R_SHADOW",
+        "C_B_PQ",
+        "C_R_PQ",
+        "M_B_QB",
+        "M_R_QB"
+      ],
+      [
+        "C_B_MQ",
+        "C_B_QB",
+        "C_R_QB"
+      ],
+      [
+        "C_R_MQ"
+      ]
+    ],
+    "1248": [
+      [
+        "R",
+        "R_SHADOW",
+        "C_R_MQ",
+        "C_R_PQ",
+        "C_R_QB",
+        "M_R_QB"
+      ],
+      [
+        "C_B_PQ",
+        "C_B_QB",
+        "M_B_QB",
+        "C_B_MQ"
+      ]
+    ],
+    "1249": [
+      [
+        "R",
+        "R_SHADOW",
+        "M_B_QB",
+        "M_R_QB",
+        "C_B_MQ",
+        "C_B_PQ",
+        "C_B_QB",
+        "C_R_MQ",
+        "C_R_PQ",
+        "C_R_QB"
+      ]
+    ],
+    "831": [
+      [
+        "R",
+        "R_SHADOW",
+        "M_R_QB",
+        "C_R_PQ"
+      ],
+      [
+        "C_B_MQ",
+        "C_B_QB",
+        "C_R_MQ"
+      ],
+      [
+        "C_B_PQ",
+        "C_R_QB",
+        "M_B_QB"
+      ]
+    ]
+  },
+  "endpoint_scope": "Arm-level classes reconstructed by the source from all 48 complete original records; repetitions are not new inputs. This file records class memberships, not original token arrays.",
+  "local_scope": "This submission reconciles reported counts, explicit dimension predicates and manuscript statements; no new Windows graph/hardware test or full native archive restoration."
+}

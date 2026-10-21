@@ -1,0 +1,28 @@
+\begin{tikzpicture}[font=\footnotesize,x=1cm,y=1cm]
+\node[anchor=west,font=\small\bfseries] at (0,4.4) {A\quad Endpoint response to layer-0 subsets};
+\node[anchor=west,text=aux] at (0,3.95) {Donor $\to$ recipient; fixed boundary receiver};
+\node at (3.85,3.5) {$K_0$};\node at (4.95,3.5) {$V_0$};\node at (6.05,3.5) {$K_0+V_0$};
+\foreach \y/\lab in {2.95/{1248\quad A$\to$B},2.25/{1248\quad B$\to$A},1.55/{831\quad A$\to$B},.85/{831\quad B$\to$A}} {
+ \node[anchor=west] at (.1,\y) {\lab};}
+\foreach \x/\y/\v/\col in {3.85/2.95/B/qualified,4.95/2.95/B/qualified,6.05/2.95/B/qualified,3.85/2.25/D/aux,4.95/2.25/B/qualified,6.05/2.25/D/aux,3.85/1.55/C/draft,4.95/1.55/B/qualified,6.05/1.55/B/qualified,3.85/.85/C/draft,4.95/.85/C/draft,6.05/.85/C/draft}{
+ \draw[\col,fill=\col!7,line width=.6pt] (\x-.35,\y-.23) rectangle ++(.7,.46);
+ \if\v D\def\endpoint{rec.}\else\if\v B\def\endpoint{don.}\else\def\endpoint{new}\fi\fi
+ \node[text=\col] at (\x,\y) {\endpoint};}
+\node[anchor=west] at (0,.15) {rec.: recipient\quad don.: donor\quad new: third endpoint};
+\node[anchor=north west,align=left,text=aux] at (0,-.3) {For 1248 B$\to$A, V-only reproduces the donor;\\adding K removes that endpoint effect.};
+\node[anchor=west,font=\small\bfseries] at (8.0,4.4) {B\quad Same-prefix score, /1248 B$\to$A};
+\begin{axis}[at={(8.6cm,1cm)},anchor=south west,scale only axis,width=6.8cm,height=2.75cm,
+xmin=-.10,xmax=.10,xtick={-.10,-.05,0,.05,.10},xticklabels={$-0.10$,$-0.05$,0,0.05,0.10},
+ymin=.5,ymax=4.5,ytick={4,3,2,1},yticklabels={EMPTY,K only,V only,Joint K/V},
+axis lines*=left,axis line style={aux},tick style={aux},tick label style={font=\footnotesize},
+xlabel={$z(832)-z(220)$},xlabel style={font=\footnotesize},grid=major,grid style={gray!13}]
+\draw[aux,dashed] (axis cs:0,.5)--(axis cs:0,4.5);
+\addplot[only marks,mark=*,mark size=2.8pt,target] coordinates {(-.06651496887207031,4)(-.006771087646484375,3)(.021633148193359375,2)(-.05448722839355469,1)};
+\addplot[only marks,mark=diamond,mark size=3.4pt,draft,line width=.8pt] coordinates {(.08137702941894531,1)};
+\end{axis}
+\fill[target] (8.35,-.25) circle[radius=2.3pt];
+\node[anchor=west,inner sep=0pt] at (8.55,-.25) {Observed};
+\draw[draft,line width=.8pt] (10.42,-.25)--(10.52,-.12)--(10.62,-.25)--(10.52,-.38)--cycle;
+\node[anchor=west,inner sep=0pt] at (10.75,-.25) {Additive joint prediction};
+\node[anchor=west,text=aux] at (8.1,-.8) {$I_{KV}=-0.135864$; actual argmax: 220 / 220 / 832 / 220};
+\end{tikzpicture}

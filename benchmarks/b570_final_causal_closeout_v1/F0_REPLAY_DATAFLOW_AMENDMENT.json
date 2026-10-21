@@ -1,0 +1,10 @@
+{
+  "before_operator_GPU_start": true,
+  "reason": "Source-bound label disambiguation: build_norm emits norm-0 both before attention and before FFN. The already frozen RMS operator means the exact producer of attn_norm-0 src0, selected by recorded tensor_identity/dataflow, without looking at any tensor difference.",
+  "unchanged": "same five frozen operators/RMS epsilon/model/numerical DLLs/full-vs128 remainder operands, two tasks, two repeats,40 replay start ceiling; original replay100.py preserved",
+  "source": "baseline/source/models/llama.cpp + llama-graph.cpp",
+  "selector": "norm-0 RMS_NORM whose tensor_identity equals attn_norm-0 MUL operand0 tensor_identity",
+  "source_sha256": "e1ba3330d9fde30f7cf1bbea41399c9753930afae755dbdff450c30a5d76da08",
+  "utc": "2026-10-13T02:29:59.707Z",
+  "new_operator_starts_so_far": 0
+}

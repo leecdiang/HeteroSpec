@@ -1,0 +1,203 @@
+你负责 HeteroSpec B570 后续工作：PR103 原始证据复核 + 同前缀决策前沿分析。
+这是一个新的、有独立注册和预算的后续研究，不是重跑、覆盖或延长 PR103。
+
+一、科学目标与范围
+
+回答三个问题：
+Q1. PR103 的小子集端点效应，能否绑定到实际 native 输出、完整 FP32 logits 和一致的 token 前缀？
+Q2. K/V 或 prefix/tail 的端点非单调性，在固定前缀下表现为怎样的 logit 主效应与非加性残差？不要从 B/C/D 标签直接推断非线性算子机制。
+Q3. 历史稳定输入是状态差异很小，还是虽有状态/分数变化但尚未越过观察到的决策边界？
+
+本轮优先 CPU 分析。只有旧数据缺少预定决策位置的原始 logits 时，才进入下面有上限的新 native 诊断采集。
+不扩大 selector、任务、模型、量化、生成长度或后端。此轮不能证明自然可达性、投影完全中介、最小性、必要性或普适修复。
+
+固定证据：
+- PR103 结果提交：b46415f2725d7c06e093a6cd2b2d261b61925dc6
+- PR103 原始注册：dd33b24abebc335d39f3b63b4e7beff86bdcf934
+- PR101 baseline：26706c9fb4818ec3465e45acea029c4ab88a390f
+- 原始 worker：PR101 native/worker.cpp 对应已冻结 b570-boundary-worker.exe
+- PR103 预期数量：32 controls + 160 subset requests；80 subset coordinates 各两次重复。
+这些数字用于核对，不是允许把分析器写死为输出这些数字。
+
+在新的独立 worktree / benchmark 目录 / Draft PR 中工作，例如 benchmarks/b570_decision_frontier_v1/。
+复用基线时引用固定提交作为外部依赖，不合并旧实验，不修改 PR103 已冻结文件。
+若远端 HEAD 已推进，记录差异；本研究仍以以上固定证据为输入，不能静默换基线。
+不得改动 main、PR102、PR104、历史 runtime/DLL、模型、旧归档、许可证或投稿材料。
+不得启停 RTX 工作，不得恢复暂停的 Zenodo/arXiv 发布或自动化，不得创建公开 release。
+
+二、Phase A：零 GPU 原始审计与再分析
+
+A1. 从 PR103 最终归档做一次独立读取路径的复核。
+确认最终 ZIP 与 manifest、2,561 文件逐项 hash，以及原始 REQUEST/RESULT/trace、ledger、PID、runtime identity、restore receipts 的对应关系。
+不得仅检查 RESULTS.md、ANALYSIS.json 或已经写着 PASS 的回执。
+相对于旧 EXPECTED endpoint 的重算应绑定 PR101 原始证据。
+分析必须真的读取恢复目录的 raw/payloads，不能因绝对路径意外回到原 run 目录。
+必要时增加只负责路径解析的 resolver，保存逻辑路径→实际路径映射；不改旧 FREEZE，不修改证据内容。
+模型/runtime 可以保留为外部冻结依赖，但要单列其位置及核验范围。
+本地 fresh restore、异机复算、远端可获取性分别记录；未完成后两者时不能宣称已经完成。
+只在已有授权的私有通道交付；无远端传输授权就准备校验包并标 REMOTE_PENDING，不公开原始文件。
+
+独立重算所有 192 endpoint、80 对重复、控制门槛、两方向、changed-byte null、第三轨迹和 donor/full-cross 对应。
+方向明确写 donor->recipient，recipient logits 固定。
+至少人工/独立代码核对 /1248 B->A 的 EMPTY/K_layer0/V_layer0/KV_layer0 四格，不混淆方向。
+不能将 160 次请求当作 160 个独立输入，不能将四个受影响 task-direction 坐标当总体成功率。
+
+A2. 对原始 A/B donor 的 F16 K/V 做数值级而非仅字节级比较。
+按实际序列化源码核对 role、layer、position、head/channel、stride、transposed V 和 metadata。
+至少报告：selected bytes、changed bytes、changed F16 elements、有限值检查、max/RMS absolute error、L2 relative error、F16 ordered-ULP 分布、零和符号情况。
+明确分母，尤其 1/64 是全 K/V value bytes 的选择比例，不是误差大小、信息量比例或因果贡献比例。
+相对误差在基准范数为零时标 N/A 或按提前规定的规则处理；不能隐式加入 epsilon 后夸大结论。
+不得把原始半精度存储当整数差值解释为数值距离。
+
+A3. 从完整 token 序列计算“共同前缀→首次不同决策”的位置，而不是只读取 endpoint 分类。
+固定任务：GSM8K/test/1248、/831、/1011、/1249。
+固定 recipient：A、B；donor 为另一侧。
+固定七个状态：EMPTY、K_layer0、V_layer0、KV_layer0、KV_prefix128、KV_tail128、ALL。
+两个分析面板分别为：
+- L0 四格：EMPTY、K_layer0、V_layer0、KV_layer0。
+- POSITION 四格：EMPTY、KV_prefix128、KV_tail128、ALL。
+
+每个 task×recipient×面板独立定义 t*：四条既有端点 token 序列第一次不全相同的位置，0-based。
+必须确认四个 arm 在 [0,t*) 已生成的 token IDs 完全相同。
+不把另一个面板的 t* 直接用于本面板，除非也通过其共同前缀核验。
+若仅长度/停止状态不同而没有可对齐的 token 决策，标 ENDPOINT_ONLY，不虚构 logits 位置。
+若 cap128 内未发现差异，标 RIGHT_CENSORED_AT_128 / EOG_FINISHED；不写“永远没有影响”。
+无差异面板的描述性采样位置预定为 1、31、63、95、127，超过共同有效长度的位置标 NOT_REACHED。
+有差异面板需要的位置为 1、t*-1、t*，去重并只保留有效 1..127。
+
+这是依据已暴露结果选择的机制定位位置，不是盲验证、不是预先预测首次分歧，也不能用于总体显著性声明。
+冻结所有位置及 token-pair 选择规则后才能新采集。
+在 t*，r=EMPTY 的 token；u 由提前固定的 arm 优先顺序取第一个与 r 不同的 token。
+L0 优先顺序 K_layer0、V_layer0、KV_layer0；POSITION 为 prefix、tail、ALL。
+不要根据 logit 效果大小另选 token。
+无差异面板用 EMPTY 的 top1/top2 作为该时刻四格共享 token pair，按 token ID 解决 tie；这是固定分析规则。
+
+A4. 检查旧 raw 的 logits 可用性。
+必须沿 RESULT.partition98.full_payloads[t].logits 解析、读取 .logits.f32 并复核尺寸、SHA256、native top1/采样 ID、位置与 naturally_committed_prefix_ids。
+phase96 里仅有 top2 或 full-vector hash 不算拿到了 full logits。
+restore100 的第 0 个 token 由已冻结 initial logits 走 native sampler 单独产生；此路径不调用普通 boundary_snapshot96(0)。
+因此 t=0 从 pinned recipient initial-logits payload 核验，不能误判为“丢失捕获”，也不能再做一次前向去补它。
+同一 recipient 下第一 token 理应一致；不一致时作为恢复/条件异常审查并停止，不能当成新的状态机制发现。
+
+如果旧数据已经提供所有预定有效坐标的两次完整 logits、共同前缀和原始验证证据，直接完成 Phase D；新 GPU 请求为 0。
+若缺失，只记录真实缺口。不能插值、用 top2 拼出 full logits、在不同 token 前缀上强算四格对比。
+
+三、Phase B：缺失时才进行的新诊断采集准备
+
+本轮新增诊断不增加状态干预类型，只补上述七个原有状态在决策前沿的数值观察。
+优先保持 PR101 可执行文件和 numerical DLL 字节不变，复用现有接口：
+  observation_mode=heavy
+  capture=true
+  phase96_diagnostic=true
+  boundary_cuts=预定位置集合
+  operator_capture=false
+  restore100=已冻结 mixture KV + recipient initial logits
+  prefill_schedule=[]
+保留 clean UB512、ordinary、native greedy、F16 KV、FA off、ctx1024、输出 cap128、原线程/内存/offload 契约。
+已有代码禁止 restore100 与 operator_capture 同时启用，不得绕过。
+保持同一个冻结 mixture 在 sparse/heavy/counts 间的输入一致，不能重新采样 donor。
+注意 counts 输出的是 memory.json，heavy 才有完整 trace.json。新增适配器必须分别验证两种通道；不得直接把 PR103 仅面向 heavy 的 validate_record/geometry 路径套到 counts，也不得把 memory 文件冒充完整 geometry 证据。
+
+你需要在新目录实现：
+- audit_raw.py：从 raw 独立重建证据关系；
+- state_distance.py：源码一致的 F16 布局与误差计算；
+- plan_frontier.py：前沿/面板/新请求计划与预算；
+- run_frontier.py：继承 worker 的薄适配，不修改旧 helper 文件；
+- analyze_frontier.py：共同前缀校验、logit 对比、端点与重复检查；
+- 对应 CPU tests。
+上述是要求新增的模块，不是声称仓库里已经存在这些命令。
+
+CPU tests 至少覆盖：方向写反、转置 V 地址、非有限值、不同 token 前缀、t=0 restore 特例、不同长度/EOG、缺 full logits、重复/缺失 slot、被篡改 raw、错误 runtime、四格残差已知例子及完整预算。
+建立一个“margin 完全可加但端点非单调”的合成例子，确认分析器不会把端点标签交互自动等同数值非加性。
+
+在首次新 native process 前注册完整 plan、代码体、原始证据引用、mixture、输入 IDs、cuts、比较 token、计量/判定规则、runtime/model/driver、请求顺序和预算。
+提交新的 F0 并以完整 Git commit 从远端逐字节回读。
+不得重新使用 PR103 的 F0 假装它授权了本次新增请求。
+资产 hash/路径/布局/源码不符就停止；CPU tests 通过不代表 Windows/native 验证通过。
+只允许修复尚未开始的本轮集成缺口，并留下新的 prospective amendment；不能修改已经开始的坐标后覆盖重跑。
+
+四、Phase C：有上限的新 native 诊断
+
+若 Phase A 不能用旧 raw 完成全部预定数值对比，则使用固定完整矩阵，不按“结果更好”挑选重测 cell：
+4 tasks × 2 recipients × 7 states = 56 cells。
+每 cell：1 次新 counts observer-control + 2 次新 heavy capture，全部 fresh worker process。
+总上限 168 request starts，含任何失败；不另加隐形 warmup、smoke request 或重试。
+已有历史 raw 的两次重复不算作本轮的两次新重复，也不与新采集混装为同一批次。
+
+执行顺序：
+1) EMPTY/ALL 的 16 次 counts 与 32 次 heavy，先通过 anchor 控制；
+2) 其余五状态的 40 次 counts；
+3) 相应 80 次 heavy。
+顺序在 F0 中预定，在每阶段内平衡两个方向与状态顺序，不按效果重新排序。
+所有 56 counts 端点都应对照对应 PR103 的完整参考端点；heavy 的两个端点也都要与其 counts/旧端点一致。
+端点 mismatch 触发控制/观察一致性停止并保存，不通过追加尝试“修好”；这不是允许删除结果的理由。
+两次 full logits 不完全相同但端点相同，应保留数值漂移、分别分析，不能假装 bitwise repeatable。
+
+本轮上限：168 新请求启动；21600 秒 cumulative owned native-process time；4 GiB 新 run 输出，不含只读外部基线。
+实际 native forward/graph counts 另行记录，不能将一个 request 等同一个 forward。
+原始加载失败也必须保留 lifecycle 与耗时，不因为还没有 request 就不记账。
+实施磁盘/内存/时间 gate 和只针对 owned child PID 的 watchdog；不能终止其他进程。
+达到任一上限就停止并报告 incomplete，不改 cap、不缩短输出、不降精度、不扩预算。
+本研究全为数值机制诊断，heavy/counts 的时间不得冒充 paid latency 或 speedup。
+没有独立授权，不新增投影注入或 teacher forcing 的 GPU 请求。
+
+五、Phase D：分析和解释
+
+每个四格比较必须对应同一 task、recipient、初始 logits、token prefix、逻辑位置、采样规则和观察条件。
+不要求 KV 相同：KV 是受操纵对象；但不同 token 前缀的 logits 不可直接用于本分析。
+禁止把不同 arm 各自首次分歧处的 logits 不加对齐地放进同一个四格。
+禁止在分歧后继续把自然生成的不同文本当作“同输入”。
+
+令 d_S=z_S(u)-z_S(r)。
+L0 主效应和残差：
+  delta_K=d_K-d_EMPTY
+  delta_V=d_V-d_EMPTY
+  I_KV=d_KV-d_K-d_V+d_EMPTY
+POSITION 残差：
+  I_pos=d_ALL-d_prefix-d_tail+d_EMPTY
+
+同时保存 full logits 与 vector-level residual，而不仅一个 token pair。
+CPU 运算用明确的 FP64 分析路径；报告每个独立重复的值、差异及实际数值精度。
+不以一个随意 epsilon 把小残差宣布为零，不从两次确定性重复构造人口置信区间。
+不预设残差一定很大；即使端点非单调而连续分数接近可加，仍然是需要报告的结果。
+残差是这个受控四格下的净分数非加性，不是自然间接效应的完整估计，也不识别唯一 kernel。
+
+辅助诊断：
+EMPTY 的 top1 margin m 与 epsilon=||z_S-z_EMPTY||_infinity。
+m>2*epsilon 是该已观测共同前缀位置 top1 保持的充分条件；反向不成立。
+它不是新理论贡献、不是全序列保证、不是允许省略未来验证的运行时算法。
+完整词表有第三候选时，一并检查真实 argmax/rank；不能只看 u/r 就解释第三轨迹。
+无端点变化仍需报告数值变化；cap128 下无变化不能外推到更长生成。
+
+六、Phase E：上游桥梁只做零 GPU 可行性准备
+
+从原 PR101 投影捕获/算子 replay 和实际模型源码审查：
+V0 projection output → 实际 reshape/permute/cast/cache write → serialized V_layer0 的对应。
+K0 还必须核实实际 positional/RoPE 等变换，不能照搬 V 的映射。
+只在真实 dtype/stride/位置、已验证转换与原始字节能对应时记录 provenance match；若需猜测 GPU cast 或缺中间 tensor，则 NOT_ESTABLISHED。
+CPU host cast 相近不等于证明 GPU cast 的字节血缘。
+
+设计下一轮在 native prefill 内替换指定投影输出、让下游自然重算的受控实验，写出具体源码挂钩点、alias/生命周期、同步、own-path sham、observe-off 对照、直接 KV patch 与 upstream-recomputed 路径的区分。
+不要执行，不要把本轮的 boundary-0 KV 混合改名为 projection intervention。
+沿该路径重算出来的状态也不自动证明与真实未干预输入同分布；必须保留自然可达性边界。
+
+七、交付
+
+对话中先直接输出完整结构化结论：
+- 原 raw 独立复核哪些完成、哪些未完成；
+- 新 GPU 请求/forward/process 数及是否触发停止；
+- 两组四格的同前缀证据、logit 主效应/残差/决策 margin；
+- /1011 与 /1249 的差异；
+- 哪些解释被支持、哪些仍不可区分；
+- 下一轮 upstream hook 的真实代码可行性。
+
+新 Draft PR 中保留代码、CPU tests、F0、所有 attempted slots、raw hash manifest 和独立再分析入口。
+只生成必要的 RESULT.md、FRONTIER_ANALYSIS.json/csv、RAW_MANIFEST 和恢复回执，不堆重复报告。
+原始 archive、恢复结果、远端可获取性、独立机器复算分开声明。
+不得写“找到唯一根因”“证明 V 最重要”“证明充分子集也是必要子集”“首次发现交互”“QB 已在 Vulkan 通过”或“确定会提高录用率”。
+
+待补充文献只记录于本轮审查，不直接编辑 PR102：
+- Zhang & Nanda, Towards Best Practices of Activation Patching in Language Models: Metrics and Methods, arXiv:2309.16042v2.
+- Vaidyanathan et al., The Curse of Multiple Mediators: Hidden Interaction Effects in Activation Patching, arXiv:2606.27510v1.
+- Grant et al., Addressing divergent representations from causal interventions on neural networks, arXiv:2511.04638v5.
+这些文献是方法边界，不代表它们已经验证本文的 B570 结果。

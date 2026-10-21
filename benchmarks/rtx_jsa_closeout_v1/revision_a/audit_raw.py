@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import struct
 import sys
+import numpy as np
 
 
 def audit_worker(worker,layers,recover_append_offsets=False):
@@ -23,9 +24,8 @@ def audit_worker(worker,layers,recover_append_offsets=False):
                 offset_errors+=1;offset=next_vector
             vector_file.seek(offset);data=vector_file.read(size)
             if len(data)!=size:raise ValueError('truncated vector')
-            integers=array.array('I');integers.frombytes(data)
-            if sys.byteorder!='little':integers.byteswap()
-            if any((value&0x7f800000)==0x7f800000 for value in integers):raise ValueError('nonfinite raw logits')
+            integers=np.frombuffer(data,dtype='<u4')
+            if np.any((integers & np.uint32(0x7f800000))==np.uint32(0x7f800000)):raise ValueError('nonfinite raw logits')
             key=(event['decode_id'],event['row'])
             if key in ownership:raise ValueError('duplicate vector owner')
             ownership[key]=event
@@ -49,16 +49,13 @@ def audit_worker(worker,layers,recover_append_offsets=False):
             if len(data)!=event['mask_bytes']:raise ValueError('truncated mask')
             mask=event['mask'];shape=mask['ne'];strides=mask['nb'];fmt='<f' if mask['type']=='f32' else '<e' if mask['type']=='f16' else None
             if fmt is None:raise ValueError('unsupported mask type')
-            visible=[]
-            for d3 in range(shape[3]):
-                for d2 in range(shape[2]):
-                    for row in range(shape[1]):
-                        count=0
-                        for key in range(shape[0]):
-                            value=struct.unpack_from(fmt,data,key*strides[0]+row*strides[1]+d2*strides[2]+d3*strides[3])[0]
-                            if math.isnan(value):raise ValueError('NaN mask')
-                            count+=math.isfinite(value)
-                        visible.append(count)
+            dtype='<u4' if mask['type']=='f32' else '<u2'
+            words=np.ndarray(tuple(reversed(shape)),dtype=dtype,buffer=data,strides=tuple(reversed(strides)))
+            exponent=np.uint32(0x7f800000) if mask['type']=='f32' else np.uint16(0x7c00)
+            mantissa=np.uint32(0x007fffff) if mask['type']=='f32' else np.uint16(0x03ff)
+            special=(words & exponent)==exponent
+            if np.any(special & ((words & mantissa)!=0)):raise ValueError('NaN mask')
+            visible=np.count_nonzero(~special,axis=-1).ravel().tolist()
             if visible!=event['visible_keys']:raise ValueError('raw visible-key reconstruction differs')
             if max(visible)>event['physical_key_extent']:raise ValueError('visible keys exceed physical key extent')
             if event['q_occupied']!=event['Q']['ne'][1]*event['Q']['ne'][3]:raise ValueError('occupied q differs')

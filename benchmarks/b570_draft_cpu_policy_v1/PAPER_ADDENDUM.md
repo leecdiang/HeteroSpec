@@ -1,0 +1,5 @@
+# Draft CPU policy counterfactual
+
+On the same four-input B570 panel, we changed only the draft context CPU thread parameters from eight to one while retaining the target policy and frozen GPU implementation. All346 full target/draft logits vectors remained byte-identical to the prior QB reference, with identical complete endpoints and state traces. In64 balanced measured requests with16 separately recorded warmups and identical-implementation controls, the candidate/dual-baseline service ratio was1.003993; its ratio to target-only was2.633056. The predeclared practical screen returned NO_ESTABLISHED_PRACTICAL_PANEL_BENEFIT. Draft prefill averaged9.287s in the baseline and9.306s under the candidate.
+
+This is a finite exposed-input, single-date CPU-policy intervention, not a general thread-count recommendation or GPU bottleneck diagnosis. Full service includes context lifetime but excludes shared model loading. Keep this result separate from the original PR134 timing and the RTX request benefits.

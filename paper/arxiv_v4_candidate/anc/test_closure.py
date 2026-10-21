@@ -35,7 +35,7 @@ class ClosureChecks(unittest.TestCase):
   with self.assertRaises(ValueError):self.exercise(lambda r:self.edit(r,'reported_summary.json',lambda x:x['prefill_followup'].__setitem__('status','TIMING_PASS')))
  def test_wrong_input_ratio(self):
   def m(r):
-   p=r/'anc/closure/service_input_table.tex';p.write_text(p.read_text().replace('0.992003','0.992060'))
+   p=r/'tables/service_input_table.tex';p.write_text(p.read_text().replace('0.992003','0.992060'))
   with self.assertRaises(ValueError):self.exercise(m)
  def test_abstract_truncation(self):
   def m(r):

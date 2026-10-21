@@ -1,15 +1,16 @@
 # Manuscript entrypoint
 
-The current author-review source is [arxiv_v4_candidate](arxiv_v4_candidate/README.txt). It replaces the earlier short PR138 reconstruction with the complete author-supplied v3-source-reconciled article, subsequent RTX/B570 evidence, and the 2026-10-21 cross-review refinement. It has not been submitted to arXiv or a journal.
-
-From that directory:
+The current source is [arxiv_v4_candidate](arxiv_v4_candidate/README.txt). It is based on the complete author-supplied v3 package, with the subsequent RTX/B570 evidence, source reconciliation, and contribution-led 2026-10-21 revision. It has not been submitted to arXiv or a journal.
 
 ```sh
+cd paper/arxiv_v4_candidate
 python -B scripts/build.py
 ```
 
-The reviewed PDF has 23 pages (13 article/references + 10 supplement), ten editable figures, 484 reported-value/source checks and 31 regression/mutation tests. PDF SHA256: `a2b844c631ef11bff5f5db0cbbc37b7966fe4d552f5b1b19681e2be8529bd6df`.
+The reviewed local PDF has 23 pages (13 article/references + 10 supplement), ten editable figures, 511 reported-value/source checks and 36 distinct regression/mutation tests. PDF SHA256: `111010ab9fa0f69892228cc9a4ea4318890494d0b009d49ad69f5fea5834f3ca`.
 
-The source subtree is `34a2e1edeeb9478205aaaaa2ec8084f0c6d166c3`; all 100 committed files match the locally built and reviewed sources by Git blob/tree identity. The downloadable source ZIP additionally contains its package manifest. Review evidence is under [anc/review_round2](arxiv_v4_candidate/anc/review_round2/REVIEW.md); previous QA is retained under `anc/review` as history, not the current certificate.
+The arXiv upload package is separately filtered from the author repository: it contains no private peer-review/probability memos, build logs or binary runtime assets. Its 86 members were extracted and rebuilt; removing the ancillary folder still produces the same PDF. Editable TeX tables reside under `tables/`, not `anc/`.
 
-These checks concern the manuscript and saved report data. They are not independent native-model execution or external authentication of full raw logits. Existing experimental failures, CPU8/F0 status, older manuscript directories and unrelated draft PRs are unchanged.
+The [repository synthesis](../docs/research/heterospec_synthesis_20261021/REPOSITORY_SYNTHESIS.md) distinguishes existing results, retrospective derivations and prospective hypotheses. The [platform closeout index](../docs/closeout_20261021/README.md) is DESIGN_ONLY and not execution-ready. Exact new inputs, execution identity, budgets and authorization must be resolved before running it.
+
+Current author QA is `anc/review_round3/QA_FINAL.json`; earlier review records are preserved as history. Tests reconstruct saved report data; they are not independent native-model or full raw-logit replication. No previous experiment, failed result, CPU8/F0 status or budget is changed by this paper revision.

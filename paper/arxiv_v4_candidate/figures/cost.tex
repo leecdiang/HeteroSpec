@@ -1,14 +1,31 @@
 \begin{tikzpicture}
-\begin{axis}[name=pq,width=.325\textwidth,height=4.45cm,title={\textbf{A} Local repair: $C_{\PQ}/C_{\QB}$},title style={font=\small},xmin=.99,xmax=1.087,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={Llama,SmolLM2,Qwen3},xtick={1,1.04,1.08},xlabel={Request-time ratio\\$>1$: QB faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
-\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
-\addplot[only marks,mark=*,mark size=2.4pt,qualified,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(1.043676,3) [1.044] (1.068111,2) [1.068] (1.021848,1) [1.022]};
-\end{axis}
-\begin{axis}[at={(pq.east)},anchor=west,xshift=.58cm,name=gs,width=.325\textwidth,height=4.45cm,title={\textbf{B} Global repair: $C_{\GS}/C_{\QB}$},title style={font=\small},xmin=.92,xmax=2.40,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={,,},xtick={1,1.5,2},xlabel={Request-time ratio\\$>1$: QB faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
-\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
-\addplot[only marks,mark=square*,mark size=2.4pt,qualified,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(2.143525,3) [2.144] (1.462530,2) [1.463] (2.175941,1) [2.176]};
-\end{axis}
-\begin{axis}[at={(gs.east)},anchor=west,xshift=.58cm,width=.325\textwidth,height=4.45cm,title={\textbf{C} Draft increment: $M_{\QB}/C_{\QB}$},title style={font=\small},xmin=.52,xmax=1.28,ymin=.55,ymax=3.45,ytick={1,2,3},yticklabels={,,},xtick={.6,.8,1,1.2},xlabel={Request-time ratio\\$>1$: drafting faster},xlabel style={font=\footnotesize,align=center},tick label style={font=\footnotesize},axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!15}]
-\addplot[aux,dashed] coordinates {(1,.55)(1,3.45)};
-\addplot[only marks,mark=triangle*,mark size=2.8pt,draft,point meta=explicit symbolic,nodes near coords,nodes near coords align={right},every node near coord/.append style={font=\scriptsize,xshift=2pt}] coordinates {(1.143749,3) [1.144] (.633948,2) [0.634] (1.116620,1) [1.117]};
-\end{axis}
+\begin{groupplot}[group style={group size=3 by 1,horizontal sep=.70cm},
+width=.305\textwidth,height=5.6cm,ymin=.5,ymax=3.5,ytick={1,2,3},
+tick label style={font=\footnotesize},title style={font=\small,yshift=12pt},label style={font=\footnotesize,align=center},
+axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},grid=major,grid style={gray!13}]
+\nextgroupplot[title={\textbf{A} Local representation},xlabel={$T_{C_{\PQ}}/T_{C_{\QB}}$\\$>1$: QB faster},xmin=.995,xmax=1.09,xtick={1,1.04,1.08},yticklabels={Llama,SmolLM2,Qwen3}]
+\addplot[aux,dashed] coordinates {(1,.5)(1,3.5)};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(1.043676000000,3)};
+\node[font=\scriptsize,anchor=south] at (axis cs:1.043676000000,3.12){1.044};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(1.068111000000,2)};
+\node[font=\scriptsize,anchor=south] at (axis cs:1.068111000000,2.12){1.068};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(1.021848000000,1)};
+\node[font=\scriptsize,anchor=south] at (axis cs:1.021848000000,1.12){1.022};
+\nextgroupplot[title={\textbf{B} Global serialization},xlabel={$T_{C_{\GS}}/T_{C_{\QB}}$\\$>1$: QB faster},xmin=.95,xmax=2.55,xtick={1,1.5,2,2.5},yticklabels={,,}]
+\addplot[aux,dashed] coordinates {(1,.5)(1,3.5)};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(2.143525000000,3)};
+\node[font=\scriptsize,anchor=south] at (axis cs:2.143525000000,3.12){2.144};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(1.462530000000,2)};
+\node[font=\scriptsize,anchor=south] at (axis cs:1.462530000000,2.12){1.463};
+\addplot[only marks,mark=diamond*,mark size=2.7pt,qualified] coordinates {(2.175941000000,1)};
+\node[font=\scriptsize,anchor=south] at (axis cs:2.175941000000,1.12){2.176};
+\nextgroupplot[title={\textbf{C} Draft value by repair},xlabel={$D_L=T_{M_L}/T_{C_L}$\\$>1$: drafting faster},xmin=.53,xmax=1.27,xtick={.6,.8,1,1.2},yticklabels={,,},legend style={at={(.5,1.01)},anchor=south,draw=none,font=\scriptsize,fill=none},legend columns=3]
+\addplot[aux,dashed,forget plot] coordinates {(1,.5)(1,3.5)};
+\addplot[only marks,mark=square*,mark size=2.4pt,aux] coordinates {(0.709722260013,3.23) (0.592109590630,2.23) (0.724338602453,1.23)};
+\addlegendentry{GS}
+\addplot[only marks,mark=o,mark size=2.4pt,target] coordinates {(1.125118952936,3.00) (0.616360145288,2.00) (1.107396133613,1.00)};
+\addlegendentry{PQ}
+\addplot[only marks,mark=diamond*,mark size=2.4pt,qualified] coordinates {(1.143749000000,2.77) (0.633948000000,1.77) (1.116620000000,0.77)};
+\addlegendentry{QB}
+\end{groupplot}
 \end{tikzpicture}

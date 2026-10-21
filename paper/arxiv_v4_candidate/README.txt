@@ -1,59 +1,40 @@
-HeteroSpec — source-reconciled v4, cross-reviewed refinement
-===========================================================
-Title: Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
+Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 Author: Chengzhan Li
-Review date: 2026-10-21
+Source revision: 2026-10-21 (arXiv update candidate, not submitted)
 
-This package is the full v3-source-reconciled manuscript, not the obsolete
-short PR138 reconstruction. The current PDF has 23 pages: 13 article/reference
-pages and 10 supplementary pages, with 10 editable TikZ/PGFPlots figures.
-All 25 original bibliography entries, six follow-up experiment references,
-original figure data, report-level inputs and scientific failure records remain.
-Selected original figure styling/labels were refined; no blanket claim of
-byte-identical figure source is made for this second editorial round.
+This complete article and supplement use the author's v3 source as the baseline.
+The later RTX/B570 service evidence and the explicit repair--draft contrast have
+separate experiment identities. The repair--draft contrast is a reconstruction of
+existing seven-arm ratios, not a new experiment. No original measurement is changed.
 
-Build (Python 3.11+, pdfLaTeX, BibTeX, elsarticle, TikZ/PGFPlots):
+Compile from the directory containing main.tex:
     python -B scripts/build.py
-Build using the included bibliography without BibTeX:
-    python -B scripts/build.py --cached-bbl
-Report-only checks, without LaTeX, network or inference:
+Or use the supplied, matching main.bbl:
+    pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error main.tex
+    pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error main.tex
+The standard TeX installation needs elsarticle, TikZ/PGFPlots, and the packages
+listed in preamble.tex. The custom bibliography style psql-num.bst is included.
+
+Reported-value checks (Python 3.11+, standard library, no inference/network):
     python -B anc/check.py
     cd anc
-    python -B -m unittest test_release test_closure test_refinement -v
-Regenerate follow-up figures and service tables:
+    python -B -m unittest test_release test_closure test_refinement test_round3 -v
+Regenerate the data-derived figures/tables from the source root:
     python -B scripts/generate_followup_figures.py
-Descriptive review sensitivity and palette audit (not new inference):
-    python -B scripts/review_audit.py
+    python -B scripts/generate_repair_interaction.py
 
-This refinement passed 484 reported-value/source checks and 31 regression/
-mutation tests. Every final PDF page was rendered and inspected; no overfull
-boxes, unresolved references/citations or missing glyphs remained. All fonts
-are embedded. Review records describe the inspected artifact, not later edits.
-The final source package is also rebuilt in a clean directory.
+TeX tables are in tables/, not anc/. main.tex compiles without the ancillary
+folder, using the supplied bibliography. anc/ holds reported data, checkers,
+source identities and scientific history; it is not a complete runtime/raw-logit
+capsule. The publication bundle contains no private editorial review or venue
+probability memo. Full validation and editorial records are a separate delivery.
 
-Scientific interpretation:
-- Original CUDA k3 resident-request gains remain separate from new k1 service
-  ratios: inputs, interfaces, runtime policies and cost windows differ.
-- RTX QB/dual-PQ=0.989284 remains unresolved under 5.208% A/A imbalance.
-  QB/R=0.582325 describes 41.8% lower service time, not a QB-specific speedup;
-  dual-PQ/R already equals 0.588633. Figure 7 now displays both controls.
-- B570 QB/dual-PQ=0.995144 and QB/R=2.619763 are a separate fixed panel.
-  A draft-prefill follow-up is numerically qualified but lacks a complete
-  timing result in the reviewed source. No optimized software ceiling follows.
-- Full raw logits/runtime archives remain separately held. This package gives
-  exact saved report data and CPU reconstruction, not independent native replay.
+The original k3 resident HTTP-request experiments and later k1 fresh-context
+service panels retain their own inputs, policies, reference identities and timers.
+RTX's 41.8% service-time reduction is speculative-policy value, not QB-specific:
+dual-PQ/R already equals 0.588633. Both later panels miss their practical QB/PQ
+screens. The numerical-only B570 prefill-submission follow-up is not a timing win.
 
-The earlier Humanizer 3.1.0 editing record remains under anc/review/.
-The current round used four public K-Dense workflows: peer-review, scientific-
-critical-thinking, scholar-evaluation and scientific-visualization. These are
-four perspectives applied by one assistant, not four independent reviewers,
-external certification or an editorial decision. Workflow versions, findings,
-accepted/rejected remedies and journal-strategy uncertainty are recorded in
-anc/review_round2/REVIEW.md. No proprietary manuscript was sent to an external
-reviewing service. No new model execution, arXiv or journal submission occurred.
-
-Current QA: anc/review_round2/QA_FINAL.json.
-Historical first-round QA: anc/review/ (preserved, not the current certificate).
-Source lineage: SOURCE_RECONCILIATION.md and CLAIM_EVIDENCE.md.
-The author-supplied v3 ZIP is the editing baseline; its byte identity with the
-arXiv-server source archive was not independently authenticated.
+No arXiv or journal submission is performed by this package. The author should
+use Replace for arXiv:2610.03228, select main.tex/PDFLaTeX, retain the intended
+license and inspect the PDF generated by arXiv before finalizing the update.

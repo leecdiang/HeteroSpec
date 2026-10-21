@@ -98,7 +98,7 @@ B570 adjusted interval: [0.979908, 1.004691]. All tested practical-effect screen
   s=summary[platform]; lines.append(r'\textbf{'+platform+r'} & \textbf{Equal-weight mean} & --- & '+f"{s['layout']:.6f} & {s['economics']:.6f}"+r' & ---\\\midrule')
  lines[-1]=lines[-1].replace(r'\midrule',r'\bottomrule')
  lines += [r'\end{tabular}',r'\end{table*}','']
- result['anc/closure/service_input_table.tex']='\n'.join(lines)
+ result['tables/service_input_table.tex']='\n'.join(lines)
  lines=[r'\begin{table*}[t]\centering\footnotesize',r'\caption{Every input/session block from the two service panels. Each platform has its own input set; adjacent rows do not form cross-platform pairs. Exact source blocks are included in the ancillary CSV files.}\label{tab:serviceblocks}']
  for j,platform in enumerate(['RTX','B570']):
   if j: lines.append(r'\hfill')
@@ -108,7 +108,7 @@ B570 adjusted interval: [0.979908, 1.004691]. All tested practical-effect screen
    lines.append(f"{x['session']} & {name} & {x['layout']:.6f} & {x['economics']:.6f} & {x['aa']:.6f}"+r'\\')
   lines += [r'\bottomrule\end{tabular}\end{minipage}']
  lines += [r'\end{table*}','']
- result['anc/closure/service_block_table.tex']='\n'.join(lines)
+ result['tables/service_block_table.tex']='\n'.join(lines)
  result['anc/closure/derived_summary.json']=json.dumps(summary,indent=2)+'\n'
  return result
 if __name__=='__main__':

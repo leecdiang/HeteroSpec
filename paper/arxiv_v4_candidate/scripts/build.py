@@ -19,8 +19,8 @@ def main()->None:
     logs=ROOT/'build_logs';logs.mkdir(exist_ok=True);env=dict(os.environ)
     env['BIBINPUTS']=str(ROOT)+os.pathsep+env.get('BIBINPUTS','');env['BSTINPUTS']=str(ROOT)+os.pathsep+env.get('BSTINPUTS','')
     run([sys.executable,'-B','anc/check.py'],ROOT,logs/'reported_checks.json',env)
-    run([sys.executable,'-B','-m','unittest','test_release','test_closure','test_refinement','-v'],ROOT/'anc',logs/'tests.txt',env)
-    cmd=[latex,'-interaction=nonstopmode','-halt-on-error','-file-line-error','main.tex']
+    run([sys.executable,'-B','-m','unittest','test_release','test_closure','test_refinement','test_round3','-v'],ROOT/'anc',logs/'tests.txt',env)
+    cmd=[latex,'-no-shell-escape','-interaction=nonstopmode','-halt-on-error','-file-line-error','main.tex']
     run(cmd,ROOT,logs/'pass1.txt',env)
     if not args.cached_bbl:run([bib,'main'],ROOT,logs/'bibtex.txt',env)
     for i in (2,3):run(cmd,ROOT,logs/f'pass{i}.txt',env)
@@ -30,5 +30,5 @@ def main()->None:
     if failures:raise RuntimeError('Unresolved build warnings:\n'+'\n'.join(failures))
     pdf=ROOT/'main.pdf'
     if not pdf.exists() or pdf.stat().st_size<10000:raise RuntimeError('No valid PDF produced')
-    print(json.dumps({'status':'BUILD_AND_REPORTED_CHECKS_PASS','pdf':'main.pdf','bytes':pdf.stat().st_size,'visual_qa':'See anc/review_round2/QA_FINAL.json for the reviewed release; modified builds require new visual inspection.','new_native_executions':0},indent=2))
+    print(json.dumps({'status':'BUILD_AND_REPORTED_CHECKS_PASS','pdf':'main.pdf','bytes':pdf.stat().st_size,'visual_qa':'This build requires separate page/figure inspection; see the release validation archive for the inspected source/PDF hashes.','new_native_executions':0},indent=2))
 if __name__=='__main__':main()

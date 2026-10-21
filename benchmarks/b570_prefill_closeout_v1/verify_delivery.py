@@ -14,6 +14,9 @@ def main():
         if previous:assert r['started_utc']>previous
         assert r['exit_observed'] and r['job_kill_on_close']
         previous=r.get('exit_observed_utc',r['finished_utc'])
+        native=read(ROOT/f"{r['mode']}-{r['index']}/result.json")
+        service_sum=sum(x['service_seconds'] for x in native['requests'])
+        assert service_sum+native['model_load_seconds']<=r['charged_seconds']+.1,(r['step'],service_sum,r['charged_seconds'])
     assert abs(sum(x['charged_seconds'] for x in receipts)-ledger['charged_worker_seconds'])<1e-8
     assert abs(close['worker_wall_seconds']-ledger['charged_worker_seconds'])<1e-8
     assert len(receipts)<=9 and len(read(ROOT/'SLOT_DISPOSITION.json'))==156

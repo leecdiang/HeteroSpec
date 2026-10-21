@@ -18,7 +18,15 @@ def logical_trace(worker):
           'verify_rollback':['kept_position_next','actual_positions','accepted_ids'],
           'draft_reconciled':['positions','pending_id','next_target_position'],
           'committed_token':['id','origin','output_index','pending_id','target_positions']}
-    return [{'event':event['event'],**{key:event[key] for key in keys[event['event']]}} for event in events if event.get('event') in keys]
+    result=[]
+    for event in events:
+        if event.get('event') not in keys:continue
+        fields=keys[event['event']]
+        if event['event']=='sample' and event['role']=='draft':
+            # draft-simple discards this return value and takes sorted candidate[0].
+            fields=['role','phase','logits_index','positions','top1','top2','top1_score','top2_score']
+        result.append({'event':event['event'],**{key:event[key] for key in fields}})
+    return result
 
 
 def qualify_pair(records,worker,layers):

@@ -1,0 +1,11 @@
+# B570 prefill study: result and review closeout
+
+The original files in this directory remain the prospective PR141 design. The fixed native matrix was subsequently completed in PR143, using a new UUID and separately preserved evidence. Their original design hashes and the result package's 100-entry payload manifest are unchanged.
+
+The [result package](../../../benchmarks/b570_prefill_closeout_v1/RESULT.md) contains 156 requests in nine model processes, including 64 measurements and 64 immediately paired input/arm-matched warmups. New qualification matches the original full-vector and endpoint/state references, and observes physical draft q1 across every captured layer/microbatch. Complete-service SUBMIT/dual-BASE is 0.999161301690, a 0.0839% reduction; the preregistered 2%-plus-A/A and every-session direction screen fails. SUBMIT/R is 1.203677993. Retain the original QB/thread8 baseline and end this bounded software-policy study.
+
+The [evidence/timing/accounting review](../../../reports/b570/prefill_closeout_review_v1/README.md) and its [machine-readable receipt](../../../reports/b570/prefill_closeout_review_v1/REVIEW_FINAL.json) support accepting this as a limited negative closeout. They do not certify full protocol resource-budget compliance: helper descendants were not completely counted or capped against the prospective 128-process reservation. The primary complete-service clock is supported; secondary synchronized decode sums are not a separately measured whole-prefill interval or GPU time. Native-worker charges are conservative supervised intervals, not exact OS-process lifetimes.
+
+The original raw archive remains local with its recorded hash, and earlier failed/incomplete records retain their identities and unknown charges. Original audit utilities can regenerate or overwrite derived audit receipts; use the separate read-only review command linked above to preserve sealed evidence. These qualifications also apply to the archived paper addendum. No new experiment, reference replacement, paper baseline rewrite or publication follows from this closeout.
+
+Result and merge tracking: [PR143](https://github.com/leecdiang/HeteroSpec/pull/143). The design is [PR141](https://github.com/leecdiang/HeteroSpec/pull/141); the result history includes its original commit so both can be closed without rewriting the preregistration history.

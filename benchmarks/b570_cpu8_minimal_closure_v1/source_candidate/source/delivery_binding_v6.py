@@ -58,8 +58,136 @@ def capture(root,op,kind):
  z=load(raw);need(x['capture_meta']==z['capture_meta'] and z['capture_meta']['callId'] and z['capture_meta']['itemId'],'actual capture supervisor identity')
  need(z['id']==op and z['kind']==kind,'capture operation identity')
  return z
+
+def _postseal_file(root, subdir, filename):
+ """Only platform-owned postseal evidence. Never fallback to the sealed root."""
+ root=Path(root).resolve()
+ campaign=load(root/'CAMPAIGN.json')
+ original=Path(campaign['original_root']).resolve()
+ outside=Path(campaign['external_root']).resolve()
+ need(root==original and outside!=original and
+      original not in outside.parents and outside not in original.parents,
+      'postseal evidence requires the actual original/external pair')
+ need(re.fullmatch(r'[A-Za-z0-9_.-]+',filename) is not None,'postseal filename')
+ need(subdir in ('captures','capture-index','intents','native-exits','stdout'),
+      'postseal evidence kind')
+ path=outside/'postseal'/subdir/filename
+ for ancestor in [path,*path.parents]:
+  need(not ancestor.is_symlink() and not ancestor.is_junction(),
+       'postseal alias')
+ need(path.is_file() and path.stat().st_nlink==1,'postseal evidence missing')
+ return path
+
+def postseal_capture(root,operation,kind):
+ """Read a download/restore provider return without changing any sealed byte."""
+ need(re.fullmatch(r'[A-Za-z0-9-]+',operation) is not None,'postseal operation id')
+ need(re.fullmatch(r'initial|poll[1-9][0-9]*|download',kind) is not None,
+      'postseal capture kind')
+ name=operation+'.'+kind+'.json'
+ raw=_postseal_file(root,'captures',name)
+ index=_postseal_file(root,'capture-index',name)
+ doc=load(index);capture=load(raw)
+ need(Path(doc['path']).resolve()==raw and doc.get('sha256')==h(raw)
+      and doc.get('bytes')==raw.stat().st_size and
+      doc.get('capture_meta')==capture.get('capture_meta'),
+      'postseal capture index/bytes')
+ meta=capture.get('capture_meta',{})
+ need(meta.get('callId') and meta.get('itemId'),'postseal provider capture identity')
+ need(capture.get('id')==operation and capture.get('kind')==kind,
+      'postseal operation/kind')
+ return capture
+
+def restore_postseal_invocation(root,operation,argv,report):
+ """Fixed isolated recompute chain whose tool/native outputs live outside F0.
+
+ This verifies externally recorded bytes and identities, not the undisclosed
+ provider's service OS lifecycle. C admission must separately authenticate it.
+ """
+ need(re.fullmatch(r'[A-Za-z0-9-]+',operation) is not None,'restore operation id')
+ root=Path(root).resolve()
+ campaign=load(root/'CAMPAIGN.json')
+ frozen_sha=h(root/'CAPABILITY_FREEZE.json')
+ intent_path=_postseal_file(root,'intents',operation+'.json')
+ intent=load(intent_path)
+ need(intent.get('schema')=='B570_POSTSEAL_RESTORE_V1' and
+      intent.get('task_uuid')==campaign.get('task_uuid') and
+      intent.get('operation_id')==operation and
+      intent.get('freeze_sha256')==frozen_sha and
+      intent.get('argv')==argv,'postseal restore prospective operation')
+ first=postseal_capture(root,operation,'initial')
+ original=Path(campaign['original_root']).resolve()
+ outside=Path(campaign['external_root']).resolve()
+ need(first['request']==intent['request'],'postseal actual first request')
+ clips=sorted((outside/'postseal'/'captures').glob(operation+'.poll*.json'),
+              key=lambda p:int(p.name.split('.poll')[1].split('.')[0]))
+ need([p.name for p in clips]==[operation+'.poll'+str(i)+'.json'
+                               for i in range(1,len(clips)+1)],
+      'postseal poll sequence')
+ events=[first]+[postseal_capture(root,operation,
+          p.name[len(operation)+1:-5]) for p in clips]
+ previous=utc(intent['registered_utc'])
+ session=first['response'].get('session_id')
+ need(session is None or (type(session) is int and session>0),
+      'postseal session type')
+ output=[]
+ for i,e in enumerate(events):
+  now=utc(e['observed_utc'])
+  need(previous<=now,'postseal capture order')
+  previous=now
+  if i:
+   need(type(session) is int and e['request']=={'session_id':session},
+        'postseal poll session')
+  response=e['response']
+  need(type(response.get('output')) is str and
+       response.get('session_id',session)==session and
+       response.get('isError') is False,
+       'postseal provider response/session')
+  code=response.get('exit_code')
+  need(code is None or (i==len(events)-1 and type(code) is int and code==0),
+       'postseal provider terminal')
+  output.append(response['output'])
+ terminal=events[-1]['response']
+ need(type(terminal.get('exit_code')) is int and terminal['exit_code']==0,
+      'postseal terminal response missing')
+ native_path=_postseal_file(root,'native-exits',operation+'.json')
+ native=load(native_path)
+ report=Path(report).resolve()
+ need(outside in report.parents and report.is_file() and
+      not report.is_symlink() and not report.is_junction() and
+      report.stat().st_nlink==1,'postseal report must be external')
+ stdout=_postseal_file(root,'stdout',operation+'.bin')
+ born=int(native['created_filetime']);end=int(native['exit_filetime'])
+ epoch=datetime.datetime(1601,1,1,tzinfo=datetime.timezone.utc)
+ need(0<born<end and
+      utc(intent['registered_utc'])<=epoch+datetime.timedelta(microseconds=born//10)
+      and epoch+datetime.timedelta(microseconds=end//10)<=previous,
+      'postseal native/provider lifetime')
+ need(native.get('task_uuid')==campaign.get('task_uuid')
+      and native.get('operation_id')==operation
+      and native.get('freeze_sha256')==frozen_sha
+      and native.get('intent_sha256')==h(intent_path)
+      and native.get('argv')==argv
+      and native.get('command')==subprocess.list2cmdline(argv)
+      and native.get('pid',0)>0 and native.get('parent_pid',0)>0
+      and native.get('image')==argv[0]
+      and native.get('exit_code')==0
+      and native.get('all_owned_handles_closed') is True
+      and native.get('descendants_exited') is True
+      and native.get('job_empty') is True,
+      'postseal actual native OS identity/exit/cleanup')
+ need(report.read_bytes()==stdout.read_bytes()
+      and h(report)==native.get('report_sha256')
+      and h(stdout)==native.get('stdout_sha256'),
+      'postseal full output bytes not authenticated')
+ return dict(status='POSTSEAL_RESTORE_CAPTURE_BOUND',
+             report_sha256=h(report),native_receipt_sha256=h(native_path),
+             session_id=session,provider_chunk_ids=[
+                 e['response'].get('chunk_id') for e in events],
+             provider_call_id='UNKNOWN_NOT_EXPOSED',
+             scope='External owner OS/provider capture and exact full bytes; independent provider authentication still required')
+
 def download(root,operation,row,commit):
- z=capture(root,operation,'download')
+ z=postseal_capture(root,operation,'download')
  ext=Path(load(Path(root)/'CAMPAIGN.json')['external_root'])
  intent=load(ext/'download-intents'/(operation+'.json'))
  need(z['request']==intent['request'],'download actual request')

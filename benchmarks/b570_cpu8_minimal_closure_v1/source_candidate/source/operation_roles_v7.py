@@ -6,10 +6,12 @@ OPERATION_ROLE_MAP.json. Historical operation IDs are never accepted as new PASS
 import hashlib
 import json
 import re
+import copy
 from pathlib import Path
 
 SCHEMA = "B570_TASK_OPERATION_ROLES_V1"
 IDENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,79}$")
+F0_SENTINEL = "__F0_SHA256__"
 HISTORICAL = {
     "037-final-review", "036-final-regressions", "026-budget-negatives",
     "025-bridge-negatives", "021-build-launcher-windows-path",
@@ -65,6 +67,68 @@ def role_map(root, phase):
     return doc
 
 
+def formal_template(root, role="C-formal-watchdog"):
+    """One immutable C source template; its bytes are in F0, no F0 hash yet."""
+    root = Path(root).resolve()
+    doc = role_map(root, "C")
+    need(role in doc["roles"], "formal role missing")
+    mapping = doc["roles"][role]
+    need(mapping.get("phase") == "C" and mapping.get("kind") == "formal_cpu8"
+         and mapping.get("post_freeze_template") is True
+         and "sha256" not in mapping, "formal role must pin only pre-F0 template")
+    opid = mapping["operation_id"]
+    path = rel(root, "tools/" + opid + ".operation.template.json")
+    need(path.is_file() and mapping.get("template_sha256") == digest(path),
+         "formal template exact frozen bytes")
+    template = load(path)
+    need(template.get("id") == opid and template.get("task_uuid") == doc["task_uuid"]
+         and template.get("stage") == "C", "formal template task identity")
+    argv = template.get("argv")
+    need(type(argv) is list and argv.count("--freeze-sha256") == 1
+         and all(type(x) is str for x in argv), "formal template argument inventory")
+    pos = argv.index("--freeze-sha256")
+    need(pos + 1 < len(argv) and argv[pos+1] == F0_SENTINEL
+         and argv.count(F0_SENTINEL) == 1, "formal template F0 placeholder")
+    return opid, path, template
+
+
+def render_formal_operation(root):
+    """Deterministic post-F0 bytes. No mutation of the frozen template/map."""
+    root = Path(root).resolve()
+    opid, path, template = formal_template(root)
+    freeze_path = rel(root, "CAPABILITY_FREEZE.json")
+    need(freeze_path.is_file(), "F0 must exist before runtime rendering")
+    frozen = load(freeze_path)
+    pinned = frozen.get("files", {})
+    runtime_rel = "tools/" + opid + ".operation.json"
+    template_rel = path.relative_to(root).as_posix()
+    need(runtime_rel not in pinned, "F0 hash cycle: runtime operation frozen")
+    need(pinned.get(template_rel) == digest(path)
+         and pinned.get("OPERATION_ROLE_MAP.json") == digest(root/"OPERATION_ROLE_MAP.json"),
+         "F0 has not pinned role map and source operation template")
+    actual = copy.deepcopy(template)
+    pos = actual["argv"].index("--freeze-sha256")
+    actual["argv"][pos+1] = digest(freeze_path)
+    text_bytes = (json.dumps(actual, sort_keys=True, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    return opid, rel(root, runtime_rel), actual, text_bytes
+
+
+def materialize_formal_operation(root):
+    """Explicit post-freeze native-controller step; never invoked during F0."""
+    root = Path(root).resolve()
+    campaign = load(rel(root, "CAMPAIGN.json"))
+    need(root == Path(campaign["original_root"]).resolve(), "no restored-root execution")
+    opid, dest, _, serialized = render_formal_operation(root)
+    with dest.open("xb") as stream:
+        stream.write(serialized)
+        stream.flush()
+        import os
+        os.fsync(stream.fileno())
+    return {"operation_id": opid, "operation_sha256": digest(dest),
+            "freeze_sha256": digest(root/"CAPABILITY_FREEZE.json"),
+            "status": "POST_F0_OPERATION_MATERIALIZED_NOT_ADMITTED"}
+
+
 def operation(root, role, phase, expected_kind=None):
     root = Path(root).resolve()
     doc = role_map(root, phase)
@@ -75,9 +139,19 @@ def operation(root, role, phase, expected_kind=None):
     opid = mapping["operation_id"]
     filename = "tools/" + opid + ".operation.json"
     path = rel(root, filename)
-    need(path.is_file() and mapping.get("sha256") == digest(path),
-         "operation exact bytes not frozen")
-    op = load(path)
+    if mapping.get("kind") == "formal_cpu8":
+        need(phase == "C" and role == "C-formal-watchdog",
+             "unexpected post-F0 dynamic operation role")
+        tid, expected_path, expected, serialized = render_formal_operation(root)
+        need(tid == opid and expected_path == path and path.is_file()
+             and path.read_bytes() == serialized,
+             "formal runtime operation not exactly derived from F0 template")
+        op = expected
+    else:
+        need(path.is_file() and mapping.get("sha256") == digest(path)
+             and "template_sha256" not in mapping,
+             "operation exact bytes not frozen")
+        op = load(path)
     need(op.get("id") == opid and op.get("task_uuid") == doc["task_uuid"]
          and op.get("stage") == phase, "operation belongs to another task/stage")
     return opid, op
@@ -97,3 +171,10 @@ def native_gate_paths(root, required=("healthy", "freeze", "stall", "stall_harne
         p = rel(root, paths[key])
         need(p.parent != root and p.exists(), "native gate artifact absent")
     return {key: rel(root, paths[key]) for key in required}
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Materialize one post-F0 C operation (not native admission)")
+    parser.add_argument("--root", required=True)
+    options = parser.parse_args()
+    print(json.dumps(materialize_formal_operation(options.root),sort_keys=True))

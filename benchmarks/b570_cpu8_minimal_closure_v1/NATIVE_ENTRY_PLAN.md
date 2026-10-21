@@ -63,3 +63,24 @@ guard 的 prospective intent 内只允许预先审查的 workload argv。正式 
 ## 不扩展的范围
 
 不解释所有 Windows 控制台豁免机理，不为通用 reviewer 树制造更多 observer 嵌套，不重复完整旧 19/57 项或三小时 soak。仍须保留已有 native gates（原入口导入、observer/身份/断点/冻结/停滞/D0）到新的明确 gate mapping，不能用这四行替代原 CPU8 内层资格。只运行 A 最终 gate mapping 明确要求、且另获授权的项目。
+
+## Post-A native qualification details (prospective only)
+
+**Pre-execution source contract is now different from native proof.** The guard tracks the `CreateProcessW(CREATE_SUSPENDED)` root handle and a separately acknowledged `AssignProcessToJobObject` outcome. If assignment fails, it requests direct `TerminateProcess` on that exact retained root process, then waits for real exit FILETIME and closes the thread/process handles; `TerminateJobObject` alone is NOT enough. Before accepting B, price and execute one bounded B00 fault-injected assignment-failure cleanup negative with an outside-owner exit witness, including a deliberately failed direct-termination/exit-query counterexample. This B00 negative has nonzero starts, wall, storage and provider reserve; the old B01–B04 1200-process-second target DOES NOT cover it automatically.
+
+B02/B03/B04 use frozen success/failure-specific contracts, not a generic allow-failure flag. B's outside owner must authenticate exact guard PowerShell request/terminal, true guard PID+creation+native parent, child image/argv/parent PID+creation and the outside owner's own distinct identity; the candidate witness JSON itself is only consistency evidence, not external authenticity. Count every short-lived Job start independently of 100ms polling; native cumulative starts that cannot be matched to preserved identities remain ENTRY_BLOCKED.
+
+C's post-F0 runtime operation is materialized only after A/B approval and a separately authorized C freeze. Its actual bytes must equal the F0-pinned pre-freeze template with exactly one F0-hash substitution. B01–B04 and C remain **NOT_RUN** under this design.
+
+## Fixed B00 assignment-failure qualification — prospective addition, not executed
+
+**A source-only prerequisite.** The guard's `except` branch only calls `TerminateJobObject` after acknowledged `AssignProcessToJobObject` success. If the Job assignment fails, the retained `CREATE_SUSPENDED` root must instead be terminated through its own live process handle in `finally`, followed by an actual wait, exit FILETIME and handle-close witness. Independent outside-owner failure cleanup remains required when the guard itself cannot complete. Source-only checks of this routing do not certify native behavior.
+
+Before separately authorizing any B entry launch, quote **both** fixed B00 controls independently:
+
+| Control | Frozen trigger | Mandatory evidence | Fail/stop |
+| --- | --- | --- | --- |
+| B00a | Intentionally deny root-to-Job assignment after suspended creation, without resuming the child | Exact root PID/creation identity, Job assignment OS failure, direct TerminateProcess request and actual process exit FILETIME, Job accounting 0, external owner terminal and handle closure | Job-only termination, resumed unassigned root, no native exit/cleanup |
+| B00b | Inject direct-termination or wait failure in an outer-owned bounded negative fixture | Failure classified and retained, independent outside owner performs mandatory final cleanup and proves no live root; negative must NOT be promoted to ENTRY_ADMITTED | Child survives, missing external cleanup authority or unknown cost |
+
+**Per-operation quotation, not a new price assumption:** `E_B00k = ceil(P_k * (T_k + L_k) + U_k)` with separately justified starts, disk/export, exit/cleanup and service overhead. The previous B01–B04 1200-process-second target excluded B00; therefore **do not add B00 and keep the old B budget unchanged**. If provider/outer root hard bounds or price U remain UNKNOWN, do not run even B00a. Execute once per authorized fixed control, preserve failures and stop at first unqualified outcome. B00 is engineering entry qualification, never a formal CPU8 case or B570 scientific result.

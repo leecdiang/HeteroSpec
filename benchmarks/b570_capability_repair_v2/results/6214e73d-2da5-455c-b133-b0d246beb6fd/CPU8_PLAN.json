@@ -1,0 +1,79 @@
+{
+  "cases": [
+    {
+      "id": "normal_single",
+      "run_id": "cpu8-01-normal_single",
+      "target": "positive",
+      "fault_id": "-1:normal_single",
+      "detector": "NORMAL_COMPLETE",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "normal_transition",
+      "run_id": "cpu8-02-normal_transition",
+      "target": "positive",
+      "fault_id": "-1:normal_transition",
+      "detector": "TRANSITIONS_COMPLETE",
+      "case_seconds": 180,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "terminal_pending_completion",
+      "run_id": "cpu8-03-terminal_pending_completion",
+      "target": "C:/hs/b570-capability-v1/6214e73d-2da5-455c-b133-b0d246beb6fd/legacy/runs/cpu8-03-terminal_pending_completion/protected/sealed/terminal_pending_completion.bin",
+      "fault_id": "-1:terminal_pending_completion",
+      "detector": "SEALED_WRITE_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "frozen_input",
+      "run_id": "cpu8-04-frozen_input",
+      "target": "C:/hs/b570-capability-v1/6214e73d-2da5-455c-b133-b0d246beb6fd/legacy/runs/cpu8-04-frozen_input/protected/inputs/frozen_input.bin",
+      "fault_id": "-1:frozen_input",
+      "detector": "SEALED_WRITE_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "late_closed_slot_write",
+      "run_id": "cpu8-05-late_closed_slot_write",
+      "target": "C:/hs/b570-capability-v1/6214e73d-2da5-455c-b133-b0d246beb6fd/legacy/runs/cpu8-05-late_closed_slot_write/protected/slots/cpu8-05-late_closed_slot_write__late_closed_slot_write_0/BASELINE.bin",
+      "fault_id": "-1:late_closed_slot_write",
+      "detector": "SEALED_WRITE_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "resource_read_failure",
+      "run_id": "cpu8-06-resource_read_failure",
+      "target": "resource",
+      "fault_id": "-1:resource_read_failure",
+      "detector": "RESOURCE_READ_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "directory_read_timeout",
+      "run_id": "cpu8-07-directory_read_timeout",
+      "target": "directory",
+      "fault_id": "-1:directory_read_timeout",
+      "detector": "COVERAGE_GAP_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    },
+    {
+      "id": "journal_write_failure",
+      "run_id": "cpu8-08-journal_write_failure",
+      "target": "journal",
+      "fault_id": "-1:journal_write_failure",
+      "detector": "JOURNAL_FAILURE_REJECTED",
+      "case_seconds": 90,
+      "cleanup_seconds": 30
+    }
+  ],
+  "formal_attempt_limit": 8,
+  "retry": 0,
+  "scope": "Exact original eight cases once; transition 8 pairs/16 slots"
+}

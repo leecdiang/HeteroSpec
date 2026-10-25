@@ -1,10 +1,10 @@
 \section{Numerical correspondence and repair cost}
 \label{sec:results}
 \subsection{Complete-output qualification across model families}
-The larger confirmation tests the frozen target-phase repair on 24 inputs per family. Repaired target-only $M_3$ and speculative $C_3$ match all 240 required endpoints per family, whereas the unconstrained batched target-only path $M_0$ fails on 5, 14 and 9 distinct tasks for Qwen3, SmolLM2 and Llama. Table~\ref{tab:qualification} retains the repeated-request counts. Reference preservation depends on the execution organization, even at the same configured capacity.
+The larger confirmation tests the frozen target-phase repair on 24 inputs per family. Repaired target-only $M_3$ and speculative $C_3$ match all 240 required endpoints per family, whereas the unconstrained batched target-only path $M_0$ fails on 5, 14 and 9 distinct tasks for Qwen3, SmolLM2 and Llama. Table~\ref{tab:qualification} retains the original arm identities and repeated-request counts. The archived \texttt{query\_batch} label identifies mask3/UB4 but does not resolve its graph implementation as the later PQ or QB. This panel supports the historical repair's output qualification; the explicitly labelled seven-arm and E2 studies supply the PQ/QB comparison.
 
 \begin{table}[t]\centering\small
-\caption{Larger frozen-panel confirmation: matching complete endpoints out of 240 per arm/family. $M_0$ is unconstrained UB4; $R_{\mathrm{prod}}$ is an engineering-selected ordinary recipe.}
+\caption{Historical frozen-panel confirmation: matching endpoints out of 240 per arm/family. $M_3/C_3$ retain their original implementation identity; $M_0$ is unconstrained UB4 and $R_{\mathrm{prod}}$ an engineering-selected ordinary recipe.}
 \label{tab:qualification}
 \begin{tabular}{lrrr}\toprule
 Arm & Qwen3 & SmolLM2 & Llama\\\midrule
@@ -33,20 +33,6 @@ The sampled target layers are $0/18/35$ for Qwen3, $0/12/23$ for SmolLM2 and $0/
 MQ agrees with either repaired path only in the 18 single-query controls. Across the other 54 contexts, its first difference is at QK; maximum finite absolute differences are 0.078583 at QK, 0.000917 at softmax and 0.010433 at AV. These are operator differences on identical operands, not model-logit bounds.
 
 All snapshots have tensor key extent 256, including masked padding. The maximum number of visible keys is 109, 130 and 127 by family; prefill captures include early query positions with only one to four visible keys. The experiment covers layers, phases and query widths at these short visible contexts, using one exposed prompt per family. Complete coordinates and operator comparisons appear in \sref{supp:cuda}.
-
-\subsection{QB's independent implementation benefit}
-\label{sec:e2}
-E2 completes 1,620 requests in 324 fresh workers, including 324 registered warmups. There are no request failures, output mismatches, workload errors or heavy-observer flags. The six-session speculative ratios $C_{\PQ}/C_{\QB}$ are 1.031614, 1.065803 and 1.029114, corresponding to 3.06\%, 6.17\% and 2.83\% lower QB request latency. Figure~\ref{fig:e2} shows both paths and their session-level uncertainty.
-
-\begin{figure*}[t]\centering
-\input{figures/sessions}
-\caption{Independent-block E2 replication. Small marks are the six session estimates; large markers and horizontal bars are the equal-weight estimate and its registered 95\% six-session percentile interval. Dashed lines mark parity and the 1.02 practical threshold. $M$ is target-only and $C$ speculative. The fixed exposed panel and single host limit statistical scope.}
-\label{fig:e2}
-\end{figure*}
-
-All 36 family/path/session contrasts favor QB. This agreement coexists with request-level variation: 9 of the 72 family/path/task aggregates regress. The speculative intervals are [1.025393,1.037926], [1.063387,1.068399] and [1.020126,1.039149], each above the predeclared 1.02 threshold. Target-only effects are smaller: Llama's estimate is 1.015593, below the threshold, while Qwen3's interval overlaps it. The complete estimates, task regressions and session times appear in \sref{supp:cuda}.
-
-Recorded acceptance, rollback and logical-workload counters agree in all 216 speculative PQ/QB task/session pairs. Together with endpoint agreement, this supports an implementation-cost comparison rather than a gain caused by different recorded speculative work. The recorded counters cover acceptance, rollback and logical work rather than full control traces. The earlier two-adjacent-session results remain in \sref{supp:cost}, including the target-only Qwen3 and Llama direction reversals.
 
 \subsection{Repair scope changes draft profitability}
 \label{sec:economics}
@@ -78,3 +64,28 @@ It is 1.612, 1.071 and 1.542 for the three families, respectively. These are ret
 Target-only QB also preserves the specified serial reference at lower cost: $R/M_{\QB}$ is 1.334051, 1.369890 and 1.426161, with every task favoring QB on this panel. SmolLM2 therefore benefits from reference-preserving batching even when drafting is unprofitable.
 
 A historical fixed-UB4 experiment provides a related counterexample: increasing $k$ from 3 to 7 preserved outputs but reduced request speed to 0.890 of the smaller-draft path. Separate work captures recorded fewer target callers and more physical micrographs. Acceptance and caller reduction alone therefore cannot establish request acceleration. The width failures and negative cost results that constrain this conclusion remain in \sref{supp:implementation}.
+
+\subsection{QB's independent implementation benefit}
+\label{sec:e2}
+E2 completes 1,620 requests in 324 fresh workers, including 324 registered warmups. There are no request failures, output mismatches, workload errors or heavy-observer flags. The six-session speculative ratios $C_{\PQ}/C_{\QB}$ are 1.031614, 1.065803 and 1.029114, corresponding to 3.06\%, 6.17\% and 2.83\% lower QB request latency. Figure~\ref{fig:e2} shows both paths and their session-level uncertainty.
+
+Table~\ref{tab:e2absolute} gives the absolute cost behind these ratios. It uses the same task/session log weights on the recovered, source-verified request records. The speculative PQ/QB geometric means are 1987.2/1926.3\,ms for Qwen3, 1238.8/1162.3\,ms for SmolLM2 and 2360.9/2294.2\,ms for Llama.
+\begin{table}[t]\centering\small
+\caption{Absolute E2 request costs (ms), with equal task and session weights in the geometric mean. Registered warmups are excluded; the paid interval includes submission, full-response parsing and endpoint validation.}\label{tab:e2absolute}
+\input{tables/e2_absolute_cost}
+\end{table}
+
+\begin{figure*}[t]\centering
+\input{figures/sessions}
+\caption{Independent-block E2 replication. Small marks are the six session estimates; large markers and horizontal bars are the equal-weight estimate and its registered 95\% six-session percentile interval. Dashed lines mark parity and the 1.02 practical threshold. $M$ is target-only and $C$ speculative. The fixed exposed panel and single host limit statistical scope.}
+\label{fig:e2}
+\end{figure*}
+
+All 36 family/path/session contrasts favor QB; 9 of the 72 family/path/task aggregates regress. The primary speculative intervals are [1.025393,1.037926], [1.063387,1.068399] and [1.020126,1.039149], each above the predeclared 1.02 threshold. Target-only effects are smaller: Llama's estimate is 1.015593, below the threshold, while Qwen3's interval overlaps it.
+
+The secondary $t_5$ intervals remain above 1.02 for speculative Qwen3 and SmolLM2. Llama's interval is [1.015387,1.043026], above parity but crossing 1.02; its six leave-one-session-out estimates range from 1.024960 to 1.032333. QB's advantage is stable in these checks. Whether the Llama effect exceeds the practical threshold depends on the interval method. \sref{supp:cuda} reports both analyses and all task regressions.
+
+Recorded acceptance, rollback and logical-workload counters agree in all 216 speculative PQ/QB task/session pairs. With endpoint agreement, these counters support an implementation-cost comparison under matched recorded work. They do not provide full control traces. The earlier two-adjacent-session estimates, including target-only Qwen3 and Llama direction reversals, remain in \sref{supp:cost}.
+
+The recovered E2 records do not report actual CUDA Graph capture, replay or fallback counts. The request-cost estimate therefore identifies the implementation effect but does not isolate those mechanisms. The controlled QB/QH replay study in Section~\ref{sec:mappingcosts} has its own execution evidence and comparator.
+

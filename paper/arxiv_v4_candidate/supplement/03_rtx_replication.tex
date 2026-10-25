@@ -3,6 +3,10 @@
 \subsection{E2 design and complete estimates}
 The replication retains the 12-task implementation panel and the original reference, models, sampler, timer and runtime routes. Each session has 54 fresh workers: short PQ/QB blocks and serial-reference blocks, with one registered warmup per worker. Across six sessions this gives 864 PQ/QB requests, 432 references and 324 warmups. Each task/session has two matching serial-reference endpoints. All required endpoints and observation checks pass; no latency is trimmed.
 
+The fixed runtime routes use the original executable for every Qwen3 arm and all R/QB arms. SmolLM2 and Llama PQ arms use the recorded metadata4 correction; both builds retain identical hashes for all 21 numerical DLLs. The source/build manifests identify each route. The launcher clears inherited GGML/CUDA environment overrides, but neither that configuration nor GGML topology reuse establishes actual CUDA Graph replay. Per-request capture, replay and fallback counts are absent from the recovered E2 report records.
+
+\texttt{E2\_REQUEST\_LATENCIES.csv} retains all 1,620 rows, including the 324 labelled warmups, with its original Git-blob identity. \texttt{generate\_e2\_absolute\_cost.py} checks the source and reconstructs Table~\ref{tab:e2absolute}. The per-arm geometric means use the same 12-task and six-session weights as Equation~\ref{eq:ratio}, so their quotients reproduce the paired ratios. The table's \texttt{latency\_ms} is the resident request interval; raw start/end nanosecond fields remain in the full request archive.
+
 All consecutive session gaps exceed one hour; first-to-last start is 24.450801 hours. The original interpreter bytes were restored after a pre-start identity mismatch before the final session. The original freeze checks then passed without exception and the untouched scientific slots ran. The earlier stopped record remains part of the history.
 
 Table~\ref{tab:e2full} gives the complete six-session estimates. The intervals use the original random seed 20261014, 10,000 bootstrap draws of six session log means, and linearly interpolated 2.5/97.5 percentiles. They quantify fixed-panel, single-host variation, not a date-level population or multiple-comparison guarantee. Table~\ref{tab:e2tasks} gives all 72 task aggregates; 9 regress. Full session contrasts and observed session times are in \texttt{anc/rtx104/}.
@@ -38,6 +42,17 @@ MBPP 418&1.004440&1.046335&1.033875&1.052829&1.050112&1.041465\\
 \bottomrule\end{tabular}\end{table*}
 
 Recorded acceptance, rollback and logical-workload counters agree in all 216 speculative task/session pairs. This comparison is limited to the recorded counters and histograms, rather than complete control-trace identity. Model callers and physical micrographs remain distinct from hardware launches.
+
+\subsection{Sensitivity to interval method and session omission}
+The registered percentile bootstrap remains the primary analysis. Table~\ref{tab:e2sensitivity} adds a post-review $t$ interval,
+\[
+\exp\!\left(\bar z\pm t_{0.975,5}\frac{s_z}{\sqrt6}\right),
+\qquad t_{0.975,5}=2.570581835636314,
+\]
+where $z_s$ is the session mean log contrast and $s_z$ its sample standard deviation. This analysis assumes independent, approximately normal session log means; it does not add inputs, dates or hosts. Six further point estimates omit one session each.
+
+All speculative $t$ intervals remain above parity. Qwen3 and SmolLM2 also remain above the practical ratio threshold 1.02; Llama crosses it. Its omit-one estimates all exceed 1.02. Thus the direction of the Llama effect is stable across these checks, while its practical-threshold conclusion depends on the interval method. The source CSV is unchanged; \texttt{scripts/generate\_e2\_sensitivity.py} reconstructs the new table and the complete omit-one estimates.
+\input{tables/e2_sensitivity}
 
 \subsection{E1 coverage and controls}
 The independently frozen diagnostic retains all 21 numerical DLLs and changes only the two admitted capture/replay source files. Its 72 contexts use target layers $0/\lfloor L/2\rfloor/(L-1)$, both phases and $q=1$--4. One exposed text, GSM8K443, is selected by longest inherited prompt with lexical tie-breaking for each tokenizer. It has 105/126/123 prompt IDs for Qwen3/SmolLM2/Llama. Each context has a fresh worker with a counts warmup, heavy capture and counts control; each observed MQ/PQ/QB graph is replayed twice. All 72 contexts are observed and admitted; all requests and 432 operator starts complete.

@@ -7,6 +7,40 @@ def gm(xs):
     if not xs or not all(math.isfinite(x) and x>0 for x in xs):raise ValueError('finite positive ratios required')
     return math.exp(math.fsum(map(math.log,xs))/len(xs))
 
+def derived_json_equal(actual, expected):
+    """Compare generated summaries, allowing at most one ULP for finite floats.
+
+    libm exp/log results can differ in their last bit across platforms. Only
+    derived JSON uses this comparison: source blobs and rendered TeX remain
+    exact. Types, keys, list ordering, integers, and nonnumeric leaves stay exact.
+    """
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, float):
+        return (math.isfinite(actual) and math.isfinite(expected)
+                and actual in (expected, math.nextafter(expected, -math.inf),
+                               math.nextafter(expected, math.inf)))
+    if isinstance(expected, dict):
+        return (actual.keys() == expected.keys()
+                and all(derived_json_equal(actual[k], v) for k, v in expected.items()))
+    if isinstance(expected, list):
+        return (len(actual) == len(expected)
+                and all(derived_json_equal(a, e) for a, e in zip(actual, expected)))
+    return actual == expected
+
+def read_derived_json(text):
+    """Reject duplicate keys and JSON extensions before numerical comparison."""
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError('Duplicate JSON key: ' + key)
+            result[key] = value
+        return result
+    def constant(value):
+        raise ValueError('Non-finite JSON number: ' + value)
+    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
+
 def verify(check,root:Path):
     data=root/'anc/closure'; records=json.loads((data/'reported_summary.json').read_text())
     result={}
@@ -52,7 +86,12 @@ def verify(check,root:Path):
     pf=records['prefill_followup'];check('Prefill submission: numerical-only published result',pf['status']=='QUALIFIED_NO_COMPLETE_TIMING_RECORD_IN_REVIEWED_TREE' and pf['full_logit_pairs']==346 and pf['physical_q']==1 and pf['draft_prefill_api_calls']==1)
     spec=importlib.util.spec_from_file_location('generate_followup_figures',root/'scripts/generate_followup_figures.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
     for name,expected in mod.outputs().items():
-        check('Generated figure/table byte consistency: '+name,(root/name).read_text()==expected)
+        actual=(root/name).read_text()
+        if name=='anc/closure/derived_summary.json':
+            check('Derived summary numerical consistency (one ULP): '+name,
+                  derived_json_equal(read_derived_json(actual),read_derived_json(expected)))
+        else:
+            check('Generated figure/table byte consistency: '+name,actual==expected)
     text=(root/'sections/08_request_service.tex').read_text()
     for value in ('0.989284','5.208','0.582325','41.8','0.588633','0.995144','2.619763','1.003994'):
         check('Service manuscript value '+value,value in text)

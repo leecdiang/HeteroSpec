@@ -1,20 +1,43 @@
-\section{Related work and scope}
+\section{Related work and evidence scope}
 \label{sec:related}
-\subsection{Numerical consistency}
-Batch-invariant inference stabilizes normalization, matrix multiplication and attention, including split boundaries~\cite{thinkingmachines}. LayerCast separates storage precision from computation precision~\cite{layercast}, and TBIK aligns reductions across tensor-parallel configurations~\cite{tbik}. QB instead changes query/mask views within a fixed quantized, non-flash graph. It retains the existing arithmetic operators and measures correspondence to a specified ordinary reference.
+\subsection{Where numerical consistency is enforced}
+Table~\ref{tab:relatedmechanisms} compares the closest control points. Batch-invariant inference stabilizes reductions in normalization, matrix multiplication and attention~\cite{thinkingmachines}. CoRun combines isolated prefill, fixed-shape decode and selective kernel constraints~\cite{corun}. LLM-42 runs a fast path, verifies fixed-shape windows and repairs the corresponding KV entries~\cite{llm42}. These systems define reproducible execution contracts; matching an already deployed quantized reference is a separate requirement.
 
-CoRun uses isolated prefill and fixed-shape decode~\cite{corun}. LLM-42 adds fixed-shape verification and rollback around a fast path~\cite{llm42}; MarginGate selectively invokes verification using decision margins~\cite{margingate}. QB changes the target attention representation without adding a numerical-consistency verifier. The measured comparators are PQ and GS within the same runtime; external systems provide design context rather than measured speed comparisons.
+\begin{table*}[t]\centering\small
+\caption{Mechanism comparison. These are design differences, not cross-system speed comparisons. Our measured alternatives are GS and PQ in the same runtime.}\label{tab:relatedmechanisms}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{3.3cm}YY@{}}\toprule
+Approach & Consistency target & Constraint and arithmetic & State and verification\\\midrule
+Batch-invariant kernels~\cite{thinkingmachines}
+& Each token's result is invariant to batching and slicing
+& Stable reduction/tiling rules in kernels, including attention split size
+& Consistent KV layout before attention; no added verify--rollback loop\\
+CoRun~\cite{corun}
+& Stable token sequence across co-runners, batch positions and arrival orders in a fixed stack
+& Isolated prefill and fixed-shape CUDA-Graph decode; disable decode Split-KV and constrain collectives
+& Request-local cache and RNG state; shape control supplies the execution contract\\
+LLM-42~\cite{llm42}
+& Tokens agree with a fixed-shape verification schedule
+& Dynamic fast path plus fixed-shape replay; mostly existing kernels
+& Verify--rollback and replacement of decoded KV entries by verified entries\\
+Phase-scoped QB
+& Complete output agrees with the specified ordinary reference on the qualified panel
+& Q/mask views preserve local one-query attention; surrounding computation remains batched
+& Phase/layout-aware reuse, producer-state qualification and native speculative reconciliation\\\bottomrule
+\end{tabularx}
+\end{table*}
 
-Vosti specifies and verifies engine/kernel behavior across batching, chunking and cache changes~\cite{vosti}. That guarantee under stated assumptions has a different scope from our finite qualification against an existing deployment. Our evidence combines a logical mapping proof, runtime guards, operator replay and finite-panel endpoint qualification.
+QB's method is the integrated graph/runtime transformation. It reuses attention operators while changing query/mask representation, preserving head semantics and binding the layout to phases and graph identity. The Vulkan AV-preserving port shows that backend admission can still require an implementation change. Local numerical correspondence and stateful endpoint qualification test different parts of this contract.
 
-\subsection{State and performance}
-Stage-Replay demonstrates suffix sensitivity to KV transplantation~\cite{stagereplay}; cache-dependent divergence in quantized serving is also reported~\cite{cachestate}. Our state experiments add fixed-precision partition interventions, component-substitution counterexamples and common-prefix scores. Activation-patching work has already established that metrics and intervention choices affect interpretation, including nonadditive component effects~\cite{patching,mediators}. Here the four-cell score contrast distinguishes an observed nonadditive response from an endpoint pattern that a threshold alone could produce.
+Other approaches act at different boundaries. LayerCast separates storage and computation precision~\cite{layercast}; TBIK aligns reductions across tensor-parallel configurations~\cite{tbik}; MarginGate selects verification using decision margins~\cite{margingate}. Vosti specifies engine/kernel behavior across batching, chunking and cache changes and proves guarantees under its assumptions~\cite{vosti}. Our logical mapping proof, runtime guards, operator replay and endpoint tests supply finite qualification against the chosen deployment reference.
 
-Ragged-batch synchronization errors are a separate source of speculative-decoding failures~\cite{forensics}. A wrong position or mask map is a semantic error, whereas a correct map can still alter finite-precision evaluation or fail backend admission. The independent checks in this paper address those cases separately. Performance work also emphasizes verification cost and actual execution behavior~\cite{illusion,lossless}. Our cost contribution is the qualified PQ/QB comparison and its separation from global repair and draft profitability.
+\subsection{State and request cost}
+Stage-Replay demonstrates suffix sensitivity to KV transplantation~\cite{stagereplay}, and cache-dependent divergence is reported in quantized serving~\cite{cachestate}. Our fixed-precision interventions add component-substitution counterexamples and common-prefix score comparisons. Activation-patching studies establish the importance of intervention metrics and nonadditive component effects~\cite{patching,mediators}; our four-cell score contrast tests nonadditivity beyond an endpoint pattern caused only by thresholding.
 
-\subsection{Scope of the evidence}
-The CUDA evaluation covers one logical sequence, non-flash attention, occupied $q\leq4$, Q8\_0 weights, F16 KV and supported Qwen3/dense Llama-family paths. The three pairs share backend components. E2 repeats an exposed panel on one host; E1 uses one prompt per family with short visible contexts despite physical key extent 256. Larger contexts, concurrency, other precisions and fused attention require separate qualification. The measured 3--6\% resident-request gains compare PQ/QB, not an optimized fused-attention serving stack; a stronger baseline must meet the same output contract.
+Ragged-batch synchronization errors supply a separate source of speculative failures~\cite{forensics}. We check semantic indexing, finite-precision correspondence and backend admission separately. Work on verification cost and actual execution behavior~\cite{illusion,lossless} also motivates complete-request measurement. Our matched comparisons add the repair--draft interaction and isolate QB's incremental cost relative to PQ.
 
-Vulkan state interventions use four exposed inputs and finite greedy continuations. The stopped Llama Q6\_K port remains unqualified; the successful Qwen3 Q8\_0 port has a separate reference and runtime. Counterexamples, failed comparisons and missing vectors are retained with their affected results. Production throughput, energy, physical critical-path shares and hardware efficiency remain outside the measurements.
+\subsection{Coverage and unresolved measurements}
+The CUDA evidence covers one sequence, non-flash attention, $q\leq4$, Q8\_0 weights, F16 KV and supported Qwen3/dense Llama-family graphs. E2 repeats 12 exposed inputs on one host. E1 samples one prompt per family, with physical key extent 256 and short visible contexts. The 3--6\% resident-request gains therefore characterize qualified PQ/QB implementations in that domain. Fused attention, longer contexts and concurrency remain unmeasured.
 
-Each service panel uses four exposed inputs, one pair and one device/date. Recorded warmups establish neither cold-driver behavior nor cache residency for every shape; exclusive machine use is unverified. The RTX layout estimate is noise-limited, and neither panel establishes equivalence. The draft-prefill submission follow-up has qualification but incomplete timing. Clean timing and full-logit qualification are separate; manuscript checks reconstruct reported values, while runtime binaries and complete raw tensors remain separately held.
+Vulkan state tests use four exposed inputs and finite greedy continuations. The stopped Llama Q6\_K pilot remains unqualified; the successful Qwen3 Q8\_0 port uses a separate reference and runtime. The service panels each contain four exposed inputs, one model pair and one device/date. Neither service panel establishes a practical QB/PQ increment; the studies do not estimate equivalence. Exclusive machine use and per-shape cache residency were not established.
+
+The remaining causal gap is the transition from the positive resident result to the unresolved service increment: driver, inputs, $k$ and lifecycle all change. A matched bridge is needed to isolate their effects. Production throughput, energy and hardware efficiency are outside the current measurements. The source package distinguishes saved-data reconstruction, CPU interface tests and native runtime execution (\sref{supp:reproduction}).

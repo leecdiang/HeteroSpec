@@ -118,9 +118,13 @@ def test():
     verify(load('portability111.json'),check)
     from check_closure import verify as verify_closure
     closure=verify_closure(check,ROOT)
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('generate_e2_absolute_cost',ROOT/'scripts/generate_e2_absolute_cost.py')
+    absolute_module=importlib.util.module_from_spec(spec);spec.loader.exec_module(absolute_module)
+    absolute=absolute_module.verify(check,ROOT)
     from check_repair_interaction import verify as verify_interaction
     interaction=verify_interaction(check,ROOT)
-    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,
+    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,
             'scope':'Reported-value/source checks, not native execution, full-vector reconstruction, all-input correctness or arXiv-server validation.',
             'new_model_executions':0}
 if __name__=='__main__':

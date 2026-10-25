@@ -1,7 +1,7 @@
 \usepackage[T1]{fontenc}
 \renewcommand{\ttdefault}{lmtt}
 \usepackage{microtype,graphicx,booktabs,amsmath,amssymb,amsthm,array,tabularx,longtable,multirow}
-\usepackage{xcolor,tikz,pgfplots,enumitem,placeins,xurl,needspace,etoolbox,balance}
+\usepackage{xcolor,tikz,pgfplots,enumitem,placeins,xurl,needspace,etoolbox,flushend}
 \geometry{reset,a4paper,left=23mm,right=18mm,top=20mm,bottom=21mm,columnsep=6mm,footskip=10mm}
 \usetikzlibrary{arrows.meta,positioning,calc,fit,matrix,backgrounds,patterns}
 \pgfplotsset{compat=1.18}
@@ -9,7 +9,7 @@
 \usepackage[hypertexnames=false,bookmarksnumbered=true,bookmarksopen=false]{hyperref}
 \urlstyle{same}
 \definecolor{linkblue}{HTML}{204D8B}
-\hypersetup{colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue,pdfauthor={Chengzhan Li},pdftitle={Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding},pdfsubject={Complete article and supplementary material; source-reconciled v4 candidate}}
+\hypersetup{colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue,pdfauthor={Chengzhan Li},pdftitle={Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding},pdfsubject={Complete article and supplementary material; major revision 2026-10-25}}
 \definecolor{target}{HTML}{426B8B}
 \definecolor{draft}{HTML}{936027}
 \definecolor{qualified}{HTML}{3E725E}
@@ -55,3 +55,7 @@
 \pdfinfoomitdate=1
 \pdftrailerid{}
 \pdfsuppressptexinfo=15
+
+% Robust balancing with full-width floats at article and supplement ends.
+\let\balance\flushcolsend
+\let\nobalance\raggedcolsend

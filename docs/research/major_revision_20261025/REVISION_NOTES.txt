@@ -1,0 +1,47 @@
+HeteroSpec 大修说明（2026-10-25）
+
+底稿：本次审稿采用的 v4 Ready TeX；论文内容与 GitHub main
+805864b1e370c4d17defa58bed4fac43c1cfb75e 的 paper/arxiv_v4_candidate 一致。
+本次未运行新的模型、GPU 实验；未投稿或合并主分支。
+
+已完成
+1. 重写摘要、引言、设计含义与结论，主张明确为：
+   先选数值修复范围，再判断 drafting 是否盈利，最后测量 QB 相对 PQ 的增量。
+2. 结果顺序改为：输出资格与数值对应 → 修复范围/草稿收益 → QB 独立成本。
+   原生映射成本与 fresh-context 服务结果合并为同一部署成本章节。
+3. 新增 Thinking Machines、CoRun、LLM-42、QB 的机制对照表。
+   明确贡献在图变换与运行时合同；不把 query independence 本身称为创新。
+4. 恢复并校验全部 1,620 条 E2 请求时间（含 324 warmup）。
+   新增绝对毫秒表；排除登记 warmup 后，用原 task/session 权重重建比值。
+5. 保留原注册 bootstrap，补充 t5 与逐会话删除分析。
+   Llama 的优势方向保持；是否超过 1.02 实用阈值依赖区间方法。
+6. 修复派生 JSON 1 ULP 的跨平台比较问题。
+   只允许相邻有限 binary64 值；源数据、整数、schema 和生成 TeX 保持严格校验。
+7. 加入真实的 CPU 地址/phase/cache contract、12项测试、历史 patch 和来源校验。
+   附带 header 来自后期 service，明确区分 E2 的原始/metadata4 构建路由。
+8. 压缩状态、映射和服务三个部分约21%的重复叙述，保留全部科学结论与关键数值。
+   用具体结果取代重复免责声明，真实未确定的事实仍明确标出。
+
+已经澄清、尚未实证补全
+- 24-input 历史 M3/C3 的 query_batch 标签不能确认是后来定义的 PQ 还是 QB。
+  正文保留原 arm 身份；不把该面板作为 QB 专属验证。
+- E2 报告表不含实际 CUDA Graph capture/replay/fallback 次数。
+  请求时间差成立，但现有资料不能把差异归因于某个 Graph 机制。
+- 新增代码包支持 CPU 合同测试与源码审阅；完整 GPU 复现仍缺配套源码胶囊、
+  工具链/数值库和至少一个真实阶段捕获及完整请求 fixture。
+- resident k3 与 fresh k1 的结果仍来自不同合同；不能把差别归因于 context 创建。
+
+后续
+POST_REVISION_EXPERIMENT_PLAN.md 仅是一份未执行的作者计划。
+先补齐最小原生复现材料，再做同主机/运行时/参考/输入的 2×2 桥接：
+k=1/3 × resident/fresh，每格 PQ_A/PQ_B/QB，既有12个 Qwen3 输入，
+固定8会话、至少4日期。登记实际 Graph 状态、观察器成本、完整服务时间、
+A/A 噪声、2%收益阈值及日期敏感性；不根据显著性追加会话。
+当前不扩展模型家族、B570硬件研究或长上下文全套 benchmark。
+
+验证
+- 515 项报告数据/来源/一致性检查通过。
+- 49 项分析与变动拒绝测试通过；12 项 CPU runtime contract 测试通过。
+- 8/8 原始源码文件的 Git blob 身份通过。
+- pdfLaTeX/BibTeX 完整构建通过；无 overfull、未定义引用或缺字警告。
+- 全文24页已渲染检查，新增表格可读，双栏末页已平衡。

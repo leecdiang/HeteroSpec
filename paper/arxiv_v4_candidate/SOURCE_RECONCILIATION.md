@@ -1,4 +1,4 @@
-Current revision: see `anc/review_round3/QA_FINAL.json` and the repository synthesis. The records below document earlier rounds; they do not describe the current PDF hash or unchanged figure-source status.
+Current revision: see `docs/research/review_revision_20261026/REVISION.md` and `QA_FINAL.json` in the repository. The records below document earlier rounds; their PDF hashes, section numbers and figure-source status are historical.
 
 # v3 → v4 source reconciliation and release review
 

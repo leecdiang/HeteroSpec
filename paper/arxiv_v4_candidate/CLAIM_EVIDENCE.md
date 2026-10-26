@@ -53,3 +53,9 @@ The principal narrative now orders numerical qualification, repair-scope economi
 This update preserves every original measurement file. New compact source records
 are exact Git-blob copies. The paper reconstruction runs CPU checks only; native
 platform executions are attributed to their original campaigns.
+
+## Post-review revision (2026-10-26)
+
+The main text now proceeds from workload qualification and repair-scope economics to QB incremental cost, complete-service deployment, and transfer. Section 8 specifies an offline selection rule, not an implemented online correctness detector or recovery guarantee. SmolLM2's qualified target-only batching is presented as a positive deployment choice; its draft-cost result, the Llama transfer failure and both k1 practical-screen failures remain explicit.
+
+The native source-build scopes remain distinct: RTX core/frontend rebuild with retained numerical DLLs; B570 numerical-library and shader rebuild. `REPRODUCTION_ACCESS.md` lists exact pinned entry points and the external bytes still required. Complete external native delivery is not claimed. The revision adds FlashAttention/FlashAttention-2 positioning, disambiguates MQ from multi-query attention, corrects the mapping figure to `4/4 fail`, and moves historical service panels to Supplement S8. Measurement inputs and analysis estimators are unchanged. Current validation is recorded in `docs/research/review_revision_20261026/QA_FINAL.json` in the repository.

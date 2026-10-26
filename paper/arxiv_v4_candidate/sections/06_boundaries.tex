@@ -1,5 +1,7 @@
-\section{Transferring a local repair}
+\section{Reference transfer across inputs and backends}
 \label{sec:state}
+\input{sections/10_input_transfer}
+
 \begin{figure*}[t]\centering
 \resizebox{\textwidth}{!}{\input{figures/composition}}
 \caption{State composition at two levels. A: layer-0 endpoint classes; rec. retains the recipient, don. reproduces a distinguishable donor and new is a third trajectory. Each cell has two agreeing process repeats. B: full-logit comparison for /1248, B$\to$A, at output 47 after a common consumed prefix. The hollow diamond is the additive prediction, not a fifth execution.}
@@ -11,7 +13,7 @@ A local attention repair consumes state produced upstream. The B570 studies test
 
 For two exposed inputs of 161 and 133 prompt tokens, B reproduces C's complete endpoint, initial FP32 logits and sequence-KV bytes. A diverges at generated indices 47 and 81. Two longer controls have unequal A/B states but equal endpoints. A partition sweep yields several endpoint classes, including a third trajectory for the 133-token input split as $132+1$: smaller chunks are not monotonically closer to the reference (\sref{supp:b570}).
 
-The differences begin before attention: first-layer K/V projections differ for the 161-token input, and Q/K/V differ for the 133-token input. Fixed-operand replay qualifies 32 of 40 calls and reproduces projection sensitivity. Eight scale/MUL calls are excluded because an in-place consumer overwrote their captured operands. The partition sweep's driver-body preregistration gap and replay admission record are retained in \sref{supp:b570}.
+The differences begin before attention: first-layer K/V projections differ for the 161-token input, and Q/K/V differ for the 133-token input. Fixed-operand replay qualifies 32 of 40 calls and reproduces projection sensitivity. Eight scale/MUL calls are excluded because an in-place consumer overwrote their captured operands. The partition sweep is diagnostic because its driver body was authenticated after execution; the later replay has an authenticated admission record (\sref{supp:b570}).
 
 A common UB512 receiver isolates the state link. It imports sequence KV and positions, samples the selected complete initial logits, and restores pending-token semantics. Sixteen own-path shams reproduce natural endpoints; 40 crosses then vary KV and logit sources. For the two affected tasks,
 \begin{align}
@@ -49,7 +51,7 @@ b_3(\mathrm{src}_0)=b_3(\mathrm{src}_1),
 \end{equation}
 where $b_3$ is the fourth tensor extent. QK pairs K at extent 1 with lifted Q at extent 2; AV pairs V at extent 1 with probabilities at extent 2. Both are rejected. MQ and each PQ slice satisfy this check with $(1,1)$.
 
-This is a version-specific source admission result. Actual placement and fallback transfers were not observed in the failed pilot. The checker records the proven violation as false and the remaining admission decisions as unknown.
+The frozen backend rejects these lifted QK and AV descriptors because their fourth source extents differ. Actual placement and fallback transfers were not observed in the failed pilot; the later port addresses the source-level admission requirement directly.
 
 \subsection{Preserving the AV path in a scoped GQA port}
 A scoped port targets F16/F32, $d=128$, 32-query-head/8-KV-head layouts, physical key extents 256/512 and $q=2,4$. Its packed route matches PQ at QK and softmax but differs in 7,160 of 8,192 AV values at key512/$q=2$, with maximum absolute difference $1.22236\times10^{-9}$. That route fails the exact reference~\cite{b570gqarecords}.

@@ -1,27 +1,15 @@
-\section{From layout cost to service cost}
+\subsection{Representation and execution-mode boundaries}
 \label{sec:mappingcosts}
-\subsection{Mapping execution and representation costs}
-\subsubsection{Execution mode changes the comparison}
-We compare PQ, QB and query-to-head mapping (QH), which places independent queries in a head-like dimension and then restores native output order. Each operator study freezes its inputs, reference and cost window~\cite{mappingrecords,b570compactrecords}.
+A local representation must also satisfy the reference after backend path selection and repay its conversion costs. Query-to-head mapping (QH) places independent queries in a head-like dimension and restores native output order. Balanced operator studies compare it with two identical QB controls under fixed inputs and execution windows~\cite{mappingrecords,b570compactrecords}.
 
-Graph allocations initially reused K/V storage and changed later operands. Independent persistent storage restored repeatable input and output bytes. Balanced experiments then used identical QB arms to measure A/A variation. On the RTX core panel, QB\_A/QH is 0.900826. A frozen selector predicts the ordering on 12 held-out synthetic geometries, but charging its lookup raises the offline estimated selector/fixed-QB ratio to 1.010298. Selection overhead outweighs the predicted benefit.
+On the RTX core panel, QB\_A/QH=0.900826. A frozen selector predicts all twelve held-out synthetic mean orderings, but its charged lookup raises the offline selector/fixed-QB estimate to 1.010298. CUDA Graph ON/OFF intervention reduces QB completed-graph cost to 0.615--0.849 of OFF and narrows four QH-minus-QB gaps from 12.056--12.975 to 0.735--1.627\,$\mu$s. These measurements establish execution-mode sensitivity of QB versus QH; the PQ/QB request comparison has a different comparator and lacks corresponding capture/replay counts.
 
-CUDA Graph capture, instantiation and replay materially change the relative costs. QB\_A's completed-graph ON/OFF ratios range from 0.615 to 0.849. For four permuted-$q=2$ coordinates, the QH-minus-QB gap falls from 12.056--12.975 to 0.735--1.627\,$\mu$s. Instrumented mode checks and clean timing runs share frozen graph/runtime identities. This intervention identifies an execution-mode effect on QB versus QH; it does not measure the PQ/QB mechanism in the resident-request study.
-
-\subsubsection{Path availability and reference preservation}
-RTX key extents 1023/1024/1025 select 8/3/8-kernel paths, with completed graph-replay costs of 113.085/50.439/114.618\,$\mu$s. To separate physical extent from logical visibility, a padding intervention fixes each input and original mask columns, then appends finite zero K/V and fully masked columns~\cite{mappingrecords}.
-
-Padding logical length 1023 to physical extent 1024 reaches the three-kernel path on the first call but fails the unpadded reference on all four qualification hosts. Padding to 1025 passes all four, retains eight kernels and costs about 1.5\% more than either native QB control. The faster path is therefore available but inadmissible under the frozen reference (Figure~\ref{fig:mappingboundary}); it has no qualified steady-state cost.
+Reference admission can exclude an otherwise faster execution path. RTX physical key extents 1023/1024/1025 select 8/3/8 kernels. Padding the same logical length-1023 operands and mask to extent1024 reaches three kernels on the first call but fails all four reference qualifications. Padding to1025 qualifies, retains eight kernels and costs about 1.5\% more than native QB (Figure~\ref{fig:mappingboundary}).
 
 \begin{figure*}[t]
 \centering\input{figures/mapping_boundary}
-\caption{Reference and transaction constraints on mapping optimization. A: the length-1023 padding candidate reaches a three-kernel path on its first call but fails the reference. B: complete Q-representation transactions with explicit comparators. RTX and B570 use different geometries and execution modes. The B570 interval is descriptive and family-adjusted.}
+\caption{Reference and transaction constraints on representation choice. A: padding the same logical length-1023 input to extent1024 selects a three-kernel path but fails all four reference checks. B: complete Q-representation transactions, with conversion and transfer charged. RTX and B570 use distinct geometries and execution modes; the B570 interval is descriptive and family-adjusted.}
 \label{fig:mappingboundary}
 \end{figure*}
 
-\subsubsection{Charging the representation transaction}
-Compact Q removes a QH graph copy but must first be produced. The RTX timer covers the continuous transaction from common permuted host Q through copy/transpose, upload, graph replay/synchronization and complete ordinary-output readback. K/V and mask are resident; targets are preallocated. The window excludes model Q production and ongoing KV updates.
-
-For $q=2$ and $q=4$, compact-QH/QB\_A transaction ratios are 1.002216 and 1.001598; relative to QB\_B they are 1.008295 and 1.004167. Neither passes the practical screen against both controls. The B570 equal-head study likewise establishes no practical QH benefit: compact-QH/dual-QB is 0.992244, with descriptive adjusted interval [0.979908,1.004691] and paired difference $-1.518\,\mu$s [$-4.168,+0.916$]. \sref{supp:followupmapping} retains the separate resident-graph results.
-
-Fixed QB remains the baseline in these domains: a representation must repay its production and consumption costs, not just reduce internal graph work.
+Charging copy/transpose, upload, completed graph execution and ordinary-output readback removes the apparent compact-QH advantage. RTX compact-QH/QB\_A ratios are 1.002216 and 1.001598 at $q=2,4$, and neither passes the practical screen against both QB controls. The separate B570 transaction gives 0.992244 [0.979908,1.004691], also below the evidence required for a practical improvement. Fixed QB remains the selected baseline in these domains. Input-lifetime controls, continuous timer boundaries and all alternative mappings are detailed in \sref{supp:followupmapping}.

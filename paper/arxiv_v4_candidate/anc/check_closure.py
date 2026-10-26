@@ -97,5 +97,5 @@ def verify(check,root:Path):
         check('Service manuscript value '+value,value in text)
     check('Speculation percentage derived from service ratio',f"{100*(1-result['rtx']['economics']):.1f}"=='41.8')
     check('No bare percent truncates abstract',re.search(r'(?<!\\)%',(root/'abstract.tex').read_text()) is None)
-    check('Shared original/new bibliography all used',len(re.findall(r'^@\w+\{', (root/'references.bib').read_text(),re.M))==35)
+    check('Shared original/new bibliography all used',len(re.findall(r'^@\w+\{', (root/'references.bib').read_text(),re.M))==37)
     return result

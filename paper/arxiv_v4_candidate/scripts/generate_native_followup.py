@@ -324,9 +324,9 @@ def analyse(root=ROOT):
 
 def bridge_table(result):
     lines = [r'\begin{table*}[t]\centering\small',
-             r'\caption{Matched Qwen3 deployment bridge. Ratios compare QB with the arithmetic mean of identical PQ controls; aggregation gives equal weight to inputs and process sessions. Intervals are the registered Bonferroni-adjusted session-bootstrap intervals for the four-cell family. The practical screen also requires reduction above the A/A threshold and improvement in every session.}',
+             r'\caption{Matched Qwen3 deployment bridge. Ratios compare QB with the arithmetic mean of identical PQ controls; aggregation gives equal weight to inputs and process sessions. Intervals use the registered Bonferroni-adjusted bootstrap of six process sessions, with nominal 95\% family coverage across the four cells. The practical screen also requires reduction above the A/A threshold and improvement in every session.}',
              r'\label{tab:nativebridge}', r'\begin{tabular}{@{}rlll@{}}\toprule',
-             r'$k$ & Lifecycle & QB/dual-PQ [simultaneous interval] & Practical gain\\\midrule']
+             r'$k$ & Lifecycle & QB/dual-PQ [adjusted interval] & Practical gain\\\midrule']
     for cell in result['rtx_bridge']['cells']:
         low, high = cell['simultaneous_family95_interval']
         status = 'Established' if cell['practical_gain_established'] else 'Not established'

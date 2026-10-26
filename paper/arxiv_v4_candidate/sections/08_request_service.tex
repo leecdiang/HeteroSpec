@@ -1,36 +1,15 @@
-\subsection{Historical fresh-context request service}
+\subsection{Historical k1 service controls}
 \label{sec:service}
-\subsubsection{Service and reference contracts}
-The service studies integrate mapped verification into real speculative transactions and charge complete service cost. Both use a Qwen3-8B Q8\_0 target, Qwen3-0.6B Q8\_0 draft, four exposed inputs, $k=1$, F16 KV and non-flash attention. The platform panels have different formatting, output windows, frontends and prefill policies~\cite{b570servicerecords,rtxservicerecords}.
+The earlier RTX and B570 studies place the matched result in context. Both use Qwen3-8B/0.6B Q8\_0, $k=1$, F16 KV, non-flash attention and four exposed inputs. Their request formats, stopping windows, prefill policies and drivers differ. Each timer charges fresh-context creation, graph reservation, prefill, generation, synchronization and destruction, with model loading separate. Full contracts and all blocks appear in \sref{supp:service}~\cite{b570servicerecords,rtxservicerecords}.
 
-The timer spans fresh-context creation, graph reservation, prefill, generation, sampling, state handling, synchronization and context destruction. It includes host logits copies and native state work; correctness comparisons and raw-file output follow the timer. Shared model loading is recorded separately, and both models remain resident for target-only $R$. This window charges more lifecycle work than the resident HTTP requests in Section~\ref{sec:e2}.
-
-For input $i$ and process session $s$, define the identical-PQ control mean and layout ratio
+The paired layout estimator uses two identical PQ controls:
 \begin{equation}
 \bar T_{is,\PQ}=\tfrac12(T_{is,\PQ_A}+T_{is,\PQ_B}),\qquad
 r_{is}=T_{is,\QB}/\bar T_{is,\PQ}.
 \label{eq:servicepair}
 \end{equation}
-We aggregate $r_{is}$ geometrically with equal input and session weights; values below one favor QB. Separately, $d_{is}=T_{is,\QB}/T_{is,R}$ measures the frozen speculative policy's net value. The registered practical screen requires qualified outputs, a reduction above both 2\% and the largest absolute input-aggregate PQ\_A/PQ\_B imbalance, and a QB advantage in every session. All registered blocks enter this engineering screen.
+Input/session ratios are combined with equal log weights. The finite-panel screen requires a reduction above both 2\% and the largest input-aggregate A/A imbalance, with improvement in every session. Both original panels fail this practical layout screen: QB/dual-PQ is 0.995144 on B570 and 0.989284 on RTX. The corresponding point reductions are 0.486\% and 1.072\%, against A/A imbalances of 0.754\% and 5.208\%; two of four RTX sessions favor PQ.
 
-\subsubsection{Vulkan: qualified requests, costly speculation}
-The B570 bridge integrates the scoped GQA repair into a private model graph builder. Each fresh context fixes its layout before graph creation. Real-request traces record proposals, acceptance/correction/bonus decisions and KV trimming, and verify $q=2$, key256/512 and 32/8 GQA across all 36 target layers.
+The speculative policy has a different outcome. On RTX, QB/R=0.582325 and dual-PQ/R=0.588633, so PQ already obtains most of the 41.8\% service-time reduction. On B570, QB/R=2.619763 under its separate two-model Vulkan contract. Its qualified R/PQ/QB requests match complete endpoints, 346 PQ/QB full-logit pairs and cycle traces, while costly draft work dominates the request. Changing the draft thread parameter produces DRAFT1/dual-baseline=1.003994~\cite{b570policyrecords}. The later CPU-draft prefill-submission study gives SUBMIT/dual-baseline=0.999161 and also fails its practical screen~\cite{b570prefillrecords}.
 
-On HumanEval/38, /65, /115 and /127 with cap64 and natural EOG, R/PQ/QB endpoints agree. PQ/QB match 346 full-logit pairs, including rejected rows, and complete cycle traces. Four timing processes perform 64 measurements and 16 separately recorded warmups. QB/dual-PQ is 0.995144: its 0.486\% point reduction falls below the 2\% practical margin. The largest input-aggregate A/A imbalance is 0.754\%. QB/R is 2.619763; speculation increases service cost under this policy~\cite{b570servicerecords}.
-
-The mean target-verification host interval falls from 1.009015 to 0.935009 seconds (7.33\%), while draft prefill/decode costs 12.366798 seconds per QB request. These are host phase intervals. Changing the draft CPU-thread parameter from 8 to 1 preserves all 346 vectors but yields DRAFT1/dual-baseline 1.003994. One-task embedding operations may already clamp the effective worker count, so this parameter intervention neither improves cost nor identifies its physical cause~\cite{b570policyrecords}.
-
-\subsubsection{RTX at k1: useful speculation, unresolved layout increment}
-The RTX study freezes a new driver and prospective full-logit reference, retaining model/tokenizer bytes, cap128 and 21 numerical DLLs. Independent R/PQ references preserve historical endpoints. QB matches PQ verification and draft vectors, including discarded rows, and the full cycle/state trace. Qualification omits operator readbacks that would split the CUDA graph. Metadata verifies caller $q=2$, QB physical $q=2$, PQ serial $q=1$ and all 36 layers~\cite{rtxservicerecords}.
-
-Four fresh processes execute 64 measured requests and 64 separately charged warmups. Endpoint/state checks pass; all 16 paired blocks remain in the analysis. QB/dual-PQ is 0.989284, a 1.072\% point reduction, against 5.208\% maximum input-aggregate A/A imbalance; two of four sessions favor PQ. The practical QB increment remains unresolved, and the registered rule stops additional profiling.
-
-QB/R is 0.582325, a 41.8\% service-time reduction, with all 16 paired ratios below one. Dual-PQ/R is already 0.588633 (Figure~\ref{fig:servicepanels}): most of this policy gain is obtained by PQ. R uses target UB1; speculation uses target UB4 and draft UB1. These frozen-policy comparisons separate profitable speculation from QB's unresolved additional value.
-
-\begin{figure*}[t]
-\centering\input{figures/service_panels}
-\caption{Service costs under separate platform contracts. Small outlined points show all 16 input/session blocks per contrast; large markers are equal-weight geometric means. A: QB/dual-PQ. B: identical-PQ A/A, with the largest absolute input-aggregate imbalance used by the screen. C: both speculative paths relative to target-only R. Dashed lines mark parity; dotted lines show 2\%. Vertical offsets separate observations. Ratios below one favor the numerator. The platform panels are analyzed separately.}
-\label{fig:servicepanels}
-\end{figure*}
-
-The positive $k=3$ resident-request result and unresolved $k=1$ service increment use different drivers, inputs and cost windows. Their difference motivates the matched study in Section~\ref{sec:matchedbridge}. \sref{supp:service} preserves the original blocks, identities and completed B570 follow-ups.
+These controls distinguish the speculative policy's value from QB's incremental layout value. The common-runtime study above tests draft length and lifecycle directly; the original panels retain their separate references and timers. Their complete qualification, phase intervals, warmups and execution records remain in \sref{supp:service}.

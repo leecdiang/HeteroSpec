@@ -1,11 +1,12 @@
 Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 Author: Chengzhan Li
-Source revision: 2026-10-26 (native results integrated; not submitted)
+Source revision: 2026-10-26 (review-driven narrative revision; not submitted)
 
 This revision starts from the v4 source used in the accompanying review.
 It reorganizes the article around repair scope, draft profitability and QB's
-incremental implementation cost, then tests state/backend transfer and complete
-service cost. Original measurements and registered primary intervals are retained.
+incremental implementation cost, then matched complete-service cost and input/state/backend
+transfer. It defines offline workload qualification and separates backend admission
+from validated use. The original MQ label means multiple query positions, not MQA. Original measurements and registered primary intervals are retained.
 This editorial update incorporates completed platform executions; it launches no new native model request.
 
 Build the complete article and supplement:
@@ -35,6 +36,10 @@ CPU runtime interface checks and archived source/patch provenance are under
 anc/runtime_reproduction/. Follow its README for the exact scope and external
 dependencies. The companion branches now supply native build/replay results; this paper
 package itself is not a complete GPU runtime/raw-tensor capsule.
+REPRODUCTION_ACCESS.md gives pinned kit links and separates versioned fixtures,
+external model/runtime dependencies and source-host-only full-request references.
+A source-host handoff accompanies the PR to close those packaging gaps without
+new timing experiments.
 
 TeX tables and figures live outside anc/, so article compilation can use only
 the TeX sources and included bibliography. The ancillary directory contains

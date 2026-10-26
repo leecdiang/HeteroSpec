@@ -100,7 +100,7 @@ def test():
     check('Every source cross-reference resolves',set(refs)<=set(labels))
     bib=(ROOT/'references.bib').read_text();keys=re.findall(r'^@\w+\{([^,]+),',bib,re.M)
     cites=set(x.strip() for group in re.findall(r'\\cite(?:\[[^\]]*\])?\{([^}]+)\}',texts) for x in group.split(','))
-    check('37 unique bibliography entries: original 25, ten follow-up records and two FlashAttention papers',len(keys)==len(set(keys))==37)
+    check('39 unique bibliography entries: original 25, ten follow-up records, two FlashAttention papers and two delivery records',len(keys)==len(set(keys))==39)
     check('Every citation resolves with no unused entry',cites==set(keys))
     check('Single TeX document entry',sum(r'\documentclass' in p.read_text() for p in texfiles)==1)
     check('Shared bibliography and continuous pages',texts.count(r'\bibliography{references}')==1 and r'\setcounter{page}' not in texts)

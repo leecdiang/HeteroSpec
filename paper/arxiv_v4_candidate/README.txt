@@ -1,6 +1,6 @@
 Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 Author: Chengzhan Li
-Source revision: 2026-10-26 (review-driven narrative revision; not submitted)
+Source revision: 2026-10-27 (native material delivery closeout; not submitted)
 
 This revision starts from the v4 source used in the accompanying review.
 It reorganizes the article around repair scope, draft profitability and QB's
@@ -36,10 +36,12 @@ CPU runtime interface checks and archived source/patch provenance are under
 anc/runtime_reproduction/. Follow its README for the exact scope and external
 dependencies. The companion branches now supply native build/replay results; this paper
 package itself is not a complete GPU runtime/raw-tensor capsule.
-REPRODUCTION_ACCESS.md gives pinned kit links and separates versioned fixtures,
-external model/runtime dependencies and source-host-only full-request references.
-A source-host handoff accompanies the PR to close those packaging gaps without
-new timing experiments.
+REPRODUCTION_ACCESS.md gives pinned delivery links, authenticated download routes,
+exact model/DLL acquisition and package audit commands. The minimal native source,
+fixture and complete-request reference materials are delivered for both platforms;
+compact access/verification records are retained in anc/native_delivery/. Larger
+original archives remain in source-host custody. Delivery checks use preserved
+bytes on the source hosts; a new hardware host still needs native qualification.
 
 TeX tables and figures live outside anc/, so article compilation can use only
 the TeX sources and included bibliography. The ancillary directory contains

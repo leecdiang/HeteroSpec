@@ -1,4 +1,4 @@
-Current revision: see `docs/research/review_revision_20261026/REVISION.md` and `QA_FINAL.json` in the repository. The records below document earlier rounds; their PDF hashes, section numbers and figure-source status are historical.
+Current revision: see `docs/research/native_delivery_closeout_20261027/REVISION.md` and `QA_STATUS.json` in the repository. The records below document earlier rounds; their PDF hashes, section numbers and figure-source status are historical.
 
 # v3 → v4 source reconciliation and release review
 

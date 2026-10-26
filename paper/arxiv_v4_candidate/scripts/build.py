@@ -19,7 +19,7 @@ def main()->None:
     logs=ROOT/'build_logs';logs.mkdir(exist_ok=True);env=dict(os.environ)
     env['BIBINPUTS']=str(ROOT)+os.pathsep+env.get('BIBINPUTS','');env['BSTINPUTS']=str(ROOT)+os.pathsep+env.get('BSTINPUTS','')
     run([sys.executable,'-B','anc/check.py'],ROOT,logs/'reported_checks.json',env)
-    run([sys.executable,'-B','-m','unittest','test_release','test_closure','test_refinement','test_round3','test_major_revision','-v'],ROOT/'anc',logs/'tests.txt',env)
+    run([sys.executable,'-B','-m','unittest','test_release','test_closure','test_refinement','test_round3','test_major_revision','test_native_followup','-v'],ROOT/'anc',logs/'tests.txt',env)
     cmd=[latex,'-no-shell-escape','-interaction=nonstopmode','-halt-on-error','-file-line-error','main.tex']
     run(cmd,ROOT,logs/'pass1.txt',env)
     if not args.cached_bbl:run([bib,'main'],ROOT,logs/'bibtex.txt',env)

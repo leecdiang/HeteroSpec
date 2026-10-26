@@ -32,7 +32,7 @@ routes all Qwen arms and all R/QB arms to the original executable. Only the
 SmolLM2/Llama M_PQ and C_PQ arms use the metadata4 executable. Reproduction
 must preserve this routing and the unchanged numerical DLLs.
 
-A runnable minimal native release still needs:
+The following dependencies are external to this small CPU subdirectory:
 1. The exact source capsule and metadata4 correction, native build recipe,
    toolchain identifiers, and pinned backend libraries listed in PROVENANCE.json.
 2. One admitted native capture with original Q/K/V/mask spans and strides,
@@ -42,6 +42,15 @@ A runnable minimal native release still needs:
    reference output IDs/stop state, phase/layout configuration, and a driver.
 4. A clean-machine build and the two native smoke tests on the admitted hardware.
 
-These are packaging and execution prerequisites. The present addition provides
-a testable mapping contract and readable source provenance; it adds no native
-experiment and does not supply a GPU replication result.
+These dependencies have now been assembled and validated on the source hosts:
+- RTX: commit3429e2c49626c30e4a406a517a3e8a030aea9c7f,
+  scripts/native_reproduction/rtx_bridge/README.md and
+  benchmarks/rtx_native_bridge_20261026/RESULT.md.
+- B570: commit41cb7504ece1f78109fde6895b10ffc56dff8ef1,
+  benchmarks/b570_native_reproduction_v1/README.md and RESULT.md.
+
+Both campaigns include real native stage/request replay and same-host fresh-
+directory execution. RTX numerical DLLs remain pinned external dependencies;
+B570 numerical libraries are rebuilt from source. The complete bulk archives
+remain separately held. See ../followup_20261026/ for compact evidence and
+source pins. The tests in this CPU subdirectory still launch no GPU execution.

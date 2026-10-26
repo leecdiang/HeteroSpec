@@ -1,14 +1,14 @@
 \section{A deployment decision rule}
-\label{sec:transfer}
+\label{sec:decisionrule}
 The results support an ordered comparison of qualified implementations.
 
 \paragraph{Choose the repair scope before judging the draft.}
-For each repair organization, compare target-only and speculative requests under the same reference, inputs and timer. The seven-arm experiment shows that this choice changes the sign of draft value for two families. A draft rejected under global serialization can be profitable after local repair; a draft paired with a faster layout can still lose to target-only execution.
+For each repair organization, compare target-only and speculative requests under the same reference, inputs and timer. The seven-arm experiment shows that this choice changes the sign of draft value for two families. A draft rejected under global serialization can be profitable after local repair; a draft paired with a faster layout can still lose to target-only execution. Qualification must cover the intended inputs: the later Llama counterexample shows that mutually agreeing PQ/QB executions can both depart from the deployed reference~\cite{rtxtransferrecords}.
 
 \paragraph{Preserve evaluation within a query and expose work across queries.}
 The Q/mask views preserve logical operands and indexing. The scoped Vulkan port supplies the backend counterpart: retain the noncontiguous AV shader, use a zero V batch stride and dispatch independent query workgroups~\cite{b570gqarecords}. Its packed alternative loses byte correspondence. Phase/layout tags and producer-state qualification are therefore part of the interface, alongside tensor shapes and strides. Endpoint equality alone does not license cache-component substitution.
 
 \paragraph{Charge the complete deployment transaction.}
-After selecting local repair, compare QB directly with PQ. Include graph preparation, reuse, submission and request lifecycle costs in the intended service window. The resident CUDA study establishes an incremental QB benefit; the fresh-context panels do not pass their practical screen. The data support choosing the cheaper qualified policy in each measured setting, rather than treating either drafting or QB as an unconditional speedup.
+After selecting local repair, compare QB directly with PQ. Include graph preparation, reuse, submission and request lifecycle costs in the intended service window. The common-runtime bridge establishes a practical QB benefit at $k=3$ for both resident and fresh contexts, while neither $k=1$ cell passes the screen~\cite{rtxnativebridge}. Draft length changes the measured value of the layout; fresh-context overhead does not by itself eliminate that value. The B570 prefill-submission follow-up supplies a separate negative result: reducing API submissions preserves the reference but does not clear the service-benefit screen~\cite{b570prefillrecords}. Select the cheaper qualified policy using the complete request, not acceptance rate, caller count or one operator interval alone.
 
 These control points complement batch-invariant kernels~\cite{thinkingmachines}, reproducible accumulation~\cite{reproblas} and phase-aware tiled execution~\cite{spectra}. A hardware extension must preserve the declared evaluation, including matrix-instruction details beyond dtype~\cite{ptx}, and beat an equal-resource baseline at a measured request-critical cost. The archived same-policy AV model supplies a parity control, not that performance evidence~\cite{studyrecords}.

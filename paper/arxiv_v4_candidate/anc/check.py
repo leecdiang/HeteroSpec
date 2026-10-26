@@ -100,7 +100,7 @@ def test():
     check('Every source cross-reference resolves',set(refs)<=set(labels))
     bib=(ROOT/'references.bib').read_text();keys=re.findall(r'^@\w+\{([^,]+),',bib,re.M)
     cites=set(x.strip() for group in re.findall(r'\\cite(?:\[[^\]]*\])?\{([^}]+)\}',texts) for x in group.split(','))
-    check('31 unique bibliography entries: original 25 plus six pinned follow-up records',len(keys)==len(set(keys))==31)
+    check('35 unique bibliography entries: original 25 plus ten pinned follow-up records',len(keys)==len(set(keys))==35)
     check('Every citation resolves with no unused entry',cites==set(keys))
     check('Single TeX document entry',sum(r'\documentclass' in p.read_text() for p in texfiles)==1)
     check('Shared bibliography and continuous pages',texts.count(r'\bibliography{references}')==1 and r'\setcounter{page}' not in texts)
@@ -122,9 +122,12 @@ def test():
     spec=importlib.util.spec_from_file_location('generate_e2_absolute_cost',ROOT/'scripts/generate_e2_absolute_cost.py')
     absolute_module=importlib.util.module_from_spec(spec);spec.loader.exec_module(absolute_module)
     absolute=absolute_module.verify(check,ROOT)
+    followup_spec=importlib.util.spec_from_file_location('generate_native_followup',ROOT/'scripts/generate_native_followup.py')
+    followup_module=importlib.util.module_from_spec(followup_spec);followup_spec.loader.exec_module(followup_module)
+    followup=followup_module.verify(check,ROOT)
     from check_repair_interaction import verify as verify_interaction
     interaction=verify_interaction(check,ROOT)
-    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,
+    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,'native_followup':followup,
             'scope':'Reported-value/source checks, not native execution, full-vector reconstruction, all-input correctness or arXiv-server validation.',
             'new_model_executions':0}
 if __name__=='__main__':

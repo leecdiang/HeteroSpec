@@ -1,0 +1,21 @@
+\subsection{Matched deployment: k3 gains survive fresh contexts}
+\label{sec:matchedbridge}
+A new matched study separates the effects of speculative depth and context lifecycle within one runtime~\cite{rtxnativebridge}. It uses the original twelve exposed Qwen3 inputs, unchanged model/tokenizer bytes, context1024, target UB4, draft UB1 and cap128/native EOG. One executable supplies all four $k=1,3$ by resident/fresh cells and the PQ\_A/PQ\_B/QB arms. All 204 qualification requests preserve complete outputs and speculative state; corresponding PQ/QB decision vectors agree, and every output also matches the historical E2 reference.
+
+Six independently loaded process sessions complete 864 measurements and 72 warmups. The order balances cells and arms within input/session blocks. Both models remain loaded. Resident requests clear their existing contexts; fresh requests create and destroy contexts inside the service timer. The shared timer includes prefill, generation, sampling, synchronization and result construction. Heavy capture and additional backend counters are disabled.
+
+\input{tables/native_bridge}
+
+QB reduces service time by 6.26\% at resident $k=3$ and 5.36\% at fresh $k=3$ (Table~\ref{tab:nativebridge}). Both pass the registered practical screen; neither $k=1$ cell passes. The $k=3$ point reductions exceed their respective 4.125\% and 4.388\% input-aggregate A/A imbalances and favor QB in every session. The four primary intervals resample whole process sessions and use a Bonferroni adjustment; the twelve inputs remain a fixed panel.
+
+The layout benefit therefore survives fresh-context service at $k=3$. Secondary paired contrasts favor a stronger layout effect at $k=3$ in both lifecycles, while each individual lifecycle contrast includes parity. Changing $k$ changes the speculative transaction as well as query width. These comparisons identify a deployment-dependent layout effect, not a pure width intervention or a CUDA Graph mechanism. The new driver also does not reconstruct every difference between the older HTTP E2 and fresh-service contracts.
+
+\subsection{Transfer to previously unexposed inputs}
+\label{sec:transfer}
+A separate study retains the three-family $k=3$ resident HTTP contract and tests twelve previously unexposed natural inputs per family~\cite{rtxtransferrecords}. The frozen panel covers formatted prompt-length strata 64--192, 256--448 and 640--832 within context1024. Short inputs are GSM8K mathematics; longer inputs are CodeContests code. Length and domain therefore vary together.
+
+\input{tables/heldout_transfer}
+
+Qwen3 and SmolLM2 pass all twelve inputs. Four sessions per family supply 384 measurements and 384 warmups in total. SmolLM2's 6.99\% QB layout reduction passes the finite-panel practical screen, yet QB/R is 1.007007: the complete speculative request remains slightly slower than its serial reference. Qwen3's 3.22\% reduction is smaller than its 4.78\% A/A threshold. Layout value and profitable speculation remain separate questions.
+
+Llama provides a reference-transfer counterexample. On CodeContests/valid/108, with 737 formatted prompt tokens, PQ and QB agree with each other in outputs, full decision vectors and causal trace, but both depart from deployed R at zero-based output index81. The remaining three Llama inputs and all Llama timing slots stay unexecuted. PQ/QB correspondence therefore does not establish reference preservation on a new input. The tested native-fast comparator also fails reference qualification in all three families; no qualified timing victory over that route is claimed. \sref{supp:followup} gives accounting and source access.

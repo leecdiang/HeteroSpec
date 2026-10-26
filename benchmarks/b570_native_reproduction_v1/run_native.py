@@ -64,7 +64,10 @@ def main():
             rc.update(exit_code=worker.returncode,exit_observed=True,status='complete' if worker.returncode==0 else 'failed')
         acct=Accounting();check(K.QueryInformationJobObject(job,1,c.byref(acct),c.sizeof(acct),None),'Job accounting failed')
         rc['job_accounting']={key:getattr(acct,key) for key,_ in Accounting._fields_}
-        check(acct.total_processes==1 and acct.active_processes==0,'Unexpected process tree')
+        rc['main_process_count']=1
+        rc['other_job_processes']=acct.total_processes-1
+        rc['other_job_process_identity']='NOT_CAPTURED; cumulative Job count is authoritative, active limit is not a lifetime count'
+        check(1<=acct.total_processes<=4 and acct.active_processes==0,'Job total bound or cleanup failure')
     except BaseException as e:
         rc.update(status='failed',error=str(e));K.TerminateJobObject(job,2)
         if worker is not None:

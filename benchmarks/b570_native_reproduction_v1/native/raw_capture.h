@@ -3,10 +3,11 @@
 // Diagnostic readback only. The ordinary request path never enables this hook.
 inline bool raw_stage_capture(ggml_tensor *t, bool ask, const std::string &phase) {
     const char *root = getenv("HS_STAGE_CAPTURE");
-    if (!root || !*root || phase != "VERIFY") return false;
+    const char *layout = getenv("HS_REQUEST_LAYOUT");
+    if (!root || !*root || !layout || strcmp(layout,"QB")!=0 || phase != "VERIFY") return false;
     static std::set<std::string> saved;
     std::string name=t->name;
-    std::map<std::string,std::string> stages={{"hs_qb_qk-0","qk"},{"hs_qb_prob-0","softmax"},{"hs_qb_av-0","av"},{"hs_qb_final-0","final"}};
+    std::map<std::string,std::string> stages={{"hs_qb_qk-0","qk"},{"hs_qb_prob-0","softmax"},{"hs_qb_av-0","av"},{"kqv_out-0","final"}};
     if (!stages.count(name) || saved.count(name)) return false;
     if (ask) return true;
     fs::path dir=root;fs::create_directories(dir);

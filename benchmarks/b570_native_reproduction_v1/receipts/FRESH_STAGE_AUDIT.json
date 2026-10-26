@@ -1,0 +1,285 @@
+{
+  "status": "REAL_STAGE_REPLAY_AUDIT_PASS",
+  "request": "C:\\hs\\b570-native-reproduction-20261026\\capture-a2",
+  "fixture": "C:\\hs\\b570-native-reproduction-20261026\\fresh-v1\\fixture",
+  "replay": "C:\\hs\\b570-native-reproduction-20261026\\fresh-stage-a1",
+  "provenance": "new capture, QB first VERIFY at layer0; q1 is first-query slice",
+  "input_id": "HumanEval/115",
+  "cycle": {
+    "accepted": 1,
+    "base": 349,
+    "batch_ids": [
+      750,
+      1932
+    ],
+    "cycle": 0,
+    "decisions": [
+      1932,
+      30728
+    ],
+    "draft_kv_max": 350,
+    "keep": 351,
+    "proposal": 1932,
+    "q_caller": 2,
+    "seed_id": 750,
+    "target_kv_max": 350
+  },
+  "visible_keys": [
+    350,
+    351
+  ],
+  "records": [
+    {
+      "name": "Q",
+      "bytes": 32768,
+      "sha256": "95b08609bd3484335500e39052d6dc916c58e6e832a50b6024507a15a9ba2727",
+      "ne": [
+        128,
+        1,
+        32,
+        2
+      ],
+      "nb": [
+        4,
+        16384,
+        512,
+        16384
+      ]
+    },
+    {
+      "name": "K",
+      "bytes": 1048576,
+      "sha256": "f1ced34b00dfb69c01ede9565c42ac70c958d184837cc53c4e42b1ddaefffd8b",
+      "ne": [
+        128,
+        512,
+        8,
+        1
+      ],
+      "nb": [
+        2,
+        2048,
+        256,
+        2097152
+      ]
+    },
+    {
+      "name": "V",
+      "bytes": 2096128,
+      "sha256": "501603e99146997ccdec157ba5b746a691f79a5741641ecc937f3d3febfa44b2",
+      "ne": [
+        512,
+        128,
+        8,
+        1
+      ],
+      "nb": [
+        2,
+        2048,
+        262144,
+        2097152
+      ]
+    },
+    {
+      "name": "mask",
+      "bytes": 4096,
+      "sha256": "3cf146dddec9ad1f8120f46158ec4bdeb067a47d913132b1967addc22d1fea82",
+      "ne": [
+        512,
+        1,
+        1,
+        2
+      ],
+      "nb": [
+        4,
+        2048,
+        4096,
+        2048
+      ]
+    },
+    {
+      "name": "qk",
+      "bytes": 131072,
+      "sha256": "22a02c2eedbb729af311f8579ab541379e7062fe6e06a89a17a12b6dc2f05b2b",
+      "ne": [
+        512,
+        1,
+        32,
+        2
+      ],
+      "nb": [
+        4,
+        2048,
+        2048,
+        65536
+      ]
+    },
+    {
+      "name": "softmax",
+      "bytes": 131072,
+      "sha256": "f2614c9c5db8cdbc57744bcd1a3b4a27232f3fb7a662855e4c1b28a6865e114b",
+      "ne": [
+        512,
+        1,
+        32,
+        2
+      ],
+      "nb": [
+        4,
+        2048,
+        2048,
+        65536
+      ]
+    },
+    {
+      "name": "av",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823",
+      "ne": [
+        128,
+        1,
+        32,
+        2
+      ],
+      "nb": [
+        4,
+        512,
+        512,
+        16384
+      ]
+    },
+    {
+      "name": "final",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823",
+      "ne": [
+        4096,
+        2,
+        1,
+        1
+      ],
+      "nb": [
+        4,
+        16384,
+        32768,
+        32768
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "q": 1,
+      "arm": "PQ",
+      "stage": "qk",
+      "bytes": 65536,
+      "sha256": "5c6a89d79dbc2ebbffddcf47260868b3408a2c489326ce12a6c35592cb1531e1"
+    },
+    {
+      "q": 1,
+      "arm": "PQ",
+      "stage": "softmax",
+      "bytes": 65536,
+      "sha256": "09970b499bfa117f85a344efe3b781fe18c3ce935eb1437afa9e6a1b2c9ce224"
+    },
+    {
+      "q": 1,
+      "arm": "PQ",
+      "stage": "av",
+      "bytes": 16384,
+      "sha256": "83298397c7390a65b3dc844dccda76c8614bc93a6791a75524df2eca7df730b2"
+    },
+    {
+      "q": 1,
+      "arm": "PQ",
+      "stage": "final",
+      "bytes": 16384,
+      "sha256": "83298397c7390a65b3dc844dccda76c8614bc93a6791a75524df2eca7df730b2"
+    },
+    {
+      "q": 1,
+      "arm": "QB",
+      "stage": "qk",
+      "bytes": 65536,
+      "sha256": "5c6a89d79dbc2ebbffddcf47260868b3408a2c489326ce12a6c35592cb1531e1"
+    },
+    {
+      "q": 1,
+      "arm": "QB",
+      "stage": "softmax",
+      "bytes": 65536,
+      "sha256": "09970b499bfa117f85a344efe3b781fe18c3ce935eb1437afa9e6a1b2c9ce224"
+    },
+    {
+      "q": 1,
+      "arm": "QB",
+      "stage": "av",
+      "bytes": 16384,
+      "sha256": "83298397c7390a65b3dc844dccda76c8614bc93a6791a75524df2eca7df730b2"
+    },
+    {
+      "q": 1,
+      "arm": "QB",
+      "stage": "final",
+      "bytes": 16384,
+      "sha256": "83298397c7390a65b3dc844dccda76c8614bc93a6791a75524df2eca7df730b2"
+    },
+    {
+      "q": 2,
+      "arm": "PQ",
+      "stage": "qk",
+      "bytes": 131072,
+      "sha256": "22a02c2eedbb729af311f8579ab541379e7062fe6e06a89a17a12b6dc2f05b2b"
+    },
+    {
+      "q": 2,
+      "arm": "PQ",
+      "stage": "softmax",
+      "bytes": 131072,
+      "sha256": "f2614c9c5db8cdbc57744bcd1a3b4a27232f3fb7a662855e4c1b28a6865e114b"
+    },
+    {
+      "q": 2,
+      "arm": "PQ",
+      "stage": "av",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823"
+    },
+    {
+      "q": 2,
+      "arm": "PQ",
+      "stage": "final",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823"
+    },
+    {
+      "q": 2,
+      "arm": "QB",
+      "stage": "qk",
+      "bytes": 131072,
+      "sha256": "22a02c2eedbb729af311f8579ab541379e7062fe6e06a89a17a12b6dc2f05b2b"
+    },
+    {
+      "q": 2,
+      "arm": "QB",
+      "stage": "softmax",
+      "bytes": 131072,
+      "sha256": "f2614c9c5db8cdbc57744bcd1a3b4a27232f3fb7a662855e4c1b28a6865e114b"
+    },
+    {
+      "q": 2,
+      "arm": "QB",
+      "stage": "av",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823"
+    },
+    {
+      "q": 2,
+      "arm": "QB",
+      "stage": "final",
+      "bytes": 32768,
+      "sha256": "97e99fefee20dbeb2d4b4309b6e65201899cd9b2da5aa0933482a7890bc08823"
+    }
+  ],
+  "comparisons_passed": 16,
+  "performance_claim": false
+}

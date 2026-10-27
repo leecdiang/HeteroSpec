@@ -1,26 +1,8 @@
 \section{Repair scope and query-layout cost}
 \label{sec:results}
-\subsection{Complete-output qualification across model families}
-The larger confirmation tests the frozen target-phase repair on 24 inputs per family. Repaired target-only $M_3$ and speculative $C_3$ match all 240 required endpoints per family, whereas the unconstrained batched target-only path $M_0$ fails on 5, 14 and 9 distinct tasks for Qwen3, SmolLM2 and Llama. Table~\ref{tab:qualification} retains the original arm identities and repeated-request counts. The archived \texttt{query\_batch} label identifies mask3/UB4 but does not resolve its graph implementation as the later PQ or QB. This panel supports the historical repair's output qualification; the explicitly labelled seven-arm and E2 studies supply the PQ/QB comparison.
-
-\begin{table}[t]\centering\small
-\caption{Historical frozen-panel confirmation: matching endpoints out of 240 per arm/family. $M_3/C_3$ retain their original implementation identity; $M_0$ is unconstrained UB4 and $R_{\mathrm{prod}}$ an engineering-selected ordinary recipe.}
-\label{tab:qualification}
-\begin{tabular}{lrrr}\toprule
-Arm & Qwen3 & SmolLM2 & Llama\\\midrule
-$R$ &240&240&240\\
-$M_0$ &190&100&150\\
-$M_3$ &240&240&240\\
-$C_3$ &240&240&240\\
-$R_{\mathrm{prod}}$ &240&100&160\\\bottomrule
-\end{tabular}
-\end{table}
-
-The ordinary $R_{\mathrm{prod}}$ recipe keeps UB1 for Qwen3 and uses UB512 for the other families. Its SmolLM2 and Llama failures prevent those comparisons from being reported as reference-preserving deployment gains. In the separate seven-arm implementation campaign, all arms qualify 96/96 endpoints per family. E2 also passes every required serial-reference and PQ/QB endpoint check across all six sessions. Full task results and ordinary-baseline failures are retained in \sref{supp:confirmation}.
-
 \subsection{Repair scope changes draft profitability}
 \label{sec:economics}
-The seven-arm campaign compares repair scope and drafting on the same qualified 12-input panel. Figure~\ref{fig:cost} separates local representation cost, global serialization cost and the draft increment under all three repair organizations. These estimates retain the original two-session protocol, separately from E2.
+The seven-arm campaign compares repair scope and drafting on the same 12-input panel. All seven arms qualify 96/96 complete endpoints per family under the declared reference. Figure~\ref{fig:cost} separates local representation cost, global serialization cost and the draft increment under all three repair organizations. These estimates retain the original two-session protocol, separately from E2.
 
 \begin{figure*}[t]\centering
 \resizebox{\textwidth}{!}{\input{figures/cost}}
@@ -29,6 +11,8 @@ The seven-arm campaign compares repair scope and drafting on the same qualified 
 \end{figure*}
 
 Its speculative GS/QB ratios are 2.144, 1.463 and 2.176; every task favors QB. These differences reflect the value of constraining attention locally while retaining batched projection and feed-forward work. The PQ/QB ratios, 1.044, 1.068 and 1.022, measure the representation choice within local repair. These common-panel estimates distinguish repair scope from layout cost; E2 supplies a separately scheduled PQ/QB comparison.
+
+A retrospective audit of all 2,016 formal responses forms 288 matched seven-arm audit groups. All 1,728 within-path GS/PQ/QB pairings agree in recorded proposals, acceptance, logical rows, rollback and caller-width histograms; complete native token IDs and recorded EOG flags match the paired $R$ endpoints. GS changes physical batching as intended; PQ/QB agree in every workload field. This holds recorded logical work fixed without apportioning operator time (\sref{supp:sevenarmwork}).
 
 Adding the draft to QB is profitable for Qwen3 and Llama but not SmolLM2: $M_{\QB}/C_{\QB}$ is 1.144, 0.634 and 1.117. SmolLM2 takes about 1.58 times its own draft-free request duration despite QB being cheaper than PQ. Across the common seven-arm panel, draft value under another layout $L$ follows
 \begin{equation}
@@ -43,33 +27,27 @@ The relative change in draft value summarizes this interaction:
 =\frac{S_{C_{\GS}/C_{\QB}}}{S_{M_{\GS}/M_{\QB}}}.
 \label{eq:repairinteraction}
 \end{equation}
-It is 1.612, 1.071 and 1.542 for the three families, respectively. These are retrospective ratio-of-ratios summaries from the reported common-panel estimates, with the original weights and timer. They quantify how repair policy changes the draft increment at complete-request level. The resulting design decision is to select a qualified repair policy before evaluating the draft's incremental cost.
+It is 1.612, 1.071 and 1.542 for the three families, respectively. These are retrospective ratio-of-ratios summaries from the reported common-panel estimates, with the original weights and timer. They quantify how repair policy changes the draft increment at complete-request level. The draft's incremental cost must therefore be evaluated under the repair policy being considered.
 
-Reference-preserving batching also has value without drafting. Target-only QB lowers cost relative to the specified serial reference: $R/M_{\QB}$ is 1.334051, 1.369890 and 1.426161, with every task favoring QB on this panel. For SmolLM2, the measured choice is therefore to retain target-only QB batching and omit the draft. This separates the benefit of batched target execution from the profitability of speculative decoding.
+Reference-preserving batching also has value without drafting. Target-only QB lowers cost relative to the specified serial reference: $R/M_{\QB}$ is 1.334051, 1.369890 and 1.426161, with every task favoring QB on this panel. For SmolLM2, the measured choice is therefore to retain target-only QB batching and omit the draft. These complete-request gains include prompt prefill; the target-only continuation uses a common one-query path. They establish neither a single-token decoding speedup nor a measured decomposition by phase.
 
 A historical fixed-UB4 experiment provides a related counterexample: increasing $k$ from 3 to 7 preserved outputs but reduced request speed to 0.890 of the smaller-draft path. Separate work captures recorded fewer target callers and more physical micrographs. Acceptance and caller reduction alone therefore cannot establish request acceleration. The width failures and negative cost results that constrain this conclusion remain in \sref{supp:implementation}.
 
-\subsection{Same-input correspondence across layers and phases}
-\label{sec:numeric}
-The initial 24-context replay established PQ/QB correspondence at sampled layer-0 attention boundaries. E1 expands the test to three layer positions, prefill and continuation, and $q=1,2,3,4$ in each family. All 72 contexts pass observation, native-MQ own-path and repeatability checks. PQ and QB are bitwise equal at QK, softmax and AV in every context, with zero maximum error and ULP distance (Figure~\ref{fig:numeric}).
+\subsection{Draft decisions across the six E2 sessions}
+\label{sec:e2draft}
+E2 records target-only and speculative requests under each local layout. We retrospectively pair its 864 non-warmup local-arm measurements into 216 family/task/session quartets: $M_{\PQ}$, $M_{\QB}$, $C_{\PQ}$ and $C_{\QB}$. The contrast $D_L=S_{M_L/C_L}$ uses the weights in Equation~\ref{eq:ratio}.
 
-\begin{figure}[t]\centering
-\resizebox{\columnwidth}{!}{\input{figures/numeric}}
-\caption{Completed 72-context CUDA replay. The 18 agreements between MQ and either repair are exactly the $q=1$ common-path controls. The 54 multi-query cases first differ at QK. All PQ/QB stage outputs agree bitwise.}
-\label{fig:numeric}
-\end{figure}
+\input{tables/e2_draft_profitability}
 
-The sampled target layers are $0/18/35$ for Qwen3, $0/12/23$ for SmolLM2 and $0/16/31$ for Llama. Qwen3 and Llama use head dimension 128 with 32 query heads and 8 KV heads; SmolLM2 uses dimension 64 with 32/32 heads. Thus the observed correspondence spans both ordinary and grouped-query attention and more than one head dimension.
+Table~\ref{tab:e2draft} retains all three local-policy directions: drafting benefits Qwen3 and Llama, while SmolLM2 favors target-only execution. Every one of the six session estimates has the corresponding direction under both PQ and QB. Under QB, drafting reduces complete-request latency by 7.72\% and 9.51\% for Qwen3 and Llama; it increases SmolLM2 latency by 67.52\%. The magnitudes differ from the original two-session campaign, while the policy decisions agree.
 
-MQ agrees with either repaired path only in the 18 single-query controls. Across the other 54 contexts, its first difference is at QK; maximum finite absolute differences are 0.078583 at QK, 0.000917 at softmax and 0.010433 at AV. These are operator differences on identical operands, not model-logit bounds.
-
-All snapshots have tensor key extent 256, including masked padding. The maximum number of visible keys is 109, 130 and 127 by family; prefill captures include early query positions with only one to four visible keys. The experiment covers layers, phases and query widths at these short visible contexts, using one exposed prompt per family. Complete coordinates and operator comparisons appear in \sref{supp:cuda}.
+The exploratory pointwise $t_5$ intervals use sessions as sampling units; the registered PQ/QB analysis is unchanged. Pairing separately collected target-only and speculative blocks does not remove within-session drift. Without a GS arm, E2 checks the local draft decision rather than independently replicating the full repair-scope interaction. Complete estimates and the PQ-to-QB change in draft value appear in \sref{supp:e2draft}.
 
 \subsection{QB's independent implementation benefit}
 \label{sec:e2}
-E2 completes 1,620 requests in 324 fresh workers, including 324 registered warmups. There are no request failures, output mismatches, workload errors or heavy-observer flags. The six-session speculative ratios $C_{\PQ}/C_{\QB}$ are 1.031614, 1.065803 and 1.029114, corresponding to 3.06\%, 6.17\% and 2.83\% lower QB request latency. Figure~\ref{fig:e2} shows both paths and their session-level uncertainty.
+The registered E2 comparison isolates representation cost within local repair. It completes 1,620 requests in 324 fresh workers, including 324 warmups and 432 serial-reference measurements. There are no request failures, output mismatches, workload errors or heavy-observer flags. The six-session speculative ratios $C_{\PQ}/C_{\QB}$ are 1.031614, 1.065803 and 1.029114, corresponding to 3.06\%, 6.17\% and 2.83\% lower QB request latency. Figure~\ref{fig:e2} shows both paths and their session-level uncertainty.
 
-Table~\ref{tab:e2absolute} gives the absolute cost behind these ratios. It uses the same task/session log weights on the recovered, source-verified request records. The speculative PQ/QB geometric means are 1987.2/1926.3\,ms for Qwen3, 1238.8/1162.3\,ms for SmolLM2 and 2360.9/2294.2\,ms for Llama.
+Table~\ref{tab:e2absolute} gives absolute costs from the source-verified requests, using the same task/session log weights.
 \begin{table}[t]\centering\small
 \caption{Absolute E2 request costs (ms), with equal task and session weights in the geometric mean. Registered warmups are excluded; the paid interval includes submission, full-response parsing and endpoint validation.}\label{tab:e2absolute}
 \input{tables/e2_absolute_cost}
@@ -88,4 +66,21 @@ The secondary $t_5$ intervals remain above 1.02 for speculative Qwen3 and SmolLM
 E2 establishes endpoint and recorded-counter correspondence across all 216 speculative PQ/QB task/session pairs: acceptance, rollback and logical-workload counters agree. This supports an implementation-cost comparison under matched recorded work. The original two-session estimates and their target-only direction reversals are reported in \sref{supp:cost}; E2's recorded-counter scope is detailed in \sref{supp:cuda}.
 
 The recovered E2 records do not report actual CUDA Graph capture, replay or fallback counts. The request-cost estimate therefore identifies the implementation effect but does not isolate those mechanisms. The controlled QB/QH replay study in Section~\ref{sec:mappingcosts} has its own execution evidence and comparator.
+
+
+\subsection{Same-input correspondence across layers and phases}
+\label{sec:numeric}
+The initial 24-context replay established PQ/QB correspondence at sampled layer-0 attention boundaries. E1 expands the test to three layer positions, prefill and continuation, and $q=1,2,3,4$ in each family. All 72 contexts pass observation, native-MQ own-path and repeatability checks. PQ and QB are bitwise equal at QK, softmax and AV in every context, with zero maximum error and ULP distance (Figure~\ref{fig:numeric}).
+
+\begin{figure}[t]\centering
+\resizebox{\columnwidth}{!}{\input{figures/numeric}}
+\caption{Completed 72-context CUDA replay. The 18 agreements between MQ and either repair are exactly the $q=1$ common-path controls. The 54 multi-query cases first differ at QK. All PQ/QB stage outputs agree bitwise.}
+\label{fig:numeric}
+\end{figure}
+
+The sampled target layers are $0/18/35$ for Qwen3, $0/12/23$ for SmolLM2 and $0/16/31$ for Llama. Qwen3 and Llama use head dimension 128 with 32 query heads and 8 KV heads; SmolLM2 uses dimension 64 with 32/32 heads. Thus the observed correspondence spans both ordinary and grouped-query attention and more than one head dimension.
+
+MQ agrees with either repaired path only in the 18 single-query controls. Across the other 54 contexts, its first difference is at QK; maximum finite absolute differences are 0.078583 at QK, 0.000917 at softmax and 0.010433 at AV. These are operator differences on identical operands, not model-logit bounds.
+
+All snapshots have tensor key extent 256, including masked padding. The maximum number of visible keys is 109, 130 and 127 by family; prefill captures include early query positions with only one to four visible keys. The experiment covers layers, phases and query widths at these short visible contexts, using one exposed prompt per family. Complete coordinates and operator comparisons appear in \sref{supp:cuda}.
 

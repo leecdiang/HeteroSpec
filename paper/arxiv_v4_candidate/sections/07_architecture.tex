@@ -1,20 +1,25 @@
 \section{Selecting a reference-qualified implementation}
 \label{sec:decisionrule}
-The experiments support three ordered choices for the declared workload: qualify the repair, decide whether to draft, and select the local representation (Table~\ref{tab:deploymentrule}). Keeping these choices separate assigns each measured gain to its actual source.
+Repair scope, local representation and draft policy jointly determine request cost. For a declared workload $X$ and service contract, let $\mathcal A_\rho(X)$ contain the evaluated candidate combinations that pass reference qualification. The selection objective is
+\begin{equation}
+a^\star=\arg\min_{a\in\mathcal A_\rho(X)} \widehat T_a(X),
+\label{eq:policyselection}
+\end{equation}
+where $\widehat T_a$ is the observed complete-request cost estimate, using the same estimator and weights across candidates. Table~\ref{tab:deploymentrule} separates the conditional comparisons needed to evaluate this joint choice. Their effects need not be separable; sequentially choosing each dimension need not find the cheapest combination.
 
 \begin{table*}[t]\centering\small
-\caption{An offline selection rule for a declared reference, input workload and service contract. The evaluated implementation enforces phase/configuration guards; the rule does not add an online correctness verifier.}
+\caption{Evidence for joint offline policy selection under a declared reference, workload and service contract. Each cost comparison is conditional on the other policy dimensions.}
 \label{tab:deploymentrule}
 \begin{tabularx}{\textwidth}{@{}p{2.6cm}YY@{}}\toprule
 Choice & Evidence required & Resulting decision\\\midrule
-Reference admission & Supported layout, producer state and complete-output checks against $R$ & Admit passing workload/configuration pairs; retain $R$ outside the validated domain.\\
-Draft on or off & Target-only and speculative requests with the same repair, reference and timer & Use the cheaper qualified policy; local repair changes this choice for Qwen3/Llama, while SmolLM2 favors target-only execution on the original panel.\\
+Reference admission & Supported layout, producer state and complete-output checks against $R$ & Admit passing workload/configuration pairs under the contract in Section~\ref{sec:contract}.\\
+Draft on or off & Target-only and speculative requests with the same repair, reference and timer & Use the cheaper qualified policy; Qwen3/Llama favor drafting under both local repairs, while SmolLM2 favors target-only execution in the original panel and the retrospective E2 analysis.\\
 PQ or QB & Paired complete-request cost with A/A and session controls & Select QB where its incremental benefit passes the declared screen; matched Qwen3 $k=3$ passes under both lifecycles, while $k=1$ remains unresolved.\\\bottomrule
 \end{tabularx}
 \end{table*}
 
 \paragraph{Repair scope is a scheduling decision}
-The matched seven-arm panel shows that local repair changes the sign of the draft increment for two families. Both PQ and QB make that transition by retaining batched projections and feed-forward work. QB then reduces the representation cost within local repair. Target-only batching supplies a useful endpoint even when the draft adds cost, as SmolLM2 demonstrates.
+The matched seven-arm panel shows that local repair changes the sign of the draft increment for two families. Both PQ and QB retain batched projections and feed-forward work; QB reduces the representation cost within local repair. E2 retains the local draft decisions across all six sessions. Target-only batching supplies a useful endpoint when the draft adds cost, as SmolLM2 demonstrates.
 
 \paragraph{Numerical organization belongs in runtime interfaces}
 Paired Q/mask views carry query and head semantics; the phase flag and layout-sensitive cache check preserve those choices during graph reuse. The scoped Vulkan port retains the noncontiguous AV shader while exposing independent query workgroups~\cite{b570gqarecords}. Producer-state qualification completes this interface: endpoint-equivalent states can contain noninterchangeable KV components. Together these results identify the state, layout and evaluation properties a portable implementation must preserve.

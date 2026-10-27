@@ -20,6 +20,21 @@ $R_{\rm prod}/M_3$&1.382970&---&---\\\bottomrule
 \end{table}
 For $M_3/C_3$, regressed tasks number 0/24, 24/24 and 4/24. Llama regressions are MBPP418,476,79,99. Failed $M_0/M_3$ comparisons have diagnostic ratios 0.968456, 0.948603 and 0.936943; failed SmolLM2/Llama $R_{\rm prod}/C_3$ comparisons are 0.512333 and 0.842790. They remain unqualified because the outputs differ. The 72 separate lite timing observations did not establish mutually exclusive completed GPU stages; their component model remains unavailable.
 
+\begin{table}[t]\centering\small
+\caption{Historical frozen-panel confirmation: matching endpoints out of 240 per arm/family. $M_3/C_3$ retain their original implementation identity; $M_0$ is unconstrained UB4 and $R_{\mathrm{prod}}$ an engineering-selected ordinary recipe.}
+\label{tab:qualification}
+\begin{tabular}{lrrr}\toprule
+Arm & Qwen3 & SmolLM2 & Llama\\\midrule
+$R$ &240&240&240\\
+$M_0$ &190&100&150\\
+$M_3$ &240&240&240\\
+$C_3$ &240&240&240\\
+$R_{\mathrm{prod}}$ &240&100&160\\\bottomrule
+\end{tabular}
+\end{table}
+
+The ordinary $R_{\mathrm{prod}}$ recipe keeps UB1 for Qwen3 and uses UB512 for the other families. Its SmolLM2 and Llama failures prevent those comparisons from being reported as reference-preserving deployment gains. The archived mask3/UB4 implementation is not retrospectively assigned to PQ or QB; the explicitly labelled seven-arm and E2 studies supply that comparison.
+
 \subsection{Seven-arm implementation comparison}
 The 12-task panel comprises MBPP 123, 140, 255, 401, 413, 418 and GSM8K 111, 120, 1308, 141, 322, 443. Two adjacent sessions and four repetitions per arm/family give 2,016 formal requests and 96 qualified endpoints per arm/family. Table~\ref{tab:allcost} gives all 21 ratios. Figure~\ref{fig:taskcost} retains the task-level local-repair and draft comparisons.
 \begin{table}[t]\centering\small
@@ -73,3 +88,17 @@ All original task-level and session values are retained in \texttt{anc/plot\_val
 \input{tables/repair_interaction}
 
 Table~\ref{tab:repairinteraction} makes the repair--draft comparison explicit using the existing common-panel estimates. The source values are reported to six decimal places. Propagating their rounding bounds leaves the displayed three-decimal contrasts and all draft-parity classifications unchanged. These numerical rounding bounds are separate from sampling uncertainty; the retrospective contrast adds neither requests nor a new confidence interval.
+
+\subsection{Original-response audit of logical work}
+\label{supp:sevenarmwork}
+The retrospective audit reopens the original response records for all 2,016 formal requests and excludes 42 warmups. Matching family, input, session and repetition gives 288 matched seven-arm audit groups. Each group contributes one GS/PQ/QB triple for target-only execution and one for speculative execution: 576 triples and 1,728 within-path pairwise comparisons. The exported logical-work counters and acceptance/caller-width histograms agree in every comparison (Table~\ref{tab:sevenarmwork}). Complete native token-ID arrays, recorded EOG flags, length, terminal ID, stop reason, cache count and truncation flag also agree in all 1,728 non-reference-to-$R$ endpoint comparisons. Each original record's normalized IDs and workload are checked against its native response fields.
+
+\input{tables/seven_arm_work_audit}
+
+The original execution has 42 family/session/arm workers, each with 48 formal requests; the second session reverses the arm order. The 288 audit groups are reconstructed by task and repetition across these workers, not collected as adjacent randomized seven-arm time blocks. Matching their recorded work does not remove between-worker temporal drift.
+
+The counter definitions distinguish caller work from physical execution. Both GS/local contrasts change physical graph calls, graph reuse and target prefill widths in all 288 pairs per path; speculative execution also changes continuation physical-width histograms. The draft's physical counters remain equal. PQ/QB agree in every exported workload field. These are aggregate counts and histograms, not complete per-cycle trace or bitwise state comparisons. They establish matched recorded work without assigning the request-time difference to projection, attention, feed-forward computation or instrumentation.
+
+The source manifest pins all archive parts. This audit retrieves and checks parts 001, 007 and 009 by their committed Git-blob and SHA256 identities, then verifies each selected original member against the archived index. It does not recompute the whole nine-part ZIP hash. The paper includes a compressed field projection with complete endpoint arrays, original record hashes, the frozen plan, counter definitions and the original index under \texttt{anc/seven\_arm\_work\_audit/}. The reconstruction script recomputes all pairings and conservation identities from that projection. Its original-record and split-archive modes additionally reopen the archived bytes and reproduce the projection exactly. This adds no sessions and leaves all original timings and statistical weights unchanged.
+
+Freeze versions and executable identities are distinct. The prospective v02 correction retained the 96 completed Qwen3 session-0 $R/M_{\QB}$ records under their initial freeze; the remaining 1,920 records carry v02. Actual worker commands use the metadata-capacity-corrected executable only for SmolLM2 and Llama PQ arms (384 formal requests), while the other 1,632 use the original executable. The correction enlarges PQ metadata reservation; all 21 numerical DLLs and the counter/observer sources retain identical hashes. GS/QB therefore share an executable, while the PQ comparison includes its recorded metadata-capacity correction. Exact routes and source differences remain in the audit receipt.

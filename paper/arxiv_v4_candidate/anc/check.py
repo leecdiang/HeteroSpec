@@ -122,12 +122,18 @@ def test():
     spec=importlib.util.spec_from_file_location('generate_e2_absolute_cost',ROOT/'scripts/generate_e2_absolute_cost.py')
     absolute_module=importlib.util.module_from_spec(spec);spec.loader.exec_module(absolute_module)
     absolute=absolute_module.verify(check,ROOT)
+    draft_spec=importlib.util.spec_from_file_location('generate_e2_draft_profitability',ROOT/'scripts/generate_e2_draft_profitability.py')
+    draft_module=importlib.util.module_from_spec(draft_spec);draft_spec.loader.exec_module(draft_module)
+    e2_draft=draft_module.verify(check,ROOT)
+    work_spec=importlib.util.spec_from_file_location('generate_seven_arm_work_audit',ROOT/'scripts/generate_seven_arm_work_audit.py')
+    work_module=importlib.util.module_from_spec(work_spec);work_spec.loader.exec_module(work_module)
+    seven_arm_work=work_module.verify(check,ROOT)
     followup_spec=importlib.util.spec_from_file_location('generate_native_followup',ROOT/'scripts/generate_native_followup.py')
     followup_module=importlib.util.module_from_spec(followup_spec);followup_spec.loader.exec_module(followup_module)
     followup=followup_module.verify(check,ROOT)
     from check_repair_interaction import verify as verify_interaction
     interaction=verify_interaction(check,ROOT)
-    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,'native_followup':followup,
+    return {'status':'PASS','closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,'e2_draft_posthoc':e2_draft,'seven_arm_work_audit':seven_arm_work,'native_followup':followup,
             'scope':'Reported-value/source checks, not native execution, full-vector reconstruction, all-input correctness or arXiv-server validation.',
             'new_model_executions':0}
 if __name__=='__main__':

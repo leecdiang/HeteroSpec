@@ -1,3 +1,5 @@
+Current P0 revision and independent reviews: `docs/research/p0_revision_20261027/`. The original measurement sources remain unchanged; the new E2 draft and seven-arm work audits are explicitly retrospective.
+
 Current revision: see `docs/research/native_delivery_closeout_20261027/REVISION.md` and `QA_STATUS.json` in the repository. The records below document earlier rounds; their PDF hashes, section numbers and figure-source status are historical.
 
 # v3 → v4 source reconciliation and release review

@@ -1,6 +1,6 @@
 Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding
 Author: Chengzhan Li
-Source revision: 2026-10-27 (native material delivery closeout; not submitted)
+Source revision: 2026-10-27 (P0 evidence and narrative revision; not submitted)
 
 This revision starts from the v4 source used in the accompanying review.
 It reorganizes the article around repair scope, draft profitability and QB's
@@ -25,7 +25,16 @@ Regenerate derived tables/figures from the source root:
     python3.11 -B scripts/generate_repair_interaction.py
     python3.11 -B scripts/generate_e2_sensitivity.py
     python3.11 -B scripts/generate_e2_absolute_cost.py
+    python3.11 -B scripts/generate_e2_draft_profitability.py --check
+    python3.11 -B scripts/generate_seven_arm_work_audit.py --check
     python3.11 -B scripts/generate_native_followup.py
+
+The P0 revision adds retrospective draft-on/off contrasts from the existing E2
+request records and a source-authenticated logical-work audit of the original
+seven-arm campaign. It leads with the explicitly named GS/PQ/QB arms and retains
+the historical M3/C3 qualification panel in Supplement S2. No new native request
+is introduced by these analyses. Their source indices, reconstruction and scope
+are documented under anc/rtx104/ and anc/seven_arm_work_audit/.
 
 The registered six-session percentile bootstrap remains the primary E2 analysis.
 The t5 and omit-one-session results are secondary sensitivity analyses. Llama's

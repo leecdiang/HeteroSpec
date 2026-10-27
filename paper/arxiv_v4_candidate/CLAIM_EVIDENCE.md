@@ -65,3 +65,29 @@ The native source-build scopes remain distinct: RTX core/frontend rebuild with r
 PR149 `9149b6f5` and PR150 `9f03bead` close the minimum controlled-access material gaps recorded above. RTX now provides a 12-part source/fixture/full-request archive, relocatable wrappers and exact acquisition for 21 pinned numerical DLLs. B570 publishes a minimal source/stage/request package and all four inputs' complete references as private-repository release assets. Both provide exact model identities and acquisition routes. Source-host fresh-download CPU audits verify preserved bytes, with no new native execution. B570's 175 capture/reference comparisons and 914 reference self-checks have different roles and are reported separately.
 
 The paper's scientific measurements and native rebuild scopes remain unchanged. Authenticated material delivery is established; independent-machine execution and anonymous public access are not claimed. The B570 historical driver version is identified but a fixed installer is not supplied. `REPRODUCTION_ACCESS.md` is the current access index; compact pinned records are in `anc/native_delivery/`. Current validation status is in `docs/research/native_delivery_closeout_20261027/QA_STATUS.json` in the repository.
+
+## P0 evidence and narrative revision (2026-10-27)
+
+The main repair argument now starts with the explicitly named seven-arm campaign.
+The historical M3/C3 qualification table is retained in Supplement S2, without
+retroactively assigning those implementations to PQ or QB.
+
+`anc/rtx104/e2_draft_profitability.json` reconstructs 216 four-arm cells from the
+original 864 local-arm measurements. The equal-task/session draft ratios remain
+above parity for Qwen3 and Llama and below parity for SmolLM2 under both PQ and QB
+in every session. This is a retrospective exploratory contrast; its pointwise
+t5 intervals do not replace the registered PQ/QB intervals. E2 has no GS arm and
+does not independently replicate the full GS/local repair interaction.
+
+The original seven-arm response audit is indexed in `anc/seven_arm_work_audit/`.
+It distinguishes equal recorded logical work from the physical graph fields
+changed by GS. Complete-request time is not partitioned into projection,
+attention, feed-forward or prefill shares.
+
+The implementation-selection section now expresses a joint comparison of
+qualified repair/layout/draft combinations under a fixed service contract. It
+does not assert that sequential choices find a global optimum over untested
+implementations. Scope conditions are centralized in the reference contract;
+the Llama transfer failure, SmolLM2 draft cost, k1 screen failures and all original
+measurements remain. Current revision and independent review records are in
+`docs/research/p0_revision_20261027/`.

@@ -1,7 +1,10 @@
 # RTX repair-scope transfer: registered design and CPU tools
 
-**2026-10-28 host update:** the new worker and both source cohorts are now built,
-resident resource admission passed, and the execution freeze is committed.
+**2026-10-29 host update:** the new worker and both source cohorts are built,
+resident resource admission passed, and both families passed their 98-request
+numerical qualification (196 total). SmolLM2 required a CPU-only correction for
+an already observed tensor-name alias; the original refusal and unchanged raw
+data hashes are preserved in [AUDIT_METADATA_CORRECTION.md](AUDIT_METADATA_CORRECTION.md).
 See [HOST_EXECUTION.md](HOST_EXECUTION.md) and `host_execution/` for current host
 evidence. The text below records the original design-only submission; its
 `NOT_RUN`/extension statements do not describe subsequent execution receipts.

@@ -6,6 +6,14 @@ worker exists. Build success and resident resource admission are not numerical
 qualification. See `host_execution/EXECUTION_IDENTITY.json` for the committed
 execution cohort, dates and resource limits; results are recorded separately.
 
+The qualification closeout is `host_execution/QUALIFICATION_STATUS.json`:
+Qwen 98/98 and SmolLM2 98/98 are numerically qualified. The SmolLM2 CPU audit
+needed the source-grounded name correction documented in
+[AUDIT_METADATA_CORRECTION.md](AUDIT_METADATA_CORRECTION.md). Its initial refusal
+is retained; neither raw bytes nor native requests were changed or repeated.
+There are still no formal performance results. The raw bundle is retained
+locally with a committed payload manifest; remote raw archival remains pending.
+
 ## Implemented
 
 - `arm_spec.h` admits exactly the seven registered arms and source-family routes.

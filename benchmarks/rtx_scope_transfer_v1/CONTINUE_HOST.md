@@ -6,9 +6,12 @@ The retained bundle is
 `C:\Users\ASUS\Documents\ChatGPT\HeteroSpec\repo\work\scope-transfer-bundle-v1`.
 Python is `D:\HeteroSpec-PC\python311\python.exe`.
 
-The execution/source freeze is commit
-`011e484b0ec98be800cae4dbcf75e8d9cfdfcbb2`. The bundle's `FREEZE_COMMIT.json`
-binds that commit, the identity, historical references and all source hashes.
+The original execution/source freeze is commit
+`011e484b0ec98be800cae4dbcf75e8d9cfdfcbb2`. The current CPU-auditor source binding
+is recorded in `host_execution/CURRENT_SOURCE_BINDING.json` and the bundle's
+`FREEZE_COMMIT.json`. Read [AUDIT_METADATA_CORRECTION.md](AUDIT_METADATA_CORRECTION.md):
+the metadata4 tensor-name correction adds no GPU request and changes no native
+runtime or raw record. The original source binding and failed audit are retained.
 Do not rebuild, change source, replace a model, re-run qualification or silently
 move a frozen date while continuing this cohort.
 
@@ -17,6 +20,10 @@ First inspect `ATTEMPTS.json`, `Qwen-QUALIFICATION.json` and
 exact status `NUMERICALLY_QUALIFIED`. `COMPLETE` on a process receipt alone is
 insufficient. Inspect any `HOST.lock` and process identity; never delete a lock
 or retry an existing attempt merely because a previous chat ended.
+
+Closeout status on 2026-10-29: Qwen and SmolLM2 are both numerically qualified,
+98 requests each. Formal measurements, charged formal warmups and Llama
+diagnostics are all still zero. No technical retry reserve was consumed.
 
 ## Formal order
 

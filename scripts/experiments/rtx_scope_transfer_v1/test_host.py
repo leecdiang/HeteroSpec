@@ -66,6 +66,28 @@ class HostAdmission(unittest.TestCase):
             with self.assertRaises(s.ContractError):
                 s.payload(root, bad)
 
+    def test_metadata4_observed_query_alias(self):
+        tensor = {"name": "jsa_llama_query_batch-7", "ne": [64, 1, 32, 4],
+                  "nb": [4, 8192, 256, 8192], "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU"}
+        row = {"scope": "QB", "family": "SmolLM2", "identity": {
+            "source_variant": "metadata4", "source_zip_sha256": s.SOURCE_ZIPS["metadata4"]},
+            "geometry": [{"name": "kq-7", "op": "MUL_MAT", "sources": [{"name": "cache_k"}, tensor]}]}
+        self.assertEqual(s.local_geometry(row), [tensor])
+        self.assertIs(s.local_geometry(row)[0], tensor)
+        # The collector preserves wrong evidence so the original shape/placement
+        # checks still reject it; it must not manufacture the expected geometry.
+        tensor["ne"] = [64, 4, 32, 1]
+        self.assertEqual(s.local_geometry(row)[0]["ne"], [64, 4, 32, 1])
+        for mutation in ("family", "source", "operator", "layer", "operand"):
+            bad = deepcopy(row)
+            if mutation == "family": bad["family"] = "Qwen"
+            if mutation == "source": bad["identity"]["source_zip_sha256"] = "0" * 64
+            if mutation == "operator": bad["geometry"][0]["op"] = "VIEW"
+            if mutation == "layer": bad["geometry"][0]["name"] = "kq-8"
+            if mutation == "operand": bad["geometry"][0]["sources"].reverse()
+            with self.subTest(mutation=mutation):
+                self.assertEqual(s.local_geometry(bad), [])
+
 
 if __name__ == "__main__":
     unittest.main()

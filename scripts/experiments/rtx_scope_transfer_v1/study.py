@@ -381,6 +381,29 @@ def identity_errors(binding, plan, design, models):
     return errors
 
 
+def local_geometry(record):
+    """Read observed query tensors, including the pinned metadata4 name alias.
+
+    llama-graph.cpp names the same q view twice: hs_attn_query_batch followed
+    by jsa_llama_query_batch. Its actual metadata survives as kq's second input.
+    No dimensions, strides, layers or device values are synthesized here.
+    """
+    prefix = "hs_attn_query_batch-" if record["scope"] == "QB" else "hs_attention_q-"
+    result = [g for g in record["geometry"] if g["name"].startswith(prefix)]
+    identity = record.get("identity", {})
+    if (record["scope"] == "QB" and record["family"] == "SmolLM2"
+            and identity.get("source_variant") == "metadata4"
+            and identity.get("source_zip_sha256") == SOURCE_ZIPS["metadata4"]):
+        for node in record["geometry"]:
+            name = node["name"]
+            sources = node.get("sources", [])
+            if (name.startswith("kq-") and name[3:].isdigit()
+                    and node.get("op") == "MUL_MAT" and len(sources) == 2
+                    and sources[1].get("name") == "jsa_llama_query_batch-" + name[3:]):
+                result.append(sources[1])
+    return result
+
+
 def audit(design, bundle):
     """Fail closed. Missing/failed slots stay in denominators, never imputed."""
     design, bundle = Path(design), Path(bundle)
@@ -500,8 +523,7 @@ def audit(design, bundle):
                     elif s["draft_enabled"]:
                         need(4 in r["physical_widths"] or len(r["cycles"]) == 0, "local verifier lacks batched physical width")
                     if s["scope"] in ("PQ", "QB"):
-                        prefix = "hs_attn_query_batch-" if s["scope"] == "QB" else "hs_attention_q-"
-                        geometry = [g for g in r["geometry"] if g["name"].startswith(prefix)]
+                        geometry = local_geometry(r)
                         layers = {int(g["name"].rsplit("-", 1)[1]) for g in geometry}
                         shapes = model["architecture_shapes"]["target"]
                         count = next(v for k, v in shapes.items() if k.endswith(".block_count"))

@@ -30,6 +30,7 @@ def main():
         ap.add_argument('--' + name, type=Path, required=True)
     ap.add_argument('--history', type=Path, action='append', required=True)
     ap.add_argument('--gsm8k', type=Path)
+    ap.add_argument('--math500', type=Path)
     ap.add_argument('--cpu-packages', type=Path)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
@@ -55,6 +56,13 @@ def main():
                 rows.append(dict(id=task,text=question,raw_prompt=raw,prefix=MATH_PREFIX,
                     formatted_prompt=WRAPPER.format(raw=raw),domain='math',
                     source={'revision':'3101c7d5072418e28b9008a6636bde82a006892c','task_id':task,'file_sha256':h,'split':split}))
+    if a.math500:
+        corpus=a.math500/'test.jsonl';h=sha_file(corpus);corpus_hashes.add(h)
+        for line in corpus.read_text('utf8').splitlines():
+            r=json.loads(line);question=r['problem'];task='MATH500/'+r['unique_id'];raw=MATH_PREFIX+question
+            rows.append(dict(id=task,text=question,raw_prompt=raw,prefix=MATH_PREFIX,
+                formatted_prompt=WRAPPER.format(raw=raw),domain='math',
+                source={'revision':'6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be','task_id':task,'file_sha256':h,'unique_id':r['unique_id']}))
     input_bytes = ''.join(json.dumps(r, ensure_ascii=False)+'\n' for r in rows).encode('utf8')
     (a.out/'TOKENIZER_INPUT.jsonl').write_bytes(input_bytes)
     with (a.out/'TOKENIZER_STDOUT.jsonl').open('xb') as out, (a.out/'TOKENIZER_STDERR.log').open('xb') as err:
@@ -78,6 +86,7 @@ def main():
     suffixes = {'.json', '.jsonl', '.md', '.txt', '.csv', '.log', '.yaml', '.yml', '.tex', '.py', '.cpp', '.h'}
     id_re = re.compile(r'\b(HumanEval|MBPP)[/_-](\d{1,4})\b', re.I)
     math_id_re=re.compile(r'\bGSM8K/(?:train|test)/\d+\b')
+    competition_id_re=re.compile(r'MATH500/test/[a-z_]+/\d+\.json')
     text_map = collections.defaultdict(set)
     for row in rows:
         for text in [row['text'],json.dumps(row['text'],ensure_ascii=True)[1:-1].replace('\\n','\n').replace('\\t','\t').replace('\\"','"')]:
@@ -101,6 +110,7 @@ def main():
         s = b.decode('utf8', errors='replace')
         found = {('HumanEval' if m[1].lower()=='humaneval' else 'MBPP')+'/'+m[2] for m in id_re.finditer(s)}
         found.update(math_id_re.findall(s))
+        found.update(competition_id_re.findall(s))
         # Match normalized literal and JSON-escaped prompt text, without inspecting numerical outcomes.
         s = s.replace('\\n', '\n').replace('\\t', '\t').replace('\\"', '"')
         for end,ids in matcher.iter(normalized(s)):found.update(ids)
@@ -132,10 +142,12 @@ def main():
                     errors.append(dict(path=str(p), error=str(e)))
         print('scanned', root, 'unique files', len(catalog), 'excluded identities', len(hits), flush=True)
     inventory = []
+    token_counts=collections.Counter(digest(tokens[r['id']]) for r in rows)
     for row in rows:
         ids = tokens[row['id']]
         band = 'short' if 64<=len(ids)<=192 else 'long' if 256<=len(ids)<=352 else None
         reasons = ([] if band else ['outside length bands']) + (['historical or ambiguous exposure'] if row['id'] in hits else [])
+        if token_counts[digest(ids)]>1:reasons.append('duplicate token sequence in candidate pool')
         inventory.append(dict(**row, prompt_ids=ids, stratum=band, cap=128,
             normalized_text_sha256=digest(normalized(row['text'])),
             template_sha256=digest({'wrapper':WRAPPER,'prefix':row['prefix']}),

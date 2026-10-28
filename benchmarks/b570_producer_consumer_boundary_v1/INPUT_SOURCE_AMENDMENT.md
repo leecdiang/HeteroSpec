@@ -33,6 +33,27 @@ The two historical controls, independent strict R, P1/P4T recipes, 32+120=152
 primary budget, cap64/cap128, native dependencies, B0 gate, no-retry rule,
 clean-receiver scope and exclusion of performance claims are unchanged.
 
+## Static length follow-up, still before any forward
+
+Native tokenization of all 8,792 original GSM8K questions produced **zero**
+256–352-token candidates under the exact wrapper. Its interrupted exposure scan
+does not produce a qualified panel; its tokenization and STOP receipts remain.
+Add the 500 original `problem` fields in
+[HuggingFaceH4/MATH-500](https://huggingface.co/datasets/HuggingFaceH4/MATH-500/tree/6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be),
+revision `6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be`, `test.jsonl` SHA256
+`35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132`.
+Use `MATH500/` followed by the original `unique_id`, the same math prefix, and
+the complete original problem string, including any original Asymptote notation.
+Solutions, levels and expected answers are not selection features. This is a
+text input preservation experiment, not a claim of mathematical/diagram accuracy.
+
+The final pool is the union of HumanEval, sanitized MBPP, GSM8K and MATH-500.
+Exclude duplicate native token sequences before ranking. Apply the unchanged
+hash rule and historical-exposure policy to the full union. If this final pool
+still cannot fill either band, stop without extending it further in this attempt.
+These source amendments respond only to static availability and token lengths;
+they use no new model outputs, qualification results or performance observations.
+
 The initial scan also found six copies of two historical 22/23-byte failed ZIP
 transfers. Adjacent immutable failure receipts identify transport truncation,
 not usable archives. The amended scanner accepts this classification only when

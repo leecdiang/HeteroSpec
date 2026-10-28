@@ -14,10 +14,12 @@ import re
 import subprocess
 import unicodedata
 import zipfile
+import sys
 from work_package import read, sha_file, digest, write_new
 
 WRAPPER = '<|im_start|>user\n{raw}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n'
 PREFIX = 'Complete the following Python programming task. Return only the completed Python code, without Markdown fences.\n\n'
+MATH_PREFIX = 'Solve the following math problem. Give a concise solution and the final answer.\n\n'
 
 def normalized(s):
     return ' '.join(unicodedata.normalize('NFKC', s).split())
@@ -27,9 +29,14 @@ def main():
     for name in ('humaneval', 'mbpp', 'tokenizer', 'model', 'out'):
         ap.add_argument('--' + name, type=Path, required=True)
     ap.add_argument('--history', type=Path, action='append', required=True)
+    ap.add_argument('--gsm8k', type=Path)
+    ap.add_argument('--cpu-packages', type=Path)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
+    if a.cpu_packages:sys.path.insert(0,str(a.cpu_packages))
+    import ahocorasick
     rows = []
+    corpus_hashes={sha_file(a.humaneval),sha_file(a.mbpp)}
     with gzip.open(a.humaneval, 'rt', encoding='utf8') as f:
         he = [json.loads(line) for line in f]
     mb = read(a.mbpp)
@@ -37,9 +44,17 @@ def main():
         for r in data:
             task = r['task_id'] if family == 'HumanEval' else 'MBPP/' + str(r['task_id'])
             raw = PREFIX + r['prompt']
-            rows.append(dict(id=task, text=r['prompt'], raw_prompt=raw,
+            rows.append(dict(id=task, text=r['prompt'], raw_prompt=raw, prefix=PREFIX,
                              formatted_prompt=WRAPPER.format(raw=raw), domain='code',
                              source={'revision': 'sha256:' + sha_file(corpus), 'task_id': task}))
+    if a.gsm8k:
+        for split in ['train','test']:
+            corpus=a.gsm8k/(split+'.jsonl');h=sha_file(corpus);corpus_hashes.add(h)
+            for i,line in enumerate(corpus.read_text('utf8').splitlines()):
+                question=json.loads(line)['question'];task=f'GSM8K/{split}/{i}';raw=MATH_PREFIX+question
+                rows.append(dict(id=task,text=question,raw_prompt=raw,prefix=MATH_PREFIX,
+                    formatted_prompt=WRAPPER.format(raw=raw),domain='math',
+                    source={'revision':'3101c7d5072418e28b9008a6636bde82a006892c','task_id':task,'file_sha256':h,'split':split}))
     input_bytes = ''.join(json.dumps(r, ensure_ascii=False)+'\n' for r in rows).encode('utf8')
     (a.out/'TOKENIZER_INPUT.jsonl').write_bytes(input_bytes)
     with (a.out/'TOKENIZER_STDOUT.jsonl').open('xb') as out, (a.out/'TOKENIZER_STDERR.log').open('xb') as err:
@@ -62,12 +77,16 @@ def main():
         'b570-prefill-build', 'b570-partition-intervention-v1-build', 'b570-mechanism-v08-build'}
     suffixes = {'.json', '.jsonl', '.md', '.txt', '.csv', '.log', '.yaml', '.yml', '.tex', '.py', '.cpp', '.h'}
     id_re = re.compile(r'\b(HumanEval|MBPP)[/_-](\d{1,4})\b', re.I)
+    math_id_re=re.compile(r'\bGSM8K/(?:train|test)/\d+\b')
     text_map = collections.defaultdict(set)
     for row in rows:
-        text_map[normalized(row['text'])].add(row['id'])
-    text_re = re.compile('|'.join(re.escape(t) for t in sorted(text_map, key=len, reverse=True)))
+        for text in [row['text'],json.dumps(row['text'],ensure_ascii=True)[1:-1].replace('\\n','\n').replace('\\t','\t').replace('\\"','"')]:
+            text_map[normalized(text)].add(row['id'])
+    matcher=ahocorasick.Automaton()
+    for text,ids in text_map.items():matcher.add_word(text,tuple(ids))
+    matcher.make_automaton()
     hits = collections.defaultdict(set)
-    catalog, errors, unique = [], [], {}
+    catalog, errors, unique, fragments = [], [], {}, []
     out_abs = a.out.resolve()
     def inspect(label, b, basename):
         import hashlib
@@ -75,16 +94,16 @@ def main():
         if h in unique:
             return
         unique[h] = label
-        availability = basename.lower() in availability_names or ('exposure' in basename.lower() and basename.lower().endswith('.json'))
+        availability = h in corpus_hashes or basename.lower() in availability_names or ('exposure' in basename.lower() and basename.lower().endswith('.json'))
         catalog.append(dict(path=label, bytes=len(b), sha256=h, classification='availability' if availability else 'history'))
         if availability:
             return
         s = b.decode('utf8', errors='replace')
         found = {('HumanEval' if m[1].lower()=='humaneval' else 'MBPP')+'/'+m[2] for m in id_re.finditer(s)}
+        found.update(math_id_re.findall(s))
         # Match normalized literal and JSON-escaped prompt text, without inspecting numerical outcomes.
         s = s.replace('\\n', '\n').replace('\\t', '\t').replace('\\"', '"')
-        for m in text_re.finditer(normalized(s)):
-            found.update(text_map[m[0]])
+        for end,ids in matcher.iter(normalized(s)):found.update(ids)
         for task in found:
             hits[task].add(label)
     for root in a.history:
@@ -96,7 +115,13 @@ def main():
                 if p.suffix.lower() not in suffixes | {'.zip'}:
                     continue
                 try:
-                    if p.suffix.lower()=='.zip':
+                    if p.suffix.lower()=='.zip' and not zipfile.is_zipfile(p):
+                        candidates=[p.parent/'FAILED.json',p.parent/'FAILURE.json']
+                        proof=next((q for q in candidates if q.exists() and read(q).get('status')=='TRANSPORT_FAILED'
+                            and read(q).get('received_bytes',read(q).get('partial_bytes'))==p.stat().st_size),None)
+                        if proof is None:raise zipfile.BadZipFile('Unreadable archive without matching transport receipt')
+                        fragments.append(dict(path=str(p),bytes=p.stat().st_size,sha256=sha_file(p),receipt=str(proof),receipt_sha256=sha_file(proof)))
+                    elif p.suffix.lower()=='.zip':
                         with zipfile.ZipFile(p) as z:
                             for member in z.infolist():
                                 if Path(member.filename).suffix.lower() in suffixes and member.file_size <= 128*1024**2:
@@ -113,13 +138,14 @@ def main():
         reasons = ([] if band else ['outside length bands']) + (['historical or ambiguous exposure'] if row['id'] in hits else [])
         inventory.append(dict(**row, prompt_ids=ids, stratum=band, cap=128,
             normalized_text_sha256=digest(normalized(row['text'])),
-            template_sha256=digest({'wrapper':WRAPPER,'prefix':PREFIX}),
+            template_sha256=digest({'wrapper':WRAPPER,'prefix':row['prefix']}),
             selection_hash=digest({'study':'b570_producer_consumer_boundary_v1','id':row['id'],'source':row['source']}),
             exclusions=reasons, evidence=sorted(hits.get(row['id'], []))))
     write_new(a.out/'EXPOSURE_CATALOG.json', catalog)
     write_new(a.out/'CANDIDATE_INVENTORY.json', inventory)
     audit = dict(status='PASS' if not errors else 'FAIL', roots=[str(p) for p in a.history], errors=errors,
         unique_files=len(catalog), catalog_sha256=sha_file(a.out/'EXPOSURE_CATALOG.json'),
+        classified_failed_transport_fragments=fragments,
         policy='Any task ID or normalized prompt mention excludes; exhaustive corpora/tokenization/exposure ledgers are availability only.',
         limitations=['Accessible retained history only; not a claim about deleted/private other-machine records or model training.'],
         eligible_counts={band:sum(not r['exclusions'] and r['stratum']==band for r in inventory) for band in ['short','long']},

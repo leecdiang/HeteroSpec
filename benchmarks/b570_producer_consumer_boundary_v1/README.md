@@ -1,7 +1,9 @@
 # B570 producer × consumer boundary experiment
 
-**Design and CPU work package. No new model/GPU request has been executed.**
-The native boundary extension is **not implemented, compiled, or qualified** in this PR.
+**Native extension implemented and compiled; native qualification is pending.**
+No new model/GPU request has yet been executed. See [IMPLEMENTATION.md](IMPLEMENTATION.md)
+for the new driver and bounded executor, and [INPUT_SOURCE_AMENDMENT.md](INPUT_SOURCE_AMENDMENT.md)
+for the visible pre-forward input-source revisions and retained static stops.
 
 This experiment asks whether Qwen3 producer state changes the reference that a local PQ/QB consumer can preserve. It builds on the completed PR148 native reproduction and PR150 delivery; it does not repeat delivery or promise a speedup.
 
@@ -17,7 +19,7 @@ This experiment asks whether Qwen3 producer state changes the reference that a l
 - The main causal endpoint is explicitly a **boundary0 clean-receiver contract**. P4T failure is not automatically a failure of an untested natural production path.
 - No formal timing, new q4 operator grid, cost model, KV×logits decomposition, or automatic model retry.
 
-`plan.json` is a deterministic **DRAFT_UNBOUND** inventory of all152 coordinates. New input IDs and the native extension are not yet bound, so it is not execution-ready and contains no result rows. `CONTROL_INPUTS.json` contains the real immutable HumanEval/38 (181IDs) and HumanEval/115 (349IDs), both original cap64. New inputs use cap128.
+`plan.json` preserves the original deterministic **DRAFT_UNBOUND** inventory of all152 coordinates. It is not an execution plan or result. The new executor requires a separate bound `FROZEN_PLAN.json` after static input selection and actual runtime hashing. `CONTROL_INPUTS.json` contains the real immutable HumanEval/38 (181IDs) and HumanEval/115 (349IDs), both original cap64. New inputs use cap128.
 
 ## What is implemented here
 
@@ -59,7 +61,7 @@ To regenerate a draft into a **new** path:
 python "$work/work_package.py" make-plan --out C:/hs/b570-boundary-new/draft-plan.json
 ```
 
-After implementing/building the native extension and completing static input selection, populate real copies of the two templates. The builder checks eight unique token sequences, four inputs per length band, exact caps/model identity, and actual build/vocabulary fields:
+After completing static input selection, bind real copies of the two templates using `execute.py freeze` (see IMPLEMENTATION.md). The lower-level builder checks eight unique token sequences, four inputs per length band, exact caps/model identity, and actual build/vocabulary fields:
 
 ```powershell
 python "$work/work_package.py" make-plan --panel C:/hs/b570-boundary-new/INPUT_PANEL.json --runtime C:/hs/b570-boundary-new/RUNTIME.json --out C:/hs/b570-boundary-new/FROZEN_PLAN.json
@@ -81,9 +83,9 @@ Output files are created exclusively: use a fresh filename for each report. Ther
 
 ## Present limitations
 
-The native driver still to be implemented is named `boundary.exe` in the handoff specification. The existing `formal.exe` accepts only the historical four-input qual triplets and cannot execute this design by changing CLI flags. Do not mark native work complete from the CPU tests.
+The new driver is `boundary.exe`; the existing `formal.exe` still accepts only the historical four-input qual triplets and cannot execute this design by changing CLI flags. A successful compilation and CPU tests do not establish native qualification. Only the independent native B0 audit can open B1.
 
-The8 new inputs are not yet selected. Their scientific factors are producer×consumer. Length and domain are selection descriptors; impossible domain×length cells must not be manufactured with truncated/concatenated prompts. If the frozen census cannot support the8-input plan, stop before new forwards and revise the design visibly; do not change152 slots during execution.
+The input-source amendment preserves the two length bands and the fixed count of8. Scientific factors are producer×consumer. Length and domain are selection descriptors; impossible domain×length cells must not be manufactured with truncated/concatenated prompts. If the final census cannot support the8-input plan, stop before new forwards; do not change152 slots during execution.
 
 All new result fields are null. Historical references remain unchanged.
 

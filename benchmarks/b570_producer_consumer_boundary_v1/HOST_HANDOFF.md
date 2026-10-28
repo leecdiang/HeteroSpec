@@ -1,5 +1,11 @@
 # B570 host handoff
 
+This file preserves the original 2026-10-27 implementation specification below.
+The 2026-10-28 extension implements and compiles the described driver; current
+commands and the metadata/full-logit observation definition are in IMPLEMENTATION.md.
+Original statements about an unimplemented extension describe the initial handoff,
+not the current source tree. Native qualification still requires actual B0 evidence.
+
 ## Status at handoff
 
 This PR provides a fixed scientific protocol and executable **CPU** planner/validators. It has started **0 new native/GPU processes**. `boundary.exe` does not exist in this package. No native compile or qualification has been claimed.

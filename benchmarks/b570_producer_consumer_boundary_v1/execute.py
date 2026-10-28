@@ -61,7 +61,9 @@ def freeze(a):
 
 def module_check(receipt,manifest):
     expected={Path(r['path']).name.lower():r['sha256'] for r in manifest if Path(r['path']).suffix.lower() in {'.dll','.exe'}}
-    observed={Path(r['path']).name.lower():r['sha256'] for r in receipt.get('loaded_module_hashes',[])}
+    actual=receipt.get('loaded_module_hashes',[])
+    if any(Path(r['path']).name.lower() in expected and r['sha256']!=expected[Path(r['path']).name.lower()] for r in actual):return False
+    observed={Path(r['path']).name.lower():r['sha256'] for r in actual}
     return all(observed.get(k)==v for k,v in expected.items())
 
 def classify(row):

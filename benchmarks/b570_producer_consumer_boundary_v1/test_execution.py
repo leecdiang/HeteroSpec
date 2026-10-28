@@ -11,6 +11,9 @@ class ExecutionTests(unittest.TestCase):
         self.assertFalse(module_check(receipt,expected))
         receipt['loaded_module_hashes'][1]['sha256']='qualified'
         self.assertTrue(module_check(receipt,expected))
+        receipt['loaded_module_hashes'].insert(0,{'path':'C:/unexpected/ggml-vulkan.dll','sha256':'different'})
+        self.assertFalse(module_check(receipt,expected))
+        receipt['loaded_module_hashes'].pop(0)
         receipt['loaded_module_hashes'].pop()
         self.assertFalse(module_check(receipt,expected))
 

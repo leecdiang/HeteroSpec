@@ -1,7 +1,7 @@
 # B570 producer × consumer boundary result
 
 Completed 2026-10-29 (Asia/Shanghai). **152/152 primary requests executed,
-B0=32 and B1=120; zero retries, technical failures or missing coordinates.** All 32 controls
+B0=32 and B1=120; zero model-request retries, technical failures or missing coordinates.** All 32 controls
 qualified before B1. The final independent CPU audit reports COMPLETE_ACCOUNTING,
 no errors, 96 actual restored boundaries rehashed, and all 88 observer/own-path
 comparisons passing. No additional model forwards, operator replays, or formal
@@ -105,5 +105,18 @@ remain byte unchanged. `analyze.py` produces the complete matrix after re-auditi
 The full evidence package contains frozen sources, all static selection attempts,
 exact native inputs, the bound plan, primary records, complete vector/boundary
 payloads, process/module receipts, and CPU audits. Models and numerical DLLs are
-excluded. Delivery access and authenticated readback receipts are recorded in
-`delivery/ACCESS.json` and `delivery/ROUNDTRIP.json` after publication.
+excluded. The [private evidence release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-producer-consumer-boundary-v1-20261029)
+contains six ZIPs plus the manifest and package receipt. All eight assets were
+downloaded through the authorized account, and all **6,826** extracted members
+matched their original SHA256. Re-running the frozen CPU analysis and state
+summary from that downloaded copy reproduced all eight audit/matrix/summary
+files **byte for byte**, with 152 complete requests, B0 qualified, 48 qualified
+scientific cells and zero audit errors.
+
+See [access pins](delivery/ACCESS.json), [full readback](delivery/ROUNDTRIP.json),
+[CPU reconstruction](delivery/CPU_READBACK.json), and [reproduction instructions](delivery/README.md).
+This is same-account, same-machine delivery verification, not a second-machine
+native qualification. [Transport recovery](delivery/TRANSPORT_RECOVERY.json)
+records the upload interruptions and a failed large-volume transfer. Repartitioning
+that volume preserved the complete member manifest and original payload bytes;
+no model request was repeated or added.

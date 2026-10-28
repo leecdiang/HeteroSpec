@@ -2,6 +2,8 @@
 
 **Completed: 152/152 native requests; B0 qualified and final audits passed.**
 See [RESULT.md](RESULT.md) for the complete matrix and three scientific counterexamples.
+The [evidence delivery](delivery/README.md) includes authenticated download,
+all-member byte checks, and exact CPU reconstruction of the published results.
 Two inputs change local consumer reference eligibility from P1 failure to P4T
 preservation while natural C1 retains the same strict R. See [IMPLEMENTATION.md](IMPLEMENTATION.md)
 for the new driver and bounded executor, and [INPUT_SOURCE_AMENDMENT.md](INPUT_SOURCE_AMENDMENT.md)
@@ -34,12 +36,12 @@ Files:
 | File | Purpose |
 |---|---|
 | `PROTOCOL.md` | Scientific question, estimands, complete matrix, interpretation and stop conditions |
-| `HOST_HANDOFF.md` | Existing callable commands versus the explicitly unimplemented native extension |
+| `HOST_HANDOFF.md` | Original host handoff, with a pointer to the completed native extension |
 | `SOURCE_PINS.json` | Actual source paths, immutable commits/Git blobs and SHA256 |
 | `CONTROL_INPUTS.json` | Existing exact native control IDs and cap64 |
 | `INPUT_PANEL_TEMPLATE.json` | Eight real new inputs must be bound before forward; no placeholder may execute |
 | `RUNTIME_TEMPLATE.json` | Actual new build/vocabulary must be bound before forward |
-| `plan.json` | Current draft152-slot inventory; all new results null |
+| `plan.json` | Preserved design-stage 152-slot inventory; actual execution uses `execution/FROZEN_PLAN.json` |
 | `work_package.py` | CPU generation and record validation |
 | `test_work_package.py` | Synthetic CPU contract tests, not model results |
 | `CPU_VALIDATION.json` | Only the CPU commands actually run while preparing this PR |

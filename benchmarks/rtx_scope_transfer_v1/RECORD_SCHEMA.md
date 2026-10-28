@@ -1,5 +1,10 @@
 # New host-adapter contract (schema1)
 
+The original schema below is now produced by the 2026-10-28 host implementation.
+Its build and execution status are tracked in [HOST_EXECUTION.md](HOST_EXECUTION.md)
+and retained receipts. This does not retroactively change the original CPU review
+into a review of native results.
+
 **This format is a required extension, not the current rtx_bridge output.** Its native producer/adapter is `NATIVE_EXTENSION_REQUIRED`; the submitted study is `NOT_RUN`. `study.py audit/analyze` implement CPU validation of this envelope. Positive acceptance against real native payloads remains untested until the host implementation exists. The diagnostic stream is separate: the factorial auditor must not ingest its54 slots as performance observations.
 
 ## Bundle files and synthetic exclusion

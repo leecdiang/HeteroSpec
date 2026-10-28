@@ -1,5 +1,12 @@
 # RTX repair-scope transfer: registered design and CPU tools
 
+**2026-10-28 host update:** the new worker and both source cohorts are now built,
+resident resource admission passed, and the execution freeze is committed.
+See [HOST_EXECUTION.md](HOST_EXECUTION.md) and `host_execution/` for current host
+evidence. The text below records the original design-only submission; its
+`NOT_RUN`/extension statements do not describe subsequent execution receipts.
+Three-date performance collection and the separate Llama stream remain pending.
+
 **Status: design/work package only. No new native requests, no new performance results, no compiled or qualified worker.** Stack this PR on `windows/rtx-native-delivery-20261026` at `9149b6f5f5a4dcde1b6124c654dc0ba1241ca509` (PR149).
 
 This study asks whether the net value of drafting changes between global serialization and attention-local repair on the **fixed, already exposed PR144 transfer panel**, and whether its direction persists on three actual dates. Qwen3 and SmolLM2 form the factorial study. A separate, bounded Llama diagnostic retains the known failure and two controls; it does not need to produce a fix.

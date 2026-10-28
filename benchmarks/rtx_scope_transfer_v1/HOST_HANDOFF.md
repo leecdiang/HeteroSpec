@@ -1,5 +1,9 @@
 # RTX host handoff — native extension still required
 
+Historical preparation handoff. The 2026-10-28 implementation and committed
+resource/build evidence are described in [HOST_EXECUTION.md](HOST_EXECUTION.md).
+Numerical qualification and performance admission remain separate gates.
+
 ## Present readiness
 
 The committed CPU design, schedules and tests run now. No new native executable, worker adapter, source patch, compile receipt or qualification receipt is supplied. Do not submit `SLOTS.jsonl` to the existing bridge: its accepted labels and k/lifecycle assumptions implement a different experiment. `study.py` is CPU-only and has no run/build command.

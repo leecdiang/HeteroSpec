@@ -1,7 +1,9 @@
 # B570 producer × consumer boundary experiment
 
-**Native extension implemented and compiled; native qualification is pending.**
-No new model/GPU request has yet been executed. See [IMPLEMENTATION.md](IMPLEMENTATION.md)
+**Completed: 152/152 native requests; B0 qualified and final audits passed.**
+See [RESULT.md](RESULT.md) for the complete matrix and three scientific counterexamples.
+Two inputs change local consumer reference eligibility from P1 failure to P4T
+preservation while natural C1 retains the same strict R. See [IMPLEMENTATION.md](IMPLEMENTATION.md)
 for the new driver and bounded executor, and [INPUT_SOURCE_AMENDMENT.md](INPUT_SOURCE_AMENDMENT.md)
 for the visible pre-forward input-source revisions and retained static stops.
 
@@ -87,5 +89,7 @@ The new driver is `boundary.exe`; the existing `formal.exe` still accepts only t
 
 The input-source amendment preserves the two length bands and the fixed count of8. Scientific factors are producer×consumer. Length and domain are selection descriptors; impossible domain×length cells must not be manufactured with truncated/concatenated prompts. If the final census cannot support the8-input plan, stop before new forwards; do not change152 slots during execution.
 
-All new result fields are null. Historical references remain unchanged.
+The original draft plan's result fields remain null as a preserved preparation
+artifact. Actual execution plans, audits and derived results are in `execution/`;
+complete primary records and raw payloads are delivered with the evidence package.
 

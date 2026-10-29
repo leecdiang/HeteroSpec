@@ -36,12 +36,24 @@ retained without rerunning any request.
 
 ## Formal order
 
-`formal/d0/s0/Qwen` completed on October 30, 00:46:08 to 00:57:35
-(Asia/Shanghai): 7 warmups and 84 measurements, with normal process cleanup.
-Its evidence is under `host_execution/formal-d0-s0-Qwen-a0/`.
-Do not launch that unit again. The next unit is `formal/d0/s0/SmolLM2`;
-both `s1` units remain for October 30. The later daily first sessions must
-still pass both per-family and global 20-hour gates and their declared dates.
+All four date0 units completed on October 30 (Asia/Shanghai):
+
+| Unit | Process interval | Measurements | Warmups |
+|---|---|---:|---:|
+| `formal/d0/s0/Qwen` | 00:46:08–00:57:35 | 84 | 7 |
+| `formal/d0/s0/SmolLM2` | 01:05:42–01:09:13 | 84 | 7 |
+| `formal/d0/s1/Qwen` | 01:12:29–01:23:56 | 84 | 7 |
+| `formal/d0/s1/SmolLM2` | 01:28:24–01:31:54 | 84 | 7 |
+
+All four processes returned normally and cleanup was verified. The first-unit
+snapshot remains under `host_execution/formal-d0-s0-Qwen-a0/`; the first-day
+closeout is `host_execution/day0/DAY0_STATUS.json`. Do not rerun any date0 unit.
+The next unit is `formal/d1/s0/SmolLM2` on **October 31**, followed by Qwen,
+then the second independently loaded session for SmolLM2 and Qwen.
+October 31 at 00:00 Shanghai is later than both first-session 20-hour lower
+bounds from October 30. Returning only 20 hours after this day's work can
+still be October 30 and cannot start date1. The host must verify the exact
+current date, all first-session gaps and midnight headroom at every launch.
 
 Each command below starts a new owned process and reloads both models. Run one
 unit at a time, checking the retained receipt before the next unit. The common

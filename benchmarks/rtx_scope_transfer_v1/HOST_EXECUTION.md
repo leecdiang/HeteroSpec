@@ -11,8 +11,13 @@ Qwen 98/98 and SmolLM2 98/98 are numerically qualified. The SmolLM2 CPU audit
 needed the source-grounded name correction documented in
 [AUDIT_METADATA_CORRECTION.md](AUDIT_METADATA_CORRECTION.md). Its initial refusal
 is retained; neither raw bytes nor native requests were changed or repeated.
-There are still no formal performance results. The raw bundle is retained
-locally with a committed payload manifest; remote raw archival remains pending.
+The qualification closeout is a historical snapshot. The first formal Qwen
+unit has now completed 7 warmups and 84 measurements on October 30 under the
+user-authorized [calendar amendment](CALENDAR_AMENDMENT.md). Its current status
+is recorded separately in
+`host_execution/formal-d0-s0-Qwen-a0/FIRST_FORMAL_STATUS.json`.
+There is no complete three-date performance estimate. The raw bundle is retained
+locally with committed payload manifests; remote raw archival remains pending.
 
 ## Implemented
 

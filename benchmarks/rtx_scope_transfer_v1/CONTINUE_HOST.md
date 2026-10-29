@@ -36,6 +36,13 @@ retained without rerunning any request.
 
 ## Formal order
 
+`formal/d0/s0/Qwen` completed on October 30, 00:46:08 to 00:57:35
+(Asia/Shanghai): 7 warmups and 84 measurements, with normal process cleanup.
+Its evidence is under `host_execution/formal-d0-s0-Qwen-a0/`.
+Do not launch that unit again. The next unit is `formal/d0/s0/SmolLM2`;
+both `s1` units remain for October 30. The later daily first sessions must
+still pass both per-family and global 20-hour gates and their declared dates.
+
 Each command below starts a new owned process and reloads both models. Run one
 unit at a time, checking the retained receipt before the next unit. The common
 command, from the checkout, is:

@@ -25,6 +25,15 @@ Closeout status on 2026-10-29: Qwen and SmolLM2 are both numerically qualified,
 98 requests each. Formal measurements, charged formal warmups and Llama
 diagnostics are all still zero. No technical retry reserve was consumed.
 
+## Authorized calendar amendment
+
+Before any formal request, the user explicitly approved moving the dates to
+October 30, October 31 and November 1. The original October 29 first date
+was missed and remains recorded as an incomplete original calendar. This is
+a disclosed amendment, not completion of the original calendar or a technical
+retry. See [CALENDAR_AMENDMENT.md](CALENDAR_AMENDMENT.md). Qualification is
+retained without rerunning any request.
+
 ## Formal order
 
 Each command below starts a new owned process and reloads both models. Run one
@@ -37,9 +46,9 @@ command, from the checkout, is:
 
 | Shanghai date | Units in order |
 |---|---|
-| 2026-10-29 | `formal/d0/s0/Qwen`, `formal/d0/s0/SmolLM2`, `formal/d0/s1/Qwen`, `formal/d0/s1/SmolLM2` |
-| 2026-10-30 | `formal/d1/s0/SmolLM2`, `formal/d1/s0/Qwen`, `formal/d1/s1/SmolLM2`, `formal/d1/s1/Qwen` |
-| 2026-10-31 | `formal/d2/s0/Qwen`, `formal/d2/s0/SmolLM2`, `formal/d2/s1/Qwen`, `formal/d2/s1/SmolLM2` |
+| 2026-10-30 | `formal/d0/s0/Qwen`, `formal/d0/s0/SmolLM2`, `formal/d0/s1/Qwen`, `formal/d0/s1/SmolLM2` |
+| 2026-10-31 | `formal/d1/s0/SmolLM2`, `formal/d1/s0/Qwen`, `formal/d1/s1/SmolLM2`, `formal/d1/s1/Qwen` |
+| 2026-11-01 | `formal/d2/s0/Qwen`, `formal/d2/s0/SmolLM2`, `formal/d2/s1/Qwen`, `formal/d2/s1/SmolLM2` |
 
 The host checks both per-family and daily first-session gaps of at least 20 hours.
 Qualification on October 28 is not a formal date and does not count as date0.

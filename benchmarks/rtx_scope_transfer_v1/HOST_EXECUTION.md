@@ -72,11 +72,12 @@ retry reserve is not automatically spent or silently reassigned.
 ## Remaining boundaries
 
 Three real dates and both daily sessions must finish before performance claims.
-The Llama native producer recipes are implemented, but its separate 54-request
-host stream and diagnostic report still require completion. It must not enter
+The separate registered Llama stream has completed and audited all 54 requests;
+see [sidecar_execution/README.md](sidecar_execution/README.md). It remains outside
 the factorial auditor. Checkpoint transfer, additional replay, repair searches
 and numerical retries remain disabled. The raw native admission records and
-build receipts are evidence of resource/build status only.
+build receipts are evidence of resource/build status only. Incremental archive
+and downloaded-member readback receipts are maintained with the sidecar evidence.
 
 The initial CPU `check-plan` status describes the unchanged registration package;
 it is not a live execution-status endpoint. Use retained attempts, qualification

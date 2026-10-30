@@ -85,9 +85,13 @@ No numerical failure permits a retry.
 Run the public `study.py audit` and `study.py analyze` on the retained bundle.
 Only a complete family passing every audit gate may contribute a performance
 estimate. Preserve all twelve inputs, six sessions and three date points.
-Keep the separate 54-request Llama diagnostic out of `REQUESTS.jsonl`; its
-host stream/report are still pending. No state transplant, extra replay or
-repair search is authorized by this continuation file.
+The separate 54-request Llama diagnostic completed on October30 and passed its
+independent audit. Its stream is outside the main `REQUESTS.jsonl`, at
+`D:\rtx151-llama-diagnostic-v2`, with committed evidence under
+`sidecar_execution/diagnostic/`. Do not rerun A1/A2 or add diagnostic requests.
+No state transplant, extra replay or repair search is authorized.
+Incremental archive and readback receipts are tracked under `sidecar_execution`;
+historical qualification/day0 closeout snapshots are not live delivery status.
 
 The user plans to return to this chat to continue; no recurring automation has
 been installed and no future model requests are running unattended.

@@ -19,6 +19,16 @@ vector inventories and bytes match. These are bundled producer/consumer recipe
 observations; no common state was transplanted and no consumer-only causal
 effect or repair is claimed. The earliest operator divergence remains unresolved.
 
+Read-only alignment of the retained decision vectors is recorded in
+[diagnostic/DECISION_COORDINATES.json](diagnostic/DECISION_COORDINATES.json).
+On the known case, A1's first unequal committed target vector is at zero-based
+output index29, while the first unequal emitted token is at index81. This
+alignment uses the same committed token prefix, not an asserted common numeric
+KV state. Both controls' aligned A1 committed target vectors match R. The
+historical first and next captured target decision vectors also match across
+R/PQ/QB. These coordinates describe existing evidence and consume zero new
+requests; they do not identify the earliest internal operator divergence.
+
 All 5916 new full-vocabulary vectors are retained. Actual fresh-context teardown,
 producer call counts, 32-layer geometry, finite vector argmax, transactions,
 execution identity, timing bounds and process cleanup pass the independent

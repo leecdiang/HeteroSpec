@@ -55,8 +55,11 @@ and [archives/READBACK.json](archives/READBACK.json). Original snapshots, ordina
 ZIP parts and prior indices remain retained. Later dates require separate
 increments; this completed batch must not be replaced.
 
-Date1 must begin on October31, SmolLM2 then Qwen, and both families reload again
-for session1. Date2 keeps the registered Qwen-first order on November1. The
+Date1 completed on October31, SmolLM2 then Qwen, with both families reloaded
+again for session1; all364 requests passed the date1 audit. See
+[the date1 closeout](../host_execution/day1/README.md). The54 Llama diagnostic
+requests were retained without repetition. Date2 keeps the registered
+Qwen-first order on November1. The
 frozen `study.py audit` and `study.py analyze` commands remain the analysis
 interface; they refuse a complete study estimate before all six sessions per
 family and all three dates are present. No day0 timing is used to select later

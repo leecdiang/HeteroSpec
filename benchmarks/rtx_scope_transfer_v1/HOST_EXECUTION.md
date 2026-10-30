@@ -17,11 +17,17 @@ on October 30 under the user-authorized
 [calendar amendment](CALENDAR_AMENDMENT.md). Current day0 status is recorded in
 `host_execution/day0/DAY0_STATUS.json`; both families ran in two separately
 loaded processes and all processes exited normally.
-There is no complete three-date performance estimate. The raw bundle is retained
+There is no complete three-date performance estimate.
+Date1 on October31 has also completed336 measurements and28 warmups,
+with all four independent processes cleaned and all364 records audited. Main
+requests now total924; date2 on November1 remains pending. See
+[date1 closeout](host_execution/day1/README.md). The original date0 evidence
+and qualification bytes remain unchanged. The raw bundle is retained
 locally with committed payload manifests. The completed main-through-day0 and
 54-request diagnostic increment is now remotely archived and download-verified;
-see [the archive receipt](sidecar_execution/archives/README.md). Future dates
-remain pending and must be archived as separate increments.
+see [the archive receipt](sidecar_execution/archives/README.md). Date1 is a
+separate increment described in its closeout; date2 must also use a separate
+increment without replacing earlier indices.
 
 ## Implemented
 

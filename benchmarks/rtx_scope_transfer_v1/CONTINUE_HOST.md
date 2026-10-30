@@ -48,8 +48,28 @@ All four date0 units completed on October 30 (Asia/Shanghai):
 All four processes returned normally and cleanup was verified. The first-unit
 snapshot remains under `host_execution/formal-d0-s0-Qwen-a0/`; the first-day
 closeout is `host_execution/day0/DAY0_STATUS.json`. Do not rerun any date0 unit.
-The next unit is `formal/d1/s0/SmolLM2` on **October 31**, followed by Qwen,
-then the second independently loaded session for SmolLM2 and Qwen.
+All four date1 units also completed on October31 (Asia/Shanghai):
+
+| Unit | Process interval | Measurements | Warmups |
+|---|---|---:|---:|
+| `formal/d1/s0/SmolLM2` | 03:45:01–03:47:55 | 84 | 7 |
+| `formal/d1/s0/Qwen` | 03:53:13–04:03:03 | 84 | 7 |
+| `formal/d1/s1/SmolLM2` | 04:08:03–04:10:56 | 84 | 7 |
+| `formal/d1/s1/Qwen` | 04:14:08–04:24:13 | 84 | 7 |
+
+The date1 audit is `host_execution/day1/DAY1_STATUS.json`. All364 records pass
+the public unit gates and the additional date1 PQ/QB canonical-state check.
+The original560-request prefix and original six process receipts are unchanged.
+Total main requests are924; the independent Llama stream remains54, with zero
+new diagnostic requests. Do not rerun date0, date1 or qualification.
+
+The next unit is `formal/d2/s0/Qwen` on **November1**, then SmolLM2,
+then session1 Qwen and SmolLM2. November1 at00:00 Shanghai is after the actual
+date1 first-session20-hour lower bounds (Qwen October31 23:53:13;
+SmolLM2 and daily first October31 23:45:01). The host still checks all gates.
+Remaining:336 formal measurements and28 warmups; no retry reserve was used.
+
+For the retained date1 admission history:
 October 31 at 00:00 Shanghai is later than both first-session 20-hour lower
 bounds from October 30. Returning only 20 hours after this day's work can
 still be October 30 and cannot start date1. The host must verify the exact

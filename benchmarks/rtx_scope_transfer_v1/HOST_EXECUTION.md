@@ -18,7 +18,10 @@ on October 30 under the user-authorized
 `host_execution/day0/DAY0_STATUS.json`; both families ran in two separately
 loaded processes and all processes exited normally.
 There is no complete three-date performance estimate. The raw bundle is retained
-locally with committed payload manifests; remote raw archival remains pending.
+locally with committed payload manifests. The completed main-through-day0 and
+54-request diagnostic increment is now remotely archived and download-verified;
+see [the archive receipt](sidecar_execution/archives/README.md). Future dates
+remain pending and must be archived as separate increments.
 
 ## Implemented
 

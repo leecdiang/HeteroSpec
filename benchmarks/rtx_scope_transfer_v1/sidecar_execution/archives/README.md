@@ -1,5 +1,15 @@
 # Completed-data incremental archive, batch 1
 
+**Complete: October30 04:55:34 UTC (12:55:34 Asia/Shanghai).** All39 ZIPs,
+all8541 decompressed content objects, all38087 logical member mappings and both
+remote indices passed fresh-download verification. See [READBACK.json](READBACK.json)
+and [FINAL_HOST_CHECK.json](FINAL_HOST_CHECK.json). The main source/design,
+seven retained main checkpoint files, both native EXEs/core libraries/build
+receipts and all21 runtime DLLs per family remain unchanged. The host lock is
+released and no native worker remains. This receipt verifies downloaded content
+and its original-path mapping; it does not claim a separately materialized full
+restoration of every original path.
+
 This batch retains all completed main data through date0 (196 qualification,
 336 formal and28 warmup requests) and all54 registered Llama diagnostics,
 including A0 historical raw evidence. The source snapshots contain 38,087 files

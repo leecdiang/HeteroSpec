@@ -48,6 +48,13 @@ ZIP member. Its final archive receipts are separate from diagnostic completion;
 do not infer remote delivery merely from a local manifest or a successful upload.
 Formal timing always has priority over diagnostics, CPU audits and archival IO.
 
+The first completed-data increment is now remotely delivered and independently
+download-verified:39 object ZIPs,8541 unique objects and38087 original paths,
+including both mapping indices. See [archives/README.md](archives/README.md)
+and [archives/READBACK.json](archives/READBACK.json). Original snapshots, ordinary
+ZIP parts and prior indices remain retained. Later dates require separate
+increments; this completed batch must not be replaced.
+
 Date1 must begin on October31, SmolLM2 then Qwen, and both families reload again
 for session1. Date2 keeps the registered Qwen-first order on November1. The
 frozen `study.py audit` and `study.py analyze` commands remain the analysis

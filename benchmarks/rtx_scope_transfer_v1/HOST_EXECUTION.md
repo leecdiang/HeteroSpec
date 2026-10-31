@@ -1,5 +1,17 @@
 # Native implementation and host execution, 2026-10-28
 
+## Completed three-date cohort, 2026-11-01
+
+Both families passed the full audit with1288 primary requests:196 qualification,
+1008 formal measurements and84 warmups. The separate54 registered Llama
+diagnostics are also complete. All three actual Shanghai dates and twelve
+independent formal processes are present; no technical or numerical retry ran.
+See [final results](host_execution/day2/RESULTS.md),
+[full audit](host_execution/day2/AUDIT.json), and
+[date2 delivery status](host_execution/day2/DAY2_STATUS.json).
+
+The implementation and earlier closeout history below is retained for provenance.
+
 The registered PLAN/PANEL/SLOTS and historical experiment bytes are unchanged.
 This implementation supersedes the original handoff's statement that no new
 worker exists. Build success and resident resource admission are not numerical
@@ -17,16 +29,16 @@ on October 30 under the user-authorized
 [calendar amendment](CALENDAR_AMENDMENT.md). Current day0 status is recorded in
 `host_execution/day0/DAY0_STATUS.json`; both families ran in two separately
 loaded processes and all processes exited normally.
-There is no complete three-date performance estimate.
+The complete three-date performance estimates are now linked above.
 Date1 on October31 has also completed336 measurements and28 warmups,
 with all four independent processes cleaned and all364 records audited. Main
-requests now total924; date2 on November1 remains pending. See
+requests totalled924 at that closeout; date2 subsequently completed. See
 [date1 closeout](host_execution/day1/README.md). The original date0 evidence
 and qualification bytes remain unchanged. The raw bundle is retained
 locally with committed payload manifests. The completed main-through-day0 and
 54-request diagnostic increment is now remotely archived and download-verified;
 see [the archive receipt](sidecar_execution/archives/README.md). Date1 is a
-separate increment described in its closeout; date2 must also use a separate
+separate increment described in its closeout; date2 uses another separate
 increment without replacing earlier indices.
 
 ## Implemented

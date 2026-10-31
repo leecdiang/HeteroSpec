@@ -1,7 +1,9 @@
 # Independent Llama diagnostics and incremental evidence delivery
 
-The main cohort is unchanged: qualification196, date0 measurements336 and
-warmups28; 560 main requests are retained without rerun. The registered formal
+At diagnostic execution, the main cohort contained qualification196, date0
+measurements336 and warmups28; those560 requests remain retained without rerun.
+Subsequent date1/date2 collection completed all1288 main requests. The54
+diagnostic requests and their bytes are unchanged. The registered formal
 dates remain October30/31 and November1, with both first-session 20-hour gates.
 
 The registered independent Llama stream is now **54/54 completed and audited**:
@@ -58,8 +60,9 @@ increments; this completed batch must not be replaced.
 Date1 completed on October31, SmolLM2 then Qwen, with both families reloaded
 again for session1; all364 requests passed the date1 audit. See
 [the date1 closeout](../host_execution/day1/README.md). The54 Llama diagnostic
-requests were retained without repetition. Date2 keeps the registered
-Qwen-first order on November1. The
+requests were retained without repetition. Date2 completed in the registered
+Qwen-first order on November1. Both families now pass the full three-date audit;
+see [final results](../host_execution/day2/RESULTS.md). The
 frozen `study.py audit` and `study.py analyze` commands remain the analysis
 interface; they refuse a complete study estimate before all six sessions per
 family and all three dates are present. No day0 timing is used to select later

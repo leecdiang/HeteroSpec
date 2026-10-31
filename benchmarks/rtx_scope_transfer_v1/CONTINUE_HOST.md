@@ -1,4 +1,12 @@
-# Continue the frozen RTX cohort
+# Completed RTX cohort: retained continuation history
+
+All registered work is complete:1288 primary requests (196 qualification,
+1008 formal measurements,84 warmups) and the separate54 Llama diagnostics.
+Both families passed the complete three-date audit and analysis. No technical
+retry reserve was used. There is no next unit: do not rerun the commands below.
+They are retained as execution history. See
+[final results](host_execution/day2/RESULTS.md) and
+[date2 status](host_execution/day2/DAY2_STATUS.json).
 
 Use the checkout at
 `C:\Users\ASUS\Documents\ChatGPT\HeteroSpec\repo`.
@@ -63,11 +71,22 @@ The original560-request prefix and original six process receipts are unchanged.
 Total main requests are924; the independent Llama stream remains54, with zero
 new diagnostic requests. Do not rerun date0, date1 or qualification.
 
-The next unit is `formal/d2/s0/Qwen` on **November1**, then SmolLM2,
-then session1 Qwen and SmolLM2. November1 at00:00 Shanghai is after the actual
+All four date2 units completed on November1 (Asia/Shanghai):
+
+| Unit | Process interval | Measurements | Warmups |
+|---|---|---:|---:|
+| `formal/d2/s0/Qwen` | 00:09:15–00:19:06 | 84 | 7 |
+| `formal/d2/s0/SmolLM2` | 00:24:12–00:27:05 | 84 | 7 |
+| `formal/d2/s1/Qwen` | 00:30:19–00:40:16 | 84 | 7 |
+| `formal/d2/s1/SmolLM2` | 00:44:48–00:47:42 | 84 | 7 |
+
+The earlier924-request byte prefix and ten process receipts remain unchanged;
+date2 appended364 requests. All twelve formal processes independently loaded
+models, completed on their registered actual dates and cleaned up.
+For the retained date2 admission history: November1 at00:00 Shanghai is after the actual
 date1 first-session20-hour lower bounds (Qwen October31 23:53:13;
 SmolLM2 and daily first October31 23:45:01). The host still checks all gates.
-Remaining:336 formal measurements and28 warmups; no retry reserve was used.
+Remaining requests:0. No retry reserve was used.
 
 For the retained date1 admission history:
 October 31 at 00:00 Shanghai is later than both first-session 20-hour lower
@@ -113,5 +132,5 @@ No state transplant, extra replay or repair search is authorized.
 Incremental archive and readback receipts are tracked under `sidecar_execution`;
 historical qualification/day0 closeout snapshots are not live delivery status.
 
-The user plans to return to this chat to continue; no recurring automation has
-been installed and no future model requests are running unattended.
+No recurring automation is installed and no future model requests are queued.
+The completed protocol does not authorize additional experiments.

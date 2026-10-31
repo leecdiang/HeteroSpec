@@ -1,0 +1,15 @@
+\subsection{Representation and execution-mode boundaries}
+\label{sec:mappingcosts}
+A local representation must also satisfy the reference after backend path selection and repay its conversion costs. Query-to-head mapping (QH) places independent queries in a head-like dimension and restores native output order. Balanced operator studies compare it with two identical QB controls under fixed inputs and execution windows~\cite{mappingrecords,b570compactrecords}.
+
+On the RTX core panel, QB\_A/QH=0.900826. A frozen selector predicts all twelve held-out synthetic mean orderings, but its charged lookup raises the offline selector/fixed-QB estimate to 1.010298. CUDA Graph ON/OFF intervention reduces QB completed-graph cost to 0.615--0.849 of OFF and narrows four QH-minus-QB gaps from 12.056--12.975 to 0.735--1.627\,$\mu$s. These measurements establish execution-mode sensitivity of QB versus QH; the PQ/QB request comparison has a different comparator and lacks corresponding capture/replay counts.
+
+Reference admission can exclude an otherwise faster execution path. RTX physical key extents 1023/1024/1025 select 8/3/8 kernels. Padding the same logical length-1023 operands and mask to extent1024 reaches three kernels on the first call but fails all four reference qualifications. Padding to1025 qualifies, retains eight kernels and costs about 1.5\% more than native QB (Figure~\ref{fig:mappingboundary}).
+
+\begin{figure*}[t]
+\centering\input{figures/mapping_boundary}
+\caption{Reference and transaction constraints on representation choice. A: padding the same logical length-1023 input to extent1024 selects a three-kernel path but fails all four reference checks. B: complete Q-representation transactions, with conversion and transfer charged. RTX and B570 use distinct geometries and execution modes; the B570 interval is descriptive and family-adjusted.}
+\label{fig:mappingboundary}
+\end{figure*}
+
+Charging copy/transpose, upload, completed graph execution and ordinary-output readback removes the apparent compact-QH advantage. RTX compact-QH/QB\_A ratios are 1.002216 and 1.001598 at $q=2,4$, and neither passes the practical screen against both QB controls. The separate B570 transaction gives 0.992244 [0.979908,1.004691], also below the evidence required for a practical improvement. Fixed QB remains the selected baseline in these domains. Input-lifetime controls, continuous timer boundaries and all alternative mappings are detailed in \sref{supp:followupmapping}.

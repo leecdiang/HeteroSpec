@@ -3,6 +3,10 @@ sys.path.insert(0,str(pathlib.Path(__file__).resolve().parent))
 import regression as r
 
 class RegressionTests(unittest.TestCase):
+    def test_model_specific_geometry(self):
+        self.assertEqual(r.model_geometry('Qwen'),{'layers':36,'embd':4096})
+        self.assertEqual(r.model_geometry('Llama'),{'layers':32,'embd':4096})
+        with self.assertRaises(ValueError):r.model_geometry('unknown')
     def test_host_driver_changes_only_bound_family(self):
         _,before,after=r.derived_driver({})
         self.assertEqual(after,before.replace("'Qwen',str(bundle/","c['regression_family'],str(bundle/"))
@@ -24,5 +28,13 @@ class RegressionTests(unittest.TestCase):
             with self.assertRaises(ValueError):r.profile_check(*args)
             args[0]['identity']={'changed':True}
             with self.assertRaises(ValueError):r.profile_check(*args)
+    def test_qwen36_coverage_rejects_llama32_geometry(self):
+        with tempfile.TemporaryDirectory() as d:
+            args=self.fixture(pathlib.Path(d));record,slot,_,folder,binding=args
+            record['family']=slot['family']='Qwen';binding['families']['Qwen']=binding['families'].pop('Llama')
+            a=array.array('f',[0.])*151936;a[2]=1.;(folder/'target/initial.f32').write_bytes(a.tobytes())
+            with self.assertRaises(ValueError):r.profile_check(*args)
+            record['geometry'] += [dict(record['geometry'][0],name=f'kq-{i}',layer=i) for i in range(32,36)]
+            r.profile_check(*args)
 
 if __name__=='__main__':unittest.main()

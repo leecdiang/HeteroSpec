@@ -55,17 +55,23 @@ Epoch03 prospectively selects native prefill, without a per-request canonical
 producer. It builds and passes capacity admission. The same eight first-seed
 requests pass observer controls; all40 layer outputs and final logits now match
 R in M_QB/C_PQ/C_QB, and complete natural endpoints match R. The complete96-cell
-development matrix is still running at this checkpoint. No qualification or
-performance claim follows yet.
+development matrix subsequently completed: all48 heavy/off pairs preserve R,
+with no observer discrepancies. No held-out qualification or performance claim
+follows yet.
 
 ## Remaining gates and resource accounting
 
-Complete development, then144 original-Qwen8B regression requests and24 pinned
+After development, run144 original-Qwen8B regression requests and24 pinned
 Llama regression requests. The latter retain the original known counterexample
 and two controls, using the metadata4 source and fresh contexts. Their references
 are read from pinned historical records, never from candidate output. The derived
 host driver retains the existing lock, Job, timeout, memory and shared-budget
-checks; only family binding and32-layer/family-vocabulary validation differ.
+checks; only family binding and model-specific geometry/vocabulary validation differ.
+The first Qwen8B admission failed before generation because the adapter incorrectly
+bound32 layers. Authenticated model metadata reports36 layers and4096 embedding
+dimensions. The adapter now binds36 for Qwen and32 for Llama, with explicit coverage
+tests; the failed receipt and prior source remain. New regression epochs were
+prepared. Qwen8B admission then passed and its144-request run is in progress.
 
 Before epoch03 output, finite safety ceilings were raised to21600seconds per
 worker and86400seconds cumulative to accommodate the frozen long prompts and

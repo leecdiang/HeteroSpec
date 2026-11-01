@@ -8,6 +8,10 @@ import run,plan,audit
 
 def git_json(repo,path):return json.loads(git_read(repo,BASE,path))
 
+def model_geometry(family):
+    need(family in ('Qwen','Llama'),'registered model geometry')
+    return {'layers':36 if family=='Qwen' else 32,'embd':4096}
+
 def profile_check(r,s,item,folder,binding):
     family=s['family'];need(family in ('Qwen','Llama') and r['family']==family,'regression family')
     need(r['identity']==binding['families'][family],'regression executable/model identity')
@@ -18,7 +22,7 @@ def profile_check(r,s,item,folder,binding):
         b=r['boundary'];need(b['positions_equal'] and not b['pending_token_consumed'] and b['pending_token']==r['ids'][0],'sham semantics')
         if s['observer']=='heavy':need(b['receiver_readback_checked'] and b['serialized_bytes_equal'],'sham byte roundtrip')
     if s['observer']=='heavy':
-        audit.geometry_check(r['geometry'] or r['boundary'].get('producer_geometry',[]),32);audit.verify_states(r,folder)
+        audit.geometry_check(r['geometry'] or r['boundary'].get('producer_geometry',[]),model_geometry(family)['layers']);audit.verify_states(r,folder)
         best={};n=151936 if family=='Qwen' else 128256
         for role in ('target','draft'):
             for p in sorted((Path(folder)/role).glob('*.f32')):best[p.relative_to(folder).as_posix()]=audit.full_vector(p,n)[0]
@@ -62,7 +66,7 @@ def prepare(repo,family,build_path,worker,out):
     for role in ('target','draft'):need(file_hash(local[role])==original['models'][role]['sha256'],'original model identity')
     for item in panel['inputs']:
         valid_input(item);need(max(item['prompt_ids'])<(151936 if family=='Qwen' else 128256),'family vocabulary')
-    binding=copy.deepcopy(identity);binding['study_id']=STUDY;binding['repair_model']={'layers':32,'embd':4096};binding['dense14b']={'target_gpu_layers':999,'threads':24,'min_ram_free_bytes':8*1024**3,'min_vram_free_bytes':1024**3}
+    binding=copy.deepcopy(identity);binding['study_id']=STUDY;binding['repair_model']=model_geometry(family);binding['dense14b']={'target_gpu_layers':999,'threads':24,'min_ram_free_bytes':8*1024**3,'min_vram_free_bytes':1024**3}
     bound=binding['families'][family];bound.update(executable_sha256=build['executable_sha256'],core_sha256=build['core_sha256'],worker_source_sha256=build['worker_source_sha256'])
     policy={'prefill':'native','rowwise_roles':0,'stable_norm_offload':True,'revision':'dev03-regression','mechanism':'Same head-normalization offload preference; original family source, models and reference'};binding['candidate_policy']=policy
     candidate=read('D:/rtx158/config03/HOST_CONFIG.json');cfg=dict(candidate,regression_family=family,parent_root=str(old_root),target=local['target'],draft=local['draft'],original_worker=local['executable'],worker=str(Path(worker).resolve()),build_receipt=str(Path(build_path).resolve()),policy=str(out/'POLICY.json'))

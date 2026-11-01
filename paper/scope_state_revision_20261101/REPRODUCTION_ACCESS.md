@@ -34,3 +34,11 @@ replay is not independently provisioned second-machine qualification.
 
 The author must arrange dependable reviewer access before journal submission.
 No new access permissions, archive publication or submission was performed here.
+
+## Targeted interpretation checks
+
+`python -B scripts/analyze_targeted_revision.py --check` reconstructs the
+approved post-hoc scope/layout factors, same-panel normalization and finite
+producer/consumer counterexamples. It reads the existing compact data offline.
+An independent external reader still needs the author to arrange native-material
+access; this revision does not claim a new-account or second-machine test.

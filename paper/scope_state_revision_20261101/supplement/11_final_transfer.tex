@@ -44,6 +44,21 @@ The 16 input--producer PQ/QB pairs agree in complete endpoints, cycles and all c
 
 The source pool was amended before new model forwards after static exposure and length checks could not fill the requested bands. Four original GSM8K and four original MATH-500 problems were chosen by the frozen hash rule, without output- or timing-based selection, truncation or concatenation. The retained panel is mathematical throughout; source and length are confounded. Exact input strings, selection records and static stops remain in the source archive. Natural integrated P4T speculative production was not qualified by this clean-receiver experiment, and its diagnostic resource times are not formal service estimates.
 
+\subsection{Retrospective contrasts and baseline normalization}
+\label{supp:targetedcontrasts}
+Equation~\eqref{eq:scopedecomposition} uses the original equal input, session and date log weights. Multiplication of these geometric ratios is an identity on the common panel; it does not assign fractions of runtime to mechanisms. Table~\ref{tab:scopefactors} reports the pooled factors. The three date values of $\eta$ are 1.027012, 1.052076 and 1.100240 for Qwen3, and 1.013963, 1.001058 and 0.983694 for SmolLM2; all date-level factors remain in the supplied data. Qwen3's target-only QB/PQ comparison reverses across dates, so its pooled value is not a stable per-date ordering.
+
+\input{tables/scope_factors}
+\input{tables/normalized_costs}
+
+Table~\ref{tab:normalizedcosts} uses $T(C_L)/T(R)=1/S_{R/C_L}$ and $T(M_L)/T(R)=D_L/S_{R/C_L}$. These are common-weight geometric ratios, not total wall-clock seconds. For SmolLM2, QB's target-only and speculative paths are respectively 6.579\% and 6.532\% cheaper than PQ, leaving $D_{\QB}/D_{\PQ}=0.999494$. Its speculative path is 30.570\% cheaper than $R$ but 24.243\% more costly than same-layout target-only. All are post-hoc arithmetic descriptions of existing records, with no new measurements or uncertainty test.
+
+\subsection{A finite counterexample to independent pass labels}
+\label{supp:targetedeligibility}
+For either fixed-$R$ prealgebra case, define $V(p,c)$ as one when the endpoint under producer $p$ and consumer $c$ equals that input's strict $R$. Rows $(P1,P4T)$ and columns $(C1,PQ)$ give $V=\bigl(\begin{smallmatrix}1&0\\1&1\end{smallmatrix}\bigr)$; QB has the same outcome. If $V(p,c)=g(p)\wedge h(c)$ for independent binary labels, the two C1 passes force both producer labels to one. The P4T/PQ pass then forces the PQ label to one, incorrectly predicting the P1/PQ cell. No such exact decomposition exists on this observed submatrix. This does not preclude modular verification with relational preconditions~\cite{vosti}.
+
+Across the eight-input matrix, PQ/QB agree in all sixteen input--producer pairs, including four where both differ from strict $R$: both producers for GSM8K/1184 and P1 for the two prealgebra cases. This descriptive count tests the insufficiency of mutual agreement as a reference oracle; it is not a deployment failure rate. The intervention changes KV and initial logits together within the validated clean receiver. The accompanying script enumerates all sixteen binary label assignments and reproduces these counts from the unchanged CSVs.
+
 \subsection{Final evidence delivery}
 RTX's immutable base through date zero and Llama diagnostics has 39 object ZIPs, 8,541 unique objects and 38,087 original-path mappings. Date-one and date-two increments add three ZIPs each, containing 425 and 427 members respectively. B570 publishes six ZIPs plus two manifest/receipt assets containing 6,826 files. Source-host authenticated downloads and readback checks are recorded for every batch; B570's frozen CPU analysis recreates eight outputs byte-for-byte from that downloaded copy. These are source-host delivery checks, distinct from independent-host native reproduction.
 

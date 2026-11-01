@@ -130,7 +130,10 @@ def test():
     final_spec=importlib.util.spec_from_file_location('analyze_final_revision',ROOT/'scripts/analyze_final_revision.py')
     final_module=importlib.util.module_from_spec(final_spec);final_spec.loader.exec_module(final_module)
     final=final_module.verify(check,ROOT)
-    return {'status':'PASS','final':final,'closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,'native_followup':followup,
+    targeted_spec=importlib.util.spec_from_file_location('analyze_targeted_revision',ROOT/'scripts/analyze_targeted_revision.py')
+    targeted_module=importlib.util.module_from_spec(targeted_spec);targeted_spec.loader.exec_module(targeted_module)
+    targeted=targeted_module.verify(check,ROOT)
+    return {'status':'PASS','targeted':targeted,'final':final,'closure':closure,'repair_interaction':interaction,'checks_passed':len(checks),'checks':checks,'derived_draft_ratios':draft,'rtx104':rtx,'e2_absolute_cost':absolute,'native_followup':followup,
             'scope':'Reported-value/source checks, not native execution, full-vector reconstruction, all-input correctness or arXiv-server validation.',
             'new_model_executions':0}
 if __name__=='__main__':

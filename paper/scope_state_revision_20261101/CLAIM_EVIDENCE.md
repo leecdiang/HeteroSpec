@@ -74,3 +74,25 @@ The new main evidence is the registered three-date repair-scope × draft study (
 | Llama diagnostic | Pinned original audit and report; no local raw-vector replay | Known counterexample repeated; controls pass; P1/P4_NATIVE C1 retains R while PQ/QB differ. No earliest operator identified. |
 
 The new checker independently reconstructs report-level aggregates, matrix counts and P0 E2 quartet arithmetic. It does not impersonate a native replay or the full original seven-arm raw-response audit. Larger P0 projection and delivery materials remain at their immutable repository commits.
+
+## Approved targeted revision — 2026-11-01
+
+This supersedes the earlier section-8 "offline selection rule" wording. Equation
+(policyselection) is an empirical comparison objective over an already-qualified
+fixed panel, not an online algorithm or semantic guard for new requests. Reference
+generation and qualification precede formal timing; each campaign still charges
+its declared in-window checks. An online reference-selection mechanism is not
+implemented or measured.
+
+| Added interpretation | Source and reconstruction | Allowed scope |
+|---|---|---|
+| Separate scope and local-layout factors | Same 12 reported RTX session log vectors; scripts/analyze_targeted_revision.py | D_QB/D_GS = (D_PQ/D_GS)(D_QB/D_PQ), post-hoc common-weight algebra. Not kernel-time allocation or new significance. |
+| Smol common-path improvement | Existing M_QB/M_PQ and C_QB/C_PQ | 6.579% and 6.532% lower point costs; eta=0.999494. Not an equivalence test. |
+| Strict-reference versus draft baseline | Same three-date paired ratios | Smol C_QB/R=0.694295 but C_QB/M_QB=1.242426; no pooling with the earlier 1.007007 panel. |
+| Qualification is relational on two submatrices | Unchanged B570 MATRIX and STATE_EFFECTS CSVs | Exact finite matrices cannot factor into independent producer/consumer binary labels; relational modular verification remains possible. |
+| Mutual agreement is insufficient as an oracle | Complete eight-input matrix | Four of sixteen agreeing local pairs depart from strict R; descriptive count only, not a failure rate. |
+| Closest systems' stronger guarantees | Vosti v1 and LLM-42 v2 primary HTML, rechecked 2026-11-01 | Accurately describe engine/kernel proof and verify/repair guarantees; no cross-system speed ranking. |
+
+No new observation, raw-logit replay, uncertainty estimate, model execution or
+benchmark modification is introduced. The original 41 bibliography entries and
+12 figure sources are retained. New generated tables are outside anc/.

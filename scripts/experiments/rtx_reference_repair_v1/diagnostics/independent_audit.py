@@ -20,10 +20,10 @@ def endpoint(r):
     need(e['stop_reason']==('EOG' if flags[-1] else 'CAP') and (flags[-1] or len(e['ids'])==128),'stopping contract')
     return e
 def vector(p,n):
-    data=p.read_bytes();need(len(data)==n*4,'full vocabulary: '+str(p));best=-math.inf;token=None
-    for i,(v,) in enumerate(struct.iter_unpack('<f',data)):
-        need(math.isfinite(v),'nonfinite vector: '+str(p))
-        if v>best:best=v;token=i
+    data=p.read_bytes();need(len(data)==n*4,'full vocabulary: '+str(p))
+    values=[v for (v,) in struct.iter_unpack('<f',data)]
+    need(all(map(math.isfinite,values)),'nonfinite vector: '+str(p))
+    token=values.index(max(values))
     return token,hashlib.sha256(data).hexdigest()
 def main(root,repo,out):
     root=pathlib.Path(root);repo=pathlib.Path(repo);out=pathlib.Path(out);need(not out.exists(),'fresh audit output')

@@ -71,7 +71,24 @@ The first Qwen8B admission failed before generation because the adapter incorrec
 bound32 layers. Authenticated model metadata reports36 layers and4096 embedding
 dimensions. The adapter now binds36 for Qwen and32 for Llama, with explicit coverage
 tests; the failed receipt and prior source remain. New regression epochs were
-prepared. Qwen8B admission then passed and its144-request run is in progress.
+prepared. Qwen8B admission and all144 requests subsequently passed against the
+original references, with72 stable observer pairs.
+
+The first Llama run failed after15 completed records while the16th heavy request
+was active. The new regression integration exposed a fresh-context capture lifetime
+bug: diagnostic state serialization occurred after context destruction. Windows
+recorded access violation `c0000005`; all24 reserved requests remain charged. A fresh
+Llama build captures state into owned bytes before teardown and writes them afterward,
+outside service timing. The natural decode/acceptance loop is byte-identical. The new
+capacity admission and complete24-request regression pass. All24 endpoints/native
+transactions and2356 saved full-vector artifacts match original historical behavior.
+The known CodeContests108 C_PQ/C_QB counterexample remains four failures against R;
+it is not relabeled as reference preservation.
+
+The mechanism record and native freeze re-audit now pass. At freeze420 requests
+are conservatively charged, including8 operator replays and the entire failed
+Llama24 reservation. The planned720 confirmation/timing requests bring the projected
+total to1140. Held-out qualification and performance are still pending.
 
 Before epoch03 output, finite safety ceilings were raised to21600seconds per
 worker and86400seconds cumulative to accommodate the frozen long prompts and

@@ -74,7 +74,8 @@ def phases_map(record, ngl):
         dev=g.get('device','');need(dev and dev!='UNALLOCATED','unobserved device')
         gpu='5070' in dev; is_cpu=g.get('device_type')==0
         need(gpu or is_cpu,'unregistered compute device')
-        need(gpu==(layer>=40-ngl),'unexpected attention placement; inspect actual scheduler before freeze')
+        # Authenticated core llama-model.cpp:1479 counts the output layer in n_gpu_layers.
+        need(gpu==(layer>=41-ngl),'unexpected attention placement; inspect actual scheduler before freeze')
         # All core matrix products keep the native QK source order.
         src=g.get('sources',[]);need(len(src)>=2,'missing Q/K operand descriptors')
         q=src[1]['ne'];k=src[0]['ne']

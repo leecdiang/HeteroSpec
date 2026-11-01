@@ -46,6 +46,14 @@ class Job:
         return x.active
     def terminate(self):
         if self.handle:need(self.k.TerminateJobObject(self.handle,3),'job termination failed')
+    def wait_empty(self, timeout=5):
+        # Windows process signaling may precede the Job's active-count update.
+        # Keep ownership and the GPU lock until accounting actually reaches zero.
+        deadline=time.monotonic()+timeout
+        while True:
+            active=self.active()
+            if active==0 or time.monotonic()>=deadline:return active
+            time.sleep(.05)
     def close(self):
         if self.handle:self.k.CloseHandle(self.handle);self.handle=None
 
@@ -204,14 +212,14 @@ def run_unit(bundle,unit,panel,planned,admit=False,validator=None):
             need(result['status']==('RESOURCE_ADMITTED' if admit else 'COMPLETE'),'native terminal status')
             need(result.get('normal_cleanup_returned') is True,'native cleanup missing')
             need(admit or index==len(planned),'incomplete native slot count')
-            active=job.active();need(active==0,'job still owns live processes');success=True
+            active=job.wait_empty();need(active==0,'job still owns live processes');success=True
     except BaseException as exc:
         err=repr(exc)
         if job:
             job.terminate()
         elif p and p.poll() is None:p.kill()
         if p:p.wait(timeout=30)
-        if job:active=job.active()
+        if job:active=job.wait_empty()
         raise
     finally:
         if job:job.close()

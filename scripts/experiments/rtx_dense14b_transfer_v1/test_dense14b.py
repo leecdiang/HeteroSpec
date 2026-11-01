@@ -181,11 +181,18 @@ class EndpointTests(unittest.TestCase):
 class GeometryTests(unittest.TestCase):
     def fixture(self,scope='QB',ngl=24):
         return {'observed_scope':scope,'cycles':[{}],'geometry':[
-            {'name':f'kq-{i}','op':'MUL_MAT','phase':phase,'device':'RTX 5070 Ti' if i>=40-ngl else 'CPU',
-             'device_type':1 if i>=40-ngl else 0,
+            {'name':f'kq-{i}','op':'MUL_MAT','phase':phase,'device':'RTX 5070 Ti' if i>=41-ngl else 'CPU',
+             'device_type':1 if i>=41-ngl else 0,
              'sources':[{'ne':[128,512,8,1]},{'ne':[128,1,40,4 if scope=='QB' else 1]}]}
             for phase in ('PREFILL','VERIFY') for i in range(40)]}
     def test_all40(self):self.assertEqual(len(d.phases_map(self.fixture(),24)['VERIFY']),40)
+    def test_output_layer_counts_toward_offload(self):
+        for ngl,first in ((24,17),(20,21),(16,25)):
+            observed=d.phases_map(self.fixture(ngl=ngl),ngl)['VERIFY']
+            self.assertEqual([i for i,v in observed.items() if v=='GPU'],list(range(first,40)))
+    def test_reject_old_off_by_one(self):
+        x=self.fixture();x['geometry'][16]['device']='RTX 5070 Ti';x['geometry'][16]['device_type']=1
+        with self.assertRaises(ValueError):d.phases_map(x,24)
     def test_wrong_heads(self):
         x=self.fixture();x['geometry'][0]['sources'][1]['ne'][2]=32
         with self.assertRaises(ValueError):d.phases_map(x,24)

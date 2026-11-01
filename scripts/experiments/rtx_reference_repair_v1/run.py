@@ -52,6 +52,7 @@ def prepare(config,out):
         need(projection(current)==projection(frozen),'panel identity differs from PR156: '+name)
     policy=read(c['policy']);plan.policy_check(policy)
     need(policy['rowwise_roles']==build['repair_spec']['rowwise_roles'],'candidate build/policy differs')
+    need(policy.get('stable_norm_offload',False)==build['repair_spec'].get('stable_norm_offload',False),'scheduler repair build/policy differs')
     for n in ('worker_timeout_seconds','total_native_seconds','min_ram_free_bytes','min_vram_free_bytes','min_disk_free_bytes','max_payload_bytes'):
         positive(c['resources'][n])
     need(c['resources']['min_ram_free_bytes']>=8*1024**3 and c['resources']['min_vram_free_bytes']>=1024**3,'retain headroom')

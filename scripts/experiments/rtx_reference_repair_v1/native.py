@@ -10,7 +10,7 @@ HERE=Path(__file__).resolve().parent
 LEGACY='scripts/experiments/rtx_dense14b_transfer_v1/'
 UPPATH='scripts/experiments/rtx_scope_transfer_v1/'
 ADAPTER_BLOB='f38e7f31cbfc594ede1ac4720300817844d4e506'
-HEADERS=('repair_runtime.hpp','repair_boundary.hpp','repair_observer.inc','repair_mm.hpp')
+HEADERS=('repair_runtime.hpp','repair_boundary.hpp','repair_observer.inc','repair_mm.hpp','repair_offload.hpp')
 
 def once(text,old,new):
     need(text.count(old)==1,'missing/nonunique source anchor: '+old[:90]);return text.replace(old,new)
@@ -96,16 +96,17 @@ def patch_builder(text):
     new='''        code = Path(__file__).parent
         from operator_patch import apply_rows
         repair_spec = json.loads((code / "REPAIR_BUILD.json").read_text())
-        report["repair_source_changes"] = apply_rows(source, code, repair_spec["rowwise_roles"])
+        report["repair_source_changes"] = apply_rows(source, code, repair_spec["rowwise_roles"], repair_spec.get("stable_norm_offload", False))
         report["repair_spec"] = repair_spec
         for name in ("repair_runtime.hpp", "repair_boundary.hpp", "repair_mm.hpp"):
             shutil.copyfile(code / name, root / name)
         for name in ("worker.cpp", "arm_spec.h"):'''
     return once(text,old,new)
 
-def stage(repo,out,roles=0):
+def stage(repo,out,roles=0,stable_norm_offload=False):
     out=Path(out);need(not out.exists(),'fresh stage directory required')
     need(type(roles) is int and 0<=roles<=7,'rowwise operator mask')
+    need(type(stable_norm_offload) is bool,'stable norm offload flag')
     upstream={n:git_read(repo,UPSTREAM,UPPATH+n,h) for n,h in PINS.items()}
     adapter=git_read(repo,BASE,LEGACY+'native.py',ADAPTER_BLOB)
     transformed=adapt(inherited_adapt(upstream['worker.cpp'].decode(),adapter),(HERE/'repair_observer.inc').read_text())
@@ -117,7 +118,7 @@ def stage(repo,out,roles=0):
     # Static build choice: cannot be switched under a cached graph.
     p=out/'repair_mm.hpp';p.write_text(p.read_text().replace('#define HSR_MM_ROLES 0',f'#define HSR_MM_ROLES {roles}'),encoding='utf-8',newline='\n')
     save(out/'REPAIR_BUILD.json',{'study_id':STUDY,'base':BASE,'rowwise_roles':roles,
-       'new_reference_allowed':False,'native_compilation_performed_here':False})
+       'stable_norm_offload':stable_norm_offload,'new_reference_allowed':False,'native_compilation_performed_here':False})
     save(out/'STAGING.json',{'status':'STAGED_NOT_NATIVE_QUALIFIED','base':BASE,'source_pins':PINS,
        'files':{p.name:file_hash(p) for p in out.iterdir() if p.is_file()},'native_requests':0})
     return out

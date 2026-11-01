@@ -36,6 +36,15 @@
                 return want;
             }
             need(want,"unexpected post-evaluation observation");
+            if(t->op==GGML_OP_ROPE){
+                j["op_params_i32"]=std::vector<int32_t>(t->op_params,t->op_params+GGML_MAX_OP_PARAMS/sizeof(int32_t));
+                auto*positions=t->src[1];
+                need(positions && positions->type==GGML_TYPE_I32 && positions->op==GGML_OP_NONE && ggml_is_contiguous(positions) && ggml_nelements(positions)<=1024,"RoPE position input is not an immutable contiguous input");
+                std::vector<int32_t> p(ggml_nelements(positions));
+                ggml_backend_tensor_get(positions,p.data(),0,p.size()*sizeof(int32_t));
+                j["rope_positions_i32"]=p;
+                j["rope_positions_source"]="immutable graph input copied after evaluation; no overwritten operand claim";
+            }
             auto n=ggml_nbytes(t);
             need(hs_repair::opt.files<hs_repair::opt.max_files && n<=hs_repair::opt.max_bytes-hs_repair::opt.bytes,"trace budget exhausted; retain partial trace");
             need(t->buffer!=nullptr,"observed tensor unallocated");

@@ -8,7 +8,7 @@ from native import stage
 
 def build(config):
     c=read(config);out=Path(c['out']);staged=out.parent/(out.name+'_source_adapter')
-    stage(c['repo'],staged,c.get('rowwise_roles',0))
+    stage(c['repo'],staged,c.get('rowwise_roles',0),c.get('stable_norm_offload',False))
     old=read(c['parent_build']);manifest=staged/'NUMERICAL_DLLS.json'
     save(manifest,{'numerical_DLL_sha256':old['numerical_modules']},exclusive=True)
     cmd=[sys.executable,'-B',str(staged/'build_native.py'),'--variant','original',

@@ -1,0 +1,2219 @@
+{
+  "observer_controls_pass": true,
+  "controls": [
+    {
+      "arm": "R",
+      "all_endpoint_vectors_transactions_states_equal": true,
+      "control_sha256": "7ff1459b6cc98732d3468927d3ceb2992779ed4a4a11a4d124715c64dd67f3bc",
+      "trace_sha256": "d4a26fd779cb5c484a2a45abf5fa55e2689d09df1b9ef94b8560e8bef02cdc9d"
+    },
+    {
+      "arm": "M_QB",
+      "all_endpoint_vectors_transactions_states_equal": true,
+      "control_sha256": "79b83fda2c4b547133df6109f306ba98726807990dfe30e9e8e02b29d70684cf",
+      "trace_sha256": "45aa36578b706d15606d8858971a5e5dff92e6f6f4f3b454c033bb9110ca54a2"
+    },
+    {
+      "arm": "C_PQ",
+      "all_endpoint_vectors_transactions_states_equal": true,
+      "control_sha256": "ebd86f7911e5f1c0962f04691fcfdbe9285804f82bc800a802bbbbe03c7c7189",
+      "trace_sha256": "7a3d77ff6b4b9af4ad012ef96ca4f21aa4c290ae2a9480e6bdfcc72e66180f2f"
+    },
+    {
+      "arm": "C_QB",
+      "all_endpoint_vectors_transactions_states_equal": true,
+      "control_sha256": "f83582f0880316b46342c477587d7e7cb74226d77129c7bce96ebec2c82d60a3",
+      "trace_sha256": "c5274fb172ffcaf9f4990bf0e20d21d68616abd40956cf7faa7ee5829e3c23ae"
+    }
+  ],
+  "results": [
+    {
+      "arm": "M_QB",
+      "comparisons": [
+        {
+          "name": "norm-10",
+          "op": "RMS_NORM",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 4,
+          "right_count": 4
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "attn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/1_attn_norm-10.bin",
+          "right_capture": "trace/1_attn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/2_Qcur-10.bin",
+          "right_capture": "trace/2_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/3_Qcur-10.bin",
+          "right_capture": "trace/3_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/5_Qcur_normed-10.bin",
+          "right_capture": "trace/5_Qcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/6_Qcur-10.bin",
+          "right_capture": "trace/6_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/7_Vcur-10.bin",
+          "right_capture": "trace/7_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/8_Vcur-10.bin",
+          "right_capture": "trace/8_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/9_Kcur-10.bin",
+          "right_capture": "trace/9_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/10_Kcur-10.bin",
+          "right_capture": "trace/10_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/12_Kcur_normed-10.bin",
+          "right_capture": "trace/12_Kcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/13_Kcur-10.bin",
+          "right_capture": "trace/13_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "hs_attention_q-10",
+          "op": "PERMUTE",
+          "left_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/14_hs_attention_q-10.bin",
+          "right_capture": "trace/14_hs_attention_q-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 10240,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kq-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/15_kq-10.bin",
+          "right_capture": "trace/15_kq-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 10240,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kq_soft_max-10",
+          "op": "SOFT_MAX",
+          "left_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/16_kq_soft_max-10.bin",
+          "right_capture": "trace/16_kq_soft_max-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kqv-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/17_kqv-10.bin",
+          "right_capture": "trace/17_kqv-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kqv_out-10",
+          "op": "CONT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/18_kqv_out-10.bin",
+          "right_capture": "trace/18_kqv_out-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_inp-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/19_ffn_inp-10.bin",
+          "right_capture": "trace/19_ffn_inp-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/21_ffn_norm-10.bin",
+          "right_capture": "trace/21_ffn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_gate-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/22_ffn_gate-10.bin",
+          "right_capture": "trace/22_ffn_gate-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_up-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/23_ffn_up-10.bin",
+          "right_capture": "trace/23_ffn_up-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_swiglu-10",
+          "op": "GLU",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/24_ffn_swiglu-10.bin",
+          "right_capture": "trace/24_ffn_swiglu-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_out-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/25_ffn_out-10.bin",
+          "right_capture": "trace/25_ffn_out-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "l_out-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "row_map": "identical shapes, all logical values",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/26_l_out-10.bin",
+          "right_capture": "trace/26_l_out-10.bin"
+        }
+      ]
+    },
+    {
+      "arm": "C_PQ",
+      "comparisons": [
+        {
+          "name": "norm-10",
+          "op": "RMS_NORM",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 4,
+          "right_count": 4
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "attn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/1_attn_norm-10.bin",
+          "right_capture": "trace/1_attn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/2_Qcur-10.bin",
+          "right_capture": "trace/2_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/3_Qcur-10.bin",
+          "right_capture": "trace/3_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/5_Qcur_normed-10.bin",
+          "right_capture": "trace/5_Qcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/6_Qcur-10.bin",
+          "right_capture": "trace/6_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/7_Vcur-10.bin",
+          "right_capture": "trace/7_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/8_Vcur-10.bin",
+          "right_capture": "trace/8_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/9_Kcur-10.bin",
+          "right_capture": "trace/9_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/10_Kcur-10.bin",
+          "right_capture": "trace/10_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/12_Kcur_normed-10.bin",
+          "right_capture": "trace/12_Kcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 851,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 2.3126602172851562e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/13_Kcur-10.bin",
+          "right_capture": "trace/13_Kcur-10.bin"
+        },
+        {
+          "name": "hs_attention_q-10",
+          "op": "PERMUTE",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 1,
+          "right_count": 4
+        },
+        {
+          "name": "kq-10",
+          "op": "MUL_MAT",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 1,
+          "right_count": 4
+        },
+        {
+          "name": "kq_soft_max-10",
+          "op": "SOFT_MAX",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 1,
+          "right_count": 4
+        },
+        {
+          "name": "kqv-10",
+          "op": "MUL_MAT",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 1,
+          "right_count": 4
+        },
+        {
+          "name": "kqv_out-10",
+          "op": "CONT",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 1,
+          "right_count": 0
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5118,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 8.150935173034668e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_inp-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/19_ffn_inp-10.bin",
+          "right_capture": "trace/35_ffn_inp-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5114,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 3.577768802642822e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/21_ffn_norm-10.bin",
+          "right_capture": "trace/37_ffn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17407,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0013362765312194824,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_gate-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/22_ffn_gate-10.bin",
+          "right_capture": "trace/38_ffn_gate-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17408,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0012230277061462402,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_up-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/23_ffn_up-10.bin",
+          "right_capture": "trace/39_ffn_up-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17408,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0007454752922058105,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_swiglu-10",
+          "op": "GLU",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/24_ffn_swiglu-10.bin",
+          "right_capture": "trace/40_ffn_swiglu-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5120,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.003373965620994568,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_out-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/25_ffn_out-10.bin",
+          "right_capture": "trace/41_ffn_out-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5120,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0033054128289222717,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "l_out-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/26_l_out-10.bin",
+          "right_capture": "trace/42_l_out-10.bin"
+        }
+      ]
+    },
+    {
+      "arm": "C_QB",
+      "comparisons": [
+        {
+          "name": "norm-10",
+          "op": "RMS_NORM",
+          "status": "EXPLICIT_OCCURRENCE_MAP_REQUIRED",
+          "left_count": 4,
+          "right_count": 4
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "attn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/1_attn_norm-10.bin",
+          "right_capture": "trace/1_attn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/2_Qcur-10.bin",
+          "right_capture": "trace/2_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/3_Qcur-10.bin",
+          "right_capture": "trace/3_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/5_Qcur_normed-10.bin",
+          "right_capture": "trace/5_Qcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Qcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            40,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            40,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/6_Qcur-10.bin",
+          "right_capture": "trace/6_Qcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/7_Vcur-10.bin",
+          "right_capture": "trace/7_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Vcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/8_Vcur-10.bin",
+          "right_capture": "trace/8_Vcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            1024,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/9_Kcur-10.bin",
+          "right_capture": "trace/9_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "RESHAPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/10_Kcur-10.bin",
+          "right_capture": "trace/10_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur_normed-10",
+          "op": "MUL",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/12_Kcur_normed-10.bin",
+          "right_capture": "trace/12_Kcur_normed-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 1024,
+          "different_elements": 851,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 2.3126602172851562e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "Kcur-10",
+          "op": "ROPE",
+          "left_shape": [
+            128,
+            8,
+            1,
+            1
+          ],
+          "right_shape": [
+            128,
+            8,
+            4,
+            1
+          ],
+          "row_map": "axis2 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/13_Kcur-10.bin",
+          "right_capture": "trace/13_Kcur-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 0,
+          "first_different_index": null,
+          "max_absolute_finite_difference": 0.0,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": true,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "hs_attention_q-10",
+          "op": "PERMUTE",
+          "left_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            128,
+            4,
+            40,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CUDA0",
+          "right_backend": "CUDA0",
+          "left_capture": "trace/14_hs_attention_q-10.bin",
+          "right_capture": "trace/14_hs_attention_q-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 10240,
+          "different_elements": 5098,
+          "first_different_index": {
+            "left": [
+              93,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              93,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 102.42051029205322,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kq-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            256,
+            1,
+            40,
+            4
+          ],
+          "row_map": "axis3 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/15_kq-10.bin",
+          "right_capture": "trace/16_kq-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 10240,
+          "different_elements": 1116,
+          "first_different_index": {
+            "left": [
+              92,
+              0,
+              2,
+              0
+            ],
+            "right": [
+              92,
+              0,
+              2,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 3.8504600524902344e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kq_soft_max-10",
+          "op": "SOFT_MAX",
+          "left_shape": [
+            256,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            256,
+            1,
+            40,
+            4
+          ],
+          "row_map": "axis3 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/16_kq_soft_max-10.bin",
+          "right_capture": "trace/17_kq_soft_max-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 509,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              14,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              14,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 3.281235694885254e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kqv-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            128,
+            1,
+            40,
+            1
+          ],
+          "right_shape": [
+            128,
+            1,
+            40,
+            4
+          ],
+          "row_map": "axis3 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/17_kqv-10.bin",
+          "right_capture": "trace/18_kqv-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 509,
+          "first_different_index": {
+            "left": [
+              1792,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              1792,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 3.281235694885254e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "kqv_out-10",
+          "op": "CONT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/18_kqv_out-10.bin",
+          "right_capture": "trace/19_kqv_out-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5118,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 8.150935173034668e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_inp-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/19_ffn_inp-10.bin",
+          "right_capture": "trace/20_ffn_inp-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5114,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 3.577768802642822e-05,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_norm-10",
+          "op": "MUL",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/21_ffn_norm-10.bin",
+          "right_capture": "trace/22_ffn_norm-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17407,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0013362765312194824,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_gate-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/22_ffn_gate-10.bin",
+          "right_capture": "trace/23_ffn_gate-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17408,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0012230277061462402,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_up-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/23_ffn_up-10.bin",
+          "right_capture": "trace/24_ffn_up-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 17408,
+          "different_elements": 17408,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0007454752922058105,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_swiglu-10",
+          "op": "GLU",
+          "left_shape": [
+            17408,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            17408,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/24_ffn_swiglu-10.bin",
+          "right_capture": "trace/25_ffn_swiglu-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5120,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.003373965620994568,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "ffn_out-10",
+          "op": "MUL_MAT",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/25_ffn_out-10.bin",
+          "right_capture": "trace/26_ffn_out-10.bin"
+        },
+        {
+          "status": "COMPARED",
+          "elements": 5120,
+          "different_elements": 5120,
+          "first_different_index": {
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "max_absolute_finite_difference": 0.0033054128289222717,
+          "nonfinite_pairs": 0,
+          "bitwise_equal": false,
+          "scope": "Captured outputs only; not a root-cause proof",
+          "name": "l_out-10",
+          "op": "ADD",
+          "left_shape": [
+            5120,
+            1,
+            1,
+            1
+          ],
+          "right_shape": [
+            5120,
+            4,
+            1,
+            1
+          ],
+          "row_map": "axis1 row0, first common seed; source/shape rule",
+          "left_backend": "CPU",
+          "right_backend": "CPU",
+          "left_capture": "trace/26_l_out-10.bin",
+          "right_capture": "trace/27_l_out-10.bin"
+        }
+      ]
+    }
+  ],
+  "scope": "Only explicitly comparable captured outputs. Occurrence/axis gaps remain visible. No causal operator conclusion without input equality and intervention."
+}

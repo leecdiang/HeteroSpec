@@ -11,7 +11,8 @@ DEVELOPMENT_RECIPES=(('R','native'),('R','reference'),('R','pq'),('R','qb'),
  ('M_PQ','reference'),('M_QB','reference'),('C_PQ','reference'),('C_QB','reference'))
 
 def policy_check(p):
-    need(set(p)<= {'prefill','rowwise_roles','mechanism','revision'},'policy contains unregistered/task-specific fields')
+    need(set(p)<= {'prefill','rowwise_roles','stable_norm_offload','mechanism','revision'},'policy contains unregistered/task-specific fields')
+    need(type(p.get('stable_norm_offload',False)) is bool,'stable norm offload flag')
     need(p.get('prefill') in ('native','reference'),'unknown global producer policy')
     need(type(p.get('rowwise_roles')) is int and 0<=p['rowwise_roles']<=7,'role mask')
     need(bool(p.get('mechanism')),'state proposed mechanism, not only PASS')

@@ -21,10 +21,11 @@ four inputs in endpoint, logical work, captured full logits and serialized
 target/applicable draft state. Thus layout-to-layout correspondence persists
 in this finite pilot while the stronger shared-UB1-reference property fails.
 The evidence does not isolate a particular operator or establish a universal
-cause. The observed attention computations are GPU-backed at every layer,
-despite CPU residency of17 target-weight layers; no CPU-attention coverage is
-claimed. The initial auditor's conflation of weight and operator placement is
-disclosed and its original failed result preserved.
+cause. Actual attention compute placement is unresolved: captured device labels
+describe buffer ownership, and CUDA_Host also reports NVIDIA. Neither CPU nor
+GPU compute coverage is established. The original auditor's weight-to-operator
+inference and the first closeout's all-GPU interpretation are both unsupported.
+Both are preserved with an explicit v2 correction; the failed gate is retained.
 
 The registered gate therefore stopped before the120-request unseen-input
 qualification and all paired timing. No speedup, selected-subset estimate or

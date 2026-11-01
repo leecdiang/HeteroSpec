@@ -2,6 +2,8 @@
 
 **Host closeout: REFERENCE_COUNTEREXAMPLE, 2026-11-01.** Native compilation and24-layer-parameter capacity admission passed; all40 pilot requests completed, but two inputs failed the shared-R gate. Qualification and timing were not started. See [actual results](host_execution/RESULTS.md), [independent reconstruction](host_execution/INDEPENDENT_RECOMPUTE.json) and [proposed addendum](host_execution/PAPER_ADDENDUM.md). Do not rerun the commands below for this closed cohort.
 
+See [remote evidence and correction v2](host_execution/DELIVERY.md). Actual QK compute backend is unresolved: buffer ownership cannot establish execution placement. The v1 all-GPU interpretation is preserved and explicitly corrected; numerical counterexamples are unchanged.
+
 The implementation and original preparation commands below are retained as history. This work branches from completed PR151 and does not merge it or alter PR154's paper.
 
 Start with `HOST_PROMPT.md`, `PROTOCOL.md`, then `ENGINEERING_POLICY.md`. The user has already authorized preparation and automatic gated progression. The experiment agent may repair ordinary engineering problems and continue; model/reference/panel/estimator changes are not silent repairs.

@@ -25,11 +25,15 @@ the output layer in that parameter: weights for layers0–16 are CPU-resident,
 All pools left22,248,693,760bytes available RAM and1,507,852,288bytes free VRAM,
 above the8GiB/1GiB thresholds. Native admission returned normally, owned count0.
 
-Actual QK operators were observed on GPU at all40 target layers, for every
-observed phase. Weight placement is not operator placement. The original
-CPU auditor wrongly equated these maps and remains failed in PILOT_AUDIT.json.
-The independent read-only closeout verifies the native weight log and actual
-40-layer QK/GQA geometry separately. This is not evidence for CPU-QK execution.
+Actual QK compute placement is unresolved. The observer records buffer-type
+device ownership, not scheduler execution backend; the pinned CUDA_Host buffer
+type also identifies the NVIDIA device (ggml-cuda.cu:1297–1326). Thus the v1
+closeout's all-GPU interpretation was unsupported. The original auditor's
+weight-to-QK inference was also unsupported and remains failed in PILOT_AUDIT.json.
+Correction v2 verifies weight logs and 40-layer QK/GQA shapes separately without
+claiming CPU or GPU compute coverage. The original archive and v1 interpretation
+are preserved; CLOSEOUT_CORRECTION_V2 supersedes only the interpretation and
+derived closeout reports. This unresolved placement is an additional gate failure.
 
 ## Complete pilot outcome
 

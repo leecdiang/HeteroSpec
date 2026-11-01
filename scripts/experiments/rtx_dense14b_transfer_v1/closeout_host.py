@@ -7,7 +7,8 @@ from design import slots, load_cycle_validator
 def check(ok,why):
     if not ok:raise ValueError(why)
 
-def reconstruct(bundle,repo):
+def reconstruct(bundle,repo,report_dir):
+    report_dir=Path(report_dir);report_dir.mkdir(parents=True,exist_ok=False)
     bundle=Path(bundle);root=bundle/'units/pilot/native';panel=read(bundle/'PILOT.json')
     binding=read(bundle/'BINDING.json');planned=slots(panel,'pilot')
     cycle=load_cycle_validator(repo);records={};vectors={};geometry={};matrix=[];pairs=[];nvec=0
@@ -52,12 +53,12 @@ def reconstruct(bundle,repo):
             if not m or g['op']!='MUL_MAT':continue
             layer=int(m[1]);check(0<=layer<40,'layer index');phase=g['phase']
             check(phase in ('PREFILL','ORDINARY','VERIFY'),'phase')
-            check('5070' in g['device'] and g['device_type']==1,'observed pilot QK compute map differs')
+            check('5070' in g['device'] and g['device_type']==1,'observed QK buffer owner differs')
             k,q=[x['ne'] for x in g['sources'][:2]]
             check(k[0]==q[0]==128 and k[2]==8 and q[2]==40,'GQA geometry')
             if s['scope']=='PQ':check(q[1]==q[3]==1,'PQ query extent')
             if s['scope']=='QB':check(q[1]==1 and 1<=q[3]<=4 and (phase!='VERIFY' or q[3]==4),'QB query extent')
-            mapped[phase][layer]='GPU'
+            mapped[phase][layer]='NVIDIA buffer owner; compute backend unresolved'
         check(set(mapped['PREFILL'])==set(range(40)),'all40 prefill witnesses')
         if r['cycles']:check(set(mapped['VERIFY'])==set(range(40)),'all40 q4 verification witnesses')
         geometry[s['slot_id']]={phase:dict(layers) for phase,layers in mapped.items()}
@@ -88,17 +89,17 @@ def reconstruct(bundle,repo):
       'original_gate_status':read(bundle/'PILOT_AUDIT.json')['status'],'records':len(records),'full_vectors_checked':nvec,
       'all_vectors_finite_and_greedy_reconstructed':True,'all_state_artifacts_verified':True,'all_transactions_reconstructed':True,
       'all_observer_pairs_equal':True,'all_R_pairs_repeatable':True,'endpoint_matrix':matrix,'paired_internal_diagnostics':pairs,
-      'QK_geometry':geometry,'target_weight_assignments':expected,'source_record_hashes':source_hashes,
+      'QK_buffer_owner_geometry':geometry,'QK_shapes_verified':True,'compute_backend_placement_verified':False,'target_weight_assignments':expected,'source_record_hashes':source_hashes,
       'actual_requests':40,'cumulative_charged_requests':charged,'remaining_hard_ceiling':800-charged,'engineering_reserve_used':0,
       'qualification_requests':0,'formal_measured_requests':0,'formal_warmup_requests':0,
       'native_seconds':sum(x.get('seconds',0) for x in ledger if x['event']=='END'),
-      'placement_note':'Authenticated scheduler expands supported non-weight ops to GPU; actual QK is all40-layer CUDA despite17 CPU-weight layers. Original weight-to-QK inference was invalid. No CPU-QK coverage claim.',
+      'placement_note':'Observer records buffer-type device, not scheduler execution backend. CUDA_Host also identifies NVIDIA. Actual QK compute backend is unresolved. Both the original weight-to-QK inference and v1 all-GPU interpretation are unsupported; neither placement gate is passed.',
       'authority':'Read-only closeout only. Original failed gate remains. No further model execution authorized by this report.'}
-    save(bundle/'INDEPENDENT_RECOMPUTE.json',result)
+    save(report_dir/'INDEPENDENT_RECOMPUTE.json',result)
     pending=[dict(s,status='NOT_RUN_DEPENDENCY',reason='pilot reference counterexample') for s in slots(read(bundle/'PANEL.json'),'qualification')]
     for session in range(4):pending += [dict(s,status='NOT_RUN_DEPENDENCY',reason='pilot reference counterexample') for s in slots(read(bundle/'PANEL.json'),'formal',session)]
-    save(bundle/'UNSTARTED_SLOTS.json',pending)
+    save(report_dir/'UNSTARTED_SLOTS.json',pending)
     return result
 
 if __name__=='__main__':
-    r=reconstruct(Path(sys.argv[1]),Path(sys.argv[2]));print(r['status'],r['records'],r['full_vectors_checked'])
+    r=reconstruct(Path(sys.argv[1]),Path(sys.argv[2]),Path(sys.argv[3]));print(r['status'],r['records'],r['full_vectors_checked'])

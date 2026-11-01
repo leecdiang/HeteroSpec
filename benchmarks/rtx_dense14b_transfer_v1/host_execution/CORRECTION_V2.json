@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "status": "REFERENCE_COUNTEREXAMPLE",
+  "native_requests_added": 0,
+  "all_numeric_outcomes_and_source_record_hashes_unchanged": true,
+  "superseded_v1_report_sha256": "4f4119c82a32021d80a1158ea3556ed48f1c0971054f6625c80e91293102389a",
+  "v2_report_sha256": "8a0cc61c3ccecdaa62b379936a5147368ad1be04f5c0d3f4cfc5d7bd4938af87",
+  "error": "v1 interpreted buffer device ownership as actual QK execution backend and claimed all-GPU. This is unsupported.",
+  "source_finding": "worker.cpp:55,69 reads buffer-type device. ggml-cuda.cu:1297-1326 uses CPU buffer_from_ptr for CUDA_Host, whose device is CUDA device0. ggml-backend.cpp:89-92 returns buffer-type device. Actual scheduler execution backend cannot be recovered from these labels.",
+  "corrected_scope": "Weight placement and QK shapes verified; actual QK compute backend unresolved. Original placement audit remains failed; no CPU/GPU compute coverage or operator-level cause claimed.",
+  "preservation": "Primary archive and COUNTEREXAMPLE_DECISIONS.zip remain byte-identical v1 artifacts. This supplement supersedes only placement interpretation and derived reports. No freeze, panel, raw, native binary or reference was changed.",
+  "source_files": [
+    {
+      "path": "D:\\rtx155\\staging\\native\\build_source\\worker.cpp",
+      "sha256": "e1c1d77994ae1ec9b403f7699013ce17f00344621f85cbceb0b917abc256a533"
+    },
+    {
+      "path": "D:\\rtx155\\build01\\source\\ggml\\src\\ggml-cuda\\ggml-cuda.cu",
+      "sha256": "0832b007fb5cd0165dd80116ea7833c5acda6dfd44f89f2c248d5d977a3e1fde"
+    },
+    {
+      "path": "D:\\rtx155\\build01\\source\\ggml\\src\\ggml-backend.cpp",
+      "sha256": "3991dfa1ccff2b2aae82ef610205f4e5a4db6545ee6724fa3eb6c283ffd1d9d6"
+    }
+  ]
+}

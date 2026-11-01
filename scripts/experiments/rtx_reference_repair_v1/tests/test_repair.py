@@ -203,11 +203,12 @@ class CostTests(unittest.TestCase):
 class CppPrimitiveTests(unittest.TestCase):
     def test_cpp_graph_and_stride_contract(self):
         import shutil,subprocess
-        compiler=shutil.which('g++') or shutil.which('clang++')
+        compiler=shutil.which('g++') or shutil.which('clang++') or shutil.which('zig')
         if not compiler:self.skipTest('C++ compiler unavailable; native host build still required')
         with tempfile.TemporaryDirectory() as d:
             exe=Path(d)/('mock.exe' if os.name=='nt' else 'mock')
-            subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'tests/stubs'),'-I'+str(HERE),str(HERE/'tests/rowwise_contract.cpp'),'-o',str(exe)],check=True,capture_output=True,text=True)
+            command=[compiler,'c++'] if Path(compiler).stem=='zig' else [compiler]
+            subprocess.run(command+['-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'tests/stubs'),'-I'+str(HERE),str(HERE/'tests/rowwise_contract.cpp'),'-o',str(exe)],check=True,capture_output=True,text=True)
             r=subprocess.run([str(exe)],check=True,capture_output=True,text=True)
             self.assertIn('CPP_GRAPH_ADDRESS_CONTRACT_PASS',r.stdout)
 

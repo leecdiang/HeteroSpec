@@ -1,6 +1,8 @@
 # Qwen3-14B dense transfer — executable host scaffolding
 
-**Status: implementation + CPU validation, not a native result.** This PR branches from completed PR151 so its exact native source/build/auditor are available. It does not merge PR151 or touch PR154's paper. New files only.
+**Host closeout: REFERENCE_COUNTEREXAMPLE, 2026-11-01.** Native compilation and24-layer-parameter capacity admission passed; all40 pilot requests completed, but two inputs failed the shared-R gate. Qualification and timing were not started. See [actual results](host_execution/RESULTS.md), [independent reconstruction](host_execution/INDEPENDENT_RECOMPUTE.json) and [proposed addendum](host_execution/PAPER_ADDENDUM.md). Do not rerun the commands below for this closed cohort.
+
+The implementation and original preparation commands below are retained as history. This work branches from completed PR151 and does not merge it or alter PR154's paper.
 
 Start with `HOST_PROMPT.md`, `PROTOCOL.md`, then `ENGINEERING_POLICY.md`. The user has already authorized preparation and automatic gated progression. The experiment agent may repair ordinary engineering problems and continue; model/reference/panel/estimator changes are not silent repairs.
 

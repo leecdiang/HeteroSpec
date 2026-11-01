@@ -30,3 +30,29 @@ Original implementation retained at PR155 head `afddffc016573cb78b398c95734a4363
 Native requests consumed by these repairs:0. Request ceiling remains800,
 including736 planned and64 engineering reserve. Test receipt and source identities
 will be included with the host freeze.
+
+## Completed pilot: retained negative, no successor execution
+
+The40-request pilot completed safely. Its original audit remains UNQUALIFIED:
+20 heavy records hit the incorrect weight-residency-to-QK-placement assertion,
+and two mathematical inputs separately fail the shared-R endpoint gate.
+Authenticated scheduler code expands supported non-weight operations to GPU;
+observed QK tensors are CUDA-backed at all40 layers, including layers whose
+weights reside on CPU. The fixed24 weight allocation itself is verified from
+the native load log:CPU0–16, GPU17–39 plus output40.
+
+No further change was made to design.py to obtain PASS, no native rebuild ran,
+and FREEZE.json was not refreshed. Original FREEZE/PILOT_AUDIT/STATE/BLOCKED
+bytes are retained under `amendments/pilot-placement-diagnosis` in the bundle.
+The new read-only `closeout_host.py` separates weight residency from observed
+operator placement, reconstructs all full-vector greedy decisions, checks all
+transactions/states, and independently confirms REFERENCE_COUNTEREXAMPLE.
+Its source hash and relationship to the original failed audit are recorded in
+RECOMPUTE_PROVENANCE.json. It grants no execution authority. The invalid earlier
+placement inference is preserved as a preparation limitation, not retroactively
+described as having passed before generation.
+
+The 40 original requests remain charged; engineering reserve consumed0,
+qualification0, timing0. Final cumulative native owned time528.516seconds,
+including the single zero-token admission. No reference, input, precision,
+stopping rule, native arithmetic, timer or estimator was changed.

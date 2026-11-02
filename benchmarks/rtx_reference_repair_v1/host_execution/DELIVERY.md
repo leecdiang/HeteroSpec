@@ -1,8 +1,37 @@
 # Evidence delivery
 
-Native execution and independent raw reconstruction are complete. Transport
-verification is pending at this source snapshot. The final result PR will replace
-this status with the actual release, access index and fresh remote readback receipts.
+Native execution, independent raw reconstruction and remote delivery are complete.
+The [published evidence release](https://github.com/leecdiang/HeteroSpec/releases/tag/rtx-reference-repair-v1-evidence-20261102) accompanies
+[Draft result PR159](https://github.com/leecdiang/HeteroSpec/pull/159).
+There are 133 raw ZIP shards containing 51496 files
+(68271459792 uncompressed bytes;
+55892670590 archive bytes). Every shard was freshly
+downloaded; archive size/SHA256, exact inventory and every decompressed member's
+size/SHA256 passed. All separate transport metadata assets and ZIP members also
+passed fresh remote readback. After publication the raw index was additionally
+downloaded with repository authorization and normal HTTPS certificate verification.
+The repository is private: authorized readers are required, and its permissions
+were not changed. Anonymous availability is not claimed.
+
+[RAW_ACCESS.json](RAW_ACCESS.json) pins the full remote index and every shard.
+Full index SHA256: `80abc43b9d68dd9fa61effb93d7ce9e0172ff0645c65051a96a9e10fb69156f0`.
+The immutable full index retains its packaging-time `remote_uploaded=false`;
+[UPLOAD.json](delivery/UPLOAD.json) and
+[REMOTE_READBACK.json](delivery/REMOTE_READBACK.json) establish subsequent success.
+See [metadata readback](delivery/DELIVERY_METADATA_READBACK.json),
+[receipt readback](delivery/RECEIPT_ASSET_READBACK.json), and
+[published access verification](delivery/PUBLISHED_ACCESS_READBACK.json).
+TRANSPORT_METADATA.zip, METADATA_MEMBERS.json and DELIVERY_ASSETS.json on the release
+retain and pin the transfer sources, handoff and per-part receipts. The native/source
+archive is pinned to commit `0ccedc064214c7a758564bd6be1aa9a0c81bcb99`; later transport
+code and delivery reports are separate commits in the result PR. No native request
+was added during transport.
+
+Two closeout failures are retained: publication succeeded, but the first checker
+asserted against a cached draft asset URL; the next anonymous download returned404
+because the repository is private. A fresh post-publication authenticated index
+download passed. These are access/reporting corrections, not missing raw evidence
+or scientific retries. Logs, receipts and corrected closeout source accompany this PR.
 
 The raw bundle retains every new epoch, failed attempt, full vector/state artifact,
 schedule, native receipt and cumulative ledger. The closeout snapshot also preserves
@@ -10,7 +39,7 @@ build adaptations, source, operations logs and reports. Runtime/weight binaries 
 not distributed. Local configuration-only files named CONFIG.json or LOCAL_PATHS.json
 are excluded by the supplied archiver; native logs retain host paths.
 
-Packaging uses the supplied archiver with512MiB uncompressed shard groups. Every
+Packaging uses the supplied archiver with 512MiB uncompressed shard groups. Every
 local ZIP is reopened and every member's size/SHA256 is verified. Remote transport
 then downloads a new copy of every shard and repeats archive/member checks. Only a
 successfully verified temporary remote duplicate may be removed after a durable

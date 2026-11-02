@@ -189,6 +189,6 @@ host, not third-party scientific replication.
 ## Delivery
 
 All raw data remain locally, including initial failures and partial artifacts.
-Remote release/access and fresh all-member readback receipts are documented in
-[DELIVERY.md](DELIVERY.md) after delivery completes. No existing paper or old PR is
+The published release, raw access index and successful fresh all-member remote
+readback receipts are documented in [DELIVERY.md](DELIVERY.md). No existing paper or old PR is
 merged or rewritten.

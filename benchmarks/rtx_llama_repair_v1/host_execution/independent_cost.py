@@ -49,7 +49,8 @@ def transaction(r):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--bundle',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     a=p.parse_args();b=a.bundle;panel=read(b/'HELDOUT.json')['inputs'];n=len(panel)
-    labels=('R','M_PQ','M_QB','C_PQ_A','C_PQ_B','C_QB');values={};records={};refs={}
+    labels=('R','M_PQ','M_QB','C_PQ_A','C_PQ_B','C_QB');values={};records={};refs={};loaded=[]
+    components={category:{k:[] for k in ('setup_seconds','request_seconds','teardown_seconds','service_seconds')} for category in ('warmup','measured')}
     original=b/'units/original_references'
     for s in read(original/'SLOTS.json'):
         r=read(original/'native'/(s['slot_id']+'.json'))
@@ -59,6 +60,10 @@ def main():
     for session in range(6):
         unit=b/'units'/('formal%d'%session);receipt=read(unit/'RECEIPT.json')
         assert receipt['success'] and receipt['active_processes_after_wait']==0
+        provision=read(unit/'native/PROVISIONED.json')
+        loaded.append({'session':session,'model_load_seconds':provision['model_load_seconds'],
+          'resident_provisioning_seconds':provision['resident_provisioning_seconds'],
+          'supervised_wall_seconds':receipt['seconds'],'provision_sha256':sha(unit/'native/PROVISIONED.json')})
         slots=read(unit/'SLOTS.json');assert len(slots)==12*n
         for s in slots:
             path=unit/'native'/(s['slot_id']+'.json');r=read(path);transaction(r)
@@ -67,10 +72,11 @@ def main():
             assert r['context_teardown_completed'] and s['lifecycle']=='fresh'
             assert not r['capture'] and not r['teacher_forced'] and r['observer_mode']=='off'
             assert r['llama_diagnostic']['mode']=='off' and s['repair']['trace']['mode']=='off'
-            elapsed=r['service_seconds'];assert math.isfinite(elapsed) and elapsed>0
+            elapsed=r['service_seconds'];assert type(elapsed) in (float,int) and math.isfinite(elapsed) and elapsed>0
             assert elapsed+1e-6>=r['setup_seconds']+r['request_seconds']+r['teardown_seconds']
             key=(session,s['source_index'],s['experiment_arm'],s['category'])
             assert key not in values;values[key]=elapsed;records[str(path)]=sha(path)
+            for name in components[s['category']]:components[s['category']][name].append(r[name])
     expected={(s,i,l,c) for s in range(6) for i in range(n) for l in labels for c in ('warmup','measured')}
     assert set(values)==expected
     blocks=[]
@@ -96,6 +102,10 @@ def main():
       'scope':'Six loaded sessions, all input blocks retained; no population claim.',
       'script_sha256':sha(Path(__file__)),'produced_report_sha256':sha(b/'FINAL_COST.json'),
       'record_sha256':records,'all_service_seconds':math.fsum(values.values())}
+    result['loaded_session_costs']=loaded
+    result['service_components_seconds']={category:{k:math.fsum(v) for k,v in fields.items()} for category,fields in components.items()}
+    result['reported_model_load_seconds']=math.fsum(x['model_load_seconds'] for x in loaded)
+    result['cost_scope']='Service includes fresh context setup, request/prefill/decode/reconciliation/synchronization and teardown. Weight load is reported separately. Supervised wall time additionally contains host auditing, protocol waits and output I/O.'
     with a.out.open('x') as f:json.dump(result,f,indent=2)
     print({k:v for k,v in result.items() if k!='record_sha256'})
 

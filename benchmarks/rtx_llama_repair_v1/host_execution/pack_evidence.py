@@ -24,12 +24,16 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True)
     a=p.parse_args();assert not a.out.exists();assert not Path('D:/HeteroSpec-PC/RTX_EXPERIMENT.lock').exists()
     assert Path('E:/rtx160/research/epoch06/INDEPENDENT_COST.json').exists()
+    assert Path('E:/rtx160/research/epoch06/INDEPENDENT_QUALIFICATION.json').exists()
     assert Path('E:/rtx160/research/LEDGER_AUDIT.json').exists()
     a.out.mkdir(parents=True);started=time.monotonic();files={};runtime=[]
     def add(path,name,kind='evidence'):
         assert path.is_file() and not path.is_symlink()
         assert not name.startswith('/') and '..' not in Path(name).parts and name not in files
-        assert path.suffix.lower() not in ('.gguf','.key','.pem') and path.name not in ('.env','credentials.json')
+        assert path.suffix.lower() not in ('.gguf','.pem') and path.name not in ('.env','credentials.json')
+        if path.suffix.lower()=='.key':
+            # This source-capsule member is an upstream Keynote presentation.
+            assert name.endswith('/source/docs/development/llama-star/idea-arch.key')
         if path.suffix.lower() in ('.exe','.dll'):assert kind=='runtime';runtime.append(name)
         files[name]=path
     def tree(root,prefix):
@@ -42,9 +46,20 @@ def main():
         tree(root/folder,folder)
     tree(Path('D:/rtx160/research/history01'),'historical-reconstruction')
     tree(Path('D:/rtx151-llama-diagnostic-v2'),'original-PR151-raw')
-    tree(Path('D:/rtx160/operations'),'operations')
+    for label,path in [('PR156_LEDGER.jsonl','D:/rtx155/epoch01/LEDGER.jsonl'),
+                       ('PR159_LEDGER.jsonl','D:/rtx158/research/LEDGER.jsonl'),
+                       ('PR159_INDEPENDENT_AUDIT.json','D:/rtx158/research/INDEPENDENT_AUDIT01.json')]:
+        add(Path(path),'historical-ledgers/'+label)
+    # Transport receipts are necessarily produced after this immutable archive;
+    # deliver them in a separately indexed and freshly downloaded metadata asset.
+    operations=Path('D:/rtx160/operations')
+    for f in sorted(operations.rglob('*')):
+        if f.is_file() and not f.name.startswith(('PACK','ARCHIVE','UPLOAD','REMOTE','DELIVERY','PUBLISH','TRANSPORT')):
+            add(f,'operations/'+f.relative_to(operations).as_posix())
     tree(a.repo/'scripts/experiments/rtx_llama_repair_v1','protocol-source')
     tree(a.repo/'benchmarks/rtx_llama_repair_v1','execution-source')
+    for name in ('ENGINEERING_POLICY.md','README.md','HOST_PROMPT.md'):
+        add(a.repo/'benchmarks/rtx_reference_repair_v1'/name,'inherited-protocol/'+name)
     for config in sorted(root.glob('*config*')):
         tree(config/'stage',config.name+'/stage');tree(config/'build/source',config.name+'/source')
         for f in sorted(config.glob('*.json')):add(f,config.name+'/'+f.name)
@@ -63,8 +78,13 @@ def main():
                           ('original',Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/repo/work/native-original-v4/bin'))]:
         for f in sorted(folder.iterdir()):
             if f.suffix.lower() in ('.exe','.dll'):add(f,'original-runtime/'+cohort+'/'+f.name,'runtime')
+        for name in ('BUILD.json','SOURCE_MEMBERS.json','worker.cpp','arm_spec.h'):
+            add(folder.parent/name,'original-runtime/'+cohort+'/'+name)
     for name in ('SOURCE_RUNTIME.zip','SOURCE_RUNTIME_V02.zip'):
         add(Path('D:/hsc95')/name,'original-source-capsules/'+name)
+    add(root/'PR160_PROTOCOL_BASE02.zip','original-source-capsules/PR160_PROTOCOL_BASE.zip')
+    add(root/'PR160_PROTOCOL_SOURCE_RECEIPT.json','original-source-capsules/PROTOCOL_SOURCE_RECEIPT.json')
+    add(root/'PR160_PROTOCOL_BASE.zip','engineering-failures/PR160_PROTOCOL_BASE.failed01.zip')
     total=sum(f.stat().st_size for f in files.values())
     assert shutil.disk_usage(a.out).free>total+20*1024**3,'uncompressed worst-case archive disk reserve'
     groups=[];group=[];size=0;limit=512*1024**2

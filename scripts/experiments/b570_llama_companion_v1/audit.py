@@ -123,7 +123,9 @@ def matrix(candidate_paths, oracle_paths, expected_ids):
             a,b=c[i,prefix+'PQ','heavy'],c[i,prefix+'QB','heavy']
             pairs.append({'input_id':i, 'path':prefix, 'full_vectors_equal':a['vectors']==b['vectors'],
                           'transactions_equal':a['record']['cycles']==b['record']['cycles']})
-    return {'local_pairs':pairs, 'pure_layout_correspondence':all(p['full_vectors_equal'] and p['transactions_equal'] for p in pairs),
+    correspondence = all(p['full_vectors_equal'] and p['transactions_equal'] for p in pairs)
+    all_ok &= correspondence
+    return {'local_pairs':pairs, 'pure_layout_correspondence':correspondence,
             'status': 'QUALIFIED' if all_ok else 'REFERENCE_OR_CONTROL_FAILURE', 'all_reference_equal': bool(all_ok),
             'cells': cells, 'reference': 'frozen B570 stock oracle; not CUDA output',
             'requests': len(c) + len(o)}

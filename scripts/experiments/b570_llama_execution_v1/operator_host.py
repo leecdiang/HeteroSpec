@@ -40,7 +40,7 @@ def run(build,config,out,root,lock,limit):
     out.mkdir(parents=True);write(lock,{'pid':os.getpid(),'attempt':str(out),'utc':utc()})
     started=False;cleaned=False;success=False;begin=time.monotonic();actual=0
     try:
-        budget.reserve(root/'LEDGER.jsonl',str(out),0,len(fixtures),limit);started=True
+        budget.reserve(root/'LEDGER.jsonl',str(out),0,inputs.get('operator_calls',len(fixtures)),limit);started=True
         write(out/'FILES.json',{'files':b['files']});shutil.copyfile(config,out/'CONFIG.json')
         command=[sys.executable,'-B',b['supervisor'],'--manifest',str(out/'FILES.json'),'--receipt',str(out/'SUPERVISOR.json'),'--limit',str(limit),'--minimum-free-bytes',str(20*1024**3),b['executable'],str(config),str(out/'native')]
         write(out/'COMMAND.json',{'argv':command,'build_sha256':sha(build),'config_sha256':sha(config),'utc':utc()})
@@ -53,7 +53,7 @@ def run(build,config,out,root,lock,limit):
             name=Path(f['path']).name.lower()
             if name in loaded:need(loaded[name]==f['sha256'],'loaded library drift')
         need('ggml-vulkan.dll' in loaded,'native Vulkan unobserved')
-        need(actual==len(fixtures) and n['status']==inputs.get('expected_status','OWN_PATH_REPLAY_PASS'),'registered replay expectation mismatch');success=True
+        need(actual==inputs.get('expected_rows',len(fixtures)) and n['status']==inputs.get('expected_status','OWN_PATH_REPLAY_PASS'),'registered replay expectation mismatch');success=True
     finally:
         if (out/'SUPERVISOR.json').exists():cleaned=read(out/'SUPERVISOR.json').get('job_accounting',{}).get('active_processes')==0
         if (out/'native/result.json').exists():actual=len(read(out/'native/result.json').get('rows',[]))

@@ -50,8 +50,8 @@ void safety(){
 #endif
 }
 struct Scope{
-    Scope(int m){hs_b570_set_reference_q8(m!=0&&config.value("reference_q8",false));hs_b570_set_layout(m);}
-    ~Scope(){hs_b570_set_layout(0);hs_b570_set_reference_q8(false);}
+    Scope(int m){hs_b570_set_reference_q8(m!=0&&config.value("reference_q8",false));hs_b570_set_prefix_extent(m!=0&&config.value("prefix_extent",false));hs_b570_set_layout(m);}
+    ~Scope(){hs_b570_set_layout(0);hs_b570_set_reference_q8(false);hs_b570_set_prefix_extent(false);}
 };
 struct Observer{
     llama_context*ctx=nullptr;fs::path root;bool heavy=false,trace=false,failed=false;

@@ -53,7 +53,7 @@ def transactions(r):
     return mapping
 
 
-def record(path):
+def record(path, retain_geometry=True):
     path = Path(path);r = read(path);transactions(r)
     need(r['slot']['input']['prompt_ids'] == r['prompt_ids'] and r['slot']['input']['id'] == r['input_id'], 'request identity')
     need(r['diagnostic'] == (r['slot'].get('trace', False) or r['slot'].get('probe_cycle', -1) >= 0), 'diagnostic flag')
@@ -86,11 +86,17 @@ def record(path):
                 n, q, heads, batches = g['ne']
                 need(n in (256, 512, 768, 1024) and q == 1 and heads == 32, 'unadmitted QK output')
                 need(2 <= batches <= 4 if 'QB' in r['slot']['arm'] else batches == 1, 'query batch mapping')
+    # Geometry is fully validated above and retained in immutable raw JSON. The
+    # matrix needs endpoints/cycles/vector hashes, not every repeated caller list.
+    # Release it per record so a 24-input panel cannot retain >100GB of metadata.
+    if not retain_geometry:
+        r.pop('geometry', None)
     return {'record': r, 'endpoint': endpoint(r), 'vectors': checked, 'record_sha256': sha(path)}
 
 
 def matrix(candidate_paths, oracle_paths, expected_ids):
-    candidates = [record(p) for p in candidate_paths];oracles = [record(p) for p in oracle_paths]
+    candidates = [record(p, retain_geometry=False) for p in candidate_paths]
+    oracles = [record(p, retain_geometry=False) for p in oracle_paths]
     def indexed(rows):
         out = {}
         for x in rows:

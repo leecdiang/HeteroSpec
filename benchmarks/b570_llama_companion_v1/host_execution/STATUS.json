@@ -1,30 +1,52 @@
 {
   "status": "NATIVE_DEVELOPMENT_IN_PROGRESS",
-  "utc": "2026-11-02T12:47:37.403054+00:00",
+  "utc": "2026-11-02T13:35:14.430521+00:00",
   "local_work_root": "I:\\HeteroSpec\\b570-llama-20261102",
   "source_pr": 161,
   "result_pr": 163,
   "historical_requests_audited": 54,
   "historical_vectors_audited": 5916,
   "completed_baseline_requests": 36,
-  "completed_probe_trace_requests": 7,
+  "completed_probe_trace_requests": 12,
   "original_own_path_operator_calls": 15,
   "dispatch_observer_operator_calls": 15,
   "activation_intervention_operator_calls": 15,
   "controlled_first_projection_difference": "Layer0 Qcur MUL_MAT, before RoPE; actual q1 F32 activation vs q4 Q8_1 activation dispatch",
   "intervention_result": "All15 calls pass; q4 Q/K/V outputs equal original q1 concatenation; no model repair claim yet",
-  "structural_candidate": "candidate-reference-q8-01; explicit F32 contract; compiled, full-model qualification pending",
+  "structural_candidate": "candidate-combined-00; independently switchable Q8 F32 activation and scalar-prefix extent policies; full development and ablations queued",
   "ledger": {
     "credit_limit": 16384,
     "seconds_limit": 604800.0,
-    "credits_reserved": 135,
-    "completed_model_requests": 49,
-    "operator_calls": 45,
-    "owned_seconds": 1483.8110000000024,
-    "open": {}
+    "credits_reserved": 297,
+    "completed_model_requests": 114,
+    "operator_calls": 87,
+    "owned_seconds": 3079.7150000000047,
+    "open": {
+      "I:\\HeteroSpec\\b570-llama-20261102\\ablation-epoch-00\\units\\baseline-candidate": {
+        "attempt": "I:\\HeteroSpec\\b570-llama-20261102\\ablation-epoch-00\\units\\baseline-candidate",
+        "credits": 30,
+        "diagnostic_calls": 0,
+        "event": "START",
+        "maximum_seconds": 7200,
+        "prev": "66f052eba72449350b64c98d407980f47c673d16d3a5e0bb58803f8e36c4cb42",
+        "requests": 30,
+        "utc": "2026-11-02T13:27:09.007117+00:00",
+        "hash": "392afa0415e23766407a0319b77a14a0d01b88a9a3b4faf3d825b9bcd61430aa"
+      }
+    }
   },
   "repair_qualified": false,
   "confirmation_run": false,
   "remote_new_evidence_delivery_complete": false,
-  "rtx_pr160_modified": false
+  "rtx_pr160_modified": false,
+  "structural_projection_operator_calls": 15,
+  "attention_chain_replays": 16,
+  "attention_stage_comparisons": 64,
+  "av_extent_operator_calls": 11,
+  "q8_repair_development_requests": 36,
+  "q8_repair_complete_endpoints_pass": true,
+  "q8_repair_committed_vector_difference": "CodeContests/valid/108 first output29, 99/128 C_PQ and C_QB committed vectors differ",
+  "legacy_qwen_requests": 24,
+  "legacy_qwen_repair_vectors": 914,
+  "second_mechanism": "Physical KV extent 768/1024 changes AV contiguity and actual Vulkan nc/contiguous shader selection with visible operands unchanged"
 }

@@ -34,12 +34,18 @@ double elapsed(Clock::time_point t){return std::chrono::duration<double>(Clock::
 json config;
 ggml_backend_dev_t device=nullptr;
 Clock::time_point worker_start;
+json resource_samples=json::array();
 void safety(){
     need(elapsed(worker_start)<config.at("worker_timeout_seconds").get<double>(),"native timeout");
     size_t free=0,total=0;ggml_backend_dev_memory(device,&free,&total);
-    need(free>=config.at("min_vram_free_bytes").get<size_t>(),"device-memory reserve");
+    json sample={{"worker_seconds",elapsed(worker_start)},{"device_free_bytes",free},{"device_total_bytes",total}};
 #ifdef _WIN32
     MEMORYSTATUSEX m{};m.dwLength=sizeof(m);need(GlobalMemoryStatusEx(&m),"RAM query");
+    sample["ram_available_bytes"]=m.ullAvailPhys;
+#endif
+    resource_samples.push_back(sample);
+    need(free>=config.at("min_vram_free_bytes").get<size_t>(),"device-memory reserve");
+#ifdef _WIN32
     need(m.ullAvailPhys>=config.at("min_ram_free_bytes").get<unsigned long long>(),"RAM reserve");
 #endif
 }
@@ -189,15 +195,17 @@ int main(int argc,char**argv){
         need(llama_model_n_layer(t)==32&&llama_model_n_embd(t)==4096,"exact Llama8B structure");
         auto*tv=llama_model_get_vocab(t);auto*dv=llama_model_get_vocab(d);need(llama_vocab_n_tokens(tv)==128256&&llama_vocab_n_tokens(dv)==128256,"vocab size");
         for(int i=0;i<128256;i++)need(std::strcmp(llama_vocab_get_text(tv,i),llama_vocab_get_text(dv,i))==0&&llama_vocab_is_eog(tv,i)==llama_vocab_is_eog(dv,i),"vocabulary/EOG identity");
+        // Admission must cover the same post-load, pre-context gate as execution.
+        safety();
         if(admit){Context c(t,4,0,false,root/"capacity"),draft(d,1,0,false,root/"capacity_draft");
             if(config.value("reserve_shadow_context",true)){Context shadow(t,4,0,false,root/"shadow");safety();}else safety();
             result["model_requests"]=0;result["status"]="RESOURCE_ADMITTED";
         }else{
-            safety();for(const auto&s:slots){auto rel=s.at("id").get<std::string>();need(rel.find("..") == std::string::npos&&!fs::path(rel).is_absolute(),"slot path");
+            for(const auto&s:slots){auto rel=s.at("id").get<std::string>();need(rel.find("..") == std::string::npos&&!fs::path(rel).is_absolute(),"slot path");
                 auto r=request(t,d,s,root/rel);dump(root/(rel+".json"),r);result["records"].push_back(rel+".json");dump(root/"result.json",result);
                 std::cout<<json({{"event","REQUEST_COMPLETED"},{"id",rel}}).dump()<<'\n'<<std::flush;}
             result["model_requests"]=result["records"].size();result["status"]="COMPLETE";
         }
-        clean();result["normal_cleanup_returned"]=true;dump(root/"result.json",result);return 0;
-    }catch(const std::exception&e){result["status"]="FAILED";result["error"]=e.what();clean();result["normal_cleanup_returned"]=true;if(!root.empty())dump(root/"result.json",result);std::cerr<<e.what()<<'\n';return 2;}
+        clean();result["normal_cleanup_returned"]=true;result["resource_samples"]=resource_samples;dump(root/"result.json",result);return 0;
+    }catch(const std::exception&e){result["status"]="FAILED";result["error"]=e.what();clean();result["normal_cleanup_returned"]=true;result["resource_samples"]=resource_samples;if(!root.empty())dump(root/"result.json",result);std::cerr<<e.what()<<'\n';return 2;}
 }

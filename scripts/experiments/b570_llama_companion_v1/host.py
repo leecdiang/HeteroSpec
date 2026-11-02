@@ -94,6 +94,7 @@ def execute(epoch, attempt, slots, oracle=False, admit=False):
     if oracle: need(all(s['arm'] == 'R' for s in slots), 'oracle only R')
     if not admit:
         environment = read(epoch / 'ENVIRONMENT.json')
+        need(environment.get('admission_roles') == ['candidate', 'oracle'], 'both runtime roles must pass zero-forward admission')
         for f in environment['loaded_module_pins']:
             need(Path(f['path']).stat().st_size == f['bytes'] and sha(f['path']) == f['sha256'], 'pre-forward loaded driver/OS/runtime identity changed')
     for s in slots:
@@ -144,9 +145,19 @@ def execute(epoch, attempt, slots, oracle=False, admit=False):
         for name in ('llama.dll', 'ggml.dll', 'ggml-base.dll', 'ggml-vulkan.dll'):
             need(name in loaded, 'required runtime DLL not observed loaded: ' + name)
         if admit:
-            write(epoch / 'ENVIRONMENT.json', {'utc': utc(), 'source_receipt_sha256': sha(unit / 'SUPERVISOR.json'),
+            write(epoch / ('ENVIRONMENT_' + engine['mode'].upper() + '.json'), {'utc': utc(), 'source_receipt_sha256': sha(unit / 'SUPERVISOR.json'),
                  'loaded_module_pins': receipt['loaded_module_hashes'],
                  'scope': 'Modules observed during zero-forward admission; not all kernel-driver bodies or Vulkan pipeline identity'})
+            role_files = [epoch / ('ENVIRONMENT_' + role.upper() + '.json') for role in ('candidate', 'oracle')]
+            if all(p.exists() for p in role_files):
+                modules = {}
+                for p in role_files:
+                    for item in read(p)['loaded_module_pins']:
+                        if item['path'] in modules:
+                            need(modules[item['path']] == item, 'shared runtime changed between admission roles')
+                        modules[item['path']] = item
+                write(epoch / 'ENVIRONMENT.json', {'utc': utc(), 'admission_roles': ['candidate', 'oracle'],
+                      'role_receipts': {p.name: sha(p) for p in role_files}, 'loaded_module_pins': list(modules.values())})
         if not admit:
             for s in slots:
                 checked = audit.record(confined(unit / 'native', s['id'] + '.json'))

@@ -1,8 +1,19 @@
-import sys,unittest
+import sys,unittest,json,tempfile
+from unittest.mock import patch
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import history,source
 class HistoricalMappingTests(unittest.TestCase):
+ def test_sparse_historical_panel_recovery(self):
+  panel={'inputs':[None,None]+[{'id':i,'cap':128,'prompt_ids':[128000,42]} for i in history.DEVELOPMENT]}
+  def payload(repo,ref,path):
+   if path.endswith('PANEL.json'):return json.dumps(panel).encode()
+   if path.endswith('EXECUTION_IDENTITY.json'):return b'{"families":{"Llama":{}}}'
+   return b'{}'
+  with tempfile.TemporaryDirectory() as d,patch.object(history,'git_bytes',side_effect=payload):
+   out=history.recover('.',Path(d)/'history')
+   self.assertEqual(json.loads((out/'panel.json').read_text()),panel)
+   self.assertEqual([x['id'] for x in json.loads((out/'DEVELOPMENT.json').read_text())],history.DEVELOPMENT)
  def test_variable_accepted_prefix(self):
   r={'ids':[1,2,3,4,5],'draft_enabled':True,'cycles':[{'cycle':0,'seed':1,'output_length':2,'decisions':[2,8,9,10]}, {'cycle':1,'seed':2,'output_length':5,'decisions':[3,4,5,6]}]}
   m=history.decision_rows(r);self.assertEqual(m[2],'target/verify-1-0.f32');self.assertEqual(m[4],'target/verify-1-2.f32')

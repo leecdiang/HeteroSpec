@@ -20,7 +20,9 @@ def recover(repo, out):
         objects[key] = json.loads(data)
         pins.append({'commit': HISTORY, 'path': path, 'sha256': hashlib.sha256(data).hexdigest()})
     panel = objects['panel']['inputs']
-    by_id = {x['id']: x for x in panel}
+    # The historical panel retains source-index positions with null entries for
+    # unselected tasks. Preserve those bytes, but index only actual inputs.
+    by_id = {x['id']: x for x in panel if x is not None}
     need(set(DEVELOPMENT) <= set(by_id), 'retained Llama inputs missing')
     selected = []
     for identifier in DEVELOPMENT:
@@ -70,14 +72,25 @@ def raw_audit(repo, raw_root, out):
     need(hashlib.sha256(data).hexdigest() == '2e52aee27acb551f3f3556a566ec5f83b123aa0d50a9c01da3666ac33a2fa4b9', 'historical request manifest changed')
     rows = [json.loads(l) for l in data.decode().splitlines() if l]
     need(len(rows) == 54, 'complete diagnostic history')
-    count = 0;index = {};findings = []
+    count = 0;index = {};findings = [];reconstructed_argmax = 0
     for row in rows:
         pin = row['raw_native_record'];p = confined(raw_root,pin['path'])
         need(p.stat().st_size == pin['bytes'] and sha(p) == pin['sha256'], 'historical raw record drift')
         r = read(p);endpoint(r);mapping = decision_rows(r)
+        expected = {name: r['ids'][i] for i, name in mapping.items()}
+        if r['draft_enabled']:
+            for cycle in r['cycles']:
+                for j, token in enumerate(cycle['decisions']):
+                    expected[f'target/verify-{cycle["cycle"]}-{j}.f32'] = token
+                for j, token in enumerate(cycle['proposals']):
+                    expected[f'draft/proposal-{cycle["cycle"]}-{j}.f32'] = token
+        if row['observer'] == 'heavy':
+            need({v['name'] for v in row['raw_vectors']} == set(expected), 'historical vector decision inventory')
         for v in row['raw_vectors']:
             f = confined(raw_root,v['path']);need(sha(f) == v['sha256'], 'historical full vector drift')
-            full_vector(f);count += 1
+            best, _ = full_vector(f)
+            need(best == expected[v['name']], 'historical vector argmax differs from decision')
+            reconstructed_argmax += 1;count += 1
         key = (row['stage'],row['source_index'],row['producer'],row['arm'],row['observer'])
         need(key not in index, 'duplicate history coordinate');index[key]=(r,p,mapping)
     need(count == 5916, 'historical vector inventory incomplete')
@@ -91,7 +104,15 @@ def raw_audit(repo, raw_root, out):
             first=next((j for j in range(limit) if sha(rp.with_suffix('')/rm[j])!=sha(cp.with_suffix('')/cm[j])),None)
             findings.append({'input_id':r['input_id'],'arm':arm,'first_output_difference':fd,'earliest_saved_decision_vector_difference':first,
                 'candidate_decision_file':cm.get(fd),'same_token_prefix_does_not_prove_same_state':True})
-    report={'status':'HISTORICAL_RAW_RECONSTRUCTED','requests':54,'full_vectors':count,'findings':findings,
+    controls = []
+    for (stage, i, producer, arm, observer), (r, _, _) in index.items():
+        reference = index['diagnostic_A1', i, 'NATIVE', 'R', 'heavy'][0]
+        peer = index[stage, i, producer, arm, 'off' if observer == 'heavy' else 'heavy'][0]
+        controls.append({'stage':stage,'source_index':i,'producer':producer,'arm':arm,'observer':observer,
+                         'reference_endpoint_equal':endpoint(r)==endpoint(reference),
+                         'observer_endpoint_equal':endpoint(r)==endpoint(peer)})
+    report={'status':'HISTORICAL_RAW_RECONSTRUCTED','requests':54,'full_vectors':count,
+            'independently_reconstructed_argmax':reconstructed_argmax,'controls':controls,'findings':findings,
             'new_model_requests':0,'scope':'RTX history audit; NOT a Vulkan reference or root-cause assertion'}
     write(out,report);return report
 

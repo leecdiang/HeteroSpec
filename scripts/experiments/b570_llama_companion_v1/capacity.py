@@ -14,17 +14,20 @@ def admit(config_path, out):
         current = dict(c, target_gpu_layers=target, draft_gpu_layers=draft)
         cfg = out / f'profile-{i}.json';write(cfg, current)
         epoch = out / f'profile-{i}-epoch';host.prepare(cfg, epoch)
+        attempt = 'capacity'
         try:
             host.execute(epoch, 'capacity', [], admit=True)
+            attempt = 'capacity-oracle'
+            host.execute(epoch, attempt, [], oracle=True, admit=True)
         except Exception as e:
-            raw = epoch / 'units/capacity/native/result.json'
+            raw = epoch / 'units' / attempt / 'native/result.json'
             result = read(raw) if raw.exists() else {}
             history.append({'profile': i, 'target_gpu_layers': target, 'draft_gpu_layers': draft,
                             'status': 'FAILED', 'error': repr(e), 'native': result})
             write(out / f'failure-{i}.json', history[-1])
             message = result.get('error', '')
             resource = message in ('device-memory reserve', 'RAM reserve', 'target load', 'draft load', 'context initialization')
-            cleanup = read(epoch / 'units/capacity/RECEIPT.json').get('cleanup_verified')
+            cleanup = read(epoch / 'units' / attempt / 'RECEIPT.json').get('cleanup_verified')
             if not resource or not cleanup:
                 raise ValueError('Inspect/setup-repair before trying another placement; unknown failure is not automatically an OOM') from e
             continue

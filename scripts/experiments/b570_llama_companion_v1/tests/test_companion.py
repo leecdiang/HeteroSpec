@@ -205,9 +205,9 @@ class StorageAndTraceTests(unittest.TestCase):
     def test_duplicate_anchor(self):
         with self.assertRaises(ValueError):source.once('a a','a','b')
     def test_cpp_cycle(self):
-        compiler=shutil.which('g++');self.assertIsNotNone(compiler)
+        compiler=shutil.which('g++') or shutil.which('cl');self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory() as d:
-            src=Path(d)/'test.cpp';exe=Path(d)/'test'
+            src=Path(d)/'test.cpp';exe=Path(d)/'test.exe'
             src.write_text(r'''#include "cycle.hpp"
 #include <cassert>
 int main(){
@@ -220,7 +220,11 @@ int main(){
  }
  auto e=hs_cycle::select(std::vector<int>{9,10},std::vector<int>{9,10,11},8,[](int t){return t==9;});assert(e.stopped&&e.accepted==1&&e.emitted.size()==1&&!e.bonus);
 }''')
-            subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-I',str(Path(__file__).resolve().parents[1]),str(src),'-o',str(exe)],check=True,capture_output=True)
+            if Path(compiler).stem.lower() == 'cl':
+                command=[compiler,'/nologo','/std:c++17','/EHsc','/W4','/WX','/I'+str(Path(__file__).resolve().parents[1]),str(src),'/Fe:'+str(exe)]
+            else:
+                command=[compiler,'-std=c++17','-Wall','-Wextra','-Werror','-I',str(Path(__file__).resolve().parents[1]),str(src),'-o',str(exe)]
+            subprocess.run(command,check=True,capture_output=True,cwd=d)
             subprocess.run([str(exe)],check=True,capture_output=True)
 
 if __name__=='__main__':unittest.main()

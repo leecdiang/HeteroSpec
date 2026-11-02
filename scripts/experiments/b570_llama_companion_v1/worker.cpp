@@ -49,7 +49,10 @@ void safety(){
     need(m.ullAvailPhys>=config.at("min_ram_free_bytes").get<unsigned long long>(),"RAM reserve");
 #endif
 }
-struct Scope{Scope(int m){hs_b570_set_layout(m);}~Scope(){hs_b570_set_layout(0);}};
+struct Scope{
+    Scope(int m){hs_b570_set_reference_q8(m!=0&&config.value("reference_q8",false));hs_b570_set_layout(m);}
+    ~Scope(){hs_b570_set_layout(0);hs_b570_set_reference_q8(false);}
+};
 struct Observer{
     llama_context*ctx=nullptr;fs::path root;bool heavy=false,trace=false,failed=false;
     std::string phase,error,pattern="^(l_out|result_norm|result_output)(-[0-9]+)?$";

@@ -18,14 +18,14 @@ def rows(a, b):
             'different_fp32_words':sum(ba[i:i+4]!=bb[i:i+4] for i in range(0,len(ba),4))}
 
 
-def run(epoch, attempt, out):
+def run(epoch, attempt, out, reference_epoch=None):
     epoch=Path(epoch); unit=epoch/'units'/attempt
     receipt=read(unit/'RECEIPT.json')
     need(receipt['success'] and receipt['cleanup_verified'], 'incomplete supervised unit')
     results=[]
     for slot in read(unit/'SLOTS.json'):
         arm=slot['arm']; current=unit/'native'/(slot['id']+'.json')
-        baseline=epoch/'units/baseline-candidate/native/baseline/i0'/arm/'heavy.json'
+        baseline=Path(reference_epoch or epoch)/'units/baseline-candidate/native/baseline/i0'/arm/'heavy.json'
         actual=audit.record(current)
         ae, av, ac=actual['endpoint'],actual['vectors'],actual['record']['cycles']
         del actual
@@ -50,4 +50,4 @@ def run(epoch, attempt, out):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--epoch',required=True);p.add_argument('--attempt',required=True);p.add_argument('--out',required=True)
-    a=p.parse_args();run(a.epoch,a.attempt,a.out)
+    p.add_argument('--reference-epoch');a=p.parse_args();run(a.epoch,a.attempt,a.out,a.reference_epoch)

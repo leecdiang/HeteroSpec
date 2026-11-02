@@ -1,5 +1,9 @@
 # Reference repair: canonical state, numerical-path localization, then transfer
 
+**Executed results (2026-11-02):** see [host execution](host_execution/RESULTS.md).
+Reference repair qualified; the separate practical QB/PQ benefit screen did not pass.
+The package description below is the original pre-execution record.
+
 **Implementation and protocol, not an executed fix.** This successor starts from PR156
 `47c93985010d0f3c0c55f975f4cd7761e64bcae2`. The existing 14B counterexamples remain
 unchanged. The goal is to remove the mechanism causing them while preserving useful

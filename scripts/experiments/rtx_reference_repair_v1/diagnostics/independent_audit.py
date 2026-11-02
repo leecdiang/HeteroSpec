@@ -31,7 +31,7 @@ def main(root,repo,out):
     need(hashlib.sha1(b'blob '+str(len(source)).encode()+b'\0'+source).hexdigest()==blob,'old checker source identity')
     tree=ast.parse(source);fn=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='validate_cycles'];need(len(fn)==1,'old checker anchor')
     env={'need':need};exec(compile(ast.Module(body=fn,type_ignores=[]),'authenticated_old_transaction_checker','exec'),env)
-    manifest=[];units=[];allrows={};vector_count=state_count=0;reference_mismatches=[];observer_pairs=0;path_pairs=[]
+    manifest=[];units=[];allrows={};vector_count=state_count=0;reference_mismatches=[];observer_pairs=0;path_pairs=[];partial_artifacts=[]
     for schedule in sorted(root.glob('*/units/*/SLOTS.json')):
         unit=schedule.parent;epoch=unit.parent.parent;receipt=read(unit/'RECEIPT.json');slots=read(schedule);rows=[];panel=read(unit/'PANEL.json')
         identity=read(epoch/('ORIGINAL_BINDING.json' if unit.name=='original_reference' else 'BINDING.json'))
@@ -39,12 +39,22 @@ def main(root,repo,out):
         need(receipt['active_processes_after_wait']==0 and not receipt['lock_retained'],'unsettled process')
         for slot in slots:
             p=unit/'native'/(slot['slot_id']+'.json')
-            if not p.exists():continue
+            if not p.exists():
+                folder=p.with_suffix('');partial={};n=151936 if slot['family']=='Qwen' else 128256
+                for role in ('target','draft'):
+                    for v in sorted((folder/role).glob('*.f32')):
+                        token,h=vector(v,n);partial[v.relative_to(folder).as_posix()]={'sha256':h,'first_argmax':token};vector_count+=1
+                states={v.relative_to(folder).as_posix():{'bytes':v.stat().st_size,'sha256':sha(v)} for v in folder.glob('*.state')}
+                if partial or states:partial_artifacts.append({'unit':unit.relative_to(root).as_posix(),'slot':slot['slot_id'],'vectors':partial,'states_without_record_hash':states,'qualification_eligible':False,'limitation':'No complete native record/transaction trace: finite vectors and artifact hashes checked, not a reconstructed or qualified endpoint.'})
+                continue
             r=read(p);e=endpoint(r);need(r['slot']==slot,'slot identity');item=panel['inputs'][slot['source_index']]
             need(r['identity']==identity['families'][r['family']],'executable/model identity')
             need(r['prompt_ids']==item['prompt_ids'] and r['input_id']==item['id'],'input identity')
             if item['id'] in references and e!=references[item['id']]:reference_mismatches.append(p.relative_to(root).as_posix())
-            need(not r['teacher_forced'] and r['qualification_eligible'],'unexpected forced diagnostic')
+            if unit.name=='original_reference':
+                need(r['arm']=='R' and r['producer']=='NATIVE' and not r['draft_enabled'] and slot['study_id']=='rtx_dense14b_transfer_v1','original worker natural-R contract')
+                need(slot['repair']['prefill']=='native' and not slot['repair'].get('probe',False),'original reference slot contract')
+            else:need(not r['teacher_forced'] and r['qualification_eligible'],'unexpected forced diagnostic')
             n=151936 if r['family']=='Qwen' else 128256
             env['validate_cycles'](r,{'prompt_tokens':len(item['prompt_ids']),'cap':128},{'eog':r['vocabulary_eog'],'vocabulary_tokens':n})
             if not r['draft_enabled']:need(r['target_final_kv']=={'min':0,'max':len(item['prompt_ids'])+len(e['ids'])-2},'ordinary pending KV')
@@ -68,7 +78,7 @@ def main(root,repo,out):
                 for name,key in [('boundary_source.state','boundary_state_sha256'),('boundary_logits.f32','boundary_logits_sha256')]:
                     if key in b:shash[name]=sha(folder/name);need(shash[name]==b[key],'boundary artifact')
                 if r.get('repair_prefill','native')!='native':need(b['positions_equal'] and b['receiver_readback_checked'] and b['serialized_bytes_equal'] and not b['pending_token_consumed'],'native boundary assertions')
-            manifest.append({'path':p.relative_to(root).as_posix(),'sha256':sha(p),'vectors':vhash,'states':shash});rows.append(r)
+            manifest.append({'path':p.relative_to(root).as_posix(),'sha256':sha(p),'vectors':vhash,'states':shash,'unit_success':receipt['success']});rows.append(r)
         if receipt['success'] and receipt['completed_requests']:need(len(rows)==len(slots)==receipt['completed_requests'],'complete stage')
         units.append({'path':unit.relative_to(root).as_posix(),'receipt_sha256':sha(unit/'RECEIPT.json'),'success':receipt['success'],'records':len(rows),'reserved_slots':len(slots)})
         allrows[unit.relative_to(root).as_posix()]=rows
@@ -89,12 +99,21 @@ def main(root,repo,out):
     ledger=[json.loads(l) for l in (root/'LEDGER.jsonl').read_text().splitlines() if l];starts=[r for r in ledger if r['event']=='START'];ends=[r for r in ledger if r['event']=='END']
     need(len(starts)==len(ends),'unsettled ledger');reserved=sum(r['reserved_requests'] for r in starts);dev=sum(r['reserved_requests'] for r in starts if r['stage']=='development')
     need(reserved<=1200 and dev<=480,'shared budget')
-    confirmation={};cost=None;ep=root/'epoch03'
+    confirmation={};cost=None;ep=root/'epoch03';original_R_comparisons=[]
     if (ep/'ORIGINAL_HELDOUT_REFERENCES.json').exists():
         refs=read(ep/'ORIGINAL_HELDOUT_REFERENCES.json')['references'];old=allrows['epoch03/units/original_reference']
         need(len(old)==24 and all(endpoint(r)==refs[r['input_id']] for r in old),'original oracle stability')
         candidates=allrows.get('epoch03/units/heldout',[]);fail=[r['slot']['slot_id'] for r in candidates if endpoint(r)!=refs[r['input_id']]]
         confirmation={'original_records':len(old),'candidate_records':len(candidates),'failed_slots':fail}
+        artifacts={x['path']:x for x in manifest}
+        for a in old:
+            if a['slot']['observer']!='heavy':continue
+            pair=[r for r in candidates if r['input_id']==a['input_id'] and r['arm']=='R' and r['slot']['observer']=='heavy']
+            if not pair:continue
+            need(len(pair)==1,'candidate R ambiguity');b=pair[0]
+            av=artifacts['epoch03/units/original_reference/native/'+a['slot']['slot_id']+'.json'];bv=artifacts['epoch03/units/heldout/native/'+b['slot']['slot_id']+'.json']
+            original_R_comparisons.append({'input_id':a['input_id'],'endpoint_equal':endpoint(a)==endpoint(b),'transactions_bounds_equal':all(a[k]==b[k] for k in ('cycles','target_final_kv','draft_final_kv')),'full_vectors_equal':av['vectors']==bv['vectors'],'target_final_state_equal':av['states']['target_final.state']==bv['states']['target_final.state']})
+        confirmation['original_R_candidate_R']=original_R_comparisons
         timed=[r for key,rows in allrows.items() if key.startswith('epoch03/units/formal_s') for r in rows]
         if timed:
             need(len(timed)==576 and not fail and len(candidates)==120,'qualification/timing completeness');table={}
@@ -105,11 +124,15 @@ def main(root,repo,out):
             blocks=[]
             for s in range(4):
                 for i in range(12):
-                    t={a:table[s,i,a,'measured'] for a in labels};pq=statistics.mean([t['C_PQ_A'],t['C_PQ_B']]);blocks.append(dict(session=s,input=i,layout=t['C_QB']/pq,AA=t['C_PQ_A']/t['C_PQ_B'],D_QB=t['M_QB']/t['C_QB'],D_PQ=t['M_PQ']/pq,CQB_R=t['C_QB']/t['R'],MQB_R=t['M_QB']/t['R']))
+                    t={a:table[s,i,a,'measured'] for a in labels};pq=statistics.mean([t['C_PQ_A'],t['C_PQ_B']]);blocks.append(dict(session=s,input=i,layout=t['C_QB']/pq,AA=t['C_PQ_A']/t['C_PQ_B'],D_QB=t['M_QB']/t['C_QB'],D_PQ=t['M_PQ']/pq,CQB_R=t['C_QB']/t['R'],MQB_R=t['M_QB']/t['R'],M_layout=t['M_QB']/t['M_PQ'],CPQ_R=pq/t['R'],MPQ_R=t['M_PQ']/t['R'],service_seconds=t))
             geo=lambda xs:math.exp(statistics.fmean(map(math.log,xs)));means={k:geo(b[k] for b in blocks) for k in ('layout','AA','D_QB','D_PQ','CQB_R','MQB_R')};noise=max(abs(geo(b['AA'] for b in blocks if b['input']==i)-1) for i in range(12));sessions=[geo(b['layout'] for b in blocks if b['session']==s) for s in range(4)]
             cost={'means':means,'AA_max_input':noise,'sessions':sessions,'practical_layout_gain':1-means['layout']>max(.02,noise) and all(x<1 for x in sessions),'blocks':blocks}
             primary=read(ep/'FINAL_COST.json');need(all(math.isclose(v,primary['means'][k],rel_tol=1e-12) for k,v in means.items()) and primary['practical_layout_gain']==cost['practical_layout_gain'],'cost implementations disagree')
-    result={'status':'INDEPENDENT_RAW_AUDIT_COMPLETE','checker':'struct.iter_unpack finite/first-argmax; authenticated old validate_cycles AST; independent state hashes and fmean-log cost','old_checker_blob':blob,'self_sha256':sha(__file__),'units':units,'records':len(manifest),'full_vectors':vector_count,'final_states':state_count,'observer_pairs':observer_pairs,'reference_mismatches':reference_mismatches,'PQ_QB_pairs':path_pairs,'charged_requests':reserved,'charged_development':dev,'remaining_total':1200-reserved,'remaining_development':480-dev,'native_process_seconds':sum(r['seconds'] for r in ends),'confirmation':confirmation,'cost':cost,'record_manifest':manifest,'limits':'Same-host independent implementation, not external replication. Boundary immediate receiver equality uses native assertions; retained final/source bytes are rehashed. Scientific mismatches remain outcomes, not audit errors.'}
+            cost['additional_means']={k:geo(b[k] for b in blocks) for k in ('M_layout','CPQ_R','MPQ_R')}
+            ratio_keys=tuple(means)+tuple(cost['additional_means'])
+            cost['per_input']=[dict(input=i,**{k:geo(b[k] for b in blocks if b['input']==i) for k in ratio_keys}) for i in range(12)]
+            cost['per_session']=[dict(session=s,**{k:geo(b[k] for b in blocks if b['session']==s) for k in ratio_keys}) for s in range(4)]
+    result={'status':'INDEPENDENT_RAW_AUDIT_COMPLETE','checker':'struct.iter_unpack finite/first-argmax; authenticated old validate_cycles AST; independent state hashes and fmean-log cost','old_checker_blob':blob,'self_sha256':sha(__file__),'units':units,'records':len(manifest),'full_vectors':vector_count,'final_states':state_count,'observer_pairs':observer_pairs,'reference_mismatches':reference_mismatches,'PQ_QB_pairs':path_pairs,'charged_requests':reserved,'charged_development':dev,'remaining_total':1200-reserved,'remaining_development':480-dev,'native_process_seconds':sum(r['seconds'] for r in ends),'confirmation':confirmation,'cost':cost,'record_manifest':manifest,'partial_artifacts':partial_artifacts,'limits':'Same-host independent implementation, not external replication. Boundary immediate receiver equality uses native assertions; retained final/source bytes are rehashed. Failed fresh-lifetime attempt records/states remain failure evidence, not qualification. Scientific mismatches remain outcomes, not audit errors.'}
     out.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print('COMPLETE',len(manifest),reserved,flush=True)
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('repo');p.add_argument('out');a=p.parse_args();main(a.root,a.repo,a.out)

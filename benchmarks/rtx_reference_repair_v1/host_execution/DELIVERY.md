@@ -23,6 +23,15 @@ uploaded shard's size/SHA256. `diagnostics/stream_upload.py` records each transf
 uses no clobber or silent retry, and does not replace the subsequent fresh remote
 download and all-member verification.
 
+After four successful sequential transfers, a quiescent handoff switched to
+`diagnostics/parallel_upload.py` (at most five concurrent transfers). Existing
+assets are adopted only when prior success receipts, local size/SHA256 and GitHub's
+uploaded-state SHA256 digest agree. The original uploader's intentional stop and
+the temporary readiness-barrier hold/restoration are retained in transport records;
+no active transfer was interrupted and no remote asset was deleted or overwritten.
+`diagnostics/parallel_verify.py` performs the fresh index/archive/member readback,
+with at most five temporary shards and durable per-part receipts before cleanup.
+
 The native/source snapshot necessarily predates its own transport receipts. Final
 upload/readback receipts are separate release assets and files in the result PR;
 this avoids a self-referential archive manifest. It does not change native data or

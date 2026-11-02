@@ -1,0 +1,34 @@
+{
+  "status": "MECHANISM_REVIEWED",
+  "utc": "2026-11-02T09:06:21.620129+00:00",
+  "reference_unchanged": true,
+  "no_task_specific_rule": true,
+  "ablation_passed": true,
+  "evidence": {
+    "E:\\rtx160\\research\\epoch03\\units\\attention_replay01\\MECHANISM_AUDIT02.json": "9e4672257dfe68152ed1ea23da1e65eb021c036ab3159dbb88b47817bd015312",
+    "E:\\rtx160\\research\\epoch06\\DEVELOPMENT_AUDIT.json": "f6e24655504887ee1bc4b95d76ba2ecbc2fe3dbe1cf4465af55b446cde390ca5",
+    "E:\\rtx160\\research\\epoch06\\COMMITTED_VECTORS.json": "61f23d049683a6dc2589684f0a7c1e15017b7a25e8a99bb78acffc3c7123cc72",
+    "E:\\rtx160\\research\\epoch06\\REPAIRED_TRIAGE06.json": "0a0a386bd66d4e49279205a197f5dd25f774fc86ad4348752653cea95338cf6c",
+    "E:\\rtx160\\research\\epoch06\\REPAIRED_CONTROL06.json": "2d80c750391762667a41f5e3499825b204f74a361af3d74f2ddb3d723c9d276e",
+    "E:\\rtx160\\research\\epoch01\\ABLATION_CONTROL01.json": "396ac41d58986cf7244b3c0fc0184b437e3d540af2f37a4158a92cc1896c534f",
+    "D:\\rtx160\\research\\history01\\HISTORY.json": "1b2ffb3a942290c0ad1bec50c8be2e3b57938bf2ad2843260a26521b21f30797",
+    "E:\\rtx160\\config06\\build\\BUILD.json": "e32f9cb84ce93aa097a8d294e8bf1759b5b7003d230391573a89494b240ed93b",
+    "E:\\rtx160\\config06\\stage\\prefix_extent.py": "91a3fb7534c4568fbf3dd6b04cccd5be28bf8c577b4a649ad63081e8ae5ae38e",
+    "E:\\rtx160\\research\\epoch01\\units\\ablation_off01\\native\\ablation\\C_PQ\\heavy.json": "4b6fe23395d1dd9e4edd7778671d49854cdf9b9cfc0348e629ce5259a85e1382",
+    "E:\\rtx160\\research\\epoch01\\units\\ablation_off01\\native\\ablation\\C_QB\\heavy.json": "bad010b7249bfc24804ca7768dc77d736d5c8b70cb74c69a0d16174766899095",
+    "E:\\rtx160\\research\\HOST_SCHEMA_REPAIR.json": "900f6b73ea4eb5b91e49f03d5390fa6aa79f03cee52188293b43e82578eed821",
+    "E:\\rtx160\\research\\epoch07\\DEVELOPMENT_AUDIT.json": "f6e24655504887ee1bc4b95d76ba2ecbc2fe3dbe1cf4465af55b446cde390ca5",
+    "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\pr160\\scripts\\experiments\\rtx_llama_repair_v1\\host.py": "eee7633c60dbf1f4c33049456854d490a959f36bb0e809392bcc308b06886a4b",
+    "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\pr160\\benchmarks\\rtx_llama_repair_v1\\host_execution\\confirmation_sequence.py": "2a7c83c276db22ba3fb22c042e0aab6febd0890fa7e31ab3dfc5abc4616f2d47"
+  },
+  "root_cause": "At physical KV padding boundaries, grouped verification grows the attention reduction extent earlier than scalar consumption. CUDA V-by-probability reduction with identical valid values and zero masked suffix gives different bits at 768 versus 1024; the state difference persists to cycle 21, where the same C state gives identical q1/q4 outputs but the wrong original-R decision.",
+  "intervention": "Group adjacent query rows with equal scalar-equivalent physical KV extent; copy shortened multirow masks contiguously; include the extent vector in graph reuse checks. Preserve Qwen head-norm offload rule as a separate previously established mechanism.",
+  "ablation": "New baseline process with grouping disabled reproduces both original C failures, all vectors and states; repaired complete matrix and all committed vectors equal old R.",
+  "observability": "Both shadow orders, trace/no-trace, live-state invariance, q4 own-path and 22 standalone CUDA operator replays checked. Actual scheduler CUDA0; exact kernel launch is not claimed from scheduler metadata alone.",
+  "remaining_limits": "Cross-model regressions, unseen qualification, full timing and remote evidence delivery remain pending. No population or universal correctness claim.",
+  "host_schema_successor": {
+    "numeric_policy_changed": false,
+    "original_epoch": "epoch06",
+    "unchanged_panel_sha256": "a148009c627f4c852aee4367138699448ddaf4fc640cabfc66d0f8fc42b5d87a"
+  }
+}

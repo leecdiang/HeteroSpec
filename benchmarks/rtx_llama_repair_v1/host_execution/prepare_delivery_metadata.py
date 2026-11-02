@@ -37,6 +37,11 @@ def main():
     for prefix,folder in [('upload',a.upload),('remote',a.remote)]:
         for f in sorted(folder.rglob('*')):
             if f.is_file():copy(f,Path(prefix)/f.relative_to(folder))
+    # Release creation and source-snapshot commands settled before upload began.
+    # Preserve these separate post-science receipts as well as the transfers.
+    for f in sorted(a.upload.parent.iterdir()):
+        if f.is_file() and f.suffix in ('.json','.log','.md'):
+            copy(f,Path('release-setup')/f.name)
     for f in sorted(a.operations.iterdir()):
         if f.is_file() and f.name.startswith(('PACK','ARCHIVE','UPLOAD','REMOTE','CREATE_EVIDENCE','RELEASE','RESULT_PR')):
             copy(f,Path('operations')/f.name)

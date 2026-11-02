@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import math
+from collections import Counter
 from pathlib import Path
 
 
@@ -46,10 +47,45 @@ def transaction(r):
     assert r['target_final_kv']['max']==r['draft_final_kv']['max']==base-1
 
 
+def check_schedule(schedules,n):
+    labels=('R','M_PQ','M_QB','C_PQ_A','C_PQ_B','C_QB')
+    seed='llama-repair-williams-v1'
+    ranked=sorted(labels,key=lambda x:hashlib.sha256((seed+'|arm|'+x).encode()).digest())
+    positions={i:Counter() for i in range(n)};adjacent={i:Counter() for i in range(n)};aa=Counter()
+    assert len(schedules)==6
+    for session,slots in enumerate(schedules):
+        assert len(slots)==12*n
+        expected_inputs=sorted(range(n),key=lambda i:hashlib.sha256(f'{seed}|input|{session}|{i}'.encode()).digest())
+        for block,i in enumerate(expected_inputs):
+            order=[]
+            for position in range(6):
+                warm,measured=slots[block*12+position*2:block*12+position*2+2]
+                assert (warm['category'],measured['category'])==('warmup','measured')
+                for key in ('session','source_index','input_id','experiment_arm','repair','lifecycle','observer'):
+                    assert warm[key]==measured[key]
+                assert warm['session']==session and warm['source_index']==i
+                assert warm['lifecycle']=='fresh' and warm['observer']=='off'
+                order.append(warm['experiment_arm'])
+            assert set(order)==set(labels)
+            # Registered row is checked separately from its balance properties.
+            assert order==[ranked[(v+session+i)%6] for v in (0,1,5,2,4,3)]
+            positions[i].update((arm,pos) for pos,arm in enumerate(order))
+            adjacent[i].update(zip(order,order[1:]))
+            aa[i]+=order.index('C_PQ_A')<order.index('C_PQ_B')
+    expected_positions=Counter({(arm,pos):1 for arm in labels for pos in range(6)})
+    expected_edges=Counter({(a,b):1 for a in labels for b in labels if a!=b})
+    assert all(x==expected_positions for x in positions.values())
+    assert all(x==expected_edges for x in adjacent.values())
+    assert all(aa[i]==3 for i in range(n))
+    return {'status':'REGISTERED_WILLIAMS_ORDER_AND_BALANCE_RECONSTRUCTED','sessions':6,'inputs':n,
+      'immediate_same_arm_warmups':6*n*6,'all_arm_positions_once_per_input':True,
+      'all_ordered_distinct_arm_adjacencies_once_per_input':True,'AA_order_per_input':[3,3],
+      'scope':'Measured-arm order and immediate same-arm warmups; block-boundary carryover is retained, not claimed balanced.'}
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--bundle',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     a=p.parse_args();b=a.bundle;panel=read(b/'HELDOUT.json')['inputs'];n=len(panel)
-    labels=('R','M_PQ','M_QB','C_PQ_A','C_PQ_B','C_QB');values={};records={};refs={};loaded=[]
+    labels=('R','M_PQ','M_QB','C_PQ_A','C_PQ_B','C_QB');values={};records={};refs={};loaded=[];schedules=[]
     components={category:{k:[] for k in ('setup_seconds','request_seconds','teardown_seconds','service_seconds')} for category in ('warmup','measured')}
     original=b/'units/original_references'
     for s in read(original/'SLOTS.json'):
@@ -65,6 +101,7 @@ def main():
           'resident_provisioning_seconds':provision['resident_provisioning_seconds'],
           'supervised_wall_seconds':receipt['seconds'],'provision_sha256':sha(unit/'native/PROVISIONED.json')})
         slots=read(unit/'SLOTS.json');assert len(slots)==12*n
+        schedules.append(slots)
         for s in slots:
             path=unit/'native'/(s['slot_id']+'.json');r=read(path);transaction(r)
             assert r['slot']==s and endpoint(r)==refs[s['input_id']]
@@ -79,6 +116,7 @@ def main():
             for name in components[s['category']]:components[s['category']][name].append(r[name])
     expected={(s,i,l,c) for s in range(6) for i in range(n) for l in labels for c in ('warmup','measured')}
     assert set(values)==expected
+    order_audit=check_schedule(schedules,n)
     blocks=[]
     for s in range(6):
         for i in range(n):
@@ -103,6 +141,7 @@ def main():
       'script_sha256':sha(Path(__file__)),'produced_report_sha256':sha(b/'FINAL_COST.json'),
       'record_sha256':records,'all_service_seconds':math.fsum(values.values())}
     result['loaded_session_costs']=loaded
+    result['order_audit']=order_audit
     result['service_components_seconds']={category:{k:math.fsum(v) for k,v in fields.items()} for category,fields in components.items()}
     result['reported_model_load_seconds']=math.fsum(x['model_load_seconds'] for x in loaded)
     result['cost_scope']='Service includes fresh context setup, request/prefill/decode/reconciliation/synchronization and teardown. Weight load is reported separately. Supervised wall time additionally contains host auditing, protocol waits and output I/O.'

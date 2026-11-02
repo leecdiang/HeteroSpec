@@ -12,6 +12,8 @@ The structural repair groups adjacent rows by their scalar-equivalent physical K
 
 ## Interpretation of validation and costs
 
+The frozen 24-input native qualification completes all 48 immutable old-R references and 240 candidate requests with reference/observer equality and exact candidate-R vector preservation. All six timing sessions complete, comprising 864 measured requests and 864 warmups. Independent cost reconstruction gives a C_QB / dual-C_PQ geometric mean ratio of 0.975530833, a 2.4469% reduction. Although all six session ratios favor QB, the largest symmetric input-aggregate A/A imbalance is 2.9832%, so the prospective practical layout-gain screen fails. No additional timing is used to change that conclusion. The repair is reference-preserving on this panel; this experiment does not establish the registered practical layout advantage.
+
 Development inputs and Qwen regression inputs are previously exposed and do not establish unseen-input generalization. Unseen confirmation uses the registered balanced 24-input panel, immutable old-R executions, complete endpoint and available state/vector checks. A finite pass supports only the measured models, numerical assets, hardware and execution contract.
 
 The prospective cost comparison retains all six Williams sessions and both warmups and measured requests. It uses arithmetic dual-PQ means within blocks and geometric means of paired ratios. Practical layout benefit requires improvement beyond both 2% and the largest symmetric input-aggregate A/A imbalance, with all six sessions favorable. Correctness and practical performance are distinct conclusions; an unfavorable result is retained without extending timing to change its sign.

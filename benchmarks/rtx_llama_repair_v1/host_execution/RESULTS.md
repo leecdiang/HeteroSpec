@@ -32,12 +32,35 @@ The first operand observer rejected a legitimate scheduler mask copy; its failed
 
 The repaired candidate completes all 36 development requests with original-reference and observer equality. All 18 heavy cells' committed decision vectors equal the corresponding original R vectors. Eight repaired same-state pairs across both arms, both orders and trace/no-trace have equal complete q1/q4 vectors and pass own-path controls. A fresh ablation process with the structural repair disabled restores both original failures, including their vectors and states.
 
-## Gates still in progress
+## Frozen confirmation and independent reconstruction
 
-New Qwen 8B and 14B regressions pass all 144 and 192 requests respectively under the same structural source policy, fixed original assets and previously exposed inputs. The additional 24 and 32 successful immutable original-R requests preserve complete R vectors in both native and reference-prefill candidate R cells. These are development work charged to the same ledger, not unseen transfer evidence. Failed original-worker schema attempts remain charged and preserved.
+The final host-schema successor, epoch07, uses the unchanged config06 native candidate. Its repeated 36-request development matrix passes. The complete pinned historical exposure union excludes IDs, text hashes and token hashes across all reviewed project history. The selected 24-input code/math × short/long panel remained unchanged through the pre-output host-schema correction and was frozen before any reference or candidate output.
 
-The first freeze attempt found that the immutable PR151 input records lack a text-hash field. A host-only successor (epoch07, unchanged candidate EXE and numerical policy) binds and checks the complete historical ID/text/token union, and correctly routes original-R records through their original schema. The previously selected panel remains unchanged and had no model outputs before this correction. The prior host source and failed freeze receipt are retained; all 73 CPU tests pass without skips, and capacity admission and the 36-request development matrix are repeated before freezing the successor.
+All 48 immutable old-R reference requests and all 240 candidate qualification requests complete. Independent reconstruction checks 23,080 complete decision vectors and 168 candidate final-state artifacts, all endpoints/transactions/observer pairs, original-R vector preservation and layer/backend coverage. New Qwen8B/14B regressions pass 144/192 requests; the additional 24/32 successful original-R controls preserve complete R vectors. These Qwen inputs are development inputs, not unseen confirmation.
 
-The intended confirmation remains the registered 24 unseen inputs, balanced over code/math and short/long strata, followed by 48 old-R references, 240 candidate qualification requests and six complete Williams timing sessions (864 measured requests plus 864 warmups). No formal input has yet been run. Any qualification failure exposes the entire panel and precludes timing a successful subset.
+All six timing sessions complete: 864 measured requests and 864 immediately preceding warmups, with no captures, shadow consumers or concurrent archives/profiling. Independent recomputation matches the production report and retains every block. The geometric mean C_QB / arithmetic-dual-C_PQ service ratio is **0.975530833**. The largest symmetric input-aggregate A/A imbalance is **2.983157%**; the prospective improvement threshold is **2.983157%**. The practical layout-gain screen **did not pass**. Session ratios are 0.973614561, 0.961260205, 0.977617954, 0.981693410, 0.978961967, 0.980182884. An unfavorable performance result is not repaired by extending or selecting timing blocks.
 
-Final costs, independent recomputation, complete archival manifests, remote upload/download readback and the separate results PR remain pending. No speed or practical layout-gain claim is made here.
+| Service ratio | Geometric mean |
+|---|---:|
+| layout | 0.975530833 |
+| D_QB | 0.973607050 |
+| D_PQ | 0.945654464 |
+| CQB_R | 0.458984574 |
+| MQB_R | 0.446870617 |
+| MPQ_R | 0.444927825 |
+| CPQ_R | 0.470497250 |
+| AA | 0.998819659 |
+
+`layout` is C_QB / dual-C_PQ; `D_QB` and `D_PQ` are same-layout M/C ratios. The `_R` columns divide each arm's service time by R. Service includes fresh context setup, prefill/decode, state transfer/reconciliation, synchronization and teardown. Model load is reported separately: 26.557655 seconds across six sessions. All measured and warmup service totals and component totals are in INDEPENDENT_COST.json. These ratios are paired finite-panel summaries, without a population confidence interval.
+
+## Complete accounting and retained failures
+
+The append-only new study ledger reserves **2862 work credits**, including 846 development credits. It records 2573 audited complete model requests, 22 standalone operator replays and 130 extra shadow decodes. Supervised wall time is 24003.562 seconds, including host auditing and protocol waits. Reservations and actual calls are different quantities. Failed processes may have additional partial work; missing telemetry is not treated as zero. Historical PR151/PR156/PR159 records remain separately retained and are not reset or credited back.
+
+FINAL_EXECUTION_SUMMARY.json additionally indexes every retained pre-transport preparation, build, test, audit and supervisor operation receipt with its elapsed time and exit code. Nested/overlapping operations are not summed into a misleading wall total. Archive/upload/download costs are preserved in the separate delivery metadata produced after scientific timing finishes.
+
+There are 6 failed native execution units. Complete per-slot dispositions distinguish audited completion, worker completion rejected by host audit, possible partial starts, and unstarted slots. The baseline numerical failures, build-only candidates, host freeze/schema corrections and failed preparation/transport operations are also preserved even where they did not create a failed native unit. See LEDGER_AUDIT.json, ENGINEERING_CHANGES.jsonl, operation receipts and all source versions.
+
+## Delivery
+
+Independent result PR: https://github.com/leecdiang/HeteroSpec/pull/162. Full archive upload and fresh all-member download verification are pending; no remote delivery PASS is claimed until their receipts are added. No merge or manuscript edit is performed. PAPER_ADDENDUM.md states the supported scope and limitations.

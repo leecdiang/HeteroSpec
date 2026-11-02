@@ -16,6 +16,13 @@ then downloads a new copy of every shard and repeats archive/member checks. Only
 successfully verified temporary remote duplicate may be removed after a durable
 receipt; original raw data, local archives and failed downloads remain.
 
+Upload to the unpublished draft overlaps packaging. The supplied packer creates
+the next ZIP only after the preceding ZIP's complete local readback and hash; this
+is the upload readiness barrier. The final immutable index must match every
+uploaded shard's size/SHA256. `diagnostics/stream_upload.py` records each transfer,
+uses no clobber or silent retry, and does not replace the subsequent fresh remote
+download and all-member verification.
+
 The native/source snapshot necessarily predates its own transport receipts. Final
 upload/readback receipts are separate release assets and files in the result PR;
 this avoids a self-referential archive manifest. It does not change native data or

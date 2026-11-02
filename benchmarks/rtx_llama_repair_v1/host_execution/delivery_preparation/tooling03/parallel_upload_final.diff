@@ -1,0 +1,53 @@
+--- tooling02/parallel_upload_bounded.py
++++ tooling03/parallel_upload_bounded.py
+@@ -29,14 +29,30 @@
+     def journal(name,obj):
+         with journal_lock:
+             with (out/name).open('a',encoding='utf-8') as f:f.write(json.dumps(obj)+'\n');f.flush();os.fsync(f.fileno())
+-    query=subprocess.run(['gh','api',f'repos/{repo}/releases/{release_id}'],capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++    def read_only_api(args,**kwargs):
++        assert args[:2]==['gh','api'] and not any(x in args for x in ('-X','--method','--input','-f','-F'))
++        for attempt in range(1,4):
++            remaining=deadline-time.monotonic()
++            assert remaining>0,'cumulative transport deadline'
++            kwargs['timeout']=min(kwargs.get('timeout',120),remaining)
++            result=subprocess.run(args,**kwargs)
++            journal('READ_ONLY_API_ATTEMPTS.jsonl',{'argv':args,'attempt':attempt,'exit_code':result.returncode,'stdout':result.stdout,'stderr':result.stderr,'utc':datetime.datetime.now(datetime.timezone.utc).isoformat()})
++            transient=any(t in result.stderr for t in ('EOF','connection reset','TLS handshake timeout','i/o timeout','HTTP 502','HTTP 503','HTTP 504'))
++            if result.returncode==0 or not transient or attempt==3:return result
++            assert time.monotonic()+5*attempt<deadline,'cumulative transport deadline'
++            time.sleep(5*attempt)
++        raise AssertionError('bounded read-only query loop')
++    query=read_only_api(['gh','api',f'repos/{repo}/releases/{release_id}'],capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
+     (out/'INITIAL_REMOTE.log').write_text(query.stderr,encoding='utf-8');assert query.returncode==0,'Remote metadata failed'
+     remote=json.loads(query.stdout);save('INITIAL_REMOTE.json',remote)
+     assert remote['draft'] and remote['tag_name']==tag,'Only the intended unpublished draft may be resumed'
+     prior=[json.loads(x) for x in (previous/'UPLOADED_PARTS.jsonl').read_text().splitlines() if x]
+     assert all(re.fullmatch(r'evidence-\d{3}\.zip',x['name']) for x in prior),'Unexpected prior asset'
+     assert len({x['name'] for x in prior})==len(prior),'Duplicate prior success'
+-    assets={x['name']:x for x in remote['assets']};assert set(assets)=={x['name'] for x in prior},'Unaccounted remote assets'
++    listed=read_only_api(['gh','api','--paginate','--slurp',f'repos/{repo}/releases/{release_id}/assets?per_page=100'],capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++    assert listed.returncode==0,'Initial paginated asset query failed'
++    full_assets=[x for page in json.loads(listed.stdout) for x in page];save('INITIAL_ALL_ASSETS.json',full_assets)
++    assets={x['name']:x for x in full_assets};assert len(assets)==len(full_assets) and set(assets)=={x['name'] for x in prior},'Unaccounted or duplicate remote assets'
+     completed={}
+     for pin in prior:
+         p=local/pin['name'];asset=assets[p.name]
+@@ -60,7 +76,7 @@
+             journal('ATTEMPTS.jsonl',event)
+             if code==0:return event
+             query_args=['gh','api','--paginate','--slurp',f'repos/{repo}/releases/{release_id}/assets?per_page=100']
+-            q=subprocess.run(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++            q=read_only_api(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
+             matches=[x for page in json.loads(q.stdout) for x in page if x['name']==p.name] if q.returncode==0 else []
+             error=log.read_text(encoding='utf-8',errors='replace')
+             transient=any(t in error for t in ('EOF','connection reset','TLS handshake timeout','i/o timeout'))
+@@ -76,7 +92,7 @@
+             # Preserve the actual failed command. Accept completion only when
+             # the server already has the exact uploaded object; never retry here.
+             query_args=['gh','api','--paginate','--slurp',f'repos/{repo}/releases/{release_id}/assets?per_page=100']
+-            query=subprocess.run(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++            query=read_only_api(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
+             matches=[]
+             if query.returncode==0:
+                 matches=[x for page in json.loads(query.stdout) for x in page if x['name']==event['name']]

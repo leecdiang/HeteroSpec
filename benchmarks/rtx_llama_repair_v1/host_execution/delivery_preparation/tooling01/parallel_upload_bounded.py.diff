@@ -1,0 +1,63 @@
+--- E:\rtx160\parent159\diagnostics\parallel_upload.py
++++ parallel_upload_bounded.py
+@@ -16,7 +16,13 @@
+ def main(local,out,previous,tag,release_id):
+     local,out,previous=map(pathlib.Path,(local,out,previous));assert not out.exists(),'fresh upload directory'
+     out.mkdir(parents=True);(out/'commands').mkdir();env=dict(os.environ,GODEBUG='http2client=0')
+-    start=time.monotonic();deadline=start+21600;repo='leecdiang/HeteroSpec'
++    start=time.monotonic();repo='leecdiang/HeteroSpec'
++    resource_path=out.parent/'TRANSPORT_RESOURCE_POLICY02.json'
++    resource=json.loads(resource_path.read_text(encoding='utf-8'))
++    assert resource['previous_sha256']==sha(out.parent/'TRANSPORT_RESOURCE_POLICY.json')
++    remaining=(datetime.datetime.fromisoformat(resource['overall_deadline_utc'])-datetime.datetime.now(datetime.timezone.utc)).total_seconds()
++    assert 0<remaining<=86400 and resource['max_concurrent_uploads']==5 and resource['per_asset_timeout_max_seconds']==7200
++    deadline=start+remaining
+     def save(name,obj):
+         with (out/name).open('x',encoding='utf-8') as f:json.dump(obj,f,indent=2);f.write('\n')
+     def journal(name,obj):
+@@ -40,7 +46,7 @@
+         pin={'name':p.name,'bytes':p.stat().st_size,'sha256':sha(p)}
+         args=['gh','release','upload',tag,'--repo',repo,str(p)]
+         begin=time.monotonic();remaining=deadline-begin
+-        if remaining<=0:return dict(pin,exit_code=-2,error='six-hour deadline before transfer',seconds=0)
++        if remaining<=0:return dict(pin,exit_code=-2,error='recorded cumulative transport deadline before transfer',seconds=0)
+         with (out/'commands'/(p.name+'.log')).open('xb') as f:
+             process=subprocess.Popen(args,env=env,stdout=f,stderr=subprocess.STDOUT)
+             try:code=process.wait(timeout=min(7200,remaining))
+@@ -49,7 +55,17 @@
+     errors=[];active={};report=None
+     def settle(event):
+         journal('COMMANDS.jsonl',event)
+-        if event['exit_code']!=0:errors.append(event);return
++        if event['exit_code']!=0:
++            # Preserve the actual failed command. Accept completion only when
++            # the server already has the exact uploaded object; never retry here.
++            query_args=['gh','api','--paginate','--slurp',f'repos/{repo}/releases/{release_id}/assets?per_page=100']
++            query=subprocess.run(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++            matches=[]
++            if query.returncode==0:
++                matches=[x for page in json.loads(query.stdout) for x in page if x['name']==event['name']]
++            reconciled=(len(matches)==1 and matches[0]['state']=='uploaded' and matches[0]['size']==event['bytes'] and matches[0]['digest']=='sha256:'+event['sha256'])
++            journal('RECONCILED_COMMANDS.jsonl',{'event':event,'query':query_args,'query_exit_code':query.returncode,'query_stderr':query.stderr,'remote_matches':matches,'accepted_exact_remote_completion':reconciled})
++            if not reconciled:errors.append(event);return
+         pin={k:event[k] for k in ('name','bytes','sha256')};completed[pin['name']]=pin;journal('UPLOADED_PARTS.jsonl',pin)
+         print('UPLOADED',pin['name'],len(completed),flush=True)
+     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+@@ -59,7 +75,7 @@
+                 try:report=json.loads(manifest.read_text(encoding='utf-8'))
+                 except json.JSONDecodeError:report=None
+                 if report is not None:assert report['status']=='LOCAL_ARCHIVE_READBACK_PASS'
+-            if time.monotonic()>=deadline and not errors:errors.append({'error':'finite six-hour transport deadline reached'})
++            if time.monotonic()>=deadline and not errors:errors.append({'error':'finite recorded cumulative transport transport deadline reached'})
+             busy=set(active.values())
+             candidates=([local/x['name'] for x in report['parts']] if report else
+                 [p for p in sorted(local.glob('evidence-*.zip')) if re.fullmatch(r'evidence-\d{3}\.zip',p.name) and (local/f'evidence-{int(p.stem.split("-")[-1])+1:03d}.zip').exists()])
+@@ -84,7 +100,7 @@
+                 assert event['exit_code']==0,'Index upload failed; receipt retained'
+                 save('UPLOAD.json',{'status':'UPLOAD_COMPLETE_NOT_YET_VERIFIED','tag':tag,'release_id':release_id,'parts':report['parts'],
+                     'raw_index_sha256':event['sha256'],'seconds':time.monotonic()-start,'native_requests_added':0,'script_sha256':sha(pathlib.Path(__file__)),
+-                    'method':'At most five concurrent uploads to the intended unpublished draft. Prior assets adopted only after receipt/local/server SHA256 verification. Supplied packer next-shard barrier and final full-index equality. No clobber, silent retry or published release; fresh remote every-member verification still required.'})
++                    'method':'At most five concurrent uploads within the pinned cumulative transport deadline. Original command failures are retained; exact already-uploaded server SHA256/size can reconcile an ambiguous completion without retry. Prior assets adopted only after receipt/local/server SHA256 verification. Supplied packer next-shard barrier and final full-index equality. No clobber, silent retry or published release; fresh remote every-member verification still required.'})
+                 print('UPLOAD_COMPLETE',len(completed),flush=True);return
+             else:time.sleep(5)
+ 

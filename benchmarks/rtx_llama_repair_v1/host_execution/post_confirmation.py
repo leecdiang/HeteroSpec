@@ -8,7 +8,7 @@ import time
 
 REPO=Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/pr160')
 CODE=REPO/'benchmarks/rtx_llama_repair_v1/host_execution'
-OPS=Path('D:/rtx160/operations');ROOT=Path('E:/rtx160/research');EPOCH=ROOT/'epoch06'
+OPS=Path('D:/rtx160/operations');ROOT=Path('E:/rtx160/research');EPOCH=ROOT/'epoch07'
 
 
 def run(name,script,args,python=sys.executable):
@@ -16,7 +16,7 @@ def run(name,script,args,python=sys.executable):
 
 
 def main():
-    done=OPS/'CONFIRMATION_SEQUENCE04.json';deadline=time.monotonic()+86400
+    done=OPS/'CONFIRMATION_SEQUENCE07.json';deadline=time.monotonic()+86400
     while not done.exists():
         assert time.monotonic()<deadline,'finite confirmation wait expired'
         time.sleep(10)

@@ -13,8 +13,8 @@ Saved raw records can be independently audited without a GPU. Native reproductio
 For a restored archive rooted at `<evidence>`, use the delivered helper sources:
 
 ```text
-python -B independent_cost.py --bundle <evidence>/research/epoch06 --out <new-cost-report.json>
-python -B independent_qualification.py --bundle <evidence>/research/epoch06 --pool <evidence>/preparation01/POOL.json --exposures <evidence>/exposure04/EXPOSURES.json --out <new-qualification-report.json>
+python -B independent_cost.py --bundle <evidence>/research/epoch07 --out <new-cost-report.json>
+python -B independent_qualification.py --bundle <evidence>/research/epoch07 --pool <evidence>/preparation01/POOL.json --exposures <evidence>/exposure04/EXPOSURES.json --out <new-qualification-report.json>
 ```
 
 The qualification auditor uses NumPy (host version 2.4.6 under Python 3.11.9) for complete little-endian F32 finite/argmax checks. It independently repeats the registered input selection, endpoint/transaction reconstruction, observer pairs, original-R vector identity, state hashes and layer coverage. The optional restored pool/exposure paths must retain the exact pre-output hashes. The cost auditor uses only the Python standard library and includes every warmup and measured record.

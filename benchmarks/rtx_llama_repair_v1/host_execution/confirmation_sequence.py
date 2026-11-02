@@ -1,53 +1,36 @@
-"""Continue the authorized registered gates after successful new regressions."""
-import hashlib
-import json
+"""Continue the unchanged selected panel after source-bound host schema repair."""
+import hashlib,json,subprocess,sys,time
 from pathlib import Path
-import subprocess
-import sys
-import time
-
 REPO=Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/pr160')
-ROOT=Path('E:/rtx160');BUNDLE=ROOT/'research/epoch06'
+ROOT=Path('E:/rtx160');BUNDLE=ROOT/'research/epoch07'
 CODE=REPO/'scripts/experiments/rtx_llama_repair_v1'
 HELPERS=REPO/'benchmarks/rtx_llama_repair_v1/host_execution'
-OPERATIONS=Path('D:/rtx160/operations')
-
-
+OPS=Path('D:/rtx160/operations')
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def run(name,script,args):
-    subprocess.run([sys.executable,'-B',str(OPERATIONS/'run_logged.py'),name,sys.executable,'-B',str(script),*map(str,args)],cwd=REPO,check=True)
-
-
+ subprocess.run([sys.executable,'-B',str(OPS/'run_logged.py'),name,sys.executable,'-B',str(script),*map(str,args)],cwd=REPO,check=True)
 def main():
-    deadline=time.monotonic()+10800
-    coverage=ROOT/'exposure04/COVERAGE_REVIEW.json'
-    while not ((OPERATIONS/'QWEN_SEQUENCE03.json').exists() and coverage.exists()):
-        assert time.monotonic()<deadline,'finite regression wait expired'
-        time.sleep(10)
-    assert read(OPERATIONS/'QWEN_SEQUENCE03.json')['exit_code']==0,'regression continuation failed'
-    reg=ROOT/'research/CROSS_MODEL_REGRESSION.json'
-    assert read(reg)['status']=='CROSS_MODEL_REGRESSION_PASS'
-    exposure=ROOT/'exposure04';prep=ROOT/'preparation01'
-    review=read(coverage)
-    assert review['status']=='ALL_REMOTE_HEADS_TAGS_AND_PR_HISTORY_REVIEWED'
-    for path,digest in review['evidence'].items():assert sha(Path(path))==digest
-    report=read(exposure/'REPORT.json')
-    assert report['coverage_review_complete'] and not report['errors']
-    receipt=read(prep/'TOKENIZATION_RECEIPT.json')
-    assert receipt['status']=='EXACT_ORIGINAL_TOKENIZER_ROUNDTRIP' and receipt['historical_items']==12 and receipt['forward_calls']==0
-    assert not (BUNDLE/'CANDIDATE_FREEZE.json').exists()
-    provenance={'status':'PRE_OUTPUT_SELECTION_INPUTS_BOUND',
-      'n':24,'strata':'code/math x short/long; six each; original registered seed',
-      'inputs':{str(p):sha(p) for p in [reg,coverage,exposure/'REPORT.json',exposure/'EXPOSURES.json',prep/'POOL.json',prep/'TOKENIZATION_RECEIPT.json',Path(__file__)]}}
-    with (ROOT/'research/SELECTION_PROVENANCE.json').open('x') as f:json.dump(provenance,f,indent=2)
-    panel=ROOT/'research/HELDOUT_SELECTION01.json'
-    run('SELECT_HELDOUT01',CODE/'panel.py',['--pool',prep/'POOL.json','--exposures',exposure/'EXPOSURES.json','--n',24,'--out',panel])
-    run('FREEZE06',CODE/'host.py',['seal','--bundle',BUNDLE,'--panel',panel,
-      '--mechanism',BUNDLE/'MECHANISM_REVIEW.json','--development',BUNDLE/'DEVELOPMENT_AUDIT.json','--regression',reg])
-    run('CONFIRM06',CODE/'host.py',['confirm','--bundle',BUNDLE])
-    run('INDEPENDENT_COST06',HELPERS/'independent_cost.py',['--bundle',BUNDLE,'--out',BUNDLE/'INDEPENDENT_COST.json'])
-    print('CONFIRMATION_AND_INDEPENDENT_COST_COMPLETE',flush=True)
-
-
+ deadline=time.monotonic()+3600
+ while not (OPS/'PREPARE07.json').exists():
+  assert time.monotonic()<deadline;time.sleep(5)
+ assert read(OPS/'PREPARE07.json')['exit_code']==0
+ assert read(ROOT/'research/CROSS_MODEL_REGRESSION.json')['status']=='CROSS_MODEL_REGRESSION_PASS'
+ panel=ROOT/'research/HELDOUT_SELECTION01.json'
+ repair=ROOT/'research/HOST_SCHEMA_REPAIR.json'
+ assert sha(panel)==read(repair)['selected_panel_sha256']
+ assert not (ROOT/'research/epoch06/CANDIDATE_FREEZE.json').exists()
+ for name in ('worker','original_worker','build_receipt','source_binding','target','draft','policy'):
+  assert read(BUNDLE/'CONFIG.json')[name]==read(ROOT/'research/epoch06/CONFIG.json')[name]
+ run('ADMISSION07',CODE/'host.py',['admit','--bundle',BUNDLE])
+ run('DEVELOPMENT07',CODE/'host.py',['development','--bundle',BUNDLE])
+ dev=read(BUNDLE/'DEVELOPMENT_AUDIT.json');assert dev['all_reference_equal'] and dev['all_observer_equal']
+ m=read(ROOT/'research/epoch06/MECHANISM_REVIEW.json')
+ m['host_schema_successor']={'numeric_policy_changed':False,'original_epoch':'epoch06','unchanged_panel_sha256':sha(panel)}
+ for p in [repair,BUNDLE/'DEVELOPMENT_AUDIT.json',CODE/'host.py',Path(__file__)]:m['evidence'][str(p)]=sha(p)
+ with (BUNDLE/'MECHANISM_REVIEW.json').open('x') as f:json.dump(m,f,indent=2)
+ run('FREEZE07',CODE/'host.py',['seal','--bundle',BUNDLE,'--panel',panel,'--mechanism',BUNDLE/'MECHANISM_REVIEW.json','--development',BUNDLE/'DEVELOPMENT_AUDIT.json','--regression',ROOT/'research/CROSS_MODEL_REGRESSION.json'])
+ run('CONFIRM07',CODE/'host.py',['confirm','--bundle',BUNDLE])
+ run('INDEPENDENT_COST07',HELPERS/'independent_cost.py',['--bundle',BUNDLE,'--out',BUNDLE/'INDEPENDENT_COST.json'])
+ print('CONFIRMATION_AND_INDEPENDENT_COST_COMPLETE',flush=True)
 if __name__=='__main__':main()

@@ -23,8 +23,8 @@ def sha(p):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True)
     a=p.parse_args();assert not a.out.exists();assert not Path('D:/HeteroSpec-PC/RTX_EXPERIMENT.lock').exists()
-    assert Path('E:/rtx160/research/epoch06/INDEPENDENT_COST.json').exists()
-    assert Path('E:/rtx160/research/epoch06/INDEPENDENT_QUALIFICATION.json').exists()
+    assert Path('E:/rtx160/research/epoch07/INDEPENDENT_COST.json').exists()
+    assert Path('E:/rtx160/research/epoch07/INDEPENDENT_QUALIFICATION.json').exists()
     assert Path('E:/rtx160/research/LEDGER_AUDIT.json').exists()
     a.out.mkdir(parents=True);started=time.monotonic();files={};runtime=[]
     def add(path,name,kind='evidence'):
@@ -42,8 +42,9 @@ def main():
             if f.is_file() and '__pycache__' not in f.parts:
                 add(f,prefix+'/'+f.relative_to(root).as_posix())
     root=Path('E:/rtx160')
-    for folder in ('research','parent159','preparation01','exposure01','exposure02','exposure03','exposure04'):
+    for folder in ('research','parent159','preparation01','exposure01','exposure02','exposure03','exposure04','protocol_before_hostfix01'):
         tree(root/folder,folder)
+    add(root/'host_schema_config07.json','host_schema_config07.json')
     tree(Path('D:/rtx160/research/history01'),'historical-reconstruction')
     tree(Path('D:/rtx151-llama-diagnostic-v2'),'original-PR151-raw')
     for label,path in [('PR156_LEDGER.jsonl','D:/rtx155/epoch01/LEDGER.jsonl'),
@@ -60,7 +61,7 @@ def main():
     tree(a.repo/'benchmarks/rtx_llama_repair_v1','execution-source')
     for name in ('ENGINEERING_POLICY.md','README.md','HOST_PROMPT.md'):
         add(a.repo/'benchmarks/rtx_reference_repair_v1'/name,'inherited-protocol/'+name)
-    for config in sorted(root.glob('*config*')):
+    for config in sorted(p for p in root.glob('*config*') if p.is_dir()):
         tree(config/'stage',config.name+'/stage');tree(config/'build/source',config.name+'/source')
         for f in sorted(config.glob('*.json')):add(f,config.name+'/'+f.name)
         for f in sorted((config/'build').iterdir()):
@@ -75,10 +76,14 @@ def main():
             if f.suffix=='.exe':add(f,helper+'/'+f.relative_to(root/helper).as_posix(),'runtime')
             else:add(f,helper+'/'+f.relative_to(root/helper).as_posix())
     for cohort,folder in [('metadata4',Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/repo/work/native-metadata4-v4/bin')),
-                          ('original',Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/repo/work/native-original-v4/bin'))]:
+                          ('original',Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/repo/work/native-original-v4/bin')),
+                          ('dense14b',Path('D:/rtx155/build01/bin'))]:
         for f in sorted(folder.iterdir()):
             if f.suffix.lower() in ('.exe','.dll'):add(f,'original-runtime/'+cohort+'/'+f.name,'runtime')
         for name in ('BUILD.json','SOURCE_MEMBERS.json','worker.cpp','arm_spec.h'):
+            add(folder.parent/name,'original-runtime/'+cohort+'/'+name)
+        tree(folder.parent/'source','original-runtime/'+cohort+'/source')
+        for name in ('configure.log','core.log','link.log','worker.log'):
             add(folder.parent/name,'original-runtime/'+cohort+'/'+name)
     for name in ('SOURCE_RUNTIME.zip','SOURCE_RUNTIME_V02.zip'):
         add(Path('D:/hsc95')/name,'original-source-capsules/'+name)

@@ -18,7 +18,7 @@ def main():
     slots=[]
     for s in q.read(b/'SLOTS.json'):
         if s['arm']=='R' and s['repair']['prefill']=='native':
-            old=copy.deepcopy(s);old['study_id']='rtx_scope_transfer_v1'
+            old=copy.deepcopy(s);old['study_id']='rtx_dense14b_transfer_v1' if c['profile']=='Qwen3-14B' else 'rtx_scope_transfer_v1'
             old['slot_id']='original-control/i%02d/%s'%(s['source_index'],s['observer'])
             slots.append(old)
     fn,_,_,audit=q.driver(c['parent_snapshot'],binding)
@@ -32,10 +32,13 @@ def main():
         # bytes remain untouched; the added inventory is model metadata only.
         audit.transaction_check(dict(r,vocabulary_eog=candidate['vocabulary_eog']))
     def old_states(r,folder):
+        if c['profile']=='Qwen3-14B':
+            audit.verify_states(r,folder)
+            return
         assert 'target_state' not in r and 'draft_state' not in r
         assert not list(Path(folder).glob('*_final.state'))
     fn.__globals__.update(transaction_check=old_transaction,verify_states=old_states)
-    unit='original_control03'
+    unit='original_control05'
     rows=fn(b,unit,panel,slots,original=True)
     cells=[]
     for r,s in zip(rows,slots):
@@ -58,7 +61,7 @@ def main():
     q.save(b/'ORIGINAL_R_CONTROL.json',{'status':'ORIGINAL_R_PRESERVED','profile':c['profile'],
       'original_worker_sha256':q.file_hash(c['original_worker']),'source_sha256':digest(Path(__file__)),
       'receipt_sha256':digest(b/'units'/unit/'RECEIPT.json'),'cells':cells,
-      'old_schema_scope':'Original EXE has per-output EOG flags and KV bounds but no vocabulary_eog or final.state. EOG flags checked against same-model current native vocabulary inventory; no historical final-state equality claimed.'},exclusive=True)
+      'old_schema_scope':'Original EOG flags checked against same-model native vocabulary inventory. Qwen14B original exported final states are size/hash verified; Qwen8B original has no serialized final states. No cross-worker final-state equality claimed.'},exclusive=True)
     print(c['profile'],'ORIGINAL_R_PRESERVED',len(cells),flush=True)
 
 

@@ -29,11 +29,11 @@ def main():
         assert time.monotonic()<deadline,'bounded wait expired'
         time.sleep(10)
     passed(b8)
-    run('QWEN8B_ORIGINAL_CONTROL04','qwen_original_control.py',['--repo',str(REPO),'--bundle',str(b8)])
+    assert read(b8/'ORIGINAL_R_CONTROL.json')['status']=='ORIGINAL_R_PRESERVED'
     for command,name in [('admit','QWEN14B_ADMISSION02'),('run','QWEN14B_RUN02')]:
-        run(name,'qwen_regression.py',[command,'--repo',str(REPO),'--bundle',str(b14)])
+        assert read(Path('D:/rtx160/operations')/(name+'.json'))['exit_code']==0
     passed(b14)
-    run('QWEN14B_ORIGINAL_CONTROL04','qwen_original_control.py',['--repo',str(REPO),'--bundle',str(b14)])
+    run('QWEN14B_ORIGINAL_CONTROL06','qwen_original_control.py',['--repo',str(REPO),'--bundle',str(b14)])
     paths=[b/name for b in (b8,b14) for name in ('REGRESSION_AUDIT.json','ORIGINAL_R_CONTROL.json','EPOCH.json')]
     paths += [CODE/'qwen_regression.py',CODE/'qwen_original_control.py',Path(__file__)]
     report={'status':'CROSS_MODEL_REGRESSION_PASS','families':['Qwen3-8B','Qwen3-14B'],

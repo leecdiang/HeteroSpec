@@ -64,7 +64,7 @@ def derive_driver(runmod,auditmod,binding,original=False):
     # Compare its available logits/endpoint/transaction metadata, never invent
     # historical serialized-state equality. Candidate checks remain mandatory.
     env['verify_states']=lambda r,p: None
-    env['record_check']=lambda r,slot,item,folder:lr_audit.check_record(r,slot,item,folder,binding['families']['Llama'],auditmod)
+    env['record_check']=lambda r,slot,item,folder:lr_audit.check_record(r,slot,item,folder,binding['families']['Llama'],auditmod,original=original)
     exec(compile(s,'pinned_pr159_llama_host_adapter','exec'),env)
     return env['run_unit'],source,s
 
@@ -104,6 +104,10 @@ def prepare(config,out):
       'service_timer_definition':'fresh contexts: creation, native/paid producer prefill, speculation, reconciliation, synchronization, teardown; weights loaded separately; all diagnostics excluded from timing'})]:save(out/name,obj)
     assets={str(Path(c[k]).resolve()):file_hash(c[k]) for k in ('target','draft','worker','original_worker','build_receipt','source_binding')}
     assets.update(source_binding['files'])
+    if c.get('exposure_manifest'):
+        ep=Path(c['exposure_manifest']).resolve()
+        need(file_hash(ep)==c['exposure_manifest_sha256'],'historical exposure manifest changed')
+        assets[str(ep)]=file_hash(ep)
     for directory in {Path(c['worker']).parent,Path(c['original_worker']).parent}:
         for name,hsh in ident['numerical_modules'].items():need(file_hash(directory/name)==hsh,'DLL cohort drift '+name);assets[str((directory/name).resolve())]=hsh
     inputs={p.name:file_hash(p) for p in out.iterdir() if p.is_file()}
@@ -142,6 +146,22 @@ def execute(bundle,name,panel,slots,original=False,admit=False):
         for r,s in zip(rows,slots):lr_audit.check_record(r,s,panel['inputs'][s['source_index']],bundle/'units'/name/'native'/s['slot_id'],binding['families']['Llama'],auditmod,original)
     return rows
 
+def check_unexposed(pan,dev,exposures):
+    # Original PR151 inputs contain IDs and exact token hashes, but no text hash.
+    # Keep those records untouched; require the complete separately pinned
+    # historical text/ID/token union instead of inventing a missing text hash.
+    need(exposures,'complete historical exposure union required')
+    for k in ('id','text_sha256','prompt_ids_sha256'):
+        seen={x[k] for x in exposures if x.get(k)}
+        need(seen,'historical exposure axis absent: '+k)
+        if k!='text_sha256':
+            need(all(x.get(k) for x in dev['inputs']),'historical input identity missing')
+            need({x[k] for x in dev['inputs']}<=seen,'development missing from historical union')
+        need(all(x.get(k) for x in pan['inputs']),'missing held-out exposure field')
+        selected={x[k] for x in pan['inputs']}
+        need(not selected&({x[k] for x in dev['inputs'] if x.get(k)}|seen),'development/history held-out overlap')
+        need(len(selected)==len(pan['inputs']),'duplicate held-out input')
+
 def seal(bundle,panel,mechanism,development,regression):
     bundle=Path(bundle);c=check_epoch(bundle);need(not (bundle/'CANDIDATE_FREEZE.json').exists(),'candidate already frozen')
     m=read(mechanism);d=read(development);r=read(regression);pan=read(panel)
@@ -154,10 +174,11 @@ def seal(bundle,panel,mechanism,development,regression):
     need(len(pan['inputs'])>=12 and len(pan['inputs'])%12==0,'crossed held-out panel count')
     for x in pan['inputs']:input_check(x)
     dev=read(bundle/'DEV.json')
-    for k in ('id','text_sha256','prompt_ids_sha256'):
-        need(all(x.get(k) for x in pan['inputs']),'missing held-out exposure field')
-        need(not {x[k] for x in pan['inputs']}&{x[k] for x in dev['inputs']},'development/held-out overlap')
-        need(len({x[k] for x in pan['inputs']})==len(pan['inputs']),'duplicate held-out input')
+    need(c.get('exposure_manifest') and c.get('exposure_manifest_sha256'),'pin complete historical exposure union')
+    need(file_hash(c['exposure_manifest'])==c['exposure_manifest_sha256'],'historical exposure union drift')
+    historical=read(c['exposure_manifest'])
+    need(pan.get('exposure_sha256')==digest(historical),'selection exposure union differs')
+    check_unexposed(pan,dev,historical)
     need(pan.get('source_pool_sha256') and pan.get('exposure_sha256'),'selection/exposure manifests required')
     exposure=Path(c['research_root'])/'EXPOSURES.jsonl'
     seen=[json.loads(l) for l in exposure.read_text().splitlines() if l] if exposure.exists() else []

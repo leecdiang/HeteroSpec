@@ -249,4 +249,20 @@ class DriverAdapterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaises(ValueError):host.derive_driver(self.module(d,True),None,{'families':{'Llama':{}}})
 
+class HistoricalSchemaTests(unittest.TestCase):
+    def fixture(self):
+        old=item(90);del old['text_sha256']
+        exposure=[{'id':old['id']},{'prompt_ids_sha256':old['prompt_ids_sha256']},{'text_sha256':c.sha(b'old text')}]
+        return {'inputs':[item(1)]},{'inputs':[old]},exposure
+    def test_missing_historical_text_requires_complete_union(self):
+        pan,dev,exposure=self.fixture();host.check_unexposed(pan,dev,exposure)
+        with self.assertRaises(ValueError):host.check_unexposed(pan,dev,exposure[:2])
+    def test_each_exposure_axis_blocks_overlap(self):
+        for field in ('id','text_sha256','prompt_ids_sha256'):
+            pan,dev,exposure=self.fixture();exposure.append({field:pan['inputs'][0][field]})
+            with self.assertRaises(ValueError):host.check_unexposed(pan,dev,exposure)
+    def test_missing_dev_token_in_union_blocks_freeze(self):
+        pan,dev,exposure=self.fixture();exposure[1]={'prompt_ids_sha256':'f'*64}
+        with self.assertRaises(ValueError):host.check_unexposed(pan,dev,exposure)
+
 if __name__=='__main__':unittest.main(verbosity=2)

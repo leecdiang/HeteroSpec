@@ -205,10 +205,12 @@ class ResourceTests(unittest.TestCase):
 class NativeContractTests(unittest.TestCase):
     def test_compile_real_pure_helper(self):
         compiler=shutil.which('g++') or shutil.which('clang++')
-        if not compiler:self.skipTest('C++ compiler unavailable; pure helper compile not claimed')
+        zig=shutil.which('zig') if not compiler else None
+        if not compiler and not zig:self.skipTest('C++ compiler unavailable; pure helper compile not claimed')
+        compiler_command=[compiler] if compiler else [zig,'c++']
         with tempfile.TemporaryDirectory() as d:
             p=pathlib.Path(d);code='''#include "cycle_contract.hpp"\n#include <cassert>\nint main(){using namespace hs_llama_contract;assert(output_index(81,0,4)==81);assert(output_index(81,3,4)==84);preverify_bound(817,818);assert(probe_allowed(true,true,true,0));assert(!probe_allowed(false,true,true,0));bool bad=false;try{preverify_bound(818,818);}catch(...){bad=true;}assert(bad);bad=false;try{output_index(81,4,4);}catch(...){bad=true;}assert(bad);}\n'''
-            (p/'t.cpp').write_text(code);subprocess.run([compiler,'-std=c++17','-I',str(ROOT),str(p/'t.cpp'),'-o',str(p/'t')],check=True,capture_output=True);subprocess.run([str(p/'t')],check=True)
+            (p/'t.cpp').write_text(code);subprocess.run([*compiler_command,'-std=c++17','-I',str(ROOT),str(p/'t.cpp'),'-o',str(p/'t')],check=True,capture_output=True);subprocess.run([str(p/'t')],check=True)
     def test_no_default_Qwen_patch(self):self.assertIn('native.stage(repo,out,roles,False)',(ROOT/'native_stage.py').read_text())
     def test_diagnostic_not_reference(self):self.assertIn('"source_is_canonical_R",false',(ROOT/'llama_probe.hpp').read_text())
     def test_no_task_specific_native_branch(self):

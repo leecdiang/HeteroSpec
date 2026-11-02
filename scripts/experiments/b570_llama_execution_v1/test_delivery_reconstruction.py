@@ -10,6 +10,9 @@ class ReconstructionTests(unittest.TestCase):
             pack(raw,p/'archive',limit=260);result=verify(p/'archive');self.assertEqual(result['files'],4);self.assertEqual(result['objects'],3)
             restore(p/'archive',p/'restored')
             for f in raw.iterdir():self.assertEqual(f.read_bytes(),(p/'restored'/f.name).read_bytes())
+            restore(p/'archive',p/'selected',('a.state',),('failed.log',))
+            self.assertEqual({x.name for x in (p/'selected').iterdir()},{'a.state','failed.log','RESTORE_RECEIPT.json'})
+            self.assertEqual(read(p/'selected/RESTORE_RECEIPT.json')['status'],'EXACT_SELECTED_RECONSTRUCTION_PASS')
             first=read(p/'archive/INDEX.json')['parts'][0]['name'];f=p/'archive'/first;f.write_bytes(f.read_bytes()+b'tampered')
             with self.assertRaises(ValueError):verify(p/'archive')
     def test_independent_acceptance_and_rejection(self):

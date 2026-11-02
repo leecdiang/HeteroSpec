@@ -25,7 +25,7 @@ def run(root,remote,tag,commit):
             found.extend(batch)
             if len(batch)<100:return found
             page+=1
-    write(remote/'RELEASE_BEFORE.json',release);upload=release['upload_url'].split('{')[0];assets={a['name']:a for a in all_assets()};index=read(root/'INDEX.json');names=[p['name'] for p in index['parts']]+['INDEX.json','MEMBERS.json']
+    write(remote/'RELEASE_BEFORE.json',release);upload=release['upload_url'].split('{')[0];assets={a['name']:a for a in all_assets()};index=read(root/'INDEX.json');names=[p['name'] for p in index['parts']]+['INDEX.json','MEMBERS.json','object_archive.py','independent_qualification.py','independent_cost.py','independent_ledger.py','README.md']
     pins=[{'name':n,'bytes':(root/n).stat().st_size,'sha256':sha(root/n)} for n in names];manifest=root/'DELIVERY_ASSETS.json'
     if manifest.exists():need(read(manifest)['assets']==pins,'delivery manifest changed')
     else:write(manifest,{'assets':pins,'release_tag':tag,'source_commit':commit,'local_verification':local})

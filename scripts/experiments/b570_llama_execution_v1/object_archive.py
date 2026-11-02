@@ -63,22 +63,25 @@ def verify(root):
     for f in members:
         p=Path(f['path']);need(not p.is_absolute() and '..' not in p.parts and f['path'] not in paths,'safe unique logical member');paths.add(f['path']);need(objects[f['sha256']]==f['bytes'],'complete logical mapping')
     need(len(paths)==index['logical_files'] and len(objects)==index['unique_objects'],'declared inventory');return {'status':'ALL_LOGICAL_MEMBERS_VERIFIED','files':len(paths),'objects':len(objects),'parts':len(index['parts']),'index_sha256':sha(root/'INDEX.json')}
-def restore(root,out):
+def restore(root,out,prefixes=(),tails=()):
     root=Path(root);out=Path(out);need(not out.exists(),'fresh reconstruction root');verify(root);index=read(root/'INDEX.json');members=read(root/'MEMBERS.json')['files'];by_hash=collections.defaultdict(list)
+    if prefixes or tails:members=[f for f in members if any(f['path']==prefix or f['path'].startswith(prefix.rstrip('/')+'/') for prefix in prefixes) or any(f['path'].endswith(tail) for tail in tails)]
+    need(members,'nonempty selected reconstruction')
     for f in members:by_hash[f['sha256']].append(f)
     out.mkdir(parents=True)
     for part in index['parts']:
         with zipfile.ZipFile(root/part['name']) as z:
             for o in part['objects']:
+                if o['sha256'] not in by_hash:continue
                 for f in by_hash[o['sha256']]:
                     p=out/f['path'];need(p.resolve().is_relative_to(out.resolve()),'confined restore');p.parent.mkdir(parents=True,exist_ok=True)
                     with z.open('objects/'+o['sha256']) as src,p.open('xb') as dest:
                         while b:=src.read(4*1024**2):dest.write(b)
                     need(sha(p)==f['sha256'],'restored file mismatch')
-    write(out/'RESTORE_RECEIPT.json',{'status':'EXACT_LOGICAL_RECONSTRUCTION_PASS','files':len(members),'index_sha256':sha(root/'INDEX.json')})
+    write(out/'RESTORE_RECEIPT.json',{'status':'EXACT_SELECTED_RECONSTRUCTION_PASS' if prefixes or tails else 'EXACT_LOGICAL_RECONSTRUCTION_PASS','selected_prefixes':list(prefixes),'selected_tails':list(tails),'files':len(members),'all_archive_objects_verified':True,'index_sha256':sha(root/'INDEX.json')})
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('command',choices=['pack','verify','restore']);p.add_argument('--root',required=True);p.add_argument('--out');p.add_argument('--limit',type=int,default=512*1024**2);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('command',choices=['pack','verify','restore']);p.add_argument('--root',required=True);p.add_argument('--out');p.add_argument('--prefix',action='append',default=[]);p.add_argument('--tail',action='append',default=[]);p.add_argument('--limit',type=int,default=512*1024**2);a=p.parse_args()
     if a.command=='pack':pack(a.root,a.out,a.limit)
-    elif a.command=='restore':restore(a.root,a.out)
+    elif a.command=='restore':restore(a.root,a.out,a.prefix,a.tail)
     else:print(verify(a.root))

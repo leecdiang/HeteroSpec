@@ -4,9 +4,9 @@ import argparse,sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'b570_llama_companion_v1'))
 from common import read,write,need,sha,endpoint
 
-def compare(a,b,out):
+def compare(a,b,out,reference_only=False):
     a=Path(a);b=Path(b);rows=[]
-    for role in ('oracle','candidate'):
+    for role in (('oracle',) if reference_only else ('oracle','candidate')):
         sa=read(a/f'units/baseline-{role}/SLOTS.json');sb=read(b/f'units/baseline-{role}/SLOTS.json');need(sa==sb,'identical complete natural schedule')
         for s in sa:
             pa=a/f'units/baseline-{role}/native'/s['id'];pb=b/f'units/baseline-{role}/native'/s['id'];ra=read(pa.with_suffix('.json'));rb=read(pb.with_suffix('.json'))
@@ -14,7 +14,7 @@ def compare(a,b,out):
             va={p.relative_to(pa).as_posix():sha(p) for k in ('target','draft') for p in (pa/k).glob('*.f32')};vb={p.relative_to(pb).as_posix():sha(p) for k in ('target','draft') for p in (pb/k).glob('*.f32')}
             need(va==vb,'complete saved vector set not restored')
             rows.append({'role':role,'slot':s['id'],'vectors':len(va),'original_record_sha256':sha(pa.with_suffix('.json')),'ablation_record_sha256':sha(pb.with_suffix('.json'))})
-    write(out,{'status':'COMPLETE_FACTOR_REVERSAL_PASS','requests':len(rows),'vectors':sum(x['vectors'] for x in rows),'original_epoch':str(a),'ablation_epoch':str(b),'rows':rows,'scope':'Full endpoint/cycle and every saved target/draft vector; not just the first failure or a successful subset'})
+    write(out,{'status':'FROZEN_REFERENCE_STABILITY_PASS' if reference_only else 'COMPLETE_FACTOR_REVERSAL_PASS','requests':len(rows),'vectors':sum(x['vectors'] for x in rows),'original_epoch':str(a),'ablation_epoch':str(b),'rows':rows,'scope':'Full endpoint/cycle and every saved target/draft vector; not just the first failure or a successful subset'})
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--original',required=True);p.add_argument('--ablation',required=True);p.add_argument('--out',required=True);a=p.parse_args();compare(a.original,a.ablation,a.out)
+    p=argparse.ArgumentParser();p.add_argument('--original',required=True);p.add_argument('--ablation',required=True);p.add_argument('--out',required=True);p.add_argument('--reference-only',action='store_true');a=p.parse_args();compare(a.original,a.ablation,a.out,a.reference_only)

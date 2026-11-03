@@ -1,6 +1,8 @@
 """Publish compact results only after both qualifications and all registered blocks pass."""
 from pathlib import Path
 import shutil
+import math
+import json
 from focused import ROOT, read, save, digest
 
 DEST=Path(__file__).resolve().parent
@@ -30,16 +32,35 @@ def main():
         files=["QUALIFICATION.json","QUALIFICATION_PASS.json","TIMING_PLAN.json","COST.json","PANEL.json","CANDIDATE_FREEZE.json","EPOCH.json"]
         folder=out/fam;folder.mkdir()
         for n in files:shutil.copy2(b/n,folder/n)
+        event_times={}
         times=[]
         for session in range(3):
             u=b/"units"/cost["units"][str(session)]
             assert read(u/"RECEIPT.json")["completed_requests"]==40
             rows=[read(u/"native"/(s["slot_id"]+".json")) for s in read(u/"SLOTS.json")]
+            events=[json.loads(l) for l in (u/"EVENTS.jsonl").read_text(encoding="utf-8").splitlines()]
+            completed=[e for e in events if e["event"]=="REQUEST_COMPLETED"]
+            assert [e["slot_id"] for e in completed]==[r["slot"]["slot_id"] for r in rows]
+            for event,row in zip(completed,rows):
+                assert event["service_seconds"]==row["service_seconds"]
+                if row["slot"]["category"]=="measured":
+                    event_times.setdefault((row["input_id"],row["arm"]),[]).append(event["service_seconds"])
             for warm,measured in zip(rows[::2],rows[1::2]):
                 assert warm["slot"]["category"]=="warmup" and measured["slot"]["category"]=="measured"
                 assert warm["arm"]==measured["arm"] and warm["input_id"]==measured["input_id"]
             times.append(dict(session=session,load=read(u/"native/PROVISIONED.json")["model_load_seconds"],
                               requests=[dict(slot=r["slot"]["slot_id"],arm=r["arm"],input=r["input_id"],seconds=r["service_seconds"]) for r in rows]))
+        checked={}
+        for key,published in cost["ratios"].items():
+            numerator,denominator=key.split("/")
+            ratios=[]
+            for item in read(b/"PANEL.json")["inputs"]:
+                left=event_times[item["id"],numerator];right=event_times[item["id"],denominator]
+                assert len(left)==len(right)==3
+                ratios.append(math.fsum(left)/math.fsum(right))
+            checked[key]=math.prod(ratios)**(1/len(ratios))
+            assert math.isclose(checked[key],published,rel_tol=1e-12)
+        save(folder/"EVENT_COST_CHECK.json",dict(source="Native completion events checked against registered order and per-request service records",ratios=checked))
         reference_seconds=read(b/"units/original/RECEIPT.json")["seconds"]
         qualification_seconds=read(b/"units/qualification/RECEIPT.json")["seconds"]
         warm=sum(r["seconds"] for session in times for r in session["requests"] if r["slot"].endswith("/warmup"))
@@ -86,7 +107,7 @@ def main():
     for fam in FAMILIES:
         lines.append(f"{fam} recorded {freeze['families'][fam]['scalar_override_events']} host-weight placement queries where scalar and batch preferences differed and the scalar preference was selected.")
         lines.append("")
-    lines.extend(["","PR159 recorded twelve failing input/arm/producer combinations across GSM8K/test/111 and GSM8K/test/120. Two identical recipes were covered before freeze. A review of the historical failure ledger found ten missing recipes; these were tested after the fixed panel, using the same frozen binary. PR159_RECIPE_AUDIT.json records the historical first differing token, the exact old and new record identities and the complete committed-vector comparison for each recipe."])
+    lines.extend(["","PR159 recorded twelve failing input/arm/producer combinations across GSM8K/test/111 and GSM8K/test/120. Two identical recipes were covered before freeze. A review of the historical failure ledger found ten missing recipes; these were tested after the fixed panel, using the same frozen binary. R/pq and R/qb are historical alternate-producer diagnostics. Every recipe uses the unchanged original R as its oracle. PR159_RECIPE_AUDIT.json records the historical first differing token, the exact old and new record identities and the complete committed-vector comparison for each recipe."])
     lines.extend(["","| PR159 input | Arm | Producer | Historical first token difference (zero-based) | Frozen endpoint | Different committed vectors |",
         "|---|---|---|---:|---|---:|"])
     for c in read(ROOT/"PR159_RECIPE_AUDIT.json"):

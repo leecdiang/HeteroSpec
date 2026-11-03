@@ -45,6 +45,7 @@ def main():
         failed=read(old_path)
         assert failed["input_id"]==oracle["input_id"] and failed["prompt_ids"]==oracle["prompt_ids"]
         assert oracle["endpoint"]==read(epoch/"DEV_REFERENCES.json")[s["input_id"]]
+        assert failed["endpoint"]!=oracle["endpoint"]
         if key in reused:
             unit="focused";slot=reused[key]
         else:

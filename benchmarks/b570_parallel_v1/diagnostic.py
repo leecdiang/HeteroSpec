@@ -39,4 +39,3 @@ def inspect(rows):
         a=np.concatenate([value(p,c) for c in left],axis=3);bb=value(b,right[0])
         print(field,a.shape,bb.shape,'different per row',np.sum(a.view('u4')!=bb.view('u4'),axis=(0,1,2)).tolist(),flush=True)
 if __name__=='__main__':inspect(observe('smol',4096,256,8,False,'candidate-capture',['PQ','QB'],True))
-

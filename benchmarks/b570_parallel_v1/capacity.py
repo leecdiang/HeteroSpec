@@ -20,4 +20,3 @@ def smoke():
             n=run(f'first-{fam}-{C}-{a}','candidate-B',job(fam,C,[slot(fam,C,p,a,True) for p in points]),allow_failure=True)
             print(fam,C,a,[(r['slot']['base'],len(r['vectors']),r['vectors']==ref['vectors']) for r,ref in zip(n.get('records',[]),rs.get('records',[]))],flush=True)
 if __name__=='__main__':investigate();smoke()
-

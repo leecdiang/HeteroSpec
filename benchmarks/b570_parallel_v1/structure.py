@@ -87,4 +87,3 @@ if __name__=='__main__':
         compare('qwen',1024,key,role,points,'pilot')
     elif sys.argv[1]=='qual':
         for fam,C,key in configurations(role):compare(fam,C,key,role)
-

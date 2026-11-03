@@ -36,4 +36,3 @@ def prepare():
     write(POOL/'eligible-v3.json',kept)
     print(collections.Counter((r['domain'],r['band']) for r in kept))
 if __name__=='__main__':prepare()
-

@@ -20,4 +20,3 @@ def once(s,a,b):
     return s.replace(a,b,1)
 def command(cmd,log):
     with Path(log).open('x',encoding='utf-8') as f:subprocess.run(list(map(str,cmd)),stdout=f,stderr=subprocess.STDOUT,check=True)
-

@@ -50,9 +50,11 @@ def recompute(root,verify=False):
         k=f"{r['family']}/{r['C']}/{r['arm']}"
         c=stats.setdefault(k,{'equal':0,'attempted_cells':0,'observed':0,'reference_available':0})
         c['attempted_cells']+=1;c['observed']+=int(r['observed']);c['reference_available']+=int(r['ref']);c['equal']+=int(r['equal'])
-    return dict(controls=stats,fixed=fx,natural=natural,owned_seconds=sum(r.get('owned_seconds',0) for r in spent),
+    from contrast import crossing_contrast,forecast
+    from verify_raw import verification
+    return dict(controls=stats,fixed=fx,natural=natural,crossing_effect=crossing_contrast(times),held_out_forecast=forecast(times),
+        raw_validation=verification(root) if verify else None,owned_seconds=sum(r.get('owned_seconds',0) for r in spent),
         process_seconds=sum(r.get('process_seconds',0) for r in spent),units=len(spent),unsuccessful_units=sum(not r.get('success',False) for r in spent),verified_unique_vectors=len(checked))
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('--verify-objects',action='store_true')
     a=p.parse_args();print(json.dumps(recompute(a.root,a.verify_objects),indent=2))
-

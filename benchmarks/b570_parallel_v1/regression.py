@@ -13,6 +13,13 @@ def qwen():
     new=slots_run('D-P1-anchor',ROLE,'qwen',1024,slots)
     anchors=[dict(index=i,compared=len(r['vectors']) if r else 0,equal=bool(r and r['vectors']==old['vectors'] and r['greedy']==old['greedy'])) for i,r,old in zip((4,6,2),new,original)]
     put_once(ROOT/'D_P1_ANCHOR.json',anchors)
+    wide=[]
+    for a in ('PQ','QB','WB'):
+        rows=slots_run('D-P1-wide-'+a,ROLE,'qwen',1024,[dict(s,arm=a,ub=32) for s in slots])
+        for i,r,old in zip((4,6,2),rows,original):
+            wide.append(dict(index=i,arm=a,remainder=len(old['slot']['ids'])%32,observed=r is not None,
+                equal=bool(r and r['vectors']==old['vectors'] and r['greedy']==old['greedy'])))
+    put_once(ROOT/'D_P1_WIDE.json',wide)
     role='legacy-D';dest=ROOT/role;bin=dest/'bin'
     if not (dest/'FILES.json').exists():
         bin.mkdir(parents=True)
@@ -37,4 +44,3 @@ def qwen():
         results.append(dict(index=i,status=d['status'],matches_PR165=eq))
     put_once(ROOT/'K1_REGRESSION.json',results)
 if __name__=='__main__':{'llama':llama,'qwen':qwen}[sys.argv[1]]()
-

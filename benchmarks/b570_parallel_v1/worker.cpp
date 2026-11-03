@@ -199,4 +199,3 @@ int main(int argc,char**argv){
   clean();result["status"]="COMPLETE";result["min_free_device"]=free_gpu_min;result["min_free_ram"]=free_ram_min;save(root/"result.json",result);return 0;
  }catch(const std::exception&e){clean();result["status"]="FAILED";result["error"]=e.what();result["min_free_device"]=free_gpu_min;result["min_free_ram"]=free_ram_min;if(fs::is_directory(root))save(root/"result.json",result);return 2;}
 }
-

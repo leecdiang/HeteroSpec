@@ -53,6 +53,7 @@ def control(fam,C):
     put_once(ROOT/f'CONTROL-{fam}-{C}.json',records)
 def fixed(fam,C):
     checks=read(ROOT/f'CONTROL-{fam}-{C}.json')
+    scalar=read(ROOT/f'SCALAR-{fam}-{C}.json')
     for rep in range(3):
         for B in sorted({r['B'] for r in checks}):
             group=[r for r in checks if r['B']==B]
@@ -60,11 +61,26 @@ def fixed(fam,C):
             # ordering within each replicate, without looking at any timing.
             group.sort(key=lambda r:hashval(['common-state-v1',rep,r['head'],r['q'],r['arm']]))
             ss=[slot(fam,C,r,r['arm'],False) for r in group]
+            for s in ss:
+                if s['arm']=='S1':s['ub']=1
             rows=slots_run(f'timeB-{fam}-{C}-b{B}-r{rep}',ROLE,fam,C,ss)
             table=[]
             for g,r in zip(group,rows):
+                if g['arm']=='S1':g=next(x for x in scalar if x['head']==g['head'] and x['q']==g['q'])
                 if r and g['greedy'] is not None:assert r['greedy']==g['greedy']
                 table.append(dict(family=fam,C=C,B=B,head=g['head'],q=g['q'],arm=g['arm'],groups=g['groups'],rep=rep,qualified=g['equal'],seconds=r['seconds'] if r else None,calls=r['graph_calls'] if r else None))
             put_once(ROOT/f'TIMES-{fam}-{C}-b{B}-r{rep}.json',table)
+def strong_scalar(fam,C):
+    # The serial method only needs a one-row context, even when the logical
+    # teacher query supplies 32 known tokens. Preserve the matched-UB controls.
+    checks=[r for r in read(ROOT/f'CONTROL-{fam}-{C}.json') if r['arm']=='S1']
+    result=[]
+    for B,it in groupby(checks,key=lambda r:r['B']):
+        rows=list(it)
+        slots=[dict(slot(fam,C,p,'S1',True),ub=1) for p in rows]
+        rr=slots_run(f'scalar1-{fam}-{C}-b{B}',ROLE,fam,C,slots)
+        for g,r in zip(rows,rr):
+            v=r['vectors'] if r else None
+            result.append(dict(g,actual_vectors=v,observed=bool(r),greedy=r['greedy'] if r else None,equal=bool(v and v==g['reference_vectors'])))
+    put_once(ROOT/f'SCALAR-{fam}-{C}.json',result)
 if __name__=='__main__':{'control':control,'fixed':fixed}[sys.argv[1]](sys.argv[2],int(sys.argv[3]))
-

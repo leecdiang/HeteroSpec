@@ -4,7 +4,7 @@ from natural import select
 METHODS=['S1','PQ','QB','WB']
 WILLIAMS=[[0,1,3,2],[1,2,0,3],[2,3,1,0],[3,0,2,1]]
 def natural_slot(r,arm,ub,heavy,stage):
-    return dict(kind='natural',arm=arm,ub=ub,ids=r['prompt_ids'],cap=128,heavy=heavy,stage=stage)
+    return dict(kind='natural',arm=arm,ub=1 if arm=='S1' else ub,ids=r['prompt_ids'],cap=128,heavy=heavy,stage=stage)
 def setup_panel():
     if not (ROOT/'NATURAL_PANEL.json').exists():select()
     rows=read(ROOT/'NATURAL_PANEL.json')['rows'];plan=[]
@@ -14,6 +14,7 @@ def setup_panel():
             for a in WILLIAMS[(block+sess)%4]:
                 plan.append(dict(session=sess,block=block,i=i,arm=METHODS[a]))
     put_once(ROOT/'NATURAL_SCHEDULE.json',plan)
+    put_once(ROOT/'FAST_SCHEDULE.json',[dict(i=i,session=i//2,position='before' if i%2==0 else 'after') for i in range(12)])
     return rows,plan
 def confirm():
     rows,_=setup_panel();freeze=read(ROOT/'FREEZE.json');role=freeze['role'];report=[]
@@ -26,17 +27,32 @@ def confirm():
     put_once(ROOT/'NATURAL_QUAL.json',report)
 def costs():
     panel,plan=setup_panel();freeze=read(ROOT/'FREEZE.json');qual=read(ROOT/'NATURAL_QUAL.json')
-    summary=[]
+    summary=[];native=[]
+    def fast(i,sess):
+        s=[natural_slot(panel[i],'FAST',freeze['width'],False,stage) for stage in ('warmup','measure')]
+        unit=f'paired-native-{i:02d}'
+        n=run(unit,freeze['role'],job('qwen',1024,s),allow_failure=True)
+        rr=n.get('records',[])
+        q=next(x for x in qual if x['i']==i and x['arm']=='FAST')
+        if len(rr)==2 and q['actual_ids']:assert all(x['greedy']==q['actual_ids'] for x in rr)
+        native.append(dict(i=i,id=panel[i]['id'],session=sess,unit=unit,qualified=q['equal'],seconds=rr[1]['seconds'] if len(rr)==2 else None,error=n.get('error')))
     for k,b in enumerate(plan):
         i=b['i'];a=b['arm'];expected=next(x for x in qual if x['i']==i and x['arm']==a)
+        if b['session']==i//2 and i%2==0 and k%4==0:fast(i,b['session'])
         ss=[natural_slot(panel[i],a,freeze['width'],False,s) for s in ('warmup','measure')]
-        n=run(f'paired-{k:03d}',freeze['role'],job('qwen',1024,ss),timeout=1200,allow_failure=True)
+        unit=f'paired-{k:03d}'
+        n=run(unit,freeze['role'],job('qwen',1024,ss),timeout=1200,allow_failure=True)
         if len(n.get('records',[]))!=2 and n.get('error') in ('128 MiB device reserve','2 GiB host reserve'):
-            n=run(f'paired-{k:03d}-retry',freeze['role'],job('qwen',1024,ss),timeout=1200,allow_failure=True)
+            unit+='-retry'
+            n=run(unit,freeze['role'],job('qwen',1024,ss),timeout=1200,allow_failure=True)
         rs=n.get('records',[]);measured=rs[1] if len(rs)==2 else None
         if measured and expected['actual_ids'] is not None:assert all(v['greedy']==expected['actual_ids'] for v in rs)
-        summary.append(dict(**b,id=panel[i]['id'],qualified=expected['equal'],seconds=measured['seconds'] if measured else None,
+        receipt=read(ROOT/'units'/unit/'RECEIPT.json')
+        summary.append(dict(**b,id=panel[i]['id'],unit=unit,qualified=expected['equal'],seconds=measured['seconds'] if measured else None,
+            warmup_seconds=rs[0]['seconds'] if rs else None,process_seconds=receipt['process_seconds'],owned_seconds=receipt['owned_seconds'],
             graph_calls=measured['graph_calls'] if measured else None,load_seconds=n.get('load_seconds'),error=n.get('error')))
+        if b['session']==i//2 and i%2==1 and k%4==3:fast(i,b['session'])
     put_once(ROOT/'NATURAL_COST.json',summary)
+    assert len(native)==12
+    put_once(ROOT/'FAST_COST.json',native)
 if __name__=='__main__':{'confirm':confirm,'cost':costs}[sys.argv[1]]()
-

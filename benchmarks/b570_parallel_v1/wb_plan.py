@@ -27,4 +27,3 @@ extern "C" LLAMA_API int hs_parallel_groups(llama_context *ctx,uint32_t rows,uin
 '''
     cpp.write_text(s,encoding='utf-8',newline='\n')
 if __name__=='__main__':apply(ROOT/'source-00')
-

@@ -30,4 +30,3 @@ def references():
         assert hashes==row['vectors'] and ref['endpoint']['ids']==row['greedy']
     write(ROOT/'ORIGINAL_ANCHOR.json',dict(status='ORIGINAL_384_VECTORS_PRESERVED',source_manifest=sha(ROOT/'reference/FILES.json')))
 if __name__=='__main__':references()
-

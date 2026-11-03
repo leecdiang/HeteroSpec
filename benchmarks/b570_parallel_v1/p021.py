@@ -26,4 +26,3 @@ def apply(src):
     s=s.replace('const uint iy = ','const uint iy = query*p.query_stride_b + ')
     s=once(s,'const uint idst = ','const uint idst = query*p.query_stride_d + ')
     p.write_text(s,encoding='utf-8',newline='\n')
-

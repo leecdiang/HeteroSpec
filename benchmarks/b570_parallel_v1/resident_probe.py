@@ -18,4 +18,3 @@ def probe():
                     measures.append(dict(unit=name,status=result['status'],min_free=result.get('min_free_device')))
     put_once(ROOT/'DEVICE_LOCAL_PROBE.json',measures)
 if __name__=='__main__':probe()
-

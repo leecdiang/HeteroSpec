@@ -13,4 +13,3 @@ def run_controls(role):
                  vectors=r['vectors'] if r else None,equal=bool(original and r and original['vectors']==r['vectors'] and original['greedy']==r['greedy'])))
     put_once(ROOT/f'SMOL_INTACT-{role}.json',rows)
 if __name__=='__main__':run_controls(sys.argv[1])
-

@@ -89,4 +89,3 @@ if __name__=='__main__':
     os.environ['VULKAN_SDK']='C:/VulkanSDK/1.4.357.0';os.environ['PATH']=os.environ['VULKAN_SDK']+'/Bin;'+os.environ['PATH']
     command(['cmake','-S',KIT,'-B',ROOT/'build-00','-G','Visual Studio 17 2022','-A','x64','-DLLAMA_SOURCE='+(ROOT/'source-00').as_posix(),'-DHS_COMPANION_ORACLE=OFF','-DCMAKE_PREFIX_PATH=C:/VulkanSDK/1.4.357.0','-DLLAMA_BUILD_NUMBER=10839','-DLLAMA_BUILD_COMMIT=0cae43063'],ROOT/'configure.log')
     command(['cmake','--build',ROOT/'build-00','--config','Release','--parallel','4'],ROOT/'build.log')
-

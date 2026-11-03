@@ -15,4 +15,3 @@ def bind_source(role):
         compiled_source=actual,pr166_core_commit='abd36bea639bf814159ad68ab015bc983c5338b1',rtx_integrated_commit='9c79594f679ea4aad1956d8a385fdf6a7352d892',
         common_git_blob='a0baff824a1b54fb3867845372939b9a97c11115',cmake_cache_sha256=sha(ROOT/'build-00/CMakeCache.txt'),first_receipt=sha(ROOT/'SOURCE.json')))
 if __name__=='__main__':bind_source(sys.argv[1])
-

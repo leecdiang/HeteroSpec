@@ -21,4 +21,3 @@ def configs():
     if admitted('smol',4096):out.append(('smol',4096))
     return out
 if __name__=='__main__':gates();print(configs())
-

@@ -94,4 +94,3 @@ if __name__=='__main__':
     setup();role=sys.argv[1]
     if role.startswith('reference'):driver(role,OLD_LIB/'clean-source2/llama.cpp-0cae43063cf15170e91a2ff4d034da0ecef4a1b2',OLD_LIB/'build',False)
     else:driver(role,ROOT/'source-00',ROOT/'build-00',True)
-

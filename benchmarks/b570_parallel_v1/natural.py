@@ -2,6 +2,7 @@
 from host import *
 import collections
 import gzip
+from datetime import datetime,timezone
 from urllib.request import urlopen
 L=Path('I:/HeteroSpec/b570-llama-20261102')
 POOL=ROOT/'pool'
@@ -101,6 +102,7 @@ def select():
                 used.update(keys);picked.append(r)
                 if len(picked)==2:break
             assert len(picked)==2;panel.extend(picked)
-    write(ROOT/'NATURAL_PANEL.json',dict(freeze=sha(ROOT/'FREEZE.json'),pool=sha(POOL/'eligible-v3.json'),rows=panel))
+    evidence=[L/'EXPOSURE_AUDIT-00.json',L/'research/EXPOSURE.jsonl',L/'UNSEEN_PANEL-00.json',DATA,PR165/'UNSEEN.json',
+              POOL/'rtx-parallel-panel.json',*sorted(POOL.glob('*_PANEL.json'))]
+    write(ROOT/'NATURAL_PANEL.json',dict(selected_utc=datetime.now(timezone.utc).isoformat(),freeze=sha(ROOT/'FREEZE.json'),pool=sha(POOL/'eligible-v3.json'),exclusions=[dict(path=str(p),sha256=sha(p)) for p in evidence],rows=panel))
 if __name__=='__main__':{'pool':prepare,'supplement':supplement,'select':select}[sys.argv[1]]()
-

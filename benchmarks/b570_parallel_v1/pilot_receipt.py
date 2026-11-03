@@ -18,4 +18,3 @@ def write_pilot():
         receipts.append(dict(name=folder.name,**receipt,minimum_device=n.get('min_free_device'),minimum_host=n.get('min_free_ram'),error=n.get('error'),native_sha256=sha(folder/'native/result.json') if n else None))
     put_once(dest/'first-pilots.json',dict(status='development',anchor=read(ROOT/'ORIGINAL_ANCHOR.json'),cells=experiments,receipts=receipts))
 if __name__=='__main__':write_pilot()
-

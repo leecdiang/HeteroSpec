@@ -15,4 +15,3 @@ def apply(src):
         b.out=columns.front();
         return b;''')
     p.write_text(s,encoding='utf-8',newline='\n')
-

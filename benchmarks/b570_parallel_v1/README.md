@@ -21,4 +21,3 @@ The path bindings in `paths.py` identify the original PR152 numeric libraries, t
 ## Development evidence
 
 `evidence/first-pilots.json` reports all cells from the first B=256 experiments, including unmeasured cells and process failures. Qwen C1024 used the preliminary mapping. SmolLM2-1.7B C4096 used the stronger balanced PQ join. Their development measurements cannot establish final service performance.
-

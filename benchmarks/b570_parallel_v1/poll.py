@@ -54,4 +54,3 @@ def measure():
         comp[arm]={'on/off':math.exp(math.fsum(map(math.log,ratios))/len(ratios)) if ratios else None,'ratios':ratios,'pairs':len(ratios)}
     write(ROOT/'POLL_RESULT.json',dict(rows=totals,contrasts=comp))
 if __name__=='__main__':setup();{'build':build,'run':measure}[sys.argv[1]]()
-

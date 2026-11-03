@@ -13,4 +13,3 @@ def check():
         if a in records:records[a]['equal']=records[a]['vectors']==records['S1']['vectors']
     put_once(ROOT/'REUSE.json',records)
 if __name__=='__main__':check()
-

@@ -10,8 +10,11 @@ def make():
     for name,h in known.items():
         p=PR165/'repro'/name;assert sha(p)==h
         s=p.read_text(encoding='utf-8')
+        if name=='object_archive.py':
+            s=once(s,'b570-qwen-transfer-native-evidence','b570-parallel-native-evidence')
         if name=='publish_delivery.py':
             s=s.replace('B570 Qwen structural transfer evidence','B570 physical-prefix parallelism evidence').replace('B570 PR165','B570 PR169')
+            s=once(s,"'recompute.py','README.md'","'recompute.py','verify_raw.py','contrast.py','README.md'")
         (repo/name).write_text(s,encoding='utf-8',newline='\n')
     # Every native unit, checkpoint, vector, failure and log remains under its
     # original relative path. We exclude only regenerable intermediate builds.
@@ -21,7 +24,7 @@ def make():
     import object_archive
     assert (ROOT/'NATURAL_COST.json').is_file() and (ROOT/'FREEZE.json').is_file()
     object_archive.pack(ROOT,PACK)
-    for name in ('object_archive.py','recompute.py','README.md'):shutil.copyfile(repo/name,PACK/name)
+    for name in ('object_archive.py','recompute.py','contrast.py','verify_raw.py','README.md'):shutil.copyfile(repo/name,PACK/name)
     object_archive.verify(PACK)
 def publish(commit):
     sys.path.insert(0,str(ROOT/'repro'))
@@ -30,4 +33,3 @@ def publish(commit):
 if __name__=='__main__':
     if sys.argv[1]=='pack':make()
     elif sys.argv[1]=='publish':publish(sys.argv[2])
-

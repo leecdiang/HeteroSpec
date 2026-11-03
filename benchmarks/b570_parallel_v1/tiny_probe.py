@@ -16,4 +16,3 @@ def probe():
         for p,r,s in zip(pts,cand,refs):out.append(dict(**p,arm=a,actual=r['vectors'] if r else None,reference=s['vectors'] if s else None,equal=bool(r and s and r['vectors']==s['vectors'])))
     put_once(ROOT/'TINY_RESULT.json',out)
 if __name__=='__main__':probe()
-

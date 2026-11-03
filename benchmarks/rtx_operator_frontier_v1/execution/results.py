@@ -24,6 +24,18 @@ def audit():
             assert hashes["input"]==op["inputs"]["input"] and hashes["live32"]==routes[32,"wide"] and hashes["scalar32"]==hashes["packed32"]==routes[32,"scalar"] and hashes["native8"]==routes[8,"wide"]
     matrix=read("matrix-vectors.json.gz");assert len(matrix)==840 and all(r["actual"]==r["oracle"] for r in matrix)
     geom=read("coordinates.json");assert len(geom)==40 and all(r["actual_calls"]==r["predicted_calls"] for r in geom)
+    observed=read("graph-observations.json.gz");activities=read("append-activities.json.gz")
+    for r in geom:
+        key=f"c{r['cell']}-{r['arm']}"
+        nodes=observed[key]["nodes"]
+        assert [x["tensor"]["ne"] for x in nodes if x["tensor"]["name"]=="kq-0"]==r["qk"]
+        assert [x["tensor"]["ne"] for x in nodes if x["tensor"]["name"]=="kqv-0"]==r["av"]
+        assert sum(e["kind"]=="kernel" for e in activities[key])==r["kernels"]
+        row=0
+        for qk,av in zip(r["qk"],r["av"]):
+            assert qk[0]==256*((r["head"]+row)//256+1) and qk[3]==av[3]
+            row+=qk[3]
+        assert row==r["width"]
     costs=read("append-cost.json.gz");plan=read("matrix-plan.json")["plan"]
     assert len(plan)==len(costs)==120
     for p,c in zip(plan,costs):
@@ -65,6 +77,16 @@ def main():
        "## Active KV boundaries","",
        "Each cell restores a scalar R prefix from the same serialized state. P was measured as 256. Five paths matched all 800 appended vocabulary vectors and 40 subsequent continuation vectors. The append clock includes splitting, graph work, materialization, compute and synchronization. All 120 measured appends have an immediate same-arm warmup from identical state. The table gives geometric means in milliseconds over three paired blocks.","",
        "| Boundary | Head | q | Cross | S1 | QB4 | WB4 | New QB | New WB | New WB / QB |","|---:|---:|---:|:---:|---:|---:|---:|---:|---:|---:|"]
+    where=text.index("## Active KV boundaries")
+    attribution=["### Diagnostic attribution at 32 columns","","All entries are microseconds. CPU definition includes creating the graph arena and nodes. Submit/wait are medians after the initial run, without CUPTI. The kernel sum is from the separate trace and excludes transfer activities.","",
+        "| Operator | Implementation | CPU graph definition | Host submit | Synchronization wait | GPU kernel sum |","|---|---|---:|---:|---:|---:|"]
+    for op in ops:
+        name=op["descriptor"]["weight"]["name"]
+        if op["model"]=="8B" and name in ("blk.0.attn_q.weight","blk.0.ffn_down.weight","output.weight"):
+            for r in op["routes"]:
+                if r["q"]==32 and r["route"] in ("tile","packed"):
+                    attribution.append(f"| {name} | {r['route']} | {1e6*r['plan_s']:.1f} | {1e6*statistics.median(r['submit_s'][1:]):.1f} | {1e6*statistics.median(r['sync_s'][1:]):.1f} | {1000*r['activity']['kernel_ms']:.1f} |")
+    text[where:where]=attribution+[""]
     blocks={(r["cell"],r["block"],r["arm"]):r["measured"]["append_s"] for r in cost}
     arms=["S1","QB4","WB4","newQB","newWB"]
     ratios={}
@@ -72,7 +94,7 @@ def main():
         v={a:gm([blocks[i,s,a] for s in range(3)]) for a in arms}
         ratios[i]=v["newWB"]/v["newQB"]
         text.append(f"| {b} | {h} | {q} | {'yes' if cross else 'no'} | "+" | ".join(f"{1000*v[a]:.2f}" for a in arms)+f" | {ratios[i]:.3f} |")
-    text+=["",f"New WB time / new QB time is {gm([ratios[i] for i in (0,2,4,6)]):.3f}× for noncrossing cells and {gm([ratios[i] for i in (1,3,5,7)]):.3f}× for crossing cells. The coordinates have deliberately balanced cut density. Their average has no deployment-frequency interpretation.","",
+    text+=["",f"New WB time / new QB time is {gm([ratios[i] for i in (0,2,4,6)]):.3f}× for noncrossing cells and {gm([ratios[i] for i in (1,3,5,7)]):.3f}× for crossing cells. When q8 crosses, WB splits into three and five rows; neither subgraph can use an eight-column packed operator. When q32 crosses, its 29-row second graph still packs 28 columns. The coordinates have deliberately balanced cut density. Their average has no deployment-frequency interpretation.","",
        "Every QK and AV row group agreed with the registered geometry. At B1024/H1021, q32 uses extents 1024 then 1280 with QK/AV groups 3+4+4+4+4+4+4+4+1. Local submits [32], whereas WB submits [3,29]. Local Q projection uses one [output,4,8] matmul. WB restarts at the boundary and uses three columns in the first graph, then seven four-column groups and a one-column tail. Counts, bytes and physical graph-build/reuse observations for every cell are in coordinates.json.","",
        "## Unseen natural confirmation and service cost","",
        f"The fixed panel used four fresh inputs, C1536, k3 and cap128. Old QB4, new QB and new WB matched {sum(len(r['vectors']) for r in proof if r['arm']!='S1')} committed-vector comparisons against immutable R and {sum(len(r['branch']) for r in proof if r['arm']!='S1')} branch-vector comparisons against scalar k3, including uncommitted positions. The sets overlap. Endpoints and complete cycle transactions matched. Timed R was not an arm in this panel.","",
@@ -81,6 +103,19 @@ def main():
     for a in ["oldQB","newQB","newWB"]:
         rows=[r["measured"] for r in service if r["arm"]==a];cols=[gm([r[k] for r in rows]) for k in ("service_seconds","prefill_wall_seconds","continuation_wall_seconds")]
         times[a]=cols[0];ver=gm([r["target_phases"]["VERIFY"] for r in rows]);text.append(f"| {a} | {cols[0]:.4f} | {cols[1]:.4f} | {ver:.4f} | {cols[2]:.4f} |")
+    insert_at=text.index("## Unseen natural confirmation and service cost")
+    profile_lines=["### Prediction and profiler check","","QK and AV groups matched in every cell. Counts are CUDA kernels in a separate append trace. Concat MiB are logical writes to concat outputs seen by the scheduler; they differ from CUPTI memcpy bytes.","",
+        "| H / q | QB predicted → observed calls | WB predicted → observed calls | Actual QK/AV rows | Old QB / new QB kernels | Old WB / new WB kernels | QB concat MiB old / new |",
+        "|---|---|---|---|---:|---:|---:|"]
+    for cell in range(8):
+        rows={r["arm"]:r for r in geo if r["cell"]==cell}
+        old,new,wb,oldwb=[rows[a] for a in ("QB4","newQB","newWB","WB4")]
+        profile_lines.append(f"| {new['head']} / {new['width']} | {new['predicted_calls']} → {new['actual_calls']} | {wb['predicted_calls']} → {wb['actual_calls']} | {new['attention']} | {old['kernels']} / {new['kernels']} | {oldwb['kernels']} / {wb['kernels']} | {old['logical_output_bytes'].get('CONCAT',0)/2**20:.1f} / {new['logical_output_bytes'].get('CONCAT',0)/2**20:.1f} |")
+    load=sum(x["model_load"] for x in cost)
+    restore=sum(x[role]["restore_s"] for x in cost for role in ("warm","measured"))
+    prefix=sum(x["scalar_prefix_s"] for x in read("prefixes.json"))
+    profile_lines+=["",f"The six distinct scalar prefixes took {prefix:.1f} s to generate. The 120 append-pair processes spent {load:.1f} s loading the model and {restore:.1f} s reading and restoring prefix state across both roles. Context initialization and all three of those costs are outside the append interval. Per-pair process wall time remains in the evidence.",""]
+    text[insert_at:insert_at]=profile_lines
     phase=times["oldQB"]/times["newQB"];cut=times["newWB"]/times["newQB"]
     pairs={(x["session"],x["index"],x["arm"]):x["measured"]["service_seconds"] for x in service}
     text+=["",f"Old QB / new QB was **{phase:.4f}×**. New WB / new QB was **{cut:.4f}×**. The first ratio isolates the operator change with local grouping fixed. The second compares group organization with identical operator lowering. Per-session WB/QB ratios were "+", ".join(f"{gm([pairs[s,i,'newWB']/pairs[s,i,'newQB'] for i in range(4)]):.4f}" for s in range(3))+".","",

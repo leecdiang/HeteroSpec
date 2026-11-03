@@ -319,6 +319,14 @@
     }
   },
   "ggml_cuda": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+  "cuda_sources": {
+    "ggml-cuda.cu": "0832b007fb5cd0165dd80116ea7833c5acda6dfd44f89f2c248d5d977a3e1fde",
+    "mmvq.cu": "49a8f1d60c06a3c4b7b95fcc6aa0406338a4afc94fdf7fc2d30d94f3670aa525",
+    "mmvq.cuh": "93ef0ea631585f93c35b00087d265e4ca45f82aaca8e7c363d382dc561d85fbd",
+    "mmq.cu": "d4edb8c52ae103aaa01e54b1c16b22ce53cf6ac21bfa9ecd66386b4173af1590",
+    "quantize.cu": "12ab0782e5e9cf273dcc584edc7413729b18609dc20b4bc6c7a53efd5656c48f"
+  },
+  "historical_freeze_sha256": "9885b0d56df86b0d940d741db762f5ba4e84eb26c2e7e07bfc36132cfb3c3d5b",
   "sdk": {
     "nvidia_cuda_cupti_cu12-12.9.79-py3-none-win_amd64.whl": "1848a9380067560d5bee10ed240eecc22991713e672c0515f9c3d9396adf93c8",
     "nvidia_cuda_nvcc_cu12-12.9.86-py3-none-win_amd64.whl": "8ed7f0b17dea662755395be029376db3b94fed5cbb17c2d35cc866c5b1b84099",
@@ -346,7 +354,22 @@
     "result": "99fe2c4a5290697dc690d28cdada2890ccb15f0245475489f9ef5094863d2153"
   },
   "failed_builds": {
-    "prof01": "1 error generated.",
-    "prof02": "99 warnings and 6 errors generated."
+    "prof01": {
+      "log_sha256": "74f2fa0a34d8321a9ed9a54fdbeb07d30b8671d04d9d8422bad237214bc96e82",
+      "errors": [
+        "E:/rtx170/profiler/sdk/nvidia/cuda_runtime/include/device_types.h:59:10: fatal error: 'crt/host_defines.h' file not found"
+      ]
+    },
+    "prof02": {
+      "log_sha256": "d52c0be02893f9973f0bea8881c897b874dd5bbfda18a105b41c189e7f2fa254",
+      "errors": [
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:1: error: a type specifier is required for all declarations",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:1: error: use of undeclared identifier 'push'",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:23: error: expected ';' after top level declarator",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:1: error: a type specifier is required for all declarations",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:1: error: use of undeclared identifier 'pop'",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:21: error: expected ';' after top level declarator"
+      ]
+    }
   }
 }

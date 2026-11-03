@@ -85,8 +85,8 @@ def sources():
     def gpu_info():return subprocess.check_output(["nvidia-smi","--query-gpu=name,uuid,driver_version,compute_cap","--format=csv,noheader"],text=True).strip()
     save("bindings.json",dict(gpu=gpu_info(),frozen_graph=sha(src),candidate_graph=sha(dst),frozen_core=sha(FROZEN/"core/src/libllama.a"),candidate_core=sha(ROOT/"candidate01/core/src/libllama.a"),
         compiler_builds={p.parent.name:read(p) for p in ROOT.glob("*/build.json")},ggml_cuda=sha(FROZEN/"bin/ggml-cuda.dll"),
-        sdk={p.name:sha(p) for p in (ROOT/"profiler").glob("*.whl")},service=read(ROOT/"new-driver/service-build.json"),
-        failed_builds={p: (ROOT/p/"worker.log").read_text(errors="replace").splitlines()[-1] for p in ("prof01","prof02")}))
+        cuda_sources={n:sha(FROZEN/"source/ggml/src/ggml-cuda"/n) for n in ("ggml-cuda.cu","mmvq.cu","mmvq.cuh","mmq.cu","quantize.cu")},historical_freeze_sha256=sha(FROZEN.parent/"formal01/freeze.json"),sdk={p.name:sha(p) for p in (ROOT/"profiler").glob("*.whl")},service=read(ROOT/"new-driver/service-build.json"),
+        failed_builds={p: dict(log_sha256=sha(ROOT/p/"worker.log"),errors=[l for l in (ROOT/p/"worker.log").read_text(errors="replace").splitlines() if "error:" in l][:6]) for p in ("prof01","prof02") if (ROOT/p/"worker.log").exists()}))
 if __name__=="__main__":
     for name in sys.argv[1:]:globals()[name]()
 

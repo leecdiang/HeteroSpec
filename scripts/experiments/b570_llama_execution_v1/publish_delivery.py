@@ -53,14 +53,14 @@ def run(root,remote,tag,commit):
                 need(partial.stat().st_size==pin['bytes'] and sha(partial)==pin['sha256'],'fresh remote bytes mismatch');partial.rename(destination);break
             except Exception as exc:write(remote/(name+f'.download-failure-{attempt}.json'),{'failure_type':type(exc).__name__,'http_status':getattr(exc,'code',None)})
         need(destination.exists(),'remote download attempts exhausted');print('REMOTE_VERIFIED',name,flush=True)
-        return dict(pin,asset_id=asset['id'],download_url=asset['browser_download_url'])
+        return dict(pin,asset_id=asset['id'],download_url='https://github.com/leecdiang/HeteroSpec/releases/download/'+urllib.parse.quote(tag,safe='')+'/'+urllib.parse.quote(name,safe=''))
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:verified=list(pool.map(one,pins))
-    result=verify(remote);result.update(authenticated_same_host_fresh_download=True,external_reader_verified=False,anonymous_access_claimed=False,assets=verified,release_url=release['html_url'],source_commit=commit)
+    result=verify(remote);result.update(authenticated_same_host_fresh_download=True,external_reader_verified=False,anonymous_access_claimed=False,assets=verified,release_url='https://github.com/leecdiang/HeteroSpec/releases/tag/'+urllib.parse.quote(tag,safe=''),source_commit=commit)
     write(remote/'REMOTE_READBACK.json',result)
     receipt=remote/'REMOTE_READBACK.json'
     with receipt.open('rb') as f,request(upload+'?name=REMOTE_READBACK.json','POST',f,{'Content-Type':'application/json','Content-Length':str(receipt.stat().st_size)}) as r:receipt_asset=json.load(r)
     with request(receipt_asset['url']+'?fresh='+str(time.time_ns()),headers={'Accept':'application/octet-stream'}) as r:data=r.read()
-    need(data==receipt.read_bytes(),'published readback receipt download');write(remote/'READBACK_RECEIPT_VERIFIED.json',{'sha256':sha(receipt),'download_url':receipt_asset['browser_download_url']})
+    need(data==receipt.read_bytes(),'published readback receipt download');write(remote/'READBACK_RECEIPT_VERIFIED.json',{'sha256':sha(receipt),'asset_id':receipt_asset['id'],'download_url':'https://github.com/leecdiang/HeteroSpec/releases/download/'+urllib.parse.quote(tag,safe='')+'/REMOTE_READBACK.json'})
     body={'draft':False,'body':f'Independent B570 PR163 native evidence, source {commit}. All {result["files"]} logical files / {result["objects"]} unique raw objects were verified after authenticated fresh remote download on the B570 host. INDEX.json and MEMBERS.json map raw paths to SHA256 objects. REMOTE_READBACK.json records verification. No anonymous/private-repository access or independent external-reader claim. No model weights included.'}
     with request(api+f'/releases/{release["id"]}','PATCH',json.dumps(body).encode(),{'Content-Type':'application/json'}) as r:final=json.load(r)
     write(remote/'RELEASE_PUBLISHED.json',final);print(final['html_url'],flush=True)

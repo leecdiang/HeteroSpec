@@ -1,0 +1,22 @@
+--- a/src/llama-graph.cpp
++++ b/src/llama-graph.cpp
+@@ -1571,7 +1571,18 @@
+         cur->ne[1] > 4 && cur->ne[1] <= 32 && cur->ne[2] == 1 && cur->ne[3] == 1) {
+         // A wide MM dispatch is a different numerical operation on this backend.
+         // Preserve four-column parallel matmuls across the physical KV cut.
+-        for (int64_t i = 0; i < cur->ne[1]; i += 4) {
++        int64_t first_tail = 0;
++        // Dense F32 columns share one Q8 weight. Preserve the four-column
++        // reduction descriptor and expose independent groups in dimension 2.
++        if (ggml_is_contiguous(cur) && w->ne[2]==1 && w->ne[3]==1 && cur->ne[1]>=8) {
++            first_tail = cur->ne[1] / 4 * 4;
++            auto * groups = ggml_view_3d(ctx0, cur, cur->ne[0], 4, first_tail/4,
++                                         cur->nb[1], 4*cur->nb[1], 0);
++            auto * batch = ggml_mul_mat(ctx0, w, groups);
++            ggml_format_name(batch,"frontier_packed_%s",w->name);
++            res = ggml_reshape_2d(ctx0,batch,w->ne[1],first_tail);
++        }
++        for (int64_t i = first_tail; i < cur->ne[1]; i += 4) {
+             const int64_t rows = std::min<int64_t>(4, cur->ne[1] - i);
+             auto * x = ggml_view_2d(ctx0, cur, cur->ne[0], rows, cur->nb[1], i*cur->nb[1]);
+             auto * block = ggml_mul_mat(ctx0, w, x);

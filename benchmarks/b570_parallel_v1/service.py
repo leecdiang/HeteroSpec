@@ -55,4 +55,15 @@ def costs():
     put_once(ROOT/'NATURAL_COST.json',summary)
     assert len(native)==12
     put_once(ROOT/'FAST_COST.json',native)
+    phases=[]
+    order=sorted(range(len(panel)),key=lambda i:(panel[i]['tokens'],panel[i]['id']))
+    for i in (order[0],order[-1]):
+        for a in ('QB','WB'):
+            s=dict(natural_slot(panel[i],a,freeze['width'],False,'phase'),phases=True)
+            n=run(f'natural-phase-{i}-{a}',freeze['role'],job('qwen',1024,[s]),allow_failure=True)
+            rr=n.get('records',[])
+            expected=next(r for r in qual if r['i']==i and r['arm']==a)
+            if rr and expected['actual_ids']:assert rr[0]['greedy']==expected['actual_ids']
+            phases.append(dict(i=i,arm=a,tokens=panel[i]['tokens'],qualified=expected['equal'],phase=rr[0] if rr else None,error=n.get('error')))
+    put_once(ROOT/'NATURAL_PHASE.json',phases)
 if __name__=='__main__':{'confirm':confirm,'cost':costs}[sys.argv[1]]()

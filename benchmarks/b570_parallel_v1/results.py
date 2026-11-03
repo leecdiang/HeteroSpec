@@ -39,6 +39,7 @@ def report():
             if rows:ret[f'{family}/q{q}']=dict(blocks=len(rows),cross=gmean([r['cross'] for r in rows]),inside=gmean([r['inside'] for r in rows]),incremental=gmean([r['ratio'] for r in rows]),cross_WB_slower=sum(r['cross']>1 for r in rows))
     summary=dict(controls=dec['controls'],fixed_work=ret,natural=[dict(**{k:v for k,v in x.items() if k!='pairs'},**intervals(x['pairs'])) for x in dec['natural']],
                  forecast={k:{j:v for j,v in val.items() if j!='rows'} for k,val in dec['held_out_forecast'].items()},process_seconds=dec['process_seconds'],owned_seconds=dec['owned_seconds'],units=dec['units'],unsuccessful_units=dec['unsuccessful_units'],raw_validation=dec['raw_validation'],objects=dec['verified_unique_vectors'])
+    summary['fixed_alternatives']={k:[{j:v for j,v in r.items() if j!='pairs'} for r in rs] for k,rs in dec['fixed'].items()}
     costs=read(ROOT/'NATURAL_COST.json')
     summary['service_accounting']={}
     for a in ('S1','PQ','QB','WB'):

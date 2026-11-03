@@ -1,0 +1,30 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+\node[anchor=west,font=\bfseries] at (0,2.9) {A\quad Scalar requirement};
+\node[anchor=west,font=\bfseries] at (5.6,2.9) {B\quad Unsplit batch};
+\node[anchor=west,font=\bfseries] at (11.2,2.9) {C\quad Compatible groups};
+\foreach \row/\pos in {0/765,1/766,2/767,3/768}{
+ \pgfmathsetmacro{\yy}{2.25-.55*\row}
+ \node[anchor=east,font=\footnotesize] at (.7,\yy+.15) {\pos};
+ \node[anchor=east,font=\footnotesize] at (6.3,\yy+.15) {\pos};
+ \node[anchor=east,font=\footnotesize] at (11.9,\yy+.15) {\pos};
+ \fill[qualified!20] (.85,\yy) rectangle (3.55,\yy+.3);
+ \fill[draft!25] (6.45,\yy) rectangle (10.05,\yy+.3);
+ \fill[qualified!20] (12.05,\yy) rectangle (14.75,\yy+.3);
+ \ifnum\row=3
+  \fill[target!25] (.85,\yy) rectangle (4.45,\yy+.3);
+  \fill[target!25] (12.05,\yy) rectangle (15.65,\yy+.3);
+  \node[anchor=east,font=\scriptsize] at (4.4,\yy+.15) {1024};
+  \node[anchor=east,font=\scriptsize] at (15.6,\yy+.15) {1024};
+ \else
+  \node[anchor=east,font=\scriptsize] at (3.5,\yy+.15) {768};
+  \node[anchor=east,font=\scriptsize] at (14.7,\yy+.15) {768};
+ \fi
+ \node[anchor=east,font=\scriptsize] at (10,\yy+.15) {1024};
+}
+\draw[draft,dashed] (9.15,.5)--(9.15,2.7);
+\draw[qualified,rounded corners=1pt] (11.98,1.06) rectangle (14.82,2.62);
+\draw[target,rounded corners=1pt] (11.98,.5) rectangle (15.72,.97);
+\node[align=center,font=\footnotesize,text=aux] at (2.65,-.1) {Four scalar evaluations};
+\node[align=center,font=\footnotesize,text=aux] at (8.25,-.1) {Early rows inherit the larger extent};
+\node[align=center,font=\footnotesize,text=aux] at (13.85,-.1) {Three rows together, then one row};
+\end{tikzpicture}

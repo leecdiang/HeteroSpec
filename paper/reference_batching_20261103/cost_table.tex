@@ -1,0 +1,14 @@
+\begin{table*}[t]\centering\small
+\caption{Reconstructed complete-request ratios on the two new Llama panels. Each platform uses all 144 paired blocks. The target-only layout comparison is post hoc; the practical screen applies to the speculative layout comparison.}
+\label{tab:costs}
+\begin{tabularx}{\textwidth}{@{}lrrY@{}}\toprule
+Comparison & CUDA & Vulkan & Meaning\\\midrule
+$C_{\QB}/\overline{C_{\PQ}}$ & 0.9755 & 0.9505 & Speculative layout; primary\\
+$M_{\QB}/M_{\PQ}$ & 1.0044 & 0.8993 & Target-only layout; post hoc\\
+$M_{\QB}/C_{\QB}$ & 0.9736 & 0.3343 & Draft value; above one favors draft\\
+$C_{\QB}/R$ & 0.4590 & 1.6288 & Complete speculative path\\
+$M_{\QB}/R$ & 0.4469 & 0.5444 & Complete target-only path\\
+A/A screen & 2.983\% & 2.942\% & Predeclared engineering threshold\\
+Speculative layout screen & Not passed & Passed & Requires all six sessions favorable\\
+Slower speculative blocks & 38/144 & 2/144 & All blocks retained\\\bottomrule
+\end{tabularx}\end{table*}

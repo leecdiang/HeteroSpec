@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "study": "reference_batching_transfer_20261103",
+  "purpose": "Executable structure-derived batching requirements and predictive cross-family transfer while preserving each existing numerical reference.",
+  "shared_method": {
+    "header": "src/reference_batching/reference_batching.hpp",
+    "integrator": "src/reference_batching/integrate_llama_cpp.py",
+    "integration_status_at_authoring": "Shared prefix planner and policy cache identity supplied; native extraction/call sites for arithmetic and dispatch requirements must be completed on the host.",
+    "requirement_sources": [
+      "actual graph/operator role",
+      "tensor shape and strides",
+      "weight/input/activation type",
+      "scalar-reference placement or dispatch",
+      "cache occupancy and slot head",
+      "native padding"
+    ],
+    "rule_selection_excludes": [
+      "model_name",
+      "prompt_id",
+      "answer_token",
+      "output_position",
+      "logit_margin"
+    ],
+    "proof_of_use": "Native trigger records from real calls; zero/default structural IDs or an unused helper do not establish extraction."
+  },
+  "confirmation": {
+    "total_inputs": 8,
+    "selection": "After candidate freeze, natural inputs from pinned existing sources with exact tokenizer and authenticated exposure index.",
+    "desired_strata": [
+      "boundary-near natural prompt length",
+      "ordinary natural prompt length"
+    ],
+    "padding": false,
+    "truncation": false,
+    "failed_input_replacement": false,
+    "checks": [
+      "unchanged numerical R",
+      "complete endpoints",
+      "committed full-vocabulary vectors",
+      "matched PQ/QB transactions and rejected-row correspondence when available"
+    ],
+    "observer_control": "Reuse established capture; one representative heavy/off control per family or changed instrumentation path unless a concrete discrepancy requires more.",
+    "by_family": {
+      "Qwen3-8B": 4,
+      "Qwen3-14B": 4
+    }
+  },
+  "cost": {
+    "sessions": 3,
+    "arms": [
+      "R",
+      "M_PQ",
+      "M_QB",
+      "C_PQ",
+      "C_QB"
+    ],
+    "inputs": 8,
+    "measurements": 120,
+    "immediate_same_arm_warmups": true,
+    "order": "Fixed before timing; reuse existing arm/input rotation or randomization.",
+    "aggregate_by": [
+      "platform",
+      "model_family"
+    ],
+    "contrasts": [
+      "M_QB/M_PQ",
+      "C_QB/C_PQ",
+      "M_QB/C_QB",
+      "M_QB/R",
+      "C_QB/R"
+    ],
+    "population_confidence_interval": false,
+    "timing_extension_for_better_result": false,
+    "phase_diagnostics": "Optional small separate subset only; record prefill, generation/verification, reconciliation and repair costs without mixing diagnostic timings into clean primary results.",
+    "cost_scope": "Fresh/resident lifecycle kept fixed within model/contrast; include prefill, generation/draft/verification, reconciliation, synchronization and applicable teardown; loading and reference preparation separately reported."
+  },
+  "preserve": [
+    "original reference implementation and retained original vectors",
+    "model/tokenizer/quantization bytes",
+    "original historical fixture inputs, caps, k and P1 construction",
+    "all new counterexamples and unfavorable timing blocks"
+  ],
+  "completion": [
+    "native shared planner and actual structural extractor invoked",
+    "predicted and observed rule actions documented",
+    "retained development counterexamples resolved by structural rules",
+    "frozen small natural unseen confirmation complete",
+    "one complete fixed same-runtime cost panel",
+    "compact result PR with source, commands and evidence"
+  ],
+  "stop_optional_work_after_completion": true,
+  "excluded_work": [
+    "third platform",
+    "arbitrary new model families",
+    "old full Llama confirmation/timing reruns without a concrete changed-domain reason",
+    "timing until a favorable threshold",
+    "duplicated archival audit as a scientific contribution",
+    "automatic manuscript merge",
+    "arXiv or journal submission"
+  ],
+  "platform": "RTX / CUDA",
+  "backend_argument": "cuda",
+  "source_refs": {
+    "combined_results": "e11d2b75d82422409ba2b701aa38c59f36acc50b",
+    "qwen14b_mechanism": "38b3d3d3929dc958e6a2a7e0bdc8abd61ff38ab1",
+    "source_selection": "Restore the final PR162 build's source binding, not an intermediate failed candidate."
+  },
+  "existing_models": [
+    "Qwen3-8B Q8",
+    "Qwen3-14B Q8"
+  ],
+  "existing_controls": [
+    "Llama original boundary counterexample",
+    "Llama non-boundary control"
+  ],
+  "priorities": [
+    "Finish scalar-compatible normalization placement extraction",
+    "Demonstrate real prefix triggers on Qwen8B and Qwen14B",
+    "Shared requirement and graph-key identity for actual native paths"
+  ],
+  "retained_fixtures": {
+    "source": "PR159 retained Qwen14B development panel and PR162 original-control/regression records",
+    "qwen14b_known_examples": [
+      "GSM8K/test/111",
+      "GSM8K/test/120"
+    ],
+    "rule": "Read exact IDs, prompts and first-difference positions from retained records; never reconstruct expected answers from prose.",
+    "original_references": "Reuse each family's original worker/source and numerical cohort."
+  },
+  "structural_probes": [
+    {
+      "purpose": "Cross physical boundary",
+      "example": {
+        "head": 765,
+        "rows": 4,
+        "padding": 256,
+        "capacity": 1024,
+        "expected_extents": [
+          768,
+          768,
+          768,
+          1024
+        ],
+        "expected_group_widths": [
+          3,
+          1
+        ]
+      }
+    },
+    {
+      "purpose": "Nearby non-boundary",
+      "example": {
+        "head": 764,
+        "rows": 4,
+        "padding": 256,
+        "capacity": 1024,
+        "expected_extents": [
+          768,
+          768,
+          768,
+          768
+        ],
+        "expected_group_widths": [
+          4
+        ]
+      }
+    },
+    {
+      "purpose": "Scalar-compatible normalization placement",
+      "expected": "Derived from actual head-normalization operator and scalar backend preference; do not hard-code a family label."
+    }
+  ],
+  "ordinary_engineering_fixes_authorized": true
+}

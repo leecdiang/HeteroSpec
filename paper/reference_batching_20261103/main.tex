@@ -1,0 +1,33 @@
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+\input{preamble}
+\begin{document}
+\begin{frontmatter}
+\title{HeteroSpec: Reference-Preserving Query Batching for Quantized Inference}
+\author{Chengzhan Li}
+\address{University of Electronic Science and Technology of China, Chengdu, China\\[2pt]
+{\normalfont\ttfamily\href{mailto:chengzhan.li@std.uestc.edu.cn}{chengzhan.li@std.uestc.edu.cn}}}
+\begin{abstract}
+Batching prompt or speculative-verification queries can change the output of an existing quantized deployment, even when their logical positions and causal masks are unchanged. We present a reference-preserving query-batching method that separates physical KV-prefix requirements from query-parallel work. It groups adjacent queries by the physical prefix required by the original scalar execution, retains the corresponding arithmetic paths, and lowers each group through paired query/mask views with shared KV storage. Controlled interventions on CUDA and Vulkan identify a common physical-prefix mechanism; Vulkan additionally requires preservation of the projection activation path. The repairs remove the known Llama divergence and preserve the original references on two independently selected panels of 24 previously unseen inputs, with exact committed full-vocabulary-vector correspondence. A distinct CUDA Qwen3-14B intervention preserves the reference by retaining scalar-path placement at a head-normalization/RoPE boundary. Complete-request measurements separate reference repair, layout cost and drafting. On the repaired Llama panels, QB reduces speculative cost relative to per-query attention by 2.45\% on CUDA and 4.95\% on Vulkan; the latter passes the predeclared practical screen. Drafting remains more expensive than the corresponding target-only paths. These results establish physical-prefix compatibility and arithmetic-path preservation as actionable constraints for retaining parallel execution against a deployed numerical reference.
+\end{abstract}
+\begin{keyword}
+quantized inference \sep reference preservation \sep speculative decoding \sep attention batching \sep numerical execution
+\end{keyword}
+\end{frontmatter}
+\input{01_introduction}
+\input{02_mechanisms}
+\input{03_method}
+\input{04_evaluation}
+\input{05_results}
+\input{06_related}
+\input{07_conclusion}
+\section*{Data and code availability}
+Commit-pinned native implementations, input identities, full-vector records and request measurements are indexed in \ref{app:artifacts}. This source package includes the reported timing records, their reconstruction script and editable figures. The companion shared planner and native adapters are supplied as a separately identified integration candidate; all GPU results in this paper come from the frozen implementations identified in the tables.
+\section*{Declaration of AI-assisted work}
+OpenAI ChatGPT and Codex assisted implementation, analysis code, figures and writing. Scientific Agent Skills supported the developmental review~\cite{scientificskills}. Measurements come from recorded native executions. The author is responsible for verifying the results, interpretations and references and approving the final text.
+\bibliographystyle{psql-num}
+\balance
+\bibliography{references}
+\clearpage
+\appendix
+\input{appendix}
+\end{document}

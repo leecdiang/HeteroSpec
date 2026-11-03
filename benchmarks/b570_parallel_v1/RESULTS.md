@@ -50,11 +50,29 @@ All 288 formal service measurements and their 288 immediate warmups completed on
 
 Fresh natural prefill starts at zero and its 32-row chunks align with the 256-cell physical allocation boundary. QB and WB made identical numbers of whole-target calls in all 72 blocks. WB was faster in 39 of those blocks. At 90 input tokens the separate QB/WB prefill diagnostics took 0.833/0.836 s. At 688 tokens they took 6.903/6.908 s across 22 calls each. The natural data give no measurable local-grouping advantage over the strong whole-graph caller. Native FAST took 0.71690 times QB service in twelve matched reference slots and failed numerical qualification on every input.
 
+Loading both resident models took a mean 5.14–5.15 s per process across arms. Mean host-owned time for a process containing setup, immediate warmup, measurement and cleanup was 43.545 s for S1, 32.429 s for PQ, 23.848 s for QB and 23.827 s for WB. The old polling experiment yielded 33 formal observations across its 60 slots. Twenty-four dual-context slots failed admission and three ordinary measurements exhausted the device reserve. Among matched pairs, polling-on / polling-off service was 1.047 for R (6 pairs), 1.033 for M_PQ (6) and 1.037 for M_QB (3). The raw on/off query durations and incomplete pairs remain in the archive.
+
+## Fixed work across physical boundaries
+
+All 1395 registered timed cells returned. Each interval starts after state restoration and ends after synchronized execution and all required greedy reads. The table gives geometric means of paired WB time divided by QB time. Values above one favor QB. The inside column includes the scalar controls where registered. The per-width columns contain crossing observations only.
+
+| Deployment | Inside | Crossing | q2 | q4 | q8 | q16 | q32 | Crossing blocks favoring QB |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen C1024, both weights resident | 1.0000 | 1.1154 | 1.2169 | 1.3138 | 1.1933 | 0.9547 | 0.9478 | 26/45 |
+| Qwen target-only C4096 | 1.0024 | 1.0610 | 1.1298 | 1.1333 | 1.0765 | 0.9900 | 0.9855 | 37/60 |
+| SmolLM2-1.7B C4096 | 0.9974 | 1.1163 | 1.2350 | — | 1.2641 | 1.0830 | 0.9183 | 18/24 |
+
+At q32 WB cut the full query into two 16-row graphs and had lower geometric mean latency on all three deployments. The dispatch reduction did not cover the local path's additional work at this width. At q2 and q8 the local path had lower geometric mean latency on all three. In the crossing cells, the eligible PQ/QB ratios were 1.374, 1.266 and 1.338 respectively. The S1/QB ratios were 2.246, 1.583 and 2.355. Missing numerical qualifications are excluded from those comparisons. The raw table retains their timings.
+
+The within-coordinate ratio of crossing WB/QB to inside WB/QB was 1.1154, 1.0606 and 1.1192 across the three deployments. A predictor stratified by width and crossing status had median absolute log-ratio error 0.0276 on the 24 held-out Smol B2048 observations. Qwen C1024 predictions tested on the 120 multi-row observations in the separate target-only C4096 deployment had error 0.0260. This second comparison changes both capacity and residency and cannot isolate a context effect.
+
+The independent audit reconstructed 465 observed or missing numerical cells and 1395 fixed timings from the native records, checked 80 serialized checkpoint files, and verified 4077 unique comparison-vector objects. There were 684 supervised native processes with 17214.82 charged process-seconds including failures, admission and diagnostics. These are process wall-clock intervals. GPU-active duration was measured separately in sampled dispatch traces.
+
 ## Relevance to TPDS
 
 The systems question here is how much concurrency a runtime retains while reproducing a specific deployed scalar reference. WB-cut provides a direct comparator because it respects the same physical allocator and numerical contract. The hardware evidence identifies the operations that still run wide, the extra dispatches from splitting the entire graph and the mask copies and concatenations paid by local grouping.
 
 Related systems already address deterministic inference through batch-invariant kernels, schedule control, verification and rollback, and formal reasoning about engine state and kernels. The present comparison contributes an empirical test of local compatibility against whole-target cutting, including a head-geometry counterexample localized to a real dispatch. Its numerical evidence covers the reported geometries and workloads. [Thinking Machines](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/), [LLM-42](https://arxiv.org/abs/2601.17768), [CoRun](https://arxiv.org/abs/2608.14376), [Vosti](https://arxiv.org/abs/2609.38981).
 
-The crossed common-state cost measurements are pending.
+The performance contribution is bounded by query width and alignment. The strong whole-graph baseline accounts for the observed natural service improvement relative to scalar execution on this panel. Local grouping adds measured value at selected crossings, and loses to whole-graph cuts at the widest registered query. In the separate RTX pilot the same shared header was used with a different speculative deployment and a WB/QB service ratio of 1.0104 across eight blocks. The two studies provide a transfer of the rule and its comparison method. Their different workloads preclude a pooled speed estimate. [RTX execution results](https://github.com/leecdiang/HeteroSpec/blob/9c79594f679ea4aad1956d8a385fdf6a7352d892/benchmarks/tpds_parallel/RESULTS.md)
 

@@ -2,7 +2,7 @@
 from paths import *
 from recompute import recompute,gmean
 from contrast import crossing_contrast
-import statistics,random,math
+import statistics,random,math,gzip
 def intervals(rows):
     by={}
     for r in rows:by.setdefault(r['key'][1],[]).append(math.log(r['ratio']))
@@ -30,7 +30,12 @@ def traces():
     return out
 def report():
     dest=HERE/'evidence';dec=recompute(ROOT,True)
-    times=[r for p in ROOT.glob('TIMES-*.json') for r in read(p)]
+    times=[r for p in sorted(ROOT.glob('TIMES-*.json')) for r in read(p)]
+    assert len(times)==1395
+    raw_json=json.dumps(times,sort_keys=True,separators=(',',':')).encode()
+    z=dest/'fixed-work.json.gz'
+    if z.exists():assert gzip.decompress(z.read_bytes())==raw_json
+    else:z.write_bytes(gzip.compress(raw_json,compresslevel=9,mtime=0))
     dx=crossing_contrast(times)
     ret={}
     for family in sorted({x['key'][0] for x in dx}):

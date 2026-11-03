@@ -1,5 +1,7 @@
 # B570 physical-prefix parallelism
 
+All four methods matched 1331 committed vectors per arm on twelve blind requests. Across 72 natural service blocks WB/QB time was 1.00029. In the crossed fixed-work cells the ratio was 1.1154 for resident-pair Qwen C1024, 1.0610 for target-only Qwen C4096 and 1.1163 for SmolLM2 C4096. At width 32 WB was faster on all three deployments. The result tables include missing qualifications, negative cases and process costs. [Results](RESULTS.md) · [Reproduction and archive verification](RUN.md)
+
 The study starts at PR165 commit `5aae66e05b0f6e8a8b44dac719b2b05b8f84f34f`. Its Vulkan runtime consumes the same shared rule bytes as RTX commit `9c79594f679ea4aad1956d8a385fdf6a7352d892`. The file has Git blob `a0baff824a1b54fb3867845372939b9a97c11115` and SHA-256 `7c1e2ee97e0af5b306ec9ba3cf7e2fb55c37749da07891f46cccd88041530809`.
 
 | Arm | Whole target calls on one known query | Attention |

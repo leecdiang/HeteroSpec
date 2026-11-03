@@ -53,4 +53,29 @@ def measure():
         ratios=[vals[i,s,True]['seconds']/vals[i,s,False]['seconds'] for i in selected for s in range(3) if vals[i,s,True]['seconds'] and vals[i,s,False]['seconds']]
         comp[arm]={'on/off':math.exp(math.fsum(map(math.log,ratios))/len(ratios)) if ratios else None,'ratios':ratios,'pairs':len(ratios)}
     write(ROOT/'POLL_RESULT.json',dict(rows=totals,contrasts=comp))
-if __name__=='__main__':setup();{'build':build,'run':measure}[sys.argv[1]]()
+def recover_measured_slots():
+    """One fresh same-binary pair for a resource failure after role admission."""
+    if (ROOT/'POLL_RESULT_FINAL.json').exists():return
+    initial=read(ROOT/'POLL_RESULT.json');rows=initial['rows']
+    panel=read(PR165/'UNSEEN.json')
+    for k,r in enumerate(rows):
+        if r.get('error') not in ('128 MiB device reserve','2 GiB host reserve'):continue
+        arm=r['arm'];role='poll3-R' if arm=='R' else 'poll3-C'
+        old_name=f'poll-{k:03d}';name=old_name+'-reserve'
+        template=read(ROOT/'units'/old_name/'JOB.json')
+        j=dict(template,payload_root=str(ROOT/'units'/name/'payload'))
+        def args(u):return [str(u/'native'),*MODELS['qwen'],str(PR165/'UNSEEN.json'),str(u/'JOB.json')]
+        d=run(name,role,j,args=args,allow_failure=True)
+        r['successor']=name
+        if d['status']!='WORKER_COMPLETE':continue
+        i=list(panel).index(r['id']);idx=0 if arm=='R' else ['M_PQ','M_QB','C_PQ','C_QB'].index(arm)
+        ref=read(PR165/'units'/f"qual-{i}-{'R' if arm=='R' else 'candidate'}"/'native/result.json')['requests'][idx]
+        assert all(v['endpoint']==ref['endpoint'] and v['cycles']==ref['cycles'] for v in d['requests'])
+        v=d['requests'][1];r.update(seconds=v['service_seconds'],poll_seconds=v['poll_seconds'],queries=v['poll_queries'],error=None)
+    effects={}
+    for a in ('R','M_PQ','M_QB','C_PQ','C_QB'):
+        v={(r['id'],r['session'],r['poll']):r['seconds'] for r in rows if r['arm']==a}
+        ratios=[x/v[i,s,False] for (i,s,p),x in v.items() if p and x and v.get((i,s,False))]
+        effects[a]=dict(pairs=len(ratios),ratios=ratios,on_over_off=math.exp(math.fsum(map(math.log,ratios))/len(ratios)) if ratios else None)
+    write(ROOT/'POLL_RESULT_FINAL.json',dict(rows=rows,contrasts=effects,initial_sha256=sha(ROOT/'POLL_RESULT.json')))
+if __name__=='__main__':setup();{'build':build,'run':measure,'recover':recover_measured_slots}[sys.argv[1]]()

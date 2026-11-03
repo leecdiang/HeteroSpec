@@ -31,7 +31,25 @@ def regress():
     if not (ROOT/'units/llama-controls-00/REGRESSION.json').is_file():regression.llama()
 def freeze():
     from datetime import datetime,timezone
+    poll.recover_measured_slots()
+    # Verify the realized column tiling across the requested widths. The earlier
+    # q16 profiled traces already cover the middle point and charge mask/concat.
+    for fam,widths in [('qwen_target',(2,4,8,32)),('smol',(32,))]:
+        ctl=read(ROOT/f'CONTROL-{fam}-4096.json')
+        for width in widths:
+            rows=observe(fam,4096,2048,width,True,ROLE,['QB','WB'])
+            assert set(rows)=={'QB','WB'}
+            for arm,r in rows.items():
+                c=next(x for x in ctl if x['B']==2048 and x['q']==width and len(x['groups'])==2 and x['arm']==arm)
+                assert c['actual_vectors']==r['vectors']
     bind_source(ROLE)
+    git=['git','-c','gc.auto=0','-c','maintenance.auto=false']
+    shared_branch='codex/tpds-reference-parallel'
+    tip=subprocess.check_output(git+['ls-remote','origin','refs/heads/'+shared_branch],cwd=HERE,text=True).split()[0]
+    subprocess.run(git+['fetch','--no-auto-maintenance','origin',shared_branch],cwd=HERE,check=True)
+    blob=subprocess.check_output(git+['rev-parse',tip+':src/reference_batching/reference_batching.hpp'],cwd=HERE,text=True).strip()
+    assert blob=='a0baff824a1b54fb3867845372939b9a97c11115'
+    put_once(ROOT/'CORE_FREEZE_READBACK.json',dict(remote='origin',branch=shared_branch,commit=tip,blob=blob))
     checks=[r for f,C in configs() for r in read(ROOT/f'CONTROL-{f}-{C}.json')]
     errors=[r for r in checks if r['observed'] and r['ref'] and r['arm']!='FAST' and not r['equal']]
     if errors:
@@ -49,6 +67,7 @@ def freeze():
             runner_commit=subprocess.check_output(['git','-c','gc.auto=0','-c','maintenance.auto=false','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
             protocol_files={f:sha(HERE/f) for f in ('campaign.py','experiment.py','natural.py','service.py','contrast.py','recompute.py')},
             geometry_plan=sha(PLAN),deployments=sha(ROOT/'DEPLOYMENTS-D.json'),validated_configs=configs(),
+            shared_remote_readback=sha(ROOT/'CORE_FREEZE_READBACK.json'),
             controlled_files={f'CONTROL-{f}-{C}.json':sha(ROOT/f'CONTROL-{f}-{C}.json') for f,C in configs()},
             scalar_ub1={f'SCALAR-{f}-{C}.json':sha(ROOT/f'SCALAR-{f}-{C}.json') for f,C in configs()},
             missing=sum(not r['observed'] or not r['ref'] for r in checks),natural='C1024 Qwen original pair of resident all-GPU models, target-only requests; 12 prompts, six balanced sessions, cap128',

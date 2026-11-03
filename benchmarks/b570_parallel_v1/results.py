@@ -51,7 +51,11 @@ def report():
         q=next(r for r in costs if r['arm']=='QB' and r['i']==f['i'] and r['session']==f['session'])
         if f['seconds'] and q['seconds']:ratios.append(f['seconds']/q['seconds'])
     summary['native_performance_reference']=dict(qualified=sum(r['qualified'] for r in fs),cells=len(fs),measured_pairs=len(ratios),native_over_QB_time=gmean(ratios))
-    for name,v in [('summary.json',summary),('dispatch.json',traces())]:
+    widths=[]
+    for p in sorted(ROOT.glob('DIAG-candidate-D-*.json')):
+        for a,r in read(p).items():
+            widths.append(dict(trace=p.name,arm=a,calls=r['trace_calls'],dispatches=r['dispatches'],q8_dispatch={k:v for k,v in r['kernels'].items() if 'mul_mat_vec_q8_0_f32_f32' in k},projection=r['projection'],attention=r['attn']))
+    for name,v in [('summary.json',summary),('dispatch.json',traces()),('dispatch-widths.json',widths)]:
         if (dest/name).exists():assert read(dest/name)==v
         else:write(dest/name,v)
     return summary

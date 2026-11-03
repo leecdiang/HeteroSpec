@@ -1,6 +1,6 @@
 {
-  "status": "UNSEEN_INDEPENDENT_QUALIFICATION_PASS_COSTS_PENDING",
-  "utc": "2026-11-02T15:01:29.473152+00:00",
+  "status": "NATIVE_AND_INDEPENDENT_COSTS_COMPLETE_REMOTE_DELIVERY_PENDING",
+  "utc": "2026-11-03T03:18:06Z",
   "local_work_root": "I:\\HeteroSpec\\b570-llama-20261102",
   "source_pr": 161,
   "result_pr": 163,
@@ -12,16 +12,25 @@
   "dispatch_observer_operator_calls": 15,
   "activation_intervention_operator_calls": 15,
   "controlled_first_projection_difference": "Layer0 Qcur MUL_MAT, before RoPE; actual q1 F32 activation vs q4 Q8_1 activation dispatch",
-  "intervention_result": "All15 calls pass; q4 Q/K/V outputs equal original q1 concatenation; no model repair claim yet",
+  "intervention_result": "All15 original projection interventions pass; final combined native repair independently qualifies24 unseen inputs",
   "structural_candidate": "candidate-combined-02; combined-epoch-03",
   "ledger": {
-    "credit_limit": 16384,
-    "seconds_limit": 604800.0,
-    "credits_reserved": 504,
-    "completed_model_requests": 281,
-    "operator_calls": 108,
-    "owned_seconds": 6923.401000000008,
-    "open": {}
+    "status": "INDEPENDENT_LEDGER_RECONCILED",
+    "hash_chain_head": "3d4a18178af8638e2b34df25650e6609af346cdcf2a8e81d2861c3330b934dd1",
+    "ledger_sha256": "03bc1cc42ffc2dd6a11ce46c684d0615e295924931f8bbd83404b95264fe5381",
+    "limits": {
+      "credits": 16384,
+      "seconds": 604800
+    },
+    "credits_reserved_including_failed_and_unstarted_slots": 2520,
+    "completed_model_requests": 2297,
+    "operator_graph_calls": 108,
+    "host_owned_seconds": 47854.915,
+    "native_process_seconds": 46061.49599999999,
+    "failed_attempts": 4,
+    "zero_request_attempts": 26,
+    "open": {},
+    "scope": "New B570 native work only. Historical externally executed requests and invalid historical alias captures are preserved separately. Operator count is native graph submissions, not inferred shader dispatches; stage/dispatch counts are separately evidenced. Build and transport failures are retained outside the inference ledger."
   },
   "repair_qualified": true,
   "confirmation_run": true,
@@ -44,7 +53,7 @@
   "cross_platform_exposure_review_complete": true,
   "cpu_tests_passed": 60,
   "delivery_reconstruction_tests_passed": 2,
-  "repair_scope": "24 prospectively selected unseen natural inputs pass full independent qualification; full costs and delivery remain pending",
+  "repair_scope": "All24 prospective unseen inputs pass full reference qualification;864 warmups and864 measurements complete",
   "combined_development_requests": 36,
   "combined_development_vectors": 3152,
   "combined_committed_vectors": 1920,
@@ -61,5 +70,12 @@
   "unseen_inputs": 24,
   "unseen_requests": 288,
   "unseen_saved_vectors": 23718,
-  "unseen_committed_vectors": 14555
+  "unseen_committed_vectors": 14555,
+  "warmups": 864,
+  "measurements": 864,
+  "independent_cost_pass": true,
+  "practical_layout_screen": true,
+  "cqb_pq_ratio": 0.9505485305997169,
+  "cqb_r_ratio": 1.6287866913580917,
+  "performance_claim_scope": "Finite independent Vulkan panel, GPU target and CPU draft; speculative QB slower than stock R"
 }

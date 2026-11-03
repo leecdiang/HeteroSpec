@@ -14,7 +14,10 @@ def main():
     shutil.copy2(ROOT/"llama_controls01/AUDIT.json",out/"LLAMA_CONTROLS.json")
     shutil.copy2(ROOT/"diagnostics04/COMMITTED_VECTOR_AUDIT.json",out/"RETAINED_R.json")
     shutil.copy2(ROOT/"diagnostics04/LEDGER.jsonl",out/"LEDGER.jsonl")
+    for cohort in ("qwen_config01","config06"):
+        shutil.copy2(ROOT/"active03"/cohort/"BUILD.json",out/(cohort+"_BUILD.json"))
     table=[]
+    preparation=[]
     for fam in FAMILIES:
         b=ROOT/"confirmation01"/fam
         q=read(b/"QUALIFICATION.json");cost=read(b/"COST.json")
@@ -32,7 +35,26 @@ def main():
                 assert warm["arm"]==measured["arm"] and warm["input_id"]==measured["input_id"]
             times.append(dict(session=session,load=read(u/"native/PROVISIONED.json")["model_load_seconds"],
                               requests=[dict(slot=r["slot"]["slot_id"],arm=r["arm"],input=r["input_id"],seconds=r["service_seconds"]) for r in rows]))
-        save(folder/"SERVICE.json",dict(sessions=times,original_reference_supervised_seconds=read(b/"units/original/RECEIPT.json")["seconds"]))
+        reference_seconds=read(b/"units/original/RECEIPT.json")["seconds"]
+        qualification_seconds=read(b/"units/qualification/RECEIPT.json")["seconds"]
+        warm=sum(r["seconds"] for session in times for r in session["requests"] if r["slot"].endswith("/warmup"))
+        measured=sum(r["seconds"] for session in times for r in session["requests"] if r["slot"].endswith("/measured"))
+        load=sum(session["load"] for session in times)
+        save(folder/"SERVICE.json",dict(sessions=times,original_reference_supervised_seconds=reference_seconds,
+              qualification_supervised_seconds=qualification_seconds,formal_model_loading_seconds=load,
+              warmup_service_seconds=warm,measured_service_seconds=measured))
+        preparation.append((fam,reference_seconds,qualification_seconds,load,warm,measured))
+        panel=read(b/"PANEL.json")["inputs"]
+        reversals={}
+        for contrast,aggregate in cost["ratios"].items():
+            numerator,denominator=contrast.split("/")
+            reversals[contrast]=[]
+            for ix,block in enumerate(cost["blocks"]):
+                ratio=block[numerator]/block[denominator]
+                if (ratio-1)*(aggregate-1)<0:
+                    reversals[contrast].append(dict(session=ix//4,input=panel[ix%4]["id"],ratio=ratio))
+        save(folder/"BLOCK_REVERSALS.json",reversals)
+        shutil.copy2(b/"ORIGINAL_BINDING.json",folder/"ORIGINAL_BINDING.json")
         table.append((fam,len(q),sum(x["vector_count"] for x in q),cost["ratios"]))
     receipts={str(p.relative_to(out)):digest(p) for p in out.rglob("*") if p.is_file()}
     save(out/"INDEX.json",receipts)
@@ -41,6 +63,11 @@ def main():
            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for fam,cells,v,ratios in table:
         lines.append("| "+str(fam)+" | "+str(cells)+" | "+str(v)+" | "+" | ".join(f"{ratios[k]:.6f}" for k in ["M_QB/M_PQ","C_QB/C_PQ","M_QB/C_QB","M_PQ/R","M_QB/R","C_PQ/R","C_QB/R"])+" |")
+    lines.extend(["","| Family | Original R preparation (s) | Qualification (s) | Formal model loading (s) | Warmup service (s) | Measured service (s) |",
+                  "|---|---:|---:|---:|---:|---:|"])
+    for fam,*values in preparation:
+        lines.append("| "+fam+" | "+" | ".join(f"{v:.3f}" for v in values)+" |")
+    lines.extend(["","The old executable supplied each qualification reference. The timed R arm uses the candidate runtime's ordinary path after its complete committed vectors match that reference. Per-session ratios, input ratios, every service interval and the blocks on the opposite side of one from each aggregate are recorded under evidence/."])
     lines.extend(["","| Family | Input and start position | Layout | Planned (extent, width) | Observed QK (extent, width) | Layers |",
                   "|---|---|---|---|---|---:|"])
     for fam in FAMILIES:

@@ -63,11 +63,14 @@ inline bool offload_op(Backend backend, const Tensor * tensor, bool feeds_rope) 
                                   (uint64_t(k->ne[1]) << 32) | (uint64_t(transposed) << 48);
         const auto groups=hs_reference_batching::partition_adjacent(prefix, arithmetic, dispatch);''')
     replace(graph, "ggml_tensor * cur=nullptr;\n    if (grouped)", '''if (hs_query_batch && std::getenv("HS_RTX164_TRACE") && !prefix.empty()) {
-        std::fprintf(stderr,"RTX164_ATTN layer=%d heads=%lld kv_heads=%lld rows=%lld first=%u last=%u split=%d\\n",
-            il,(long long)q->ne[1],(long long)k->ne[1],(long long)q->ne[2],prefix.front(),prefix.back(),grouped);
+        std::fprintf(stderr,"RTX164_ATTN layer=%d heads=%lld kv_heads=%lld rows=%lld first=%u last=%u split=%d position=%d\\n",
+            il,(long long)q->ne[1],(long long)k->ne[1],(long long)q->ne[2],prefix.front(),prefix.back(),grouped,ubatch.pos ? int(ubatch.pos[0]) : -1);
     }
     ggml_tensor * cur=nullptr;
     if (grouped)''')
+    replace(graph, "void llm_graph_result::reset() {", """void llm_graph_result::reset() {
+    rotary_head_scales.clear();
+    head_placement_key.clear();""")
     header = tree / "src/llama-graph.h"
     replace(header, "    void set_outputs(const llm_graph_params & params);", '''    void set_outputs(const llm_graph_params & params);
     std::vector<const ggml_tensor *> rotary_head_scales;

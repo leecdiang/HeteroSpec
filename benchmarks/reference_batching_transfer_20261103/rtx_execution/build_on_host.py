@@ -1,7 +1,7 @@
 from pathlib import Path
 import hashlib,json,os,shutil,subprocess,time
 for cohort in ('qwen_config01','config06'):
- old=Path('E:/rtx160')/cohort/'build'; new=Path('E:/rtx164/active02')/cohort
+ old=Path('E:/rtx160')/cohort/'build'; new=Path('E:/rtx164/active03')/cohort
  (new/'core').mkdir(); (new/'bin').mkdir()
  for f in [*old.glob('*.hpp'),*old.glob('*.h'),old/'worker.cpp']:shutil.copyfile(f,new/f.name)
  for name in ('ar.cmd','ranlib.cmd'):shutil.copyfile(old/'core'/name,new/'core'/name)

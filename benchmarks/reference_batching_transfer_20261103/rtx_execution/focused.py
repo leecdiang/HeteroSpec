@@ -8,7 +8,7 @@ import sys
 ROOT = Path("E:/rtx164")
 PREVIOUS = Path("C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/pr160")
 OLD = Path("E:/rtx160/research")
-NEW = ROOT / "diagnostics02"
+NEW = ROOT / "diagnostics04"
 
 
 def digest(path):
@@ -55,15 +55,17 @@ def run(profile, library):
         record=read(file)
         if record["input_id"] not in inputs:continue
         cycles=record["cycles"]
-        near=min((c for c in cycles if c["caller_rows"]==4 and c["base"]//256==(c["base"]+3)//256),
-                 key=lambda c:min(c["base"]%256,256-(c["base"]+3)%256),default=None)
+        crosses=[c["cycle"] for c in cycles if c["base"]//256!=(c["base"]+c["caller_rows"]-1)//256]
+        near=next((c for c in cycles if c["caller_rows"]==4 and
+                   (not crosses or c["cycle"]>max(crosses)) and
+                   c["base"]//256==(c["base"]+3)//256),None)
         if near:
             predictions.append(dict(input=record["input_id"],cycle=near["cycle"],head=near["base"],
                              extents=[((near["base"]+256)//256)*256]*4))
     selected = [s for s in slots if s["input_id"] in inputs and s["arm"] in ("R","C_PQ","C_QB") and s["producer"]=="NATIVE" and s["observer"]=="heavy"]
     assert selected
     cfg=read(old/"CONFIG.json")
-    build=ROOT/"active02/qwen_config01"
+    build=ROOT/"active03/qwen_config01"
     worker=build/"bin/rtx-scope-transfer.exe"
     binding=read(old/"BINDING.json")
     identity=binding["families"]["Qwen"]
@@ -74,10 +76,14 @@ def run(profile, library):
     assert digest(Path(cfg["original_worker"]))==original["families"]["Qwen"]["executable_sha256"]
     for name,h in original["families"]["Qwen"]["numerical_modules"].items():
         assert digest(worker.parent/name)==h
-    identity.update(core_sha256=digest(build/"core/src/libllama.a"),executable_sha256=digest(worker),worker_source_sha256=digest(build/"worker.cpp"))
-    cfg.update(worker=str(worker),research_root=str(NEW),request_limit=1200,development_limit=480)
+    identity.update(build_receipt_sha256=digest(build/"BUILD.json"),core_sha256=digest(build/"core/src/libllama.a"),executable_sha256=digest(worker),worker_source_sha256=digest(build/"worker.cpp"))
+    cfg.update(build_receipt=str(build/"BUILD.json"),worker=str(worker),research_root=str(NEW),request_limit=1200,development_limit=480)
     cfg["resources"].update(total_native_seconds=86400,worker_timeout_seconds=7200)
-    for name,data in [("BINDING.json",binding),("ORIGINAL_BINDING.json",original),("PLAN.json",read(old/"PLAN.json")),("CONFIG.json",cfg),("PREDICTIONS.json",dict(boundaries=predictions,ordinary_input=panel["inputs"][0]["id"],normalization="Compare scalar and batch preference on host-resident head-scale weights. GPU-resident weights may retain placement without a scheduler override."))]:
+    for name,data in [("BINDING.json",binding),("ORIGINAL_BINDING.json",original),("PLAN.json",read(old/"PLAN.json")),("CONFIG.json",cfg),("PREDICTIONS.json",dict(boundaries=predictions,ordinary_input=panel["inputs"][0]["id"],normalization={
+                "source":"Pinned CUDA MUL offload uses ggml_nrows >= 32; supervisor clears GGML environment overrides.",
+                "prediction":("All target layers on GPU: no host-weight placement override." if profile=="qwen8b02" else
+                    "On a host-resident layer, K has 8 heads: 8 scalar rows <32, 8*4 batch rows >=32, select scalar false. Q has 40 heads: 40 and 160 both >=32, select true."),
+                "target_gpu_layers":binding["dense14b"]["target_gpu_layers"]}))]:
         save(bundle/name,data)
     seal={f.name:digest(f) for f in bundle.iterdir() if f.is_file()}
     save(bundle/"EPOCH.json",seal)
@@ -100,7 +106,7 @@ def run(profile, library):
 if __name__=="__main__":
     NEW.mkdir()
     import shutil
-    shutil.copyfile(ROOT/"diagnostics01/LEDGER.jsonl",NEW/"LEDGER.jsonl")
+    shutil.copyfile(ROOT/"diagnostics03/LEDGER.jsonl",NEW/"LEDGER.jsonl")
     path=PREVIOUS/"benchmarks/rtx_llama_repair_v1/host_execution/qwen_regression.py"
     spec=importlib.util.spec_from_file_location("retained_driver",path)
     library=importlib.util.module_from_spec(spec)

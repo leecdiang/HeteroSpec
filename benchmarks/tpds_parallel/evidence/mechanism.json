@@ -1,0 +1,7277 @@
+[
+  {
+    "attempt": "cross256",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 6,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 6,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      1
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      3,
+      5
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      1
+    ],
+    "physical": {
+      "3": 1,
+      "5": 1
+    },
+    "actual_calls": [
+      3,
+      5
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 253,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        8,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 30,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 30,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      1
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      3,
+      29
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      1
+    ],
+    "physical": {
+      "29": 1,
+      "3": 1
+    },
+    "actual_calls": [
+      3,
+      29
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross256",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        32,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "oracle",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 14,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "S1",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 14,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "PQ-ext",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "QB-local",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      2,
+      4,
+      4,
+      4,
+      2
+    ],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        1,
+        2,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        2,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "WB-cut",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      2,
+      14
+    ],
+    "predicted_attention_tiles": [
+      2,
+      4,
+      4,
+      4,
+      2
+    ],
+    "physical": {
+      "14": 1,
+      "2": 1
+    },
+    "actual_calls": [
+      2,
+      14
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        1,
+        2,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        768,
+        1,
+        2,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        2,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "cross512",
+    "arm": "native",
+    "ctx": 1536,
+    "base": 510,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        768,
+        16,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 30,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 30,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      1
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      3,
+      29
+    ],
+    "predicted_attention_tiles": [
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      1
+    ],
+    "physical": {
+      "29": 1,
+      "3": 1
+    },
+    "actual_calls": [
+      3,
+      29
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        3,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        512,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        1,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "eight",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 253,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        512,
+        32,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 2
+    },
+    "actual_calls": [
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 1,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 2
+    },
+    "actual_calls": [
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 1,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      2
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1
+    ],
+    "physical": {
+      "2": 1
+    },
+    "actual_calls": [
+      2
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      2
+    ],
+    "predicted_attention_tiles": [
+      2
+    ],
+    "physical": {
+      "2": 1
+    },
+    "actual_calls": [
+      2
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      2
+    ],
+    "predicted_attention_tiles": [
+      2
+    ],
+    "physical": {
+      "2": 1
+    },
+    "actual_calls": [
+      2
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 2,
+    "exit": 0,
+    "mismatch_rows": [
+      1
+    ],
+    "predicted_calls": [
+      2
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "2": 1
+    },
+    "actual_calls": [
+      2
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=0 width=1 extent=256",
+      "TPDS_TILE base=0 begin=1 width=2 extent=256",
+      "TPDS_TILE base=0 begin=2 width=3 extent=256",
+      "TPDS_TILE base=0 begin=3 width=4 extent=256",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1788: GGML_ASSERT(view_src == NULL || data_size == 0 || data_size + view_offs <= ggml_nbytes(view_src)) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "sched_reserve: graph nodes  = 1126",
+      "sched_reserve: graph splits = 2",
+      "sched_reserve: reserve took 3.00 ms, sched copies = 1",
+      "TPDS_TILE base=0 begin=0 width=4 extent=256",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1788: GGML_ASSERT(view_src == NULL || data_size == 0 || data_size + view_offs <= ggml_nbytes(view_src)) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "sched_reserve: graph nodes  = 1126",
+      "sched_reserve: graph splits = 2",
+      "sched_reserve: reserve took 3.03 ms, sched copies = 1",
+      "TPDS_TILE base=0 begin=0 width=4 extent=256",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1788: GGML_ASSERT(view_src == NULL || data_size == 0 || data_size + view_offs <= ggml_nbytes(view_src)) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "first",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=0 width=1 extent=256",
+      "TPDS_TILE base=0 begin=1 width=2 extent=256",
+      "TPDS_TILE base=0 begin=2 width=3 extent=256",
+      "TPDS_TILE base=0 begin=3 width=4 extent=256",
+      "E:/tpds167/build01/source/src/llama-graph.cpp:2655: GGML_ASSERT(q->ne[2] <= 4 && k->ne[3] == 1) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "sched_reserve: graph nodes  = 1126",
+      "sched_reserve: graph splits = 2",
+      "sched_reserve: reserve took 2.87 ms, sched copies = 1",
+      "TPDS_TILE base=0 begin=0 width=4 extent=256",
+      "E:/tpds167/build01/source/src/llama-graph.cpp:2698: GGML_ASSERT(q->ne[1] <= 4 && q->ne[3] == 1 && k->ne[3] == 1) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "sched_reserve: graph nodes  = 1126",
+      "sched_reserve: graph splits = 2",
+      "sched_reserve: reserve took 2.91 ms, sched copies = 1",
+      "TPDS_TILE base=0 begin=0 width=4 extent=256",
+      "E:/tpds167/build01/source/src/llama-graph.cpp:2698: GGML_ASSERT(q->ne[1] <= 4 && q->ne[3] == 1 && k->ne[3] == 1) failed"
+    ]
+  },
+  {
+    "attempt": "first",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CPU"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CPU"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CPU"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CPU"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CPU"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CPU"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CPU"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CPU"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "fourteen",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        8,
+        1,
+        "CPU"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 4
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 3,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 4
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 3,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      4
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "4": 1
+    },
+    "actual_calls": [
+      4
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      4
+    ],
+    "predicted_attention_tiles": [
+      4
+    ],
+    "physical": {
+      "4": 1
+    },
+    "actual_calls": [
+      4
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      4
+    ],
+    "predicted_attention_tiles": [
+      4
+    ],
+    "physical": {
+      "4": 1
+    },
+    "actual_calls": [
+      4
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 4,
+    "exit": 0,
+    "mismatch_rows": [
+      1,
+      2,
+      3
+    ],
+    "predicted_calls": [
+      4
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "4": 1
+    },
+    "actual_calls": [
+      4
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        4,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        8,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 15,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 15,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        16,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ],
+      [
+        256,
+        1,
+        4,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [
+      [
+        "tpds_projection_blk.0.attn_k",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_output",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_q",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.attn_v",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_down",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_gate",
+        4,
+        "CUDA0"
+      ],
+      [
+        "tpds_projection_blk.0.ffn_up",
+        4,
+        "CUDA0"
+      ]
+    ],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "projection",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [
+      [
+        256,
+        32,
+        1,
+        "CUDA0"
+      ]
+    ],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 8
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 7,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=5 width=1 extent=256",
+      "TPDS_TILE base=0 begin=6 width=1 extent=256",
+      "TPDS_TILE base=0 begin=7 width=1 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4
+    ],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 8,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "predicted_calls": [
+      8
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "8": 1
+    },
+    "actual_calls": [
+      8
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 15,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 16
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 15,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=13 width=1 extent=256",
+      "TPDS_TILE base=0 begin=14 width=1 extent=256",
+      "TPDS_TILE base=0 begin=15 width=1 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=4 width=4 extent=256",
+      "TPDS_TILE base=0 begin=8 width=4 extent=256",
+      "TPDS_TILE base=0 begin=12 width=4 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=4 width=4 extent=256",
+      "TPDS_TILE base=0 begin=8 width=4 extent=256",
+      "TPDS_TILE base=0 begin=12 width=4 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 16,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "predicted_calls": [
+      16
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "16": 1
+    },
+    "actual_calls": [
+      16
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "oracle",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "S1",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [],
+    "predicted_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "1": 32
+    },
+    "actual_calls": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 31,
+    "failure_tail": []
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "PQ-ext",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=29 width=1 extent=256",
+      "TPDS_TILE base=0 begin=30 width=1 extent=256",
+      "TPDS_TILE base=0 begin=31 width=1 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "QB-local",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=20 width=4 extent=256",
+      "TPDS_TILE base=0 begin=24 width=4 extent=256",
+      "TPDS_TILE base=0 begin=28 width=4 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "WB-cut",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 3221226505,
+    "mismatch_rows": null,
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "physical": null,
+    "actual_calls": null,
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": null,
+    "failure_tail": [
+      "TPDS_TILE base=0 begin=20 width=4 extent=256",
+      "TPDS_TILE base=0 begin=24 width=4 extent=256",
+      "TPDS_TILE base=0 begin=28 width=4 extent=256",
+      "ggml_new_object: not enough space in the context's memory pool (needed 1055440, available 1055072)",
+      "E:/tpds167/build01/source/ggml/src/ggml.c:1805: GGML_ASSERT(obj_new) failed"
+    ]
+  },
+  {
+    "attempt": "tilefix",
+    "arm": "native",
+    "ctx": 1024,
+    "base": 0,
+    "width": 32,
+    "exit": 0,
+    "mismatch_rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "predicted_calls": [
+      32
+    ],
+    "predicted_attention_tiles": [],
+    "physical": {
+      "32": 1
+    },
+    "actual_calls": [
+      32
+    ],
+    "actual_layer0_qk": [],
+    "projection_dispatch": [],
+    "graph_reuses": 0,
+    "failure_tail": []
+  }
+]

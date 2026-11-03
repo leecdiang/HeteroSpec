@@ -1,6 +1,6 @@
 """Portable CPU reconstruction from a restored evidence archive. No study imports."""
 from array import array
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import argparse
 import hashlib
 import json
@@ -69,6 +69,20 @@ def unit(root,name):
 
 def run(root):
     root=Path(root)
+    original_root=PureWindowsPath("I:/HeteroSpec/b570-qwen-transfer-20261103")
+    def verify_pin(pin):
+        path=PureWindowsPath(pin["path"]).relative_to(original_root)
+        with root.joinpath(*path.parts).open("rb") as f:
+            assert hashlib.file_digest(f,"sha256").hexdigest()==pin["sha256"]
+    for pin in load(root/"FREEZE.json")["proofs"]:
+        verify_pin(pin)
+    original_dlls={PureWindowsPath(pin["path"]).name:pin["sha256"]
+                   for pin in load(root/"historical/B1-4.launch.json")["files"] if pin["path"].endswith(".dll")}
+    for role in ("original-final","shared-01"):
+        for pin in load(root/role/"FILES.json")["files"]:
+            verify_pin(pin)
+            if role=="original-final" and pin["path"].endswith(".dll"):
+                assert original_dlls[PureWindowsPath(pin["path"]).name]==pin["sha256"]
     panel=load(root/"UNSEEN.json")
     seal=load(root/"SELECTION.json")
     for file,key in [("FREEZE.json","freeze_sha256"),("UNSEEN.json","panel_sha256"),("COST_ORDER.json","order_sha256")]:

@@ -1,6 +1,6 @@
 """Reuse the authenticated, byte-verified PR165 archive format under a new release tag."""
 from paths import *
-import shutil,importlib.util
+import shutil,gzip
 PACK=ROOT.parent/'b570-parallel-evidence-v1'
 REMOTE=ROOT.parent/'b570-parallel-readback-v1'
 TAG='b570-reference-parallel-v1-evidence-20261103'
@@ -43,9 +43,16 @@ def verify_remote():
         subprocess.run([sys.executable,'-B',str(RESTORED/'repro/recompute.py'),str(RESTORED),'--verify-objects'],stdout=f,check=True)
     from recompute import recompute
     local=json.loads(json.dumps(recompute(ROOT,True)));remote=read(out);assert local==remote
+    (HERE/'evidence/remote-recomputed.json.gz').write_bytes(gzip.compress(out.read_bytes(),compresslevel=9,mtime=0))
+    attempts=[]
+    for p in sorted(REMOTE.iterdir()):
+        if '.upload-failure-' in p.name or '.download-attempt-' in p.name:
+            attempts.append(dict(name=p.name,bytes=p.stat().st_size,sha256=sha(p),details=read(p) if p.suffix=='.json' else None))
+    index=read(REMOTE/'INDEX.json')
     write(HERE/'evidence/remote-readback.json',dict(tag=TAG,release_url=read(REMOTE/'REMOTE_READBACK.json')['release_url'],index_sha256=sha(REMOTE/'INDEX.json'),
+        archive_parts=len(index['parts']),archive_logical_files=index['logical_files'],archive_unique_objects=index['unique_objects'],restored_for_recomputation=read(RESTORED/'RESTORE_RECEIPT.json')['files'],
         receipt_sha256=sha(REMOTE/'REMOTE_READBACK.json'),recomputed_sha256=sha(out),raw_validation=remote['raw_validation'],
-        verified_unique_vectors=remote['verified_unique_vectors'],same_host_authenticated_fresh_download=True))
+        verified_unique_vectors=remote['verified_unique_vectors'],retained_transfer_attempts=attempts,same_host_authenticated_fresh_download=True))
 if __name__=='__main__':
     if sys.argv[1]=='pack':make()
     elif sys.argv[1]=='publish':publish(sys.argv[2])

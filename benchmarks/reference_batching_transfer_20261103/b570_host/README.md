@@ -17,3 +17,6 @@ Use a fresh PR164 worktree on the original host. Host paths are bound in `script
 5. `prepare_pool.py` tokenizes pinned natural texts with the exact Qwen vocabulary and validates all three historical prompt-ID sequences. It applies the authenticated exposure inventory and subsequent PR163 exposures. Run `confirmation.py freeze`, then `select`, `qualify`, `time` and `phases` in order. Run `cost_report.py` to reconstruct the one registered cost panel.
 
 The integrated target prefill schedule is uniformly P4T. Three sessions use immediate same-arm warmups. Phase clocks use one separately designated input. Model loading, reference preparation and all failed attempts remain identifiable in the raw evidence.
+
+
+The completed tables are in [RESULTS.md](RESULTS.md). For independent CPU reconstruction from the [published evidence](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-qwen-shared-transfer-v1-evidence-20261103), use the release [README](https://github.com/leecdiang/HeteroSpec/releases/download/b570-qwen-shared-transfer-v1-evidence-20261103/README.md) and [standalone auditor](https://github.com/leecdiang/HeteroSpec/releases/download/b570-qwen-shared-transfer-v1-evidence-20261103/recompute.py).

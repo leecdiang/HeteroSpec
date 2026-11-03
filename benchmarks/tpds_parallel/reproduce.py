@@ -28,7 +28,21 @@ def main():
             if r["predicted_attention_tiles"]:
                 observed=[s[2] for s in r["actual_layer0_qk"]]
                 check(observed==r["predicted_attention_tiles"],(folder,r["arm"],observed))
+                order=0
+                for obs,width in zip(r["actual_layer0_qk"],observed):
+                    extent=min(r["ctx"],256*((r["base"]+order)//256+1))
+                    check(obs[0]==extent and obs[1]==1,(folder,obs,extent))
+                    order+=width
+                check(order==r["width"],folder)
                 passed+=1
+    from zipfile import ZipFile
+    with ZipFile(E/"eight-crossing-vectors.zip") as archive:
+        rows=json.loads(archive.read("rows.json"))
+        for arm,group in rows.items():
+            for row,h in group.items():
+                check(hashlib.sha256(archive.read(h+".f32")).hexdigest()==h,"raw vector digest")
+                check(hashes[f"probes/eight/253-32-{arm}"][row+".f32"]==h,"sample identity")
+                check((h==rows["oracle"][row])==(arm!="native"),"sample equivalence")
     oracle={(o["ctx"],o["input"]):o for o in read("oracles.json.gz")}
     captures=read("qualification-raw.json.gz")
     by={(r["ctx"],r["input"],r["arm"]):r for r in captures}
@@ -45,7 +59,7 @@ def main():
         else:v.extend(h[f"target/ordinary-{j}.f32"] for j in range(1,len(r["ids"])))
         bad=[i for i in range(max(len(v),len(o["vectors"]))) if v[i:i+1]!=o["vectors"][i:i+1]]
         check(bad==x["different"],key)
-        check((r["ids"]==o["ids"])==x["endpoint"],key)
+        check((r["endpoint"]==o["endpoint"])==x["endpoint"],key)
         if x["arm"] in ("S1","PQ-ext","QB-local","WB-cut","R"):
             check(not bad and x["endpoint"],key);committed+=len(v)
             if r["draft_enabled"]:

@@ -58,7 +58,7 @@ def mechanism():
                 graph_reuses=obs.get("graphs_reused"),failure_tail=log.splitlines()[-5:] if entry["exit"] else [])
             rows.append(row)
             hashes={f.name:sha(f) for f in (cell/"row").glob("*.f32")}
-            raw.append(dict(cell=str(cell.relative_to(ROOT)),input=conf,receipt=obs,exit=read(cell/"exit.json"),vectors=hashes,
+            raw.append(dict(cell=cell.relative_to(ROOT).as_posix(),input=conf,receipt=obs,exit=read(cell/"exit.json"),vectors=hashes,
                             log_sha256=sha(cell/"native.log"),tiles=re.findall(r"TPDS_TILE [^\r\n]+",log)))
         by_batch[batch.name]=len(comparisons)
     write("mechanism.json",rows);pack("mechanism-raw.json.gz",raw)
@@ -77,10 +77,10 @@ def formal():
         for i in range(len(items)):
             d=root/f"oracle-{ctx}"/(f"raw/old/i{i}/heavy" if ctx==1024 else f"i{i}/R/capture")
             rec=read(d.with_suffix(".json") if ctx==1024 else d/"receipt.json")
-            oracle.append(dict(ctx=ctx,input=items[i]["id"],vectors=vectors(d,rec),ids=rec["ids"]))
+            oracle.append(dict(ctx=ctx,input=items[i]["id"],vectors=vectors(d,rec),ids=rec["ids"],endpoint={k:rec[k] for k in ("ids","eog","terminal_id","stop_reason","length")}))
             for arm in ARMS:
                 d=qual/f"i{i}/{arm}/capture";r=read(d/"receipt.json")
-                raw.append(dict(ctx=ctx,input=items[i]["id"],arm=arm,receipt=slim(r),hashes={str(p.relative_to(d)):sha(p) for p in d.rglob("*.f32")}))
+                raw.append(dict(ctx=ctx,input=items[i]["id"],arm=arm,receipt=slim(r),hashes={p.relative_to(d).as_posix():sha(p) for p in d.rglob("*.f32")}))
                 for ses in (0,1):
                     for role in ("warm","timed"):
                         p=root/f"cost-{ctx}-s{ses}/i{i}/{arm}/{role}/receipt.json"
@@ -88,6 +88,18 @@ def formal():
                         timing.append(dict(ctx=ctx,input=items[i]["id"],session=ses,role=role,arm=arm,receipt=rec))
     write("qualification.json",captures);pack("qualification-raw.json.gz",raw);pack("oracles.json.gz",oracle)
     pack("timing-raw.json.gz",timing)
+    overhead=[]
+    for ctx in (1024,1536):
+        for session in (0,1):
+            blocks=[r for r in timing if r["ctx"]==ctx and r["session"]==session]
+            invocation=read(root/f"cost-{ctx}-s{session}/exit.json")
+            measured=sum(r["receipt"]["service_seconds"] for r in blocks if r["role"]=="timed")
+            warm=sum(r["receipt"]["service_seconds"] for r in blocks if r["role"]=="warm")
+            pool=sum(r["receipt"]["pool_setup_seconds"] for r in blocks if r["role"]=="warm")
+            load=blocks[0]["receipt"]["model_load_seconds"]
+            overhead.append(dict(ctx=ctx,session=session,process_wall=invocation["elapsed"],model_loading=load,
+                pool_setup=pool,warm=warm,measured=measured,remaining_wall=invocation["elapsed"]-load-pool-warm-measured))
+    write("complete-cost.json",overhead)
 
 def results():
     import gzip

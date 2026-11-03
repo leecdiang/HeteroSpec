@@ -61,16 +61,25 @@ struct scope {
 struct ctx {
  llama_context*c=nullptr;int nv=0,capacity_n,ub;bool trace;json nodes=json::array();int pos=0,width=0,calls=0;
  static bool callback(ggml_tensor*t,bool ask,void*u){
-  if(!ask)return false;
   auto &x=*static_cast<ctx*>(u);
   const std::string name=t->name;
-  if(t->op!=GGML_OP_MUL_MAT && t->op!=GGML_OP_CONCAT && t->op!=GGML_OP_CONT && t->op!=GGML_OP_SOFT_MAX)return false;
+  const bool dump=job.value("capture",false) && name.size()>2 && name.substr(name.size()-2)=="-0" &&
+      (name.rfind("hs_",0)==0 || name.rfind("kq",0)==0 || name.rfind("Qcur",0)==0 || name.rfind("ffn_out",0)==0);
+  if(!ask){
+   if(dump){
+    std::vector<uint8_t> data(ggml_nbytes(t));ggml_backend_tensor_get(t,data.data(),0,data.size());
+    const auto file="capture-"+std::to_string(x.nodes.size())+"-"+name+".bin";
+    put(root/file,data.data(),data.size());x.nodes.push_back({{"capture",file},{"name",name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"type",ggml_type_name(t->type)}});
+   }
+   return true;
+  }
+  if(t->op!=GGML_OP_MUL_MAT && t->op!=GGML_OP_CONCAT && t->op!=GGML_OP_CONT && t->op!=GGML_OP_SOFT_MAX)return dump;
   json z={{"name",name},{"op",ggml_op_name(t->op)},{"base",x.pos},{"width",x.width},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}}};
   for(int i=0;i<2;i++)if(auto*s=t->src[i])z["sources"].push_back({{"name",s->name},{"type",ggml_type_name(s->type)},{"ne",{s->ne[0],s->ne[1],s->ne[2],s->ne[3]}},{"nb",{s->nb[0],s->nb[1],s->nb[2],s->nb[3]}}});
 #ifdef CAND
   if(x.c){auto*b=hs_b570_tensor_backend(x.c,t);z["backend"]=b?b:"unknown";}
 #endif
-  x.nodes.push_back(std::move(z));return false;
+  x.nodes.push_back(std::move(z));return dump;
  }
  ctx(llama_model*m,int C,int U,bool observe=false):nv(llama_vocab_n_tokens(llama_model_get_vocab(m))),capacity_n(C),ub(U),trace(observe){
   auto p=llama_context_default_params();p.n_ctx=C;p.n_batch=512;p.n_ubatch=U;p.n_outputs_max=U;p.n_outputs_max_per_seq=U;

@@ -1,6 +1,6 @@
 """Cross-check the summary tables against executed native records and checkpoint bytes."""
 from pathlib import Path
-import json,hashlib
+import json,hashlib,math
 from functools import lru_cache
 def verification(root):
     root=Path(root)
@@ -50,9 +50,24 @@ def verification(root):
             raw=records(name)
             assert (raw[1]['seconds'] if len(raw)==2 else None)==r['seconds']
             if len(raw)==2:assert [v['slot']['stage'] for v in raw]==['warmup','measure']
+    if (root/'NATURAL_QUAL.json').exists():
+        for r in read(root/'NATURAL_QUAL.json'):
+            orig=records(f'blind-{r["i"]}-R-*')
+            cand=records(f'blind-{r["i"]}-{r["arm"]}-*')
+            assert (orig[0]['vectors'] if orig else None)==r['reference_vectors']
+            assert (cand[0]['vectors'] if cand else None)==r['candidate_vectors']
+            if cand:assert cand[0]['greedy']==r['actual_ids']
+    if (root/'FAST_COST.json').exists():
+        for r in read(root/'FAST_COST.json'):
+            raw=records(r['unit'])
+            assert (raw[1]['seconds'] if len(raw)==2 else None)==r['seconds']
     for d in (root/'units').glob('seed-*'):
         for r in records(d.name):
             for s in r.get('states',[]):
                 with (d/'native'/f'state-{s["head"]}.bin').open('rb') as f:assert hashlib.file_digest(f,'sha256').hexdigest()==s['sha256']
                 states+=1
-    return dict(observed_or_missing_cells_reconstructed=cells,raw_fixed_costs_reconstructed=timings,checkpoint_objects_verified=states)
+    supervised=[(p,read(p)) for p in sorted((root/'units').rglob('SUPERVISOR.json'))]
+    assert all(s.get('job_accounting',{}).get('active_processes')==0 for _,s in supervised)
+    return dict(observed_or_missing_cells_reconstructed=cells,raw_fixed_costs_reconstructed=timings,checkpoint_objects_verified=states,
+                all_native_processes=len(supervised),all_native_seconds=math.fsum(s['charged_seconds'] for _,s in supervised),
+                legacy_supervised_jobs=[p.parent.relative_to(root).as_posix() for p,_ in supervised if not (p.parent/'RECEIPT.json').exists()])

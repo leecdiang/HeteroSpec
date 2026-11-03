@@ -39,3 +39,16 @@ The four-arm Williams panel has 288 measured slots. Twelve native-fast reference
 For timestamp attribution, a separate library adds tensor names to the Vulkan timestamp reports for CONT and CONCAT. It is used only for mechanism traces. The original formal library bytes are restored and the trace vectors are checked against the corresponding formal role.
 
 The scripts retain units that completed or failed. Use a fresh output root for an independent reproduction. An existing result directory is an evidence record, and is also usable for CPU-only recomputation.
+
+## CPU-only verification of the evidence release
+
+Use a GitHub account with repository access and fresh output directories. The release includes the object archive utility, recomputation program and their standalone dependencies.
+
+```powershell
+gh release download b570-reference-parallel-v1-evidence-20261103 --repo leecdiang/HeteroSpec --dir archive
+python archive/object_archive.py verify --root archive
+python archive/object_archive.py restore --root archive --out restored --prefix units --prefix vectors --prefix repro --tail .json
+python archive/recompute.py restored --verify-objects
+```
+
+The archive verifies all stored objects before selective restoration. The final command checks full-vector hashes, raw native comparison records, paired timing records and serialized checkpoint bytes.

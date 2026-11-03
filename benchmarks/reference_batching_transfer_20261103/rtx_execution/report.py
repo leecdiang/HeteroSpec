@@ -1,6 +1,6 @@
 """Publish compact results only after both qualifications and all registered blocks pass."""
 from pathlib import Path
-import json,shutil,subprocess
+import shutil
 from focused import ROOT, read, save, digest
 
 DEST=Path(__file__).resolve().parent
@@ -37,10 +37,19 @@ def main():
     receipts={str(p.relative_to(out)):digest(p) for p in out.rglob("*") if p.is_file()}
     save(out/"INDEX.json",receipts)
     lines=["# RTX shared planner transfer","", "The frozen candidate passed the retained original-R controls and all eight unseen inputs. The fixed cost panel completed 120 measured requests and 120 immediate warmups.","",
-           "| Family | Heavy qualification cells | Committed vectors | M_QB/M_PQ | C_QB/C_PQ | M_QB/C_QB | M_QB/R | C_QB/R |",
-           "|---|---:|---:|---:|---:|---:|---:|---:|"]
+           "| Family | Heavy qualification cells | Committed vectors | M_QB/M_PQ | C_QB/C_PQ | M_QB/C_QB | M_PQ/R | M_QB/R | C_PQ/R | C_QB/R |",
+           "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for fam,cells,v,ratios in table:
-        lines.append("| "+str(fam)+" | "+str(cells)+" | "+str(v)+" | "+" | ".join(f"{ratios[k]:.6f}" for k in ["M_QB/M_PQ","C_QB/C_PQ","M_QB/C_QB","M_QB/R","C_QB/R"])+" |")
+        lines.append("| "+str(fam)+" | "+str(cells)+" | "+str(v)+" | "+" | ".join(f"{ratios[k]:.6f}" for k in ["M_QB/M_PQ","C_QB/C_PQ","M_QB/C_QB","M_PQ/R","M_QB/R","C_PQ/R","C_QB/R"])+" |")
+    lines.extend(["","| Family | Input and start position | Layout | Planned (extent, width) | Observed QK (extent, width) | Layers |",
+                  "|---|---|---|---|---|---:|"])
+    for fam in FAMILIES:
+        for cell in freeze["families"][fam]["observed"]:
+            lines.append(f"| {fam} | {cell['input']} at {cell['head']} | {cell['arm']} | {cell['planned_groups']} | {cell['observed_qk_extent_width']} | {cell['layers_checked']} |")
+    lines.append("")
+    for fam in FAMILIES:
+        lines.append(f"{fam} recorded {freeze['families'][fam]['scalar_override_events']} host-weight placement queries where scalar and batch preferences differed and the scalar preference was selected.")
+        lines.append("")
     lines+=["","FREEZE.json records the predicted and observed groups, scalar placement override counts and executed source identities. The 8B all-GPU cohort and partially offloaded 14B cohort are reported separately. The retained audit and Llama control receipts are under evidence/. The per-family SERVICE.json separates loading, reference preparation and every warmup and measured service interval.",
             "", "The first exploratory epoch inherited a stale static-core digest. The final diagnostics bind the actual compiled libraries and executables. Earlier attempts remain under E:/rtx164. No experimental outcome depends on changing the original R.",
             "", "Reproduction order: authenticate PR162 sources, stage CUDA through integrate_llama_cpp.py, build the two pinned cohorts, then run focused.py, audit_focused.py, llama_controls.py, freeze.py, select_panel.py and confirm.py. Prepare pool.py before selection. Saved native raw is under E:/rtx164 on the RTX host."]

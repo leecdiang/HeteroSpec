@@ -24,6 +24,12 @@ def run_family(lib,fam,mode):
     panel_path=ROOT/"selection01"/(fam+".json")
     panel=read(panel_path)
     assert panel["freeze_sha256"]==digest(ROOT/"FREEZE.json")
+    oracle_identity=original["families"]["Qwen"]
+    for role in ("target","draft"):
+        assert digest(Path(cfg[role]))==oracle_identity["models"][role]["sha256"]
+    for exe in (cfg["worker"],cfg["original_worker"]):
+        for name,h in oracle_identity["numerical_modules"].items():
+            assert digest(Path(exe).parent/name)==h
     pins=read(ROOT/"FREEZE.json")["families"][fam]["source"]
     def check(bundle):
         for path,h in pins.items():assert digest(Path(path))==h

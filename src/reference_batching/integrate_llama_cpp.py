@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import runpy
 
 HERE = Path(__file__).resolve().parent
 METHOD = "std::vector<uint32_t> llama_kv_cache::get_prefix_n_kv(const slot_info & sinfo) const {"
@@ -107,7 +108,7 @@ def stage(source: Path, out: Path, backend: str) -> dict:
         (out / name).write_text(text, encoding="utf-8", newline="\n")
     shutil.copyfile(HERE / "reference_batching.hpp", out / "src/hs_reference_batching.hpp")
     if backend == "cuda":
-        from activate_cuda_requirements import install
+        install = runpy.run_path(str(HERE / "activate_cuda_requirements.py"))["install"]
         additional = ("ggml/src/ggml-backend.cpp", "ggml/src/repair_offload.hpp")
         before.update({name: (source / name).read_bytes() for name in additional})
         names += additional

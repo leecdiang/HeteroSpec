@@ -14,6 +14,12 @@ def mechanism():
     for fam,C in configs():
         strong_scalar(fam,C)
         B=2048 if C==4096 else 256
+        controls=read(ROOT/f'CONTROL-{fam}-{C}.json')
+        plans=[r for r in controls if r['arm']=='FAST' and r['B']==B and r['q'] in (2,32) and len(r['groups'])==2]
+        original=slots_run(f'fast-native-{fam}-{C}','reference-D',fam,C,[slot(fam,C,p,'FAST',True) for p in plans])
+        parity=[dict(q=p['q'],head=p['head'],original=r['vectors'] if r else None,unscoped=p['actual_vectors'],
+                     equal=bool(r and r['vectors']==p['actual_vectors'])) for r,p in zip(original,plans)]
+        put_once(ROOT/f'FAST_NATIVE_PARITY-{fam}-{C}.json',parity)
         for cross in (False,True):
             rows=observe(fam,C,B,16,cross,'candidate-profile',['PQ','QB','WB'],profile=True)
             ctl=read(ROOT/f'CONTROL-{fam}-{C}.json')
@@ -40,6 +46,8 @@ def freeze():
     assert all(any(r['family']==f and r['C']==C and r['arm']==a and r['q']==32 and r['equal'] for r in checks) for f,C in configs() for a in ('S1','PQ','QB','WB'))
     if not (ROOT/'FREEZE.json').exists():
         write(ROOT/'FREEZE.json',dict(utc=datetime.now(timezone.utc).isoformat(),role=ROLE,width=32,source=sha(ROOT/f'SOURCE_BINDING-{ROLE}.json'),core='a0baff824a1b54fb3867845372939b9a97c11115',
+            runner_commit=subprocess.check_output(['git','-c','gc.auto=0','-c','maintenance.auto=false','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
+            protocol_files={f:sha(HERE/f) for f in ('campaign.py','experiment.py','natural.py','service.py','contrast.py','recompute.py')},
             geometry_plan=sha(PLAN),deployments=sha(ROOT/'DEPLOYMENTS-D.json'),validated_configs=configs(),
             controlled_files={f'CONTROL-{f}-{C}.json':sha(ROOT/f'CONTROL-{f}-{C}.json') for f,C in configs()},
             scalar_ub1={f'SCALAR-{f}-{C}.json':sha(ROOT/f'SCALAR-{f}-{C}.json') for f,C in configs()},

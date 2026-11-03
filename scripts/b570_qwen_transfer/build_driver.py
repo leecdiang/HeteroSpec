@@ -8,7 +8,7 @@ KIT=Path('C:/hs/b570-producer-consumer-20261028/source-freeze/benchmarks')
 OLD=Path('C:/hs/b570-native-reproduction-20261026')
 ROOT=Path('I:/HeteroSpec/b570-qwen-transfer-20261103')
 
-def build(name, candidate):
+def build(name, candidate, version):
     destination=ROOT/name
     destination.mkdir()
     source=destination/'kit'
@@ -20,7 +20,16 @@ def build(name, candidate):
     s=replace(s,'#include <bcrypt.h>','#include "transfer_scope.hpp"\n#include <bcrypt.h>')
     shutil.copyfile(HERE/'transfer_scope.hpp',p.parent/'transfer_scope.hpp')
     s=replace(s,'p.cb_eval=BoundaryObs::cb;p.cb_eval_user_data=&obs;', 'if (!policy.clean) { p.cb_eval=BoundaryObs::cb;p.cb_eval_user_data=&obs; }')
-    s=replace(s,'int rc=llama_decode(c,b);','DecodeScope scope(role,phase); capacity_check(); int rc=llama_decode(c,b);')
+    s=replace(s,'int rc=llama_decode(c,b);','''DecodeScope scope(role,phase); capacity_check();
+  if(std::getenv("HS_TRANSFER_TRACE")) std::fprintf(stderr,"HS_DECODE role=%s phase=%s pos=%d width=%d\\n",role.c_str(),phase,pos,int(ids.size()));
+  const auto phase_start=policy.phase_clocks?Clock::now():Clock::time_point{};
+  int rc=llama_decode(c,b);''')
+    s=replace(s,'llama_synchronize(c);calls++;','llama_synchronize(c);calls++; if(policy.phase_clocks)phase_seconds[role+"/"+phase]+=seconds(phase_start);')
+    s=replace(s,'void trim(int keep){need(llama_memory_seq_rm(llama_get_memory(c),0,keep,-1),"trim");}', '''void trim(int keep){
+  const auto start=policy.phase_clocks?Clock::now():Clock::time_point{};
+  need(llama_memory_seq_rm(llama_get_memory(c),0,keep,-1),"trim");
+  if(policy.phase_clocks)phase_seconds[role+"/KV_TRIM"]+=seconds(start);
+ }''')
     s=replace(s,'  caller_trace.push_back(', '  if(!policy.clean) caller_trace.push_back(')
     s=replace(s,' NativeContext target(t,slot.at("target_ub"),heavy,"target");', '''
  policy.producer=slot.at("producer_layout")=="QB"?2:1;
@@ -28,6 +37,7 @@ def build(name, candidate):
  if(slot.at("route")=="strict_reference")policy.producer=policy.consumer=0;
  policy.precision=slot.value("precision",true);policy.prefix=slot.value("prefix",true);
  policy.clean=slot.value("clean",false);
+ policy.phase_clocks=slot.value("phase_clocks",false);phase_seconds.clear();
  _putenv_s("HS_TRANSFER_TRACE",slot.value("trace",false)?"1":"");
  need(!policy.clean || (!heavy && !resume), "clean natural request");
  NativeContext target(t,slot.at("target_ub"),heavy,"target");''')
@@ -56,11 +66,20 @@ def build(name, candidate):
   const auto*tv=''')
     s=replace(s,'row.update(run_request(t,d,input,slot,donor));', '''
     auto service=Clock::now();auto result_row=run_request(t,d,input,slot,donor);
-    row["service_seconds"]=seconds(service);row.update(result_row);''')
+    row["service_seconds"]=seconds(service);row.update(result_row);
+    row["performance_eligible"]=policy.clean && !policy.phase_clocks && !slot.value("trace",false) && !slot.value("probe",false);
+    if(policy.phase_clocks)row["phase_seconds"]=phase_seconds;''')
     s=replace(s,'cleanup();result["status"]="WORKER_COMPLETE";', 'result["min_device_free"]=min_device_free;result["min_ram_free"]=min_ram_free;cleanup();result["status"]="WORKER_COMPLETE";')
+    s=replace(s,'json run_request(', (HERE/'probe.inc').read_text(encoding='utf-8')+'\njson run_request(')
+    s=replace(s,'  std::map<std::string,json>completed;', '''  if(job.value("probe",false)) {
+    result["probe_runs"]=structural_probe(t,panel.at(job.at("slots")[0].at("input_id").get<std::string>()));
+    cleanup();result["normal_cleanup_returned"]=true;result["status"]="PROBE_COMPLETE";
+    dump(root/"result.json",result);return 0;
+  }
+  std::map<std::string,json>completed;''')
     p.write_text(s,encoding='utf-8')
-    runtime=ROOT/'build-00' if candidate else OLD/'build'
-    native=ROOT/'source-00' if candidate else OLD/'clean-source2/llama.cpp-0cae43063cf15170e91a2ff4d034da0ecef4a1b2'
+    runtime=ROOT/('build-'+version) if candidate else OLD/'build'
+    native=ROOT/('source-'+version) if candidate else OLD/'clean-source2/llama.cpp-0cae43063cf15170e91a2ff4d034da0ecef4a1b2'
     cm=(KIT/'b570_producer_consumer_boundary_v1/CMakeLists.txt').read_text(encoding='utf-8')
     cm+='\ntarget_compile_definitions(boundary PRIVATE LLAMA_SHARED GGML_SHARED GGML_BACKEND_SHARED'+(' TRANSFER_CANDIDATE' if candidate else '')+')\n'
     (unit/'CMakeLists.txt').write_text(cm,encoding='utf-8')
@@ -79,5 +98,5 @@ def build(name, candidate):
     print('DRIVER_BUILT',name,flush=True)
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('name');ap.add_argument('--candidate',action='store_true');a=ap.parse_args();build(a.name,a.candidate)
+    ap=argparse.ArgumentParser();ap.add_argument('name');ap.add_argument('--candidate',action='store_true');ap.add_argument('--version',default='00');a=ap.parse_args();build(a.name,a.candidate,a.version)
 

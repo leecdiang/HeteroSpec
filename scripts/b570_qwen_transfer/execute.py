@@ -16,7 +16,7 @@ def sha(p):
     with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
 def now():return datetime.now(timezone.utc).isoformat()
 def historical(index):return read(OLD/f'run-primary/B1-{index}.job.json')
-def record_unit(unit,build,slots,panel,prediction,admit=False):
+def record_unit(unit,build,slots,panel,prediction,admit=False,probe=False):
     unit=ROOT/'units'/unit
     unit.mkdir(parents=True,exist_ok=False)
     if not prediction:raise ValueError("pre-output structural prediction required")
@@ -24,7 +24,7 @@ def record_unit(unit,build,slots,panel,prediction,admit=False):
     template=historical(2)
     job={k:v for k,v in template.items() if k not in ('slots','payload_root','runtime_sha256')}
     manifest=ROOT/build/'FILES.json'
-    job.update(slots=slots,payload_root=str(unit/'payload'),runtime_sha256=sha(manifest),admit=admit)
+    job.update(slots=slots,payload_root=str(unit/'payload'),runtime_sha256=sha(manifest),admit=admit,probe=probe)
     write(unit/'JOB.json',job)
     models=read(OLD/'run-primary/B1-2.receipt.json')['argv'][2:4]
     pins=read(ROOT/'MODEL_PINS.json')['files']
@@ -42,7 +42,7 @@ def record_unit(unit,build,slots,panel,prediction,admit=False):
         sup=read(unit/'SUPERVISOR.json')
         native=read(unit/'native/result.json')
         if sup['job_accounting']['active_processes']!=0:raise RuntimeError('unsettled native process')
-        expected='ZERO_FORWARD_ADMITTED' if admit else 'WORKER_COMPLETE'
+        expected='ZERO_FORWARD_ADMITTED' if admit else 'PROBE_COMPLETE' if probe else 'WORKER_COMPLETE'
         ok=p.returncode==0 and native['status']==expected and native.get('normal_cleanup_returned')
         observed={Path(x['path']).name.lower():x['sha256'] for x in sup.get('loaded_module_hashes',[])}
         for f in read(manifest)['files']:
@@ -81,13 +81,14 @@ def admit(build):
 def original(build):
     for i in IDS:
         s=slots_for(i,[0],observer='heavy')
-        native=record_unit(f'original-{i}',build,s,PANEL,'Original numerical libraries, exact scalar R; retained P1 single-row vectors expected byte-identical.')
+        name=f'original-{i}' if build=='original-adapter-00' else f'original-{build}-{i}'
+        native=record_unit(name,build,s,PANEL,'Original numerical libraries, exact scalar R; retained P1 single-row vectors expected byte-identical.')
         row=native['requests'][0];old=read(OLD/f'run-primary/B1-{i}/result.json')['requests']
         vec={k:v['sha256'] for k,v in row['vectors'].items()}
         historical_vec={k:v['sha256'] for k,v in old[2]['vectors'].items()}
         assert row['endpoint']==old[0]['endpoint'] and vec==historical_vec
-        for f in row['vectors'].values():assert sha(ROOT/'units'/f'original-{i}'/'payload'/f['path'])==f['sha256']
-        write(ROOT/'units'/f'original-{i}'/'ORIGINAL_COMPARISON.json',dict(status='EXACT_ORIGINAL_MATCH',vectors=len(vec),original_endpoint=old[0]['endpoint']))
+        for f in row['vectors'].values():assert sha(ROOT/'units'/name/'payload'/f['path'])==f['sha256']
+        write(ROOT/'units'/name/'ORIGINAL_COMPARISON.json',dict(status='EXACT_ORIGINAL_MATCH',vectors=len(vec),original_endpoint=old[0]['endpoint']))
 def known(build):
     for i in IDS:
         choices=[2,8,10] if i!=2 else [2,8,10,5,12,14]

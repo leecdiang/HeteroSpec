@@ -15,8 +15,10 @@ struct RequestPolicy {
     bool precision = true;
     bool prefix = true;
     bool clean = false;
+    bool phase_clocks = false;
 };
 static RequestPolicy policy;
+static std::map<std::string,double> phase_seconds;
 static ggml_backend_dev_t selected_device = nullptr;
 static size_t min_device_free = SIZE_MAX;
 static size_t min_ram_free = SIZE_MAX;

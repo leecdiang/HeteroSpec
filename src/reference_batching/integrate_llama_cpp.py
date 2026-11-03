@@ -106,6 +106,12 @@ def stage(source: Path, out: Path, backend: str) -> dict:
     for name, text in changed.items():
         (out / name).write_text(text, encoding="utf-8", newline="\n")
     shutil.copyfile(HERE / "reference_batching.hpp", out / "src/hs_reference_batching.hpp")
+    if backend == "cuda":
+        from activate_cuda_requirements import install
+        additional = ("ggml/src/ggml-backend.cpp", "ggml/src/repair_offload.hpp")
+        before.update({name: (source / name).read_bytes() for name in additional})
+        names += additional
+        install(out)
     receipt = {
         "status": "SOURCE_STAGED_NOT_GPU_QUALIFIED", "backend": backend,
         "source": str(source), "candidate": str(out), "model_requests": 0,

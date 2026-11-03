@@ -103,10 +103,27 @@ def run_family(lib,fam,mode):
         save(b/"QUALIFICATION_PASS.json",dict(cells=len(cells)))
     else:
         for f in ("qwen8b02","qwen14b02"):assert (parent/f/"QUALIFICATION_PASS.json").is_file()
+        references={x["id"]:read(b/"units/original/native/old"/f"i{i}"/"heavy.json")["endpoint"] for i,x in enumerate(panel["inputs"])}
+        reference_path=b/"QUALIFIED_REFERENCES.json"
+        if reference_path.exists():
+            assert read(reference_path)==references
+        else:
+            save(reference_path,references)
         candidate,_,_,_=lib.driver(cfg["parent_snapshot"],binding)
         blocks=[]
+        units={}
         for session,slots in read(b/"TIMING_PLAN.json").items():
-            rows=candidate(b,"formal"+session,panel,slots)
+            unit="formal"+session
+            prior=b/"units"/unit
+            if prior.exists():
+                receipt=read(prior/"RECEIPT.json")
+                events=[__import__("json").loads(line) for line in (prior/"EVENTS.jsonl").read_text(encoding="utf-8").splitlines()]
+                assert not receipt["success"] and "FileNotFoundError" in receipt["error"] and receipt["active_processes_after_wait"]==0
+                assert [e["slot_id"] for e in events if e["event"]=="REQUEST_COMPLETED"]==[slots[0]["slot_id"]]
+                assert slots[0]["category"]=="warmup" and not list((prior/"native").rglob("measured.json"))
+                unit+="_reference_index_repair"
+            units[session]=unit
+            rows=candidate(b,unit,panel,slots)
             for i in range(4):
                 oracle=read(b/"units/original/native/old"/f"i{i}"/"heavy.json")
                 times={}
@@ -119,7 +136,7 @@ def run_family(lib,fam,mode):
         pairs=[("M_QB","M_PQ"),("C_QB","C_PQ"),("M_QB","C_QB")]+[(a,"R") for a in ARMS[1:]]
         by_input={panel["inputs"][i]["id"]:{f"{a}/{c}":sum(blocks[j*4+i][a] for j in range(3))/sum(blocks[j*4+i][c] for j in range(3)) for a,c in pairs} for i in range(4)}
         by_session=[{f"{a}/{c}":mean_ratio([blocks[j*4+i][a]/blocks[j*4+i][c] for i in range(4)]) for a,c in pairs} for j in range(3)]
-        save(b/"COST.json",dict(blocks=blocks,input_ratios=by_input,session_ratios=by_session,
+        save(b/"COST.json",dict(blocks=blocks,units=units,input_ratios=by_input,session_ratios=by_session,
             ratios={f"{a}/{c}":mean_ratio([v[f"{a}/{c}"] for v in by_input.values()]) for a,c in pairs}))
 
 
@@ -128,5 +145,6 @@ if __name__=="__main__":
     spec=importlib.util.spec_from_file_location("retained_driver",source)
     lib=importlib.util.module_from_spec(spec);spec.loader.exec_module(lib);lib.initialize(PREVIOUS)
     lib.parent.load("E:/rtx160/parent159")
-    for mode in ("qualify","cost"):
+    assert sys.argv[1:] in ([],["--cost-only"])
+    for mode in (("cost",) if sys.argv[1:] else ("qualify","cost")):
         for fam in ("qwen8b02","qwen14b02"):run_family(lib,fam,mode)

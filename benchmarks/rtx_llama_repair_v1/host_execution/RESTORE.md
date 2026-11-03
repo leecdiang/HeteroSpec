@@ -1,6 +1,6 @@
 # Evidence restoration
 
-The final release index and transport receipts will be linked in RESULTS.md after upload and fresh remote verification. Until then, no remote delivery is claimed.
+Complete evidence is published at [the Llama repair release](https://github.com/leecdiang/HeteroSpec/releases/tag/rtx-llama-repair-v1-evidence-20261102). All 259 shards / 123,210 members and separate transport metadata passed fresh authenticated remote readback. Start with [RAW_ACCESS.json](https://github.com/leecdiang/HeteroSpec/releases/download/rtx-llama-repair-v1-evidence-20261102/RAW_ACCESS.json), SHA-256 `ba4999f8d8a526aa209a181ab7a0d96dd5a7cc5bd9c4e9e048e12d5dc1089f86`; RESULTS.md and FINAL_DELIVERY.json link the attestations. Repository access controls are unchanged.
 
 The immutable `RAW_ACCESS.json` maps each archived member to its shard, byte count and SHA-256. Download every shard through an authenticated account with access to the private repository. Verify each archive's size and SHA-256, its exact member inventory, and each decompressed member's size and SHA-256 before using the evidence. The source map records original host paths for provenance; extracting those paths directly is unnecessary.
 

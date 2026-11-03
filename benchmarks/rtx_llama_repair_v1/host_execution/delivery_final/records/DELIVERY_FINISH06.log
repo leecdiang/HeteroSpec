@@ -1,0 +1,12 @@
+REMOTE_VERIFY01 exit 1 seconds 4399.0160000000615
+Traceback (most recent call last):
+  File "E:\rtx160\transport01\tooling05\finish_transport06.py", line 65, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "E:\rtx160\transport01\tooling05\finish_transport06.py", line 46, in main
+    run('REMOTE_VERIFY01',parent/'diagnostics/parallel_verify.py',[a.archive,remote,a.tag])
+  File "E:\rtx160\transport01\tooling05\finish_transport06.py", line 27, in run
+    subprocess.run([sys.executable,'-B',str(ops/'run_logged.py'),name,sys.executable,'-B',str(script),*map(str,args)],cwd=repo,env=env,check=True)
+  File "D:\HeteroSpec-PC\python311\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['D:\\HeteroSpec-PC\\python311\\python.exe', '-B', 'D:\\rtx160\\operations\\run_logged.py', 'REMOTE_VERIFY01', 'D:\\HeteroSpec-PC\\python311\\python.exe', '-B', 'E:\\rtx160\\parent159\\diagnostics\\parallel_verify.py', 'F:\\rtx160\\archive01', 'E:\\rtx160\\transport01\\remote01', 'rtx-llama-repair-v1-evidence-20261102']' returned non-zero exit status 1.

@@ -2,7 +2,7 @@
 
 The combined repair preserves the frozen stock Vulkan reference on all 24 prospectively selected unseen inputs. Independent reconstruction passes all 288 qualification requests, 23,718 saved full-vocabulary vectors and 14,555 committed candidate vectors. All 864 warmups and 864 measurements complete with reference-equal outputs. QB reduces complete speculative service time by 4.945% relative to the paired PQ controls, passing the predeclared 2.942% A/A screen in all six periods. The speculative C_QB path is nevertheless 62.879% slower than stock R under the admitted GPU-target / CPU-draft placement. These are distinct findings.
 
-Raw publication and fresh remote reconstruction are recorded separately in delivery receipts; completion of local native work is not by itself a remote-delivery claim.
+[Raw evidence](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-llama-companion-v1-evidence-20261103) is published and freshly downloaded. All145342 logical files /46976 unique objects in245 archives passed verification. A fresh restore of39473 files independently reproduces the complete unseen qualification, all costs and cumulative ledger, with byte-identical reports. [DELIVERY_COMPLETE.json](https://github.com/leecdiang/HeteroSpec/releases/download/b570-llama-companion-v1-evidence-20261103/DELIVERY_COMPLETE.json) records this authenticated same-host verification; no independent third-party replication is claimed.
 
 ## Contract and reference
 

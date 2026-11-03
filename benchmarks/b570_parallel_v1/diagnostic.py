@@ -1,6 +1,7 @@
 """Compare actual intermediate tensors at the first qualified/nonqualified boundary."""
 from experiment import *
 from collections import Counter
+import re
 def observe(fam,C,B,q,cross,role,arms,capture=False,profile=False):
     point=next(p for p in read(PLAN)[config(fam,C)] if p['B']==B and p['q']==q and (len(p['groups'])>1)==cross)
     rows={}
@@ -12,8 +13,12 @@ def observe(fam,C,B,q,cross,role,arms,capture=False,profile=False):
         u=ROOT/'units'/name;r=n['records'][0];log=(u/'SUPERVISOR.stderr.log').read_text(encoding='utf-8',errors='replace')
         region=log.split('TP_BEGIN ',1)[1].split('TP_END',1)[0]
         ds=Counter(x for x in region.splitlines() if x.startswith('TP_DISPATCH '))
+        device_us=Counter()
+        for v in re.finditer(r'^([^\r\n:]+): \d+ x [\d.eE+-]+ us = ([\d.eE+-]+) us',region,re.MULTILINE):
+            device_us[v.group(1)]+=float(v.group(2))
         captures=[v for v in r['nodes'] if 'capture' in v]
-        rows[a]=dict(unit=name,trace_calls=r['trace_calls'],dispatches=sum(ds.values()),kernels=dict(ds),captures=captures,
+        rows[a]=dict(unit=name,trace_calls=r['trace_calls'],dispatches=sum(ds.values()),kernels=dict(ds),captures=captures,gpu_microseconds=dict(device_us),
+            cache=[x for x in region.splitlines() if x.startswith('HS_CACHE')][:4],
             projection=[x for x in region.splitlines() if x.startswith('HS_PROJECTION')][:4],attn=[x for x in region.splitlines() if x.startswith('HS_ATTENTION')][:2],
             layer0_nodes=[z for z in r['nodes'] if z.get('op') and z['name'].endswith('-0')],vectors=r['vectors'])
     put_once(ROOT/f'DIAG-{role}-{fam}-{C}-h{point["head"]}-q{q}-d{int(capture)}p{int(profile)}.json',rows)

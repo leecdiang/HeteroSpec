@@ -81,6 +81,8 @@ static bool ggml_vk_qb_gqa_av_broadcast(const ggml_tensor *a,const ggml_tensor *
     apply(src)
     from pq_join import apply as join
     join(src)
+    from p021 import apply as extend_p021
+    extend_p021(src)
     write(ROOT/'SOURCE.json',dict(parent='5aae66e05b0f6e8a8b44dac719b2b05b8f84f34f',header_sha256=sha(src/'src/hs_reference_batching.hpp'),changes={p:sha(src/p) for p in ('src/llama-graph.cpp','src/query_head.h','src/llama-context.cpp',vk+'ggml-vulkan.cpp',vk+'vulkan-shaders/mul_mat_vec_base.glsl')}))
 if __name__=='__main__':
     ROOT.mkdir(exist_ok=True);stage()

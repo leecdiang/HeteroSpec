@@ -5,6 +5,7 @@ Q=read(PR165/'MODEL_PINS.json')['files']
 S=Path('C:/hs/jsa-b570-run-v1/models')
 sm=str(S/'SmolLM2-1.7B-Instruct-Q8_0.gguf');tiny=str(S/'SmolLM2-135M-Instruct-Q8_0.gguf')
 MODELS={'qwen':tuple(x['path'] for x in Q),'smol':(sm,tiny),'tiny':(tiny,sm)}
+MODELS['qwen_target']=MODELS['qwen']
 def setup():
     ROOT.mkdir(exist_ok=True)
     if not (ROOT/'ASSETS.json').exists():
@@ -23,6 +24,7 @@ def setup():
         (ROOT/'supervisor.py').write_text(s,encoding='utf-8')
 def driver(name,src,libs,candidate,worker=HERE/'worker.cpp'):
     dest=ROOT/name;dest.mkdir()
+    shutil.copyfile(worker,dest/'worker.cpp');worker=dest/'worker.cpp'
     cm=f'''cmake_minimum_required(VERSION 3.20)
 project(frontier_driver LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -63,6 +65,14 @@ def run(name,role,job,*,timeout=1200,allow_failure=False,args=None):
             s=once(s,key,'    cfg=json.loads(next(Path(v) for v in a.argv[1:] if Path(v).name=="JOB.json").read_text(encoding="utf-8"))\n    env["GGML_VK_SUBALLOCATION_BLOCK_SIZE"]=str(cfg["block_bytes"])\n'+key)
             tuned.write_text(s,encoding='utf-8')
         sup_path=tuned
+    if job.get('device_local'):
+        assert not job.get('block_bytes')
+        tuned=ROOT/'device-local-supervisor.py'
+        if not tuned.exists():
+            s=sup_path.read_text(encoding='utf-8')
+            key='    exe=Path(a.argv[0]).resolve()'
+            tuned.write_text(once(s,key,'    env["GGML_VK_DISABLE_HOST_VISIBLE_VIDMEM"]="1"\n'+key),encoding='utf-8')
+        sup_path=tuned
     cmd=[sys.executable,'-B',str(sup_path),'--manifest',str(manifest),'--receipt',str(unit/'SUPERVISOR.json'),'--limit',str(timeout),'--minimum-free-bytes',str(20*1024**3),*argv]
     write(unit/'COMMAND.json',cmd);write(LOCK,dict(pid=os.getpid(),unit=str(unit)))
     start=time.monotonic()
@@ -78,6 +88,7 @@ def run(name,role,job,*,timeout=1200,allow_failure=False,args=None):
     finally:
         if (unit/'SUPERVISOR.json').is_file() and read(unit/'SUPERVISOR.json').get('job_accounting',{}).get('active_processes')==0:LOCK.unlink(missing_ok=True)
 def job(family,C,slots,**extras):
+    if family=='qwen_target':extras['target_only']=True
     t,d=MODELS[family];return dict(target=t,draft=d,context=C,cas=str(ROOT/'vectors'),slots=slots,**extras)
 if __name__=='__main__':
     setup();role=sys.argv[1]

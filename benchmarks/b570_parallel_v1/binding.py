@@ -11,7 +11,7 @@ def bind_source(role):
     cmd=['git','-c','gc.auto=0','-c','maintenance.auto=false','rev-parse','9c79594f679ea4aad1956d8a385fdf6a7352d892:src/reference_batching/reference_batching.hpp']
     assert subprocess.check_output(cmd,cwd=repo,text=True).strip()=='a0baff824a1b54fb3867845372939b9a97c11115'
     dest=ROOT/f'SOURCE_BINDING-{role}.json'
-    put_once(dest,dict(parent='5aae66e05b0f6e8a8b44dac719b2b05b8f84f34f',runtime=role,runtime_files=read(ROOT/role/'FILES.json'),reference_runtime_files=read(ROOT/'reference-B/FILES.json'),
+    put_once(dest,dict(parent='5aae66e05b0f6e8a8b44dac719b2b05b8f84f34f',runtime=role,runtime_files=read(ROOT/role/'FILES.json'),worker_snapshot=sha(ROOT/role/'worker.cpp') if (ROOT/role/'worker.cpp').exists() else None,reference_runtime_files=read(ROOT/('reference-D' if role=='candidate-D' else 'reference-B')/'FILES.json'),
         compiled_source=actual,pr166_core_commit='abd36bea639bf814159ad68ab015bc983c5338b1',rtx_integrated_commit='9c79594f679ea4aad1956d8a385fdf6a7352d892',
         common_git_blob='a0baff824a1b54fb3867845372939b9a97c11115',cmake_cache_sha256=sha(ROOT/'build-00/CMakeCache.txt'),first_receipt=sha(ROOT/'SOURCE.json')))
 if __name__=='__main__':bind_source(sys.argv[1])

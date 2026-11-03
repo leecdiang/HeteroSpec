@@ -2,7 +2,7 @@
 from host import *
 import itertools,math
 def build():
-    for role,oldrole in [('poll2-R','original-final'),('poll2-C','shared-01')]:
+    for role,oldrole in [('poll3-R','original-final'),('poll3-C','shared-01')]:
         dest=ROOT/role;shutil.copytree(PR165/oldrole/'kit',dest/'kit')
         kit=dest/'kit/b570_producer_consumer_boundary_v1';p=kit/'native/boundary.cpp';s=p.read_text(encoding='utf-8')
         s=once(s,'struct NativeContext {','static bool poll_decode=false; static double poll_seconds=0; static int poll_queries=0;\nstruct NativeContext {')
@@ -11,8 +11,10 @@ def build():
         s=once(s,'row.update(result_row);','row.update(result_row);row["poll_seconds"]=poll_seconds;row["poll_queries"]=poll_queries;capacity_check();')
         s=once(s,'NativeContext draft(d,1,false,"draft");capacity_check();','std::unique_ptr<NativeContext> draft; if(job.value("admit_draft",true))draft=std::make_unique<NativeContext>(d,1,false,"draft");capacity_check();')
         p.write_text('#include <memory>\n'+s,encoding='utf-8')
-        libs=(OLD_LIB/'build') if role=='poll2-R' else PR165/'build-01'
-        src=next((OLD_LIB/'clean-source2').glob('llama.cpp-*')) if role=='poll2-R' else PR165/'source-01'
+        hdr=kit/'native/transfer_scope.hpp'
+        hdr.write_text(once(hdr.read_text(encoding='utf-8'),'need(available >= 128ULL','need(available <= total && available >= 128ULL'),encoding='utf-8')
+        libs=(OLD_LIB/'build') if role=='poll3-R' else PR165/'build-01'
+        src=next((OLD_LIB/'clean-source2').glob('llama.cpp-*')) if role=='poll3-R' else PR165/'source-01'
         command(['cmake','-S',kit,'-B',dest/'build','-G','Visual Studio 17 2022','-A','x64','-DLLAMA_SOURCE='+src.as_posix(),'-DQUALIFIED_BUILD='+libs.as_posix()],dest/'configure.log')
         command(['cmake','--build',dest/'build','--config','Release','--parallel','4'],dest/'compile.log')
         bin=dest/'build/bin/Release'
@@ -29,7 +31,7 @@ def measure():
         i=list(panel).index(b['id']);arm=b['arm']
         qual=PR165/'units'/f"qual-{i}-{'R' if arm=='R' else 'candidate'}"
         idx=0 if arm=='R' else ['M_PQ','M_QB','C_PQ','C_QB'].index(arm)
-        template=read(qual/'JOB.json');s=template['slots'][idx];role='poll2-R' if arm=='R' else 'poll2-C'
+        template=read(qual/'JOB.json');s=template['slots'][idx];role='poll3-R' if arm=='R' else 'poll3-C'
         name=f'poll-{n:03d}';j=dict(template,payload_root=str(ROOT/'units'/name/'payload'),runtime_sha256=sha(ROOT/role/'FILES.json'),
              slots=[dict(s,slot_id=f'{stage}/{arm}',stage=stage,clean=True,observer='off',trace=False,poll=b['poll']) for stage in ('warmup','measured')])
         def args(u):return [str(u/'native'),*MODELS['qwen'],str(PR165/'UNSEEN.json'),str(u/'JOB.json')]

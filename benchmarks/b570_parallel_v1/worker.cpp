@@ -34,6 +34,7 @@ static json job;static fs::path root;static ggml_backend_dev_t device;
 static size_t free_gpu_min=SIZE_MAX,free_ram_min=SIZE_MAX;
 static void capacity(){
  size_t f=0,total=0;ggml_backend_dev_memory(device,&f,&total);MEMORYSTATUSEX m{};m.dwLength=sizeof(m);need(GlobalMemoryStatusEx(&m),"RAM");
+ if(job.value("capacity_trace",false) || f>total || f<128ULL*1024*1024)std::cerr<<"TP_CAPACITY raw_free="<<f<<" total="<<total<<" ram="<<m.ullAvailPhys<<std::endl;
  free_gpu_min=std::min(free_gpu_min,f);free_ram_min=std::min(free_ram_min,size_t(m.ullAvailPhys));
  need(f<=total && f>=128ULL*1024*1024,"128 MiB device reserve");need(m.ullAvailPhys>=2ULL*1024*1024*1024,"2 GiB host reserve");
 }
@@ -138,7 +139,12 @@ static json grid(llama_model*m,const json&s){
  output out{s.at("heavy").get<bool>()};json calls=json::array();
  if(x.trace)std::cerr<<"TP_BEGIN "<<arm<<" head="<<base<<" width="<<ids.size()<<std::endl;
  auto start=clock_t_tp::now();
- chunk(x,arm,ids.data(),int(ids.size()),base,true,true,out,s.value("trace",false)?&calls:nullptr);llama_synchronize(x.c);
+ const int step=s.value("step",int(ids.size()));need(step>0&&step<=32,"positive query step");
+ for(int offset=0;offset<int(ids.size());offset+=step){
+  int count=std::min(step,int(ids.size())-offset);
+  chunk(x,arm,ids.data()+offset,count,base+offset,true,true,out,s.value("trace",false)?&calls:nullptr);
+ }
+ llama_synchronize(x.c);
  const double elapsed=sec(start);
  if(x.trace)std::cerr<<"TP_END"<<std::endl;
  capacity();
@@ -175,13 +181,15 @@ int main(int argc,char**argv){
   need(argc==3,"worker JOB OUT");job=read(argv[1]);root=argv[2];need(!fs::exists(root),"fresh native unit");fs::create_directories(root);save(root/"result.json",result);
   llama_backend_init();for(size_t i=0;i<ggml_backend_dev_count();i++){auto*q=ggml_backend_dev_get(i);if(std::string(ggml_backend_dev_description(q)).find("B570")!=std::string::npos)device=q;}
   need(device,"B570 device");ggml_backend_dev_t devices[]={device,nullptr};auto params=llama_model_default_params();params.devices=devices;params.n_gpu_layers=999;params.split_mode=LLAMA_SPLIT_MODE_NONE;
-  auto l=clock_t_tp::now();t=llama_model_load_from_file(job.at("target").get<std::string>().c_str(),params);need(t,"load target");d=llama_model_load_from_file(job.at("draft").get<std::string>().c_str(),params);need(d,"load draft");result["load_seconds"]=sec(l);capacity();
+  auto l=clock_t_tp::now();t=llama_model_load_from_file(job.at("target").get<std::string>().c_str(),params);need(t,"load target");
+  if(!job.value("target_only",false)){d=llama_model_load_from_file(job.at("draft").get<std::string>().c_str(),params);need(d,"load draft");}
+  result["resident_models"]=d?2:1;result["load_seconds"]=sec(l);capacity();
   for(auto&s:job.at("slots")){
    capacity();json r;std::string kind=s.at("kind");
    if(kind=="admit"){ctx a(t,job.at("context"),s.at("ub"));
     std::unique_ptr<ctx> draft_ctx;
-    if(s.value("draft_context",true))draft_ctx=std::make_unique<ctx>(d,job.at("context"),1);
-    capacity();r={{"zero_forwards",true},{"both_models_all_gpu",true},{"draft_context",bool(draft_ctx)}};}
+    if(s.value("draft_context",true)){need(d,"draft model required");draft_ctx=std::make_unique<ctx>(d,job.at("context"),1);}
+    capacity();r={{"zero_forwards",true},{"both_models_all_gpu",bool(d)},{"draft_context",bool(draft_ctx)}};}
    else if(kind=="seed")r=seed(t,s);
    else if(kind=="grid")r=grid(t,s);
    else if(kind=="natural")r=natural(t,s);

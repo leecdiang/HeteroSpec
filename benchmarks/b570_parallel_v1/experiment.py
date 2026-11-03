@@ -1,7 +1,7 @@
 """One fixed design. Preserve missing cells and the first failed native attempt."""
 from structure import *
 from itertools import groupby
-ROLE='candidate-B'
+ROLE='candidate-D'
 def put_once(path,value):
     if path.exists():assert read(path)==value
     else:write(path,value)
@@ -24,7 +24,7 @@ def slots_run(tag,role,fam,C,slots,**opts):
         else:raise ValueError('incomplete successful process')
     return out
 def config(fam,C):
-    return ('Q' if fam=='qwen' else 'S')+str(C)
+    return ('Q' if fam.startswith('qwen') else 'S')+str(C)
 def control(fam,C):
     key=config(fam,C);points=read(PLAN)[key]
     seed(fam,C,key)
@@ -39,7 +39,7 @@ def control(fam,C):
                 for r in read(u/'native/result.json')['records']:lookup[hashval(r['slot'])]=r
         missing=[s for s in original if hashval(s) not in lookup]
         if missing:
-            new=slots_run(base+'-R','reference-B',fam,C,missing)
+            new=slots_run(base+'-R','reference-D',fam,C,missing)
             lookup.update((hashval(s),r) for s,r in zip(missing,new))
         for arm in ARMS:
             rows=slots_run(base+'-'+arm,ROLE,fam,C,[slot(fam,C,p,arm,True) for p in group])

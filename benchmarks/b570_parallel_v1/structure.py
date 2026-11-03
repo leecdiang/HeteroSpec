@@ -12,14 +12,14 @@ def select_configs(role):
     write(ROOT/f'ADMISSION-{role}.json',gate);return gate
 @lru_cache
 def sequences(fam):
-    if fam=='qwen':return read(PLAN)['tokens']
+    if fam in ('qwen','qwen_target'):return read(PLAN)['tokens']
     pool=read(PR165/'pool-00/POOL.json')['rows']
     selected=sorted(pool,key=lambda v:hashval(['smol-heldout',v['id']]))[:4]
-    txt=ROOT/'smol-input.jsonl';out=ROOT/'smol-tokenized.jsonl'
+    txt=ROOT/f'{fam}-input.jsonl';out=ROOT/f'{fam}-tokenized.jsonl'
     if not txt.exists():
         txt.write_text(''.join(json.dumps({'id':v['id'],'formatted_prompt':v['text']})+'\n' for v in selected),encoding='utf-8')
         tok=Path('I:/HeteroSpec/b570-llama-20261102/tokenizer-build-00/build/Release/operator_replay.exe')
-        command([tok,MODELS[fam][0],txt,out],ROOT/'smol-tokenizer.log')
+        command([tok,MODELS[fam][0],txt,out],ROOT/f'{fam}-tokenizer.log')
     ids=[x for line in out.read_text(encoding='utf-8').splitlines() for x in json.loads(line)['prompt_ids']]
     return (ids*((4200+len(ids)-1)//len(ids)))[:4200]
 def configurations(role):
@@ -29,9 +29,10 @@ def configurations(role):
     return [('qwen',1024,'Q1024')]+([('qwen',long,'Q'+str(long))] if long else [])+[('smol',4096,'S4096')]
 def seed(fam,C,key):
     coords=read(PLAN)[key];heads=sorted({p['head'] for p in coords})
+    role='reference-D' if fam=='qwen_target' else 'reference-O'
     if not (ROOT/f'R-{fam}-{C}.json').exists():
-        write(ROOT/f'R-{fam}-{C}.json',dict(context=C,original_manifest=sha(ROOT/'reference-O/FILES.json'),models=MODELS[fam],anchor=sha(ROOT/'ORIGINAL_ANCHOR.json'),recipe='original numerical DLLs, UB1 P1 8 threads F16 KV, fixed original query tokens'))
-    return run(f'seed-{fam}-{C}','reference-O',job(fam,C,[dict(kind='seed',ids=sequences(fam),heads=heads)]),timeout=1800)
+        write(ROOT/f'R-{fam}-{C}.json',dict(context=C,original_manifest=sha(ROOT/role/'FILES.json'),models=MODELS[fam][:1] if fam=='qwen_target' else MODELS[fam],anchor=sha(ROOT/'ORIGINAL_ANCHOR.json'),recipe='original numerical DLLs, UB1 P1 8 threads F16 KV, fixed original query tokens'))
+    return run(f'seed-{fam}-{C}',role,job(fam,C,[dict(kind='seed',ids=sequences(fam),heads=heads)]),timeout=1800)
 def slot(fam,C,point,arm,heavy,trace=False):
     h=point['head'];w=point['q']
     return dict(kind='grid',arm=arm,base=h,ids=sequences(fam)[h:h+w],state=str(ROOT/f'units/seed-{fam}-{C}/native/state-{h}.bin'),ub=w,heavy=heavy,trace=trace)

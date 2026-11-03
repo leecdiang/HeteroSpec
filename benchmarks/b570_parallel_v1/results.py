@@ -39,6 +39,18 @@ def report():
             if rows:ret[f'{family}/q{q}']=dict(blocks=len(rows),cross=gmean([r['cross'] for r in rows]),inside=gmean([r['inside'] for r in rows]),incremental=gmean([r['ratio'] for r in rows]),cross_WB_slower=sum(r['cross']>1 for r in rows))
     summary=dict(controls=dec['controls'],fixed_work=ret,natural=[dict(**{k:v for k,v in x.items() if k!='pairs'},**intervals(x['pairs'])) for x in dec['natural']],
                  forecast={k:{j:v for j,v in val.items() if j!='rows'} for k,val in dec['held_out_forecast'].items()},process_seconds=dec['process_seconds'],owned_seconds=dec['owned_seconds'],units=dec['units'],unsuccessful_units=dec['unsuccessful_units'],raw_validation=dec['raw_validation'],objects=dec['verified_unique_vectors'])
+    costs=read(ROOT/'NATURAL_COST.json')
+    summary['service_accounting']={}
+    for a in ('S1','PQ','QB','WB'):
+        rs=[r for r in costs if r['arm']==a and r['seconds']]
+        summary['service_accounting'][a]=dict(completed=len(rs),qualified=sum(r['qualified'] for r in rs),
+            geometric_service=gmean([r['seconds'] for r in rs]),mean_model_load=statistics.mean(r['load_seconds'] for r in rs) if rs else None,
+            mean_owned_including_warmup=statistics.mean(r['owned_seconds'] for r in rs) if rs else None)
+    fs=read(ROOT/'FAST_COST.json');ratios=[]
+    for f in fs:
+        q=next(r for r in costs if r['arm']=='QB' and r['i']==f['i'] and r['session']==f['session'])
+        if f['seconds'] and q['seconds']:ratios.append(f['seconds']/q['seconds'])
+    summary['native_performance_reference']=dict(qualified=sum(r['qualified'] for r in fs),cells=len(fs),measured_pairs=len(ratios),native_over_QB_time=gmean(ratios))
     for name,v in [('summary.json',summary),('dispatch.json',traces())]:
         if (dest/name).exists():assert read(dest/name)==v
         else:write(dest/name,v)

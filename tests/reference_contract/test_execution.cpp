@@ -84,6 +84,29 @@ int main() {
     live=r.state;
     result=execute_operator(r,registry,live,[&](const PackingPlan&){live.position++;return true;},scalar,[]{return true;});
     check(!result.success&&!live.clean);
+    // Callback errors may not resurrect clean metadata on failed execution.
+    live=r.state;
+    result=execute_operator(r,registry,live,[&](const PackingPlan&){live.clean=true;return false;},scalar,[]{return true;});
+    check(!result.success&&!live.clean);
+    live=r.state;threw=false;
+    try{execute_operator(r,registry,live,[&](const PackingPlan&)->bool{live.clean=true;throw std::runtime_error("late failure after metadata write");},scalar,[]{return true;});}
+    catch(...){threw=true;}check(threw&&!live.clean);
+    live=r.state;
+    result=execute_operator(r,registry,live,optimized,scalar,[&](){live.clean=true;return false;});
+    check(!result.success&&!live.clean);
+    // Structural assumptions must be checked for each actual request.
+    auto structural=qualification(r);structural.level=EvidenceLevel::structural_assumptions;
+    structural.assumptions="test-only data-dependent premise";
+    PackingRegistry structural_registry;
+    threw=false;try{structural_registry.add(structural);}catch(const std::invalid_argument&){threw=true;}check(threw);
+    bool premise=false;int premise_calls=0;
+    structural.validate_assumptions=[&](const PackingRequest & actual){++premise_calls;return premise&&actual.input.k==128;};
+    structural_registry.add(structural);
+    check(packing_admission(r,structural_registry).reason==Reason::assumptions_unmet);
+    premise=true;check(packing_admission(r,structural_registry).action==Admission::optimized);
+    premise=false;check(packing_admission(r,structural_registry).reason==Reason::assumptions_unmet);check(premise_calls==3);
+    PackingRegistry throwing_registry;structural.validate_assumptions=[](const PackingRequest&)->bool{throw std::runtime_error("premise check failed");};
+    throwing_registry.add(structural);check(packing_admission(r,throwing_registry).reason==Reason::assumptions_unmet);
     DenseAppendState s{253,4,257,257,1024,256,1,true,false};
     auto ext=checked_prefix(s);check(ext==std::vector<uint32_t>({256,256,256,512}));
     s.contiguous=false;check(checked_prefix(s).empty());

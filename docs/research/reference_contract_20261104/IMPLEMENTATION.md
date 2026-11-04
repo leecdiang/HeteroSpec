@@ -181,3 +181,16 @@ Final cloud evidence: 40 Python tests, 643 C++ protocol checks (also UBSan),
 state test executable reporting all eight cases passed. An independent review
 recompiled the native test against the final library and reproduced 47/47.
 No CI run, GPU result or acceptance-probability improvement is inferred.
+
+## Costs that must be measured, not hidden
+
+The current owner is correctness-first: a successful append synchronizes and
+exports full native state before execution, then synchronizes and exports it
+again after execution; it copies checkpoint vectors and all requested logit
+rows. Restore creates a fresh context, imports and re-exports the full state.
+Bound graphs deliberately lose graph-cache reuse. These are potentially large
+latency, memory-bandwidth and allocation costs, especially for long contexts.
+The tiny CPU checks are not a throughput benchmark. Any later GPU evaluation
+must include capture, verification, state copying, graph rebuilding, restore and
+miss/fallback costs against an equally optimized baseline. A faster isolated
+packed GEMM would not establish a faster end-to-end service.

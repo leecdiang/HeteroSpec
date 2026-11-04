@@ -20,7 +20,7 @@ def main(name,out):
         assert attempts[-1].get('code')==0,filename
         print('downloaded',filename,flush=True)
     download(name+'.parts.json');manifest=read(out/(name+'.parts.json'))
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=6) as pool:
         for f in as_completed([pool.submit(download,p['name']) for p in manifest['parts']]):f.result()
     parts.join(out/(name+'.parts.json'),out/name)
     if name.startswith('calibration'):

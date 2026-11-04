@@ -66,7 +66,7 @@ Descriptive fixed-policy comparisons (no additional hypothesis tests):
 
 ## Append, imports and aligned control
 
-| Arm | Geometric receipt-to-append s | Mean cumulative import s | Mean imported bytes | Empty-cache geometric service s |
+| Arm | Geometric receipt-to-append s | Mean cumulative import s | Mean snapshot bytes | Empty-cache geometric service s |
 |---|---:|---:|---:|---:|
 | QB | 0.622190 | 0.464198 | 43706716 | 3.814175 |
 | WB-cut | 0.623004 | 0.463064 | 43706716 | 3.803054 |
@@ -82,7 +82,7 @@ The empty-cache control uses another workload lifecycle and is not pooled with c
 - Conservative request reservations: **2026 / 2048**; completed native request receipts: **1957**; reserved units without a completed receipt: **69**. Interrupted batches retain their entire reservation.
 - Zero-forward launches: **2**; completed native process wall sum: **7288.123934s** (separate from, not added to, overlapping calibration wall time).
 - Main measured service sum: **1544.649764s**; immediate-warmup service sum: **1539.268555s**.
-- Main observed cache-hit fraction: 100%; all actual imports totaled **44755677696 bytes** across 1024 main slots. This planned replay hit fraction is not a production traffic estimate.
+- Main observed cache-hit fraction: 100%; serialized snapshot bytes supplied to the import API totaled **44755677696 bytes** across 1024 main slots. These are serialized API input bytes, not measured PCIe traffic. The planned replay hit fraction is not a production traffic estimate.
 - Across all completed engineering/calibration/main/control requests, recorded service windows sum to **6021.082215s**; disjoint positive-head prefix production adds **438.733440s**. Heavy-observer I/O is included where actually used. Model-load windows sum to **451.653362s** and remain separately reported.
 - The pre-freeze epoch omitting file/index costs was interrupted and invalidated for service claims. A later batch was interrupted for output-blind leaf-cohort reconciliation. Both batches, incomplete slots, original references, source epochs and cumulative costs remain in the raw archive and ledger; no favorable rerun was selected.
 
@@ -100,6 +100,12 @@ Release: [rtx-prefix-reuse-v1-20261104](https://github.com/leecdiang/HeteroSpec/
 Follow [execution README](README.md). `download_parts.py` downloads to a fresh directory, authenticates and joins parts, and reconstructs raw qualification and bootstrap results. `reproduce.py --prepare-only` checks the delivered runtime/model and rebases immutable snapshot paths without adding native measurements. Actual replay is a new run and must be charged separately. The worker deliberately requires an NVIDIA device description containing 5070; another deployment needs new qualification.
 
 Actual restored-download verification is documented separately from local packaging checks. Neither is third-party native replication. No result was merged and no manuscript was changed.
+
+## Delivered verification
+
+All 58 final raw parts were downloaded from GitHub, authenticated and rejoined. The downloaded archive reconstructed all qualification evidence, 144 calibration slots, 1024 main slots, 96 aligned slots, separate restore diagnostics and the exact bootstrap result. It retains 56,588 original paths and 8,988 unique content blobs. Whole-archive SHA256: `5850cd9e839f099c6105ae54ce144494d32ee6e058b32cb3701e8f2272de5570`.
+
+Prepare-only replay also passed against the downloaded runtime/raw archives and exact model, materializing 32 authenticated snapshots for the original main-session manifest. It added zero model requests. [Delivery receipt](evidence/DELIVERY.json) retains transfer retries and verification scope; this is not third-party native replication.
 
 ## All held-out root contrasts
 

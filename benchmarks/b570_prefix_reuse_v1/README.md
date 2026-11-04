@@ -5,10 +5,12 @@ This result branch starts at PR173 design head
 PR169 `8ca17478c292275b3515a91b51d0e791a8fae256`. Historical references,
 failed k1 admissions, shaders, and prior results are never overwritten.
 
-Execution is in progress. Admission and the output-blind cohort are real;
-no performance conclusion follows from these receipts. The shared test runner
-refuses to launch without both actual source/policy freezes and an exact
-token/cohort comparison. Source publication is not a freeze.
+Execution is in progress. Both genuine source/policy freezes have been published
+and inspected before any B570 held-out output. B570 froze at
+`6517c79b59ad3d813a35fa087d15751b825dad34`; RTX froze at
+`efd92438a08a4e9c37a422731ddd6850d8907f1b`. The shared test runner checks the
+receipt hashes, exact token/cohort identity and frozen source before launch.
+No performance conclusion follows from these receipts alone.
 
 ## Deployment and timer
 
@@ -70,8 +72,21 @@ scenarios, not measured third-party serving engines.
 The initial RTX provisional cohort used a different terminal interpretation.
 The saved provisional receipt and GitHub coordination comments retain that
 difference. B570's selected test roots do not overlap RTX's initial calibration
-roots. A common panel still requires explicit agreement and full token checks;
-the provisional RTX test panel must not silently be called shared blind data.
+roots. RTX independently accepted the actual-user-leaf interpretation and all44
+selected paths/token arrays at `3e326ecafa5fb74a65b8f22acf5d10175f015a9f`.
+Both sides verified all44 root IDs, cached/request hashes and physical heads.
+The provisional RTX panel remains an earlier epoch, not the shared blind panel.
+RTX's declared file-backed replay charges file read/index construction inside
+service. B570 preloads immutable snapshots into host memory and charges preload
+separately. Report within-host policy contrasts, not pooled or pure-hardware
+timing comparisons.
+
+B570 completed exactly144 calibration warm/measured slots. The resulting AUTO
+table is constant WB-rechunk. Its3193.093745-second observed calibration window
+includes earlier engineering and orchestration; it is not a free offline fit.
+The earlier incomplete observer-state epoch and explicitly interrupted slot are
+retained with their costs. Candidate03 qualification passed every calibration
+root/arm with final-state objects captured in both heavy and OFF controls.
 
 ## Host execution and read-only reconstruction
 

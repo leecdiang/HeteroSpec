@@ -23,9 +23,9 @@ def once(text, old, new):
         raise ValueError('missing/nonunique pinned source anchor: ' + old[:100])
     return text.replace(old, new, 1)
 
-def transform(graph: str, cache: str):
+def transform(graph: str, cache: str, graph_header: str):
     graph = once(graph, PACKED, GUARDED)
-    graph = '#define HS_CONTRACT_BUILD\n#include "hs_packing_gate.cpp"\n' + graph
+    graph = '#define HS_CONTRACT_BUILD\n#include "hs_packing_gate.cpp"\n#include "hs_scope.h"\nextern "C" HS_GATE_API bool hs_exchange_runtime_scope(bool active) { const bool old=hs_scope::active; hs_scope::active=active; return old; }\n' + graph
     cache = once(cache, PREFIX, 'return hs_reference_batching::checked_prefix(state);')
     cache = '#include "hs_packing_gate.hpp"\n' + cache
     # These early exits otherwise bypass checked_prefix before DenseAppendState.
@@ -36,7 +36,15 @@ def transform(graph: str, cache: str):
         '            throw std::runtime_error("reference prefix unsupported: restore before retry");\n'
         '        return {}; // legacy, no reference-preserving claim\n'
         '    }')
-    return graph,cache
+    graph_header=once(graph_header,
+        '    hs_reference_batching::PolicyIdentity reference_policy;',
+        '    hs_reference_batching::PolicyIdentity reference_policy;\n    bool reference_contract_active = false;')
+    graph=once(graph,'    inp->reference_policy=hs_reference_policy_identity();',
+        '    inp->reference_policy=hs_reference_policy_identity();\n    inp->reference_contract_active=hs_reference_batching::hs_get_packing_binding()!=nullptr;')
+    graph=once(graph,'    if (reference_policy!=hs_reference_policy_identity()) return false;',
+        '    if (reference_contract_active || hs_reference_batching::hs_get_packing_binding()) return false;\n    if (reference_policy!=hs_reference_policy_identity()) return false;')
+    graph += '\n#include "hs_native_preflight.inc"\n'
+    return graph,cache,graph_header
 
 def stage(source: Path, out: Path):
     source,out=source.resolve(),out.resolve()
@@ -44,15 +52,18 @@ def stage(source: Path, out: Path):
         raise ValueError('source must exist; output must be fresh and outside source')
     if any(p.is_symlink() for p in source.rglob('*')):
         raise ValueError('source symlinks are not supported')
-    names=('src/llama-graph.cpp','src/llama-kv-cache.cpp')
+    names=('src/llama-graph.cpp','src/llama-kv-cache.cpp','src/llama-graph.h')
     original={p:(source/p).read_bytes() for p in names}
     transformed=transform(*(original[p].decode('utf-8') for p in names))
     headers={
-        'reference_batching.hpp':'hs_reference_batching.hpp',
         'execution_contract.hpp':'execution_contract.hpp',
         'packing_gate.hpp':'hs_packing_gate.hpp',
         'packing_gate.cpp':'hs_packing_gate.cpp',
+        'native_preflight.inc':'hs_native_preflight.inc',
     }
+    backend_header=(source/'src/hs_reference_batching.hpp').read_bytes()
+    if hashlib.sha256(backend_header).hexdigest() != '746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c':
+        raise ValueError('unexpected source shared header; do not overwrite backend rules')
     # Materialize/validate all replacement bytes before creating output.
     payload={p:t.encode() for p,t in zip(names,transformed)}
     for src,dst in headers.items():
@@ -71,6 +82,7 @@ def stage(source: Path, out: Path):
             if target.is_symlink(): raise ValueError('refuse to overwrite symlink: '+p)
             target.write_bytes(data)
         receipt={'status':'STAGED_NOT_NATIVE_QUALIFIED','model_requests':0,
+                 'preserved_backend_header_sha256':hashlib.sha256(backend_header).hexdigest(),
                  'default':'reject without explicit bound qualification; tiled fallback separately qualified',
                  'failure':'prefix rejection requires abort and full checkpoint recovery',
                  'files':{p:{'before_sha256':hashlib.sha256(original[p]).hexdigest(),

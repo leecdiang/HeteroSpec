@@ -1,19 +1,30 @@
 """Bounded, authenticated asset parts; no scientific data is discarded."""
 from host import *
 from concurrent.futures import ThreadPoolExecutor,as_completed
-def split(path):
+def split(path,chunk_mib=128):
     parts=[]
     with path.open('rb') as f:
         i=0
-        while b:=f.read(256*1024**2):
+        while b:=f.read(chunk_mib*1024**2):
             p=path.with_name(path.name+f'.part{i:03}');p.write_bytes(b);parts.append(dict(name=p.name,bytes=len(b),sha256=hashlib.sha256(b).hexdigest()));i+=1
     put(path.with_name(path.name+'.parts.json'),dict(archive=path.name,sha256=sha(path),bytes=path.stat().st_size,parts=parts));print(len(parts),'parts')
 def upload(manifest):
     m=read(manifest);paths=[manifest.parent/x['name'] for x in m['parts']]+[manifest]
     def one(p):
-        t=time.monotonic();r=subprocess.run(['gh','release','upload','rtx-prefix-reuse-v1-20261104','--repo','leecdiang/HeteroSpec',str(p)],capture_output=True,text=True,timeout=900)
-        record=dict(file=p.name,code=r.returncode,seconds=time.monotonic()-t,stdout=r.stdout,stderr=r.stderr)
-        put(ROOT/(p.name+'.upload.json'),record);print(p.name,r.returncode,flush=True);return record
+        attempts=[]
+        for attempt in range(3):
+            t=time.monotonic();command=['gh','release','upload','rtx-prefix-reuse-v1-20261104','--repo','leecdiang/HeteroSpec',str(p)]
+            if attempt:command.append('--clobber') # only this task's identical generated asset
+            try:
+                r=subprocess.run(command,capture_output=True,text=True,timeout=600)
+                current=dict(attempt=attempt,code=r.returncode,seconds=time.monotonic()-t,stdout=r.stdout,stderr=r.stderr)
+            except subprocess.TimeoutExpired:
+                current=dict(attempt=attempt,code=None,seconds=time.monotonic()-t,error='600s transfer timeout')
+            attempts.append(current)
+            put(ROOT/(p.name+f'.upload-attempt{attempt}.json'),current)
+            if current['code']==0:break
+        record=dict(file=p.name,code=attempts[-1]['code'],attempts=attempts,seconds=sum(x['seconds'] for x in attempts))
+        put(ROOT/(p.name+'.upload.json'),record);print(p.name,record['code'],flush=True);return record
     with ThreadPoolExecutor(max_workers=4) as pool:
         results=[f.result() for f in as_completed([pool.submit(one,p) for p in paths])]
     assert all(r['code']==0 for r in results)

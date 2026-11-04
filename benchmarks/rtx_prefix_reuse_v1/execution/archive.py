@@ -47,8 +47,17 @@ def verify(path):
         sys.path.insert(0,str(HERE.parents[1]/'tpds_prefix_reuse_v1'))
         import study
         recomputed=study.analyze(normalized,panel);assert recomputed==get('analysis.json')
+        for s in range(2):
+            units=get(f'aligned-cost-s{s}/input.json')['units'];assert len(units)==48
+            for u in units:
+                i=int(u['id'].split('/')[0][1:]);r=get(f'aligned-cost-s{s}/'+u['id']+'/receipt.json');ref=get(f'aligned-r-{i:02}/R-r0/receipt.json')
+                assert r['output']==ref['output'] and r['final_position']==ref['final_position']
+                assert r['calls']==[{k:x[k] for k in ('head','width')} for x in study.plan(0,len(u['tokens']),u['arm'])]
+        continuous='restore-diagnostic-reference/continuous/'
+        for d in ['restore-diagnostic-reference/restored/']+[f'restore-diagnostic-candidate/{a}/' for a in study.FIXED]:
+            assert vectors(d)==vectors(continuous) and index[d+'final.bin']['sha256']==index[continuous+'final.bin']['sha256']
         ledger=[get(p) for p in index if p.endswith('/launch.json')]
-        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=512,formal_warmups=512,bootstrap_reconstructed=True,not_third_party_native_replication=True)
+        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=512,formal_warmups=512,aligned_timing_slots=96,diagnostic_comparisons=4,bootstrap_reconstructed=True,not_third_party_native_replication=True)
         print(json.dumps(result,indent=2));return result
 if __name__=='__main__':
     if sys.argv[1]=='pack':pack()

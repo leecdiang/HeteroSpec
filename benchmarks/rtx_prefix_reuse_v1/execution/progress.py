@@ -3,6 +3,8 @@ from host import *
 from datetime import datetime,timezone
 status={'utc':datetime.now(timezone.utc).isoformat()}
 status['reference_roots_completed']=sum((ROOT/f'main-r-{i:02}/exit.json').exists() for i in range(32))
+status['aligned_reference_roots_completed']=sum((ROOT/f'aligned-r-{i:02}/exit.json').exists() for i in range(8))
+status['aligned_candidate_roots_completed']=sum((ROOT/f'aligned-q-{i:02}/exit.json').exists() for i in range(8))
 for stage in ['main-q-session']+[f'main-cost-s{s}' for s in range(4)]+[f'aligned-cost-s{s}' for s in range(2)]:
     d=ROOT/stage
     if (d/'input.json').exists():

@@ -1,5 +1,7 @@
 # RTX natural prefix replay execution
 
+Completed native results and full cost/uncertainty reporting are in [RESULTS.md](RESULTS.md). The registered AUTO usefulness screen was not met; the full 32-root, four-session panel and aligned control are retained. Download verification is documented separately from native replication.
+
 This is the independent native result branch from PR172 head `801196166c8e2a02215003301d129e68504e6b72`. The immutable scientific ancestor is PR171 `371223b696bb805030c29f04e39eb17b57fb2ebb`. Historical archives and original R are not overwritten.
 
 The final service worker is `worker_service.cpp`, built as `candidate07`. It links the unchanged PR171 packed arithmetic core and original numerical DLL cohort. QB, WB-cut, WB-rechunk and AUTO share those arithmetic assets. The scalar executable links the original PR166/168 core. Build bindings retain exact commands, source bytes, executable/core/module hashes and failed or superseded epochs.

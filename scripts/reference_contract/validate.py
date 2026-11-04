@@ -35,7 +35,8 @@ def main(output):
            for folder in ('src/reference_batching','tests/reference_contract','scripts/reference_contract')
            for p in sorted((ROOT/folder).glob('*')) if p.is_file()}
     files['src/query_layout/state_lineage.py']=hashlib.sha256((ROOT/'src/query_layout/state_lineage.py').read_bytes()).hexdigest()
-    result={'status':'CPU_PROTOCOL_AND_SOURCE_FIXTURE_TESTS_PASS','platform':platform.platform(),
+    result={'receipt_scope':'protocol and source fixtures only; see separate NATIVE_VALIDATION.json for actual runtime',
+            'status':'CPU_PROTOCOL_AND_SOURCE_FIXTURE_TESTS_PASS','platform':platform.platform(),
             'python':platform.python_version(),'compiler':subprocess.check_output([compiler,'--version'],text=True).splitlines()[0],
             'gpu_executions':0,'full_llama_build':'NOT_RUN','windows_dll':'NOT_RUN',
             'actual_pr171_source_staging':'NOT_RUN','new_numerical_equivalence':'NOT_ESTABLISHED',

@@ -104,13 +104,13 @@ reconstruction is explicitly different from native replication on another GPU.
 
 ## Portable native kit
 
-The archive's `portable` directory includes both original and candidate source,
+The archive's `portable-final` directory includes both original and candidate source,
 the adapter, historical import libraries/DLLs, and an actual calibration fixture.
 It contains no model weights. Supply the exact model hash above.
 With Visual Studio2022 and CMake, configure the adapter using:
 
 ```powershell
-cmake -S portable/adapter -B candidate-build -G "Visual Studio 17 2022" -A x64 -DCANDIDATE=ON -DLLAMA_SOURCE=ABSOLUTE/portable/candidate-source -DHISTORICAL_LIBS=ABSOLUTE/portable/historical-libs/candidate
+cmake -S portable-final/adapter -B candidate-build -G "Visual Studio 17 2022" -A x64 -DCANDIDATE=ON -DLLAMA_SOURCE=ABSOLUTE/portable-final/candidate-source -DHISTORICAL_LIBS=ABSOLUTE/portable-final/historical-libs/candidate
 cmake --build candidate-build --config Release --parallel 4
 ```
 
@@ -122,6 +122,7 @@ contains complete native request and cached token arrays; the native `seed`
 slot creates its prefix snapshot, and the `service` slot performs real restore.
 The supervised jobs in `units` are complete executable examples. Rebind paths
 and runtime manifests on the receiving host; never reuse source-host loaded-file
-attestations as proof of a different host's run.
+attestations as proof of a different host's run. The earlier `portable` directory
+is retained as a development epoch; use `portable-final` for the final source.
 
 No automatic merge, paper modification, submission or GPU rental is performed.

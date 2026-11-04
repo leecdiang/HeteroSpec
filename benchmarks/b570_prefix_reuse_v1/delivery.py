@@ -14,7 +14,7 @@ def prepare():
   s=s.replace('b570-parallel-native-evidence','b570-prefix-reuse-native-evidence')
   s=s.replace('B570 physical-prefix parallelism evidence','B570 natural prefix reuse evidence')
   s=s.replace('B570 PR169','B570 PR175')
-  if name=='publish_delivery.py':s=s.replace("'verify_raw.py','contrast.py'","'verify_raw.py'")
+  if name=='publish_delivery.py':s=s.replace("'verify_raw.py','contrast.py'","'verify_raw.py','report_details.py'")
   (repro/name).write_text(s,encoding='utf-8',newline='\n')
  historical=ROOT/'historical';historical.mkdir()
  for p in [*OLD.glob('R-*.json'),OLD/'K1_REGRESSION.json',OLD/'SOURCE_BINDING-candidate-D.json',OLD/'FREEZE.json']:shutil.copyfile(p,historical/p.name)
@@ -24,7 +24,7 @@ def prepare():
   if not dest.exists():shutil.copyfile(src,dest)
  sys.path.insert(0,str(repro));import object_archive
  object_archive.pack(ROOT,PACK)
- for name in ('object_archive.py','recompute.py','verify_raw.py','README.md'):shutil.copyfile(repro/name,PACK/name)
+ for name in ('object_archive.py','recompute.py','verify_raw.py','report_details.py','README.md'):shutil.copyfile(repro/name,PACK/name)
  object_archive.verify(PACK)
 def publish(commit):
  sys.path.insert(0,str(ROOT/'repro'));import publish_delivery

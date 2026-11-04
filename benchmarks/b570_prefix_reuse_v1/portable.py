@@ -1,7 +1,7 @@
 """Stage source and a small native fixture independent of source-host paths."""
 from host import *
 def stage():
- out=ROOT/'portable';out.mkdir()
+ out=ROOT/'portable-final';out.mkdir()
  shutil.copytree(ROOT/'source-00',out/'candidate-source')
  shutil.copytree(ORACLE/'clean-source2/llama.cpp-0cae43063cf15170e91a2ff4d034da0ecef4a1b2',out/'original-source')
  for label,base in [('candidate',OLD/'build-00'),('original',ORACLE/'build')]:

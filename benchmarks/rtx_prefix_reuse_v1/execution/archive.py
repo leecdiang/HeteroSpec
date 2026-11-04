@@ -1,16 +1,16 @@
 """Content-addressed raw archive and independent archive-only reconstruction."""
 from host import *
 import zipfile
-def pack():
+def pack(filename='raw-evidence.zip',receipt='raw-archive.json'):
     delivery=Path('F:/rtx172-delivery');delivery.mkdir(exist_ok=True)
-    out=delivery/'raw-evidence.zip';index={};unique=set()
+    out=delivery/filename;index={};unique=set()
     with zipfile.ZipFile(out,'x',zipfile.ZIP_DEFLATED,compresslevel=1) as z:
         for p in sorted(ROOT.rglob('*')):
             if not p.is_file() or p.suffix not in ('.json','.jsonl','.log','.f32','.bin','.cpp') or p.name=='archive-verification.json':continue
             h=sha(p);index[p.relative_to(ROOT).as_posix()]=dict(sha256=h,size=p.stat().st_size)
             if h not in unique:z.write(p,'blobs/'+h);unique.add(h)
         z.writestr('index.json',json.dumps(index,sort_keys=True))
-    put(ROOT/'raw-archive.json',dict(sha256=sha(out),bytes=out.stat().st_size,logical_files=len(index),unique_blobs=len(unique)))
+    put(ROOT/receipt,dict(sha256=sha(out),bytes=out.stat().st_size,logical_files=len(index),unique_blobs=len(unique)))
 def verify(path):
     with zipfile.ZipFile(path) as z:
         index=json.loads(z.read('index.json'));verified=set()
@@ -32,7 +32,7 @@ def verify(path):
                 repeat=f'{phase}-r-{i:02}/'+('R-r1/' if phase=='aligned' else 'r1/')
                 assert vectors(repeat)==v
                 for a in arms:
-                    d=f'{phase}-q-{i:02}/'+(f'i{i:02}/{a}/heavy/' if phase=='main' else a+'-heavy/')
+                    d=f'main-q-session/i{i:02}/{a}/heavy/' if phase=='main' else f'{phase}-q-{i:02}/'+a+'-heavy/'
                     assert vectors(d)==v and index[d+'final.bin']['sha256']==index[ref+'final.bin']['sha256']
                     c=get(d+'receipt.json');assert c['output']==r['output'] and c['final_position']==r['final_position'];comparisons+=1
         records=get('COMMON_CALIBRATION.json')['records'];assert len(records)==144

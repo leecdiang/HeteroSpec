@@ -19,10 +19,12 @@ def refs():
     for i,r in enumerate(gate()):
         run(f'main-r-{i:02}','oracle02',dict(mode='requests',capacity=4096,units=[dict(id=f'r{k}',tokens=r['request_ids'],head=study.lcp(r['cached_ids'],r['request_ids']),arm='R',cap=128,capture=True) for k in range(2)]),requests=2)
 def qualify():
-    proof=[]
-    for i,r in enumerate(gate()):
-        units=[unit(r,i,a,k) for a in study.ARMS for k in ('heavy','off')]
-        d=run(f'main-q-{i:02}','candidate07',dict(mode='requests',capacity=4096,units=units),requests=8)
+    proof=[];rows=gate()
+    # Match formal serving lifecycle: one resident context across all32 roots.
+    # This also exercises graph reuse between different restored prefixes.
+    units=[unit(r,i,a,k) for i,r in enumerate(rows) for a in study.ARMS for k in ('heavy','off')]
+    d=run('main-q-session','candidate07',dict(mode='requests',capacity=4096,units=units),requests=256)
+    for i,r in enumerate(rows):
         ref=ROOT/f'main-r-{i:02}/r0';rr=read(ref/'receipt.json');v={p.name:sha(p) for p in ref.glob('*.f32')}
         for arm in ('R-repeat',*study.ARMS):
             heavy=ROOT/f'main-r-{i:02}/r1' if arm=='R-repeat' else d/f'i{i:02}'/arm/'heavy';h=read(heavy/'receipt.json');off=h if arm=='R-repeat' else read(heavy.parent/'off/receipt.json')

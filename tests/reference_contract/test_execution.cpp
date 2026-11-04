@@ -88,5 +88,7 @@ int main() {
     auto ext=checked_prefix(s);check(ext==std::vector<uint32_t>({256,256,256,512}));
     s.contiguous=false;check(checked_prefix(s).empty());
     {PackingScope scope(binding);threw=false;try{checked_prefix(s);}catch(const std::runtime_error&){threw=true;}check(threw);}
+    check(use_scalar_head_preference(true,true,32,true,false));
+    check(!use_scalar_head_preference(true,true,33,true,false));
     std::cout<<"CPU_PROTOCOL_CHECKS="<<checks<<" GPU_EXECUTIONS=0\n";
 }

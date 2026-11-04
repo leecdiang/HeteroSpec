@@ -1,0 +1,46 @@
+{
+  "status": "NOT_RUN",
+  "arms": [
+    "frozen_reference",
+    "graph_tiles",
+    "backend_loop4",
+    "packed"
+  ],
+  "q": [
+    1,
+    4,
+    5,
+    7,
+    8,
+    9,
+    16,
+    31,
+    32
+  ],
+  "prefix_lengths": [
+    1,
+    255,
+    256,
+    257,
+    511
+  ],
+  "geometry": "enumerate actual captured Q8 projection shapes from the frozen model; do not invent hardware results",
+  "outputs": [
+    "all binary32 logits",
+    "full KV state",
+    "continuation binary32 logits",
+    "continuation token IDs"
+  ],
+  "negative_cases": [
+    "wrong backend/fallback",
+    "noncontiguous input/weight",
+    "non-Q8_0/F32",
+    "q>32",
+    "mixed residency",
+    "IDs/fusion",
+    "padding/selector mismatch",
+    "int offset overflow"
+  ],
+  "qualification": "finite full-vector replay only, no automatic universal proof",
+  "timing": "only after qualification; include all capture/reuse/quantization/concat/restore costs"
+}

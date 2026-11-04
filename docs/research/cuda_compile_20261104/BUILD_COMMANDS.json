@@ -1,0 +1,150 @@
+{
+  "toolkit": "13.2.2",
+  "architectures": [
+    "89-real",
+    "120a-real"
+  ],
+  "gpu_executions": 0,
+  "records": [
+    {
+      "name": "pr180-configure",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "-S",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/sources/pr180",
+        "-B",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr180",
+        "-G",
+        "Ninja",
+        "-DCMAKE_MAKE_PROGRAM=/tmp/hs-build-tools/bin/ninja",
+        "-DCUDAToolkit_ROOT=/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2",
+        "-DCMAKE_CUDA_COMPILER=/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-14",
+        "-DCMAKE_CUDA_ARCHITECTURES=89-real;120a-real",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DGGML_CUDA=ON",
+        "-DGGML_VULKAN=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DLLAMA_BUILD_COMMON=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_TOOLS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_SERVER=OFF",
+        "-DGGML_CCACHE=OFF",
+        "-DGGML_CUDA_NCCL=OFF"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 3.630857229232788,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr180-configure.log",
+      "log_sha256": "68abe061e54366e94cdf4b5b846c15b2e9d0df6c3c4e8cec090ac5c5574a135e",
+      "cumulative_max_child_rss_kib": 91780
+    },
+    {
+      "name": "pr179-configure",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "-S",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/sources/pr179",
+        "-B",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr179",
+        "-G",
+        "Ninja",
+        "-DCMAKE_MAKE_PROGRAM=/tmp/hs-build-tools/bin/ninja",
+        "-DCUDAToolkit_ROOT=/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2",
+        "-DCMAKE_CUDA_COMPILER=/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-14",
+        "-DCMAKE_CUDA_ARCHITECTURES=89-real;120a-real",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DGGML_CUDA=ON",
+        "-DGGML_VULKAN=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DLLAMA_BUILD_COMMON=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_TOOLS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_SERVER=OFF",
+        "-DGGML_CCACHE=OFF",
+        "-DGGML_CUDA_NCCL=OFF"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 3.5708813667297363,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr179-configure.log",
+      "log_sha256": "281eedf7e56f3575ebe61a01471a52768fde3cf9b4de299f4a762c141577c276",
+      "cumulative_max_child_rss_kib": 91780
+    },
+    {
+      "name": "pr180-focused",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "--build",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr180",
+        "--target",
+        "ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/ggml-cuda.cu.o",
+        "ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/mmvq.cu.o",
+        "-j",
+        "1"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 88.35081720352173,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr180-focused.log",
+      "log_sha256": "5a27ac3a900c9b3e32957556245fc7fc7a16d8590dc5346b6552e08fb5f179fc",
+      "cumulative_max_child_rss_kib": 456080
+    },
+    {
+      "name": "pr179-focused",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "--build",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr179",
+        "--target",
+        "ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/ggml-cuda.cu.o",
+        "ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/mmvq.cu.o",
+        "-j",
+        "1"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 103.03230929374695,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr179-focused.log",
+      "log_sha256": "591dba19cc3c8620ad4eff65cb17ee9fa2e3dcbd79eaddff129a1957702a6d30",
+      "cumulative_max_child_rss_kib": 465632
+    },
+    {
+      "name": "pr180-full",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "--build",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr180",
+        "--target",
+        "llama",
+        "-j",
+        "1"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 3987.92685174942,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr180-full.log",
+      "log_sha256": "afe99da6ad2864d8877511e3cc5f94863e8f081d5898af1391233d24b8b5e379",
+      "cumulative_max_child_rss_kib": 831904
+    },
+    {
+      "name": "pr179-full",
+      "command": [
+        "/tmp/hs-build-tools/cmake/data/bin/cmake",
+        "--build",
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/build/pr179",
+        "--target",
+        "llama",
+        "-j",
+        "1"
+      ],
+      "returncode": 1,
+      "elapsed_seconds": 0.004961490631103516,
+      "log": "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/logs/pr179-full.log",
+      "log_sha256": "38056e0fdaaf9a6ba8aa502773f4e57420370594eb4f704b47042db280e62e68",
+      "cumulative_max_child_rss_kib": 831904,
+      "disposition": "INTENTIONAL_SCOPE_DEFERRAL_NO_COMPILATION"
+    }
+  ],
+  "pr179_full_disposition": "DEFERRED: after the long PR180 build, PR179 coverage was limited to its two passed changed translation units. The intact PR179 build directory was temporarily moved so the sequential runner would not start another complete build. Its immediate lookup error is intentional deferral, not a compiler/source failure. The directory was restored."
+}

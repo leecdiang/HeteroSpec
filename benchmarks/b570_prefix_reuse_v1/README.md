@@ -42,6 +42,12 @@ separately and included in cumulative owned cost. Every measurement has one
 immediate same-arm warmup with a fresh restored context. Heavy qualification
 times are never formal performance samples.
 
+This is a native ready-token request boundary. Corpus rendering/tokenization,
+JSON harness parsing and construction of the fixed token vector precede that
+boundary; process/trace costs retain their actual execution lifetime. It is not
+an HTTP end-to-end latency measurement. Clean service does not dump final-state
+or full-vector objects; those observers are confined to qualification.
+
 WB-cut retains the original q32 origin. WB-rechunk queries `hs_parallel_groups`
 at the current physical head, consumes only the first admitted run and starts
 the next full-width query there. All arms use the same PR169 Vulkan/ggml DLLs,
@@ -127,6 +133,10 @@ reconstruction is explicitly different from native replication on another GPU.
 The archive's `portable-final` directory includes both original and candidate source,
 the adapter, historical import libraries/DLLs, and an actual calibration fixture.
 It contains no model weights. Supply the exact model hash above.
+The same frozen files are also offered as the separate
+`b570-prefix-native-source-kit.zip` release asset (117696092 bytes). All7133
+manifest members were independently rehashed after ZIP readback; both variants
+compiled successfully from this portable directory layout on the source host.
 With Visual Studio2022 and CMake, configure the adapter using:
 
 ```powershell

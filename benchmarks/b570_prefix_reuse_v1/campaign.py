@@ -37,7 +37,7 @@ def qualification():
  assert all(r['passed'] for r in out),'Whole calibration qualification failed; no passing subset'
 def calibration_timing():
  panel,rows=data();q=read(ROOT/'CALIBRATION_QUALIFICATION_V3.json');assert len(q)==36 and all(r['passed'] for r in q)
- source=dict(worker=sha(HERE/'worker.cpp'),candidate=read(ROOT/'candidate-03/FILES.json'),reference=read(ROOT/'reference-01/FILES.json'),panel_sha256=study.digest(panel),runner_sources={n:sha(HERE/n) for n in ('host.py','campaign.py','supervisor.py')},toolkit_sources={n:sha(HERE.parent/'tpds_prefix_reuse_v1'/n) for n in ('study.py','selector.py','study.json','PROTOCOL.md','NATIVE_CONTRACT.md')})
+ source=dict(worker=sha(HERE/'worker.cpp'),candidate=read(ROOT/'candidate-03/FILES.json'),reference=read(ROOT/'reference-01/FILES.json'),aligned_reference_observer=read(ROOT/'reference-03/FILES.json'),panel_sha256=study.digest(panel),runner_sources={n:sha(HERE/n) for n in ('host.py','campaign.py','supervisor.py')},toolkit_sources={n:sha(HERE.parent/'tpds_prefix_reuse_v1'/n) for n in ('study.py','selector.py','study.json','PROTOCOL.md','NATIVE_CONTRACT.md')})
  source_sha=study.digest(source)
  if not (ROOT/'CALIBRATION_SOURCE.json').exists():write(ROOT/'CALIBRATION_SOURCE.json',source)
  else:assert read(ROOT/'CALIBRATION_SOURCE.json')==source
@@ -110,8 +110,8 @@ def main_timing():
 def aligned():
  panel,rows,freeze=common_gate();out=[]
  for i,z in enumerate(panel['test'][:8]):
-  r=rows[z['id']];ss=[slot(r,'S1',h,cache_key='empty') for h in (True,False)]
-  n=run(f'aligned-reference-{i:02d}','reference-01',ss,'aligned_control');assert n['status']=='COMPLETE';ref=n['records'][0];assert passed(check_pair(ref,n['records'][1],False))
+  r=rows[z['id']];ss=[slot(r,'S1',h,cache_key='empty',audit_state=True) for h in (True,False)]
+  n=run(f'aligned-reference-{i:02d}','reference-03',ss,'aligned_control');assert n['status']=='COMPLETE';ref=n['records'][0];assert passed(check_pair(ref,n['records'][1],False))
   ss=[slot(r,a,h,cache_key='empty',audit_state=True) for a in study.FIXED for h in (True,False)]
   n=run(f'aligned-qualification-{i:02d}','candidate-03',ss,'aligned_control');assert n['status']=='COMPLETE'
   for j,a in enumerate(study.FIXED):

@@ -1,0 +1,65 @@
+{
+  "scope": "Synthetic offline consistency checks, not native runtime/GPU qualification",
+  "auditor_sha256": "6fd522df4690e0ee718587dd306298addd2b076352e0e85df2264b95d75bf2d1",
+  "valid_mixed_branch_recipe_eog_cases": 408,
+  "cases_terminated_by_eog": 156,
+  "observed_cycle_branches": {
+    "correction": 840,
+    "accepted": 180,
+    "bonus": 168
+  },
+  "mutation_rejections": {
+    "observation_wrong_tokens": "fresh-R observation metadata differs: decoded_tokens",
+    "observation_wrong_positions": "fresh-R observation metadata differs: positions",
+    "observation_not_fresh": "fresh-R observation metadata differs: fresh_context",
+    "observation_wrong_sequence": "fresh-R observation metadata differs: sequence_id",
+    "observation_wrong_callers": "fresh-R observation metadata differs: caller_widths",
+    "observation_wrong_physical": "fresh-R observation metadata differs: physical_ubatches",
+    "job_wrong_mask": "fresh-R job execution metadata differs: logits_masks",
+    "job_not_empty": "fresh-R maximal path incomplete or polluted: start_empty",
+    "candidate_wrong_mask": "candidate producer metadata differs: logits_mask",
+    "candidate_wrong_row": "candidate producer metadata differs: captured_batch_row",
+    "candidate_wrong_output_index": "candidate producer metadata differs: captured_output_index",
+    "candidate_wrong_positions": "candidate producer metadata differs: positions",
+    "candidate_wrong_tokens": "candidate producer metadata differs: tokens",
+    "numeric_mask": "candidate producer metadata differs: logits_mask",
+    "boolean_widths": "reference execution metadata differs: physical_ubatches",
+    "float_commit_positions": "committed semantic metadata mismatch: positions",
+    "integer_commit_done": "committed semantic metadata mismatch: done",
+    "erased_pending_output": "committed semantic metadata mismatch: unmaterialized_output",
+    "free_wrong_mask": "free-run output mask differs",
+    "free_teacher_forced": "free-run oracle was teacher-forced",
+    "missing_unexamined_row": "missing/extra candidate rows, including unexamined rows",
+    "missing_reference_job": "incomplete/extra fresh-R job inventory",
+    "missing_required_observation": "missing required or invalid intermediate R prefix observation",
+    "path_escape": "payload path escapes bundle"
+  },
+  "byte_accounting": {
+    "reported": 5392,
+    "observed": 5392,
+    "calls": 98
+  },
+  "resources": [
+    {
+      "mode": "all_accept",
+      "queries": 129,
+      "cycles": 32,
+      "naive_token_evaluations": 74304,
+      "fresh_maximal_jobs": 1,
+      "maximal_path_token_evaluations": 640,
+      "independent_free_run_token_evaluations": 639,
+      "sum_committed_prefix_lengths": 19008
+    },
+    {
+      "mode": "reject_j0",
+      "queries": 509,
+      "cycles": 127,
+      "naive_token_evaluations": 293882,
+      "fresh_maximal_jobs": 127,
+      "maximal_path_token_evaluations": 73533,
+      "independent_free_run_token_evaluations": 639,
+      "sum_committed_prefix_lengths": 73664
+    }
+  ],
+  "status": "PASS"
+}

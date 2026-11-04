@@ -1,0 +1,128 @@
+{
+  "same_length_different_ids_not_detected_by_raw_parser": true,
+  "scope": "Fixed serializer structural/extraction tests, not KV mathematical correctness or model/GPU qualification",
+  "parser_sha256": "ccad8e938f78ed35e7b7f73e048e1531287dad4a8304282b2fad4081602df2e0",
+  "valid_sentinel_cases": [
+    {
+      "tokens": 1,
+      "transposed_v": 0,
+      "raw_sha256": "0020251583bff8b50032d413a83301dd2419e9a9928223d1bba3b9597c20847a",
+      "canonical_sha256": "a6cfce4172b5259127ce0653d3d4e2a4c3cd157176d3520027c9b6bce964e099"
+    },
+    {
+      "tokens": 1,
+      "transposed_v": 1,
+      "raw_sha256": "e740ea10b166b433fb97dba4012e6a2a54abdc9d6824c8ce3e198d2fcf41ab95",
+      "canonical_sha256": "a6cfce4172b5259127ce0653d3d4e2a4c3cd157176d3520027c9b6bce964e099"
+    },
+    {
+      "tokens": 2,
+      "transposed_v": 0,
+      "raw_sha256": "2552a48d73b3f47f296f6123a7d4c1a313161b7e36d559df94356ff27c1b318b",
+      "canonical_sha256": "d292f8b511beecaaae83c8e23f659e9d702e2038fce2eb4ef4697a3dda26e6ff"
+    },
+    {
+      "tokens": 2,
+      "transposed_v": 1,
+      "raw_sha256": "960ec32f09e0b3c8a7b20274f451c4b9f8cdafd23c090cc5898b50d9ff03d9af",
+      "canonical_sha256": "d292f8b511beecaaae83c8e23f659e9d702e2038fce2eb4ef4697a3dda26e6ff"
+    },
+    {
+      "tokens": 3,
+      "transposed_v": 0,
+      "raw_sha256": "0c8142b5e904a54c09194943f467a38ed693e18aa4278e339e62a2b4fc8b414a",
+      "canonical_sha256": "b53f5c99a29c9dce1e3f5569de420af3edf12b6779232911c214e4a9e0d26685"
+    },
+    {
+      "tokens": 3,
+      "transposed_v": 1,
+      "raw_sha256": "ed2952219ba7ef3c8d7036a84842e49f5a414d9d0215624e1c141cc133c1a09f",
+      "canonical_sha256": "b53f5c99a29c9dce1e3f5569de420af3edf12b6779232911c214e4a9e0d26685"
+    },
+    {
+      "tokens": 7,
+      "transposed_v": 0,
+      "raw_sha256": "c9cc298055c46988adaa74a9bc703756fbba350f64aa6fa4f12ec9c1f7320325",
+      "canonical_sha256": "b944488a24ad170e357687a5b2bbefc77fde7e66d8bedbb47f5c224aaf22adea"
+    },
+    {
+      "tokens": 7,
+      "transposed_v": 1,
+      "raw_sha256": "1390b56704b2d0d11ab1bd82449e130f2eaf86230de28255fd8678a2dbf7584f",
+      "canonical_sha256": "b944488a24ad170e357687a5b2bbefc77fde7e66d8bedbb47f5c224aaf22adea"
+    },
+    {
+      "tokens": 17,
+      "transposed_v": 0,
+      "raw_sha256": "d69ca1161951abe1b542e5fb349441c70c475a818f5fb810c2ffc54a6f91b36d",
+      "canonical_sha256": "c24680400c31c6e777a5278e441642ccfb2ca6723720adad86dc2dd018b7305c"
+    },
+    {
+      "tokens": 17,
+      "transposed_v": 1,
+      "raw_sha256": "87a934e4fc63bef4392fac6c879929b527da05f08a509721fa8e108aa6dd37b5",
+      "canonical_sha256": "c24680400c31c6e777a5278e441642ccfb2ca6723720adad86dc2dd018b7305c"
+    },
+    {
+      "tokens": 128,
+      "transposed_v": 0,
+      "raw_sha256": "bde1ebf2a48c8dc608bafde823a08ced1f4d10eb8160b374993bc8bf94001bba",
+      "canonical_sha256": "9783512caee437a86b8cb3cc73e3670f57a59fb35e076463380e7b37912016c8"
+    },
+    {
+      "tokens": 128,
+      "transposed_v": 1,
+      "raw_sha256": "0fe56e2951ae3276245257493eebfcafa19b3ded9c1fd133464d9bfa823fb534",
+      "canonical_sha256": "9783512caee437a86b8cb3cc73e3670f57a59fb35e076463380e7b37912016c8"
+    }
+  ],
+  "corruptions_rejected": {
+    "magic": "wrong magic/endianness",
+    "wrong_outer_seq": "wrong sequence",
+    "wrong_stream_count": "unsupported stream count",
+    "wrong_cell_count": "active count differs",
+    "negative_position": "noncontiguous/reordered positions unsupported",
+    "duplicate_position": "noncontiguous/reordered positions unsupported",
+    "reordered_position": "noncontiguous/reordered positions unsupported",
+    "multi_seq_cell": "multiple/missing sequence IDs",
+    "wrong_cell_seq": "wrong cell sequence",
+    "unknown_v_trans": "unknown V layout",
+    "wrong_layers": "unsupported layer count",
+    "K_dtype": "K is not F16",
+    "K_stride": "unsupported K row bytes",
+    "K_huge_stride": "unsupported K row bytes",
+    "V_dtype": "V is not F16",
+    "V_elsize": "unsupported V element size",
+    "V_dims": "unsupported V embedding",
+    "truncate_last": "truncated payload",
+    "trailing_byte": "trailing bytes/unknown state layout",
+    "short_header": "truncated header",
+    "big_endian_magic": "wrong magic/endianness"
+  },
+  "raw_payload_bit_mutation_visible": true,
+  "token_id_content_not_present_in_serializer": true,
+  "supplied_native_blob": {
+    "raw_sha256": "0afc9dc2df63003a6a5d0eba5873dffee313181c75667b07f68fa83f2ce354fe",
+    "canonical_sha256": "0a8ff07f5f12e5ff83973fe168705f50ed42f33ee6990d726c8f54c983a0a92d",
+    "meta": {
+      "format": "tiny-llama-seq0-f16-active-v1",
+      "v_trans": 1,
+      "layers": 2,
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "sequence_id": 0,
+      "bytes_per_token": 2048,
+      "canonical_order": "token/layer/K-then-V/component/raw-little-endian-F16",
+      "raw_bytes": 14492,
+      "excluded": "inactive padding, allocator/graph state, logits; tokens established by separate execution trace"
+    },
+    "provenance": "Supplied native blob parsing only. Completion and role provenance must be read from its separate capture receipt."
+  }
+}

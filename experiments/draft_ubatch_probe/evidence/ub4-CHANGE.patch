@@ -1,0 +1,65 @@
+--- frozen-worker.cpp
++++ candidate-worker.cpp
+@@ -24,6 +24,7 @@
+ #include <vector>
+ using json=nlohmann::json; namespace fs=std::filesystem;
+ using Clock=std::chrono::steady_clock;
++static constexpr int draft_ubatch=4;
+ static void need(bool v,const char*m){if(!v)throw std::runtime_error(m);}
+ static double since(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
+ static void dump(const fs::path&p,const json&j){auto tmp=p;tmp+=".tmp";{std::ofstream f(tmp);f<<j.dump(2)<<'\n';f.flush();need(bool(f),"write JSON");}for(int attempt=0;attempt<100;attempt++){if(MoveFileExW(tmp.c_str(),p.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH))return;DWORD error=GetLastError();if(error!=ERROR_SHARING_VIOLATION&&error!=ERROR_ACCESS_DENIED)throw std::runtime_error("atomic replace error "+std::to_string(error));Sleep(20);}throw std::runtime_error("atomic replace sharing timeout");}
+@@ -71,10 +72,10 @@
+ struct Context {
+     llama_context*c=nullptr;llama_model*model;bool target,capture,scoped;const int selector,ub;Observer obs;
+     fs::path path;int calls=0;std::map<std::string,double> phases;json physical_by_phase=json::object();
+-    Context(llama_model*m,int ub,bool istarget,bool scope,bool cap,const fs::path&dir,int layout):model(m),target(istarget),capture(cap),scoped(scope),selector(layout),ub(ub),path(dir){
++    Context(llama_model*m,int ub,bool istarget,bool scope,bool cap,const fs::path&dir,int layout,int draft_physical=1):model(m),target(istarget),capture(cap),scoped(scope),selector(layout),ub(ub),path(dir){
+         hs_scope::requested_layout=selector;
+         hs_scope::active=scoped;
+-        auto p=llama_context_default_params();p.n_ctx=1024;p.n_batch=1024;p.n_ubatch=ub;
++        auto p=llama_context_default_params();p.n_ctx=1024;p.n_batch=1024;p.n_ubatch=istarget?ub:draft_physical;
+         p.n_threads=24;p.n_threads_batch=24;p.n_outputs_max=ub;p.n_outputs_max_per_seq=ub;
+         p.type_k=GGML_TYPE_F16;p.type_v=GGML_TYPE_F16;p.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;
+         p.cb_eval=Observer::callback;p.cb_eval_user_data=&obs;if(cap)fs::create_directories(dir);
+@@ -111,7 +112,7 @@
+ static void provision(Pair& pair,llama_model*t,llama_model*d,const ArmSpec& spec,const fs::path& dir){
+     need(!pair.target && !pair.draft,"pool already provisioned");
+     pair.target=std::make_unique<Context>(t,spec.target_ub,true,spec.scoped,false,dir/"target",spec.selector);
+-    if(spec.scoped)pair.draft=std::make_unique<Context>(d,1,false,false,false,dir/"draft",spec.selector);
++    if(spec.scoped)pair.draft=std::make_unique<Context>(d,1,false,false,false,dir/"draft",spec.selector,draft_ubatch);
+ }
+ static json request(llama_model*t,llama_model*d,const json&input,const ArmSpec&spec,const std::string&life,bool capture,const std::string&producer,const fs::path&dir,Pair&resident){
+     const auto& arm=spec.name;int k=spec.k;
+@@ -119,7 +120,7 @@
+     auto start=Clock::now();hsc::begin(capture?"heavy":"baseline",int(input["prompt_ids"].size()));
+     json r={{"arm",arm},{"k",k},{"lifecycle",life},{"cycles",json::array()},{"capture",capture},
+         {"draft_enabled",spec.draft},{"observed_scope",spec.scope},{"context_scope_fixed",true},
+-        {"producer",producer},{"draft_producer","NATIVE"}};
++        {"producer",producer},{"draft_producer","NATIVE"},{"draft_ubatch",draft_ubatch}};
+     Pair fresh;Context*target=nullptr,*draft=nullptr;
+     if(life=="resident"){
+         need(bool(resident.target),"pool must be provisioned before requests");
+@@ -129,8 +130,9 @@
+         if(spec.draft){need(bool(resident.draft),"draft pool missing");draft=resident.draft.get();draft->reset(capture,dir/"draft");}
+     }else{
+         fresh.target=std::make_unique<Context>(t,spec.target_ub,true,spec.scoped,capture,dir/"target",spec.selector);target=fresh.target.get();
+-        if(spec.draft){fresh.draft=std::make_unique<Context>(d,1,false,false,capture,dir/"draft",spec.selector);draft=fresh.draft.get();}
+-    }
++        if(spec.draft){fresh.draft=std::make_unique<Context>(d,1,false,false,capture,dir/"draft",spec.selector,draft_ubatch);draft=fresh.draft.get();}
++    }
++    if(draft)need(int(llama_n_ubatch(draft->c))==draft_ubatch,"actual draft ubatch differs");
+     double setup=since(start);
+     auto request_start=Clock::now();auto prompt=input["prompt_ids"].get<std::vector<int>>();
+     if(producer=="P1"){for(size_t i=0;i<prompt.size();i++)target->decode({prompt[i]},int(i),false,"PREFILL");}
+@@ -202,7 +204,10 @@
+             auto id=slot.at("slot_id").get<std::string>();
+             need(!id.empty() && id.find("..") == std::string::npos && id.find(':') == std::string::npos && id.find('\\') == std::string::npos && id.front()!='/',"unsafe slot path");
+             auto spec=arm_spec(slot.at("arm"));
+-            need(slot.at("schema")==1 && slot.at("study_id")=="rtx_scope_transfer_v1" && slot.at("family")==family,"slot identity");
++            need(slot.at("draft_ubatch")==draft_ubatch,"draft ubatch slot mismatch");
++            need(plan.at("context").at("draft_ubatch")==draft_ubatch,"draft ubatch plan mismatch");
++            need(identity.at("draft_ubatch")==draft_ubatch,"draft ubatch binding mismatch");
++            need(slot.at("schema")==1 && slot.at("study_id")=="rtx_draft_ubatch_probe_v1" && slot.at("family")==family,"slot identity");
+             need(slot.at("scope")==spec.scope && slot.at("layout_selector")==spec.selector && slot.at("scoped_target")==spec.scoped,"arm scope");
+             need(slot.at("target_ub")==spec.target_ub && slot.at("target_outputs")==spec.target_ub && slot.at("k")==spec.k && slot.at("draft_enabled")==spec.draft,"arm geometry/draft");
+             need(slot.at("lifecycle")== (resident_life?"resident":"fresh"),"lifecycle");

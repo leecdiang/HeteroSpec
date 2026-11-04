@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+import argparse,pathlib,json,hashlib,importlib.util
+p=argparse.ArgumentParser();p.add_argument('--auditor',type=pathlib.Path,required=True);p.add_argument('--runs',type=pathlib.Path,nargs='+',required=True);p.add_argument('--output',type=pathlib.Path,required=True);a=p.parse_args();s=importlib.util.spec_from_file_location('audit',a.auditor);A=importlib.util.module_from_spec(s);s.loader.exec_module(A);rows=[]
+def need(x,m):
+ if not x:raise ValueError(m)
+for r in a.runs:
+ read=lambda f:json.loads((r/f).read_text());rc=read('receipt.json');need(rc['status']=='RECORDED_EVIDENCE_MATCH' and rc['qualification'] is False,'receipt status');plan=read('plan.json');e=read('evidence.json');ident=read('identity.json');audit=A.audit(plan,e,r/'bundle',ident);need(audit==read('audit.json'),'recomputed audit report differs');need(len(rc['processes'])==3,'process count');need({p['mode'] for p in rc['processes']}=={'candidate','reference','free'},'process roles');need(len({p['pid'] for p in rc['processes']})==3,'process isolation');fi=read('free-input.json');need(set(fi)=={'prompt_ids','cap','stop_after_output_index'},'candidate tape in autonomous input');need(fi['prompt_ids']==plan['prompt_ids'],'prompt mismatch')
+ for proc in rc['processes']:
+  need(proc['status']=='COMPLETED' and proc['returncode']==0,'native incomplete');need(hashlib.sha256((r/(proc['mode']+'-input.json')).read_bytes()).hexdigest()==proc['input_sha256'],'input changed');cap=read(proc['mode']+'/capture.json');need(cap['pid']==proc['pid'],'capture PID');need(all(ev['actual_n_ctx']==256 and ev['actual_n_ctx_seq']==256 and ev['actual_n_batch']==128 for ev in cap['execution']),'actual geometry')
+ rows.append({'name':r.name,'audit':audit,'case':plan['case'],'identity_sha256':hashlib.sha256((r/'identity.json').read_bytes()).hexdigest(),'evidence_sha256':hashlib.sha256((r/'evidence.json').read_bytes()).hexdigest(),'receipt_sha256':hashlib.sha256((r/'receipt.json').read_bytes()).hexdigest(),'implementation_sha256':rc['implementation_sha256'],'binary_sha256':rc['identity_base']['binary'],'native_processes':3})
+x={'status':'MATCH','auditor_sha256':hashlib.sha256(a.auditor.read_bytes()).hexdigest(),'cases':len(rows),'native_processes':3*len(rows),'vector_uses':sum(r['audit']['target_vector_uses'] for r in rows),'queries':sum(r['audit']['unique_forced_prefix_queries'] for r in rows),'committed_snapshots':sum(r['audit']['committed_snapshots'] for r in rows),'results':rows}
+with a.output.open('x') as f:json.dump(x,f,indent=2);f.write('\n')
+print(json.dumps({k:v for k,v in x.items() if k!='results'}))

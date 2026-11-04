@@ -1,0 +1,70 @@
+{
+  "scope": "CPU synthetic same-model protocol fixture; no Windows-worker/GPU/old-R qualification",
+  "attempts": [
+    {
+      "name": "stage-tests",
+      "command": [
+        "python",
+        "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/test_stage.py"
+      ],
+      "status": "PASS",
+      "returncode": 0
+    },
+    {
+      "name": "compile",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-I/tmp/heterospec-native-source/unpacked/candidate/include",
+        "-I/tmp/heterospec-native-source/unpacked/candidate/ggml/include",
+        "-I/tmp/heterospec-native-source/unpacked/candidate/vendor",
+        "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/test_native.cpp",
+        "-L/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin",
+        "-Wl,-rpath,/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin",
+        "-lllama",
+        "-lggml",
+        "-lggml-base",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/release-dense/native"
+      ],
+      "status": "PASS",
+      "returncode": 0
+    },
+    {
+      "name": "native",
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/release-dense/native",
+        "/tmp/heterospec-native-source/tiny-models/llama-dense.gguf",
+        "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/release-dense/attempts.jsonl"
+      ],
+      "status": "PASS",
+      "returncode": 0
+    }
+  ],
+  "model_sha256": "5b9aeb4e2b843d0d3f70072fe2dd22131387a86a984332da5571e717844d063c",
+  "source_hashes": {
+    "src/llama-context.cpp": "c8a66dc610db1672b2fa8416aa30c90befb0312213097232736e4d1a4155c110",
+    "src/llama-graph.cpp": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+    "src/llama-kv-cache.cpp": "5d53edebfae0722b8da464fb2407a8b8aa6e83d4e976da7e44a7c1733f96530f",
+    "include/llama.h": "b214d2c12c09e671c23dd756f1f82b670dd63150fd73de867d8f5393edcf68b1"
+  },
+  "implementation_hashes": {
+    "test_native.cpp": "9dbcfdbcb6299b0a679a0966e9d76fc2891838cf6ae4c42f842289d59e841715",
+    "stage.py": "0ab933b1b8d18b37a48a9d760f1a07e380a08092c9f50593000648d4e4986846",
+    "test_stage.py": "4299cd313a0185508efe655f06c4b670a85ed49f648a6dfae49830ff4fea03ca"
+  },
+  "library_hashes": {
+    "libllama.so": "db6056fec20a8dae0bfce797285edf6556732af361a7c5b197d4391e80510d77",
+    "libggml-base.so": "5489090a1aba1578bb5f605584dbd3184640f04fe12cf3a98ee2c6842a2f7797",
+    "libggml-cpu.so": "dc7b72116b354e38230edad54619bd701537299f1200d8dda9d5a27433c34bc3",
+    "libggml.so": "7add0854e15988aab35ea2ac1016c258444c4d2675c9f4092945f3f108286907"
+  },
+  "sanitizer_scope": "UBSan test executable only; native libraries not instrumented by this runner",
+  "status": "PASS",
+  "cases": 75,
+  "checks": 367917
+}

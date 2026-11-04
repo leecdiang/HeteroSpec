@@ -1,0 +1,121 @@
+{
+  "status": "DRAFT_ARITHMETIC_CHECKED_NOT_READY_FOR_GPU",
+  "new_native_or_GPU_executions": 0,
+  "phase_setup_bounds": {
+    "G1": {
+      "setup_max": 304,
+      "H0_priming_max": 0,
+      "H1_priming_max": 304
+    },
+    "G2": {
+      "setup_max": 150,
+      "H0_priming_max": 0,
+      "H1_priming_max": 150
+    },
+    "G3": {
+      "setup_max": 2204,
+      "H0_priming_max": 0,
+      "H1_priming_max": 2204
+    }
+  },
+  "modeled_cases": [
+    {
+      "family": "Qwen3-8B_nominal_F16",
+      "prompt_tokens": 32,
+      "cap": 8,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 7,
+      "target_vector_uses": 29,
+      "commit_snapshots": 8,
+      "maximal_reference_jobs": 7,
+      "reference_tokens_excluding_H_and_free_R": 273,
+      "free_R_tokens_excluding_H": 39,
+      "paired_repeated_active_KV_GiB": 0.0780029296875,
+      "paired_target_logits_MiB": 33.6162109375,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    },
+    {
+      "family": "Qwen3-8B_nominal_F16",
+      "prompt_tokens": 128,
+      "cap": 16,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 15,
+      "target_vector_uses": 61,
+      "commit_snapshots": 16,
+      "maximal_reference_jobs": 15,
+      "reference_tokens_excluding_H_and_free_R": 2085,
+      "free_R_tokens_excluding_H": 143,
+      "paired_repeated_active_KV_GiB": 0.595458984375,
+      "paired_target_logits_MiB": 70.7099609375,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    },
+    {
+      "family": "Qwen3-8B_nominal_F16",
+      "prompt_tokens": 512,
+      "cap": 16,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 15,
+      "target_vector_uses": 61,
+      "commit_snapshots": 16,
+      "maximal_reference_jobs": 15,
+      "reference_tokens_excluding_H_and_free_R": 7845,
+      "free_R_tokens_excluding_H": 527,
+      "paired_repeated_active_KV_GiB": 2.282958984375,
+      "paired_target_logits_MiB": 70.7099609375,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    },
+    {
+      "family": "SmolLM2-1.7B_nominal_F16",
+      "prompt_tokens": 32,
+      "cap": 8,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 7,
+      "target_vector_uses": 29,
+      "commit_snapshots": 8,
+      "maximal_reference_jobs": 7,
+      "reference_tokens_excluding_H_and_free_R": 273,
+      "free_R_tokens_excluding_H": 39,
+      "paired_repeated_active_KV_GiB": 0.10400390625,
+      "paired_target_logits_MiB": 10.875,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    },
+    {
+      "family": "SmolLM2-1.7B_nominal_F16",
+      "prompt_tokens": 128,
+      "cap": 16,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 15,
+      "target_vector_uses": 61,
+      "commit_snapshots": 16,
+      "maximal_reference_jobs": 15,
+      "reference_tokens_excluding_H_and_free_R": 2085,
+      "free_R_tokens_excluding_H": 143,
+      "paired_repeated_active_KV_GiB": 0.7939453125,
+      "paired_target_logits_MiB": 22.875,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    },
+    {
+      "family": "SmolLM2-1.7B_nominal_F16",
+      "prompt_tokens": 512,
+      "cap": 16,
+      "trajectory": "every_cycle_rejects_j0_no_EOG",
+      "cycles": 15,
+      "target_vector_uses": 61,
+      "commit_snapshots": 16,
+      "maximal_reference_jobs": 15,
+      "reference_tokens_excluding_H_and_free_R": 7845,
+      "free_R_tokens_excluding_H": 527,
+      "paired_repeated_active_KV_GiB": 3.0439453125,
+      "paired_target_logits_MiB": 22.875,
+      "excludes": "raw serialization/canonical duplication, H, repetitions, metadata, hidden state, process/setup and runtime measurements"
+    }
+  ],
+  "remaining_blockers": [
+    "GPU adapters/extractor not implemented or qualified",
+    "old-R bridge identity and budget unbound",
+    "H recipe and primary family unbound",
+    "device output/model/executable paths not verified",
+    "host RSS/peak GPU/disk/time limits and worst storage bound unbound"
+  ],
+  "not_claimed": "GPU runtime readiness, qualification, time/FLOP prediction, guaranteed completion within proposed budgets"
+}

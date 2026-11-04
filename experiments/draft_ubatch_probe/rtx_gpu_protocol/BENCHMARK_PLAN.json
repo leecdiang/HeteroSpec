@@ -1,0 +1,118 @@
+{
+  "status": "NOT_READY_FOR_GPU",
+  "execution_authorized_in_this_task": false,
+  "gpu_launch_commands_provided": false,
+  "primary_family": null,
+  "reference_contract": {
+    "historical_R_identity_manifest": null,
+    "adapter_identity_manifest": null,
+    "old_R_native_bridge_receipt": null,
+    "old_R_bridge_budget": null,
+    "H_history_recipe": null,
+    "H_requests_per_setup_allowed": [
+      0,
+      1
+    ]
+  },
+  "device_paths": {
+    "verified_output_parent": null,
+    "new_absolute_run_root": null,
+    "models": null,
+    "executables": null,
+    "modules": null
+  },
+  "resource_limits_to_bind": {
+    "host_RSS_max_bytes": null,
+    "minimum_disk_free_bytes": null,
+    "owned_process_timeout_seconds": null,
+    "GPU_peak_allocated_limit_bytes": null,
+    "pessimistic_capture_storage_bound_bytes": null
+  },
+  "phases": [
+    {
+      "name": "G0",
+      "scope": "static read-only freeze and capability review",
+      "new_GPU_requests": 0
+    },
+    {
+      "name": "G1-R",
+      "scope": "separately budgeted native old-R/adapter/observer bridge and peak admission",
+      "status": "BLOCKED_UNIMPLEMENTED_AND_UNBOUND"
+    },
+    {
+      "name": "G1",
+      "inputs": 2,
+      "approx_prompt_tokens": [
+        32,
+        128
+      ],
+      "cap": 8,
+      "main_free_and_control_requests_max": 22,
+      "forced_and_internal_oracle_jobs_max": 256,
+      "autonomous_R_runs_max": 22,
+      "stability_runs_max": 4,
+      "setup_count_bound": 304,
+      "priming_bound": "304 * H.requests_per_setup; exact frozen plan required",
+      "reference_token_evaluations_max_including_H": 75000,
+      "owned_GPU_wall_seconds_max": 1800,
+      "new_retained_payload_bytes_max": 8589934592
+    },
+    {
+      "name": "G2",
+      "inputs": 1,
+      "approx_prompt_tokens": [
+        128
+      ],
+      "cap": 16,
+      "heavy_requests_max": 5,
+      "provisional_timed_requests_max": 10,
+      "forced_reference_jobs_max": 128,
+      "autonomous_R_runs_max": 5,
+      "stability_runs_max": 2,
+      "setup_count_bound": 150,
+      "priming_bound": "150 * H.requests_per_setup; exact frozen plan required",
+      "reference_token_evaluations_max_including_H": 75000,
+      "owned_GPU_wall_seconds_max": 1800,
+      "new_retained_payload_bytes_max": 8589934592,
+      "inference_scope": "single-input screen, no population statistics"
+    },
+    {
+      "name": "G3",
+      "automatic_continuation": false,
+      "inputs": 12,
+      "cap": 32,
+      "heavy_requests_max": 36,
+      "provisional_timed_requests_max": 72,
+      "forced_reference_jobs_max": 2048,
+      "autonomous_R_runs_max": 36,
+      "stability_runs_max": 12,
+      "setup_count_bound": 2204,
+      "priming_bound": "2204 * H.requests_per_setup; exact frozen plan required",
+      "reference_token_evaluations_max_including_H": 500000,
+      "owned_GPU_wall_seconds_max": 7200,
+      "new_retained_payload_bytes_max": 12884901888
+    }
+  ],
+  "status_rules": {
+    "numerical_mismatch_tolerance_bits": 0,
+    "provisional_light_requires_post_run_observer_bridge": true,
+    "timed_KV_not_directly_observed_if_heavy_export_disabled": true,
+    "empty_budget_or_missing_adapter_means": "BLOCKED",
+    "draft_byte_exact_required": false,
+    "no_silent_fallback": true,
+    "no_original_prompt_token_or_derived_hash_upload": true
+  },
+  "primary_endpoint": "complete warm service latency in named weights/JIT/graph/history/cache cell",
+  "secondary_guardrail": "TTFT",
+  "pilot_advance": "candidate simultaneously >=3% point improvement vs fastest same-contract eligible target-only and no material C1 regression, TTFT point regression <=5%; otherwise stop",
+  "confirmatory_NI_margin": 0.03,
+  "speedup_claim_requires_one_sided_upper_ratio_below": 1.0,
+  "numerical_scope": "finite actual captured inputs, not future-universal equality",
+  "confirmatory_arms": [
+    "pilot-selected C2 or C4",
+    "B_default",
+    "B_QB"
+  ],
+  "confirmatory_C1_scope": "C1 optimization only screened in G2; a fourth confirmatory arm needs a new explicit budget",
+  "confirmatory_comparison": "Compare separately to both predeclared baselines; do not select a per-prompt oracle baseline or drop the actual default"
+}

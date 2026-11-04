@@ -1,0 +1,145 @@
+{
+  "auditor_sha256": "6fd522df4690e0ee718587dd306298addd2b076352e0e85df2264b95d75bf2d1",
+  "baseline_report": {
+    "status": "RECORDED_EVIDENCE_MATCH",
+    "target_vector_uses": 17,
+    "unique_forced_prefix_queries": 17,
+    "committed_snapshots": 5,
+    "payload_bytes_read": 408576,
+    "payload_read_calls": 98,
+    "payload_counting_scope": "Logical successful payload reads, including repeated references and frontier/job evidence; not unique storage bytes or measured OS disk IO.",
+    "gpu_qualification_established": false,
+    "scope": "NATIVE_CPU_SYNTHETIC_FRESH_REFERENCE_ONLY_NOT_HISTORICAL_R",
+    "limits": "Offline bytes/coverage/semantic consistency only. Producer truth, source/binary/device/JIT binding, canonical KV extractor correctness, observation effects and hidden backend state remain external qualification gates."
+  },
+  "evidence_sha256": "52cbb75c52ae8456a510e849cca07f5f8aee3c1dfe121ba2cff4fb33d940aa6b",
+  "cases": [
+    {
+      "name": "candidate_KV_bit",
+      "rejected": true,
+      "reason": "committed active KV bytes differ at initial"
+    },
+    {
+      "name": "candidate_KV_KVswap",
+      "rejected": true,
+      "reason": "committed active KV bytes differ at initial"
+    },
+    {
+      "name": "candidate_KV_endian",
+      "rejected": true,
+      "reason": "committed active KV bytes differ at initial"
+    },
+    {
+      "name": "candidate_KV_missing_token",
+      "rejected": true,
+      "reason": "payload byte length mismatch"
+    },
+    {
+      "name": "frontier_bit",
+      "rejected": true,
+      "reason": "wrong saved frontier logits"
+    },
+    {
+      "name": "initial_vector_bit",
+      "rejected": true,
+      "reason": "full target vector bytes differ at initial"
+    },
+    {
+      "name": "rejected_tail_vector_bit",
+      "rejected": true,
+      "reason": "full target vector bytes differ at cycle-3-row-3"
+    },
+    {
+      "name": "free_vector_bit",
+      "rejected": true,
+      "reason": "free and forced scalar R vectors differ at same prefix"
+    },
+    {
+      "name": "reference_vector_bit",
+      "rejected": true,
+      "reason": "duplicate fresh-R prefix observations disagree"
+    },
+    {
+      "name": "pending_wrong",
+      "rejected": true,
+      "reason": "committed semantic metadata mismatch: pending_for_next_loop"
+    },
+    {
+      "name": "unmaterialized_missing",
+      "rejected": true,
+      "reason": "committed semantic metadata mismatch: unmaterialized_output"
+    },
+    {
+      "name": "frontier_wrong_use",
+      "rejected": true,
+      "reason": "committed semantic metadata mismatch: frontier_logits_use"
+    },
+    {
+      "name": "position_shift",
+      "rejected": true,
+      "reason": "committed semantic metadata mismatch: positions"
+    },
+    {
+      "name": "next_position_float",
+      "rejected": true,
+      "reason": "committed semantic metadata mismatch: next_position"
+    },
+    {
+      "name": "candidate_mask_wrong",
+      "rejected": true,
+      "reason": "candidate producer metadata differs: logits_mask"
+    },
+    {
+      "name": "candidate_row_wrong",
+      "rejected": true,
+      "reason": "candidate producer metadata differs: captured_batch_row"
+    },
+    {
+      "name": "candidate_scalar_schedule_wrong",
+      "rejected": true,
+      "reason": "candidate producer metadata differs: physical_ubatches"
+    },
+    {
+      "name": "reference_mask_wrong",
+      "rejected": true,
+      "reason": "fresh-R job execution metadata differs: logits_masks"
+    },
+    {
+      "name": "reference_start_dirty",
+      "rejected": true,
+      "reason": "fresh-R maximal path incomplete or polluted: start_empty"
+    },
+    {
+      "name": "missing_reference_job",
+      "rejected": true,
+      "reason": "incomplete/extra fresh-R job inventory"
+    },
+    {
+      "name": "missing_query",
+      "rejected": true,
+      "reason": "incomplete/extra forced-prefix query inventory"
+    },
+    {
+      "name": "missing_rejected_tail",
+      "rejected": true,
+      "reason": "missing/extra candidate rows, including unexamined rows"
+    },
+    {
+      "name": "free_forced",
+      "rejected": true,
+      "reason": "free-run oracle was teacher-forced"
+    },
+    {
+      "name": "free_endpoint_wrong",
+      "rejected": true,
+      "reason": "free greedy endpoint differs"
+    },
+    {
+      "name": "free_caller_recipe_wrong",
+      "rejected": true,
+      "reason": "free-run producer recipe differs"
+    }
+  ],
+  "rejected": 25,
+  "accepted_mutants": []
+}

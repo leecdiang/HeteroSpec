@@ -1,0 +1,52 @@
+{
+  "scope": "CPU offline artificial-byte evidence checks and existing-journal planning only; no inference, GPU, user device, PR write or target qualification",
+  "auditor_sha256": "6fd522df4690e0ee718587dd306298addd2b076352e0e85df2264b95d75bf2d1",
+  "tests": [
+    {
+      "name": "unit-normal",
+      "command": [
+        "/tmp/target-reference-replay-design-20261104/package/test_replay_audit.py"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "test_count": 44
+    },
+    {
+      "name": "unit-optimized",
+      "command": [
+        "-O",
+        "/tmp/target-reference-replay-design-20261104/package/test_replay_audit.py"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "test_count": 44
+    },
+    {
+      "name": "published-journal-missing-completion",
+      "status": "EXPECTED_REJECTION",
+      "returncode": 1,
+      "error_tail": "replay_audit.EvidenceError: INCOMPLETE: unmatched attempt start"
+    },
+    {
+      "name": "published-journal-wrong-start-identity",
+      "status": "EXPECTED_REJECTION",
+      "returncode": 1,
+      "error_tail": "replay_audit.EvidenceError: attempt start/result identity differs"
+    }
+  ],
+  "artifact_reproduction": {
+    "artificial_demo": "MATCH with gpu_qualification_established=false; 5392 logical bytes / 98 reads",
+    "budget": "byte-identical recomputation",
+    "published_journal_plan": "byte-identical recomputation against 8 remotely verified input blobs",
+    "source_head_readback": "8aebc64d2075ef7fca62e352b926ff6be201c06d"
+  },
+  "independent_package_rerun": {
+    "command": "python -O independent/check_audit.py --audit-dir . --output /tmp/fresh-independent.json",
+    "status": "PASS",
+    "artificial_cases": 408,
+    "EOG_cases": 156,
+    "additional_mutations_rejected": 24,
+    "result_byte_identical_to_independent_reviewer": true,
+    "native_or_GPU_test": false
+  }
+}

@@ -24,6 +24,7 @@ def report(root):
     k=v['slot'].get('schedule',{}).get('kind','qualification_or_development')
     vals[k+'_service_seconds']=vals.get(k+'_service_seconds',0)+v['seconds']
     vals['import_bytes']=vals.get('import_bytes',0)+v.get('import_bytes',0)
+    vals['native_graph_calls']=vals.get('native_graph_calls',0)+v['graph_calls']
     vals['cache_hit_requests']=vals.get('cache_hit_requests',0)+(v['slot']['cache_key']!='empty')
     vals['cache_miss_requests']=vals.get('cache_miss_requests',0)+(v['slot']['cache_key']=='empty')
     if u.name.startswith('main-timing-session-'):main.append(v)

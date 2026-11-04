@@ -10,6 +10,9 @@ def endpoint(r):return {k:v for k,v in r['endpoint'].items() if k!='state_sha256
 def hostpath(s):return PureWindowsPath(s) if '\\' in s or (len(s)>1 and s[1]==':') else Path(s)
 def verify(root,verify_vectors=True):
  root=Path(root);units=[];counts=collections.Counter();vectors={};failures=[];owned=0.;producer=0.;loads=0.;service=0.;preload=0.;verified_states=set()
+ toolkit=root/'repro/toolkit'
+ if not toolkit.exists():toolkit=Path(__file__).resolve().parent.parent/'tpds_prefix_reuse_v1'
+ sys.path.insert(0,str(toolkit));import study
  for unit in sorted((root/'units').iterdir()):
   if not unit.is_dir():continue
   task=read(unit/'JOB.json');budget=read(unit/'BUDGET.json');planned=task['slots'];receipt=read(unit/'RECEIPT.json');sup=read(unit/'SUPERVISOR.json')
@@ -34,6 +37,13 @@ def verify(root,verify_vectors=True):
      p=unit/'native'/('state-'+str(z['head'])+'.bin');require(p.stat().st_size==z['bytes'] and sha(p)==z['sha256'],'prefix bytes drift')
    elif kind=='service':
     require(r['slot']==s,'raw schedule drift');service+=r['seconds'];require(math.isfinite(r['seconds']) and r['seconds']>0,'native elapsed')
+    entry=next((e for e in task.get('cache',[]) if e['key']==s['cache_key']),None)
+    head=0 if s['cache_key']=='empty' else entry['head']
+    require(r['physical_head']==head,'actual native restored head differs from cache object')
+    arm=r['selected_arm'];expected_arm=task['policy']['global_fixed_arm'] if s['arm']=='AUTO' else s['arm']
+    require(arm==expected_arm,'native policy selection drift')
+    append_graphs=len(s['ids'])-head if arm=='S1' else len(study.plan(head,len(s['ids'])-head,arm,capacity=task['context']))
+    require(r['graph_calls']==append_graphs+r['endpoint']['generated']-1,'native graph count differs from complete append plus decode plan')
     require(r['endpoint']['pending_decoded'] is False,'pending ownership')
     require(r['endpoint']['generated']<=s['cap'],'cap overflow')
     require(r['endpoint']['committed_tokens']==r['greedy'],'endpoint commit')

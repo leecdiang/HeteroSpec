@@ -1,6 +1,7 @@
 #pragma once
 #include "packing_gate.hpp"
 #include "llama.h"
+#include "native_cuda_scope.hpp"
 namespace hs_reference_batching {
 // Implemented inside the staged runtime: avoids host/DLL copies of hs_scope.
 extern "C" HS_GATE_API bool hs_exchange_runtime_scope(bool);
@@ -16,6 +17,7 @@ struct NativeScope {
 // the clean checkpoint. The host must still supply actual dispatch evidence.
 inline int guarded_decode(llama_context * context,llama_batch batch,const PackingBinding & binding){
     if(!hs_native_decode_supported(context,batch))throw std::runtime_error("unsupported native reference scope");
+    NativeCudaAuditScope cuda_enforcement;
     PackingScope bound(binding);NativeScope scope(true);
     return llama_decode(context,batch);
 }

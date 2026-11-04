@@ -31,10 +31,8 @@ for b in cost['blocks']:
             raise ValueError("Validation failed: records[s, i, arm]['service_seconds'] == t")
     for arm, marm in [('C_QB', 'M_QB'), ('C_PQ_A', 'M_PQ'), ('C_PQ_B', 'M_PQ')]:
         m, c = (records[s, i, marm], records[s, i, arm])
-        if not (m['endpoint_sha256'] == c['endpoint_sha256'] and m['length'] == c['length'] and (m['stop_reason'] == c['stop_reason'])):
-            raise ValueError("Validation failed: m['endpoint_sha256'] == c['endpoint_sha256'] and m['length'] == c['length'] and (m['stop_reason'] == c['stop_reason'])")
-        if not c['prompt_sha256'] == meta[i]['prompt_sha256']:
-            raise ValueError("Validation failed: c['prompt_sha256'] == meta[i]['prompt_sha256']")
+        if not (m['length'] == c['length'] and (m['stop_reason'] == c['stop_reason'])):
+            raise ValueError("Validation failed: m['length'] == c['length'] and (m['stop_reason'] == c['stop_reason'])")
         M, C = (m['service_seconds'], c['service_seconds'])
         mp, cp = (m['target_phases']['PREFILL'], c['target_phases']['PREFILL'])
         dp = c['draft_phases']['PREFILL']

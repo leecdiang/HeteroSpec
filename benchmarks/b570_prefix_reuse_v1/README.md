@@ -155,12 +155,20 @@ aligned controls and costs. The published `evidence/DELIVERY_READBACK.json`
 records actual same-host fresh-download restoration and exact agreement with
 local CPU reconstruction. Authenticated access and package verification do not
 claim anonymous access or third-party native replication.
+Post-experiment upload/download retries and retained partial bytes are documented
+in `evidence/TRANSPORT_FAILURES.json`; `evidence/DELIVERY_COSTS.json` separately
+records packing, publication and restoration wall time, with zero model requests.
 
 ## Portable native kit
 
 The archive's `portable-final` directory includes both original and candidate source,
 the adapter, historical import libraries/DLLs, and an actual calibration fixture.
 It contains no model weights. Supply the exact model hash above.
+The raw directory archive excludes every `.gguf` suffix, including duplicate
+upstream vocabulary fixtures. The complete portable ZIP retains38 upstream
+vocabulary GGUF fixtures, all with zero tensors; the separate
+`evidence/PORTABLE_GGUF_FIXTURE_AUDIT.json` verifies this distinction. They are
+not target model weights.
 The same frozen files are also offered as the separate
 `b570-prefix-native-source-kit.zip` release asset (117696092 bytes). All7133
 manifest members were independently rehashed after ZIP readback; both variants

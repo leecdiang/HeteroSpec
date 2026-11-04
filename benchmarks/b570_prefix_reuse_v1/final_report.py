@@ -93,7 +93,12 @@ def write_report(root,here):
  p()
  p('See [README.md](README.md) for native build, lifecycle and restoration commands; `evidence` contains compact receipts, all32 root results and complete costs. The dedicated [raw release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-prefix-reuse-v1-evidence-20261104) contains content-addressed raw objects, every included logical path, full vectors/state objects, source/runtime pins and `b570-prefix-native-source-kit.zip` (117696092 bytes, SHA256 `2c2adfd7afd46c37359504efa682e24b47f145b05b4abd0e6d3a7c934d397e17`). Model weights are not redistributed.')
  p()
- p('The portable source/fixture kit compiled on the source host and all7133 manifest members passed ZIP readback. Final delivery additionally requires authenticated fresh-download restoration and identical CPU reconstruction; its separate `evidence/DELIVERY_READBACK.json` receipt records completion. These checks do not claim third-party native replication. No automatic merge, paper change, submission or GPU rental was performed.')
+ delivery=here/'evidence/DELIVERY_READBACK.json'
+ if delivery.exists():
+  delivered=read(delivery);require(delivered['same_host_authenticated_fresh_download'] and delivered['restored']['status']=='EXACT_LOGICAL_RECONSTRUCTION_PASS','Delivery proof incomplete')
+  delivery_text='Authenticated fresh-download restoration and identical local/restored CPU reconstruction are complete; `evidence/DELIVERY_READBACK.json` records the result. Post-experiment transport retries and separate delivery wall costs are retained in `evidence/TRANSPORT_FAILURES.json` and `evidence/DELIVERY_COSTS.json`.'
+ else:delivery_text='Final delivery additionally requires authenticated fresh-download restoration and identical CPU reconstruction; its separate `evidence/DELIVERY_READBACK.json` receipt records completion.'
+ p('The portable source/fixture kit compiled on the source host and all7133 manifest members passed ZIP readback. '+delivery_text+' These checks do not claim third-party native replication. No automatic merge, paper change, submission or GPU rental was performed.')
  (here/'RESULTS.md').write_text('\n'.join(out)+'\n',encoding='utf-8',newline='\n')
 
 if __name__=='__main__':write_report(sys.argv[1],Path(__file__).resolve().parent)

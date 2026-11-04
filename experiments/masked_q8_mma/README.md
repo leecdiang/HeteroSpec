@@ -28,6 +28,6 @@ RESOURCES.json contains all24 ptxas reports. All variants report zero stack and 
 
 ## Prior art and research limits
 
-The mapping derives from the separate CPU model in `heterospec-q8-mapping`: exact eight-product leaves, preserved four-warp K stream and ordered floating-point graph. [Taming Numerical Variation, Appendix E](https://arxiv.org/html/2609.11356v1) already describes embedding k8 groups in masked k16 MMA. No algorithmic novelty is claimed.
+The mapping derives from the separate CPU model in `heterospec-q8-mapping`: exact eight-product leaves, preserved four-warp K stream and ordered floating-point graph. [Taming Bitwise Behavior in GPU Kernels with Tensor Core: Black-Box Reconstruction, Compiler Enforcement, and Static Verification, Appendix E](https://arxiv.org/html/2609.11356v1) already describes embedding k8 groups in masked k16 MMA. No algorithmic novelty is claimed.
 
 Before qualification, independently check fragment operand mapping, actual machine instructions and contraction, full prequantized vectors against the frozen kernel, original F32-to-Q8_1 bytes, all admitted device/model descriptors, and full model continuation/state. Benchmark against original graph tiles, backend-loop4, packed, and separately optimized wide-DP4A. The same-layout DP4A control cannot replace the logical-lane wide DP4A competitors; all three geometric controls are now implemented, but their scheduling is not claimed optimal. This source is deliberately not included in PR180 or a production registry.

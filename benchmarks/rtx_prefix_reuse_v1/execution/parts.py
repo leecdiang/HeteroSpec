@@ -25,7 +25,7 @@ def upload(manifest):
             if current['code']==0:break
         record=dict(file=p.name,code=attempts[-1]['code'],attempts=attempts,seconds=sum(x['seconds'] for x in attempts))
         put(ROOT/(p.name+'.upload.json'),record);print(p.name,record['code'],flush=True);return record
-    with ThreadPoolExecutor(max_workers=4) as pool:
+    with ThreadPoolExecutor(max_workers=8) as pool:
         results=[f.result() for f in as_completed([pool.submit(one,p) for p in paths])]
     assert all(r['code']==0 for r in results)
 def join(manifest,out):

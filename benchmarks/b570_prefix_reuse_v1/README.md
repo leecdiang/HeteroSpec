@@ -10,12 +10,16 @@ retains the original R manifests and K1_REGRESSION bytes and verifies their hash
 during CPU reconstruction. Target-only success here cannot establish dual-model
 k1 capacity or speculative speedup.
 
-Execution is in progress. Both genuine source/policy freezes have been published
+The four-session primary experiment is complete:512 measurements and512 matched
+warmups. All three AUTO family intervals cross1 and the registered3% engineering
+screen fails. See [RESULTS.md](RESULTS.md) for complete results, separate aligned
+controls, costs and limits. Both genuine source/policy freezes were published
 and inspected before any B570 held-out output. B570 froze at
 `6517c79b59ad3d813a35fa087d15751b825dad34`; RTX froze at
 `efd92438a08a4e9c37a422731ddd6850d8907f1b`. The shared test runner checks the
 receipt hashes, exact token/cohort identity and frozen source before launch.
-No performance conclusion follows from these receipts alone.
+The freeze receipts establish order and identity; the results come from the
+qualified native observations and complete registered schedule.
 
 ## Deployment and timer
 
@@ -127,6 +131,30 @@ finite-value/argmax reconstruction, runtime identity, state/endpoint comparisons
 raw schedule and measured cost checks. The inherited `study.py` additionally
 checks the exact1024 warm/timed schedule and root-cluster statistics. CPU package
 reconstruction is explicitly different from native replication on another GPU.
+
+## Delivered-byte restoration
+
+Download every asset from the dedicated
+[evidence release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-prefix-reuse-v1-evidence-20261104)
+into a fresh `evidence-download` directory using an account with repository
+access. `DELIVERY_ASSETS.json` pins the assets; `INDEX.json` pins every raw object
+part and `MEMBERS.json` maps all retained logical paths. With GitHub CLI and
+Python3.11 or newer, the complete read-only reconstruction is:
+
+```powershell
+gh release download b570-prefix-reuse-v1-evidence-20261104 --repo leecdiang/HeteroSpec --dir evidence-download
+python evidence-download/object_archive.py verify --root evidence-download
+python evidence-download/object_archive.py restore --root evidence-download --out restored-native-evidence
+python restored-native-evidence/repro/recompute.py restored-native-evidence > recomputed.json
+```
+
+Use a new restore directory. Reconstruction independently checks full vector
+bytes/argmax, state objects, native runtime identities, schedules, qualification,
+both freeze receipts, untouched old R/k1 hashes, selector fit, root bootstrap,
+aligned controls and costs. The published `evidence/DELIVERY_READBACK.json`
+records actual same-host fresh-download restoration and exact agreement with
+local CPU reconstruction. Authenticated access and package verification do not
+claim anonymous access or third-party native replication.
 
 ## Portable native kit
 

@@ -38,6 +38,16 @@ def restore():
  assert read(ROOT.parent/'b570-prefix-reuse-restored-recomputed.json')==read(ROOT.parent/'b570-prefix-reuse-local-recomputed.json')
  write(HERE/'evidence/DELIVERY_READBACK.json',dict(release_url=read(REMOTE/'REMOTE_READBACK.json')['release_url'],index_sha256=sha(REMOTE/'INDEX.json'),restored=read(RESTORED/'RESTORE_RECEIPT.json'),reconstructed_sha256=sha(ROOT.parent/'b570-prefix-reuse-restored-recomputed.json'),same_host_authenticated_fresh_download=True,external_native_replication=False))
 if __name__=='__main__':
- if sys.argv[1]=='pack':prepare()
- elif sys.argv[1]=='publish':publish(sys.argv[2])
- elif sys.argv[1]=='restore':restore()
+ action=sys.argv[1];started=utc();t0=time.monotonic();success=False;error=None
+ try:
+  if action=='pack':prepare()
+  elif action=='publish':publish(sys.argv[2])
+  elif action=='restore':restore()
+  else:raise ValueError('Unknown delivery stage')
+  success=True
+ except Exception as exc:
+  error=type(exc).__name__;raise
+ finally:
+  prefix=ROOT.name+'-delivery-'+action+'-'
+  attempt=len(list(ROOT.parent.glob(prefix+'*.json')))
+  write(ROOT.parent/(prefix+str(attempt)+'.json'),dict(stage=action,started_utc=started,finished_utc=utc(),wall_seconds=time.monotonic()-t0,success=success,failure_class=error,model_requests=0,native_campaign_cost=False))

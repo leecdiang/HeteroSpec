@@ -30,18 +30,25 @@ def verify(path):
             for i in range(count):
                 ref=f'{phase}-r-{i:02}/'+('R-r0/' if phase=='aligned' else 'r0/');r=get(ref+'receipt.json');v=vectors(ref)
                 repeat=f'{phase}-r-{i:02}/'+('R-r1/' if phase=='aligned' else 'r1/')
-                assert vectors(repeat)==v
+                rr=get(repeat+'receipt.json')
+                assert vectors(repeat)==v and index[repeat+'final.bin']['sha256']==index[ref+'final.bin']['sha256']
+                assert rr['output']==r['output'] and rr['final_position']==r['final_position']
                 for a in arms:
                     d=f'main-q-session/i{i:02}/{a}/heavy/' if phase=='main' else f'{phase}-q-{i:02}/'+a+'-heavy/'
                     assert vectors(d)==v and index[d+'final.bin']['sha256']==index[ref+'final.bin']['sha256']
-                    c=get(d+'receipt.json');assert c['output']==r['output'] and c['final_position']==r['final_position'];comparisons+=1
+                    c=get(d+'receipt.json');assert c['output']==r['output'] and c['final_position']==r['final_position']
+                    off=d.replace('/heavy/','/off/') if phase=='main' else d.replace('-heavy/','-off/')
+                    o=get(off+'receipt.json');assert o['output']==r['output'] and o['final_position']==r['final_position'];comparisons+=1
         records=get('COMMON_CALIBRATION.json')['records'];assert len(records)==144
-        formal=get('results.json')['records'];assert len(formal)==1024
+        normalized=get('results.json');formal=normalized['records'];assert len(formal)==1024
         panel=get('common-panel.json');ids={r['id']:i for i,r in enumerate(panel['test'])}
         for row in formal:
             p=f"main-cost-s{row['session']}/i{ids[row['id']]:02}/{row['arm']}/{row['kind']}/receipt.json";r=get(p);assert r['service_s']==row['seconds']
+        sys.path.insert(0,str(HERE.parents[1]/'tpds_prefix_reuse_v1'))
+        import study
+        recomputed=study.analyze(normalized,panel);assert recomputed==get('analysis.json')
         ledger=[get(p) for p in index if p.endswith('/launch.json')]
-        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=512,formal_warmups=512,not_third_party_native_replication=True)
+        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=512,formal_warmups=512,bootstrap_reconstructed=True,not_third_party_native_replication=True)
         print(json.dumps(result,indent=2));return result
 if __name__=='__main__':
     if sys.argv[1]=='pack':pack()

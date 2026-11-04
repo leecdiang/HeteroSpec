@@ -37,9 +37,10 @@ Snapshot: 2026-11-04. This extends the roadmap, not the scientific claim.
 
 ## What is deliberately not implemented or not verified
 
-- **Hardware dispatch/residency extractor and GPU qualification: NOT_IMPLEMENTED.**
-  Real native module binding and context preflight are implemented and tested on
-  Linux CPU. They do not reveal the final CUDA kernel or prove its arithmetic.
+- **Pre-launch GPU numerical qualification: NOT_IMPLEMENTED.**
+  Actual tensor/buffer observation is implemented and CPU-tested. Actual CUDA
+  route/MMVQ-launch observation is source-staged but not CUDA-compiled or run.
+  It cannot authorize GPU optimization or prove floating-point equivalence.
 - **Python-to-native adapter: NOT_IMPLEMENTED.** The Python state owner remains a
   mock-adapter protocol test. A separate, real C++ `NativeCheckpointOwner` now
   owns a llama context, serializes/restores its memory, and maintains independent
@@ -176,7 +177,7 @@ extraction at a trustworthy scheduler boundary, frozen original-reference host
 fallback, Qwen/GPU full-vector replay and continuation tests, import-failure
 injection, Windows ABI tests, concurrency isolation and service-level costs.
 
-Final cloud evidence: 40 Python tests, 643 C++ protocol checks (also UBSan),
+Final cloud evidence: 41 Python tests, 643 C++ protocol checks (also UBSan),
 47 real Q8 CPU context/guard/checkpoint checks, and the existing native
 state test executable reporting all eight cases passed. An independent review
 recompiled the native test against the final library and reproduced 47/47.
@@ -194,3 +195,51 @@ The tiny CPU checks are not a throughput benchmark. Any later GPU evaluation
 must include capture, verification, state copying, graph rebuilding, restore and
 miss/fallback costs against an equally optimized baseline. A faster isolated
 packed GEMM would not establish a faster end-to-end service.
+
+## Additional dispatch/residency instrumentation (separate compilation gate)
+
+`tensor_observation.hpp` reads actual ggml tensor shapes, byte strides, types,
+allocated buffers and host/device metadata after scheduling. It does not infer
+GPU residency from a type or a device name. `resident_on` requires the exact
+backend buffer-type object and rejects host buffers. Sixteen real CPU allocation
+and view checks exercise this code.
+
+`stage_cuda_audit.py` patches a separately staged real CUDA source tree. It
+records the route immediately before the original selected dispatch call, not
+from a duplicate heuristic. It records all four post-packing dimensions and
+strides of weight, activation and output, current device/cc/warp, and exact
+buffer-type residency. For MMVQ it also instruments the actual selected template
+launch: columns, small-K/halve-iterations/fusion/ID flags, grid/block/shared-memory,
+and 20 derived kernel arguments (K, input channel counts, row/column strides,
+channel ratios/strides, sample ratios/strides, ID stride). The source digest
+covers the CUDA source folder before patching, not the compiled binary/toolchain.
+
+The module owns its binding storage and exposes an exchange function through
+the ggml backend registry, avoiding a CUDA-to-llama link cycle. CUDA capture/replay,
+fusion and new concurrent-stream optimization are disabled while collecting;
+pre-existing concurrent plans, MUL_MAT_ID and Hadamard hints are rejected.
+HIP/MUSA collection is rejected. These restrictions change execution policy:
+collect-only mode is not the original reference or a performance measurement.
+
+Most importantly, **enforcing mode refuses the entire backend split before any
+of its launches**. The record is not a complete pre-launch numerical certificate;
+no qualification is automatically registered from it. `guarded_decode` installs
+this enforcing binding if CUDA is registered and rejects missing instrumentation.
+Real native preflight allows CPU or the instrumented CUDA backend only, rejecting
+other scheduler backends. Earlier async splits are synchronized before restoring
+the owner's checkpoint.
+
+The CUDA source transformation has run against the full source kit, but CUDA
+compilation and execution are **NOT_RUN**: this cloud environment has no nvcc or
+CUDA toolkit/GPU. A CPU fixture compiles the exact observation runtime body and
+checks its ABI/recording behavior, with explicitly mocked CUDA context helpers;
+it is not a CUDA build. The real CPU tensor tests and native owner tests remain
+separate. CUDA callback storage, ABI, scheduler-thread affinity and all device
+paths still require a genuine CUDA build and hardware run. Callbacks are trusted,
+must copy records during the call, and must not mutate/reenter the runtime.
+
+Remaining numerical qualification needs the actual binary/toolchain/runtime and
+physical-device pins, quantizer/kernel semantics, frozen scalar reference,
+finite replay or independently verified structural assumptions, and a complete
+pre-launch plan. Source/route identity and recorded launch arguments alone cannot
+supply those facts. No optimized GPU execution is enabled by this addition.

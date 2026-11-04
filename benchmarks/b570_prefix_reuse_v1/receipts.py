@@ -10,12 +10,17 @@ def publish_local():
  for name in ('HOST_ADMISSION.json','TOKENIZER_AND_CENSUS.json','COHORT_RECEIPT.json','RESOURCE_RESERVATION.json','INHERITED_AUTHENTICATION.json','panel.json','schedule.json'):
   p=ROOT/name
   if p.exists():shutil.copyfile(p,dest/name)
- for role in ('reference-00','candidate-00','reference-01','candidate-01'):
+ for role in ('reference-00','candidate-00','reference-01','candidate-01','candidate-02'):
   for name in ('FILES.json','SOURCE.json'):
    p=ROOT/role/name
    if p.exists():shutil.copyfile(p,dest/(role+'-'+name))
  for n in ('allocator_probe.cpp','worker.cpp'):
   shutil.copyfile(HERE/n,ROOT/n)
+ if (ROOT/'manifest.json').exists():
+  panel=read(ROOT/'panel.json');ids={r['id'] for r in panel['calibration']+panel['test']}
+  selected=[r for r in read(ROOT/'manifest.json')['rows'] if r['id'] in ids]
+  p=dest/'SELECTED_NATIVE_INPUTS.json'
+  if not p.exists():write(p,selected)
 if __name__=='__main__':
  if sys.argv[1]=='admission':admission()
  publish_local()

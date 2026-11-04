@@ -191,7 +191,11 @@ static json service(llama_model*m,const json&s){
   need(head>=0 && head<int(ids.size()) && ids.size()+cap<=size_t(C),"service capacity/pending ownership");
   if(arm=="AUTO"){
    const auto &policy=job.at("policy");need(policy.at("deployment_id")==job.at("deployment_id"),"policy deployment");
-   arm=policy.at("bins").at(s.at("selection_bin").get<std::string>()).at("arm");
+   // The prospectively selected calibration panel contains only zero-density
+   // roots. selector.fit therefore freezes a constant table. Avoid pretending
+   // that per-input offline features were computed for free during service.
+   arm=policy.at("global_fixed_arm");
+   for(const auto &bin:policy.at("bins"))need(bin.at("arm")==arm,"nonconstant selector requires qualified native feature extraction");
   }
   need(arm=="S1"||arm=="QB"||arm=="WB-cut"||arm=="WB-rechunk","service policy");
   if(diag)lookup=sec(start);

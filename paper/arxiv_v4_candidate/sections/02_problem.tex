@@ -10,6 +10,11 @@ where $\mathbf y$ is the full native token-ID array, $\mathbf e$ its end-of-gene
 
 We distinguish exact-arithmetic equivalence, bitwise operator correspondence and endpoint agreement. Each answers a different question. Backend acceptance and actual operator placement are additional execution prerequisites. These definitions apply throughout the paper; qualification always refers to the stated configuration, panel and output window.
 
+\subsection{Workload qualification and use}
+The study selects implementations for declared, replayable workloads under a fixed reference. Three domains have distinct roles. The \emph{backend-admitted domain} comprises configurations accepted by the source and operator guards. The \emph{validated domain} comprises the inputs and output windows that pass complete-reference comparison under those configurations. The \emph{use domain} is the workload for which an implementation is selected after qualification. Admission alone does not certify numerical correspondence; the later Llama counterexample lies within the admitted configuration (Section~\ref{sec:transfer}).
+
+For a workload requiring the deployed reference, the decision rule retains $R$ for inputs outside the validated domain and compares qualified candidates within it. Extending that domain requires fresh reference checks. This is an offline selection rule: the evaluated implementation has phase and configuration guards, but no online detector or recovery guarantee for arbitrary new inputs.
+
 \subsection{The stateful transaction}
 A target context owns KV values, sequence positions, a pending sampled token or available logits, and relevant sampler state. The draft has separate state. It proposes up to $k$ tokens; the target evaluates the pending token and proposal positions; acceptance, correction and any bonus determine the committed prefix. Rejected positions are reconciled before the next cycle. A visible token may still be pending evaluation into KV and must be consumed exactly once.
 

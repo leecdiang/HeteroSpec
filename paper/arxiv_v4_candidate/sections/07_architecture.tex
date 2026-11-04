@@ -1,15 +1,30 @@
-\Needspace{7\baselineskip}
-\section{Design implications for reference-preserving execution}
-\label{sec:transfer}
-The experiments connect three implementation choices: where numerical evaluation is constrained, which state reaches that computation, and which complete transaction pays for it.
+\section{Selecting a reference-qualified implementation}
+\label{sec:decisionrule}
+Repair scope, local representation and draft policy jointly determine request cost. For a declared workload $X$ and service contract, let $\mathcal A_\rho(X)$ contain the evaluated candidate combinations that pass reference qualification. The selection objective is
+\begin{equation}
+a^\star=\arg\min_{a\in\mathcal A_\rho(X)} \widehat T_a(X),
+\label{eq:policyselection}
+\end{equation}
+where $\widehat T_a$ is the observed complete-request cost estimate, using the same estimator and weights across candidates. Table~\ref{tab:deploymentrule} separates the conditional comparisons needed to evaluate this joint choice. Their effects need not be separable; sequentially choosing each dimension need not find the cheapest combination.
 
-\paragraph{Preserve evaluation within a query; expose work across queries.}
-QB turns independent queries into batch instances while retaining their operands, masks and head mapping. The scoped Vulkan port makes this distinction concrete: it reuses the existing noncontiguous AV shader, supplies a zero V batch stride and dispatches independent query workgroups. The packed alternative changes the AV path and loses byte correspondence, whereas the preserved path qualifies all six registered coordinates. The reusable engineering principle is to separate cross-query scheduling freedom from changes to the evaluation of one output~\cite{b570gqarecords}. Backend admission and exact stage tests remain tied to the stated layouts.
+\begin{table*}[t]\centering\small
+\caption{Evidence for joint offline policy selection under a declared reference, workload and service contract. Each cost comparison is conditional on the other policy dimensions.}
+\label{tab:deploymentrule}
+\begin{tabularx}{\textwidth}{@{}p{2.6cm}YY@{}}\toprule
+Choice & Evidence required & Resulting decision\\\midrule
+Reference admission & Supported layout, producer state and complete-output checks against $R$ & Admit passing workload/configuration pairs under the contract in Section~\ref{sec:contract}.\\
+Draft on or off & Target-only and speculative requests with the same repair, reference and timer & Use the cheaper qualified policy; Qwen3/Llama favor drafting under both local repairs, while SmolLM2 favors target-only execution in the original panel and the retrospective E2 analysis.\\
+PQ or QB & Paired complete-request cost with A/A and session controls & Select QB where its incremental benefit passes the declared screen; matched Qwen3 $k=3$ passes under both lifecycles, while $k=1$ remains unresolved.\\\bottomrule
+\end{tabularx}
+\end{table*}
 
-\paragraph{Bind numerical behavior to the state producer and graph identity.}
-A query view is part of a stateful interface. Phase/layout tags control graph reuse; prefill organization determines the KV subsequently consumed. The whole-state and component crosses show why matching endpoints cannot certify arbitrary cache substitution. A port therefore records producer recipe, positions, pending-token ownership and receiver behavior alongside tensor descriptors. The CUDA and Vulkan studies provide concrete tests of these obligations, rather than requiring all internal states to be identical.
+\paragraph{Repair scope is a scheduling decision}
+The matched seven-arm panel shows that local repair changes the sign of the draft increment for two families. Both PQ and QB retain batched projections and feed-forward work; QB reduces the representation cost within local repair. E2 retains the local draft decisions across all six sessions. Target-only batching supplies a useful endpoint when the draft adds cost, as SmolLM2 demonstrates.
 
-\paragraph{Choose repair and drafting jointly, then charge deployment cost.}
-The seven-arm panel shows a draft-profitability crossover under local repair for two families. Representation selection is the next decision: QB's incremental gain is measured against PQ, not attributed the full GS-to-local benefit. CUDA Graph replay, query preparation and fresh-context service then change the paid transaction. The new service panels retain distinct policies and do not pass their practical QB/PQ screens. These results motivate comparing complete qualified implementations at the intended request boundary.
+\paragraph{Numerical organization belongs in runtime interfaces}
+Paired Q/mask views carry query and head semantics; the phase flag and layout-sensitive cache check preserve those choices during graph reuse. The scoped Vulkan port retains the noncontiguous AV shader while exposing independent query workgroups~\cite{b570gqarecords}. Producer-state qualification completes this interface: endpoint-equivalent states can contain noninterchangeable KV components. Together these results identify the state, layout and evaluation properties a portable implementation must preserve.
 
-Batch-invariant kernels~\cite{thinkingmachines}, reproducible accumulation~\cite{reproblas} and phase-aware tiled execution~\cite{spectra} offer complementary control points. A hardware extension would preserve a declared evaluation while sharing resources across independent work; dtype alone does not specify every matrix-instruction detail~\cite{ptx}. The companion same-policy AV model is a parity control~\cite{studyrecords}. Establishing a hardware advantage requires a measured request-critical cost and an equal-resource baseline with the same legitimate sharing and buffering capabilities. The present contribution is the graph transformation, its empirical transfer conditions and their effect on request economics.
+\paragraph{Optimize the complete service transaction}
+The matched Qwen3 study establishes practical QB benefits at $k=3$ with resident and fresh contexts~\cite{rtxnativebridge}. The original $k=1$ panels, compact-QH transactions and B570 prefill-submission study identify cases where reduced local work does not pass a complete-cost screen. The implementation choice therefore uses measured request cost under the intended draft length, backend and lifecycle.
+
+These control points complement batch-invariant kernels~\cite{thinkingmachines}, reproducible accumulation~\cite{reproblas} and phase-aware tiled execution~\cite{spectra}. They also give a concrete hardware-design requirement: preserve the declared per-query evaluation, including matrix-instruction behavior beyond dtype~\cite{ptx}, while exposing independent work across queries. Hardware performance would require an equal-resource comparison on the request-critical path; the archived same-policy AV model supplies an evaluation-parity control~\cite{studyrecords}.

@@ -30,6 +30,10 @@ def main(output):
              str(ROOT/'tests/reference_contract/test_execution.cpp'),
              str(ROOT/'src/reference_batching/packing_gate.cpp'),'-o',sanitized])
         run([sanitized])
+        independent=str(Path(d)/'independent-test')
+        run([compiler,*flags,'-fsanitize=undefined','-fno-sanitize-recover=all',
+             str(ROOT/'tests/reference_contract/test_independent_execution.cpp'),'-o',independent])
+        run([independent])
         run([sys.executable,'-m','unittest','discover','-s','tests/reference_contract','-p','test_*.py','-v'])
     files={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
            for folder in ('src/reference_batching','tests/reference_contract','scripts/reference_contract')

@@ -1,7 +1,17 @@
 // Compiled inside llama's graph translation unit, not in the host executable.
 #include "llama-context.h"
+#include "ggml-cpu.h"
 extern "C" HS_GATE_API bool hs_native_decode_supported(llama_context * ctx,llama_batch batch) noexcept {
     if(!ctx || hs_scope::active || hs_reference_batching::hs_get_packing_binding())return false;
+    auto scheduler=ctx->get_sched();if(!scheduler)return false;
+    for(int i=0;i<ggml_backend_sched_get_n_backends(scheduler);++i){
+        auto backend=ggml_backend_sched_get_backend(scheduler,i);
+        if(ggml_backend_is_cpu(backend))continue;
+        auto device=ggml_backend_get_device(backend);
+        auto cuda=ggml_backend_reg_by_name("CUDA");
+        if(!device || !cuda || ggml_backend_dev_backend_reg(device)!=cuda ||
+           !ggml_backend_reg_get_proc_address(cuda,"hs_cuda_exchange_audit_v1"))return false;
+    }
     const auto & p=ctx->get_cparams();const auto & model=ctx->get_model();const auto & h=model.hparams;
     if(hs_scope::layout95()!=0 && hs_scope::layout95()!=1)return false;
     if(p.flash_attn || p.n_seq_max!=1 || !p.causal_attn || h.n_expert || h.n_swa)return false;

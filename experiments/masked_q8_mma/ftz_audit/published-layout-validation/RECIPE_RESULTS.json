@@ -1,0 +1,162 @@
+{
+  "status": "FTZ_VARIANT_COMPILED_RECIPE_FLAGS_CHECKED_NOT_EQUIVALENT",
+  "frozen_dll_sha256": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+  "frozen_entries": {
+    "q1": {
+      "filename": "q8_mmvq_q1.sm90.ptx",
+      "sha256": "f117281b6439072168d6b42cec93ce19b27ce089b64bd77effe8d3d3c7f1999e",
+      "float_operation_counts": {
+        "add.ftz.f32": 8,
+        "fma.rn.ftz.f32": 5,
+        "mul.ftz.f32": 5
+      },
+      "div_approx_ftz": 0
+    },
+    "q4": {
+      "filename": "q8_mmvq_q4.sm90.ptx",
+      "sha256": "7d371052dce8d80f36801245b8c39ef04f40ed84d9781554c93f1c9ab684b7cb",
+      "float_operation_counts": {
+        "add.ftz.f32": 64,
+        "fma.rn.ftz.f32": 8,
+        "mul.ftz.f32": 8
+      },
+      "div_approx_ftz": 0
+    },
+    "quantizer": {
+      "filename": "quantize_q8_1.sm90.ptx",
+      "sha256": "6be2f3cf00f5feeeffb1d886c1c2d6e2d5bc9b3f629811f79ab6ae8d1559e2b1",
+      "float_operation_counts": {
+        "add.ftz.f32": 5,
+        "add.rz.ftz.f32": 1
+      },
+      "div_approx_ftz": 2
+    }
+  },
+  "candidate_kernel_sha256": "a8a465ac224ba8aa9613946edbe5cf7291a063f1a4c171f366a143aa82586bb9",
+  "ptx_opcode_counts": {
+    "false": {
+      "add.rn.f32": 4552,
+      "fma.rn.f32": 328,
+      "mul.rn.f32": 984
+    },
+    "true": {
+      "add.rn.ftz.f32": 4552,
+      "fma.rn.ftz.f32": 328,
+      "mul.rn.ftz.f32": 984
+    }
+  },
+  "records": [
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-ftz=false",
+        "-arch=compute_89",
+        "-ptx",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/kernels-original.cu",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/false.ptx"
+      ],
+      "returncode": 0,
+      "log": "false-ptx.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-ftz=true",
+        "-arch=compute_89",
+        "-ptx",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/kernels-original.cu",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/true.ptx"
+      ],
+      "returncode": 0,
+      "log": "true-ptx.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-ftz=true",
+        "-gencode",
+        "arch=compute_89,code=sm_89",
+        "-gencode",
+        "arch=compute_120a,code=sm_120a",
+        "-Xptxas=-v",
+        "-c",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/kernels-original.cu",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/ftz.o"
+      ],
+      "returncode": 0,
+      "log": "object.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-ftz=true",
+        "-gencode",
+        "arch=compute_89,code=sm_89",
+        "-gencode",
+        "arch=compute_120a,code=sm_120a",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/test_fma_witness.cu",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/ftz.o",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/test_fma_witness"
+      ],
+      "returncode": 0,
+      "log": "witness-compile.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/test_fma_witness"
+      ],
+      "returncode": 77,
+      "log": "witness-run.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/cuobjdump",
+        "--dump-sass",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/ftz.o"
+      ],
+      "returncode": 0,
+      "log": "sass.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/cuobjdump",
+        "--dump-resource-usage",
+        "/workspace/scratch/14b58e5a88ca/heterospec-ftz-audit/published-layout-validation/ftz.o"
+      ],
+      "returncode": 0,
+      "log": "resources.log"
+    }
+  ],
+  "gpu_execution": "NOT_RUN_NO_DEVICE",
+  "full_dataflow_equivalence": "NOT_PROVEN",
+  "quantizer": "NOT_IMPLEMENTED_NOT_QUALIFIED",
+  "artifact_sha256": {
+    "sass.log": "6c467f00c93cf0ffba0d56e00002ca298bdc3c3988177196df45c56a38bf5540",
+    "false-ptx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ftz.o": "2032e9c37aa3d46387aea0acef90e423d43f4ae6da086b834835c6e117bff814",
+    "false.ptx": "be2fe8ad62b83d799b4806d6570e5265a70b67627f840100031d953db088a042",
+    "test_fma_witness": "0c895e63973430c1a25c0e67ca579cd77c920f5722567ed33712e2b7e533458f",
+    "witness-run.log": "a036c91d49b055faca238d0b69c59ef7a8573ad4a2ce7f79b3d11f1a15af01c6",
+    "object.log": "7e874861f2d13341c11da3d90918e93a9f4f3f6434a4cce69e37deeb6796e2d1",
+    "true-ptx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "true.ptx": "02fdfac38d8d57b061d475ee5cca6e1d3fea151270e10b13590fa9549ba208ea",
+    "resources.log": "af1ac37c79aaa04b8524ea4349240c1dabaabde83d4aeb1de905bc644dcdb61a",
+    "witness-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

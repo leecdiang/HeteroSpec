@@ -1,0 +1,72 @@
+{
+  "compile": "PASS",
+  "gpu_execution": "NOT_RUN_NO_DEVICE",
+  "sass_dump": "AVAILABLE_NOT_PROVEN",
+  "frozen_runtime_equivalence": "NOT_ESTABLISHED",
+  "performance": "NOT_MEASURED",
+  "records": [
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-arch=compute_89",
+        "-ptx",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/kernels.cu",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/validation-v3/kernels-sm89.ptx"
+      ],
+      "exit": 0,
+      "log": "ptx.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/nvcc",
+        "-ccbin",
+        "/usr/bin/g++-14",
+        "-std=c++17",
+        "-gencode",
+        "arch=compute_89,code=sm_89",
+        "-gencode",
+        "arch=compute_120a,code=sm_120a",
+        "-Xptxas=-v",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/kernels.cu",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/check_gpu.cu",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/validation-v3/check_gpu"
+      ],
+      "exit": 0,
+      "log": "compile.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/validation-v3/check_gpu"
+      ],
+      "exit": 77,
+      "log": "run.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/cuda-compile-audit/cuda-13.2.2/bin/cuobjdump",
+        "--dump-sass",
+        "/workspace/scratch/14b58e5a88ca/heterospec-masked-mma/validation-v3/check_gpu"
+      ],
+      "exit": 0,
+      "log": "sass.log"
+    }
+  ],
+  "source_sha256": {
+    "kernels.cu": "a8a465ac224ba8aa9613946edbe5cf7291a063f1a4c171f366a143aa82586bb9",
+    "check_gpu.cu": "f49820879f8f4c4c04b1ad688f702b30b045f56d21102baf496f077b118e805e",
+    "validate.py": "1ed33966d12e684cf08a9eb8a27a5259650f0ed27fe659d3587c226ed0956719"
+  },
+  "artifact_sha256": {
+    "sass.log": "ecdcbbd4071e3ef27803ba746353a24fedf549273df1433e7a2c080ef0900a97",
+    "kernels-sm89.ptx": "be2fe8ad62b83d799b4806d6570e5265a70b67627f840100031d953db088a042",
+    "compile.log": "d4a4ce67246cf11ebcad3e75b43774871bd5e401953dc5783aded070238cc081",
+    "ptx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run.log": "7223cf5efefc9ca5df5ca3cfe9d5ea630166966bfa51b439d7bea7c7ec53174f",
+    "check_gpu": "014e0be21520c3dd9ce2e5ffc9033cb8cf1989bf8f1933afb6064e7990dda5b4"
+  }
+}

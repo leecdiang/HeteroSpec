@@ -9,7 +9,8 @@ Snapshot: 2026-11-04. This extends the roadmap, not the scientific claim.
    types, residency and complete quantization/accumulation/reduction/rounding/
    dispatch descriptors. A matching descriptor is **not** an equivalence proof.
    Evidence labels distinguish empirical replay, structural assumptions and
-   bit-semantics claims. The registry trusts the supplied evidence record; it
+   bit-semantics claims. Declared assumptions require a per-request host predicate;
+   missing, false or throwing premise checks reject optimization. The registry trusts the supplied evidence record; it
    does not independently validate a theorem or authenticate an artifact.
    Empirical replay is not admitted by default. The caller must explicitly opt
    into this finite-evidence operating mode, without upgrading its guarantee.
@@ -31,9 +32,11 @@ Snapshot: 2026-11-04. This extends the roadmap, not the scientific claim.
    taint before any native export/execute; explicit successful decode and full-state
    verification; restoration with complete readback; failure remains tainted.
    Policy restoration, graph rebuild and suffix trimming cannot clear taint.
-6. Conservative exact-recipe checkpoint cache. Digests are lookup indices only;
-   complete metadata and bytes are compared. No cross-recipe compatibility is
-   inferred and no production hit-rate or scheduling claim is made.
+6. Conservative checkpoint caches: legacy exact-artifact lookup is retained.
+   A new prefix identity lookup does not require expected KV/logit bytes; it
+   checks full identity and stored-state integrity separately, quarantines
+   conflicting states, and supports full-readback cached restore. No cross-recipe
+   compatibility is inferred and no production hit-rate/scheduling claim is made.
 
 ## What is deliberately not implemented or not verified
 
@@ -177,7 +180,7 @@ extraction at a trustworthy scheduler boundary, frozen original-reference host
 fallback, Qwen/GPU full-vector replay and continuation tests, import-failure
 injection, Windows ABI tests, concurrency isolation and service-level costs.
 
-Final cloud evidence: 41 Python tests, 643 C++ protocol checks (also UBSan),
+Final cloud evidence before the independent audit: 41 Python tests, 643 C++ protocol checks (also UBSan),
 47 real Q8 CPU context/guard/checkpoint checks, and the existing native
 state test executable reporting all eight cases passed. An independent review
 recompiled the native test against the final library and reproduced 47/47.
@@ -243,3 +246,11 @@ physical-device pins, quantizer/kernel semantics, frozen scalar reference,
 finite replay or independently verified structural assumptions, and a complete
 pre-launch plan. Source/route identity and recorded launch arguments alone cannot
 supply those facts. No optimized GPU execution is enabled by this addition.
+
+## Independent audit follow-up
+
+See [INDEPENDENT_AUDIT.md](INDEPENDENT_AUDIT.md) for the reproduced failure-taint
+bug, executable assumption predicates and identity-based cache lookup. The updated
+`VALIDATION.json` and `NATIVE_VALIDATION.json` bind the final audited source/test
+versions; previous counts describe the earlier implementation, not additional
+independent experiments.

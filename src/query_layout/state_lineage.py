@@ -115,6 +115,7 @@ class StateOwner:
     def qualify(self,verify: Callable[[Capsule],Verification]):
         if self._busy: raise StateError('reentrant owner operation')
         self._busy=True
+        committed=False
         self.trust=Trust.TAINTED
         self.generation+=1
         try:
@@ -125,8 +126,11 @@ class StateOwner:
             self._current=capsule
             self._checkpoint=Checkpoint(capsule,receipt,self.generation)
             self.trust=Trust.CLEAN
+            committed=True
             return self._checkpoint
-        finally: self._busy=False
+        finally:
+            if not committed: self.trust=Trust.TAINTED
+            self._busy=False
     def admit(self,*,deployment: Deployment,recipe: str,tokens: tuple[int,...],positions: tuple[int,...]):
         c=self._current
         return (not self._busy and self.trust is Trust.CLEAN and c is not None and
@@ -143,6 +147,7 @@ class StateOwner:
         cp=self._checkpoint
         if cp is None or not cp.verification.valid(): raise StateError('no verified checkpoint')
         self._busy=True
+        committed=False
         self.trust=Trust.TAINTED
         self.generation+=1
         try:
@@ -151,13 +156,17 @@ class StateOwner:
             if restored!=cp.capsule: raise StateError('full checkpoint readback mismatch')
             self._current=restored
             self.trust=Trust.CLEAN
+            committed=True
             return restored
-        finally: self._busy=False
+        finally:
+            if not committed: self.trust=Trust.TAINTED
+            self._busy=False
     def execute(self,operation: Callable[[],bool],verify: Callable[[Capsule],Verification],*,
                 expected_generation: int,restore_on_failure: bool=True):
         if self._busy or self.trust is not Trust.CLEAN or expected_generation!=self.generation:
             raise StateError('stale/untrusted execution admission')
         self._busy=True
+        committed=False
         self._invalidate() # Includes export failure, decode failure and late graph rejection.
         error=None
         try:
@@ -172,15 +181,45 @@ class StateOwner:
             self._current=candidate
             self._checkpoint=Checkpoint(candidate,receipt,self.generation)
             self.trust=Trust.CLEAN
+            committed=True
             return candidate
         except BaseException as exc:
             error=exc
-        finally: self._busy=False
+        finally:
+            if not committed: self.trust=Trust.TAINTED
+            self._busy=False
         if restore_on_failure:
             try: self.restore_checkpoint()
             except BaseException as restoration:
                 raise StateError('execution and checkpoint restoration failed; context is tainted') from restoration
         raise error
+    def restore_cached_checkpoint(self,checkpoint: Checkpoint,identity: 'CacheIdentity'):
+        """Import a trusted, already-qualified cache hit with full readback.
+
+        This does not re-prove the receipt or infer cross-recipe compatibility.
+        A failed import leaves this owner tainted and preserves its old recovery
+        checkpoint; only successful readback publishes the new current state.
+        """
+        if self._busy: raise StateError('reentrant owner operation')
+        if (not isinstance(checkpoint,Checkpoint) or not checkpoint.verification.valid() or
+                not isinstance(identity,CacheIdentity) or identity.deployment!=self.deployment or
+                CacheIdentity.from_capsule(checkpoint.capsule)!=identity):
+            raise StateError('cache admission identity or qualification mismatch')
+        self._busy=True
+        committed=False
+        self._invalidate()
+        try:
+            self.adapter.import_full(checkpoint.capsule)
+            restored=self._export()
+            if restored!=checkpoint.capsule: raise StateError('cached checkpoint readback mismatch')
+            self._current=restored
+            self._checkpoint=Checkpoint(restored,checkpoint.verification,self.generation)
+            self.trust=Trust.CLEAN
+            committed=True
+            return restored
+        finally:
+            if not committed: self.trust=Trust.TAINTED
+            self._busy=False
     def scalar_fallback(self,operation,verify):
         if self.trust is not Trust.CLEAN: self.restore_checkpoint()
         # execute checks full native state under the same reentrancy guard.
@@ -204,4 +243,72 @@ class ExactRecipeCache:
     def get(self,key: str,expected: Capsule):
         for cp in self._items.get(key,()):
             if cp.capsule==expected: return cp
+        return None
+
+@dataclass(frozen=True)
+class CacheIdentity:
+    """Lookup identity known BEFORE producing KV; no state bytes are required.
+
+    This is exact-recipe isolation, not a claim of minimal numerical provenance.
+    The deployment/recipe must include every producer dimension the host needs.
+    """
+    deployment: Deployment
+    recipe: str
+    tokens: tuple[int,...]
+    positions: tuple[int,...]
+    pending: tuple[int,...]
+    def __post_init__(self):
+        if not isinstance(self.deployment,Deployment) or type(self.recipe) is not str or not self.recipe:
+            raise ValueError('complete producer identity required')
+        for seq in (self.tokens,self.positions,self.pending):
+            if type(seq) is not tuple or any(type(x) is not int or x<0 or x>(1<<63)-1 for x in seq):
+                raise ValueError('immutable valid token/position tuples required')
+        if len(self.tokens)!=len(self.positions): raise ValueError('token/position mismatch')
+        if self.positions and self.positions!=tuple(range(self.positions[0],self.positions[0]+len(self.positions))):
+            raise ValueError('only contiguous single-stream positions supported')
+    @classmethod
+    def from_capsule(cls,capsule: Capsule):
+        return cls(capsule.deployment,capsule.recipe,capsule.tokens,capsule.positions,capsule.pending)
+    def digest(self):
+        payload=json.dumps((self.deployment.__dict__,self.recipe,self.tokens,self.positions,self.pending),
+                           sort_keys=True,separators=(',',':')).encode()
+        return hashlib.sha256(payload).hexdigest()
+
+class PrefixCheckpointCache:
+    """Single-owner identity lookup, separate from stored-state integrity.
+
+    Unlike ExactRecipeCache, lookup does not require expected KV/logits bytes.
+    Only previously qualified immutable capsules can be stored. A conflicting
+    capsule for the exact same identity quarantines that identity: neither old
+    nor new value is silently chosen. This is not eviction or a serving scheduler.
+    """
+    def __init__(self):
+        self._items: dict[str,list[tuple[CacheIdentity,Checkpoint,str]]]={}
+        self._quarantined: set[CacheIdentity]=set()
+    def put(self,checkpoint: Checkpoint):
+        if not isinstance(checkpoint,Checkpoint) or not checkpoint.verification.valid():
+            raise StateError('verified checkpoint required')
+        identity=CacheIdentity.from_capsule(checkpoint.capsule)
+        if identity in self._quarantined: raise StateError('producer identity quarantined')
+        key=identity.digest()
+        bucket=self._items.setdefault(key,[])
+        for old_identity,old,integrity in bucket:
+            if old_identity==identity:
+                if old.capsule!=checkpoint.capsule:
+                    self._quarantined.add(identity)
+                    raise StateError('same producer identity yielded conflicting state')
+                return key
+        bucket.append((identity,checkpoint,checkpoint.capsule.digest()))
+        return key
+    def get(self,identity: CacheIdentity):
+        if not isinstance(identity,CacheIdentity): raise StateError('lookup identity required')
+        if identity in self._quarantined: return None
+        for stored,checkpoint,integrity in self._items.get(identity.digest(),()):
+            # Hashes locate candidates only. Full identity is the lookup check;
+            # stored state integrity is independent of expected state bytes.
+            if stored==identity:
+                if not checkpoint.verification.valid() or checkpoint.capsule.digest()!=integrity:
+                    self._quarantined.add(identity)
+                    raise StateError('stored checkpoint integrity failed')
+                return checkpoint
         return None

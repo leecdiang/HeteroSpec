@@ -1,0 +1,116 @@
+{
+  "runtime_zip_sha256": "24d647dbf7bedb1003e766363d24cad04d55094290f1b06d6e17a342cb328d12",
+  "dll_sha256": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+  "section": {
+    "file_offset": 15098880,
+    "bytes": 532213320,
+    "sha256": "c5f1d0057fe2859da82daa8a806e7592d7c5fe74eccf562b651c349dba43c4a6"
+  },
+  "commands": [
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "--version"
+      ],
+      "cwd": "$AUDIT_OUTPUT",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "-lelf",
+        "$AUDIT_OUTPUT/ggml-cuda.nv_fatb"
+      ],
+      "cwd": "$AUDIT_OUTPUT",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "-lptx",
+        "$AUDIT_OUTPUT/ggml-cuda.nv_fatb"
+      ],
+      "cwd": "$AUDIT_OUTPUT",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "-xptx",
+        "ggml-cuda.228.sm_90.ptx,ggml-cuda.288.sm_90.ptx",
+        "$AUDIT_OUTPUT/ggml-cuda.nv_fatb"
+      ],
+      "cwd": "$AUDIT_OUTPUT/ptx_modules",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "-xelf",
+        "ggml-cuda.76.sm_89.cubin",
+        "$AUDIT_OUTPUT/ggml-cuda.nv_fatb"
+      ],
+      "cwd": "$AUDIT_OUTPUT/cubin_modules",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "$CUOBJDUMP",
+        "-sass",
+        "-fun",
+        "_Z13mul_mat_vec_qIL9ggml_type8ELi1ELb0ELb0ELb0EEvPKvS2_PKi31ggml_cuda_mm_fusion_args_devicePfj5uint3jjjS7_jjjS7_jjjj,_Z13mul_mat_vec_qIL9ggml_type8ELi4ELb0ELb0ELb0EEvPKvS2_PKi31ggml_cuda_mm_fusion_args_devicePfj5uint3jjjS7_jjjS7_jjjj",
+        "$AUDIT_OUTPUT/cubin_modules/ggml-cuda.76.sm_89.cubin"
+      ],
+      "cwd": "$AUDIT_OUTPUT",
+      "exit_code": 0
+    }
+  ],
+  "snippets": [
+    {
+      "file": "q8_mmvq_q1.sm90.ptx",
+      "source_module": "ggml-cuda.228.sm_90.ptx",
+      "source_start_line": 78226,
+      "source_end_line": 78658,
+      "sha256": "f117281b6439072168d6b42cec93ce19b27ce089b64bd77effe8d3d3c7f1999e",
+      "entry": "_Z13mul_mat_vec_qIL9ggml_type8ELi1ELb0ELb0ELb0EEvPKvS2_PKi31ggml_cuda_mm_fusion_args_devicePfj5uint3jjjS7_jjjS7_jjjj"
+    },
+    {
+      "file": "q8_mmvq_q4.sm90.ptx",
+      "source_module": "ggml-cuda.228.sm_90.ptx",
+      "source_start_line": 79666,
+      "source_end_line": 80376,
+      "sha256": "7d371052dce8d80f36801245b8c39ef04f40ed84d9781554c93f1c9ab684b7cb",
+      "entry": "_Z13mul_mat_vec_qIL9ggml_type8ELi4ELb0ELb0ELb0EEvPKvS2_PKi31ggml_cuda_mm_fusion_args_devicePfj5uint3jjjS7_jjjS7_jjjj"
+    },
+    {
+      "file": "quantize_q8_1.sm90.ptx",
+      "source_module": "ggml-cuda.288.sm_90.ptx",
+      "source_start_line": 35,
+      "source_end_line": 203,
+      "sha256": "6be2f3cf00f5feeeffb1d886c1c2d6e2d5bc9b3f629811f79ab6ae8d1559e2b1",
+      "entry": "_Z13quantize_q8_1PKfPvxxxxxj5uint3"
+    }
+  ],
+  "gpu_execution": false,
+  "source_recompilation": false,
+  "note": "Native sm89 SASS is not the deployed sm120 driver-JIT output.",
+  "tested_utc_date": "2026-11-04",
+  "independent_extraction_rerun": "PASS",
+  "snippets_are_standalone_ptx_modules": false,
+  "text_normalization": "Snippet line endings normalized to LF; full original modules regenerated from archive.",
+  "selected_original_modules": {
+    "ptx_modules/ggml-cuda.228.sm_90.ptx": {
+      "bytes": 11159045,
+      "sha256": "6e98991ae5848e79b822deb6d358856cf40be04b4af2099244292b78e6be9e46"
+    },
+    "ptx_modules/ggml-cuda.288.sm_90.ptx": {
+      "bytes": 177697,
+      "sha256": "25c7813b484a9e8713b23c951b82401a746ef985aa7ad6d2c959c09dec5e5f1f"
+    },
+    "cubin_modules/ggml-cuda.76.sm_89.cubin": {
+      "bytes": 4218952,
+      "sha256": "751601ccdee085252036e1d3ff24baf914d898da0b2acc3f75366b9f8a4b32ef"
+    }
+  },
+  "suppressions": []
+}

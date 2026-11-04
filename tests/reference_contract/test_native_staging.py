@@ -7,7 +7,12 @@ def load(name):
     mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 port=load('port_observer').port
 harden=load('harden_native').harden
+cuda_stage=load('stage_cuda_audit').stage
 class NativeStagingTests(unittest.TestCase):
+    def test_cuda_requires_staged_tree(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(ValueError):cuda_stage(Path(d))
     def test_observer_port(self):
         text='#include <windows.h>\n#include <psapi.h>\ninline j modules(){return {};}\ninline int decode(){}'
         actual=port(text)

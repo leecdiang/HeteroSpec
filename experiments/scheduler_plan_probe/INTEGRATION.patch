@@ -1,0 +1,89 @@
+--- a/ggml/src/ggml-backend.cpp
++++ b/ggml/src/ggml-backend.cpp
+@@ -786,7 +786,12 @@
+     struct ggml_cgraph graph;
+ };
+ 
++struct hs_sched_plan;
+ struct ggml_backend_sched {
++    uint64_t hs_plan_instance, hs_plan_epoch;
++    ggml_cgraph * hs_plan_graph;
++    hs_sched_plan * hs_plan_armed;
++    int hs_plan_result;
+     bool is_reset; // true if the scheduler has been reset since the last graph split
+     bool is_alloc;
+ 
+@@ -1067,6 +1072,8 @@
+ 
+ // assigns backends to ops and splits the graph into subgraphs that can be computed on the same backend
+ void ggml_backend_sched_split_graph(ggml_backend_sched_t sched, struct ggml_cgraph * graph) {
++    sched->hs_plan_graph = nullptr;
++    if (sched->hs_plan_epoch != UINT64_MAX) ++sched->hs_plan_epoch;
+     // reset splits
+     sched->n_splits = 0;
+     sched->n_graph_inputs = 0;
+@@ -1650,6 +1657,8 @@
+     return true;
+ }
+ 
++#include "hs_plan_probe.inc"
++
+ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t sched) {
+     GGML_ASSERT(sched);
+     struct ggml_backend_sched_split * splits = sched->splits;
+@@ -1861,6 +1870,7 @@
+ 
+     struct ggml_backend_sched * sched = (ggml_backend_sched *) calloc(1, sizeof(struct ggml_backend_sched));
+ 
++    sched->hs_plan_instance = hs_plan_allocate_instance();
+     const char * GGML_SCHED_DEBUG = getenv("GGML_SCHED_DEBUG");
+     sched->debug = GGML_SCHED_DEBUG ? atoi(GGML_SCHED_DEBUG) : 0;
+ 
+@@ -1946,11 +1956,14 @@
+     free(sched->context_buffer);
+     free(sched->graph.nodes);
+     free(sched->graph.leafs);
++    hs_sched_plan_disarm(sched);
+     free(sched);
+ }
+ 
+ void ggml_backend_sched_reset(ggml_backend_sched_t sched) {
+     GGML_ASSERT(sched);
++    if (sched->hs_plan_epoch != UINT64_MAX) ++sched->hs_plan_epoch; // never silently disarm
++    sched->hs_plan_graph = nullptr;
+     // reset state for the next run
+     if (!sched->is_reset) {
+         ggml_hash_set_reset(&sched->hash_set);
+@@ -2007,6 +2020,7 @@
+     }
+ 
+     sched->is_alloc = true;
++    sched->hs_plan_graph = graph;
+ 
+     return true;
+ }
+@@ -2019,6 +2033,11 @@
+ 
+ enum ggml_status ggml_backend_sched_graph_compute_async(ggml_backend_sched_t sched, struct ggml_cgraph * graph) {
+     GGML_ASSERT(sched);
++    // A diagnostic arm cannot become ordinary execution after reset/reallocation.
++    if (sched->hs_plan_armed && !sched->is_alloc) {
++        sched->hs_plan_result = HS_PLAN_NOT_ALLOCATED;
++        return GGML_STATUS_FAILED;
++    }
+     if (!sched->is_reset && !sched->is_alloc) {
+         ggml_backend_sched_reset(sched);
+     }
+@@ -2029,6 +2048,12 @@
+         }
+     }
+ 
++    // All scheduler-visible splits/transfers are inspected BEFORE the first
++    // input copy, event wait or backend launch. This tool ALWAYS vetoes.
++    if (sched->hs_plan_armed) {
++        sched->hs_plan_result = hs_sched_plan_compare(sched, graph, sched->hs_plan_armed);
++        return GGML_STATUS_FAILED;
++    }
+     return ggml_backend_sched_compute_splits(sched);
+ }
+ 

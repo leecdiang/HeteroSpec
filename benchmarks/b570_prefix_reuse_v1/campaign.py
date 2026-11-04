@@ -54,8 +54,12 @@ def calibration_timing():
    i=next(i for i,z in enumerate(panel['calibration']) if z['id']==m['id']);ref=read(ROOT/'units'/f'cal-reference-{i:02d}'/'native/result.json')['records'][1]
    records.append(dict(m,seconds=r['seconds'],qualified=endpoint(ref)==endpoint(r),source_freeze_sha256=source_sha))
  costs=[read(p) for p in (ROOT/'units').glob('cal*/RECEIPT.json')]
- cal=dict(stage='calibration',panel_sha256=study.digest(panel),deployment_id=panel['deployment_id'],source_freeze_sha256=source_sha,calibration_total_seconds=sum(x['owned_seconds'] for x in costs),records=records)
- write(ROOT/'calibration.json',cal);policy=selector.fit(cal,panel);write(ROOT/'policy.json',policy)
+ first=min(datetime.datetime.fromisoformat(read(p)['utc']) for p in (ROOT/'units').glob('cal*/BUDGET.json'))
+ observed=(datetime.datetime.now(datetime.timezone.utc)-first).total_seconds()
+ cal=dict(stage='calibration',panel_sha256=study.digest(panel),deployment_id=panel['deployment_id'],source_freeze_sha256=source_sha,calibration_total_seconds=observed,calibration_active_owned_seconds=sum(x['owned_seconds'] for x in costs),cost_window='Actual wall span from first calibration prefix reservation through fit, including intervening instrumentation/development and orchestration; no unbounded future reuse assumed',records=records)
+ fit_start=time.monotonic();policy=selector.fit(cal,panel);fit_seconds=time.monotonic()-fit_start
+ cal['calibration_fit_seconds']=fit_seconds;cal['calibration_total_seconds']+=fit_seconds;policy['calibration_total_seconds']=cal['calibration_total_seconds']
+ write(ROOT/'calibration.json',cal);write(ROOT/'policy.json',policy)
  write(ROOT/'SOURCE_POLICY_FREEZE.json',dict(utc=utc(),status='NATIVE_CALIBRATION_SOURCE_POLICY_FROZEN',source=source,source_sha256=source_sha,policy=policy,policy_sha256=study.digest(policy),panel_sha256=study.digest(panel),calibration_sha256=sha(ROOT/'calibration.json'),qualification_sha256=sha(ROOT/'CALIBRATION_QUALIFICATION.json'),main_output_exposures=0,shared_test_gate='Require counterpart authentic freeze and exact cohort/token identity before launch'))
 def common_gate():
  panel,rows=data();freeze=read(ROOT/'SOURCE_POLICY_FREEZE.json');gate=read(ROOT/'COORDINATION_RELEASE.json')

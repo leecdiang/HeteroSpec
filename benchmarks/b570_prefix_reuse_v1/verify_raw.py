@@ -1,5 +1,5 @@
 """Read-only native evidence validation; never launches GPU or edits a result."""
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import array,hashlib,json,math,sys,collections
 def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
 def sha(p):
@@ -7,6 +7,7 @@ def sha(p):
 def require(ok,msg):
  if not ok:raise ValueError(msg)
 def endpoint(r):return {k:v for k,v in r['endpoint'].items() if k!='state_sha256'}
+def hostpath(s):return PureWindowsPath(s) if '\\' in s or (len(s)>1 and s[1]==':') else Path(s)
 def verify(root,verify_vectors=True):
  root=Path(root);units=[];counts=collections.Counter();vectors={};failures=[];owned=0.;producer=0.;loads=0.;service=0.;preload=0.
  for unit in sorted((root/'units').iterdir()):
@@ -14,11 +15,11 @@ def verify(root,verify_vectors=True):
   task=read(unit/'JOB.json');budget=read(unit/'BUDGET.json');planned=task['slots'];receipt=read(unit/'RECEIPT.json');sup=read(unit/'SUPERVISOR.json')
   require(sup['job_accounting']['active_processes']==0,'unclean process '+unit.name)
   require(sup['assigned_before_resume'] is True,'uncontained worker')
-  command=read(unit/'COMMAND.json');mp=command[command.index('--manifest')+1];role=Path(mp).parent.name
+  command=read(unit/'COMMAND.json');mp=command[command.index('--manifest')+1];role=hostpath(mp).parent.name
   manifest=root/role/'FILES.json';require(sha(manifest)==receipt['manifest_sha256']==sup['manifest_sha256'],'manifest drift')
-  frozen=read(manifest)['files'];loaded={Path(x['path']).name.lower():x for x in sup['loaded_module_hashes']}
+  frozen=read(manifest)['files'];loaded={hostpath(x['path']).name.lower():x for x in sup['loaded_module_hashes']}
   for x in frozen:
-   p=root/role/'build/Release'/Path(x['path']).name
+   p=root/role/'build/Release'/hostpath(x['path']).name
    require(p.stat().st_size==x['bytes'] and sha(p)==x['sha256'],'delivered runtime drift')
    if p.suffix.lower()=='.dll':require(loaded.get(p.name.lower(),{}).get('sha256')==x['sha256'],'loaded runtime drift')
   n=read(unit/'native/result.json');records=n.get('records',[])

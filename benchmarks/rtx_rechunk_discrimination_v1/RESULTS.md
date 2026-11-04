@@ -62,6 +62,8 @@ Exactly 160 scientific requests: 16 original R, 48 heavy/off qualification, 48 i
 
 Original R was not edited to introduce new setup clocks: its context setup remains in host wall. New candidate context initialization is separately logged. The source build receipts and all native logs/manifests are in the raw archive. One CPU command was initially launched from the repository root, producing missing-module/missing-file errors; it started no native request. The same 16 CPU tests passed from the correct directory. A transient pre-study Git fetch connection failure likewise started no request. These operational failures are retained in `evidence/OPERATIONS.json`.
 
+Compile/link wall was 5.344 s. Saved-data census/exposure auditing and interactive preparation were not separately wall-metered; this limitation is explicit in the cost ledger. Artifact transport attempts and download checks are recorded separately in the delivery receipt, without counting them as scientific requests or adding parallel transfer durations as elapsed wall time.
+
 PR174 remains unchanged: AUTO 3.02130964 s versus WB-cut 3.00224603 s (0.635% slower), all three baseline/AUTO intervals cross one. Its 2,026 reserved / 1,957 completed / 69 uncompleted reserved requests and 2,038.781179 s calibration host cost remain inherited costs, not erased or charged again as this challenge’s calibration.
 
 ## Decision and stop

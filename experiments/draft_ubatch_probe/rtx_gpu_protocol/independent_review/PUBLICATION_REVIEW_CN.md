@@ -1,0 +1,5 @@
+发布包装复核：未发现阻断。已读取README、PUBLICATION_SCOPE和ARTIFACT_LINKS，并确认四份主文件SHA256仍与最终复核一致。
+
+包装明确保留NOT_READY_FOR_GPU、旧R reserve1/cap128/resident-reset及独立adapter桥接要求，没有隐藏的fresh-reference降级。历史状态和本地路径已与后续发布状态区分；已发布源码/摘要不被冒充完整证据包，原始archive明确为LOCAL_ONLY_NOT_UPLOADED，编译产物也未承诺可下载。
+
+本次仅复核本地包装及文件完整性，未重复验证远端下载；未运行模型、GPU或修改仓库。此结论仅支持文档发布，不构成执行授权或数值资格证明。

@@ -97,7 +97,7 @@ inline std::vector<Group> partition_adjacent(const std::vector<uint32_t> & exten
 // directly consumed by rotary embedding, inside the admitted verification width.
 inline bool use_scalar_head_preference(bool active, bool rotary_head_scale,
                                        uint64_t rows, bool scalar, bool batch) {
-    return active && rotary_head_scale && rows >= 2 && rows <= 4 ? scalar : batch;
+    return active && rotary_head_scale && rows >= 2 && rows <= 32 ? scalar : batch;
 }
 
 enum class Backend : uint32_t { cuda = 1, vulkan = 2 };

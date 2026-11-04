@@ -1,0 +1,87 @@
+{
+  "status": "PR180_FULL_CUDA_AND_LLAMA_COMPILE_LINK_PASS_PR179_CHANGED_UNITS_PASS_FULL_DEFERRED",
+  "pr180_head": "40934bf0f6dd5ab41e42e0f682f42aef0514e760",
+  "pr179_head": "8005cf01b9b7736d77e4e0c5dc3ecb2da2c29603",
+  "cuda_toolkit_release": "13.2.2",
+  "nvcc": "13.2.86",
+  "host_compiler": "GCC/G++ 14.2.0",
+  "architectures": [
+    "sm_89",
+    "sm_120a"
+  ],
+  "pr180_cuda_objects": 143,
+  "pr180_library_cubin_counts": {
+    "sm_89": 143,
+    "sm_120a": 143
+  },
+  "full_build_seconds": 3987.92685174942,
+  "max_individual_child_rss_kib": 831904,
+  "archive_download_bytes": 1910420604,
+  "paid_compute_purchases": 0,
+  "gpu_kernel_or_model_runs": 0,
+  "source_integrity": {
+    "pr179": {
+      "unchanged": true,
+      "file_count": 3545,
+      "manifest_sha256": "d9b5c6a830b54439bcaa4377f655e68a2aca0516c5880136938fe09946f20320"
+    },
+    "pr180": {
+      "unchanged": true,
+      "file_count": 3540,
+      "manifest_sha256": "159d361e9ac6d6d64acb42a5ef3bb8957ebf3f4d3b2073ac9c9f3e61567b3ae2"
+    }
+  },
+  "artifacts": {
+    "build/pr180/bin/libggml-base.so.0.23.0": {
+      "sha256": "05f8a274bf02aa59c06c009d012d0561de0e89bc7b5543e41ed5dd3afcbe4f13",
+      "bytes": 900032
+    },
+    "build/pr180/bin/libggml-cpu.so.0.23.0": {
+      "sha256": "1fcee27d0deeb2efa6e8889065620689eed0950085073aecd605b7093d468a29",
+      "bytes": 1201824
+    },
+    "build/pr180/bin/libggml-cuda.so.0.23.0": {
+      "sha256": "c5ac0a484ad7074737d9a55cea0d1bf8129456a848dd2a59fc1311541c7d91bb",
+      "bytes": 63420328
+    },
+    "build/pr180/bin/libggml.so.0.23.0": {
+      "sha256": "b88273f15d43dace4814efdf1f2193b909dd2661c9e6759cb9ce9981e832ab19",
+      "bytes": 55712
+    },
+    "build/pr180/bin/libllama.so.0.4.0": {
+      "sha256": "72ea9218c32935c100380335a1ef40b6d2370e8376c7f6dae11d6c717c284515",
+      "bytes": 4775192
+    },
+    "build/pr179/ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/ggml-cuda.cu.o": {
+      "sha256": "87ab80cfab6312bedadbce8571aedf17d3123a3eddd94eb326ff74393fd73faf",
+      "bytes": 358592
+    },
+    "build/pr179/ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/mmvq.cu.o": {
+      "sha256": "5b9ae70b6e3f756c18f67665cb5b746dd7c44e9aa83d91a599271bc0acf165dc",
+      "bytes": 2916888
+    },
+    "build/pr180/ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/ggml-cuda.cu.o": {
+      "sha256": "87613ac484373d4e373f874e73d15a780cc0d58b61bb37dca6b892f6fa96fa5f",
+      "bytes": 358928
+    },
+    "build/pr180/ggml/src/ggml-cuda/CMakeFiles/ggml-cuda.dir/mmvq.cu.o": {
+      "sha256": "cbe27d652dede46ac7f61928ce93e36c16e2756b8d054000341e498477805a77",
+      "bytes": 2788624
+    }
+  },
+  "warnings": [
+    "PR179 hs_cuda_exchange_audit and hs_cuda_audit_mmvq definitions have no prior declaration (-Wmissing-declarations), nonfatal in default build."
+  ],
+  "earlier_toolchain_failure": "CUDA12.9.1 minimum smoke failed at glibc2.41 sinpi/cospi exception-specification mismatch, before project source; retained evidence, no header patches/unsupported-compiler override.",
+  "unverified": [
+    "PR179 complete CUDA library linkage",
+    "Windows compiler/DLL behavior",
+    "actual GPU/driver runtime",
+    "RTX 5070 Ti Laptop device-specific behavior",
+    "frozen reference equality",
+    "numerical correctness",
+    "performance",
+    "GPU launch and quantization counts"
+  ],
+  "scope_note": "The audited runtime/stager snapshot is 40934bf. Later additions under benchmarks/reference_mma_hypothesis did not change these staged runtime files. This receipt does not validate separate experimental kernels."
+}

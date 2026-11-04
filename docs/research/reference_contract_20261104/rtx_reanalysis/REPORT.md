@@ -2,18 +2,22 @@
 
 2026-11-04。只读CPU重算；未启动GPU、未碰用户设备、未改PR。固定提交见 refs.json。不是新实验、因果结论、总体推断或投稿概率估计。
 
+## 范围更正（2026-11-04）
+
+首版摘要遗漏了QB限定：下文“56个draft亏损块的非prefill残差全正”仅指同scope M_QB/C_QB。独立复核与本轮再计算显示GS和PQ反例，不能推广全部scope。新增scope_audit.py及288个scope/input/session结果保留这一更正的可复算证据。
+
 ## 最有用的新增发现
 
-1. **旧数据里已经存在“decode有价值，但draft启动成本吃光收益”的明确会计证据。** #151 day1/day2 的672条原生记录被独立解码；96个 input/session ×7arm，五个公开log对比重算最大差3.89e-16。全部56个draft亏损块在扣除target/draft prefill后的会计残差仍有正收益。不能把“整个请求不划算”解读为“verify没有价值”。
-2. **#162本来就有拆开领域与长度的24输入面板。** 这比#151的数学短/代码长完全混杂更有用。Llama短数学draft收益M_QB/C_QB=1.1450，长数学0.8933；短代码1.0018，长代码0.8769。两种领域的长输入都不划算，不能用“数学开、代码关”的领域标签代替成本模型。
-3. **并非所有负结果都能靠一点优化救活。** #151四个Smol session要消除总draft prefill的66.7%–73.2%，即使假设没有任何额外开销，才让该session总耗时打平。把prefill砍半仍比同scope target-only慢6.7%–9.3%。个别亏损块需消除97.4%，理想无开销同前缀分摊也需超过38次，远非“加个cache就好了”。
+1. **旧数据的QB子集里存在“非prefill会计节省被draft启动成本吃掉”的证据，GS并不成立。** #151 day1/day2 的672条原生记录被独立解码；96个 input/session ×7arm，五个公开log对比重算最大差3.89e-16。其中M_QB/C_QB的56个亏损块，在扣除target/draft prefill后的会计残差均为正；GS的86个亏损块全部为负，PQ的56个亏损块有1个为负。QB局部结果不能替代其他scope，也不能把残差直接归因为verify。
+2. **#162本来就有拆开领域与长度的24输入面板。** 这比#151的数学短/代码长完全混杂更有用。Llama在QB scope内，短数学draft收益M_QB/C_QB=1.1450，长数学0.8933；短代码1.0018，长代码0.8769。在这个QB面板中，两种领域的长输入都不划算，不能用“数学开、代码关”的领域标签代替成本模型。
+3. **即使仅看QB，也并非所有负结果都能靠一点优化救活。** #151四个Smol session要消除总draft prefill的66.7%–73.2%，即使假设没有任何额外开销，才让该session总耗时打平。把prefill砍半仍比同scope target-only慢6.7%–9.3%。个别亏损块需消除97.4%，理想无开销同前缀分摊也需超过38次，远非“加个cache就好了”。
 4. **历史强对照仍约束路线。** #122真实Graph replay将QH相对QB的12–13µs差额压至约0.7–1.6µs；#123真实producer→upload→compute→readback事务中，compact QH仍约1.0016–1.0022×QB。不能把重新减少launch的收益重复算成layout独立贡献。
 
 ## #151：原始相位会计
 
 完整三日期公开input/session对比中的draft收益（M/C，大于1有利）为：Qwen代码1.018×、数学1.620×；Smol代码0.724×、数学0.994×。但数学对应短prompt、代码对应中长prompt，不能分离领域与长度。
 
-本轮实际下载并校验了day1/day2两个小包，共672条formal native off.json；day0使用公开对比表，未重新下载原始计时。以下是两天的算术均值，不要与三天几何均值混用：
+本轮实际下载并校验了day1/day2两个小包，共672条formal native off.json；day0使用公开对比表，未重新下载原始计时。以下全部是同scope M_QB/C_QB的两天算术均值，不要与三天几何均值混用：
 
 | 模型/组 | 块数 | 非prefill净节省残差 | draft prefill | target prefill C−M | 完整请求M−C |
 |---|---:|---:|---:|---:|---:|
@@ -30,11 +34,25 @@
 
 Qwen组内平均接受率：代码0.7645、数学0.7979；Smol0.6620、0.6701。两组非prefill残差相近而draft prefill差很大，说明只用接受率判断收益遗漏了显著启动成本。但接受率是运行后得到的结果，不能当作admission时已知特征。
 
-## 每input/session的摊销阈值
+### 其他scope的必要反例与同步decode对照
+
+在相同672条记录、96个input/session中逐scope重算：
+
+|scope|完整请求亏损块|其中非prefill会计残差为正|其中同步nonprefill decode相位和节省为正|
+|---|---:|---:|---:|
+|GS|86|0|0|
+|PQ|56|55|55|
+|QB|56|56|56|
+
+GS亏损块会计残差范围−2.112851至−0.139192s，同步decode对照−2.093634至−0.129839s；因此仅去掉draft prefill并不能普遍解决GS。PQ存在一个Smol反例：会计残差−0.007484s、同步decode节省−0.003465s。QB两者范围分别0.028857–1.538706s和0.033923–1.550358s，所有亏损块同号。
+
+同步decode对照是M的target非PREFILL相位和，减C的target及draft非PREFILL相位和；其余host逻辑间隙单列在scope_audit_recomputed.json。同步host decode仍不是排他GPU时间，更不证明省掉某相位后其他成本不变。
+
+## 每input/session的QB摊销阈值
 
 完整96行见 amortization_per_block.csv；模型×date×session汇总见 amortization_recomputed.json。
 
-令C为实测draft-on完整成本，M为同scope target-only，P为实测draft prefill；候选方案实际可避免P的比例f，额外总开销h。仅作敏感性算式：
+以下公式及96行阈值仅用于QB：令C为实测C_QB完整成本，M为M_QB同scope target-only，P为实测draft prefill；候选方案实际可避免P的比例f，额外总开销h。仅作敏感性算式：
 
 C_new = C − fP + h；严格有利要求 f > (C−M+h)/P。
 
@@ -70,9 +88,9 @@ f必须包含真正可复用的比例、实际命中率、实际减少计算量�
 |短数学|1.145035|0.964187|35/36|
 |长数学|0.893313|0.981455|1/36|
 
-所有Llama总体draft收益仅0.973607，layout为0.975531且未过原practical screen。不能把相对慢参考R约2.18×的优势称作draft带来的优势，因为同scope target-only已经更快。
+此Llama QB面板总体draft收益仅0.973607，layout为0.975531且未过原practical screen。不能把相对慢参考R约2.18×的优势称作draft带来的优势，因为同scope target-only已经更快。
 
-**暴露面板上的选择空间敏感性**：事后采用“短开draft、长target-only”，几何时间比为常开draft的0.940773、常关draft的0.966276；按总耗时为0.923991、0.976408。六session均同方向。这里长度带是预先固定，但开关规则是看过结果后选择，未计policy开销，**绝非新盲测、自动方法实现或可发表的泛化性能**。它只说明值得把下一实验做成真正按输入分割、固定启发式的mixed-path对照，而不是在已暴露输入ID上学习oracle。
+**暴露面板上的选择空间敏感性**：在QB scope内，事后采用“短开draft、长target-only”，几何时间比为常开draft的0.940773、常关draft的0.966276；按总耗时为0.923991、0.976408。六session均同方向。这里长度带是预先固定，但开关规则是看过结果后选择，未计policy开销，**绝非新盲测、自动方法实现或可发表的泛化性能**。它只说明值得把下一实验做成真正按输入分割、固定启发式的mixed-path对照，而不是在已暴露输入ID上学习oracle。
 
 反例：#159新修复面板12input×4session，48/48块draft有利，总体D_QB=1.42555；#166两个模型各12块，Qwen8B D_QB=1.19359，Qwen14B=1.65821。长度不是跨模型通用关闭规则，模型、目标/草稿相对成本和服务窗口必须进入资格/成本边界。
 
@@ -100,5 +118,6 @@ f必须包含真正可复用的比例、实际命中率、实际减少计算量�
 python recompute.py
 python raw_scope.py
 python amortization.py
+python scope_audit.py
 
 只用Python标准库。此目录为最小可复现投影：raw_scope.py直接读取data/pr151-native-projection.json，不需要下载ZIP；projection逐条绑定源archive/member SHA并只保留计时、相位及accepted/proposal_count，未包含完整logits/KV。两个ZIP曾实地下载、SHA与所有CRC验证；投影重算不能代替重新下载原始证据。SOURCE_MANIFEST.json给出此包各源的固定Git路径和本地文本SHA；refs.json记录PR固定头。文本工具可能规范化换行，因此本地SHA不冒充Git源字节SHA。输出JSON、CSV都是确定性分析产物。

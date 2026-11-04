@@ -9,17 +9,18 @@ def sha(p):
     with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
 def put(p,x):
     with Path(p).open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
-def build(label,oracle=False):
+def build(label,oracle=False,source='worker.cpp'):
     old=Path('E:/rtx170')/('oracle01' if oracle else 'new-driver')
     out=ROOT/label;out.mkdir()
+    shutil.copy2(HERE/source,out/'compiled-source.cpp')
     for p in old.glob('*.dll'):os.link(p,out/p.name)
     commands=read(old/'build.json')['commands']; actual=[]
     for i,cmd in enumerate(commands):
-        cmd=[str(HERE/'worker.cpp') if s.endswith('driver.cpp') else s.replace(str(old),str(out)).replace('driver.obj','worker.obj').replace('driver.exe','worker.exe') for s in cmd]
+        cmd=[str(HERE/source) if s.endswith('driver.cpp') else s.replace(str(old),str(out)).replace('driver.obj','worker.obj').replace('driver.exe','worker.exe') for s in cmd]
         actual.append(cmd)
         with (out/f'build-{i}.log').open('xb') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=600)
         put(out/f'build-{i}.json',dict(argv=cmd,code=r.returncode));r.check_returncode()
-    put(out/'binding.json',dict(commands=actual,source=sha(HERE/'worker.cpp'),exe=sha(out/'worker.exe'),core=read(old/'build.json')['core'],modules={p.name:sha(p) for p in out.glob('*.dll')}))
+    put(out/'binding.json',dict(commands=actual,source=sha(HERE/source),source_file=source,exe=sha(out/'worker.exe'),core=read(old/'build.json')['core'],modules={p.name:sha(p) for p in out.glob('*.dll')}))
 def run(label,build,manifest,requests=0,admissions=0):
     assert requests>=0 and admissions>=0
     ledger=list(ROOT.glob('*/launch.json'))
@@ -32,7 +33,8 @@ def run(label,build,manifest,requests=0,admissions=0):
     start=time.monotonic()
     try:
         exe=ROOT/build/'worker.exe'
-        put(out/'launch.json',dict(requests=requests,admissions=admissions,timeout_s=1800,exe=sha(exe),source=sha(HERE/'worker.cpp'),start_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
+        binding=read(exe.parent/'binding.json')
+        put(out/'launch.json',dict(requests=requests,admissions=admissions,timeout_s=1800,exe=sha(exe),source=binding['source'],start_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
         env={k:v for k,v in os.environ.items() if not k.startswith(('HS_','GGML_','JSA_','HSC_'))}
         with (out/'native.log').open('xb') as f:r=subprocess.run([exe,MODEL,out/'input.json',out],stdout=f,stderr=subprocess.STDOUT,timeout=1800,env=env)
         put(out/'exit.json',dict(code=r.returncode,elapsed_s=time.monotonic()-start));r.check_returncode()

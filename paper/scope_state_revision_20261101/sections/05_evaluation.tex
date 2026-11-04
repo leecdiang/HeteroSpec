@@ -8,7 +8,7 @@ The registered study uses all twelve Qwen3 and all twelve SmolLM2 inputs from th
 
 All 196 qualification requests pass before their family's timing. Twelve independently loaded family-session processes collect 1,008 measurements and 84 warmups over October 30, October 31 and November 1. Each input forms a contiguous seven-arm block with a frozen rotation; every date contains two sessions per family. The service timer charges reset/setup, both prefills, generation, transaction/state work, synchronization and result assembly. Model loading, context provisioning and post-request comparison/file writes are separate. This is a complete resident-service window, distinct from the original HTTP timer.
 
-Figure~\ref{fig:scopefinal} shows every date mean. Qwen3 has $D_{\GS}=0.835$, $D_{\PQ}=1.122$ and $D_{\QB}=1.188$. Its draft decision crosses parity under both local repairs on all three dates. SmolLM2 has corresponding ratios 0.684, 0.805 and 0.805: target-only remains cheaper in every scope on every date. The QB/GS interactions are 1.424 and 1.176. A positive scope interaction does not require profitable drafting.
+Figure~\ref{fig:scopefinal} shows every date mean. Qwen3 has $D_{\GS}=0.835$, $D_{\PQ}=1.122$ and $D_{\QB}=1.188$. Its draft decision crosses parity under both local repairs on all three dates. SmolLM2 has corresponding ratios 0.684, 0.805 and 0.805: target-only remains cheaper in every scope on every date. The QB/GS interactions are 1.424 and 1.176. A positive scope interaction can therefore coexist with unprofitable drafting.
 
 \begin{figure*}[t]\centering
 \input{figures/scope_transfer}
@@ -19,6 +19,16 @@ Figure~\ref{fig:scopefinal} shows every date mean. Qwen3 has $D_{\GS}=0.835$, $D
 Input log contrasts receive equal weight within session, sessions within date and dates overall. Every date and session mean has a positive interaction. Individual input/session reversals remain: 5/72 for Qwen3 and 27/72 for SmolLM2. The audit finds matched observed logical work across Qwen3's scopes. SmolLM2's work differs, so its estimate identifies a joint request-path effect rather than an execution-cost-only effect. No kernel-time decomposition follows from either ratio.
 
 The three date interaction ranges are 1.361--1.459 for Qwen3 and 1.126--1.205 for SmolLM2. They provide evidence of direction stability over these dates on one host. The registered $t_2$ summaries are retained as weak, assumption-dependent sensitivity checks in \sref{supp:finaltransfer}, alongside all session points, secondary ratios and the execution amendment. The request count is not an independent date sample size.
+
+\paragraph{Separate local repair from representation cost}
+On the same panel and log weights, the scope interaction factors exactly as
+\begin{equation}
+\Gamma=\frac{D_{\PQ}}{D_{\GS}}\,\eta,
+\qquad \eta=\frac{D_{\QB}}{D_{\PQ}}
+=\frac{S_{M_{\QB}/M_{\PQ}}}{S_{C_{\QB}/C_{\PQ}}}.
+\label{eq:scopedecomposition}
+\end{equation}
+The two factors are 1.344110 and 1.059343 for Qwen3, and 1.176962 and 0.999494 for SmolLM2. On SmolLM2, the pooled target-only and speculative QB costs are 6.579\% and 6.532\% lower than PQ. Their similar reductions leave draft value nearly unchanged. This retrospective factorization describes the registered request-cost estimates, not kernel-time shares. Full values, date points and baseline normalization appear in \sref{supp:targetedcontrasts}.
 
 \subsection{Original three-family comparison}
 \label{sec:economics}

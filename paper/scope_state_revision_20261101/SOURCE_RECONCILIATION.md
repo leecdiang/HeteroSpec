@@ -1,3 +1,10 @@
+Current targeted revision starts from PR153 `28a44f6d`. Its source ZIP was verified
+against the exact 162-file Git subtree before editing. The approved scope/layout
+factorization and finite qualification argument add no measurements. Main method
+and prior mathematical equations, all original data files and all 12 figure
+sources are preserved; the appendix adds two generated tables. Current receipts
+are in the targeted author QA delivery; older records below remain historical.
+
 # Current revision: 2026-11-01
 
 The current manuscript uses PR145's latest P0 text and the final PR151/152

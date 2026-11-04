@@ -3,10 +3,10 @@
 \subsection{Where numerical consistency is enforced}
 Query-axis parallelism is established attention structure. FlashAttention uses tiled attention to reduce memory traffic~\cite{flashattention}; FlashAttention-2 distributes query rows across thread blocks and warps while sharing K/V~\cite{flashattention2}. These methods optimize fused evaluation and work partitioning. QB instead expresses independent queries through views of existing non-flash operators and integrates their one-query organization with phase selection, graph reuse and speculative state. Its qualification target is the output of a specified deployed numerical stack.
 
-Table~\ref{tab:relatedmechanisms} compares the closest control points. Batch-invariant inference stabilizes reductions in normalization, matrix multiplication and attention~\cite{thinkingmachines}. CoRun combines isolated prefill, fixed-shape decode and selective kernel constraints~\cite{corun}. LLM-42 runs a fast path, verifies fixed-shape windows and repairs the corresponding KV entries~\cite{llm42}. These systems define reproducible execution contracts; matching an already deployed quantized reference is a separate requirement.
+Table~\ref{tab:relatedmechanisms} compares the closest control points. Batch-invariant inference stabilizes reductions in normalization, matrix multiplication and attention~\cite{thinkingmachines}. CoRun combines isolated prefill, fixed-shape decode and selective kernel constraints~\cite{corun}. LLM-42 verifies fixed-shape windows and replaces decoded KV entries with verified entries even when token verification succeeds~\cite{llm42}. Vosti links canonical prefix-based KV state to relational kernel contracts and proves system-level determinism under its assumptions~\cite{vosti}. These guarantees apply to each system's execution contract. Compatibility with a separately chosen deployed quantized reference requires its own argument.
 
 \begin{table*}[t]\centering\small
-\caption{Numerical-consistency control points. Performance comparisons in this paper use GS and PQ in the same runtime.}\label{tab:relatedmechanisms}
+\caption{Numerical-consistency control points and guarantee scope. Performance comparisons here use GS and PQ in the same runtime; no common-contract speed ranking of these external systems is measured.}\label{tab:relatedmechanisms}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{3.3cm}YY@{}}\toprule
 Approach & Consistency target & Constraint and arithmetic & State and verification\\\midrule
 Batch-invariant kernels~\cite{thinkingmachines}
@@ -20,17 +20,21 @@ CoRun~\cite{corun}
 LLM-42~\cite{llm42}
 & Tokens agree with a fixed-shape verification schedule
 & Dynamic fast path plus fixed-shape replay; mostly existing kernels
-& Verify--rollback and replacement of decoded KV entries by verified entries\\
+& Verify--rollback; replace decoded KV with verified entries on acceptance as well as rollback\\
+Vosti~\cite{vosti}
+& Bitwise logits at corresponding positions across executions of a fixed configuration
+& Runtime-independent kernel choices; verified relational contracts for selected kernels
+& Canonical prefix-based KV invariant and an inductive engine proof under stated assumptions\\
 Phase-scoped QB
 & Complete output agrees with the specified ordinary reference on the qualified panel
 & Q/mask views preserve local one-query attention; surrounding computation remains batched
-& Phase/layout-aware reuse, producer-state qualification and native speculative reconciliation\\\bottomrule
+& Finite producer--consumer qualification and native speculative reconciliation; no added online consistency verifier\\\bottomrule
 \end{tabularx}
 \end{table*}
 
 QB's method is the integrated graph/runtime transformation. It reuses attention operators while changing query/mask representation, preserving head semantics and binding the layout to phases and graph identity. The Vulkan AV-preserving port shows that backend admission can still require an implementation change. Local numerical correspondence and stateful endpoint qualification test different parts of this contract.
 
-Other approaches act at different boundaries. LayerCast separates storage and computation precision~\cite{layercast}; TBIK aligns reductions across tensor-parallel configurations~\cite{tbik}; MarginGate selects verification using decision margins~\cite{margingate}. Vosti specifies engine/kernel behavior across batching, chunking and cache changes and proves guarantees under its assumptions~\cite{vosti}. Our logical mapping proof, runtime guards, operator replay and endpoint tests supply finite qualification against the specified reference.
+Other approaches act at different boundaries. LayerCast separates storage and computation precision~\cite{layercast}; TBIK aligns reductions across tensor-parallel configurations~\cite{tbik}; MarginGate selects verification using decision margins~\cite{margingate}. The logical mapping proof, runtime guards, operator replay and endpoint tests in this work establish finite qualification against the specified reference.
 
 \subsection{State and request cost}
 Stage-Replay demonstrates suffix sensitivity to KV transplantation~\cite{stagereplay}, and cache-dependent divergence is reported in quantized serving~\cite{cachestate}. Our fixed-precision interventions add component-substitution counterexamples, common-prefix scores and a producer-conditioned eligibility test on the successfully ported Qwen3 consumer. Activation-patching studies establish the importance of intervention metrics and nonadditive component effects~\cite{patching,mediators}; our four-cell score contrast tests nonadditivity beyond an endpoint pattern caused only by thresholding.

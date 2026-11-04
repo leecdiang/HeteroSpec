@@ -1,0 +1,33 @@
+{
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O2",
+    "-I/tmp/heterospec-native-source/unpacked/candidate/include",
+    "-I/tmp/heterospec-native-source/unpacked/candidate/ggml/include",
+    "-I/tmp/heterospec-native-source/unpacked/candidate/vendor",
+    "/workspace/scratch/14b58e5a88ca/heterospec-native-replay/src/bridge.cpp",
+    "-L/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin",
+    "-Wl,-rpath,/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin",
+    "-lllama",
+    "-lggml",
+    "-lggml-base",
+    "-o",
+    "/workspace/scratch/14b58e5a88ca/heterospec-native-replay/build-v3/bridge"
+  ],
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "sources": {
+    "src/bridge.cpp": "b422e58ff0f4005f0259c811dd1fa12f237c5599a4d7c7c06e194e0b398b61f3",
+    "src/pinned_fixture.cpp": "9dbcfdbcb6299b0a679a0966e9d76fc2891838cf6ae4c42f842289d59e841715"
+  },
+  "libraries": {
+    "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libllama.so.0.4.0": "db6056fec20a8dae0bfce797285edf6556732af361a7c5b197d4391e80510d77",
+    "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml-base.so.0.23.0": "5489090a1aba1578bb5f605584dbd3184640f04fe12cf3a98ee2c6842a2f7797",
+    "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml-cpu.so.0.23.0": "dc7b72116b354e38230edad54619bd701537299f1200d8dda9d5a27433c34bc3",
+    "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml.so.0.23.0": "7add0854e15988aab35ea2ac1016c258444c4d2675c9f4092945f3f108286907"
+  },
+  "status": "PASS",
+  "returncode": 0,
+  "wall_seconds": 8.197301394000533,
+  "binary_sha256": "03f803ad1451d537563a51882307ead7fb910a10f90ccede8e38892d2c3233a1"
+}

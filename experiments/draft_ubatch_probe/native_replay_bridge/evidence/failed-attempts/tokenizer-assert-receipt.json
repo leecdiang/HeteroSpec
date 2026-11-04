@@ -1,0 +1,43 @@
+{
+  "status": "STARTED",
+  "processes": [
+    {
+      "mode": "candidate",
+      "input_sha256": "a183390dda941c85053df36269204b667bad7d179e7a964ba0707a2867175b2d",
+      "status": "FAILED",
+      "returncode": -6,
+      "wall_seconds": 0.04661973899783334
+    }
+  ],
+  "identity_base": {
+    "model": "79e9c09959d6e55612e375dd4fecc1ea2b2895ec2f6e5cda54631ed49e5f1632",
+    "binary": "8d85467ce2f8991ff50a548d57cc2983b0030cf9ccf4dd378a3244ecc2a5e634",
+    "libraries": {
+      "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libllama.so.0.4.0": "db6056fec20a8dae0bfce797285edf6556732af361a7c5b197d4391e80510d77",
+      "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml-base.so.0.23.0": "5489090a1aba1578bb5f605584dbd3184640f04fe12cf3a98ee2c6842a2f7797",
+      "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml-cpu.so.0.23.0": "dc7b72116b354e38230edad54619bd701537299f1200d8dda9d5a27433c34bc3",
+      "/workspace/scratch/14b58e5a88ca/heterospec-draft-ubatch/build/bin/libggml.so.0.23.0": "7add0854e15988aab35ea2ac1016c258444c4d2675c9f4092945f3f108286907"
+    },
+    "source": {
+      "src/llama-kv-cache.cpp": "5d53edebfae0722b8da464fb2407a8b8aa6e83d4e976da7e44a7c1733f96530f",
+      "src/llama-context.cpp": "c8a66dc610db1672b2fa8416aa30c90befb0312213097232736e4d1a4155c110",
+      "include/llama.h": "b214d2c12c09e671c23dd756f1f82b670dd63150fd73de867d8f5393edcf68b1"
+    },
+    "context": {
+      "n_ctx": 128,
+      "n_batch": 128,
+      "n_ubatch": 1,
+      "n_outputs_max": 4,
+      "n_outputs_max_per_seq": 4,
+      "threads": 1,
+      "kv": "F16",
+      "flash": "disabled",
+      "seq": 0
+    },
+    "backend": "CPU",
+    "prompt_producer": "whole_prompt_last_only",
+    "continuation": "singleton_last_only",
+    "scope": "fresh CPU synthetic family; NOT PR151 resident-reset R"
+  },
+  "gpu_qualification_established": false
+}

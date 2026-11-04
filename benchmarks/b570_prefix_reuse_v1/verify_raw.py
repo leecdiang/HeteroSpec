@@ -71,6 +71,7 @@ def verify(root,verify_vectors=True):
   for u in sorted((root/'units').glob(family+'-qualification-*')):
    i=u.name.rsplit('-',1)[-1];nr=read(root/'units'/(family+'-reference-'+i)/'native/result.json')['records']
    if family!='aligned':require(nr[0]['vectors']==nr[1]['vectors'] and nr[0]['endpoint']==nr[1]['endpoint'],'original repeat')
+   else:require(nr[0]['endpoint']==nr[1]['endpoint'],'aligned original observer control')
    original=nr[0];n=read(u/'native/result.json')['records']
    for j in range(0,len(n)-1,2):
     a,b=n[j:j+2];ok=original['vectors']==a['vectors'] and original['endpoint']['state_sha256']==a['endpoint']['state_sha256'] and endpoint(original)==endpoint(a)==endpoint(b)
@@ -88,5 +89,16 @@ def verify(root,verify_vectors=True):
    raw=found[(r['id'],r['session'],r['arm'],r['kind'])];require(raw['seconds']==r['seconds'],'changed native service boundary')
    require(not raw['slot']['heavy'] and not raw['slot'].get('audit_state',False) and not raw['slot'].get('trace',False),'observer in clean formal time')
    if family=='main':require(canonical(endpoint(raw))==r['actual_output_sha256'],'normalized endpoint differs from native')
+ if (root/'ALIGNED_TIMING.json').exists():
+  aligned=read(root/'ALIGNED_TIMING.json');raw=[];references={}
+  for u in sorted((root/'units').glob('aligned-reference-*')):
+   r=read(u/'native/result.json')['records'][0];references[tuple(r['slot']['ids'])]=endpoint(r)
+  for u in sorted((root/'units').glob('aligned-timing-*')):raw.extend(read(u/'native/result.json')['records'])
+  require(len(raw)==96 and aligned==raw,'complete unchanged aligned timing')
+  aq=[x for x in q if x['unit'].startswith('aligned-qualification-')]
+  require(len(aq)==24 and all(x['qualified'] for x in aq),'aligned whole-panel qualification')
+  for r in raw:
+   s=r['slot'];require(s['cache_key']=='empty' and not s['heavy'] and not s.get('audit_state',False) and not s.get('trace',False),'aligned clean empty-cache lifecycle')
+   require(endpoint(r)==references[tuple(s['ids'])],'aligned timed endpoint differs from original')
  return dict(status='RAW_RECONSTRUCTION_COMPLETE' if not failures else 'RAW_FAILURES_PRESERVED',units=units,completed_requests_by_stage=dict(counts),completed_model_requests=sum(counts.values()),charged_failed_requests=len(failures),zero_forward_probes=sum(r['reserved_requests']==0 and r['unit'].startswith('admit-') for r in units),unique_full_vectors=len(vectors),unique_final_states_verified=len(verified_states),vectors_independently_rehashed_and_argmax_checked=verify_vectors,failures=failures,native_qualification=q,total_owned_process_seconds=owned,model_load_seconds=loads,cache_preload_seconds=preload,prefix_construction_seconds=producer,native_service_seconds_including_qualification=service,performance_claim='Requires complete frozen main schedule and native qualification; this audit alone makes no speed claim')
 if __name__=='__main__':print(json.dumps(verify(sys.argv[1],'--metadata-only' not in sys.argv),indent=2))

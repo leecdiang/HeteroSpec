@@ -230,7 +230,9 @@ static json service(llama_model*m,const json&s){
   endpoint={{"committed_tokens",out.ids},{"last_position",llama_memory_seq_pos_max(llama_get_memory(x.c),0)},
             {"generated",generated},{"stop",llama_vocab_is_eog(v,out.ids.back().get<int>())?"EOG":"cap"},
             {"pending_token",out.ids.back()},{"pending_decoded",false}};
-  if(heavy){auto final=x.state();endpoint["state_sha256"]=hash(final.data(),final.size());
+  if(heavy||s.value("audit_state",false)){auto final=x.state();auto h=hash(final.data(),final.size());endpoint["state_sha256"]=h;
+   auto state_path=fs::path(job.at("cas").get<std::string>()).parent_path()/"states"/h.substr(0,2)/h;
+   if(!fs::exists(state_path))put(state_path,final.data(),final.size());
    auto owned=final;x.restore(owned,true);need(x.state()==final,"own path roundtrip");
    need(hash(entry.data.data(),entry.data.size())==entry.digest,"retained prefix mutated");
   }

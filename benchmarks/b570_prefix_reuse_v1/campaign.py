@@ -13,7 +13,8 @@ def slot(r,arm,heavy,**kw):
  d=dict(kind='service',id=r['id'],root_id=r['root_id'],ids=r['request_ids'],cache_key=r['id'],arm=arm,heavy=heavy,cap=128);d.update(kw);return d
 def endpoint(r):return {k:v for k,v in r['endpoint'].items() if k!='state_sha256'}
 def check_pair(a,b,heavy=True):
- return dict(endpoint_equal=endpoint(a)==endpoint(b),vectors_equal=(a['vectors']==b['vectors']) if heavy else None,state_equal=a['endpoint'].get('state_sha256')==b['endpoint'].get('state_sha256') if heavy else None)
+ state=a['endpoint'].get('state_sha256')==b['endpoint'].get('state_sha256') if heavy or b['slot'].get('audit_state',False) else None
+ return dict(endpoint_equal=endpoint(a)==endpoint(b),vectors_equal=(a['vectors']==b['vectors']) if heavy else None,state_equal=state)
 def passed(v):return all(x is True or x is None for x in v.values())
 def calibration_refs():
  panel,rows=data();records=[]
@@ -27,16 +28,16 @@ def qualification():
  panel,rows=data();refs=read(ROOT/'CALIBRATION_REFERENCES.json');out=[]
  for i,z in enumerate(panel['calibration']):
   r=rows[z['id']];entry=refs[i]['cache'];original=read(ROOT/'units'/f'cal-reference-{i:02d}'/'native/result.json')['records'][1]
-  slots=[slot(r,a,h) for a in study.FIXED for h in (True,False)]
-  n=run(f'cal-qualification-{i:02d}','candidate-02',slots,'calibration',cache=[entry]);assert n['status']=='COMPLETE'
+  slots=[slot(r,a,h,audit_state=True) for a in study.FIXED for h in (True,False)]
+  n=run(f'cal-qualification-v3-{i:02d}','candidate-03',slots,'engineering_reserve',cache=[entry]);assert n['status']=='COMPLETE'
   for j,a in enumerate(study.FIXED):
    heavy,off=n['records'][2*j:2*j+2];p=check_pair(original,heavy);control=check_pair(heavy,off,False)
    out.append(dict(id=r['id'],arm=a,reference=p,observer=control,passed=passed(p) and passed(control)));print('QUAL',i,a,out[-1]['passed'],flush=True)
- write(ROOT/'CALIBRATION_QUALIFICATION.json',out)
+ write(ROOT/'CALIBRATION_QUALIFICATION_V3.json',out)
  assert all(r['passed'] for r in out),'Whole calibration qualification failed; no passing subset'
 def calibration_timing():
- panel,rows=data();q=read(ROOT/'CALIBRATION_QUALIFICATION.json');assert len(q)==36 and all(r['passed'] for r in q)
- source=dict(worker=sha(HERE/'worker.cpp'),candidate=read(ROOT/'candidate-02/FILES.json'),reference=read(ROOT/'reference-01/FILES.json'),panel_sha256=study.digest(panel))
+ panel,rows=data();q=read(ROOT/'CALIBRATION_QUALIFICATION_V3.json');assert len(q)==36 and all(r['passed'] for r in q)
+ source=dict(worker=sha(HERE/'worker.cpp'),candidate=read(ROOT/'candidate-03/FILES.json'),reference=read(ROOT/'reference-01/FILES.json'),panel_sha256=study.digest(panel),runner_sources={n:sha(HERE/n) for n in ('host.py','campaign.py','supervisor.py')},toolkit_sources={n:sha(HERE.parent/'tpds_prefix_reuse_v1'/n) for n in ('study.py','selector.py','study.json','PROTOCOL.md','NATIVE_CONTRACT.md')})
  source_sha=study.digest(source)
  if not (ROOT/'CALIBRATION_SOURCE.json').exists():write(ROOT/'CALIBRATION_SOURCE.json',source)
  else:assert read(ROOT/'CALIBRATION_SOURCE.json')==source
@@ -49,7 +50,7 @@ def calibration_timing():
     for kind in ('warmup','measure'):
      m=dict(id=z['id'],root_id=z['root_id'],session=session,arm=arm,kind=kind,position=pos)
      slots.append(slot(rows[z['id']],arm,False,schedule=m));meta.append(m)
-  n=run(f'cal-timing-session-{session}','candidate-02',slots,'calibration',cache=cache);assert n['status']=='COMPLETE'
+  n=run(f'cal-timing-session-{session}','candidate-03',slots,'calibration',cache=cache);assert n['status']=='COMPLETE'
   for m,r in zip(meta,n['records'],strict=True):
    i=next(i for i,z in enumerate(panel['calibration']) if z['id']==m['id']);ref=read(ROOT/'units'/f'cal-reference-{i:02d}'/'native/result.json')['records'][1]
    records.append(dict(m,seconds=r['seconds'],qualified=endpoint(ref)==endpoint(r),source_freeze_sha256=source_sha))
@@ -60,7 +61,7 @@ def calibration_timing():
  fit_start=time.monotonic();policy=selector.fit(cal,panel);fit_seconds=time.monotonic()-fit_start
  cal['calibration_fit_seconds']=fit_seconds;cal['calibration_total_seconds']+=fit_seconds;policy['calibration_total_seconds']=cal['calibration_total_seconds']
  write(ROOT/'calibration.json',cal);write(ROOT/'policy.json',policy)
- write(ROOT/'SOURCE_POLICY_FREEZE.json',dict(utc=utc(),status='NATIVE_CALIBRATION_SOURCE_POLICY_FROZEN',source=source,source_sha256=source_sha,policy=policy,policy_sha256=study.digest(policy),panel_sha256=study.digest(panel),calibration_sha256=sha(ROOT/'calibration.json'),qualification_sha256=sha(ROOT/'CALIBRATION_QUALIFICATION.json'),main_output_exposures=0,shared_test_gate='Require counterpart authentic freeze and exact cohort/token identity before launch'))
+ write(ROOT/'SOURCE_POLICY_FREEZE.json',dict(utc=utc(),status='NATIVE_CALIBRATION_SOURCE_POLICY_FROZEN',source=source,source_sha256=source_sha,policy=policy,policy_sha256=study.digest(policy),panel_sha256=study.digest(panel),calibration_sha256=sha(ROOT/'calibration.json'),qualification_sha256=sha(ROOT/'CALIBRATION_QUALIFICATION_V3.json'),main_output_exposures=0,shared_test_gate='Require counterpart authentic freeze and exact cohort/token identity before launch'))
 def common_gate():
  panel,rows=data();freeze=read(ROOT/'SOURCE_POLICY_FREEZE.json');gate=read(ROOT/'COORDINATION_RELEASE.json')
  assert gate['released'] is True and gate['independent_panel_fork'] is False
@@ -71,6 +72,8 @@ def common_gate():
   keys=('id','root_id','request_token_sha256','cached_token_sha256','effective_head','prompt_tokens')
   assert [{k:r[k] for k in keys} for r in panel[split]]==[{k:r[k] for k in keys} for r in remote[split]],'Shared panel differs'
  assert freeze['source']['worker']==sha(HERE/'worker.cpp')
+ for n,h in freeze['source']['runner_sources'].items():assert sha(HERE/n)==h,'Frozen runner drift: '+n
+ for n,h in freeze['source']['toolkit_sources'].items():assert sha(HERE.parent/'tpds_prefix_reuse_v1'/n)==h,'Frozen protocol/toolkit drift: '+n
  assert freeze['policy_sha256']==study.digest(read(ROOT/'policy.json'))
  return panel,rows,freeze
 def main_refs():
@@ -84,8 +87,8 @@ def main_qualify():
  panel,rows,freeze=common_gate();refs=read(ROOT/'MAIN_REFERENCES.json');policy=read(ROOT/'policy.json');out=[]
  for i,z in enumerate(panel['test']):
   r=rows[z['id']];original=read(ROOT/'units'/f'main-reference-{i:02d}'/'native/result.json')['records'][1]
-  slots=[slot(r,a,h,selection_bin=z['selection_bin']) for a in study.ARMS for h in (True,False)]
-  n=run(f'main-qualification-{i:02d}','candidate-02',slots,'main_qualification',cache=[refs[i]['cache']],policy=policy,deployment_id=panel['deployment_id']);assert n['status']=='COMPLETE'
+  slots=[slot(r,a,h,audit_state=True,selection_bin=z['selection_bin']) for a in study.ARMS for h in (True,False)]
+  n=run(f'main-qualification-{i:02d}','candidate-03',slots,'main_qualification',cache=[refs[i]['cache']],policy=policy,deployment_id=panel['deployment_id']);assert n['status']=='COMPLETE'
   for j,a in enumerate(study.ARMS):
    heavy,off=n['records'][2*j:2*j+2];p=check_pair(original,heavy);control=check_pair(heavy,off,False)
    out.append(dict(id=r['id'],arm=a,reference=p,observer=control,passed=passed(p) and passed(control)));print('MAIN_QUAL',i,a,out[-1]['passed'],flush=True)
@@ -98,7 +101,7 @@ def main_timing():
   meta=[r for r in schedule if r['session']==session];slots=[]
   for m in meta:
    z=next(r for r in panel['test'] if r['id']==m['id']);slots.append(slot(rows[z['id']],m['arm'],False,selection_bin=z['selection_bin'],schedule=m))
-  n=run(f'main-timing-session-{session}','candidate-02',slots,'main_cost_and_warmup',cache=cache,policy=policy,deployment_id=panel['deployment_id']);assert n['status']=='COMPLETE'
+  n=run(f'main-timing-session-{session}','candidate-03',slots,'main_cost_and_warmup',cache=cache,policy=policy,deployment_id=panel['deployment_id']);assert n['status']=='COMPLETE'
   for m,r in zip(meta,n['records'],strict=True):
    i=next(i for i,z in enumerate(panel['test']) if z['id']==m['id']);ref=read(ROOT/'units'/f'main-reference-{i:02d}'/'native/result.json')['records'][1]
    records.append(dict(m,seconds=r['seconds'],qualified=endpoint(ref)==endpoint(r),actual_output_sha256=study.digest(endpoint(r)),expected_output_sha256=study.digest(endpoint(ref)),source_freeze_sha256=source_sha,oracle_sha256=oracle_sha))
@@ -109,8 +112,8 @@ def aligned():
  for i,z in enumerate(panel['test'][:8]):
   r=rows[z['id']];ss=[slot(r,'S1',h,cache_key='empty') for h in (True,False)]
   n=run(f'aligned-reference-{i:02d}','reference-01',ss,'aligned_control');assert n['status']=='COMPLETE';ref=n['records'][0];assert passed(check_pair(ref,n['records'][1],False))
-  ss=[slot(r,a,h,cache_key='empty') for a in study.FIXED for h in (True,False)]
-  n=run(f'aligned-qualification-{i:02d}','candidate-02',ss,'aligned_control');assert n['status']=='COMPLETE'
+  ss=[slot(r,a,h,cache_key='empty',audit_state=True) for a in study.FIXED for h in (True,False)]
+  n=run(f'aligned-qualification-{i:02d}','candidate-03',ss,'aligned_control');assert n['status']=='COMPLETE'
   for j,a in enumerate(study.FIXED):
    heavy,off=n['records'][2*j:2*j+2];p=check_pair(ref,heavy);control=check_pair(heavy,off,False);out.append(dict(id=r['id'],arm=a,reference=p,observer=control,passed=passed(p) and passed(control)))
  write(ROOT/'ALIGNED_QUALIFICATION.json',out);assert all(x['passed'] for x in out)
@@ -121,7 +124,7 @@ def aligned():
    for pos in range(3):
     arm=study.FIXED[(i+session+pos)%3]
     for kind in ('warmup','measure'):ss.append(slot(rows[z['id']],arm,False,cache_key='empty',schedule=dict(session=session,kind=kind)))
-  n=run(f'aligned-timing-{session}','candidate-02',ss,'aligned_control');assert n['status']=='COMPLETE';times.extend(n['records'])
+  n=run(f'aligned-timing-{session}','candidate-03',ss,'aligned_control');assert n['status']=='COMPLETE';times.extend(n['records'])
  write(ROOT/'ALIGNED_TIMING.json',times)
 if __name__=='__main__':{'references':calibration_refs,'qualify':qualification,'calibrate':calibration_timing,'main-references':main_refs,'main-qualify':main_qualify,'main-time':main_timing,'aligned':aligned}[sys.argv[1]]()
 

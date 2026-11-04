@@ -68,6 +68,10 @@ def run(name,role,slots,stage,cache=None,**extra):
  used=sum(read(p)['requests'] for p in (ROOT/'units').glob('*/BUDGET.json')) if (ROOT/'units').exists() else 0
  count=sum(s['kind'] not in ('admit',) for s in slots)
  assert used+count<=2048
+ caps=dict(development=192,calibration=240,engineering_reserve=112,main_qualification=320,main_cost_and_warmup=1024,aligned_control=160)
+ if stage in caps:assert sum(read(p)['requests'] for p in (ROOT/'units').glob('*/BUDGET.json') if read(p)['stage']==stage)+count<=caps[stage],stage+' reservation exceeded'
+ if (ROOT/'MODEL_STAT_BINDING.json').exists():
+  pin=read(ROOT/'MODEL_STAT_BINDING.json');st=MODEL.stat();assert st.st_size==pin['bytes'] and st.st_mtime_ns==pin['mtime_ns'],'Pinned model changed after byte authentication'
  if any(s['kind']=='admit' for s in slots):
   assert sum(read(p).get('admissions',0) for p in (ROOT/'units').glob('*/BUDGET.json'))+len(slots)<=6
  assert shutil.disk_usage(ROOT).free>20*1024**3

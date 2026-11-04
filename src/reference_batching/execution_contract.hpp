@@ -17,7 +17,7 @@ enum class Reason {
     unsupported_layout, unsupported_type, unsupported_width,
     unsupported_device, reduction_unknown, reduction_mismatch,
     no_qualification, evidence_too_weak, state_untrusted, state_mismatch,
-    invalid_dimensions, invalid_registry, stale_plan
+    invalid_dimensions, invalid_registry, stale_plan, assumptions_unmet
 };
 inline const char * reason_name(Reason r) {
     switch (r) {
@@ -31,7 +31,7 @@ inline const char * reason_name(Reason r) {
         HS_REASON(no_qualification); HS_REASON(evidence_too_weak);
         HS_REASON(state_untrusted); HS_REASON(state_mismatch);
         HS_REASON(invalid_dimensions); HS_REASON(invalid_registry);
-        HS_REASON(stale_plan);
+        HS_REASON(stale_plan); HS_REASON(assumptions_unmet);
 #undef HS_REASON
     }
     return "invalid_reason";
@@ -108,6 +108,7 @@ inline bool valid_geometry(const PackingPlan & p) {
 
 // Exact deployment + exact geometry, not broad shape ranges inferred from a
 // few captures. The evidence record's contents are an external trust boundary.
+struct PackingRequest;
 struct PackingQualification {
     DeploymentIdentity deployment;
     PackingInput input;
@@ -115,6 +116,9 @@ struct PackingQualification {
     EvidenceLevel level=EvidenceLevel::none;
     std::string evidence_id, assumptions;
     bool full_vectors=false, committed_state=false;
+    // Evaluated for the CURRENT request, not a precomputed metadata flag.
+    // The trusted host must bind actual data-dependent proof preconditions.
+    std::function<bool(const PackingRequest &)> validate_assumptions={};
 };
 
 class PackingRegistry {
@@ -126,7 +130,8 @@ public:
             (q.level!=EvidenceLevel::empirical_replay && q.level!=EvidenceLevel::structural_assumptions &&
              q.level!=EvidenceLevel::bit_semantics) ||
             !q.full_vectors || !q.committed_state ||
-            (q.level==EvidenceLevel::structural_assumptions && q.assumptions.empty()))
+            (q.level==EvidenceLevel::structural_assumptions && q.assumptions.empty()) ||
+            (!q.assumptions.empty() && !q.validate_assumptions))
             throw std::invalid_argument("incomplete explicit qualification");
         for (const auto & old:entries_)
             if (old.deployment==q.deployment && old.input==q.input)
@@ -196,10 +201,18 @@ inline PackingDecision packing_admission(const PackingRequest & r,const PackingR
         r.input.k>uint64_t(std::numeric_limits<int64_t>::max())/r.input.columns/4)
         return deny(Reason::invalid_dimensions,false);
     if (!r.selected_scalar.complete() || !r.selected_grouped.complete()) return deny(Reason::reduction_unknown);
-    const auto * q=registry.find(r.deployment,r.input);
-    if (!q) return deny(Reason::no_qualification);
+    const auto * found=registry.find(r.deployment,r.input);
+    if (!found) return deny(Reason::no_qualification);
+    // Keep a stable copy across trusted predicate invocation.
+    const auto qualification=*found;
+    const auto * q=&qualification;
     if (!(q->scalar==r.selected_scalar) || !(q->grouped==r.selected_grouped)) return deny(Reason::reduction_mismatch);
     if (q->level==EvidenceLevel::empirical_replay && !r.allow_empirical) return deny(Reason::evidence_too_weak);
+    if (!q->assumptions.empty()) {
+        try {
+            if (!q->validate_assumptions || !q->validate_assumptions(r)) return deny(Reason::assumptions_unmet);
+        } catch (...) { return deny(Reason::assumptions_unmet); }
+    }
     d.plan=packing_geometry(r.input.k,r.input.columns);
     d.action=Admission::optimized; d.reason=Reason::admitted;
     d.evidence_id=q->evidence_id; d.evidence_level=q->level;
@@ -226,13 +239,19 @@ inline ExecutionResult execute_operator(const PackingRequest & request,
     if (d.action==Admission::empty) return {true,false,d.reason};
     if (live.generation==std::numeric_limits<uint64_t>::max()) return {false,false,Reason::invalid_dimensions};
     live.clean=false; ++live.generation;
+    // A callback may accidentally write the shared identity. Every noncommit
+    // exit must restore taint, including false returns and exceptions.
+    struct TaintOnFailure {
+        StateIdentity & state; bool committed=false;
+        ~TaintOnFailure() { if (!committed) state.clean=false; }
+    } transaction{live};
     try {
         const bool ok=d.action==Admission::optimized ? optimized(d.plan):scalar();
         if (!ok || !verify_committed_state() || live.deployment!=request.state.deployment ||
             live.position!=request.state.position || live.prefix_identity!=request.state.prefix_identity ||
             live.recipe!=request.state.recipe || live.generation!=request.state.generation+1)
             return {false,d.action==Admission::optimized,d.reason};
-        live.clean=true;
+        live.clean=true; transaction.committed=true;
         return {true,d.action==Admission::optimized,d.reason};
     } catch (...) { // Preserve taint; the owner may restore a separately verified checkpoint.
         throw;

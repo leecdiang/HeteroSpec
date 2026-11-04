@@ -66,6 +66,9 @@ class NativeCheckpointOwner {
     }
     void restore_impl() {
         clean_=false;++generation_;
+        // Earlier backend splits may have launched asynchronous work before
+        // a later graph/dispatch rejection. Quiesce the old context first.
+        llama_synchronize(context_.get());
         // Build separately; do not repair a partially failed context in place.
         auto fresh=make_context();
         if(llama_state_set_data(fresh.get(),checkpoint_.memory.data(),checkpoint_.memory.size())!=checkpoint_.memory.size())

@@ -11,5 +11,10 @@ def main():
     for label in ('candidate01','candidate02','oracle02'):
         body=(HERE/'worker.cpp').read_bytes()
         if sha(HERE/'worker.cpp')==read(ROOT/label/'binding.json')['source']:(ROOT/label/'compiled-source.cpp').write_bytes(body)
+    original=(HERE/'worker.cpp').read_text();a=original.index('static void raw(');b=original.index('int main(int argc',a)
+    first=original[:a]+original[b:]
+    first=first.replace('    if(mode=="requests"){for(auto&u:j.at("units"))request(m.get(),ctx.get(),u,out);return 0;}\n    throw std::runtime_error("unsupported mode");','    throw std::runtime_error("mode not yet implemented");')
+    expected=read(ROOT/'candidate01/binding.json')['source'];assert hashlib.sha256(first.encode()).hexdigest()==expected
+    (ROOT/'candidate01/compiled-source.cpp').write_bytes(first.encode())
     print('epochs03-06 recovered and authenticated against original build hashes')
 if __name__=='__main__':main()

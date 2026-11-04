@@ -26,6 +26,11 @@ def qualify():
         ref=ROOT/f'main-r-{i:02}/r0';rr=read(ref/'receipt.json');v={p.name:sha(p) for p in ref.glob('*.f32')}
         for arm in ('R-repeat',*study.ARMS):
             heavy=ROOT/f'main-r-{i:02}/r1' if arm=='R-repeat' else d/f'i{i:02}'/arm/'heavy';h=read(heavy/'receipt.json');off=h if arm=='R-repeat' else read(heavy.parent/'off/receipt.json')
+            if arm!='R-repeat':
+                planned=study.plan(study.lcp(r['cached_ids'],r['request_ids']),len(r['request_ids'])-study.lcp(r['cached_ids'],r['request_ids']),h['arm'])
+                assert h['calls']==off['calls']==[{k:x[k] for k in ('head','width')} for x in planned]
+                assert h['physical_dense_head']==study.lcp(r['cached_ids'],r['request_ids'])
+            assert h['final_position']==len(r['request_ids'])+len(h['output'])-2
             proof.append(dict(index=i,arm=arm,vectors_equal=v=={p.name:sha(p) for p in heavy.glob('*.f32')},state_equal=sha(ref/'final.bin')==sha(heavy/'final.bin'),output_equal=rr['output']==h['output']==off['output'],position_equal=rr['final_position']==h['final_position']==off['final_position']))
     put(ROOT/'MAIN_QUALIFICATION.json',proof)
     assert all(all(v for k,v in r.items() if k.endswith('equal')) for r in proof)

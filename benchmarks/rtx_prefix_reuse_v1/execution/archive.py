@@ -2,7 +2,8 @@
 from host import *
 import zipfile
 def pack():
-    out=ROOT/'raw-evidence.zip';index={};unique=set()
+    delivery=Path('F:/rtx172-delivery');delivery.mkdir(exist_ok=True)
+    out=delivery/'raw-evidence.zip';index={};unique=set()
     with zipfile.ZipFile(out,'x',zipfile.ZIP_DEFLATED,compresslevel=1) as z:
         for p in sorted(ROOT.rglob('*')):
             if not p.is_file() or p.suffix not in ('.json','.jsonl','.log','.f32','.bin','.cpp') or p.name=='archive-verification.json':continue
@@ -23,10 +24,24 @@ def verify(path):
         for i in range(12):
             ref=f'cal-r-{i:02}/r0/';r=get(ref+'receipt.json');v=vectors(ref);assert len(v)==len(r['output'])
             for d in [f'cal-r-{i:02}/r1/']+[f'{epoch}-{i:02}/{a}-heavy/' for epoch in ('cal-q','cal-q04','cal-q07') for a in ('QB','WB-cut','WB-rechunk')]:
+                if d+'receipt.json' not in index:continue # retained interrupted engineering slot
                 assert vectors(d)==v;assert index[d+'final.bin']['sha256']==index[ref+'final.bin']['sha256'];c=get(d+'receipt.json');assert c['output']==r['output'] and c['final_position']==r['final_position'];comparisons+=1
-        records=get('calibration07.json')['records'];assert len(records)==144
+        for phase,count,arms in [('common',12,('QB','WB-cut','WB-rechunk')),('main',32,('QB','WB-cut','WB-rechunk','AUTO')),('aligned',8,('QB','WB-cut','WB-rechunk'))]:
+            for i in range(count):
+                ref=f'{phase}-r-{i:02}/'+('R-r0/' if phase=='aligned' else 'r0/');r=get(ref+'receipt.json');v=vectors(ref)
+                repeat=f'{phase}-r-{i:02}/'+('R-r1/' if phase=='aligned' else 'r1/')
+                assert vectors(repeat)==v
+                for a in arms:
+                    d=f'{phase}-q-{i:02}/'+(f'i{i:02}/{a}/heavy/' if phase=='main' else a+'-heavy/')
+                    assert vectors(d)==v and index[d+'final.bin']['sha256']==index[ref+'final.bin']['sha256']
+                    c=get(d+'receipt.json');assert c['output']==r['output'] and c['final_position']==r['final_position'];comparisons+=1
+        records=get('COMMON_CALIBRATION.json')['records'];assert len(records)==144
+        formal=get('results.json')['records'];assert len(formal)==1024
+        panel=get('common-panel.json');ids={r['id']:i for i,r in enumerate(panel['test'])}
+        for row in formal:
+            p=f"main-cost-s{row['session']}/i{ids[row['id']]:02}/{row['arm']}/{row['kind']}/receipt.json";r=get(p);assert r['service_s']==row['seconds']
         ledger=[get(p) for p in index if p.endswith('/launch.json')]
-        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=0,not_third_party_native_replication=True)
+        result=dict(status='ARCHIVE_ONLY_RECONSTRUCTION_PASS',files=len(index),unique_blobs=len(verified),vector_state_comparisons=comparisons,calibration_slots=len(records),requests_started=sum(x['requests'] for x in ledger),formal_measurements=512,formal_warmups=512,not_third_party_native_replication=True)
         print(json.dumps(result,indent=2));return result
 if __name__=='__main__':
     if sys.argv[1]=='pack':pack()

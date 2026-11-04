@@ -1,0 +1,203 @@
+{
+  "scope": "Independent local source review and synthetic native CPU tests only. No Windows/GPU/frozen-target-R/speedup qualification.",
+  "reviewed_implementation_sha256": {
+    "frozen-worker.cpp": "4423bf687de4d652809c3ffad9cd9bf31770c2019c383fb54bd7abd24858b124",
+    "stage.py": "ddb175e311b8596ae140155cb7bfff3514bb19067a1f7fc446fa76463571c382",
+    "test_stage.py": "3ac09064ec0079f24eefa579dee0c0cc3e258f88bb7dae21bf09928be0cb8ede",
+    "test_native.cpp": "9dbcfdbcb6299b0a679a0966e9d76fc2891838cf6ae4c42f842289d59e841715",
+    "make_stress_fixture.py": "697705cecc4871f3b4903b784f622916723255347b1107b4f36deeca46639e1c",
+    "quantize_fixture.cpp": "b21576f3dff692ac567a7d6e8b170cbd300320f38983629ba1a98df6b55ca340"
+  },
+  "native_fixture_sha256": "9dbcfdbcb6299b0a679a0966e9d76fc2891838cf6ae4c42f842289d59e841715",
+  "final_stage_check": {
+    "status": "PASS",
+    "arms": [
+      {
+        "ubatch": 1,
+        "whole_file_inverse_equal": true,
+        "actual_output_hash_matches": true,
+        "worker_sha256": "1106d6d947f9f9cabc6a1e434bc83ef63a55e6b34127c649f2e22d7dcc26d8be"
+      },
+      {
+        "ubatch": 2,
+        "whole_file_inverse_equal": true,
+        "actual_output_hash_matches": true,
+        "worker_sha256": "e6cc91dfe5084dce56780874917e832473201724511dc93f68ada05efdda00d7"
+      },
+      {
+        "ubatch": 4,
+        "whole_file_inverse_equal": true,
+        "actual_output_hash_matches": true,
+        "worker_sha256": "fff8080ac9d3dd5e2fa956442ace9585cc88424ac3f4491569917b28b14f6a90"
+      }
+    ],
+    "crlf_raw_bytes_rejected": true,
+    "unsupported_widths_rejected": [
+      -1,
+      0,
+      3,
+      8
+    ],
+    "stage_sha256": "ddb175e311b8596ae140155cb7bfff3514bb19067a1f7fc446fa76463571c382"
+  },
+  "models": {
+    "original-q8": {
+      "sha256": "f6b36d77fd49d8bbc707b9d104d4a45a233bbcef236064ac7510536368fcd090"
+    },
+    "original-dense": {
+      "sha256": "5b9aeb4e2b843d0d3f70072fe2dd22131387a86a984332da5571e717844d063c"
+    },
+    "stress-q8": {
+      "sha256": "79e9c09959d6e55612e375dd4fecc1ea2b2895ec2f6e5cda54631ed49e5f1632"
+    },
+    "stress-dense": {
+      "sha256": "15cfa015cae52f4af70112a782f5304b6c75f8e8f1b03d81a08cf37a0238df76"
+    }
+  },
+  "native_runs": {
+    "original-q8": {
+      "status": "PASS",
+      "cases": 75,
+      "speculative_cycles": 114,
+      "low_level_checks": 367917,
+      "result_sha256": "36d29e0279686e3da66efdc935aa60e56456027cbbbe01bf56dab662f82e8ec7",
+      "journal_sha256": "f9376816024a2d1ef45b48fa01e6f07cb265fd02c51a5351459a5f19452d4a62",
+      "endpoint_failures": 0,
+      "verification_vector_mismatches": 0,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0
+    },
+    "original-dense": {
+      "status": "PASS",
+      "cases": 75,
+      "speculative_cycles": 114,
+      "low_level_checks": 367917,
+      "result_sha256": "36d29e0279686e3da66efdc935aa60e56456027cbbbe01bf56dab662f82e8ec7",
+      "journal_sha256": "f9376816024a2d1ef45b48fa01e6f07cb265fd02c51a5351459a5f19452d4a62",
+      "endpoint_failures": 0,
+      "verification_vector_mismatches": 0,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0
+    },
+    "stress-q8": {
+      "status": "PASS",
+      "cases": 75,
+      "speculative_cycles": 114,
+      "low_level_checks": 367917,
+      "result_sha256": "78e44b3f738400adfd735036c887c7a9e969a389cc20b403154f956f0a754085",
+      "journal_sha256": "54fb550649d8e496f042a0d7da4269c5e87b9256ce9a029955639668d1f08f10",
+      "endpoint_failures": 0,
+      "verification_vector_mismatches": 0,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0
+    },
+    "stress-dense": {
+      "status": "PASS",
+      "cases": 75,
+      "speculative_cycles": 114,
+      "low_level_checks": 367917,
+      "result_sha256": "78e44b3f738400adfd735036c887c7a9e969a389cc20b403154f956f0a754085",
+      "journal_sha256": "54fb550649d8e496f042a0d7da4269c5e87b9256ce9a029955639668d1f08f10",
+      "endpoint_failures": 0,
+      "verification_vector_mismatches": 0,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0
+    }
+  },
+  "mutation_tests": {
+    "historical_early_stop": {
+      "status": "PASS",
+      "cases": 75,
+      "cycles": 0,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0,
+      "result_sha256": "da3adea286b014c52ebdb4ef23b65cb945673239d82781acb35b4e65df1ca1c3",
+      "fixture_sha256": "3bb3c69954f03dc481c18e5fe8d25f82433649f70fe3f5593dd3c14e252bcc6f"
+    },
+    "historical_discard_state": {
+      "status": "PASS",
+      "cases": 75,
+      "cycles": 114,
+      "serialized_sequence_failures": 0,
+      "continuation_failures": 0,
+      "result_sha256": "29ce57d2f937fad5cd21619a818b23622b2afeed4755bd296d2a2e1198bd32b8",
+      "fixture_sha256": "fa4297f36630701725b969e6a1df2e24da59d978ccb577a3dfb2b8baf051e9e5"
+    },
+    "fixed_discard_state_original_q8": {
+      "status": "OBSERVED_MISMATCH",
+      "cases": 75,
+      "cycles": 114,
+      "serialized_sequence_failures": 57,
+      "continuation_failures": 0,
+      "result_sha256": "e73e6a39bad5f2c0d8e54f631c12aaa1c2dbb89eff39d20b5814800927ad4a37",
+      "fixture_sha256": "9fdbb0021d74f920fd2be7cb384f76fdeb580d91beccbf4b7fc153e1c6ca7e30"
+    },
+    "fixed_discard_state_stress_q8": {
+      "status": "OBSERVED_MISMATCH",
+      "cases": 75,
+      "cycles": 114,
+      "serialized_sequence_failures": 57,
+      "continuation_failures": 0,
+      "result_sha256": "201da0d3ba0228624733e4e23dff6d2592630cf902adf8859fbab4563bcb98eb",
+      "fixture_sha256": "9fdbb0021d74f920fd2be7cb384f76fdeb580d91beccbf4b7fc153e1c6ca7e30"
+    },
+    "fixed_early_stop": {
+      "expected_exit": 2,
+      "expected_error": "independent expected output length",
+      "review_check_pass": true,
+      "receipt_sha256": "5671582b94f048023e5aac84b7929ae3dc0bdbec3a302f66e9286129194d4c68"
+    }
+  },
+  "history_probe": {
+    "original-q8": {
+      "pairs_vs_first_prefix": 5,
+      "pairs_with_nonzero_change": 0,
+      "max_abs_difference": 0.0,
+      "result_sha256": "0c17dab24cade6f227d28c31ae3dacdabb3c3a591da6787ff2e56a1b5b163597"
+    },
+    "original-dense": {
+      "pairs_vs_first_prefix": 5,
+      "pairs_with_nonzero_change": 4,
+      "max_abs_difference": 9.313225746154785e-09,
+      "result_sha256": "18d3f27cafe35d25eb25766d327f4caae96b9a69b20a836a85f159f567e27bbe"
+    },
+    "stress-q8": {
+      "pairs_vs_first_prefix": 5,
+      "pairs_with_nonzero_change": 4,
+      "max_abs_difference": 0.0006657987833023071,
+      "result_sha256": "5c17a21f0d11c99662142fb35ba8d03b660685d0b0bd4436af8fd1185f21237a"
+    },
+    "stress-dense": {
+      "pairs_vs_first_prefix": 5,
+      "pairs_with_nonzero_change": 4,
+      "max_abs_difference": 0.0001161918044090271,
+      "result_sha256": "100502b2b9091b676e48a74062a3f597c9967a7ddff36ed6318713f8fa49a022"
+    }
+  },
+  "limits": [
+    "Same synthetic model used as target and draft",
+    "Target ubatch 1/output reservation 4, not scoped target ubatch 4",
+    "Synthetic stop-index predicate, not native EOG",
+    "UBSan executable only, not runtime libraries",
+    "Serialized active sequence is not complete hidden/padding state",
+    "Continuation alone failed to detect the tested state-loss mutation even on stress Q8"
+  ],
+  "library_sha256": {
+    "libllama.so": "db6056fec20a8dae0bfce797285edf6556732af361a7c5b197d4391e80510d77",
+    "libggml-base.so": "5489090a1aba1578bb5f605584dbd3184640f04fe12cf3a98ee2c6842a2f7797",
+    "libggml-cpu.so": "dc7b72116b354e38230edad54619bd701537299f1200d8dda9d5a27433c34bc3",
+    "libggml.so": "7add0854e15988aab35ea2ac1016c258444c4d2675c9f4092945f3f108286907"
+  },
+  "runtime_inspected_source_sha256": {
+    "src/llama-context.cpp": "c8a66dc610db1672b2fa8416aa30c90befb0312213097232736e4d1a4155c110",
+    "src/llama-graph.cpp": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+    "src/llama-kv-cache.cpp": "5d53edebfae0722b8da464fb2407a8b8aa6e83d4e976da7e44a7c1733f96530f",
+    "include/llama.h": "b214d2c12c09e671c23dd756f1f82b670dd63150fd73de867d8f5393edcf68b1"
+  },
+  "runtime_source_hash_scope": "These four inspected source files are not a complete build source manifest; exact library hashes identify tested binaries.",
+  "strengthened_dense_derivation_verified": {
+    "five_norm_ranges_set_to_one": true,
+    "all_other_bytes_identical": true
+  },
+  "verdict": "No remaining blocker for unpublished source candidate and bounded CPU fixture. Broader numerical/performance qualification remains unestablished."
+}

@@ -28,6 +28,6 @@ QB各session按总service加总，C/M为1.0393–1.0683，均比target-only慢�
 
 ## 复现
 
-在本目录运行 python analyze.py，只用Python标准库，无需GPU或访问用户设备。data/只含计时/计数标量、领域/长度分层、源hash和endpoint/prompt摘要，不含原题、提示或输入/输出token序列。SOURCE_MANIFEST.json固定原始release、提交及源worker identity。
+在本目录运行 python analyze.py，只用Python标准库，无需GPU或访问用户设备。data/只含计时/计数标量、领域/长度分层、whole-source member hash，不含prompt/endpoint内容摘要，不含原题、提示或输入/输出token序列。SOURCE_MANIFEST.json固定原始release、提交及源worker identity。
 
-脚本对最小投影hash及432配对会计重算，产出mechanism.json；其预期hash见GENERATED_OUTPUTS.json。原ZIP逐成员SHA/CRC、原始端点及864 service对齐已在导出前独立复核，投影重跑不会重新证明完整KV/logits资格。无需下载原始107GB证据。完整JSON产物本地生成，不作为大文件提交。
+脚本对最小投影hash及432配对会计重算，产出mechanism.json；其预期hash见GENERATED_OUTPUTS.json。原ZIP逐成员SHA/CRC、原始端点及864 service对齐已在导出前独立复核；投影不含内容或内容摘要，因此不能重验端点一致性，投影重跑不会重新证明完整KV/logits资格。无需下载原始107GB证据。完整JSON产物本地生成，不作为大文件提交。

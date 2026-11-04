@@ -4,6 +4,11 @@ This result branch starts at PR173 design head
 `bba256cf04bbd2038029fd59447df9722b24c197`. Its scientific ancestor remains
 PR169 `8ca17478c292275b3515a91b51d0e791a8fae256`. Historical references,
 failed k1 admissions, shaders, and prior results are never overwritten.
+The original [PR169 raw release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-reference-parallel-v1-evidence-20261103)
+continues to provide authenticated historical objects. This delivery additionally
+retains the original R manifests and K1_REGRESSION bytes and verifies their hashes
+during CPU reconstruction. Target-only success here cannot establish dual-model
+k1 capacity or speculative speedup.
 
 Execution is in progress. Both genuine source/policy freezes have been published
 and inspected before any B570 held-out output. B570 froze at

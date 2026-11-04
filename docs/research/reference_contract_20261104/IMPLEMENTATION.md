@@ -37,17 +37,18 @@ Snapshot: 2026-11-04. This extends the roadmap, not the scientific claim.
 
 ## What is deliberately not implemented or not verified
 
-- **Native host extractor/binding: NOT_IMPLEMENTED.** The backend must expose the
-  actual selected kernel/reduction and bind the gate in the same native module.
-  The provided C++ callback interface is not that hardware-specific extractor.
-- **Real llama.cpp adapter for Python StateOwner: NOT_IMPLEMENTED.** It must restore
-  the separately maintained initial logits and pending-token semantics, not only
-  call llama_state_seq_set_data. The tests use an explicit mock native adapter.
-- **Full PR171 source staging: NOT_RUN.** Complete restored llama.cpp source is in
-  host/release assets, not the main repository. The source tests use pinned-anchor
-  fixtures and do not stand in for a complete source-tree test.
-- **Full llama.cpp compilation, CUDA/Vulkan execution and new bitwise replay:
-  NOT_RUN.** CPU header compilation and graph-source transformation are distinct.
+- **Hardware dispatch/residency extractor and GPU qualification: NOT_IMPLEMENTED.**
+  Real native module binding and context preflight are implemented and tested on
+  Linux CPU. They do not reveal the final CUDA kernel or prove its arithmetic.
+- **Python-to-native adapter: NOT_IMPLEMENTED.** The Python state owner remains a
+  mock-adapter protocol test. A separate, real C++ `NativeCheckpointOwner` now
+  owns a llama context, serializes/restores its memory, and maintains independent
+  logits, pending tokens, positions and provenance. It is not a Python ABI.
+- **Complete restored source staging and full CPU llama build: PASS** in the
+  separate `NATIVE_VALIDATION.json` receipt. The source ZIP SHA256 is
+  `b1926827029e0bb8e219861901f2ca3538b330a44f9c6093b5267157dbfcd1ac`.
+- **CUDA/Vulkan execution, Windows builds and new reference-relative GPU replay:
+  NOT_RUN.** Synthetic CPU model tests establish transactional behavior only.
 - **Windows DLL/CRT callback ABI: NOT_RUN.** TLS storage is defined in one exported
   native module, avoiding header-local copies. Linux shared-library/host binding
   and thread isolation were tested. Windows still needs matching compiler/CRT,
@@ -69,12 +70,12 @@ fallback; no unsafe automatic switch is added inside a modified graph.
 
 ## Code relationship to existing work
 
-`reference_batching.hpp` is copied **unchanged** from PR166 commit
-`abd36bea639bf814159ad68ab015bc983c5338b1`, Git blob
-`a0baff824a1b54fb3867845372939b9a97c11115`. It retains existing physical extent and
-projection policies. No historical implementation, evidence or manuscript is
-rewritten, and no experimental PR is merged. The new gate does not claim that
-its old `ActivationPath` equality proves numerical equality.
+`reference_batching.hpp` is copied unchanged from the verified PR171 source kit,
+SHA256 `746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c`.
+Unlike the older PR166 helper, it retains scalar head placement through q=32.
+The stager pins and preserves the source's own shared header. It does not merge
+or edit historical experimental branches. `ActivationPath` equality still is
+not proof of floating-point equivalence.
 
 The existing main `src/query_layout/contract.py` is unchanged. State lineage is
 an additional module rather than a change to the old graph-key API. Existing
@@ -100,8 +101,17 @@ To stage an already restored PR171 source candidate:
 python scripts/reference_contract/stage.py --source /path/to/restored-packed-source --out /path/to/fresh-candidate
 ```
 
-Do not use the output for model execution until the native binding, complete
-checkpoint adapter and actual backend builds have been implemented and audited.
+For reproducible native CPU validation of the authorized source kit, run:
+
+```sh
+python scripts/reference_contract/validate_native.py --source /path/to/candidate --work /tmp/fresh-native-validation --output /tmp/native-validation.json
+```
+
+This requires CMake, Ninja and g++, builds CPU only, generates a seeded tiny
+Llama GGUF, quantizes it to Q8_0, and tests the actual runtime. No model download
+is needed. It applies isolated observer portability and experimental graph
+assertion hardening patches after staging. Do not treat these CPU tests as
+qualification to deploy the optimized GPU branch.
 A unique anchor is a drift detector, not a cryptographic source identity check.
 The receipt records before/after hashes so the host can bind it to its pinned
 source manifest and reject an unexpected source before native execution.
@@ -121,16 +131,53 @@ callback must return exactly True; false/non-success return codes fail.
 
 `execute_operator` is explicitly **stateless with respect to KV**. It checks
 that position, prefix, recipe and deployment do not change. Stateful append,
-rollback and scalar retry belong to StateOwner and the future native adapter.
+rollback and scalar retry belong to the state owners and the host verifier.
 
 ## Stage gates before any new performance experiment
 
-1. Obtain the pinned full source capsule; run the stager and complete native builds.
+1. Reproduce the verified CPU source build, then build the target GPU backends.
 2. Implement actual dispatch extraction and same-module binding, including runtime
    identity and separately qualified tiled fallback. Do not populate the registry
    with synthetic test receipts or broad unseen shapes.
-3. Implement a real full capsule adapter with initial logits/pending/positions;
-   inject failures before append, after allocation, during decode and during import.
+3. Extend the tested C++ capsule owner to the deployment host and inject native
+   import failures; retain independent initial logits/pending/positions.
 4. Reuse stored operands for exact qualification and preserve all failures.
 5. Only then register a bounded hardware study with unchanged scalar reference,
    equally optimized WB-rechunk and complete costs. No unbounded sweep is implied.
+
+## Native integration and recovery scope
+
+`native_guard.hpp` installs both binding and execution scope in the actual
+runtime module for one synchronous decode. It unwinds them before the owner
+reconstructs a checkpoint. Runtime preflight reads real context/model fields:
+only dense non-SWA Llama/Qwen3, one sequence, causal attention, no flash/MoE,
+contiguous append positions, q<=32 and all output rows are accepted. Nested
+active scopes are refused. The existing optimized attention assertions are
+converted into catchable exceptions only while bound; generic ggml assertions,
+allocation failures that abort, signals and device failures are not recoverable
+C++ exceptions. This is not a universal crash-recovery system.
+
+Graph reuse is conservatively disabled whenever the old graph or current call
+is bound. This prevents a previously authorized graph bypassing a new binding.
+The guard is for the existing dense-attention input, not arbitrary architectures.
+
+The source's full state serializer actually writes model identity and memory,
+not logits. The owner therefore retains logits separately and never reads stale
+native logits after import. Restore builds a fresh context, checks exact state
+round-trip plus positions, then swaps it in. A failed restore remains tainted.
+It preserves the last verified capsule rather than mutating a failed context
+in place. The successful late-rejection test invokes the real Q8 packed-branch
+gate after slot allocation and then verifies continuation against an uninterrupted
+CPU control. Test-only permission to retain old tiles exercises graph invalidation;
+it is not a production qualification and is never installed by default.
+
+Still required before performance claims: actual selected-kernel/residency
+extraction at a trustworthy scheduler boundary, frozen original-reference host
+fallback, Qwen/GPU full-vector replay and continuation tests, import-failure
+injection, Windows ABI tests, concurrency isolation and service-level costs.
+
+Final cloud evidence: 40 Python tests, 643 C++ protocol checks (also UBSan),
+47 real Q8 CPU context/guard/checkpoint checks, and the existing native
+state test executable reporting all eight cases passed. An independent review
+recompiled the native test against the final library and reproduced 47/47.
+No CI run, GPU result or acceptance-probability improvement is inferred.

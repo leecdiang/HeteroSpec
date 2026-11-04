@@ -1,6 +1,6 @@
 # Frozen PR174 CUDA binary inspection
 
-Inspected on 2026-11-04 in the cloud. No user device, GPU, model, kernel execution, or source recompilation was used. No PR was modified.
+Inspected on 2026-11-04 in the cloud. No user device, GPU, model, kernel execution, or source recompilation was used. No production code or frozen reference was modified.
 
 ## Result
 

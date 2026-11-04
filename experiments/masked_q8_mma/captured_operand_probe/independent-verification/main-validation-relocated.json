@@ -1,0 +1,167 @@
+{
+  "status": "PASS",
+  "scope": "Validation behavior only; no GPU execution or div.approx emulation",
+  "modes": [
+    "normal",
+    "-O",
+    "-OO"
+  ],
+  "unit_tests_per_mode": 23,
+  "unit_test_executions": 69,
+  "cli_positive_executions": 3,
+  "cli_tamper_negative_executions": 15,
+  "positive_output_files_byte_identical_across_modes": true,
+  "original_input_sha256": {
+    "operands.json.gz": "bff60fbaac437421ad4ded651cc7b94d7ddaa1245fa279e7cb7fc8b40845aed5",
+    "operand-sample.json.gz": "d1a7686e44cc85eb074e01b6471c44a20e81a72c1fbff7ab001c72286486c2a8"
+  },
+  "records": [
+    {
+      "mode": "normal",
+      "case": "unit_suite",
+      "tests": 23,
+      "returncode": 0,
+      "stderr": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 0.003s\n\nOK"
+    },
+    {
+      "mode": "normal",
+      "case": "valid_pinned_evidence",
+      "returncode": 0,
+      "output_written": true,
+      "stderr": ""
+    },
+    {
+      "mode": "normal",
+      "case": "operands_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "normal",
+      "case": "operands_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "normal",
+      "case": "operand-sample_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "normal",
+      "case": "operand-sample_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "normal",
+      "case": "actual_operand_byte_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-O",
+      "case": "unit_suite",
+      "tests": 23,
+      "returncode": 0,
+      "stderr": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 0.003s\n\nOK"
+    },
+    {
+      "mode": "-O",
+      "case": "valid_pinned_evidence",
+      "returncode": 0,
+      "output_written": true,
+      "stderr": ""
+    },
+    {
+      "mode": "-O",
+      "case": "operands_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-O",
+      "case": "operands_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "-O",
+      "case": "operand-sample_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-O",
+      "case": "operand-sample_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "-O",
+      "case": "actual_operand_byte_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-OO",
+      "case": "unit_suite",
+      "tests": 23,
+      "returncode": 0,
+      "stderr": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 0.004s\n\nOK"
+    },
+    {
+      "mode": "-OO",
+      "case": "valid_pinned_evidence",
+      "returncode": 0,
+      "output_written": true,
+      "stderr": ""
+    },
+    {
+      "mode": "-OO",
+      "case": "operands_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-OO",
+      "case": "operands_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operands.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "-OO",
+      "case": "operand-sample_truncated",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    },
+    {
+      "mode": "-OO",
+      "case": "operand-sample_valid_gzip_header_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed SHA256 mismatch"
+    },
+    {
+      "mode": "-OO",
+      "case": "actual_operand_byte_tamper",
+      "returncode": 2,
+      "output_written": false,
+      "stderr": "PROBE VALIDATION FAILED: operand-sample.json.gz: compressed byte length mismatch"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS_FOR_STATED_FIXED_CAPTURE_AND_HOST_COUNTERFACTUAL_SCOPE",
+  "source_files": {
+    "probe.py": {
+      "sha256": "edab6658801e578c63613f2553e56daa019a80bee23fa6450129bab706f80a58",
+      "ast_assert_statements": 0
+    },
+    "test_validation.py": {
+      "sha256": "93437440a3c4e6dabdab9f80544b68d1edf6311bac2f766573a052ffcf0bda1a",
+      "ast_assert_statements": 0
+    }
+  },
+  "independently_executed_main_matrix": "main-validation-reviewed.json",
+  "independently_executed_relocated_main_matrix": "main-validation-relocated.json",
+  "main_unit_executions_per_matrix": 69,
+  "main_cli_negative_executions_per_matrix": 15,
+  "main_cli_positive_executions_per_matrix": 3,
+  "valid_output_files_byte_identical_across_modes": true,
+  "validation_review": [
+    "No assertion-dependent production validation remains. unittest assert methods stay active under normal, -O, and -OO execution.",
+    "Each helper negative expects ValidationError and the specific diagnostic. The helper positive controls and full valid CLI runs establish that rejection is not caused by a universally broken validator.",
+    "CLI negatives require nonzero exit code 2, expected diagnostics, and absence of an output report. Originals are restored between temporary-fixture cases.",
+    "Header tampering is checked to preserve decompressed bytes before testing artifact-identity rejection.",
+    "The actual-operand-byte CLI mutation tests outer compressed identity. It does not isolate the decoded-SHA CLI check; direct decode unit tests and the independent tamper suite exercise decoded payload integrity.",
+    "The quantizer remains expressly a host RN counterfactual and sensitivity analysis, not GPU div.approx emulation or a projection replay."
+  ],
+  "script_only_relocation": true,
+  "original_blobs_copied_into_script_directory": false,
+  "publication_performed": false
+}

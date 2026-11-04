@@ -1,0 +1,190 @@
+{
+  "tests": 22,
+  "positive_tests": 2,
+  "negative_tests": 20,
+  "passed_tests": 22,
+  "original_input_sha256": {
+    "operands.json.gz": "bff60fbaac437421ad4ded651cc7b94d7ddaa1245fa279e7cb7fc8b40845aed5",
+    "operand-sample.json.gz": "d1a7686e44cc85eb074e01b6471c44a20e81a72c1fbff7ab001c72286486c2a8"
+  },
+  "original_inputs_unchanged": true,
+  "all_passed": true,
+  "results": [
+    {
+      "case": "valid",
+      "python_optimized": false,
+      "returncode": 0,
+      "passed": true,
+      "expected_error": null,
+      "last_stderr_line": null
+    },
+    {
+      "case": "valid",
+      "python_optimized": true,
+      "returncode": 0,
+      "passed": true,
+      "expected_error": null,
+      "last_stderr_line": null
+    },
+    {
+      "case": "same_length_payload_flip",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "SHA-256 digest mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: SHA-256 digest mismatch"
+    },
+    {
+      "case": "same_length_payload_flip",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "SHA-256 digest mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: SHA-256 digest mismatch"
+    },
+    {
+      "case": "truncated_payload",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "decoded byte length mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: decoded byte length mismatch: 524284 != 524288"
+    },
+    {
+      "case": "truncated_payload",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "decoded byte length mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: decoded byte length mismatch: 524284 != 524288"
+    },
+    {
+      "case": "invalid_base64",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "invalid base64",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: invalid base64"
+    },
+    {
+      "case": "invalid_base64",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "invalid base64",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight/input: invalid base64"
+    },
+    {
+      "case": "missing_blob",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "blob field set mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: blob field set mismatch"
+    },
+    {
+      "case": "missing_blob",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "blob field set mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: blob field set mismatch"
+    },
+    {
+      "case": "missing_operator",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "sample operator set mismatch",
+      "last_stderr_line": "ValueError: sample operator set mismatch"
+    },
+    {
+      "case": "missing_operator",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "sample operator set mismatch",
+      "last_stderr_line": "ValueError: sample operator set mismatch"
+    },
+    {
+      "case": "duplicate_descriptor",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "expected one 8B descriptor, found 2",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: expected one 8B descriptor, found 2"
+    },
+    {
+      "case": "duplicate_descriptor",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "expected one 8B descriptor, found 2",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: expected one 8B descriptor, found 2"
+    },
+    {
+      "case": "duplicate_route",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "duplicate route records",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: duplicate route records"
+    },
+    {
+      "case": "duplicate_route",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "duplicate route records",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: duplicate route records"
+    },
+    {
+      "case": "missing_route",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "route set mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: route set mismatch"
+    },
+    {
+      "case": "missing_route",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "route set mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: route set mismatch"
+    },
+    {
+      "case": "wide_live_link_mismatch",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "wide32/live output digest mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: wide32/live output digest mismatch"
+    },
+    {
+      "case": "wide_live_link_mismatch",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "wide32/live output digest mismatch",
+      "last_stderr_line": "ValueError: blk.0.attn_q.weight: wide32/live output digest mismatch"
+    },
+    {
+      "case": "route_prefix_digest_mismatch",
+      "python_optimized": false,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "aggregate route-prefix digest verification failed",
+      "last_stderr_line": "ValueError: aggregate route-prefix digest verification failed"
+    },
+    {
+      "case": "route_prefix_digest_mismatch",
+      "python_optimized": true,
+      "returncode": 1,
+      "passed": true,
+      "expected_error": "aggregate route-prefix digest verification failed",
+      "last_stderr_line": "ValueError: aggregate route-prefix digest verification failed"
+    }
+  ]
+}

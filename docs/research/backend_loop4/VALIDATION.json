@@ -1,0 +1,238 @@
+{
+  "status": "CPU_BUILD_AND_BASELINE_PROTOCOL_TESTS_PASS",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "stage": {
+    "status": "SOURCE_STAGED_CUDA_NOT_COMPILED",
+    "original_sha256": {
+      "src/llama-graph.cpp": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+      "ggml/src/ggml-cuda/ggml-cuda.cu": "0832b007fb5cd0165dd80116ea7833c5acda6dfd44f89f2c248d5d977a3e1fde",
+      "ggml/src/ggml-cuda/mmvq.cu": "49a8f1d60c06a3c4b7b95fcc6aa0406338a4afc94fdf7fc2d30d94f3670aa525",
+      "ggml/src/ggml-backend.cpp": "5a9094517d11dcafe43c51af97bfe3d6afe75d73096be4b899bae7025b1edd31",
+      "ggml/src/ggml-cpu/ggml-cpu.c": "b505cb601520698550eba53750888510046c56fe31e130aac78d30e590baa8d0"
+    },
+    "arms": {
+      "packed": {},
+      "graph_tiles": {
+        "src/llama-graph.cpp": "133329e192352ee171df414759373c34a1454f1c95052d17b4d6c749c169fbfc"
+      },
+      "backend_loop4": {
+        "src/llama-graph.cpp": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+        "ggml/src/ggml-cuda/ggml-cuda.cu": "4d65aac9035267b37a064a90f345f40a42d7289293ef32b709ad03d791a28188",
+        "ggml/src/ggml-cuda/mmvq.cu": "d9c69fafab943383b29e525417f5e2157a445c9b1afca97b7d9de23d20a2564a",
+        "ggml/src/ggml-backend.cpp": "3b6610bfe6e6c968665475547ac10c78eedda225f26fff805bf36958b4049506",
+        "ggml/src/ggml-cpu/ggml-cpu.c": "3cd6ca2396aa1cb52519d2586df65c5eab4923b0c33ae90e60933c71e176d3f5",
+        "ggml/src/hs_loop4_plan.hpp": "1e5dcd2e0192e2bb1f4f706fd29f3f8dbb93b4ec2b8c294c863cee5d56922f4e",
+        "ggml/src/hs_loop4_tensor.hpp": "87a3baef2e4cd15663363b4e010fe4dc7b95e25ab903fdbe3074de84a48f4288",
+        "ggml/src/hs_loop4_marker.h": "7cd237d4959764b52f9c5a44a4e88b5552b9f5055a4898681f608c0aa26c8881"
+      }
+    },
+    "gpu_runs": 0,
+    "quantization_launch_count": "EXPECTED_FROM_SOURCE_NOT_MEASURED",
+    "reference": "original oracle/runtime binary is separate and remains untouched"
+  },
+  "records": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "/tmp/heterospec-loop4-final2/arms/backend_loop4",
+        "-B",
+        "/tmp/heterospec-loop4-final2/build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DGGML_CUDA=OFF",
+        "-DGGML_VULKAN=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DLLAMA_BUILD_COMMON=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_TOOLS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_SERVER=OFF",
+        "-DGGML_CCACHE=OFF"
+      ],
+      "returncode": 0,
+      "stdout_tail": "-- The C compiler identification is GNU 14.2.0\n-- The CXX compiler identification is GNU 14.2.0\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: /usr/bin/cc - skipped\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- llama.cpp version: 0.4.0-dev\n-- Found Git: /usr/local/bin/git (found version \"2.52.0\")\n-- The ASM compiler identification is GNU\n-- Found assembler: /usr/bin/cc\n-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n-- Found Threads: TRUE\n-- CMAKE_SYSTEM_PROCESSOR: x86_64\n-- GGML_SYSTEM_ARCH: x86\n-- Found OpenMP_C: -fopenmp (found version \"4.5\")\n-- Found OpenMP_CXX: -fopenmp (found version \"4.5\")\n-- Found OpenMP: TRUE (found version \"4.5\")\n-- Including CPU backend\n-- x86 detected\n-- Adding CPU backend variant ggml-cpu: -msse4.2;-mf16c;-mfma;-mbmi2;-mavx;-mavx2 GGML_SSE42;GGML_F16C;GGML_FMA;GGML_BMI2;GGML_AVX;GGML_AVX2\n-- ggml version: 0.23.0\n-- ggml commit:  unknown\n-- Generating embedded license file for target: llama-app\n-- Configuring done (0.8s)\n-- Generating done (0.0s)\n-- Build files have been written to: /tmp/heterospec-loop4-final2/build\n",
+      "stderr_tail": "CMAKE_BUILD_TYPE=Release\nfatal: not a git repository (or any parent up to mount point /)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\nfatal: not a git repository (or any parent up to mount point /)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\n",
+      "stdout_sha256": "fcd986c60bc792617cc602d86d2c4dafc40bb24ca17edf7f42d97bb5cf471a8b",
+      "stderr_sha256": "f35c6e22dae35a42a3a3d257053cbc4c73f439dd569ea21044b92c3beeef58ac"
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "/tmp/heterospec-loop4-final2/build",
+        "--target",
+        "llama",
+        "-j",
+        "2"
+      ],
+      "returncode": 0,
+      "stdout_tail": "a.dir/unicode-data.cpp.o\n[64/220] Building CXX object src/CMakeFiles/llama.dir/llama-vocab.cpp.o\n[65/220] Building CXX object src/CMakeFiles/llama.dir/models/afmoe.cpp.o\n[66/220] Building CXX object src/CMakeFiles/llama.dir/models/apertus.cpp.o\n[67/220] Building CXX object src/CMakeFiles/llama.dir/models/arcee.cpp.o\n[68/220] Building CXX object src/CMakeFiles/llama.dir/models/arctic.cpp.o\n[69/220] Building CXX object src/CMakeFiles/llama.dir/models/arwkv7.cpp.o\n[70/220] Building CXX object src/CMakeFiles/llama.dir/models/baichuan.cpp.o\n[71/220] Building CXX object src/CMakeFiles/llama.dir/unicode.cpp.o\n[72/220] Building CXX object src/CMakeFiles/llama.dir/models/bailingmoe.cpp.o\n[73/220] Building CXX object src/CMakeFiles/llama.dir/models/bailingmoe2.cpp.o\n[74/220] Building CXX object src/CMakeFiles/llama.dir/models/bailingmoe3.cpp.o\n[75/220] Building CXX object src/CMakeFiles/llama.dir/models/bert.cpp.o\n[76/220] Building CXX object src/CMakeFiles/llama.dir/models/bitnet.cpp.o\n[77/220] Building CXX object src/CMakeFiles/llama.dir/models/bloom.cpp.o\n[78/220] Building CXX object src/CMakeFiles/llama.dir/models/chameleon.cpp.o\n[79/220] Building CXX object src/CMakeFiles/llama.dir/models/chatglm.cpp.o\n[80/220] Building CXX object src/CMakeFiles/llama.dir/models/clip.cpp.o\n[81/220] Building CXX object src/CMakeFiles/llama.dir/models/codeshell.cpp.o\n[82/220] Building CXX object src/CMakeFiles/llama.dir/models/cogvlm.cpp.o\n[83/220] Building CXX object src/CMakeFiles/llama.dir/models/cohere2.cpp.o\n[84/220] Building CXX object src/CMakeFiles/llama.dir/models/cohere2moe.cpp.o\n[85/220] Building CXX object src/CMakeFiles/llama.dir/models/command-r.cpp.o\n[86/220] Building CXX object src/CMakeFiles/llama.dir/models/dbrx.cpp.o\n[87/220] Building CXX object src/CMakeFiles/llama.dir/models/deci.cpp.o\n[88/220] Building CXX object src/CMakeFiles/llama.dir/models/deepseek.cpp.o\n[89/220] Building CXX object src/CMakeFiles/llama.dir/models/deepseek2.cpp.o\n[90/220] Building CXX object src/CMakeFiles/llama.dir/models/deepseek2ocr.cpp.o\n[91/220] Building CXX object src/CMakeFiles/llama.dir/models/deepseek32.cpp.o\n[92/220] Building CXX object src/CMakeFiles/llama.dir/models/deepseek4.cpp.o\n[93/220] Building CXX object src/CMakeFiles/llama.dir/models/delta-net-base.cpp.o\n[94/220] Building CXX object src/CMakeFiles/llama.dir/models/dflash.cpp.o\n[95/220] Building CXX object src/CMakeFiles/llama.dir/models/dots1.cpp.o\n[96/220] Building CXX object src/CMakeFiles/llama.dir/models/dream.cpp.o\n[97/220] Building CXX object src/CMakeFiles/llama.dir/models/dots3note.cpp.o\n[98/220] Building CXX object src/CMakeFiles/llama.dir/models/eagle3.cpp.o\n[99/220] Building CXX object src/CMakeFiles/llama.dir/models/ernie4-5-moe.cpp.o\n[100/220] Building CXX object src/CMakeFiles/llama.dir/models/ernie4-5.cpp.o\n[101/220] Building CXX object src/CMakeFiles/llama.dir/models/eurobert.cpp.o\n[102/220] Building CXX object src/CMakeFiles/llama.dir/models/exaone-moe.cpp.o\n[103/220] Building CXX object src/CMakeFiles/llama.dir/models/exaone.cpp.o\n[104/220] Building CXX object src/CMakeFiles/llama.dir/models/exaone4.cpp.o\n[105/220] Building CXX object src/CMakeFiles/llama.dir/models/falcon-h1.cpp.o\n[106/220] Building CXX object src/CMakeFiles/llama.dir/models/falcon.cpp.o\n[107/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma-embedding.cpp.o\n[108/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma.cpp.o\n[109/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma2.cpp.o\n[110/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma3.cpp.o\n[111/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma3n.cpp.o\n[112/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma4-assistant.cpp.o\n[113/220] Building CXX object src/CMakeFiles/llama.dir/models/gemma4.cpp.o\n[114/220] Building CXX object src/CMakeFiles/llama.dir/models/glm4-moe.cpp.o\n[115/220] Building CXX object src/CMakeFiles/llama.dir/models/glm-dsa.cpp.o\n[116/220] Building CXX object src/CMakeFiles/llama.dir/models/gpt2.cpp.o\n[117/220] Building CXX object src/CMakeFiles/llama.dir/models/glm4.cpp.o\n[118/220] Building CXX object src/CMakeFiles/llama.dir/models/gptneox.cpp.o\n[119/220] Building CXX object src/CMakeFiles/llama.dir/models/granite-hybrid.cpp.o\n[120/220] Building CXX object src/CMakeFiles/llama.dir/models/granite-moe.cpp.o\n[121/220] Building CXX object src/CMakeFiles/llama.dir/models/granite-swa.cpp.o\n[122/220] Building CXX object src/CMakeFiles/llama.dir/models/granite-switch.cpp.o\n[123/220] Building CXX object src/CMakeFiles/llama.dir/models/granite.cpp.o\n[124/220] Building CXX object src/CMakeFiles/llama.dir/models/grok.cpp.o\n[125/220] Building CXX object src/CMakeFiles/llama.dir/models/grovemoe.cpp.o\n[126/220] Building CXX object src/CMakeFiles/llama.dir/models/hunyuan-dense.cpp.o\n[127/220] Building CXX object src/CMakeFiles/llama.dir/models/hunyuan-moe.cpp.o\n[128/220] Building CXX object src/CMakeFiles/llama.dir/models/hunyuan-vl.cpp.o\n[129/220] Building CXX object src/CMakeFiles/llama.dir/models/hy-v3.cpp.o\n[130/220] Building CXX object src/CMakeFiles/llama.dir/models/hy-v4.cpp.o\n[131/220] Building CXX object src/CMakeFiles/llama.dir/models/internlm2.cpp.o\n[132/220] Building CXX object src/CMakeFiles/llama.dir/models/jais.cpp.o\n[133/220] Building CXX object src/CMakeFiles/llama.dir/models/jais2.cpp.o\n[134/220] Building CXX object src/CMakeFiles/llama.dir/models/jamba.cpp.o\n[135/220] Building CXX object src/CMakeFiles/llama.dir/models/jina-bert-v2.cpp.o\n[136/220] Building CXX object src/CMakeFiles/llama.dir/models/jina-bert-v3.cpp.o\n[137/220] Building CXX object src/CMakeFiles/llama.dir/models/kimi-k3.cpp.o\n[138/220] Building CXX object src/CMakeFiles/llama.dir/models/kimi-linear.cpp.o\n[139/220] Building CXX object src/CMakeFiles/llama.dir/models/laguna.cpp.o\n[140/220] Building CXX object src/CMakeFiles/llama.dir/models/lfm2.cpp.o\n[141/220] Building CXX object src/CMakeFiles/llama.dir/models/lfm2moe.cpp.o\n[142/220] Building CXX object src/CMakeFiles/llama.dir/models/llada-moe.cpp.o\n[143/220] Building CXX object src/CMakeFiles/llama.dir/models/llada.cpp.o\n[144/220] Building CXX object src/CMakeFiles/llama.dir/models/llama-embed.cpp.o\n[145/220] Building CXX object src/CMakeFiles/llama.dir/models/llama.cpp.o\n[146/220] Building CXX object src/CMakeFiles/llama.dir/models/llama4.cpp.o\n[147/220] Building CXX object src/CMakeFiles/llama.dir/models/maincoder.cpp.o\n[148/220] Building CXX object src/CMakeFiles/llama.dir/models/mamba-base.cpp.o\n[149/220] Building CXX object src/CMakeFiles/llama.dir/models/mamba.cpp.o\n[150/220] Building CXX object src/CMakeFiles/llama.dir/models/mamba2.cpp.o\n[151/220] Building CXX object src/CMakeFiles/llama.dir/models/mellum.cpp.o\n[152/220] Building CXX object src/CMakeFiles/llama.dir/models/mimo2.cpp.o\n[153/220] Building CXX object src/CMakeFiles/llama.dir/models/minicpm.cpp.o\n[154/220] Building CXX object src/CMakeFiles/llama.dir/models/minicpm3.cpp.o\n[155/220] Building CXX object src/CMakeFiles/llama.dir/models/minimax-01.cpp.o\n[156/220] Building CXX object src/CMakeFiles/llama.dir/models/minimax-m2.cpp.o\n[157/220] Building CXX object src/CMakeFiles/llama.dir/models/minimax-m3.cpp.o\n[158/220] Building CXX object src/CMakeFiles/llama.dir/models/mistral3.cpp.o\n[159/220] Building CXX object src/CMakeFiles/llama.dir/models/mistral4.cpp.o\n[160/220] Building CXX object src/CMakeFiles/llama.dir/models/modern-bert.cpp.o\n[161/220] Building CXX object src/CMakeFiles/llama.dir/models/mpt.cpp.o\n[162/220] Building CXX object src/CMakeFiles/llama.dir/models/muse-glimmer.cpp.o\n[163/220] Building CXX object src/CMakeFiles/llama.dir/models/nanbeige.cpp.o\n[164/220] Building CXX object src/CMakeFiles/llama.dir/models/nemotron-h-moe.cpp.o\n[165/220] Building CXX object src/CMakeFiles/llama.dir/models/nemotron-h.cpp.o\n[166/220] Building CXX object src/CMakeFiles/llama.dir/models/nemotron.cpp.o\n[167/220] Building CXX object src/CMakeFiles/llama.dir/models/neo-bert.cpp.o\n[168/220] Building CXX object src/CMakeFiles/llama.dir/models/nomic-bert-moe.cpp.o\n[169/220] Building CXX object src/CMakeFiles/llama.dir/models/nomic-bert.cpp.o\n[170/220] Building CXX object src/CMakeFiles/llama.dir/models/olmo.cpp.o\n[171/220] Building CXX object src/CMakeFiles/llama.dir/models/olmo2.cpp.o\n[172/220] Building CXX object src/CMakeFiles/llama.dir/models/olmoe.cpp.o\n[173/220] Building CXX object src/CMakeFiles/llama.dir/models/openai-moe.cpp.o\n[174/220] Building CXX object src/CMakeFiles/llama.dir/models/openelm.cpp.o\n[175/220] Building CXX object src/CMakeFiles/llama.dir/models/orion.cpp.o\n[176/220] Building CXX object src/CMakeFiles/llama.dir/models/paddleocr.cpp.o\n[177/220] Building CXX object src/CMakeFiles/llama.dir/models/pangu-embed.cpp.o\n[178/220] Building CXX object src/CMakeFiles/llama.dir/models/phi2.cpp.o\n[179/220] Building CXX object src/CMakeFiles/llama.dir/models/phi3.cpp.o\n[180/220] Building CXX object src/CMakeFiles/llama.dir/models/phimoe.cpp.o\n[181/220] Building CXX object src/CMakeFiles/llama.dir/models/plamo.cpp.o\n[182/220] Building CXX object src/CMakeFiles/llama.dir/models/plamo2.cpp.o\n[183/220] Building CXX object src/CMakeFiles/llama.dir/models/plamo3.cpp.o\n[184/220] Building CXX object src/CMakeFiles/llama.dir/models/plm.cpp.o\n[185/220] Building CXX object src/CMakeFiles/llama.dir/models/pockettts.cpp.o\n[186/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen.cpp.o\n[187/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen2.cpp.o\n[188/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen2moe.cpp.o\n[189/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen2vl.cpp.o\n[190/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3.cpp.o\n[191/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen35moe.cpp.o\n[192/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen35.cpp.o\n[193/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3moe.cpp.o\n[194/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3next.cpp.o\n[195/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3tts.cpp.o\n[196/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3vl.cpp.o\n[197/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen3vlmoe.cpp.o\n[198/220] Building CXX object src/CMakeFiles/llama.dir/models/refact.cpp.o\n[199/220] Building CXX object src/CMakeFiles/llama.dir/models/qwen4exp.cpp.o\n[200/220] Building CXX object src/CMakeFiles/llama.dir/models/rnd1.cpp.o\n[201/220] Building CXX object src/CMakeFiles/llama.dir/models/rwkv6-base.cpp.o\n[202/220] Building CXX object src/CMakeFiles/llama.dir/models/rwkv6.cpp.o\n[203/220] Building CXX object src/CMakeFiles/llama.dir/models/rwkv6qwen2.cpp.o\n[204/220] Building CXX object src/CMakeFiles/llama.dir/models/rwkv7-base.cpp.o\n[205/220] Building CXX object src/CMakeFiles/llama.dir/models/rwkv7.cpp.o\n[206/220] Building CXX object src/CMakeFiles/llama.dir/models/seed-oss.cpp.o\n[207/220] Building CXX object src/CMakeFiles/llama.dir/models/smallthinker.cpp.o\n[208/220] Building CXX object src/CMakeFiles/llama.dir/models/smollm3.cpp.o\n[209/220] Building CXX object src/CMakeFiles/llama.dir/models/spark2-5.cpp.o\n[210/220] Building CXX object src/CMakeFiles/llama.dir/models/stablelm.cpp.o\n[211/220] Building CXX object src/CMakeFiles/llama.dir/models/starcoder.cpp.o\n[212/220] Building CXX object src/CMakeFiles/llama.dir/models/starcoder2.cpp.o\n[213/220] Building CXX object src/CMakeFiles/llama.dir/models/step35.cpp.o\n[214/220] Building CXX object src/CMakeFiles/llama.dir/models/t5.cpp.o\n[215/220] Building CXX object src/CMakeFiles/llama.dir/models/t5encoder.cpp.o\n[216/220] Building CXX object src/CMakeFiles/llama.dir/models/talkie.cpp.o\n[217/220] Building CXX object src/CMakeFiles/llama.dir/models/wavtokenizer-dec.cpp.o\n[218/220] Building CXX object src/CMakeFiles/llama.dir/models/xverse.cpp.o\n[219/220] Linking CXX shared library bin/libllama.so.0.4.0\n[220/220] Creating library symlink bin/libllama.so.0 bin/libllama.so\n",
+      "stderr_tail": "",
+      "stdout_sha256": "ecb2bf4b68422f64d44b150a856ec5a4b9988e5aed4179cc25181e33bcf96553",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-I/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/src/reference_baselines",
+        "-I/tmp/heterospec-loop4-final2/arms/backend_loop4/ggml/include",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/tests/reference_baselines/test_loop4.cpp",
+        "-L/tmp/heterospec-loop4-final2/build/bin",
+        "-Wl,-rpath,/tmp/heterospec-loop4-final2/build/bin",
+        "-lggml",
+        "-lggml-base",
+        "-lggml-cpu",
+        "-o",
+        "/tmp/heterospec-loop4-final2/test_loop4"
+      ],
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/tmp/heterospec-loop4-final2/test_loop4"
+      ],
+      "returncode": 0,
+      "stdout_tail": "LOOP4_CPU_GEOMETRY_CHECKS=12743 CUDA_COMPILE=NOT_RUN GPU_EXECUTIONS=0\n",
+      "stderr_tail": "",
+      "stdout_sha256": "4639ad470e493745c129edda7d12930e4be3238c882d95b2bc0850944a5dcf5a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-I/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/src/reference_baselines",
+        "-I/tmp/heterospec-loop4-final2/arms/backend_loop4/ggml/include",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/tests/reference_baselines/test_cpu_reject.cpp",
+        "-L/tmp/heterospec-loop4-final2/build/bin",
+        "-Wl,-rpath,/tmp/heterospec-loop4-final2/build/bin",
+        "-lggml",
+        "-lggml-base",
+        "-lggml-cpu",
+        "-o",
+        "/tmp/heterospec-loop4-final2/test_cpu_reject"
+      ],
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/tmp/heterospec-loop4-final2/test_cpu_reject"
+      ],
+      "returncode": 0,
+      "stdout_tail": "ACTUAL_CPU_WRONG_BACKEND_REJECTION_CHECKS=11\n",
+      "stderr_tail": "",
+      "stdout_sha256": "51328204b0364ded86cf1570fcaf7c8b1f49661c57ee2004884cc65040500d75",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/reference_baselines",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "test_bit_difference_rejects (test_compare.CompareTests.test_bit_difference_rejects) ... ok\ntest_boolean_success_rejects (test_compare.CompareTests.test_boolean_success_rejects) ... ok\ntest_equal_fixture (test_compare.CompareTests.test_equal_fixture) ... ok\ntest_fallback_rejects (test_compare.CompareTests.test_fallback_rejects) ... ok\ntest_missing_arm_rejects (test_compare.CompareTests.test_missing_arm_rejects) ... ok\ntest_no_execution_rejects (test_compare.CompareTests.test_no_execution_rejects) ... ok\ntest_no_marked_node_rejects (test_compare.CompareTests.test_no_marked_node_rejects) ... ok\ntest_truncated_rejects (test_compare.CompareTests.test_truncated_rejects) ... ok\ntest_wrong_arm_pin_rejects (test_compare.CompareTests.test_wrong_arm_pin_rejects) ... ok\ntest_wrong_backend_rejects (test_compare.CompareTests.test_wrong_backend_rejects) ... ok\ntest_wrong_reference_pin_rejects (test_compare.CompareTests.test_wrong_reference_pin_rejects) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.012s\n\nOK\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "32a34a2ebef1b3803fb7790c3c95862c9c2fd45211a3b376dee4453163291298"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/tests/reference_baselines/generated_integration_probe.py",
+        "--candidate",
+        "/tmp/heterospec-native-source/unpacked/candidate",
+        "--library-dir",
+        "/tmp/heterospec-loop4-final2/build/bin",
+        "--sanitizer",
+        "address-undefined",
+        "--disable-leak-check"
+      ],
+      "returncode": 0,
+      "stdout_tail": "GENERATED_CUDA_CALL_MAPPING_CPU_CASES=336 GPU_EXECUTIONS=0\nCUDA_COMPILE=NOT_RUN GPU_EXECUTIONS=0 NUMERICAL_REFERENCE_EQUIVALENCE=NOT_ESTABLISHED\nSTAGE_SCRIPT_SHA256=122599226067490bfd1425e9b6c677a90c5e280308dea78dfc46414bf7ff5f60\n",
+      "stderr_tail": "",
+      "stdout_sha256": "eb576319c95023c926615516bb0e21bf1e92715f4c58bf028e49c565ed1daff0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/14b58e5a88ca/heterospec-loop4-baseline/tests/reference_baselines/generated_graph_probe.py",
+        "--candidate",
+        "/tmp/heterospec-native-source/unpacked/candidate",
+        "--library-dir",
+        "/tmp/heterospec-loop4-final2/build/bin",
+        "--sanitizer",
+        "address-undefined",
+        "--disable-leak-check"
+      ],
+      "returncode": 0,
+      "stdout_tail": "GENERATED_GRAPH_MARKER_FALLBACK_CASES=480 GPU_EXECUTIONS=0\nCUDA_COMPILE=NOT_RUN GPU_EXECUTIONS=0 NUMERICAL_REFERENCE_EQUIVALENCE=NOT_ESTABLISHED\nSTAGE_SCRIPT_SHA256=122599226067490bfd1425e9b6c677a90c5e280308dea78dfc46414bf7ff5f60\n",
+      "stderr_tail": "",
+      "stdout_sha256": "412b53323dff917ff9b67578481830344509fc108c9b2f452cef1428f5bca13b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_sha256": {
+    "src/reference_baselines/loop4_marker.h": "7cd237d4959764b52f9c5a44a4e88b5552b9f5055a4898681f608c0aa26c8881",
+    "src/reference_baselines/loop4_plan.hpp": "43a018ed4e3295c6940de8e4542b164a80d78fedaf9df73b4092fb69b1e7af65",
+    "src/reference_baselines/loop4_tensor.hpp": "c9a73237c64ff4116d123d6c5357568a74876bad42e15bd48d93bebff702b761",
+    "scripts/reference_baselines/compare.py": "78aa38e5cb73ab1cc230e164ace2833052cd1b0ae7c0f7c092b13e192ecd9728",
+    "scripts/reference_baselines/stage.py": "122599226067490bfd1425e9b6c677a90c5e280308dea78dfc46414bf7ff5f60",
+    "scripts/reference_baselines/validate.py": "4ae04b5fcff15218fc9f3b03843b61bf2fc4435ab1caf21457c70b765c7c89a0",
+    "tests/reference_baselines/generated_graph_probe.py": "ca4f2313b599231ba46a2a4ca7aac52899c19e5b6548b5782cb8d0711be02db5",
+    "tests/reference_baselines/generated_integration_probe.py": "f29f199d1c5336cc696e5adbe66747cb598370d0054f30e7a2bffad3fc36c8cd",
+    "tests/reference_baselines/test_compare.py": "5ad0c281c963ba0affeb0aac0037a1ae3a261b12bd5743cf574bae0cfde288a1",
+    "tests/reference_baselines/test_cpu_reject.cpp": "d8a507b5b00562b52e48f3ac64c92ec812f3bcf2333f02b1ad1fa5925a8bf831",
+    "tests/reference_baselines/test_loop4.cpp": "47f6fc95e0d1b25e25ac0257c6a4a9e2a2026f956537b981fc3200f89fdc9e01"
+  },
+  "libraries": {
+    "libllama.so.0.4.0": "da673910b33870584a3ac44919adac66e161a7a49e529b1049a87145ead3b1c6",
+    "libggml-base.so.0.23.0": "54026de4ee3ca2c755b2a318311aef1ab0f15f82ffb6e398d2118ff1d83ee7bc",
+    "libggml-cpu.so.0.23.0": "94dbb00e53ea5e4ce1259f880ff23e81215e7a1610e9b971f6a0537e91c81dd6"
+  },
+  "cuda_compilation": "NOT_RUN",
+  "gpu_execution": "NOT_RUN",
+  "reference_equivalence": "NOT_ESTABLISHED",
+  "performance": "NOT_MEASURED",
+  "quantizer_count": "source structure only; GPU trace required",
+  "incremental_validation": "After the fresh CPU build, the CPU-isolation test was extended with the independently reproduced plan-before-mark regression, then recompiled and rerun against the unchanged final libraries.",
+  "independent_review": {
+    "status": "CPU_SCOPE_PASS",
+    "source_stage_sha256": "122599226067490bfd1425e9b6c677a90c5e280308dea78dfc46414bf7ff5f60",
+    "scope": "Backend, raw CPU and plan-before-mark rejection; 12743 geometry checks; generated 336 mapping and 480 graph cases under ASan/UBSan. No CUDA verification."
+  },
+  "previous_attempt": {
+    "status": "BUILD_RESOURCE_FAILURE",
+    "detail": "Six compiler jobs exceeded cloud memory. Fresh retry with two jobs passed. No GPU run occurred."
+  }
+}

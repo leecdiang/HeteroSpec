@@ -1,0 +1,26 @@
+\section{Reference contract and execution model}
+\label{sec:contract}
+\subsection{Output qualification}
+Let $\rho$ identify the reference model and tokenizer bytes, prompt construction, numerical runtime, ordinary execution recipe, sampler and stopping rule. For input $x$, its endpoint is
+\begin{equation}
+\mathcal O_\rho(x)=(\mathbf y,\mathbf e,n,y_{\mathrm{last}},s),
+\label{eq:endpoint}
+\end{equation}
+where $\mathbf y$ is the full native token-ID array, $\mathbf e$ its end-of-generation (EOG) flags, $n$ its length and $s$ the stop reason. The principal campaigns stop at native EOG or 128 generated tokens. A candidate qualifies on a registered panel $X$ when every required pair has $\mathcal O_c(x)=\mathcal O_\rho(x)$, the reference is stable and all required records are present. Latency comparisons use these qualified, complete responses.
+
+We distinguish exact-arithmetic equivalence, bitwise operator correspondence and endpoint agreement. The tests address different parts of the execution contract. Backend acceptance and actual operator placement are additional execution prerequisites. Qualification refers to the stated configuration, panel and output window.
+
+\subsection{Workload qualification and use}
+The study selects implementations for declared, replayable workloads under a fixed reference. Three domains have distinct roles. The \emph{backend-admitted domain} comprises configurations accepted by the source and operator guards. The \emph{validated domain} comprises the inputs and output windows that pass complete-reference comparison under those configurations. The \emph{use domain} is the workload for which an implementation is selected after qualification. Admission alone does not certify numerical correspondence; the later Llama counterexample lies within the admitted configuration (Section~\ref{sec:transfer}).
+
+For a workload requiring the deployed reference, the decision rule retains $R$ for inputs outside the validated domain and compares qualified candidates within it. Extending that domain requires fresh reference checks. This is an offline selection rule: the evaluated implementation has phase and configuration guards, but no online detector or recovery guarantee for arbitrary new inputs.
+
+\subsection{The stateful transaction}
+A target context owns KV values, sequence positions, a pending sampled token or available logits, and relevant sampler state. The draft has separate state. It proposes up to $k$ tokens; the target evaluates the pending token and proposal positions; acceptance, correction and any bonus determine the committed prefix. Rejected positions are reconciled before the next cycle. A visible token may still be pending evaluation into KV and must be consumed exactly once.
+
+QB changes attention representation within the ordinary speculative verification and reconciliation transaction. Microbatch capacity $U$, occupied query count $q$, caller width and output reservation remain distinct. We write UB$n$ for a configured capacity of $n$. A caller containing $k+1$ rows can execute as several physical micrographs, so caller counts alone do not describe parallel work.
+
+\subsection{Local repair and state composition}
+The design objective is to minimize complete request time over tested implementations, subject to endpoint qualification. Write a request fragment as $D_g(P_g(x))$, where $P_g$ forms the state consumed by $D_g$ under execution organization $g$. Correspondence of $D_{\QB}$ and the reference on one input state $s_\rho$ does not establish correspondence on the different state $P_g(x)$.
+
+For full stateful composition, a relation between candidate and reference states must hold initially, preserve the committed output at each transaction, and hold again after reconciliation. The experiments test these sufficient-condition premises empirically. Section~\ref{sec:state} examines two simpler assumptions often used in local reasoning: that endpoint-equivalent states have interchangeable components, and that enlarging a sufficient replacement preserves its effect.

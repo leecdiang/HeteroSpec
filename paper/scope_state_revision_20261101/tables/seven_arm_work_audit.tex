@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Family & Matched groups & $M$ work triples & $C$ work triples & Endpoints vs. $R$ \\
+\midrule
+Qwen3 & 96 & 96/96 & 96/96 & 576/576 \\
+SmolLM2 & 96 & 96/96 & 96/96 & 576/576 \\
+Llama & 96 & 96/96 & 96/96 & 576/576 \\
+\midrule
+Total & 288 & 288/288 & 288/288 & 1728/1728 \\
+\bottomrule
+\end{tabular}
+\caption{Retrospective audit of all 2,016 formal original seven-arm requests, excluding 42 warmups. Each audit group matches family, task, session and repeat across arm-specific workers; each work triple compares GS, PQ and QB within the target-only ($M$) or speculative ($C$) path. All three pairings per triple agree in the recorded logical-work counters and acceptance/width histograms (1,728 pairings total). Endpoint checks compare the complete native token IDs and recorded EOG flags, stop reason and terminal metadata with the paired $R$ request. Physical graph calls, widths and reuse are reported separately; aggregate counter equality does not establish bitwise state or per-cycle trace equality. This adds no sessions and changes no original timings or weights.}
+\label{tab:sevenarmwork}
+\end{table*}

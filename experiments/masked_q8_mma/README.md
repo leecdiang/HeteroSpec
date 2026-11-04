@@ -2,6 +2,12 @@
 
 No production dispatch, runtime hook, automatic qualification, performance claim, or frozen-R equivalence. Inputs are already quantized serialized Q8_0 (34 bytes) and Q8_1 (36 bytes), not F32 activations. The quantizer and stateful model are outside this experiment.
 
+## Frozen-binary follow-up
+
+The actual frozen q1/q4 kernel uses fused FTZ updates. The original build recorded below is non-FTZ; its unfused modes are negative controls, not alternatives to the frozen recipe. **fused=true is necessary but not sufficient.** A valid K=1056 signed-byte witness distinguishes fused output `0xc5bcb40b` from unfused `0xc5bcb40c`.
+
+See [frozen DLL evidence](frozen_reference_audit/README.md) and the separate [FTZ/FMA audit and reproduction](ftz_audit/REPRODUCE.md). The latter compiles the unchanged source with explicit FTZ and documents the restricted finite-half lattice argument, actual half-scale overflow boundary and remaining quantizer/JIT/full-dataflow obligations. GPU equality and performance are still unestablished.
+
 ## Experimental controls
 
 - Mode 0: masked `m16n8k16.s32.s8.s8.s32`, 8 output rows by 8 columns, four reduction warps.

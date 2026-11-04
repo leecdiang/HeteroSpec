@@ -1,0 +1,171 @@
+{
+  "receipt_scope": "protocol and source fixtures only; see separate NATIVE_VALIDATION.json for actual runtime",
+  "status": "CPU_PROTOCOL_AND_SOURCE_FIXTURE_TESTS_PASS",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "gpu_executions": 0,
+  "full_llama_build": "NOT_RUN",
+  "windows_dll": "NOT_RUN",
+  "actual_pr171_source_staging": "NOT_RUN",
+  "new_numerical_equivalence": "NOT_ESTABLISHED",
+  "records": [
+    {
+      "command": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching",
+        "-fPIC",
+        "-shared",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching/packing_gate.cpp",
+        "-o",
+        "/tmp/hs-contract-zmv0a59b/libhscontract.so"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/tests/reference_contract/test_execution.cpp",
+        "-L/tmp/hs-contract-zmv0a59b",
+        "-lhscontract",
+        "-Wl,-rpath,/tmp/hs-contract-zmv0a59b",
+        "-o",
+        "/tmp/hs-contract-zmv0a59b/contract-test"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/hs-contract-zmv0a59b/contract-test"
+      ],
+      "returncode": 0,
+      "stdout": "CPU_PROTOCOL_CHECKS=652 GPU_EXECUTIONS=0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/tests/reference_contract/test_execution.cpp",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching/packing_gate.cpp",
+        "-o",
+        "/tmp/hs-contract-zmv0a59b/sanitized-test"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/hs-contract-zmv0a59b/sanitized-test"
+      ],
+      "returncode": 0,
+      "stdout": "CPU_PROTOCOL_CHECKS=652 GPU_EXECUTIONS=0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/src/reference_batching",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/workspace/scratch/14b58e5a88ca/heterospec-contract/tests/reference_contract/test_independent_execution.cpp",
+        "-o",
+        "/tmp/hs-contract-zmv0a59b/independent-test"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/hs-contract-zmv0a59b/independent-test"
+      ],
+      "returncode": 0,
+      "stdout": "INDEPENDENT_CPP_CHECKS=72 GPU_EXECUTIONS=0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/reference_contract",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_all_import_fields (test_independent_cache.Checks.test_all_import_fields) ... ok\ntest_exception_every_boundary (test_independent_cache.Checks.test_exception_every_boundary) ... ok\ntest_monotone_generation_on_cache_restore (test_independent_cache.Checks.test_monotone_generation_on_cache_restore) ... ok\ntest_quarantine_covers_all_state_conflicts (test_independent_cache.Checks.test_quarantine_covers_all_state_conflicts) ... ok\ntest_receipt_duplicate_retains_first_verified (test_independent_cache.Checks.test_receipt_duplicate_retains_first_verified) ... ok\ntest_reentrant_import (test_independent_cache.Checks.test_reentrant_import) ... ok\ntest_cuda_requires_staged_tree (test_native_staging.NativeStagingTests.test_cuda_requires_staged_tree) ... ok\ntest_hardening_missing_anchor (test_native_staging.NativeStagingTests.test_hardening_missing_anchor) ... ok\ntest_hardening_wrong_assertion_count (test_native_staging.NativeStagingTests.test_hardening_wrong_assertion_count) ... ok\ntest_observer_missing_anchor (test_native_staging.NativeStagingTests.test_observer_missing_anchor) ... ok\ntest_observer_port (test_native_staging.NativeStagingTests.test_observer_port) ... ok\ntest_failed_import_preserves_recovery_checkpoint (test_prefix_cache.CacheImportTests.test_failed_import_preserves_recovery_checkpoint) ... ok\ntest_successful_import_commits (test_prefix_cache.CacheImportTests.test_successful_import_commits) ... ok\ntest_wrong_identity_no_mutation (test_prefix_cache.CacheImportTests.test_wrong_identity_no_mutation) ... ok\ntest_both_restore_failures_preserve_taint (test_prefix_cache.FailureTaintTests.test_both_restore_failures_preserve_taint) ... ok\ntest_execute_false_and_exception_preserve_taint (test_prefix_cache.FailureTaintTests.test_execute_false_and_exception_preserve_taint) ... ok\ntest_qualify_verifier_failure_preserves_taint (test_prefix_cache.FailureTaintTests.test_qualify_verifier_failure_preserves_taint) ... ok\ntest_conflicting_state_quarantined (test_prefix_cache.PrefixCacheTests.test_conflicting_state_quarantined) ... ok\ntest_corrupt_stored_integrity (test_prefix_cache.PrefixCacheTests.test_corrupt_stored_integrity) ... ok\ntest_duplicate_and_unrelated_identity (test_prefix_cache.PrefixCacheTests.test_duplicate_and_unrelated_identity) ... ok\ntest_full_identity_after_hash_collision (test_prefix_cache.PrefixCacheTests.test_full_identity_after_hash_collision) ... ok\ntest_identity_components (test_prefix_cache.PrefixCacheTests.test_identity_components) ... ok\ntest_invalid_identity (test_prefix_cache.PrefixCacheTests.test_invalid_identity) ... ok\ntest_lookup_without_kv (test_prefix_cache.PrefixCacheTests.test_lookup_without_kv) ... ok\ntest_unverified_rejected (test_prefix_cache.PrefixCacheTests.test_unverified_rejected) ... ok\ntest_missing_or_duplicate_anchor (test_stage.StageTests.test_missing_or_duplicate_anchor) ... ok\ntest_no_output_on_anchor_failure (test_stage.StageTests.test_no_output_on_anchor_failure) ... ok\ntest_reapply_rejected (test_stage.StageTests.test_reapply_rejected) ... ok\ntest_source_symlink_denied (test_stage.StageTests.test_source_symlink_denied) ... ok\ntest_stage_source_untouched_and_existing_output_rejected (test_stage.StageTests.test_stage_source_untouched_and_existing_output_rejected) ... ok\ntest_transform (test_stage.StageTests.test_transform) ... ok\ntest_bad_verification (test_state.StateTests.test_bad_verification) ... ok\ntest_cache_collision_not_authority (test_state.StateTests.test_cache_collision_not_authority) ... ok\ntest_cache_full_equality (test_state.StateTests.test_cache_full_equality) ... ok\ntest_capsule_validation (test_state.StateTests.test_capsule_validation) ... ok\ntest_clean (test_state.StateTests.test_clean) ... ok\ntest_different_build (test_state.StateTests.test_different_build) ... ok\ntest_different_recipe (test_state.StateTests.test_different_recipe) ... ok\ntest_digest_includes_logits_pending_and_recipe (test_state.StateTests.test_digest_includes_logits_pending_and_recipe) ... ok\ntest_exact_positions (test_state.StateTests.test_exact_positions) ... ok\ntest_exact_tokens (test_state.StateTests.test_exact_tokens) ... ok\ntest_execute_success (test_state.StateTests.test_execute_success) ... ok\ntest_external_mutation_denied (test_state.StateTests.test_external_mutation_denied) ... ok\ntest_failed_decode_restored (test_state.StateTests.test_failed_decode_restored) ... ok\ntest_failed_output_verification_restores (test_state.StateTests.test_failed_output_verification_restores) ... ok\ntest_failure_without_restore_stays_tainted (test_state.StateTests.test_failure_without_restore_stays_tainted) ... ok\ntest_invalid_receipt_rejected (test_state.StateTests.test_invalid_receipt_rejected) ... ok\ntest_late_rejection_restored (test_state.StateTests.test_late_rejection_restored) ... ok\ntest_no_checkpoint (test_state.StateTests.test_no_checkpoint) ... ok\ntest_policy_switch_does_not_clean (test_state.StateTests.test_policy_switch_does_not_clean) ... ok\ntest_preexport_failure_taints_without_restore (test_state.StateTests.test_preexport_failure_taints_without_restore) ... ok\ntest_preexport_reentrancy_rejected (test_state.StateTests.test_preexport_reentrancy_rejected) ... ok\ntest_reentrant_operation (test_state.StateTests.test_reentrant_operation) ... ok\ntest_restore_complete (test_state.StateTests.test_restore_complete) ... ok\ntest_restore_import_failure (test_state.StateTests.test_restore_import_failure) ... ok\ntest_restore_logits_mismatch (test_state.StateTests.test_restore_logits_mismatch) ... ok\ntest_scalar_restores_first (test_state.StateTests.test_scalar_restores_first) ... ok\ntest_stale_generation (test_state.StateTests.test_stale_generation) ... ok\ntest_two_failures_stay_tainted (test_state.StateTests.test_two_failures_stay_tainted) ... ok\ntest_unknown_not_admitted (test_state.StateTests.test_unknown_not_admitted) ... ok\ntest_verifier_cannot_clear_invalidation (test_state.StateTests.test_verifier_cannot_clear_invalidation) ... ok\n\n----------------------------------------------------------------------\nRan 61 tests in 0.009s\n\nOK\n"
+    }
+  ],
+  "source_sha256": {
+    "src/reference_batching/cuda_audit.h": "6d47cbfd7d1f20a127ea876023a1f2024572e9bca38b6e283bd59aff0e7d1606",
+    "src/reference_batching/cuda_audit_runtime.inc": "c87c51858b909efda412137be87cd20c240cf5c0cbced73e2085777a6c7e9eee",
+    "src/reference_batching/execution_contract.hpp": "dcaa3ba67f6fec641619eda2e7b67429246524295db78696a85ef8ed919572e3",
+    "src/reference_batching/native_checkpoint.hpp": "5e68875269c49c2c3a175b61530861cd09352e0dfc42fea6468b377a91049b59",
+    "src/reference_batching/native_cuda_scope.hpp": "55894d405651905eb1acdc6fb038f92b3c25fe5b2617da8b36a48ba2ff21327a",
+    "src/reference_batching/native_guard.hpp": "4faeafab9f7667f6c1a7e865fbd1d740d4f6ce780f287703c82f22e566d405d7",
+    "src/reference_batching/native_preflight.inc": "4c17b33cb099248a47063798ae802d177a4e2d148411893753ed551811d812a4",
+    "src/reference_batching/packing_gate.cpp": "db8945d7050e95aa8e57748959699ec6b6b11ea9acfcec79e51c03df1b4116d1",
+    "src/reference_batching/packing_gate.hpp": "b2f0fcbf29243e596fcb0590e4360922e49264b73d587825d2a88205b484adaa",
+    "src/reference_batching/reference_batching.hpp": "746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c",
+    "src/reference_batching/tensor_observation.hpp": "5f3defd3deee66b700c792819d87942e3684678893aae597bfea36f7c5c1b116",
+    "tests/reference_contract/make_q8_fixture.cpp": "b21576f3dff692ac567a7d6e8b170cbd300320f38983629ba1a98df6b55ca340",
+    "tests/reference_contract/test_cuda_audit_abi.cpp": "b3af4a458c2e9c89bc463934c86afd5d33de30bf998a6cac1b3801d0ab776ea0",
+    "tests/reference_contract/test_execution.cpp": "df647c36936e42caf5c0c56c2e0a19f82333f7e32d4da36a7bc5b99da78e331e",
+    "tests/reference_contract/test_independent_cache.py": "bf08a589cc660322d2624b681e84fd91414011089d9314646b8cb96f7835c8e2",
+    "tests/reference_contract/test_independent_execution.cpp": "0f64f59b40fbbccb31eb6098506ebabbd01640ce96bddb17884bf7e89f936c9c",
+    "tests/reference_contract/test_native_checkpoint.cpp": "167ce3ec2065c525f1c47d4ca8d1db14ca4f8e47116165033a5426da9ae45ec4",
+    "tests/reference_contract/test_native_staging.py": "2b6d46fc9171a14181aac8bc7854a9c9774d99e7c6199b434f8c86ff76a0513b",
+    "tests/reference_contract/test_prefix_cache.py": "98ecff42226956887940b91dfcde312af05626bd6b461809c425f3f49712323a",
+    "tests/reference_contract/test_stage.py": "0d884fa12d1edcd6082bef26cd19e5a2c8d55e172a7f4ee461165789d727a9fb",
+    "tests/reference_contract/test_state.py": "76bc4c7c251e97c43e789acb3c69e3f7fa50d0d39f117d1406cbfc1979458ae2",
+    "tests/reference_contract/test_tensor_observation.cpp": "36104cd3741c1aa4b41302b9c4f1f0fc944f6f3064947a9b765b933db0fd7a11",
+    "scripts/reference_contract/harden_native.py": "73eba2cad4179bb046940da9ea39d282bb5680c58ff5554e5e19b837d5e6d8eb",
+    "scripts/reference_contract/port_observer.py": "74049d2c3dca25de672be9b48907baa85bc7a448a9dd6564426e1b551411a7d7",
+    "scripts/reference_contract/stage.py": "c43dfe2d5d057ff111f402831c2c898a89cb7607c54033e75c2d388a73e9bdca",
+    "scripts/reference_contract/stage_cuda_audit.py": "9906eb711e98dbc2327fded4467bc4888ce8e9bee8b94f51218fd9160e538359",
+    "scripts/reference_contract/validate.py": "bf4cd7391bd85065f6dc7023d41f7dcc7c9151be76e74a6d3d320ed6e0b1c150",
+    "scripts/reference_contract/validate_native.py": "9df80dbd00fdd6d34d426c4d14cb0bfa4fa29d563f91437b242510ba1ce957b1",
+    "src/query_layout/state_lineage.py": "9709fa58eb0570522dc736ed5c55bed2cec2e5b942032c388e0d4bebcbdcfa61"
+  }
+}

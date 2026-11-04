@@ -1,0 +1,2134 @@
+{
+  "sources": {
+    "historical-rtx-mechanism/mechanism.json": "363719bc5ba4608e5756b71dd332f0040568cdd9cfea77d471f52a9c671744fc",
+    "historical-llama-mechanism/mechanism.json": "6cfca23712af20862d1010619a5e5c63410917a19b2c851d6af2c5e98528eab7"
+  },
+  "unit": "same dataset input root, repeated sessions averaged; only four151roots overlap across models",
+  "records": 240,
+  "model_roots": 48,
+  "unique_roots": 44,
+  "features": [
+    "deployment model",
+    "prompt token count"
+  ],
+  "constant_budget": "cap128 throughout, no budget policy identifiable",
+  "summaries": {
+    "Llama": {
+      "roots": 24,
+      "best_fixed_retrospective": "alwaysM",
+      "best_fixed_sum": 109.68405938333333,
+      "policies": {
+        "nested": {
+          "sum": 107.95959303333333,
+          "over_best_fixed": 0.9842778762958326,
+          "saving_vs_best_fixed": 0.015722123704167368,
+          "regret_vs_root_oracle_s": 1.7493597166666675,
+          "selected_C": 9,
+          "draft_selected_but_costlier": 4,
+          "max_excess_vs_M_s": 0.3398707500000002,
+          "max_relative_excess_vs_M": 0.1312397282752431,
+          "mean_overhead_budget_ms_vs_best_fixed": 71.85276458333334,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.0155033134218443,
+            "10": 0.013534020880937359,
+            "50": 0.0047816095880172105,
+            "100": -0.006158904528132947
+          }
+        },
+        "stump_only": {
+          "sum": 107.95959303333333,
+          "over_best_fixed": 0.9842778762958326,
+          "saving_vs_best_fixed": 0.015722123704167368,
+          "regret_vs_root_oracle_s": 1.7493597166666675,
+          "selected_C": 9,
+          "draft_selected_but_costlier": 4,
+          "max_excess_vs_M_s": 0.3398707500000002,
+          "max_relative_excess_vs_M": 0.1312397282752431,
+          "mean_overhead_budget_ms_vs_best_fixed": 71.85276458333334,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.0155033134218443,
+            "10": 0.013534020880937359,
+            "50": 0.0047816095880172105,
+            "100": -0.006158904528132947
+          }
+        },
+        "train_fixed": {
+          "sum": 109.68405938333333,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 3.473826066666667,
+          "selected_C": 0,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.00021881028232306754,
+            "10": -0.0021881028232300093,
+            "50": -0.010940514116150046,
+            "100": -0.021881028232300093
+          }
+        },
+        "exposed384_reference": {
+          "sum": 107.09638275,
+          "over_best_fixed": 0.9764079060541542,
+          "saving_vs_best_fixed": 0.023592093945845827,
+          "regret_vs_root_oracle_s": 0.8861494333333333,
+          "selected_C": 12,
+          "draft_selected_but_costlier": 4,
+          "max_excess_vs_M_s": 0.3398707500000002,
+          "max_relative_excess_vs_M": 0.1312397282752431,
+          "mean_overhead_budget_ms_vs_best_fixed": 107.81985972222212,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.02337328366352276,
+            "10": 0.021403991122615817,
+            "50": 0.01265157982969567,
+            "100": 0.001711065713545623
+          }
+        },
+        "alwaysM": {
+          "sum": 109.68405938333333,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 3.473826066666667,
+          "selected_C": 0,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.00021881028232306754,
+            "10": -0.0021881028232300093,
+            "50": -0.010940514116150046,
+            "100": -0.021881028232300093
+          }
+        },
+        "alwaysC": {
+          "sum": 115.90632011666666,
+          "over_best_fixed": 1.056728942822833,
+          "saving_vs_best_fixed": -0.05672894282283303,
+          "regret_vs_root_oracle_s": 9.6960868,
+          "selected_C": 24,
+          "draft_selected_but_costlier": 16,
+          "max_excess_vs_M_s": 1.2386936333333338,
+          "max_relative_excess_vs_M": 0.29407078560997535,
+          "mean_overhead_budget_ms_vs_best_fixed": -259.2608638888887,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.056947753105155874,
+            "10": -0.058917045646062816,
+            "50": -0.06766945693898307,
+            "100": -0.07860997105513312
+          }
+        },
+        "root_oracle": {
+          "sum": 106.21023331666667,
+          "over_best_fixed": 0.9683287974004862,
+          "saving_vs_best_fixed": 0.03167120259951384,
+          "regret_vs_root_oracle_s": 0.0,
+          "selected_C": 8,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 144.74275277777753,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.03145239231719088,
+            "10": 0.02948309977628394,
+            "50": 0.02073068848336379,
+            "100": 0.009790174367213744
+          }
+        }
+      },
+      "nested_conditional_root_bootstrap_95pct": [
+        -0.004998783413193341,
+        0.041221517201783485
+      ]
+    },
+    "Qwen": {
+      "roots": 12,
+      "best_fixed_retrospective": "alwaysC",
+      "best_fixed_sum": 49.044748775,
+      "policies": {
+        "nested": {
+          "sum": 48.25503405,
+          "over_best_fixed": 0.9838980778834665,
+          "saving_vs_best_fixed": 0.016101922116533496,
+          "regret_vs_root_oracle_s": 0.0,
+          "selected_C": 8,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 65.80956041666694,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.015857247603976554,
+            "10": 0.013655176990964302,
+            "50": 0.0038681964886871922,
+            "100": -0.008365529139159111
+          }
+        },
+        "stump_only": {
+          "sum": 48.25503405,
+          "over_best_fixed": 0.9838980778834665,
+          "saving_vs_best_fixed": 0.016101922116533496,
+          "regret_vs_root_oracle_s": 0.0,
+          "selected_C": 8,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 65.80956041666694,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.015857247603976554,
+            "10": 0.013655176990964302,
+            "50": 0.0038681964886871922,
+            "100": -0.008365529139159111
+          }
+        },
+        "train_fixed": {
+          "sum": 49.044748775,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 0.7897147249999996,
+          "selected_C": 12,
+          "draft_selected_but_costlier": 4,
+          "max_excess_vs_M_s": 0.3796955249999998,
+          "max_relative_excess_vs_M": 0.06422248734865943,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.0002446745125568306,
+            "10": -0.002446745125569194,
+            "50": -0.012233725627846415,
+            "100": -0.024467451255692607
+          }
+        },
+        "exposed384_reference": {
+          "sum": 50.00062065,
+          "over_best_fixed": 1.0194897904235416,
+          "saving_vs_best_fixed": -0.019489790423541598,
+          "regret_vs_root_oracle_s": 1.7455865999999993,
+          "selected_C": 5,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": -79.65598958333331,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.01973446493609865,
+            "10": -0.02193653554911079,
+            "50": -0.03172351605138801,
+            "100": -0.043957241679234205
+          }
+        },
+        "alwaysM": {
+          "sum": 54.968605000000004,
+          "over_best_fixed": 1.1207847195257654,
+          "saving_vs_best_fixed": -0.12078471952576542,
+          "regret_vs_root_oracle_s": 6.713570949999999,
+          "selected_C": 0,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": -493.6546854166668,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.12102939403832225,
+            "10": -0.12323146465133461,
+            "50": -0.1330184451536116,
+            "100": -0.14525217078145802
+          }
+        },
+        "alwaysC": {
+          "sum": 49.044748775,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 0.7897147249999996,
+          "selected_C": 12,
+          "draft_selected_but_costlier": 4,
+          "max_excess_vs_M_s": 0.3796955249999998,
+          "max_relative_excess_vs_M": 0.06422248734865943,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.0002446745125568306,
+            "10": -0.002446745125569194,
+            "50": -0.012233725627846415,
+            "100": -0.024467451255692607
+          }
+        },
+        "root_oracle": {
+          "sum": 48.25503405,
+          "over_best_fixed": 0.9838980778834665,
+          "saving_vs_best_fixed": 0.016101922116533496,
+          "regret_vs_root_oracle_s": 0.0,
+          "selected_C": 8,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 65.80956041666694,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.015857247603976554,
+            "10": 0.013655176990964302,
+            "50": 0.0038681964886871922,
+            "100": -0.008365529139159111
+          }
+        }
+      },
+      "nested_conditional_root_bootstrap_95pct": [
+        0.0036016410671866205,
+        0.028975640333175096
+      ]
+    },
+    "SmolLM2": {
+      "roots": 12,
+      "best_fixed_retrospective": "alwaysM",
+      "best_fixed_sum": 14.07843735,
+      "policies": {
+        "nested": {
+          "sum": 14.13237315,
+          "over_best_fixed": 1.0038310928023557,
+          "saving_vs_best_fixed": -0.003831092802355718,
+          "regret_vs_root_oracle_s": 0.17859035000000012,
+          "selected_C": 2,
+          "draft_selected_but_costlier": 2,
+          "max_excess_vs_M_s": 0.03673247499999999,
+          "max_relative_excess_vs_M": 0.05329297336038663,
+          "mean_overhead_budget_ms_vs_best_fixed": -4.494649999999971,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.004683460128477979,
+            "10": -0.01235476606357877,
+            "50": -0.0464494591084712,
+            "100": -0.08906782541458691
+          }
+        },
+        "stump_only": {
+          "sum": 14.13237315,
+          "over_best_fixed": 1.0038310928023557,
+          "saving_vs_best_fixed": -0.003831092802355718,
+          "regret_vs_root_oracle_s": 0.17859035000000012,
+          "selected_C": 2,
+          "draft_selected_but_costlier": 2,
+          "max_excess_vs_M_s": 0.03673247499999999,
+          "max_relative_excess_vs_M": 0.05329297336038663,
+          "mean_overhead_budget_ms_vs_best_fixed": -4.494649999999971,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.004683460128477979,
+            "10": -0.01235476606357877,
+            "50": -0.0464494591084712,
+            "100": -0.08906782541458691
+          }
+        },
+        "train_fixed": {
+          "sum": 14.07843735,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 0.12465455000000014,
+          "selected_C": 0,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.0008523673261222608,
+            "10": -0.008523673261223053,
+            "50": -0.04261836630611571,
+            "100": -0.08523673261223119
+          }
+        },
+        "exposed384_reference": {
+          "sum": 14.876599975,
+          "over_best_fixed": 1.056693978540168,
+          "saving_vs_best_fixed": -0.05669397854016811,
+          "regret_vs_root_oracle_s": 0.9228171749999999,
+          "selected_C": 7,
+          "draft_selected_but_costlier": 5,
+          "max_excess_vs_M_s": 0.39105330000000005,
+          "max_relative_excess_vs_M": 0.3837778976661266,
+          "mean_overhead_budget_ms_vs_best_fixed": -66.51355208333332,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.05754634586629037,
+            "10": -0.06521765180139116,
+            "50": -0.0993123448462836,
+            "100": -0.1419307111523993
+          }
+        },
+        "alwaysM": {
+          "sum": 14.07843735,
+          "over_best_fixed": 1.0,
+          "saving_vs_best_fixed": 0.0,
+          "regret_vs_root_oracle_s": 0.12465455000000014,
+          "selected_C": 0,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 0.0,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.0008523673261222608,
+            "10": -0.008523673261223053,
+            "50": -0.04261836630611571,
+            "100": -0.08523673261223119
+          }
+        },
+        "alwaysC": {
+          "sum": 18.0320608,
+          "over_best_fixed": 1.2808282873809145,
+          "saving_vs_best_fixed": -0.2808282873809145,
+          "regret_vs_root_oracle_s": 4.078278,
+          "selected_C": 12,
+          "draft_selected_but_costlier": 10,
+          "max_excess_vs_M_s": 0.8253369500000001,
+          "max_relative_excess_vs_M": 0.45964190080176714,
+          "mean_overhead_budget_ms_vs_best_fixed": -329.4686208333333,
+          "saving_with_uniform_overhead_ms": {
+            "1": -0.28168065470703674,
+            "10": -0.28935196064213775,
+            "50": -0.3234466536870302,
+            "100": -0.36606501999314567
+          }
+        },
+        "root_oracle": {
+          "sum": 13.953782799999999,
+          "over_best_fixed": 0.9911457112106266,
+          "saving_vs_best_fixed": 0.008854288789373443,
+          "regret_vs_root_oracle_s": 0.0,
+          "selected_C": 2,
+          "draft_selected_but_costlier": 0,
+          "max_excess_vs_M_s": 0.0,
+          "max_relative_excess_vs_M": 0.0,
+          "mean_overhead_budget_ms_vs_best_fixed": 10.387879166666725,
+          "saving_with_uniform_overhead_ms": {
+            "1": 0.008001921463251072,
+            "10": 0.00033061552815027984,
+            "50": -0.033764077516742264,
+            "100": -0.07638244382285775
+          }
+        }
+      },
+      "nested_conditional_root_bootstrap_95pct": [
+        -0.01090488103067357,
+        0.0
+      ]
+    }
+  },
+  "outer_rows": [
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/355",
+      "prompt": 733,
+      "M": 6.454244366666667,
+      "C": 7.0336606,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.22981501666666,
+        "stump": 101.50534866666666
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 6.454244366666667,
+        "stump_only": 6.454244366666667,
+        "train_fixed": 6.454244366666667,
+        "exposed384_reference": 6.454244366666667,
+        "alwaysM": 6.454244366666667,
+        "alwaysC": 7.0336606,
+        "root_oracle": 6.454244366666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/392",
+      "prompt": 335,
+      "M": 3.6826086,
+      "C": 3.7649705,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 455.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.00145078333334,
+        "stump": 104.19462253333333
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 3.7649705,
+        "stump_only": 3.7649705,
+        "train_fixed": 3.6826086,
+        "exposed384_reference": 3.7649705,
+        "alwaysM": 3.6826086,
+        "alwaysC": 3.7649705,
+        "root_oracle": 3.6826086
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/409",
+      "prompt": 261,
+      "M": 2.5896941,
+      "C": 2.92956485,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 107.09436528333333,
+        "stump": 104.71848475
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 2.92956485,
+        "stump_only": 2.92956485,
+        "train_fixed": 2.5896941,
+        "exposed384_reference": 2.92956485,
+        "alwaysM": 2.5896941,
+        "alwaysC": 2.92956485,
+        "root_oracle": 2.5896941
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/423",
+      "prompt": 614,
+      "M": 5.743835083333334,
+      "C": 6.19572705,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.9402243,
+        "stump": 102.21575795
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.743835083333334,
+        "stump_only": 5.743835083333334,
+        "train_fixed": 5.743835083333334,
+        "exposed384_reference": 5.743835083333334,
+        "alwaysM": 5.743835083333334,
+        "alwaysC": 6.19572705,
+        "root_oracle": 5.743835083333334
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/529",
+      "prompt": 138,
+      "M": 2.3834251166666665,
+      "C": 1.8123117333333334,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 107.30063426666666,
+        "stump": 106.1472813
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 1.8123117333333334,
+        "stump_only": 1.8123117333333334,
+        "train_fixed": 2.3834251166666665,
+        "exposed384_reference": 1.8123117333333334,
+        "alwaysM": 2.3834251166666665,
+        "alwaysC": 1.8123117333333334,
+        "root_oracle": 1.8123117333333334
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/670",
+      "prompt": 536,
+      "M": 5.1946384666666665,
+      "C": 5.68348885,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 104.48942091666667,
+        "stump": 102.76495456666667
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.1946384666666665,
+        "stump_only": 5.1946384666666665,
+        "train_fixed": 5.1946384666666665,
+        "exposed384_reference": 5.1946384666666665,
+        "alwaysM": 5.1946384666666665,
+        "alwaysC": 5.68348885,
+        "root_oracle": 5.1946384666666665
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/684",
+      "prompt": 535,
+      "M": 4.212229483333333,
+      "C": 5.450923116666667,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 105.4718299,
+        "stump": 103.74736355
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 4.212229483333333,
+        "stump_only": 4.212229483333333,
+        "train_fixed": 4.212229483333333,
+        "exposed384_reference": 4.212229483333333,
+        "alwaysM": 4.212229483333333,
+        "alwaysC": 5.450923116666667,
+        "root_oracle": 4.212229483333333
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/745",
+      "prompt": 375,
+      "M": 4.6100292000000005,
+      "C": 4.384089016666667,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 105.07403018333333,
+        "stump": 103.09264455
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 4.6100292000000005,
+        "stump_only": 4.6100292000000005,
+        "train_fixed": 4.6100292000000005,
+        "exposed384_reference": 4.384089016666667,
+        "alwaysM": 4.6100292000000005,
+        "alwaysC": 4.384089016666667,
+        "root_oracle": 4.384089016666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/835",
+      "prompt": 686,
+      "M": 5.824394683333334,
+      "C": 6.7707964,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.8596647,
+        "stump": 102.13519835
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.824394683333334,
+        "stump_only": 5.824394683333334,
+        "train_fixed": 5.824394683333334,
+        "exposed384_reference": 5.824394683333334,
+        "alwaysM": 5.824394683333334,
+        "alwaysC": 6.7707964,
+        "root_oracle": 5.824394683333334
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/874",
+      "prompt": 328,
+      "M": 3.2215864333333335,
+      "C": 3.3961438166666666,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 455.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.46247295,
+        "stump": 104.56344921666667
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 3.3961438166666666,
+        "stump_only": 3.3961438166666666,
+        "train_fixed": 3.2215864333333335,
+        "exposed384_reference": 3.3961438166666666,
+        "alwaysM": 3.2215864333333335,
+        "alwaysC": 3.3961438166666666,
+        "root_oracle": 3.2215864333333335
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/887",
+      "prompt": 267,
+      "M": 2.5059117,
+      "C": 2.7952711,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 107.17814768333334,
+        "stump": 105.16432193333334
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 2.7952711,
+        "stump_only": 2.7952711,
+        "train_fixed": 2.5059117,
+        "exposed384_reference": 2.7952711,
+        "alwaysM": 2.5059117,
+        "alwaysC": 2.7952711,
+        "root_oracle": 2.5059117
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:APPS/test/97",
+      "prompt": 604,
+      "M": 5.625014266666667,
+      "C": 6.379938766666666,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 104.05904511666667,
+        "stump": 102.33457876666667
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.625014266666667,
+        "stump_only": 5.625014266666667,
+        "train_fixed": 5.625014266666667,
+        "exposed384_reference": 5.625014266666667,
+        "alwaysM": 5.625014266666667,
+        "alwaysC": 6.379938766666666,
+        "root_oracle": 5.625014266666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/algebra/test/469",
+      "prompt": 746,
+      "M": 6.376737866666667,
+      "C": 7.48209195,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.30732151666666,
+        "stump": 101.58285516666666
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 6.376737866666667,
+        "stump_only": 6.376737866666667,
+        "train_fixed": 6.376737866666667,
+        "exposed384_reference": 6.376737866666667,
+        "alwaysM": 6.376737866666667,
+        "alwaysC": 7.48209195,
+        "root_oracle": 6.376737866666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/counting_and_probability/test/152",
+      "prompt": 745,
+      "M": 6.520816316666666,
+      "C": 7.222773083333333,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.16324306666667,
+        "stump": 101.43877671666667
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 6.520816316666666,
+        "stump_only": 6.520816316666666,
+        "train_fixed": 6.520816316666666,
+        "exposed384_reference": 6.520816316666666,
+        "alwaysM": 6.520816316666666,
+        "alwaysC": 7.222773083333333,
+        "root_oracle": 6.520816316666666
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/counting_and_probability/test/302",
+      "prompt": 311,
+      "M": 4.135532566666667,
+      "C": 3.8098059,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 241.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 105.54852681666667,
+        "stump": 103.27778178333334
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 4.135532566666667,
+        "stump_only": 4.135532566666667,
+        "train_fixed": 4.135532566666667,
+        "exposed384_reference": 3.8098059,
+        "alwaysM": 4.135532566666667,
+        "alwaysC": 3.8098059,
+        "root_oracle": 3.8098059
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/counting_and_probability/test/372",
+      "prompt": 263,
+      "M": 3.9095911,
+      "C": 3.5980476666666665,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 241.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 105.77446828333333,
+        "stump": 103.50372325000001
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 3.9095911,
+        "stump_only": 3.9095911,
+        "train_fixed": 3.9095911,
+        "exposed384_reference": 3.5980476666666665,
+        "alwaysM": 3.9095911,
+        "alwaysC": 3.5980476666666665,
+        "root_oracle": 3.5980476666666665
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/counting_and_probability/test/463",
+      "prompt": 171,
+      "M": 3.2033497,
+      "C": 2.6966551666666665,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.48070968333333,
+        "stump": 105.26293786666668
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 2.6966551666666665,
+        "stump_only": 2.6966551666666665,
+        "train_fixed": 3.2033497,
+        "exposed384_reference": 2.6966551666666665,
+        "alwaysM": 3.2033497,
+        "alwaysC": 2.6966551666666665,
+        "root_oracle": 2.6966551666666665
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/geometry/test/11",
+      "prompt": 579,
+      "M": 5.616699583333333,
+      "C": 5.943228316666667,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 104.0673598,
+        "stump": 102.34289345
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.616699583333333,
+        "stump_only": 5.616699583333333,
+        "train_fixed": 5.616699583333333,
+        "exposed384_reference": 5.616699583333333,
+        "alwaysM": 5.616699583333333,
+        "alwaysC": 5.943228316666667,
+        "root_oracle": 5.616699583333333
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/geometry/test/275",
+      "prompt": 649,
+      "M": 5.907195066666667,
+      "C": 6.926945533333333,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.77686431666666,
+        "stump": 102.05239796666667
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.907195066666667,
+        "stump_only": 5.907195066666667,
+        "train_fixed": 5.907195066666667,
+        "exposed384_reference": 5.907195066666667,
+        "alwaysM": 5.907195066666667,
+        "alwaysC": 6.926945533333333,
+        "root_oracle": 5.907195066666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/geometry/test/276",
+      "prompt": 203,
+      "M": 3.4199779666666665,
+      "C": 2.805079666666667,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.26408141666667,
+        "stump": 105.15451336666666
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 2.805079666666667,
+        "stump_only": 2.805079666666667,
+        "train_fixed": 3.4199779666666665,
+        "exposed384_reference": 2.805079666666667,
+        "alwaysM": 3.4199779666666665,
+        "alwaysC": 2.805079666666667,
+        "root_oracle": 2.805079666666667
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/intermediate_algebra/test/427",
+      "prompt": 621,
+      "M": 5.728208833333333,
+      "C": 6.386667833333334,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.95585055000001,
+        "stump": 102.23138420000001
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.728208833333333,
+        "stump_only": 5.728208833333333,
+        "train_fixed": 5.728208833333333,
+        "exposed384_reference": 5.728208833333333,
+        "alwaysM": 5.728208833333333,
+        "alwaysC": 6.386667833333334,
+        "root_oracle": 5.728208833333333
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/intermediate_algebra/test/531",
+      "prompt": 182,
+      "M": 3.3185203,
+      "C": 2.816584183333333,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.36553908333333,
+        "stump": 105.14300885
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 2.816584183333333,
+        "stump_only": 2.816584183333333,
+        "train_fixed": 3.3185203,
+        "exposed384_reference": 2.816584183333333,
+        "alwaysM": 3.3185203,
+        "alwaysC": 2.816584183333333,
+        "root_oracle": 2.816584183333333
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/prealgebra/test/417",
+      "prompt": 606,
+      "M": 5.8633302,
+      "C": 6.401040083333333,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 103.82072918333333,
+        "stump": 102.09626283333334
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.8633302,
+        "stump_only": 5.8633302,
+        "train_fixed": 5.8633302,
+        "exposed384_reference": 5.8633302,
+        "alwaysM": 5.8633302,
+        "alwaysC": 6.401040083333333,
+        "root_oracle": 5.8633302
+      }
+    },
+    {
+      "model": "Llama",
+      "root": "162:MATH/precalculus/test/539",
+      "prompt": 222,
+      "M": 3.6364883833333335,
+      "C": 3.2205149333333334,
+      "records": 6,
+      "selected_class": "stump",
+      "threshold": 319.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 106.047571,
+        "stump": 104.7390781
+      },
+      "train_roots": 23,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 3.2205149333333334,
+        "stump_only": 3.2205149333333334,
+        "train_fixed": 3.6364883833333335,
+        "exposed384_reference": 3.2205149333333334,
+        "alwaysM": 3.6364883833333335,
+        "alwaysC": 3.2205149333333334,
+        "root_oracle": 3.2205149333333334
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/108",
+      "prompt": 716,
+      "M": 6.3164465,
+      "C": 6.373626025,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 42.67112275,
+        "stump": 41.93858755
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 6.3164465,
+        "stump_only": 6.3164465,
+        "train_fixed": 6.373626025,
+        "exposed384_reference": 6.3164465,
+        "alwaysM": 6.3164465,
+        "alwaysC": 6.373626025,
+        "root_oracle": 6.3164465
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/15",
+      "prompt": 448,
+      "M": 5.1179624,
+      "C": 4.4989448,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 536.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 44.545803975,
+        "stump": 43.75608925
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 4.4989448,
+        "stump_only": 4.4989448,
+        "train_fixed": 4.4989448,
+        "exposed384_reference": 5.1179624,
+        "alwaysM": 5.1179624,
+        "alwaysC": 4.4989448,
+        "root_oracle": 4.4989448
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/25",
+      "prompt": 649,
+      "M": 5.91218965,
+      "C": 6.291885175,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 556.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 42.7528636,
+        "stump": 42.342844400000004
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 5.91218965,
+        "stump_only": 5.91218965,
+        "train_fixed": 6.291885175,
+        "exposed384_reference": 5.91218965,
+        "alwaysM": 5.91218965,
+        "alwaysC": 6.291885175,
+        "root_oracle": 5.91218965
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/32",
+      "prompt": 414,
+      "M": 4.787855475000001,
+      "C": 4.2453263,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 44.799422475,
+        "stump": 44.009707750000004
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 4.2453263,
+        "stump_only": 4.2453263,
+        "train_fixed": 4.2453263,
+        "exposed384_reference": 4.787855475000001,
+        "alwaysM": 4.787855475000001,
+        "alwaysC": 4.2453263,
+        "root_oracle": 4.2453263
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/43",
+      "prompt": 423,
+      "M": 4.82050825,
+      "C": 4.236468425,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 44.808280350000004,
+        "stump": 44.018565625
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 4.236468425,
+        "stump_only": 4.236468425,
+        "train_fixed": 4.236468425,
+        "exposed384_reference": 4.82050825,
+        "alwaysM": 4.82050825,
+        "alwaysC": 4.236468425,
+        "root_oracle": 4.236468425
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/6",
+      "prompt": 811,
+      "M": 7.05879275,
+      "C": 7.210920425,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 41.83382835,
+        "stump": 41.196241300000004
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 7.05879275,
+        "stump_only": 7.05879275,
+        "train_fixed": 7.210920425,
+        "exposed384_reference": 7.05879275,
+        "alwaysM": 7.05879275,
+        "alwaysC": 7.210920425,
+        "root_oracle": 7.05879275
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/66",
+      "prompt": 285,
+      "M": 3.00890375,
+      "C": 2.798437475,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 46.2463113,
+        "stump": 45.456596575
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 2.798437475,
+        "stump_only": 2.798437475,
+        "train_fixed": 2.798437475,
+        "exposed384_reference": 2.798437475,
+        "alwaysM": 3.00890375,
+        "alwaysC": 2.798437475,
+        "root_oracle": 2.798437475
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:CodeContests/valid/69",
+      "prompt": 664,
+      "M": 6.1731962750000005,
+      "C": 6.373908275,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 42.670840500000004,
+        "stump": 42.081837775000004
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "C",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 6.1731962750000005,
+        "stump_only": 6.1731962750000005,
+        "train_fixed": 6.373908275,
+        "exposed384_reference": 6.1731962750000005,
+        "alwaysM": 6.1731962750000005,
+        "alwaysC": 6.373908275,
+        "root_oracle": 6.1731962750000005
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:GSM8K/test/1225",
+      "prompt": 71,
+      "M": 2.76350705,
+      "C": 1.728314825,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 47.316433950000004,
+        "stump": 46.526719225
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 1.728314825,
+        "stump_only": 1.728314825,
+        "train_fixed": 1.728314825,
+        "exposed384_reference": 1.728314825,
+        "alwaysM": 2.76350705,
+        "alwaysC": 1.728314825,
+        "root_oracle": 1.728314825
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:GSM8K/test/70",
+      "prompt": 75,
+      "M": 3.0363875250000003,
+      "C": 1.68891285,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 47.355835925,
+        "stump": 46.5661212
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 1.68891285,
+        "stump_only": 1.68891285,
+        "train_fixed": 1.68891285,
+        "exposed384_reference": 1.68891285,
+        "alwaysM": 3.0363875250000003,
+        "alwaysC": 1.68891285,
+        "root_oracle": 1.68891285
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:GSM8K/test/806",
+      "prompt": 99,
+      "M": 2.9890274,
+      "C": 1.7815409,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 47.263207875,
+        "stump": 46.47349315
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 1.7815409,
+        "stump_only": 1.7815409,
+        "train_fixed": 1.7815409,
+        "exposed384_reference": 1.7815409,
+        "alwaysM": 2.9890274,
+        "alwaysC": 1.7815409,
+        "root_oracle": 1.7815409
+      }
+    },
+    {
+      "model": "Qwen",
+      "root": "151:GSM8K/test/986",
+      "prompt": 92,
+      "M": 2.983827975,
+      "C": 1.8164633000000001,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 548.5,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 47.228285475,
+        "stump": 46.438570750000004
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "C",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 1.8164633000000001,
+        "stump_only": 1.8164633000000001,
+        "train_fixed": 1.8164633000000001,
+        "exposed384_reference": 1.8164633000000001,
+        "alwaysM": 2.983827975,
+        "alwaysC": 1.8164633000000001,
+        "root_oracle": 1.8164633000000001
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/108",
+      "prompt": 797,
+      "M": 1.7956086,
+      "C": 2.62094555,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.28282875,
+        "stump": 12.33676455
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.7956086,
+        "stump_only": 1.7956086,
+        "train_fixed": 1.7956086,
+        "exposed384_reference": 1.7956086,
+        "alwaysM": 1.7956086,
+        "alwaysC": 2.62094555,
+        "root_oracle": 1.7956086
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/112",
+      "prompt": 422,
+      "M": 1.319723075,
+      "C": 1.668240325,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.758714274999999,
+        "stump": 12.812650075
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.319723075,
+        "stump_only": 1.319723075,
+        "train_fixed": 1.319723075,
+        "exposed384_reference": 1.319723075,
+        "alwaysM": 1.319723075,
+        "alwaysC": 1.668240325,
+        "root_oracle": 1.319723075
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/24",
+      "prompt": 310,
+      "M": 1.104181525,
+      "C": 1.2491974,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.974255825,
+        "stump": 13.028191625
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.104181525,
+        "stump_only": 1.104181525,
+        "train_fixed": 1.104181525,
+        "exposed384_reference": 1.2491974,
+        "alwaysM": 1.104181525,
+        "alwaysC": 1.2491974,
+        "root_oracle": 1.104181525
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/35",
+      "prompt": 659,
+      "M": 1.647112425,
+      "C": 2.28340285,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.431324925,
+        "stump": 12.485260725
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.647112425,
+        "stump_only": 1.647112425,
+        "train_fixed": 1.647112425,
+        "exposed384_reference": 1.647112425,
+        "alwaysM": 1.647112425,
+        "alwaysC": 2.28340285,
+        "root_oracle": 1.647112425
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/4",
+      "prompt": 380,
+      "M": 1.018957325,
+      "C": 1.410010625,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.059480025,
+        "stump": 13.113415825
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.018957325,
+        "stump_only": 1.018957325,
+        "train_fixed": 1.018957325,
+        "exposed384_reference": 1.410010625,
+        "alwaysM": 1.018957325,
+        "alwaysC": 1.410010625,
+        "root_oracle": 1.018957325
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/57",
+      "prompt": 696,
+      "M": 1.57262265,
+      "C": 2.28048735,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.5058147,
+        "stump": 12.5597505
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.57262265,
+        "stump_only": 1.57262265,
+        "train_fixed": 1.57262265,
+        "exposed384_reference": 1.57262265,
+        "alwaysM": 1.57262265,
+        "alwaysC": 2.28048735,
+        "root_oracle": 1.57262265
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/62",
+      "prompt": 665,
+      "M": 1.643515675,
+      "C": 2.280967175,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 12.434921675,
+        "stump": 12.488857475
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "M",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.643515675,
+        "stump_only": 1.643515675,
+        "train_fixed": 1.643515675,
+        "exposed384_reference": 1.643515675,
+        "alwaysM": 1.643515675,
+        "alwaysC": 2.280967175,
+        "root_oracle": 1.643515675
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:CodeContests/valid/66",
+      "prompt": 323,
+      "M": 1.0102635,
+      "C": 1.3430757,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.06817385,
+        "stump": 13.12210965
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 1.0102635,
+        "stump_only": 1.0102635,
+        "train_fixed": 1.0102635,
+        "exposed384_reference": 1.3430757,
+        "alwaysM": 1.0102635,
+        "alwaysC": 1.3430757,
+        "root_oracle": 1.0102635
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:GSM8K/test/1179",
+      "prompt": 77,
+      "M": 0.6892555,
+      "C": 0.725987975,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 214.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.38918185,
+        "stump": 13.333776575
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 0.725987975,
+        "stump_only": 0.725987975,
+        "train_fixed": 0.6892555,
+        "exposed384_reference": 0.725987975,
+        "alwaysM": 0.6892555,
+        "alwaysC": 0.725987975,
+        "root_oracle": 0.6892555
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:GSM8K/test/496",
+      "prompt": 75,
+      "M": 0.7656555,
+      "C": 0.6930469,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.31278185,
+        "stump": 13.36671765
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 0.7656555,
+        "stump_only": 0.7656555,
+        "train_fixed": 0.7656555,
+        "exposed384_reference": 0.6930469,
+        "alwaysM": 0.7656555,
+        "alwaysC": 0.6930469,
+        "root_oracle": 0.6930469
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:GSM8K/test/70",
+      "prompt": 96,
+      "M": 0.754580875,
+      "C": 0.7717842,
+      "records": 4,
+      "selected_class": "stump",
+      "threshold": 214.0,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.323856475,
+        "stump": 13.28798035
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "C",
+        "stump_only": "C",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "M"
+      },
+      "costs": {
+        "nested": 0.7717842,
+        "stump_only": 0.7717842,
+        "train_fixed": 0.754580875,
+        "exposed384_reference": 0.7717842,
+        "alwaysM": 0.754580875,
+        "alwaysC": 0.7717842,
+        "root_oracle": 0.754580875
+      }
+    },
+    {
+      "model": "SmolLM2",
+      "root": "151:GSM8K/test/806",
+      "prompt": 118,
+      "M": 0.7569607,
+      "C": 0.7049147499999999,
+      "records": 4,
+      "selected_class": "fixed",
+      "threshold": -1,
+      "threshold_always_C": false,
+      "inner_costs": {
+        "fixed": 13.32147665,
+        "stump": 13.358209125
+      },
+      "train_roots": 11,
+      "actions": {
+        "nested": "M",
+        "stump_only": "M",
+        "train_fixed": "M",
+        "exposed384_reference": "C",
+        "alwaysM": "M",
+        "alwaysC": "C",
+        "root_oracle": "C"
+      },
+      "costs": {
+        "nested": 0.7569607,
+        "stump_only": 0.7569607,
+        "train_fixed": 0.7569607,
+        "exposed384_reference": 0.7049147499999999,
+        "alwaysM": 0.7569607,
+        "alwaysC": 0.7049147499999999,
+        "root_oracle": 0.7049147499999999
+      }
+    }
+  ],
+  "crossday_same_roots": [
+    {
+      "model": "Qwen",
+      "train_day": 1,
+      "test_day": 2,
+      "threshold": 548.5,
+      "alwaysC": false,
+      "cost": 95.7681592,
+      "over_test_best_fixed": 0.9829416098193059,
+      "warning": "same roots repeated; temporal stability only"
+    },
+    {
+      "model": "Qwen",
+      "train_day": 2,
+      "test_day": 1,
+      "threshold": 548.5,
+      "alwaysC": false,
+      "cost": 97.251977,
+      "over_test_best_fixed": 0.9848417734535644,
+      "warning": "same roots repeated; temporal stability only"
+    },
+    {
+      "model": "SmolLM2",
+      "train_day": 1,
+      "test_day": 2,
+      "threshold": 214.0,
+      "alwaysC": false,
+      "cost": 28.0615834,
+      "over_test_best_fixed": 0.9960552085727161,
+      "warning": "same roots repeated; temporal stability only"
+    },
+    {
+      "model": "SmolLM2",
+      "train_day": 2,
+      "test_day": 1,
+      "threshold": 76.0,
+      "alwaysC": false,
+      "cost": 27.9929523,
+      "over_test_best_fixed": 0.9947379965349883,
+      "warning": "same roots repeated; temporal stability only"
+    }
+  ],
+  "cross_model_transfer": [
+    {
+      "source": "Llama",
+      "target": "Qwen",
+      "threshold": 319.5,
+      "alwaysC": false,
+      "over_best_fixed": 1.0194897904235416,
+      "shared_roots": false
+    },
+    {
+      "source": "Llama",
+      "target": "SmolLM2",
+      "threshold": 319.5,
+      "alwaysC": false,
+      "over_best_fixed": 1.005277370147902,
+      "shared_roots": false
+    },
+    {
+      "source": "Qwen",
+      "target": "Llama",
+      "threshold": 548.5,
+      "alwaysC": false,
+      "over_best_fixed": 0.9921580891379977,
+      "shared_roots": false
+    },
+    {
+      "source": "Qwen",
+      "target": "SmolLM2",
+      "threshold": 548.5,
+      "alwaysC": false,
+      "over_best_fixed": 1.0814493715810014,
+      "shared_roots": true
+    },
+    {
+      "source": "SmolLM2",
+      "target": "Llama",
+      "threshold": 76.0,
+      "alwaysC": false,
+      "over_best_fixed": 1.0,
+      "shared_roots": false
+    },
+    {
+      "source": "SmolLM2",
+      "target": "Qwen",
+      "threshold": 76.0,
+      "alwaysC": false,
+      "over_best_fixed": 1.0722032309971803,
+      "shared_roots": true
+    }
+  ],
+  "bootstrap": "10000 model-membership-stratified root cluster draws (8Qwen-only,8Smol-only,4shared,24Llama), seed817301, conditional fixed OOF predictions; not training uncertainty or population sampling proof"
+}

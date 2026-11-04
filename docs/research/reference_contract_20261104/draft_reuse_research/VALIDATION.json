@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-04",
+  "cpu_only": true,
+  "gpu_execution": "NOT_RUN",
+  "tests": {
+    "projection_tamper_rejected_under_python_O": true,
+    "evidence_overwrite_rejected_under_python_O": true,
+    "default_reproduction_matches": true,
+    "raw_zip_reconstruction_matches_under_python_O": true
+  },
+  "files": {
+    "RESEARCH.md": {
+      "bytes": 18031,
+      "sha256": "6fa157adf0aea30f826afcf318c00087ccafdd725eb2171aec36339c78cbe3b1"
+    },
+    "reproduce.py": {
+      "bytes": 6944,
+      "sha256": "a5d69c7b685197dc6077347b18f8b1ad006573dd5ddf01f4dbfc167e0a56d3b9"
+    },
+    "SOURCE_MANIFEST.json": {
+      "bytes": 982,
+      "sha256": "1d37969c8fbe961431c8c458f6e9c417fcb63744ed388f310bb2c411ccfd967d"
+    },
+    "source_projection.json": {
+      "bytes": 185838,
+      "sha256": "22e622cf1f69abe953a810069ebaf48b8bdadd90747225ac923e260ab8c3e340"
+    },
+    "RESULTS.json": {
+      "bytes": 6611,
+      "sha256": "3a6371fc3dbf2e09a52508ee8fc6315df440fd1af77ee80766c63a62dbd1fdf0"
+    }
+  },
+  "independent_review": {
+    "date": "2026-11-04",
+    "scope": "Numerical accounting and scope only; not an independent review of every external citation.",
+    "results": [
+      "python -O raw ZIP reproduction byte-identical to RESULTS.json",
+      "all 288 paired records and phase differences matched a separately written original-ZIP audit",
+      "all six overlap summaries independently recalculated; remaining losses QB=0, PQ=1, GS=83",
+      "QB-only headline and fixed-M/fair-warm-M qualifications checked"
+    ]
+  }
+}

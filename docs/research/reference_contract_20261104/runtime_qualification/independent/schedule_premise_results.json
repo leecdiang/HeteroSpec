@@ -1,0 +1,13 @@
+{
+  "model_sha256": "bf70caf1f72c6e1fd16ee504d3e6dc1f776d9dfbc0cbe66fd82c304980508ecb",
+  "scope": "Independent finite schedule tests with a stronger Python toy attention.\n\nThe 200 schedule cases use bounded integer inputs with Python binary64 padded\nQK, softmax, and PV, not native HeteroSpec attention. Scalar and batched schedules\nshare the same toy functions. A separate unsafe alias fixture deliberately omits\nadmission; the reviewed model itself must reject aliases without mutation.\n",
+  "results": {
+    "current_shared_layer_alias_rejected_without_mutation": true,
+    "explicit_unsafe_shared_alias_fixture_diverges": true,
+    "bounded_integer_padded_qk_softmax_pv_schedule_cases": 200,
+    "separate_future_K_inf_mask_counterexample": true,
+    "native_runtime_tested": false,
+    "gpu_tested": false,
+    "formal_proof": false
+  }
+}

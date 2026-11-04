@@ -1,0 +1,176 @@
+{
+  "formula": "residual=(M-M_target_prefill)-(C-C_target_prefill-C_draft_prefill); ideal_overlap_cost=C-min(C_target_prefill,C_draft_prefill)",
+  "input_session_blocks": 96,
+  "memory": [
+    {
+      "archive": "main-day1-increment.part-002.zip",
+      "family": "Qwen",
+      "member": "attempts/formal-d1-s0-Qwen-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 1927282688,
+        "total_bytes": 12792037376
+      },
+      "sha256": "1c34ffbb42523ff0e4b488f5b13cf9ab6b72f62cc7679f44830d4af818ed01d2"
+    },
+    {
+      "archive": "main-day1-increment.part-002.zip",
+      "family": "SmolLM2",
+      "member": "attempts/formal-d1-s0-SmolLM2-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 8728346624,
+        "total_bytes": 12792037376
+      },
+      "sha256": "5fe835e4f21baeaacacc61c5151aceed2451389e4fd9a1f8846f78ccedca75dd"
+    },
+    {
+      "archive": "main-day1-increment.part-002.zip",
+      "family": "Qwen",
+      "member": "attempts/formal-d1-s1-Qwen-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 1927282688,
+        "total_bytes": 12792037376
+      },
+      "sha256": "5f7d4520ba1d30ade968d21d67d03e40e862c3712624457250855086a9669f90"
+    },
+    {
+      "archive": "main-day1-increment.part-002.zip",
+      "family": "SmolLM2",
+      "member": "attempts/formal-d1-s1-SmolLM2-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 8728346624,
+        "total_bytes": 12792037376
+      },
+      "sha256": "a9d09aa3d98dadea33704b333cb87e8849b7e39bb525c8f749078d6c91aa1997"
+    },
+    {
+      "archive": "main-day2-increment.part-002.zip",
+      "family": "Qwen",
+      "member": "attempts/formal-d2-s0-Qwen-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 1927282688,
+        "total_bytes": 12792037376
+      },
+      "sha256": "f82f5fc0b91948fc9ddfc340ad7bd4aa5122c249042901951f69020041c0f30a"
+    },
+    {
+      "archive": "main-day2-increment.part-002.zip",
+      "family": "SmolLM2",
+      "member": "attempts/formal-d2-s0-SmolLM2-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 8728346624,
+        "total_bytes": 12792037376
+      },
+      "sha256": "98566c3d6d7fd3f3425a1be6c9ca9cd3a1b9430cee394eb52d1308b7c0b336a9"
+    },
+    {
+      "archive": "main-day2-increment.part-002.zip",
+      "family": "Qwen",
+      "member": "attempts/formal-d2-s1-Qwen-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 1927282688,
+        "total_bytes": 12792037376
+      },
+      "sha256": "23462bb039eb05f6a204cad6626af602dfd181a9cec35925139782ee4c1c0960"
+    },
+    {
+      "archive": "main-day2-increment.part-002.zip",
+      "family": "SmolLM2",
+      "member": "attempts/formal-d2-s1-SmolLM2-a0/native/PROVISIONED.json",
+      "memory_after_provisioning": {
+        "free_bytes": 8728346624,
+        "total_bytes": 12792037376
+      },
+      "sha256": "7d28abd837d78ef9dca7c8f170d931baea747b3f3f430dbebad3bf65b278ec74"
+    }
+  ],
+  "scope": "QB-only 56-loss finding; GS/PQ are explicit negative controls. Same 12 exposed inputs repeated across four sessions per family, not 96 independent workloads.",
+  "scope_pairs": 288,
+  "source_formal_records": 672,
+  "summary": [
+    {
+      "family": "Qwen",
+      "ideal_overlap_remaining_losers": 35,
+      "losers": 38,
+      "losers_negative_nonprefill_residual": 38,
+      "losers_positive_nonprefill_residual": 0,
+      "losers_still_losing_after_full_draft_prefill_deletion": 35,
+      "mean_draft_prefill_s": 0.797682275,
+      "mean_target_prefill_s": 6.750356558333333,
+      "n": 48,
+      "scope": "GS",
+      "sum_C_over_M": 1.158413127879011,
+      "sum_ideal_overlap_over_M": 1.0717471332665784
+    },
+    {
+      "family": "SmolLM2",
+      "ideal_overlap_remaining_losers": 48,
+      "losers": 48,
+      "losers_negative_nonprefill_residual": 48,
+      "losers_positive_nonprefill_residual": 0,
+      "losers_still_losing_after_full_draft_prefill_deletion": 48,
+      "mean_draft_prefill_s": 0.46430493125,
+      "mean_target_prefill_s": 1.686672625,
+      "n": 48,
+      "scope": "GS",
+      "sum_C_over_M": 1.3961895658872023,
+      "sum_ideal_overlap_over_M": 1.1875446498107243
+    },
+    {
+      "family": "Qwen",
+      "ideal_overlap_remaining_losers": 0,
+      "losers": 17,
+      "losers_negative_nonprefill_residual": 0,
+      "losers_positive_nonprefill_residual": 17,
+      "losers_still_losing_after_full_draft_prefill_deletion": 0,
+      "mean_draft_prefill_s": 0.7917713020833334,
+      "mean_target_prefill_s": 2.171906425,
+      "n": 48,
+      "scope": "PQ",
+      "sum_C_over_M": 0.9457525706422444,
+      "sum_ideal_overlap_over_M": 0.7690794257688564
+    },
+    {
+      "family": "SmolLM2",
+      "ideal_overlap_remaining_losers": 1,
+      "losers": 39,
+      "losers_negative_nonprefill_residual": 1,
+      "losers_positive_nonprefill_residual": 38,
+      "losers_still_losing_after_full_draft_prefill_deletion": 1,
+      "mean_draft_prefill_s": 0.45788798541666664,
+      "mean_target_prefill_s": 0.6384936729166667,
+      "n": 48,
+      "scope": "PQ",
+      "sum_C_over_M": 1.2639651542581285,
+      "sum_ideal_overlap_over_M": 0.8999283824589134
+    },
+    {
+      "family": "Qwen",
+      "ideal_overlap_remaining_losers": 0,
+      "losers": 16,
+      "losers_negative_nonprefill_residual": 0,
+      "losers_positive_nonprefill_residual": 16,
+      "losers_still_losing_after_full_draft_prefill_deletion": 0,
+      "mean_draft_prefill_s": 0.80940141875,
+      "mean_target_prefill_s": 2.0792866875,
+      "n": 48,
+      "scope": "QB",
+      "sum_C_over_M": 0.8922320072521398,
+      "sum_ideal_overlap_over_M": 0.7155344719044626
+    },
+    {
+      "family": "SmolLM2",
+      "ideal_overlap_remaining_losers": 0,
+      "losers": 40,
+      "losers_negative_nonprefill_residual": 0,
+      "losers_positive_nonprefill_residual": 40,
+      "losers_still_losing_after_full_draft_prefill_deletion": 0,
+      "mean_draft_prefill_s": 0.4710304125,
+      "mean_target_prefill_s": 0.57494095625,
+      "n": 48,
+      "scope": "QB",
+      "sum_C_over_M": 1.2808282873809145,
+      "sum_ideal_overlap_over_M": 0.8793373541559993
+    }
+  ],
+  "warning": "Host accounting sensitivity only. Perfect overlap of unchanged sequential phases, zero contention/overhead, fixed target-only M. NOT GPU concurrency, measured acceleration, or a prediction against fairly cached target-only. Neither arithmetic residual nor synchronized host phase is exclusive GPU kernel time."
+}

@@ -44,7 +44,7 @@ Qwen组内平均接受率：代码0.7645、数学0.7979；Smol0.6620、0.6701。
 |PQ|56|55|55|
 |QB|56|56|56|
 
-GS亏损块会计残差范围−2.112851至−0.139192s，同步decode对照−2.093634至−0.129839s；因此仅去掉draft prefill并不能普遍解决GS。PQ存在一个Smol反例：会计残差−0.007484s、同步decode节省−0.003465s。QB两者范围分别0.028857–1.538706s和0.033923–1.550358s，所有亏损块同号。
+GS亏损块会计残差范围−2.112851至−0.139192s，同步decode对照−2.093634至−0.129839s；因此不能把QB结论泛化GS。还必须区分“非prefill残差为负”与“只删draft prefill后仍亏”：后者保留了实际target prefill差，GS是83/86、PQ是1/56、QB是0/56，不是同一判据。PQ存在一个Smol反例：会计残差−0.007484s、同步decode节省−0.003465s。QB两者范围分别0.028857–1.538706s和0.033923–1.550358s，所有亏损块同号。
 
 同步decode对照是M的target非PREFILL相位和，减C的target及draft非PREFILL相位和；其余host逻辑间隙单列在scope_audit_recomputed.json。同步host decode仍不是排他GPU时间，更不证明省掉某相位后其他成本不变。
 
@@ -75,7 +75,7 @@ f必须包含真正可复用的比例、实际命中率、实际减少计算量�
 - 存储cache的空间会挤占显存，可能触发CPU offload、allocator变化、同步与内存移动，且改变参考算术分派。固定资格不能从旧run继承。
 - reset/复用/并发隔离必须完整验证，observer或capture不能偷藏在计时外再宣称零成本。引用多轮收益须同时给冷未命中、热命中、部分前缀和淘汰轨迹。
 
-先测真实命中分布、P中可复用部分和h，再代入上述阈值。另一条候选是reference-preserving draft prefill实现，而不是缓存；这仍需重新验证draft全过程参考、相同proposal/逻辑工作以及完整请求，不可假设把UB1变宽自然合法。
+先测真实命中分布、P中可复用部分和h，再代入上述阈值。C−fP+h只建模固定原M、仅削减draft prefill的局部敏感性；若未来评估一般prefix-cache或自然多轮服务，M_QB target-only也必须获得同等合法target prefix复用，不能用缓存C对旧冷M。这时须重新测量热/冷公平基线，当前阈值不能直接当作整个cache方案收益。另一条候选是reference-preserving draft prefill实现，而不是缓存；这仍需重新验证draft全过程参考、相同proposal/逻辑工作以及完整请求，不可假设把UB1变宽自然合法。
 
 ## #162：独立交叉面板验证假说的价值
 

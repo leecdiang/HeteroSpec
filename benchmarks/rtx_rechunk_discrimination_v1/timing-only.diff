@@ -1,0 +1,33 @@
+--- PR174-worker_service.cpp
++++ worker.cpp
+@@ -30,17 +30,17 @@
+     auto entry=cache.find(request_key);check(entry!=cache.end(),"prefix lookup");
+     const auto & selected_state=entry->second;
+     check(llama_state_seq_set_data(c,selected_state.data(),selected_state.size(),0)==selected_state.size(),"restore");check(llama_memory_seq_pos_max(llama_get_memory(c),0)==head-1,"restored position");
+-    double import_s=seconds(t);if(arm=="AUTO"){arm=u.at("policy").at(u.at("selection_bin").get<std::string>());check(arm=="QB"||arm=="WB-cut"||arm=="WB-rechunk","frozen policy arm");}json calls=json::array();
++    llama_synchronize(c);auto phase_ready=Clock::now();double import_s=std::chrono::duration<double>(phase_ready-t).count();if(arm=="AUTO"){arm=u.at("policy").at(u.at("selection_bin").get<std::string>());check(arm=="QB"||arm=="WB-cut"||arm=="WB-rechunk","frozen policy arm");}json calls=json::array();
+ #ifndef TPDS_ORACLE
+     auto*kv=dynamic_cast<llama_kv_cache*>(llama_get_memory(c));check(kv&&kv->get_cells(0).get_used()==uint32_t(head)&&kv->get_cells(0).used_max_p1()==uint32_t(head),"dense physical restore");
+ #endif
+     hs_scope::active=arm!="R";hs_scope::requested_layout=0;int pos=head;
+     while(pos<int(ids.size())){int n=std::min(arm=="R"?1:32,int(ids.size())-pos);auto widths=cuts(c,arm=="WB-rechunk"?"WB-cut":arm,pos,n);if(arm=="WB-rechunk")widths.resize(1);for(auto w:widths){calls.push_back({{"head",pos},{"width",w}});service_decode(c,ids.data()+pos,int(w),pos,pos+int(w)==int(ids.size()));pos+=int(w);}}
+-    double append_s=seconds(t);std::vector<int>output;int vocab=llama_vocab_n_tokens(llama_model_get_vocab(m));double io=0;
++    llama_synchronize(c);auto append_done=Clock::now();double append_s=std::chrono::duration<double>(append_done-t).count();std::vector<int>output;int vocab=llama_vocab_n_tokens(llama_model_get_vocab(m));double io=0;
+     for(int k=0;k<cap;k++){auto*logits=llama_get_logits_ith(c,-1);check(logits,"logits");if(capture){auto z=Clock::now();raw(dir/(std::to_string(k)+".f32"),logits,size_t(vocab)*4);io+=seconds(z);}int best=0;for(int v=0;v<vocab;v++){check(std::isfinite(logits[v]),"finite");if(logits[v]>logits[best])best=v;}output.push_back(best);if(llama_vocab_is_eog(llama_model_get_vocab(m),best)||k+1==cap)break;service_decode(c,&best,1,pos++,true);}
+-    llama_synchronize(c);auto committed_output=output;int committed_position=llama_memory_seq_pos_max(llama_get_memory(c),0);double service=seconds(t);if(capture){auto final=snapshot(c);raw(dir/"final.bin",final.data(),final.size());}check(state==selected_state,"retained prefix mutation");
++    llama_synchronize(c);auto committed_output=output;int committed_position=llama_memory_seq_pos_max(llama_get_memory(c),0);auto response_done=Clock::now();double service=std::chrono::duration<double>(response_done-t).count();if(capture){auto final=snapshot(c);raw(dir/"final.bin",final.data(),final.size());}check(state==selected_state,"retained prefix mutation");
+     // Read-only retained snapshot bytes remain untouched after every request.
+-    save(dir/"receipt.json",{{"arm",arm},{"head",head},{"physical_dense_head",head},{"calls",calls},{"output",committed_output},{"producer_or_file_read_s",producer},{"import_s",import_s},{"append_from_receipt_s",append_s},{"service_s",service},{"observer_io_s",io},{"state_bytes",state.size()},{"pending_token",output.back()},{"final_position",committed_position},{"capture",capture}});hs_scope::active=false;
++    save(dir/"receipt.json",{{"arm",arm},{"head",head},{"physical_dense_head",head},{"calls",calls},{"output",committed_output},{"producer_or_file_read_s",producer},{"import_s",import_s},{"append_from_receipt_s",append_s},{"service_s",service},{"lookup_import_ready_s",std::chrono::duration<double>(phase_ready-t).count()},{"append_execution_s",std::chrono::duration<double>(append_done-phase_ready).count()},{"continuation_s",std::chrono::duration<double>(response_done-append_done).count()},{"observer_io_s",io},{"state_bytes",state.size()},{"pending_token",output.back()},{"final_position",committed_position},{"capture",capture}});hs_scope::active=false;
+ }
+ int main(int argc,char**argv){try{
+     check(argc==4,"worker MODEL manifest out");auto j=read(argv[2]);fs::path out=argv[3];auto bin=fs::absolute(argv[0]).parent_path();
+@@ -54,7 +54,7 @@
+         std::ofstream f(out/"tokens.jsonl");for(auto&row:j.at("rows")){auto r=row;auto msgs=row.at("messages");auto cached=msgs;cached.erase(cached.size()-1);auto a=render(m.get(),cached,false),b=render(m.get(),msgs,true);r["cached_text"]=a;r["request_text"]=b;r["cached_ids"]=tokenize(m.get(),a);r["request_ids"]=tokenize(m.get(),b);f<<r.dump()<<'\n';}return 0;
+     }
+     auto p=llama_context_default_params();p.n_ctx=j.at("capacity");p.n_batch=1024;p.n_ubatch=32;p.n_outputs_max=32;p.n_outputs_max_per_seq=32;p.n_threads=p.n_threads_batch=24;p.type_k=p.type_v=GGML_TYPE_F16;p.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;
+-    hs_scope::active=false;t=Clock::now();std::unique_ptr<llama_context,decltype(&llama_free)>ctx(llama_init_from_model(m.get(),p),llama_free);check(bool(ctx),"context");
++    hs_scope::active=false;t=Clock::now();std::unique_ptr<llama_context,decltype(&llama_free)>ctx(llama_init_from_model(m.get(),p),llama_free);check(bool(ctx),"context");save(out/"context_init.json",{{"seconds",seconds(t)}});
+     if(mode=="admit"){size_t free=0,total=0;ggml_backend_dev_memory(gpu,&free,&total);save(out/"admission.json",{{"capacity",p.n_ctx},{"free",free},{"total",total},{"init_s",seconds(t)},{"reserve_bytes",536870912},{"admitted",free<=total&&free>=536870912}});return 0;}
+     if(mode=="requests"){for(auto&u:j.at("units"))request(m.get(),ctx.get(),u,out);return 0;}
+     throw std::runtime_error("unsupported mode");

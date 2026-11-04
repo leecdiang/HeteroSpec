@@ -1,0 +1,112 @@
+{
+  "status": "INDEPENDENT_STATIC_AND_CPU_REVIEW_ONLY_NOT_FROZEN_R_EQUIVALENCE",
+  "reviewed_candidate_sha256": "a8a465ac224ba8aa9613946edbe5cf7291a063f1a4c171f366a143aa82586bb9",
+  "review_script_sha256": "eb78481cd8fd09927d54c412e128b31cd88954150e4408ae62465b705f52f8d5",
+  "reviewed_audit_input_sha256": {
+    "kernels-original.cu": "a8a465ac224ba8aa9613946edbe5cf7291a063f1a4c171f366a143aa82586bb9",
+    "ftz_model.cpp": "43e7bae2c69e367d09985d40d78248e7ba3be08149e00bd4b4d35fc75f69a316",
+    "test_fma_witness.cu": "8f33e7c0aad2bce753d134d6058f1100c92852dd80530d00aeaf2905568143b8",
+    "audit_recipe.py": "e1e04683ebd7eb7ddb762847486de43fe289c8af17ab9e9dd6a364bdc17fcf1b",
+    "check_domain.py": "dc13f87cf7a1366e7f5c005d255f786f780e4ea98586f94292ff7fc0f299405f"
+  },
+  "resolved_frozen_entry_filenames": {
+    "q1": [
+      "q8_mmvq_q1.sm90.ptx"
+    ],
+    "q4": [
+      "q8_mmvq_q4.sm90.ptx"
+    ],
+    "quantizer": [
+      "quantize_q8_1.sm90.ptx"
+    ]
+  },
+  "actual_ptx_opcode_counts": {
+    "false": {
+      "mul.rn.f32": 984,
+      "fma.rn.f32": 328,
+      "add.rn.f32": 4552
+    },
+    "true": {
+      "mul.rn.ftz.f32": 984,
+      "fma.rn.ftz.f32": 328,
+      "add.rn.ftz.f32": 4552
+    }
+  },
+  "recorded_gpu_execution": "NOT_RUN_NO_DEVICE",
+  "verification_checks_use_assert": false,
+  "reviewed_recipe_sha256": "21b23c894a324cf5b8ce8dc9ade3d7f2379ec440d40d0cc04639aebf31dc1c47",
+  "reviewed_domain_results_sha256": "addef3c9dc473a325fd9b63e37db6386eb91fdb4d923850bc8ac25c287d13f9c",
+  "reviewed_readme_sha256": "f250596fd3de5857fcf983ae5f0af230625d1c5a282024d6197eda9decf181f2",
+  "checks": {
+    "all_recorded_artifact_hashes_verified": true,
+    "extracted_frozen_entry_hashes_verified": true,
+    "dll_itself_rehashed_in_this_review": false,
+    "source_matches_original": true,
+    "scalar_sass_opcode_counts": {
+      "FMUL.FTZ": 1712,
+      "FADD.FTZ": 9104,
+      "FFMA.FTZ": 656
+    },
+    "non_ftz_scalar_sass_ops": 0,
+    "independent_actual_half_exact_scale_checks": 253952,
+    "signed_byte_dot8": [
+      18897,
+      -13817
+    ],
+    "host_fused_bits": "0xc5bcb40b",
+    "host_unfused_bits": "0xc5bcb40c"
+  },
+  "findings": [
+    "Original PR181 build is non-FTZ; actual frozen q1/q4 entries are scale-first fused FTZ. The separate -ftz=true build aligns scalar operation flags only.",
+    "Only fused=true is a candidate for the observed update recipe. K=1056 with nonzero blocks0/32 gives a reachable prequantized fused/unfused difference, confirmed on the host helper, not a GPU.",
+    "Within actual finite-half scales, exact integer dot8, RN operations, +0 initial state, no bias/external accumulator, and the positive int K bound, all finite arithmetic stays on the 2^-48 lattice and cannot reach a nonzero FP32 subnormal. FTZ alone is dormant in this restricted domain.",
+    "The no-overflow bound uses each term <2^49, at most2^21 terms per lane chain, RN unit roundoff2^-24, chain magnitude <2^71, and conservative reduction bound <2^79.",
+    "The integer lattice model collapses signed zero. Absence of nonzero subnormals plus sign-preserving FTZ explains why FTZ itself cannot change zero signs here; other compiler/dataflow zero-sign equivalence is not proved.",
+    "Finite F32 quantizer input is insufficient for the finite-half premise: amax=2^24 yields d about132104 and half +Inf. Quantizer div.approx.ftz is outside this projection proof.",
+    "The 253952 scale checks cover all finite half encodings against four partners, not all possible pairs. The 524288 lattice updates are model tests, not a CUDA interpreter or device execution.",
+    "The real q4 merge may reverse add operand order relative to q1. Finite add commutativity does not establish NaN payload preservation."
+  ],
+  "domain_external_examples": {
+    "all_normal_fma_inputs": {
+      "scale": "0x00800000",
+      "dot": "0x3f800000",
+      "acc": "0x80800001",
+      "host_rn_result": "0x80000001",
+      "ptx_ftz_result_inferred_not_device_tested": "0x80000000",
+      "not_reachable_from_finite_half_projection": true
+    },
+    "quantizer_subnormal_input": {
+      "x": "0x007fffff",
+      "host_rn_d_bits": "0x10204",
+      "host_rn_ratio": 127.00004577636719,
+      "host_nonftz_q": 127,
+      "frozen_ftz_abs_amax_zero_implies_q": 0,
+      "both_saved_half_scales": 0,
+      "byte_mismatch_not_projection_output_mismatch": true
+    }
+  },
+  "limits": [
+    "No GPU execution by this review. Any witness execution status is only the selected external receipt, reported separately.",
+    "No frozen-R numerical equivalence, lane/address proof from the binary, driver-JIT equivalence, nonfinite/NaN-payload proof, quantizer qualification, runtime enablement, or performance result.",
+    "The sm89/sm120a experiment uses CUDA13.2.2, not the original compiler or deployed sm120 JIT."
+  ],
+  "primary_spec": "https://docs.nvidia.com/cuda/parallel-thread-execution/",
+  "verified_artifact_sha256": {
+    "sass.log": "6c467f00c93cf0ffba0d56e00002ca298bdc3c3988177196df45c56a38bf5540",
+    "false-ptx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ftz.o": "2032e9c37aa3d46387aea0acef90e423d43f4ae6da086b834835c6e117bff814",
+    "false.ptx": "be2fe8ad62b83d799b4806d6570e5265a70b67627f840100031d953db088a042",
+    "test_fma_witness": "0c895e63973430c1a25c0e67ca579cd77c920f5722567ed33712e2b7e533458f",
+    "witness-run.log": "a036c91d49b055faca238d0b69c59ef7a8573ad4a2ce7f79b3d11f1a15af01c6",
+    "object.log": "7e874861f2d13341c11da3d90918e93a9f4f3f6434a4cce69e37deeb6796e2d1",
+    "true-ptx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "true.ptx": "02fdfac38d8d57b061d475ee5cca6e1d3fea151270e10b13590fa9549ba208ea",
+    "resources.log": "af1ac37c79aaa04b8524ea4349240c1dabaabde83d4aeb1de905bc644dcdb61a",
+    "witness-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verified_frozen_entry_sha256": {
+    "q1": "f117281b6439072168d6b42cec93ce19b27ce089b64bd77effe8d3d3c7f1999e",
+    "q4": "7d371052dce8d80f36801245b8c39ef04f40ed84d9781554c93f1c9ab684b7cb",
+    "quantizer": "6be2f3cf00f5feeeffb1d886c1c2d6e2d5bc9b3f629811f79ab6ae8d1559e2b1"
+  }
+}

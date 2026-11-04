@@ -112,4 +112,6 @@ GS全部96对B_decode<0，简单正收益摊销模型不适用；PQ一个Smol反
 
 ## 复现与交付
 
-在本目录运行：python analyze.py --archives /path/to/verified-archives。两个ZIP的文件名、SHA256及member来源均记录在mechanism.json的sources/逐行source中；从#151原始发布证据获取，脚本将先校验SHA及全部CRC。只用标准库；读取原始两个已校SHA/CRC的ZIP及此前固定#162源文件。mechanism.json包含全部source member/SHA、288行及汇总；mechanism_per_block.csv含所有相位、实际工作、恒等式指标和两种外推。所有数据均为历史重算；data/保留固定源文件，SOURCE_MANIFEST.json记录原提交与本地字节SHA。未来#162原始phase分析若可取得，将单独交付，不回填成本表无法证明的机制。
+在本目录运行：python analyze.py --archives /path/to/verified-archives。两个ZIP的文件名、SHA256及member来源均记录在mechanism.json的sources/逐行source中；从#151原始发布证据获取，脚本将先校验SHA及全部CRC。只用标准库；读取原始两个已校SHA/CRC的ZIP及此前固定#162源文件。mechanism.json在本地运行后生成（不随目录发布），包含全部source member/SHA、288行及汇总；mechanism_per_block.csv含所有相位、实际工作、恒等式指标和两种外推。所有数据均为历史重算；data/保留计时源文件及仅domain/stratum的输入有序投影，不含原题、提示或token序列，SOURCE_MANIFEST.json记录原提交与本地字节SHA。未来#162原始phase分析若可取得，将单独交付，不回填成本表无法证明的机制。
+
+复现产物的预期SHA256见GENERATED_OUTPUTS.json；不依赖未发布的完整HELDOUT文本。

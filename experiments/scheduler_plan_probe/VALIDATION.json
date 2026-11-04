@@ -1,0 +1,109 @@
+{
+  "status": "NATIVE_CPU_WHOLE_LIBRARY_ASAN_UBSAN_PASS_WITH_LEAK_CHECK_DISABLED",
+  "stage": {
+    "status": "DIAGNOSTIC_DRY_VETO_ONLY",
+    "input_scheduler_sha256": "5a9094517d11dcafe43c51af97bfe3d6afe75d73096be4b899bae7025b1edd31",
+    "output_scheduler_sha256": "bbff3f0856f30b805f8077592d16fc34dbd139a1aa1103588a5a48ce26c68342",
+    "production_execution": false
+  },
+  "whole_native_sanitizers": true,
+  "records": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source",
+        "-B",
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DGGML_CUDA=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_TOOLS=OFF",
+        "-DLLAMA_BUILD_SERVER=OFF",
+        "-DLLAMA_CURL=OFF",
+        "-DGGML_CCACHE=OFF",
+        "-DCMAKE_C_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer",
+        "-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer"
+      ],
+      "status": 0,
+      "log": "configure.log"
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/build",
+        "--target",
+        "ggml",
+        "-j2"
+      ],
+      "status": 0,
+      "log": "build.log"
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-rdynamic",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-I/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight",
+        "-I/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/include",
+        "-I/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src",
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/test_native.cpp",
+        "-L/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/build/bin",
+        "-Wl,-rpath,/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/build/bin",
+        "-lggml",
+        "-lggml-cpu",
+        "-lggml-base",
+        "-ldl",
+        "-o",
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/test-address,undefined"
+      ],
+      "status": 0,
+      "log": "compile-address,undefined.log"
+    },
+    {
+      "command": [
+        "/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/test-address,undefined"
+      ],
+      "status": 1,
+      "log": "test-address,undefined.log"
+    }
+  ],
+  "source_sha256": {
+    "hs_plan_probe.h": "58529b413b893d889b9e1c510dda3816aedcf140842e24b9996ebbc24c175f51",
+    "hs_plan_probe.inc": "9f133424b99dd61369768c28bf1bfe0fb045872f17bcb027066f8e715c7952b3",
+    "stage.py": "2edceabefa079d756cc58323e3c43c2cadd745aa402b96b08e617889b7b4d2bc",
+    "test_native.cpp": "389fd53d35f9ef6d78a0ff0518f5e71f96a593df00e0a2fe50a19e2000c3f829",
+    "validate.py": "13b7aa23957dc1b464ee724617da16156070c5bc203415143d27fabe3e59e706"
+  },
+  "library_sha256": {
+    "libggml-cpu.so.0.23.0": "cb04b5ae723b5721bdc8785bf75d9520a5437210ebba66a37ec72ce0d60c4fd2",
+    "libggml.so.0.23.0": "ce13eb3932147d2864be0d3e0ee8844942764dd28d969634bd5514efcda027ee",
+    "libggml-base.so.0.23.0": "13c76b6e7d979f511ef79d86e09bceafdf9fa462d795ab13170e54f50b15a4bc"
+  },
+  "production_fast_path": "NOT_IMPLEMENTED",
+  "gpu_execution": "NOT_RUN",
+  "reader_lease": "NOT_IMPLEMENTED",
+  "zero_tail": "NOT_CHECKED",
+  "all_backend_internal_prepare": "NOT_IMPLEMENTED",
+  "initial_run": "LeakSanitizer failed under the execution environment ptrace; original failed receipt/log retained",
+  "leak_detection": "NOT_RUN_UNSUPPORTED_UNDER_PTRACE",
+  "rerun": {
+    "command": [
+      "env",
+      "ASAN_OPTIONS=detect_leaks=0",
+      "final-sanitized/test-address,undefined"
+    ],
+    "returncode": 0,
+    "log": "final-sanitized/test-address-undefined-no-leaks.log",
+    "log_sha256": "8828668685c5319f849058518eaa1256f65e1306ee8ca075ab80a9e60eef67ce"
+  },
+  "staged_probe_sha256": "9f133424b99dd61369768c28bf1bfe0fb045872f17bcb027066f8e715c7952b3"
+}

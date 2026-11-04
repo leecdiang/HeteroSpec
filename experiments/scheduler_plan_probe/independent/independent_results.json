@@ -1,0 +1,46 @@
+{
+  "scope": "Native CPU scheduler diagnostics only; not CUDA, kernel equivalence, full-context transaction, or performance evidence.",
+  "results": {
+    "test_plan_probe": {
+      "matching_plan_vetoed": true,
+      "sync_wrapper_still_calls_synchronize": true,
+      "metadata_mutation_vetoed": true,
+      "callback_not_invoked": true,
+      "reset_does_not_disarm": true,
+      "data_not_certified": true,
+      "use_counts_mutation_detected": true,
+      "oversized_caller_graph_rejected": true,
+      "cycle_rejected": true,
+      "wrong_caller_graph_rejected": true,
+      "wrong_caller_compare": 5,
+      "gpu_tested": false
+    },
+    "test_eval_false_success": {
+      "scheduler_status_success": true,
+      "first_node_executed": true,
+      "final_output_untouched": true,
+      "callback_completions": 1,
+      "gpu_tested": false
+    }
+  },
+  "test_sources_sha256": {
+    "test_plan_probe.cpp": "5632e91547513b26e493d16f1ad4973f014925894d62e00d234de97db3fec7e2",
+    "test_eval_false_success.cpp": "0f481159448057eccd0f63fd000fb0b798ee96b16db37808154ab3be479b00d2",
+    "run_independent.py": "dc31bf4fc266d07b57296e987d9f15b247a6af463ef70afe2b122c8e3db3f478"
+  },
+  "staged_source_sha256": {
+    "ggml/src/ggml-backend.cpp": "bbff3f0856f30b805f8077592d16fc34dbd139a1aa1103588a5a48ce26c68342",
+    "ggml/src/hs_plan_probe.h": "58529b413b893d889b9e1c510dda3816aedcf140842e24b9996ebbc24c175f51",
+    "ggml/src/hs_plan_probe.inc": "9f133424b99dd61369768c28bf1bfe0fb045872f17bcb027066f8e715c7952b3"
+  },
+  "libraries_sha256": {
+    "libggml-base.so.0.23.0": "13c76b6e7d979f511ef79d86e09bceafdf9fa462d795ab13170e54f50b15a4bc",
+    "libggml-cpu.so.0.23.0": "cb04b5ae723b5721bdc8785bf75d9520a5437210ebba66a37ec72ce0d60c4fd2",
+    "libggml.so.0.23.0": "ce13eb3932147d2864be0d3e0ee8844942764dd28d969634bd5514efcda027ee"
+  },
+  "test_executable_sanitizers": "address-undefined",
+  "asan_options": "detect_leaks=0",
+  "library_instrumentation": "Provided library build flags must be verified separately; not inferred from executable flags.",
+  "gpu_tested": false,
+  "formal_proof": false
+}

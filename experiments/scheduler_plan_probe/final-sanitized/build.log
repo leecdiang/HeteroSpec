@@ -1,0 +1,67 @@
+[1/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml.cpp.o
+[2/33] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml-alloc.c.o
+[3/33] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml.c.o
+[4/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-backend.cpp.o
+In file included from /workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/ggml-backend.cpp:1660:
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc: In function ‘hs_sched_plan hs_plan_read(ggml_backend_sched_t, ggml_cgraph*)’:
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:69:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   69 |     if(p.callback)p.blockers|=HS_PLAN_CALLBACK;if(p.ncopies!=1)p.blockers|=HS_PLAN_PARALLEL_COPIES;
+      |     ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:69:48: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   69 |     if(p.callback)p.blockers|=HS_PLAN_CALLBACK;if(p.ncopies!=1)p.blockers|=HS_PLAN_PARALLEL_COPIES;
+      |                                                ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:102:9: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  102 |         if(color[root]==2)continue;std::vector<std::pair<const ggml_tensor*,bool>> stack{{root,false}};
+      |         ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:102:36: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  102 |         if(color[root]==2)continue;std::vector<std::pair<const ggml_tensor*,bool>> stack{{root,false}};
+      |                                    ^~~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:106:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  106 |             if(color[t]==1)throw std::invalid_argument("cyclic tensor descriptors");if(color[t]==2)continue;
+      |             ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:106:85: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  106 |             if(color[t]==1)throw std::invalid_argument("cyclic tensor descriptors");if(color[t]==2)continue;
+      |                                                                                     ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc: In function ‘hs_plan_result hs_sched_plan_compare(ggml_backend_sched_t, ggml_cgraph*, const hs_sched_plan*)’:
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:118:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  118 |     if(!s||!p||!g)return HS_PLAN_ERROR;if(!s->is_alloc)return HS_PLAN_NOT_ALLOCATED;
+      |     ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:118:40: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  118 |     if(!s||!p||!g)return HS_PLAN_ERROR;if(!s->is_alloc)return HS_PLAN_NOT_ALLOCATED;
+      |                                        ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc: In function ‘bool hs_sched_plan_arm_dry(ggml_backend_sched_t, ggml_cgraph*, const hs_sched_plan*)’:
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:126:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  126 |     if(!s||!p)return false;auto result=hs_sched_plan_compare(s,g,p);if(result!=HS_PLAN_MATCH_DRY_VETO&&result!=HS_PLAN_UNSUPPORTED)return false;
+      |     ^~
+/workspace/scratch/14b58e5a88ca/heterospec-plan-preflight/final-sanitized/source/ggml/src/hs_plan_probe.inc:126:28: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  126 |     if(!s||!p)return false;auto result=hs_sched_plan_compare(s,g,p);if(result!=HS_PLAN_MATCH_DRY_VETO&&result!=HS_PLAN_UNSUPPORTED)return false;
+      |                            ^~~~
+[5/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-opt.cpp.o
+[6/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-threading.cpp.o
+[7/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-backend-meta.cpp.o
+[8/33] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/gguf.cpp.o
+[9/33] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.c.o
+[10/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.cpp.o
+[11/33] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml-quants.c.o
+[12/33] Linking CXX shared library bin/libggml-base.so.0.23.0
+[13/33] Creating library symlink bin/libggml-base.so.0 bin/libggml-base.so
+[14/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/iqp.cpp.o
+[15/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/hbm.cpp.o
+[16/33] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/quants.c.o
+[17/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/traits.cpp.o
+[18/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/amx.cpp.o
+[19/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/mmq.cpp.o
+[20/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/repack.cpp.o
+[21/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/binary-ops.cpp.o
+[22/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/vec.cpp.o
+[23/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/unary-ops.cpp.o
+[24/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/llamafile/sgemm.cpp.o
+[25/33] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/x86/quants.c.o
+[26/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ops.cpp.o
+[27/33] Building CXX object ggml/src/CMakeFiles/ggml.dir/ggml-backend-dl.cpp.o
+[28/33] Building CXX object ggml/src/CMakeFiles/ggml.dir/ggml-backend-reg.cpp.o
+[29/33] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/x86/repack.cpp.o
+[30/33] Linking CXX shared library bin/libggml-cpu.so.0.23.0
+[31/33] Creating library symlink bin/libggml-cpu.so.0 bin/libggml-cpu.so
+[32/33] Linking CXX shared library bin/libggml.so.0.23.0
+[33/33] Creating library symlink bin/libggml.so.0 bin/libggml.so

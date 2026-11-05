@@ -40,7 +40,7 @@ def normalize(platform, row_path, native_root, prompt_path, binding_path, profil
     need(t['cap']==binding['cap'],'cap identity');need(not out.exists(),'fresh normalized capture required');out.mkdir(parents=True)
     def save(data):
         sha=hashlib.sha256(data).hexdigest();p=out/'cas'/sha[:2]/sha;p.parent.mkdir(parents=True,exist_ok=True)
-        if not p.exists():p.write_bytes(data)
+        if not p.exists():shared_blob(p,data)
         else:need(p.read_bytes()==data,'CAS inconsistency')
         return {'path':p.relative_to(out).as_posix(),'bytes':len(data),'sha256':sha}
     def rtx_vector(key):

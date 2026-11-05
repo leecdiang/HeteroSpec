@@ -13,7 +13,10 @@ class Ledger:
         self.db.execute('CREATE TABLE IF NOT EXISTS meta(k TEXT PRIMARY KEY,v TEXT NOT NULL)')
         self.db.execute('CREATE TABLE IF NOT EXISTS attempts(id TEXT PRIMARY KEY,requests INTEGER,token_rows INTEGER,operators INTEGER,status TEXT,started REAL,ended REAL,code INTEGER)')
         old=self.db.execute('SELECT v FROM meta WHERE k=?',('limits',)).fetchone();pin=digest(limits)
-        if old:need(old[0]==pin,'budget changed in-place; publish a new development tranche instead')
+        if old and old[0]!=pin:
+            self.db.close()
+            need(False,'budget changed in-place; publish a new development tranche instead')
+        if old:pass
         else:self.db.execute('INSERT INTO meta VALUES(?,?)',('limits',pin));self.db.commit()
         self.limits=limits
     def reserve(self,key,cost):

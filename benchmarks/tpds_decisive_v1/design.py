@@ -15,7 +15,12 @@ SEED='tpds-decisive-20261105-v1'
 def caller_chunks(length:int,width:int)->list[int]:
     need(type(length) is int and length>0,'positive prompt length')
     need(type(width) is int and width in (1,2,4),'supported caller width')
-    return [min(width,length-i) for i in range(0,length,width)]
+    out=[];i=0
+    while i<length:
+        n=min(width,length-i)
+        if n==3:n=2
+        out.append(n);i+=n
+    return out
 
 def williams(n:int)->list[list[int]]:
     need(2<=n<=8,'arm count')

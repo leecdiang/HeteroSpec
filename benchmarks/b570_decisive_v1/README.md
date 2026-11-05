@@ -1,12 +1,21 @@
 # B570 PR185 execution: original-interface repair and native continuation
 
+The separate Smol confirmation is complete: all four development and twelve test
+roots passed all six native arms, the fixed pilot completed 24 measurements plus 24
+warmups, and the frozen confirmation completed 432 measurements plus 432 warmups.
+Every timed endpoint matched unchanged original R. M used 86.478166s measured
+service in total; the fastest speculative arm C4U4 used 808.976532s (9.355x M).
+All 15 fixed contrasts, costs and scope are in [RESULTS.md](RESULTS.md).
+The immutable Qwen capacity failure remains separate. This is a negative Smol
+complete-service result, not Qwen admission or a general speculative-decoding claim.
+
 The Qwen capacity stop below is the immutable initial v1 result. The requested
 repair continuation now adds a real DXGI reservation attempt (still insufficient
 signed capacity) and an independently referenced secondary Smol deployment.
 See [SMOL_CONTINUATION.md](SMOL_CONTINUATION.md) for precise scope, preserved
 failures, six strong controls, prospective selection and execution rules. The
-historical exposed Smol example has passed25 full-vector/13 active-state checks;
-new-panel qualification, pilot and confirmation require their own receipts.
+historical exposed Smol example passed25 full-vector/13 active-state checks;
+new-panel qualification, pilot and confirmation have their separate actual receipts.
 
 The v1 release and its restoration receipt remain unchanged. They do not contain
 the later continuation and must not be read as evidence for its execution.
@@ -33,7 +42,7 @@ recording decode double. It checks8192 length/caller cases, complete token order
 positions, one final output flag and2+1 tails; it also reproduces the original
 interface's rejection of width3. The adjacent fixture manifest authenticates the
 historical source and method bytes. The previous8199 standalone helper checks
-also pass. All76 Python tests pass normally and under `python -O`.
+also pass. All77 Python tests pass normally and under `python -O`.
 
 A real Windows failure-path test exposed an open SQLite connection during a
 rejected budget change. `Ledger` now closes that connection before raising.
@@ -130,3 +139,30 @@ Fresh-download restoration verification and separate delivery costs are recorded
 in `evidence/DELIVERY_READBACK.json` and `evidence/DELIVERY_COSTS.json`.
 No native external replication, successful model qualification or service gain
 follows from packaging checks. No merge, paper edit, model download or rental.
+
+## Secondary recovery reconstruction
+
+The separate v2 delivery retains the full Smol panel, original-reference
+qualifications, physical-width observations, every failure, cumulative native
+ledger, frozen sources and actual native binaries. Its standalone reader uses
+only restored payload paths. Pinned GGUF weights remain separate inputs.
+
+After restoring the v2 objects, install `requirements-host.txt` and run:
+
+```powershell
+python -B RESTORED/delivery-v2/recompute.py RESTORED
+```
+
+The v2 reader verifies all16 root qualifications, all15 main contrasts, actual
+caller/embedding columns, committed prefixes and terminal suffixes, native cleanup,
+loaded numerical modules and cumulative reservations. `POST_PANEL_SOURCE_BINDING`
+records that execution sources/binaries/inputs still matched the published freeze
+after all864 timing slots. Later edits concern reports, read-only auditing and
+transport only. The final reader/report snapshot is `repro/recovery-final`;
+earlier preparation and frozen snapshots remain retained.
+
+Delivery/archive/readback/restore copies use a separate local volume by default,
+configurable through `HS_DECISIVE_DELIVERY_ROOT`; original run files stay in place.
+Native jobs and phase receipts are metered, including setup, warmups and failures.
+Some CPU preparation, early packing and final mechanism/boundary aggregation were
+not separately wall-metered. No complete total engineering-time claim is made.

@@ -119,3 +119,31 @@ process/library/backend/model/context setup, with100ms polling resolution; they
 are not labeled pure weight-load time. Clean measured service remains its native
 response-commit clock. No inference about unobserved hidden allocator state or a
 general model/backend domain follows from these finite checks.
+
+## Completed confirmation
+
+All twelve frozen test roots passed all six native arms. Qualification finished
+at 2026-11-05T15:58:29Z with 14379.86s inclusive wall, including native children and
+lossless storage. The published freeze/readback preceded every test output.
+
+The confirmation then completed exactly 864 slots: 432 measurements and 432 immediate
+warmups, across twelve roots and six Williams sessions. Every timed endpoint
+matched autonomous unchanged original R. No input/control was removed and no
+timing slot was replaced or added. Main inclusive wall was9532.469s; this includes
+child work and is not added again to native/owned process time.
+
+Measured service totals were M: 86.478166s; H1: 832.191137s; C1U1: 832.632691s;
+C4U1: 831.493408s; C4U2: 839.122671s; C4U4: 808.976532s. C4U4 is the fastest
+speculative arm, but costs about 9.355 times M complete service. Ordinary width4
+improves on the other speculative controls in this finite panel; it does not
+beat M. All15 fixed contrasts, family intervals, equal-root sensitivity and
+absolute differences are retained in the analysis. There is no equivalence or
+general speculative-decoding impossibility claim.
+
+An additional no-model post-panel check found all execution sources, binaries and
+inputs still identical to the published freeze. Subsequent edits only improve
+read-only reconstruction, cost labels, documentation and delivery. The original
+freeze/source snapshots and every runtime attempt remain available. Early CPU
+preparation and some postprocessing lack separate wall meters; actual native and
+phase costs, loads, warmups and failures are retained without double-counting.
+See `RESULTS.md` and the final recovery receipts for complete evidence and scope.

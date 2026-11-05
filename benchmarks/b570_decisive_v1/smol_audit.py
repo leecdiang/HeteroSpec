@@ -33,6 +33,9 @@ def inspect_units(parent,kind):
    expected[PureWindowsPath(f['path']).name.lower()]=f['sha256']
   observed={PureWindowsPath(f['path']).name.lower():f['sha256'] for f in s['loaded_module_hashes']}
   assert all(observed[k]==v for k,v in expected.items() if k.endswith('.dll') and k in observed)
+  if kind=='smol' and unit.name.startswith('campaign02-') and s['status']=='complete':
+   required={'llama.dll','llama-common.dll','ggml.dll','ggml-base.dll','ggml-cpu.dll','ggml-vulkan.dll'}
+   assert required<=observed.keys() and all(observed[k]==expected[k] for k in required)
   row=dict(unit=unit.name,status=s['status'],requests_reserved=read(unit/'RESERVATION.json')['requests'],rows_reserved=read(unit/'RESERVATION.json')['token_rows'],owned_seconds=receipt['owned_seconds'],native_seconds=s['charged_seconds'],supervisor_source_sha256=s.get('supervisor_source_sha256'),provisioning_to_ready_seconds=s.get('provisioning_to_ready_seconds'),provisioning_observation_resolution_seconds=s.get('poll_seconds'),cleanup=True)
   if kind=='qwen':
    n=read(unit/'native/result.json');assert n['status']=='STOPPED_FIRST_FAILURE' and not n['requests'] and not receipt['success'] and row['requests_reserved']==0
@@ -85,7 +88,7 @@ def audit():
   for x in pilot['records']:
    index=next(i for i,r in enumerate(selected['development']) if r['root_id']==x['root_id']);j=0 if x['kind']=='warmup' else 1
    path=SROOT/EPOCH/'runs'/f"pilot-{index}-{x['arm']}"/(str(j)+'.json.metrics.json');assert sha(path)==x['metrics_sha256'] and read(path)['service_ms']/1000==x['service_s']
- main=None;rp=SROOT/EPOCH/'RECORDS.json'
+ main=None;mechanisms={};boundaries={};post_panel=None;rp=SROOT/EPOCH/'RECORDS.json'
  if rp.exists():
   register();records=read(rp);main=analyze(selected,'b570-smol-draft',records);assert main==read(SROOT/EPOCH/'ANALYSIS.json')
   expected=read(SROOT/'cohort/SCHEDULE.json')['slots'];assert len(expected)==len(records['records'])==864 and len([x for x in qualifications if x['group']=='test'])==12
@@ -101,12 +104,23 @@ def audit():
   for arm,hsh in frozen['binary_manifest_sha256'].items():assert sha(SROOT/EPOCH/arm/'FILES.json')==hsh
   supervisor_pin=next(x['sha256'] for x in frozen['source_proofs'] if PureWindowsPath(x['path']).name=='supervisor.py')
   assert all(x['supervisor_source_sha256']==supervisor_pin for x in smol if x['unit'].startswith(('campaign02-test-','campaign02-main-')))
+  # Post-timing reader checks add no model requests or measurement slots.
+  from smol_mechanism import mechanism
+  from smol_boundaries import campaign as boundary_campaign
+  for group,count in (('development',4),('test',12)):
+   mechanisms[group]=json.loads(json.dumps(dict(roots=[mechanism(group,i) for i in range(count)])))
+   boundaries[group]=boundary_campaign(group)
+   assert mechanisms[group]==read(SROOT/EPOCH/('MECHANISM-'+group+'.json'))
+   assert boundaries[group]==read(SROOT/EPOCH/('BOUNDARIES-'+group+'.json'))
+  post_panel=read(SROOT/EPOCH/'POST_PANEL_SOURCE_BINDING.json')
+  assert post_panel['freeze_sha256']==sha(SROOT/EPOCH/'FREEZE.json') and post_panel['records_sha256']==sha(rp) and post_panel['analysis_sha256']==sha(SROOT/EPOCH/'ANALYSIS.json')
  # Cost ledgers are additive across every epoch. Coordinator elapsed times include
  # child time and are disclosed separately, never added to native totals twice.
  costs=dict(reserved=totals,ceilings=LIMITS,native_process_seconds=sum(x['native_seconds'] for x in qwen+smol),owned_worker_seconds=sum(x['owned_seconds'] for x in qwen+smol),failed_native_units=[x['unit'] for x in qwen+smol if x['status']=='failed'],model_requests_include_failed_warm_and_forced=True,operator_replays=totals['operators'],initial_CPU_preparation_and_early_packing_not_separately_metered=True,all_initial_v1_costs_retained=True)
+ costs['post_timing_mechanism_boundary_aggregation_not_separately_wall_metered']=True
  stages={}
  for row in qwen+smol:
-  phase='qwen-zero-forward' if row in qwen else 'confirmation' if row['unit'].startswith('campaign02-main-') else 'pilot' if row['unit'].startswith('campaign02-pilot-') else 'offline-development-qualification'
+  phase='qwen-zero-forward' if row in qwen else 'confirmation' if row['unit'].startswith('campaign02-main-') else 'pilot' if row['unit'].startswith('campaign02-pilot-') else 'offline-test-qualification' if row['unit'].startswith('campaign02-test-') else 'offline-development-qualification'
   stage=stages.setdefault(phase,dict(requests_reserved=0,rows_reserved=0,owned_seconds=0,native_seconds=0,observed_provisioning_seconds=0,provisioning_units_not_separately_metered=0))
   for key in ('requests_reserved','rows_reserved','owned_seconds','native_seconds'):stage[key]+=row[key]
   if row['provisioning_to_ready_seconds'] is None:stage['provisioning_units_not_separately_metered']+=1
@@ -123,6 +137,6 @@ def audit():
  streams=[read(p) for p in sorted((SROOT/EPOCH/'runs').glob('*/STREAM_STORAGE.json'))]
  assert all(x['thread_stopped'] and not x['error'] for x in streams)
  costs['streamed_storage']=dict(units=len(streams),packing_wall_seconds=sum(x['packing_seconds'] for x in streams),post_native_drain_seconds=sum(x.get('post_native_drain_seconds',0) for x in streams),overlaps_native_not_additive=True)
- return dict(status='COMPLETE_RESTORED_SECONDARY_PANEL' if main else 'PARTIAL_NATIVE_RECOVERY_RECONSTRUCTED',qwen_status='G0_MANDATORY_CONTROL_CAPACITY_FAILURE_RETAINED',qwen_attempts=qwen,historical_Smol=h,population=population,qualifications=qualifications,pilot=pilot,main_analysis=main,costs=costs,all_native_units=qwen+smol,raw='Full vectors plus byte-exact reconstructible sequence states; failed raw attempts retained; no weights',external_native_replication=False)
+ return dict(status='COMPLETE_RESTORED_SECONDARY_PANEL' if main else 'PARTIAL_NATIVE_RECOVERY_RECONSTRUCTED',qwen_status='G0_MANDATORY_CONTROL_CAPACITY_FAILURE_RETAINED',qwen_attempts=qwen,historical_Smol=h,population=population,qualifications=qualifications,pilot=pilot,main_analysis=main,mechanisms=mechanisms,boundaries=boundaries,post_panel_source_binding=post_panel,costs=costs,all_native_units=qwen+smol,raw='Full vectors plus byte-exact reconstructible sequence states; failed raw attempts retained; no weights',external_native_replication=False)
 
 if __name__=='__main__':print(json.dumps(audit(),indent=2))

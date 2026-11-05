@@ -8,12 +8,29 @@ from active_kv import parse
 from qualify import qualify
 from archive_host import archive_paths
 import hashlib
+import archive_host
+archive_host.STORE=Path('F:/rtx184-O-evidence')
 ARMS=('graph_tiles','backend_loop4','packed')
+
+def persist(path,value):
+    if path.exists():assert json.loads(path.read_bytes())==value,('existing evidence differs',path)
+    else:write_new(path,value)
+
+def resume_job(spec):
+    old=RUNS/spec['attempt_id']
+    if old.exists():
+        receipt=json.loads((old/'exit.json').read_bytes())
+        if receipt['status']=='COMPLETE':
+            assert json.loads((old/'job.json').read_bytes())==spec,'completed job binding differs'
+            assert sha(Path(spec['exe']))==spec['build_manifest']['exe']
+            return old
+        spec=dict(spec,attempt_id=spec['attempt_id']+'-storage-v2')
+    return execute(spec)
 def job(label,arm,input,names=('heavy','warmup','off')):
     if arm=='old':
         exe=FROZEN.parent/'oracle01/service.exe';prior=json.loads((FROZEN.parent/'formal01/freeze.json').read_bytes());assert sha(exe)==prior['inputs'][str(exe)];build=dict(exe=sha(exe),modules=prior['numerical_modules'])
     else:
-        root=Path('D:/rtx184-operator')/(arm+'-service-v3');exe=root/'bin/service.exe';build=json.loads((root/'BUILD.json').read_bytes())
+        root=Path('D:/rtx184-operator')/(arm+'-service-v4');exe=root/'bin/service.exe';build=json.loads((root/'BUILD.json').read_bytes())
     manifest=dict(ctx=1536,width=32,layers=999,blocks=[dict(arm='R' if arm in ('old','original') else 'QB-local',study_arm=arm,slots=[dict(id=n,capture=n.startswith('heavy'),input=input) for n in names])])
     return dict(attempt_id=label,exe=str(exe),build_manifest=build,operator_service=manifest,reservation=dict(requests=len(names),token_rows=8000*len(names),operators=0))
 def clean_check(native,case,bank,names):
@@ -26,23 +43,30 @@ def clean_check(native,case,bank,names):
 def main():
     os.environ['TPDS_EVIDENCE_CAS']='D:/rtx184-cas';inputs=json.loads((OLD.parent/'admission-Qwen-v4/PANEL.json').read_bytes())['inputs'][:4];allproof=[]
     for ix,input in enumerate(inputs):
-        case=QUAL/('O-root'+str(ix));case.mkdir();runs=[]
-        old=execute(job('O-old-root'+str(ix),'old',input,('heavy0','heavy1')));runs.append(old)
-        obs=execute(job('O-observer-root'+str(ix),'original',input,('heavy0','heavy1')));runs.append(obs)
+        case=QUAL/('O-root'+str(ix));case.mkdir(exist_ok=True);runs=[];candidate_runs={}
+        old=resume_job(job('O-old-root'+str(ix),'old',input,('heavy0','heavy1')));runs.append(old)
+        obs=resume_job(job('O-observer-root'+str(ix),'original',input,('heavy0','heavy1')));runs.append(obs)
         vectors=[{p.name:sha(p) for p in (base/'native'/name/'target').glob('*.f32')} for base in (old,obs) for name in ('heavy0','heavy1')]
         endpoints=[json.loads((base/'native'/name/'receipt.json').read_bytes())['endpoint'] for base in (old,obs) for name in ('heavy0','heavy1')]
         assert vectors[0] and all(x==vectors[0] for x in vectors) and all(x==endpoints[0] for x in endpoints)
-        put(case/'OLD_OBSERVER_BRIDGE.json',dict(full_vectors_equal=True,endpoints_equal=True,vector_count=len(vectors[0]),old_exe=sha(FROZEN.parent/'oracle01/service.exe'),observer_exe=sha(Path('D:/rtx184-operator/original-service-v3/bin/service.exe'))))
+        old_final=[sha(base/'native'/name/'target_final.state') for base in (old,obs) for name in ('heavy0','heavy1')];assert len(set(old_final))==1,'old/observer serialized final-state mismatch'
+        persist(case/'OLD_OBSERVER_BRIDGE.json',dict(full_vectors_equal=True,endpoints_equal=True,original_final_raw_state_equal=True,original_final_state_sha256=old_final[0],vector_count=len(vectors[0]),old_exe=sha(FROZEN.parent/'oracle01/service.exe'),observer_exe=sha(Path('D:/rtx184-operator/original-service-v4/bin/service.exe'))))
         profile=json.loads((ROOT/'O-profile-8B/PROFILE.json').read_bytes());prompt=input['prompt_ids'];eog=[128247,151643,151645,151662,151663,151664];producer=dict(caller_lengths=[len(prompt)],last_output_flags=[True])
         binding=dict(reference_identity_sha256=sha(FROZEN.parent/'oracle01/service.exe'),target_model_sha256=profile['target_model_sha256'],producer_sha256=digest(producer),lifecycle_sha256=digest(dict(original='PR171',capacity=1536,width=32,priming='sequential version worker, same-arm warmup then resident-reset')),input_sha256=digest(prompt),cap=128,vocab=151936,eog_ids=eog,active_kv_bytes_per_token=147456,reference_bridge_passed=True)
-        for name,value in [('binding',binding),('profile',profile),('prompt',dict(prompt_ids=prompt))]:write_new(case/(name+'.json'),value)
+        for name,value in [('binding',binding),('profile',profile),('prompt',dict(prompt_ids=prompt))]:persist(case/(name+'.json'),value)
         derived=[];normalized={}
         for arm in ('free',*ARMS):
             if arm=='free':base=obs/'native/heavy0';role='free_reference'
             else:
-                out=execute(job('O-development-'+arm+'-root'+str(ix),arm,input));runs.append(out);base=out/'native/heavy';role='candidate'
-            row=json.loads((base/'receipt.json').read_bytes());row.update(study_cap=128,study_fallback_count=0,study_reference_received_forced_tape=False);write_new(case/(arm+'-row.json'),row)
-            derived.append(trace_from_row(row,prompt,151936,eog,'rtx')[1]);normalize('rtx',case/(arm+'-row.json'),base/'target',case/'prompt.json',case/'binding.json',case/'profile.json',role,'O-'+arm+'-root'+str(ix),case/arm);normalized[arm]=case/arm
+                out=resume_job(job('O-development-'+arm+'-root'+str(ix),arm,input));runs.append(out);candidate_runs[arm]=out;base=out/'native/heavy';role='candidate'
+            row=json.loads((base/'receipt.json').read_bytes());row.update(study_cap=128,study_fallback_count=0,study_reference_received_forced_tape=False);persist(case/(arm+'-row.json'),row)
+            derived.append(trace_from_row(row,prompt,151936,eog,'rtx')[1])
+            if not (case/arm/'capture.json').exists():normalize('rtx',case/(arm+'-row.json'),base/'target',case/'prompt.json',case/'binding.json',case/'profile.json',role,'O-'+arm+'-root'+str(ix),case/arm)
+            normalized[arm]=case/arm
+            # Raw heavy payloads are no longer needed after normalization. Clean
+            # final states remain until independent heavy/off qualification.
+            raw=[obs/'native/heavy0',obs/'native/heavy1'] if arm=='free' else [out/'native/heavy']
+            archive_paths('O-prebank-'+str(ix)+'-'+arm,raw)
         assert all(d['tokens']==derived[0]['tokens'] for d in derived)
         prefixes={tuple(x['prefix']) for d in derived for key in ('states','vector_uses') for x in d[key]};maximal=[]
         for p in sorted(prefixes,key=lambda p:(-len(p),p)):
@@ -61,8 +85,8 @@ def main():
                 entries[key]=entry
         write_new(bank/'capture.json',dict(role='forced_reference',execution='NATIVE',completed=True,binding={k:v for k,v in binding.items() if k not in ('eog_ids','reference_bridge_passed')},reference_bridge_passed=True,fallback_count=0,invocation_id='O-forced-root'+str(ix),prefixes=list(entries.values())))
         for arm in ARMS:
-            proof=qualify(normalized[arm]/'capture.json',normalized['free']/'capture.json',bank/'capture.json');proof['heavy_off']=clean_check(RUNS/('O-development-'+arm+'-root'+str(ix))/'native',normalized[arm],bank,('warmup','off'))
-            prime=execute(job('O-priming-'+arm+'-root'+str(ix),arm,input,('warmup','measure')));runs.append(prime);proof['priming']=clean_check(prime/'native',normalized[arm],bank,('warmup','measure'));proof['stable_duplicate_prefixes']=duplicates;write_new(case/(arm+'-QUALIFICATION.json'),proof);allproof.append(dict(root=ix,arm=arm,proof=proof));print('C1536 service qualified',ix,arm,flush=True)
+            proof=qualify(normalized[arm]/'capture.json',normalized['free']/'capture.json',bank/'capture.json');proof['heavy_off']=clean_check(candidate_runs[arm]/'native',normalized[arm],bank,('warmup','off'))
+            prime=execute(job('O-priming-'+arm+'-root'+str(ix),arm,input,('warmup','measure')));runs.append(prime);proof['priming']=clean_check(prime/'native',normalized[arm],bank,('warmup','measure'));proof['stable_duplicate_prefixes']=duplicates;write_new(case/(arm+'-QUALIFICATION.json'),proof);allproof.append(dict(root=ix,arm=arm,proof=proof,development=str(candidate_runs[arm]),priming=str(prime)));print('C1536 service qualified',ix,arm,flush=True)
         archive_paths('O-root'+str(ix),runs+[p/'cas' for p in normalized.values()]+[bank/'cas'])
     put(ROOT/'O-SERVICE-QUALIFICATION.json',dict(status='FINITE_NATIVE_CAPTURE_MATCH',proofs=allproof,roots=4,arms=list(ARMS),same_version=True))
 if __name__=='__main__':main()

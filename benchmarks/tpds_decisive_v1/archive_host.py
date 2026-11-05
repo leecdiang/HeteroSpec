@@ -29,7 +29,7 @@ def archive_paths(key,bases):
                 while data:=f.read(1024*1024):
                     full.update(data);size+=len(data);h=hashlib.sha256(data).hexdigest();q=STORE/'chunks'/h[:2]/h;q.parent.mkdir(parents=True,exist_ok=True)
                     if not q.exists():
-                        if shutil.disk_usage(STORE).free<20*1024**3:raise RuntimeError('archive disk reserve reached; retain original payloads')
+                        if shutil.disk_usage(q.parent).free<20*1024**3:raise RuntimeError('archive disk reserve reached; retain original payloads')
                         packed=zlib.compress(data,1)
                         with q.open('xb') as w:w.write(packed)
                         new_bytes+=len(packed)

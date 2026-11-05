@@ -12,6 +12,7 @@ def execute(job,output=None):
     lock=Path('D:/HeteroSpec-PC/RTX_EXPERIMENT.lock');exe=Path(job['exe']);b=job.get('build_manifest') or json.loads((exe.parent.parent/'BUILD.json').read_bytes())
     try:
         assert sha(exe)==b.get('exe',b.get('executable_sha256'))
+        for path,h in job.get('external_modules',{}).items():assert sha(Path(path))==h,'external runtime drift'
         for name,h in b.get('modules',b.get('numerical_modules',{})).items():assert sha(exe.parent/name)==h
         with lock.open('x') as f:json.dump(dict(pid=os.getpid(),job=job['attempt_id']),f)
         owned=True
@@ -70,6 +71,10 @@ def execute(job,output=None):
                     if pth.name in b['modules']:assert h==b['modules'][pth.name]
                     elif key.startswith(('ggml','cublas','cudart')):raise RuntimeError('unbound numerical module '+value)
             put(out/'ACTUAL_MODULES.json',observed)
+            for path,h in job.get('external_modules',{}).items():
+                for phase in ('before','after'):
+                    matches=[m for m in observed.get(phase,[]) if str(Path(m['path']).resolve()).casefold()==str(Path(path).resolve()).casefold()]
+                    assert len(matches)==1 and matches[0]['sha256']==h,'qualified external runtime not loaded'
         for k in actual:assert actual[k]<=job['reservation'][k],(k,actual,job['reservation'])
         put(out/'session-result.json',dict(attempt_id=job['attempt_id'],completed=True,actual_work=actual,records=records,qualification_claim=False))
         status='COMPLETE';return out

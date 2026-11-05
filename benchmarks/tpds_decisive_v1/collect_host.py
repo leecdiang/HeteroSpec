@@ -12,6 +12,9 @@ def main():
         copies['host/'+p.name]=p
     for p in Path('D:/rtx184-qualification').glob('*/QUALIFICATION.json'):copies['qualification/'+p.parent.name+'.json']=p
     for p in RUNS.glob('priming-v3-*/PRIMING_QUALIFICATION.json'):copies['priming/'+p.parent.name+'.json']=p
+    for case in Path('D:/rtx184-qualification').glob('O-root*'):
+        for p in case.glob('*QUALIFICATION.json'):copies['qualification/'+case.name+'/'+p.name]=p
+        for p in case.glob('OLD_OBSERVER_BRIDGE.json'):copies['qualification/'+case.name+'/'+p.name]=p
     for p in (ROOT/'selection-v3').glob('*.json'):copies['selection/'+p.name]=p
     for root in (ROOT/'draft-v3',ROOT/'forced-v2',Path('D:/rtx184-operator')):
         for name in ('BUILD.json','CORE_BUILD.json','BUILD_CORE.json','RUNTIME_BUILD.json','RUNTIME_BINDING.json'):
@@ -34,9 +37,47 @@ def main():
                 data=json.loads(p.read_bytes());record[file]={k:v for k,v in data.items() if ('seconds' in k or 'memory' in k or k in ('status','requests','token_rows','error')) and k!='requests'}
                 if isinstance(data.get('requests'),list):record['completed_native_records']=len(data['requests'])
         if (base/'failure.json').exists():record['failure']=json.loads((base/'failure.json').read_bytes())
+        # Original service repeats model/pool setup values on each slot. Count
+        # each loaded process / block once, retaining each slot's service cost.
+        slot_details=[]
+        for p in (base/'native').glob('*/receipt.json'):
+            r=json.loads(p.read_bytes())
+            if 'service_seconds' not in r:continue
+            detail=dict(path=str(p),slot=p.parent.name,seconds={k:v for k,v in r.items() if 'seconds' in k or k=='prefill_wall_s'})
+            slot_details.append(detail)
+        if slot_details:
+            record['slot_costs']=slot_details
+            record['model_load_seconds_once']=slot_details[0]['seconds'].get('model_load_seconds')
+            record['pool_setup_seconds_once']=slot_details[0]['seconds'].get('pool_setup_seconds')
+            if 'actual_work' not in record:record['completed_slot_records_lower_bound']=len(slot_details)
+        if (base/'input.json').exists():
+            manifest=json.loads((base/'input.json').read_bytes())
+            if 'replay' in manifest:
+                cells=[]
+                for p in base.glob('*/*.json'):
+                    r=json.loads(p.read_bytes())
+                    if isinstance(r,dict) and 'submit_s' in r:
+                        cells.append(dict(path=str(p),executions=len(r['submit_s']),submit_s=r['submit_s'],sync_s=r['sync_s']))
+                record['operator_cells']=cells;record['completed_operator_executions_lower_bound']=sum(x['executions'] for x in cells)
+                if record.get('host_exit',{}).get('status')=='COMPLETE':record['actual_work']=dict(requests=0,token_rows=0,operators=record['completed_operator_executions_lower_bound'])
+            elif record.get('host_exit',{}).get('status')=='COMPLETE':record['actual_work']=dict(record['reserved'])
+            if (base/'load.json').exists():record['model_load']=json.loads((base/'load.json').read_bytes())
+        if (base/'RECOVERED_COMPLETED_NATIVE.json').exists():record['recovery']=json.loads((base/'RECOVERED_COMPLETED_NATIVE.json').read_bytes())
         native.append(record)
     summary=dict(as_of_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),attempts=attempts,native=native,reserved_total={k:sum(x[k] for x in attempts) for k in ('requests','token_rows','operators')},host_process_seconds=sum(x.get('host_exit',{}).get('seconds',0) for x in native),service_seconds=sum(x['service_s'] for x in services),services=services,interpretation='Reservations never refunded. Service/model/provision components are nested within host process wall and must not be added to it. Running/failed attempts remain explicit; missing actual-work fields are not zeros.')
+    summary['failed_attempt_completed_slot_service_seconds_lower_bound']=sum(s['seconds'].get('service_seconds',0) for r in native if r['status']!='COMPLETE' for s in r.get('slot_costs',[]))
+    summary['known_complete_and_failed_slot_service_seconds_lower_bound']=summary['service_seconds']+summary['failed_attempt_completed_slot_service_seconds_lower_bound']
+    summary['confirmed_work_lower_bound']={k:sum(r.get('actual_work',{}).get(k,0) for r in native) for k in ('requests','token_rows','operators')}
+    summary['actual_work_unresolved_attempts']=[r['attempt'] for r in native if 'actual_work' not in r]
     write(DEST/'UNIFIED_COSTS.json',summary)
-    write(DEST/'RECEIPT_INDEX.json',dict(files={k:dict(source=str(v),sha256=sha(v)) for k,v in copies.items()},raw_archive_root='C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/rtx184-evidence',raw_restore='python archive_host.py restore <manifest stem>; restore requires its chunks directory; no GPU'))
+    engineering=[]
+    for root in (ROOT,Path('D:/rtx184-operator')):
+        for p in root.rglob('*.json'):
+            if any(x in p.parts for x in ('native','source','native-arms')):continue
+            try:r=json.loads(p.read_bytes())
+            except (ValueError,OSError):continue
+            if isinstance(r,dict) and 'argv' in r and 'seconds' in r and 'code' in r:engineering.append(dict(receipt=str(p),sha256=sha(p),**r))
+    write(DEST/'ENGINEERING_COSTS.json',dict(executions=engineering,recorded_host_seconds=sum(r['seconds'] for r in engineering),scope='Separately recorded configure/compile/link and vocabulary-only tokenizer executions, including failures. Compound BUILD copies are not added again. No GPU model trajectories are inferred from these timings. Artifact and unrecorded installation wall time is not assumed zero.'))
+    write(DEST/'RECEIPT_INDEX.json',dict(files={k:dict(source=str(v),sha256=sha(v)) for k,v in copies.items()},raw_archive_roots=['C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/rtx184-evidence','F:/rtx184-O-evidence'],raw_restore='archive_host.restore reads each archive manifest and its chunks; select STORE for D or O; no GPU',storage_placement='O chunk prefixes00..67 reside on C; D archive prefixes00..0f reside on D, through recorded directory junctions. Manifest chunk hashes are independent of placement.'))
     print('collected',len(copies),'receipts;',len(attempts),'ledger entries')
 if __name__=='__main__':main()

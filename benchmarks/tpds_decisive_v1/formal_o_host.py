@@ -5,20 +5,28 @@ from analyze import analyze
 import sys
 HERE=Path(__file__).resolve().parent;FREEZE=ROOT/'O-FREEZE.json'
 def prepare():
-    for name in ('O-REAL-OPERAND-QUALIFICATION.json','O-BOUNDARY-QUALIFICATION.json'):
+    for name in ('O-REAL-OPERAND-QUALIFICATION.json','O-RUNTIME-BRIDGE.json','O-BOUNDARY-QUALIFICATION.json'):
         assert json.loads((ROOT/name).read_bytes())['all_equal']
     assert json.loads((ROOT/'O-SERVICE-QUALIFICATION.json').read_bytes())['status']=='FINITE_NATIVE_CAPTURE_MATCH'
     assert json.loads((ROOT/'O-TRACE-REVIEW.json').read_bytes())['actual_loop4_route_verified']
     scripts=('formal_o_host.py','operator_service_host.py','operator_host.py','native_adapter.py','bridge_host.py','build_host.py','runner.py','common.py','design.py','active_kv.py','analyze.py','qualify_host.py','normalize.py','trace.py','qualify.py','archive_host.py','build_operator_driver.py')
     pins={str(HERE/name):sha(HERE/name) for name in scripts};pins[str(HERE/'operator_replay.inc')]=sha(HERE/'operator_replay.inc')
-    for name in ('O-REAL-OPERAND-QUALIFICATION.json','O-BOUNDARY-QUALIFICATION.json','O-SERVICE-QUALIFICATION.json','O-TRACE-REVIEW.json'):pins[str(ROOT/name)]=sha(ROOT/name)
+    for name in ('O-REAL-OPERAND-QUALIFICATION.json','O-RUNTIME-BRIDGE.json','O-BOUNDARY-QUALIFICATION.json','O-SERVICE-QUALIFICATION.json','O-SERVICE-RUNTIME-BINDING.json','O-TRACE-REVIEW.json'):pins[str(ROOT/name)]=sha(ROOT/name)
     for arm in ('original',*ARMS):
-        path=Path('D:/rtx184-operator')/(arm+'-service-v3')
+        path=Path('D:/rtx184-operator')/(arm+'-service-v4')
         for p in [path/'service.cpp',path/'BUILD.json',path/'bin/service.exe']:pins[str(p)]=sha(p)
         if arm!='original':
             for ix in range(4):
                 for stage in ('development','priming'):
-                    receipt=RUNS/('O-'+stage+'-'+arm+'-root'+str(ix))/'session-result.json';r=json.loads(receipt.read_bytes());assert all(x['executable_sha256']==sha(path/'bin/service.exe') for x in r['records']);pins[str(receipt)]=sha(receipt)
+                    qualified=json.loads((ROOT/'O-SERVICE-RUNTIME-BINDING.json').read_bytes())['proofs'];entry=next(x for x in qualified if x['root']==ix and x['arm']==arm)
+                    receipt=Path(entry[stage])/'session-result.json';r=json.loads(receipt.read_bytes());assert all(x['executable_sha256']==sha(path/'bin/service.exe') for x in r['records']);pins[str(receipt)]=sha(receipt)
+                    prior=json.loads((receipt.parent/'job.json').read_bytes())['build_manifest'];current=json.loads((path/'BUILD.json').read_bytes());assert prior==current,'qualified runtime bundle differs';pins[str(receipt.parent/'job.json')]=sha(receipt.parent/'job.json')
+                    observed=json.loads((receipt.parent/'ACTUAL_MODULES.json').read_bytes())
+                    external=json.loads((ROOT/'O-EXTERNAL-MODULES.json').read_bytes())
+                    for phase in ('before','after'):
+                        for name,h in external.items():assert any(Path(x['path']).name.lower()==Path(name).name.lower() and x['sha256']==h for x in observed[phase]),'qualification external runtime drift'
+    for name,h in json.loads((ROOT/'O-EXTERNAL-MODULES.json').read_bytes()).items():assert sha(Path(name))==h;pins[name]=h
+    pins[str(ROOT/'O-EXTERNAL-MODULES.json')]=sha(ROOT/'O-EXTERNAL-MODULES.json')
     sel=ROOT/'selection-v3';panel=json.loads((sel/'O-panel.json').read_bytes());sched=schedule(panel,'rtx-operator')
     put(FREEZE,dict(status='FROZEN_BEFORE_TEST_OUTPUTS',lane='rtx-operator',panel=panel,schedule=sched,inputs=json.loads((sel/'O-inputs.json').read_bytes()),file_pins=pins,profile=json.loads((ROOT/'O-profile-8B/PROFILE.json').read_bytes()),lifecycle='PR171 C1536 all-GPU target plus draft, k3, cap128, QB-local target width32; each version-specific worker establishes its qualified same-arm warmup followed by resident-reset measurement; model/pool construction outside unchanged complete-service clock and separately charged',main_requests=432,limits=LIMITS,original_reference=sha(FROZEN.parent/'oracle01/service.exe'),no_wb_rescue_panel=True))
 def main():
@@ -38,6 +46,7 @@ def main():
         for j in range(0,len(slots),2):
             pair=slots[j:j+2];arm=pair[0]['arm'];input=inputs[pair[0]['input_id']];ref=references[input['id']]
             pair_job=job('O-main-s'+str(session)+'-pair'+str(j//2),arm,input,tuple(p['slot'] for p in pair))
+            pair_job['external_modules']=json.loads((ROOT/'O-EXTERNAL-MODULES.json').read_bytes())
             for slot,planned in zip(pair_job['operator_service']['blocks'][0]['slots'],pair):slot.update(kind=planned['kind'],planned=planned)
             out=execute(pair_job)
             work=json.loads((out/'session-result.json').read_bytes())['actual_work']

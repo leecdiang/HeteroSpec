@@ -1,6 +1,6 @@
 # Decisive reference-compatible experiments (2026-11-05)
 
-**Delivery state: implemented CPU tooling and source derivatives; no new native model/GPU execution.**
+**Original-host RTX execution:** see [RTX_RESULTS.md](RTX_RESULTS.md) and `host_evidence/` for native builds, independent GPU state qualifications, retained failures, costs and panel disposition. The design/tooling description below records the original PR184 boundary; it is not the current execution status.
 
 Read `protocols/DECISION.md`, `protocols/COMMON.md`, then the platform plan. These are independent experiments on copies of frozen sources, not a merge of PR179–183. Do not install the always-veto diagnostic path into a performance executable. Do not modify the submitted arXiv replacement or historical R.
 
@@ -22,7 +22,7 @@ Read `protocols/DECISION.md`, `protocols/COMMON.md`, then the platform plan. The
 
 These tools check consistency and recorded bytes. A hash, a native-origin flag or a matching descriptor is not remote attestation or a proof of numerical equivalence.
 
-## What the host agent still implements
+## Original design boundary
 
 Use the existing original-host runners, not a new speculative algorithm. Bind actual paths/compiler/libraries; compile the generated derivatives; connect native records to the capture/session formats; verify the actual old serializer/model profile; build separate autonomous and forced-reference job entry points; implement observed module/resource receipts and uninstrumented timing. `HOST_ADAPTER.md` is the explicit remaining boundary. The authoring environment did **not** compile these Windows workers or run restored trained models.
 

@@ -2,6 +2,12 @@
 
 **Delivery state: implemented CPU tooling and source derivatives; no new native model/GPU execution.**
 
+That line describes the original design package. The subsequent original-host
+B570 execution is recorded in [b570_decisive_v1](../b570_decisive_v1/README.md):
+native drivers and portable builds pass, but mandatory C1U1 fails corrected
+dual-context capacity admission. No model qualification, pilot or confirmation
+pass is implied by the interface repair or zero-forward execution.
+
 Read `protocols/DECISION.md`, `protocols/COMMON.md`, then the platform plan. These are independent experiments on copies of frozen sources, not a merge of PR179–183. Do not install the always-veto diagnostic path into a performance executable. Do not modify the submitted arXiv replacement or historical R.
 
 ## What is implemented here

@@ -95,6 +95,13 @@ receipt and restore historical PR165 sources from their separate pinned release
 when using `host.py setup` on a fresh output root. `HS_DECISIVE_ROOT` chooses that
 root; existing attempts are never overwritten.
 
+[Published raw evidence](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-decisive-v1-evidence-20261105)
+contains500 logical files /354 unique objects. All assets were actually downloaded
+again, all files restored, and original/restored CPU reports compared exactly.
+See `evidence/DELIVERY_READBACK.json`. The prerequisite
+[PR165 source/runtime release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-qwen-shared-transfer-v1-evidence-20261103)
+remains separately pinned and unchanged.
+
 For a standalone driver rebuild from the restored evidence, configure any role's
 `kit/b570_producer_consumer_boundary_v1` with Visual Studio2022, an installed Vulkan
 SDK for budget01 roles, `LLAMA_SOURCE=portable/api/original` (R) or `candidate`, and
@@ -108,6 +115,7 @@ Run the read-only audit with:
 python RESTORED/repro/host/closeout.py audit RESTORED
 ```
 
-Fresh-download restoration verification is recorded separately after publication.
+Fresh-download restoration verification and separate delivery costs are recorded
+in `evidence/DELIVERY_READBACK.json` and `evidence/DELIVERY_COSTS.json`.
 No native external replication, successful model qualification or service gain
 follows from packaging checks. No merge, paper edit, model download or rental.

@@ -4,9 +4,10 @@ import difflib
 def main():
     prior=json.loads((FROZEN.parent/'formal01/freeze.json').read_bytes());original=FROZEN/'service.cpp';assert sha(original)==prior['inputs'][str(original)]
     for arm in ('original','graph_tiles','backend_loop4','packed'):
-        out=Path('D:/rtx184-operator')/(arm+'-service-v2');out.mkdir();(out/'bin').mkdir()
+        out=Path('D:/rtx184-operator')/(arm+'-service-v3');out.mkdir();(out/'bin').mkdir()
         core=ORIG if arm=='original' else out.parent/arm;source=ORIG/'source' if arm=='original' else ROOT/'loop/native-arms'/arm
         before=original.read_text();s=before.replace('struct Context {','#include "target_capture.hpp"\n#include "replay_path.hpp"\nstruct Context {')
+        s=s.replace('ggml_backend_load_all_from_path(bin.string().c_str());','auto base_clock=LoadLibraryW((bin/"ggml-base.dll").c_str());need(base_clock,"shared base clock module");auto clock_init=(void(*)())GetProcAddress(base_clock,"ggml_time_init");need(clock_init,"shared clock initializer");clock_init();ggml_backend_load_all_from_path(bin.string().c_str());')
         s=s.replace('    int sample(int row,','    void snapshot(const std::string&key,int row){tpds_decisive::capture_existing(c,model,path/"state"/key,row);}\n    int sample(int row,')
         s=s.replace('    int pending=transferred_pending','    int final_frontier=-1;int pending=transferred_pending')
         s=s.replace('bool done=commit(pending);auto first_ready=', 'if(capture)target->snapshot("initial",-1);bool done=commit(pending);auto first_ready=')
@@ -44,7 +45,7 @@ def main():
             t=time.monotonic()
             with (out/(phase+'.log')).open('xb') as log:r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,timeout=600)
             record=dict(argv=cmd,code=r.returncode,seconds=time.monotonic()-t);commands.append(record);put(out/(phase+'.json'),record);r.check_returncode()
-        runtime=out.parent/(arm+'-driver-v3');binding=json.loads((runtime/'RUNTIME_BINDING.json').read_bytes())
+        runtime=out.parent/(arm+'-driver-v4');binding=json.loads((runtime/'RUNTIME_BINDING.json').read_bytes())
         for name,h in binding['modules'].items():os.link(runtime/'bin'/name,out/'bin'/name)
         put(out/'BUILD.json',dict(exe=sha(out/'bin/service.exe'),modules=binding['modules'],source=sha(out/'service.cpp'),original_source=sha(original),core=sha(core/'core/src/libllama.a'),commands=commands,gpu_qualified=False));print('operator service built',arm,flush=True)
 if __name__=='__main__':main()

@@ -8,12 +8,15 @@ def archive(ix,normalized_only=False):
     suffix='' if ix==0 else '-root'+str(ix);bases=[]
     for arm in ('M','D1','D2','D4'):
         case=QUAL/(arm+suffix);assert (case/'QUALIFICATION.json').exists()
-        # Keep clean timing-history qualification executable after archival:
-        # only native bulk records are archived, normalized final bank remains.
+        # Priming checks need capture manifests and final-bank hashes, retained.
         bases.extend([case/'candidate/cas',case/'free/cas',case/'bank/cas'])
         if not normalized_only:bases.extend([RUNS/('development-v3-'+arm+suffix),RUNS/('forced-v2-'+arm+suffix)])
     if ix and not normalized_only: bases += [RUNS/('old-r'+suffix+('-v3' if ix==1 else '')),RUNS/('observer-r'+suffix)]
     key='root'+str(ix)+('-normalized' if normalized_only else '')
+    archive_paths(key,bases)
+
+def archive_paths(key,bases):
+    for base in bases:assert any(base.resolve().is_relative_to(Path(b).resolve()) for b in ('D:/rtx184-runs','D:/rtx184-qualification'))
     STORE.mkdir(exist_ok=True);manifest=STORE/(key+'.json');assert not manifest.exists();rows=[];chunks=set();new_bytes=0;inodes={}
     for base in bases:
         for p in sorted(base.rglob('*')):
@@ -26,6 +29,7 @@ def archive(ix,normalized_only=False):
                 while data:=f.read(1024*1024):
                     full.update(data);size+=len(data);h=hashlib.sha256(data).hexdigest();q=STORE/'chunks'/h[:2]/h;q.parent.mkdir(parents=True,exist_ok=True)
                     if not q.exists():
+                        if shutil.disk_usage(STORE).free<20*1024**3:raise RuntimeError('archive disk reserve reached; retain original payloads')
                         packed=zlib.compress(data,1)
                         with q.open('xb') as w:w.write(packed)
                         new_bytes+=len(packed)
@@ -45,7 +49,7 @@ def archive(ix,normalized_only=False):
         p=pool/h[:2]/h;assert p.is_relative_to(pool)
         if p.exists():assert sha(p)==h;p.unlink()
     put(STORE/(key+'-retirement.json'),dict(manifest_sha256=sha(manifest),removed_payload_paths=removed,capture_manifests_preserved=True))
-    print('archived root',ix,'logical GB',sum(x['bytes'] for x in rows)/2**30,'new stored GB',new_bytes/2**30,flush=True)
+    print('archived',key,'logical GB',sum(x['bytes'] for x in rows)/2**30,'new stored GB',new_bytes/2**30,flush=True)
 def restore(ix):
     m=json.loads((STORE/(ix+'.json')).read_bytes())
     for r in m['files']:

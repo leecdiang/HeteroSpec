@@ -5,15 +5,15 @@ OP=Path('D:/rtx184-operator')
 def bind():
     runtime=OP/'cuda-v2';assert (runtime/'RUNTIME_BUILD.json').exists()
     for arm in ('original','graph_tiles','backend_loop4','packed'):
-        out=OP/(arm+'-driver-v3');binary=out/'bin';modules={}
+        out=OP/(arm+'-driver-v4');binary=out/'bin';modules={}
         sources=list((ORIG/'bin').glob('*.dll')) if arm=='original' else list((runtime/'bin').glob('*.dll'))+list(Path('D:/rtx184-tools/cuda/bin').glob('*.dll'))+list(Path('D:/rtx184-tools/msvc/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64').glob('vcruntime*.dll'))+list(Path('D:/rtx184-tools/msvc/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64').glob('msvcp*.dll'))
         for src in sources:
             h=sha(src);assert src.name.lower() not in {k.lower() for k in modules};modules[src.name]=h
             if src.drive==binary.drive:os.link(src,binary/src.name)
             else:shutil.copy2(src,binary/src.name)
         put(out/'RUNTIME_BINDING.json',dict(exe=sha(binary/'driver.exe'),modules=modules,source='original authenticated kit' if arm=='original' else 'same newly compiled CUDA DLL for every candidate arm'))
-def execute_operator(label,arm,manifest,model='8B'):
-    out=RUNS/label;out.mkdir();put(out/'input.json',manifest);build=OP/(arm+'-driver-v3');binding=json.loads((build/'RUNTIME_BINDING.json').read_bytes())
+def execute_operator(label,arm,manifest,model='8B',build_override=None):
+    out=RUNS/label;out.mkdir();put(out/'input.json',manifest);build=Path(build_override) if build_override else OP/(arm+'-driver-v4');binding=json.loads((build/'RUNTIME_BINDING.json').read_bytes())
     assert sha(build/'bin/driver.exe')==binding['exe']
     for name,h in binding['modules'].items():assert sha(build/'bin'/name)==h
     if 'replay' in manifest:
@@ -21,6 +21,8 @@ def execute_operator(label,arm,manifest,model='8B'):
         reservation=dict(requests=0,token_rows=0,operators=n*9*4)
     else:
         units=manifest['units'];reservation=dict(requests=len(units),token_rows=sum((u['pos'] if u['mode']=='prefix' else u['width']+1) for u in units),operators=0)
+        expected={'8B':'408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6','0.6B':'9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031'}
+        assert sha(Path('D:/HeteroSpec-PC/models/gguf/Qwen3-'+model+'-Q8_0.gguf'))==expected[model]
     ledger=Ledger(ROOT/'ledger.sqlite',LIMITS);ledger.reserve(label,reservation);put(out/'reservation.json',reservation)
     lock=Path('D:/HeteroSpec-PC/RTX_EXPERIMENT.lock');p=None;owned=False;code=None;status='FAILED';start=time.monotonic()
     try:
@@ -39,9 +41,9 @@ def execute_operator(label,arm,manifest,model='8B'):
         for phase in ('before','after'):
             paths=json.loads((out/('modules-'+phase+'.json')).read_bytes());seen={};modules[phase]=[]
             for value in paths:
-                p=Path(value);key=p.name.lower();assert key not in seen;seen[key]=value
-                h=sha(p);modules[phase].append(dict(path=value,sha256=h))
-                if p.name in binding['modules']:assert h==binding['modules'][p.name]
+                module_path=Path(value);key=module_path.name.lower();assert key not in seen;seen[key]=value
+                h=sha(module_path);modules[phase].append(dict(path=value,sha256=h))
+                if module_path.name in binding['modules']:assert h==binding['modules'][module_path.name]
                 elif key.startswith(('ggml','cublas','cudart')):raise RuntimeError('unbound numerical module '+value)
         put(out/'ACTUAL_MODULES.json',modules);status='COMPLETE';return out
     except BaseException as e:put(out/'failure.json',dict(error=repr(e)));raise

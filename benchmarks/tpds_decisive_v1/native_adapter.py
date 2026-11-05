@@ -17,7 +17,10 @@ def execute(job,output=None):
         owned=True
         for name in ('binding','panel','slots','plan','forced','operator_service'):
             if name in job:put(out/(name+'.json'),job[name])
-        models=['D:/HeteroSpec-PC/models/gguf/Qwen3-8B-Q8_0.gguf','D:/HeteroSpec-PC/models/gguf/Qwen3-0.6B-Q8_0.gguf']
+        models=job.get('model_paths',['D:/HeteroSpec-PC/models/gguf/Qwen3-8B-Q8_0.gguf','D:/HeteroSpec-PC/models/gguf/Qwen3-0.6B-Q8_0.gguf'])
+        if 'operator_service' in job:
+            known={'Qwen3-8B-Q8_0.gguf':'408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6','Qwen3-0.6B-Q8_0.gguf':'9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031'}
+            for path in models:assert sha(Path(path))==known[Path(path).name]
         if 'operator_service' in job:cmd=[str(exe),*models,str(out/'operator_service.json'),str(out/'native')];stdin=None
         elif 'forced' in job:cmd=[str(exe),str(out/'native'),*models,str(out/'forced.json'),str(out/'binding.json')];stdin=None
         else:cmd=[str(exe),str(out/'native'),*models,str(out/'panel.json'),str(out/'slots.json'),'Qwen',str(out/'binding.json'),str(out/'plan.json')];stdin=subprocess.PIPE
@@ -45,7 +48,7 @@ def execute(job,output=None):
         service=job.get('operator_service')
         if service and 'forced' not in service:
             result=dict(status='COMPLETE',requests=[dict(record=s['id']+'/receipt.json') for block in service['blocks'] for s in block['slots']])
-            slots=[dict(slot_id=s['id'],arm=block['arm'],input_id=s['input']['id']) for block in service['blocks'] for s in block['slots']]
+            slots=[dict(slot_id=s['id'],arm=block['arm'],study_arm=block.get('study_arm',block['arm']),kind=s.get('kind','qualification'),input_id=s['input']['id']) for block in service['blocks'] for s in block['slots']]
         else:
             result=json.loads((out/'native/result.json').read_bytes());assert result['status']=='COMPLETE';slots=job.get('slots',[])
         records=[]
@@ -79,6 +82,7 @@ def draft_job(label,arm='D1',modes=('heavy','off'),source_index=0):
     admit=OLD.parent/'admission-Qwen-v4';panel=json.loads((admit/'PANEL.json').read_bytes());templates=json.loads((admit/'SLOTS.json').read_bytes())
     use='D1' if arm=='M' else arm;ub=int(use[1:]);exe=ROOT/'draft-v3'/use/'bin/worker.exe'
     binding=json.loads((admit/'BINDING.json').read_bytes());binding['status']='FROZEN_BEFORE_FIRST_NATIVE_REQUEST';binding['families']['Qwen'].update(executable_sha256=sha(exe),draft_ubatch=ub)
+    binding['families']['Qwen'].update(worker_source_sha256=sha(exe.parent.parent/'worker.cpp'),build_receipt_sha256=sha(exe.parent.parent/'BUILD.json'),study_provenance_note='source_variant remains the inherited numerical-family ABI label; worker_source_sha256 and build_receipt_sha256 identify this derivative')
     plan=json.loads((admit/'PLAN.json').read_bytes());plan['context']['draft_ubatch']=ub
     template=next(x for x in templates if x['arm']==('M_QB' if arm=='M' else 'C_QB') and x['source_index']==source_index)
     slots=[dict(template,slot_id=kind,observer='heavy' if kind=='heavy' else 'off',study_id='tpds_decisive_rtx_draft_v1',draft_ubatch=ub,study_arm=arm) for kind in modes]

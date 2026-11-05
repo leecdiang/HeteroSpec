@@ -1,0 +1,36 @@
+{
+  "utc": "2026-11-05T10:10:34.509038+00:00",
+  "arms": [
+    "M",
+    "H1",
+    "C1U1",
+    "C4U1",
+    "C4U2",
+    "C4U4"
+  ],
+  "main_slots": 864,
+  "measurements": 432,
+  "warmups": 432,
+  "development_roots": 4,
+  "test_roots": 12,
+  "reason": "Retain stronger inherited H1 whole-prompt UB1 in separate Smol family",
+  "selection_sha256": "21f53a3ccd8fca4b61bfe2f4e7157d36ec19c647f9ad07149d5733efec6f99bc",
+  "panel_sha256": "ae7abbca6af419f5323c032a3a9376a0884c4900506cfda01f2b26a7b6166f4d",
+  "schedule_sha256": "96532d7df55e3826e0c0744a2781ca31a4f1983254563bdae3d316ffc11f1b07",
+  "output_screening": false,
+  "budgets": {
+    "requests": 6144,
+    "token_rows": 12000000,
+    "operators": 2048
+  },
+  "original_R_unchanged": true,
+  "lifecycle": "Each arm/root pair gets one immediate same-arm resident warm request followed by measure; fresh worker/model load outside service, recorded separately. Qualification bridges heavy and clean with this priming history.",
+  "service": "reset/sync, prefill, sampling/propose/verify/trim, original required state transfer/checks, continuation context destruction, response capture file close",
+  "costs": "All loads, offline qualification, engineering failures, warmups, measurements and delivery retained separately",
+  "scope": "Secondary Smol family, not Qwen capacity rescue; no AUTO",
+  "per_worker_wall_seconds": 900,
+  "per_request_watchdog_seconds": 180,
+  "job_memory_bytes": 17179869184,
+  "disk_reserve_bytes": 21474836480,
+  "device_reserve_bytes": 134217728
+}

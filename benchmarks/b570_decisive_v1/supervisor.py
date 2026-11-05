@@ -35,7 +35,7 @@ def modules(handle):
             if P.GetModuleFileNameExW(handle,module,text,len(text)):out.add(text.value)
     return out
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--manifest',type=Path,required=True);p.add_argument('--receipt',type=Path,required=True);p.add_argument('--capture',type=Path);p.add_argument('--limit',type=int,default=240);p.add_argument('--minimum-free-bytes',type=int,default=10*1024**3);p.add_argument('--process-limit',type=int,default=1);p.add_argument('argv',nargs=argparse.REMAINDER);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--manifest',type=Path,required=True);p.add_argument('--receipt',type=Path,required=True);p.add_argument('--capture',type=Path);p.add_argument('--limit',type=int,default=240);p.add_argument('--minimum-free-bytes',type=int,default=10*1024**3);p.add_argument('--stdin-file',type=Path);p.add_argument('--environment-file',type=Path);p.add_argument('--progress-limit',type=int);p.add_argument('--process-limit',type=int,default=1);p.add_argument('argv',nargs=argparse.REMAINDER);a=p.parse_args()
     check(not a.receipt.exists(),'Existing receipt');check(a.argv,'Missing native command');check(a.limit>0,'Finite positive native time bound')
     check(not a.capture or not a.capture.exists(),'Existing fixture capture')
     m=read(a.manifest)
@@ -45,6 +45,11 @@ def main():
     env=os.environ.copy()
     for key in list(env):
         if key.startswith(('HS_', 'HSC_', 'JSA_', 'GGML_')):del env[key]
+    if a.environment_file:
+        explicit=read(a.environment_file)
+        allowed={'HS_PREFILL_OUTPUT','HS_PREFILL_UB','HS_NO_TRANSFER','HS_TRACE_OFF','HS_MATCHED_TARGET','HS_SMOL_DRAFT_PATH'}
+        check(set(explicit)<=allowed and all(isinstance(x,str) for x in explicit.values()),'Unexpected environment override')
+        env.update(explicit)
     if a.capture:env['HS_STAGE_CAPTURE']=str(a.capture.resolve())
     exe=Path(a.argv[0]).resolve();env['PATH']=str(exe.parent)+os.pathsep+os.environ.get('SystemRoot','C:/Windows')+'/System32'
     rc={'status':'pending','started_utc':utc(),'argv':a.argv,'manifest_sha256':sha(a.manifest),'limit_seconds':a.limit,'capture':str(a.capture) if a.capture else None,'module_paths':[],'model_performance_claim':False}
@@ -54,13 +59,23 @@ def main():
     worker=None;seen=set();start=time.monotonic()
     try:
         with a.receipt.with_suffix('.stdout.log').open('xb') as out,a.receipt.with_suffix('.stderr.log').open('xb') as err:
-            worker=subprocess.Popen(a.argv,cwd=exe.parent,stdout=out,stderr=err,env=env,creationflags=subprocess.CREATE_NO_WINDOW|0x4)
+            worker=subprocess.Popen(a.argv,cwd=exe.parent,stdin=a.stdin_file.open('rb') if a.stdin_file else None,stdout=out,stderr=err,env=env,creationflags=subprocess.CREATE_NO_WINDOW|0x4)
             handle=w.HANDLE(int(worker._handle));rc['pid']=worker.pid
             check(K.AssignProcessToJobObject(job,handle),'AssignProcessToJobObject failed')
             rc.update(status='running',assigned_before_resume=True,child_process_limit=a.process_limit)
             write(a.receipt,rc);check(N.NtResumeProcess(handle)==0,'Resume failed')
+            progress_at=None;progress_size=0;progress_count=0
             while worker.poll() is None:
+                if a.progress_limit:
+                    check(a.progress_limit>0,'Finite request progress bound')
+                    raw=a.receipt.with_suffix('.stdout.log').read_bytes().replace(b'\r\n',b'\n')
+                    if len(raw)!=progress_size:
+                        count=raw.count(b'HS_READY\n')+raw.count(b'HS_RESULT ')
+                        if count>progress_count:progress_at=time.monotonic();progress_count=count
+                        progress_size=len(raw)
+                    if progress_at is not None:check(time.monotonic()-progress_at<a.progress_limit,'Request progress timeout')
                 seen.update(modules(handle));check(time.monotonic()-start<a.limit,'Native timeout');check(shutil.disk_usage(a.receipt.parent).free>a.minimum_free_bytes,'Runtime disk reserve');time.sleep(.1)
+            rc['progress_bound_seconds']=a.progress_limit
             rc.update(exit_code=worker.returncode,exit_observed=True,status='complete' if worker.returncode==0 else 'failed')
         acct=Accounting();check(K.QueryInformationJobObject(job,1,c.byref(acct),c.sizeof(acct),None),'Job accounting failed')
         rc['job_accounting']={key:getattr(acct,key) for key,_ in Accounting._fields_}

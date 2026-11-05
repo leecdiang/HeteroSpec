@@ -1,4 +1,15 @@
-# B570 PR185 execution: prefill repair and measured capacity stop
+# B570 PR185 execution: original-interface repair and native continuation
+
+The Qwen capacity stop below is the immutable initial v1 result. The requested
+repair continuation now adds a real DXGI reservation attempt (still insufficient
+signed capacity) and an independently referenced secondary Smol deployment.
+See [SMOL_CONTINUATION.md](SMOL_CONTINUATION.md) for precise scope, preserved
+failures, six strong controls, prospective selection and execution rules. The
+historical exposed Smol example has passed25 full-vector/13 active-state checks;
+new-panel qualification, pilot and confirmation require their own receipts.
+
+The v1 release and its restoration receipt remain unchanged. They do not contain
+the later continuation and must not be read as evidence for its execution.
 
 The prompt-tail repair, original-interface tests, original-host builds and real
 descendant-cleanup checks are complete. The Qwen3-8B/0.6B Q8 C1024 deployment
@@ -75,10 +86,10 @@ discarded, and C4U1 and the optional wide arms were not removed for speed: all
 remain in the declared roster, with unexecuted stages explicitly recorded.
 Capacity, KV precision, context length and weight residency were not relaxed.
 
-The already available, previously referenced SmolLM2 pair and original runtime
+At the initial v1 closeout, the already available, previously referenced SmolLM2 pair and original runtime
 were authenticated and inspected. Its historical draft caller is a whole-prompt
 decode and its lifecycle is resident/reset, different from this PR165 caller
-intervention. No secondary Smol campaign was opened; the protocol also permits
+intervention. No secondary Smol campaign had then been opened; the protocol also permits
 stopping. It is not presented as a Qwen success or a tested Smol failure.
 
 ## Reproduction and evidence

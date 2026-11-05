@@ -47,6 +47,7 @@ def forced_run(group,index):
   execute(f'{prefix}-{index}-forced-{j}','M',[r],heavy=True,forced=True)
 
 def check(group,index,save=True):
+ from smol_boundaries import verify as verify_boundaries
  prefix='dev' if group=='development' else 'test';r=input_row(group,index)
  oldfolder=SROOT/EPOCH/'runs'/f'{prefix}-{index}-oldR';old=read(oldfolder/'0.json');repeat=read(oldfolder/'1.json')
  assert old==repeat,'natural original R stability'
@@ -65,6 +66,7 @@ def check(group,index,save=True):
  results=[]
  for arm in ARMS:
   a=read(captures(group,index,arm,'heavy')/'1.json');b=read(captures(group,index,arm,'off')/'1.json')
+  verify_boundaries(a,old,arm)
   endpoint=(a['ids'],a['eog'])==(old['ids'],old['eog'])==(b['ids'],b['eog'])
   vals=[];states=[]
   for x in a['full_target_vectors']:

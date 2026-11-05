@@ -48,6 +48,17 @@ forward calls are unchanged. The heavy observer is absent from clean timing.
 Only active state is qualified; incidental temporary reads of padding confer no
 claim about allocator/driver closure.
 
+Closed complete snapshots can now be packed while the diagnostic worker runs.
+A Windows sharing check excludes open writer handles; exact format/length and
+the existing round-trip SHA check precede removal of a redundant flat copy.
+Partial writes remain raw. Every original byte remains reconstructible from
+content-addressed F16 token chunks. A real saved-state fixture checks open,
+complete and failed partial writes. Four exposed diagnostic requests bridge the
+same executable with this storage path:149 conditional vectors,75 committed
+states and heavy/off final state match the previously independent qualification.
+No extra pilot or confirmation timing slots were introduced. Packing can overlap
+native work, and its elapsed time is reported without double-counting it.
+
 ## Prospective secondary panel
 
 Before test outputs: four development roots and twelve test roots, natural
@@ -90,3 +101,21 @@ paper edit, model download, rental or cross-platform speed ranking.
 
 Actual per-root qualifications, pilot, freeze and confirmation status must be
 read from their receipts. Their execution is not implied by this declaration.
+
+The four fixed development roots have now passed all six native arms, including
+the147-token2+1 tail and584-token512+72 target prefill. The fixed pilot completed
+all24 measurements and24 warmups. Measured service totals across the four roots
+were M4.629248s, H145.466576s, C1U145.490480s, C4U145.459491s,
+C4U245.838786s and C4U444.603271s. This negative exploratory result does not
+remove any control, change the selected test roots or add timing repetitions.
+The confirmation still requires the actual published source/data freeze and its
+own complete qualification and864-slot panel.
+
+All native attempts, failures and reservations are metered. Early CPU preparation
+and some early lossless packing were not separately wall-metered; that limitation
+is retained. Later coordinator receipts include child work and storage and are
+not added to native wall a second time. Provisioning-to-ready observations include
+process/library/backend/model/context setup, with100ms polling resolution; they
+are not labeled pure weight-load time. Clean measured service remains its native
+response-commit clock. No inference about unobserved hidden allocator state or a
+general model/backend domain follows from these finite checks.

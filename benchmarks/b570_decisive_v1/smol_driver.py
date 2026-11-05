@@ -31,5 +31,10 @@ def development_all():
  for i in range(4):qualify_root('development',i)
 
 if __name__=='__main__':
- if sys.argv[1]=='development':development_all()
- else:qualify_root(sys.argv[1],int(sys.argv[2]))
+ started=utc();t0=time.monotonic();success=False
+ try:
+  if sys.argv[1]=='development':development_all()
+  else:qualify_root(sys.argv[1],int(sys.argv[2]))
+  success=True
+ finally:
+  write(SROOT/EPOCH/('COORDINATOR-'+started.replace(':','').replace('.','')+'.json'),dict(started_utc=started,finished_utc=utc(),wall_seconds=time.monotonic()-t0,success=success,includes_child_native=True,additive_to_native_cost=False))

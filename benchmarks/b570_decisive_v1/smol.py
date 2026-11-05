@@ -1,6 +1,8 @@
 """Separate Smol deployment: authenticate and exercise original host references."""
 from host import *
 from pathlib import PureWindowsPath
+if sys.flags.optimize:
+ raise RuntimeError('Native recovery and its read-only audit require Python assertions enabled')
 SMOL=Path('C:/hs/jsa-b570-run-v1')
 SROOT=ROOT/'secondary-smol'
 def native_path(value):
@@ -30,13 +32,20 @@ def setup():
  command(['cmake','--build',admission/'build','--config','Release','--parallel','4'],admission/'compile.log')
  for p in front.glob('*.dll'):shutil.copyfile(p,admission/'build/Release'/p.name)
  write(admission/'FILES.json',dict(files=[dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p)) for p in sorted((admission/'build/Release').iterdir()) if p.suffix.lower() in ('.dll','.exe')]))
-def supervised(name,manifest,argv,cost,**options):
+def supervised(name,manifest,argv,cost,stream_folder=None,**options):
  assert not LOCK.exists();unit=SROOT/'units'/name;unit.mkdir(parents=True)
+ for model in read(SROOT/'AUTHENTICATION.json')['models']:
+  st=Path(model['path']).stat();assert st.st_size==model['bytes'] and st.st_mtime_ns==model['mtime_ns'],'Authenticated model input changed'
  ledger=Ledger(ROOT/'ledger.sqlite',LIMITS);ledger.reserve('smol-'+name,cost);ledger.close()
  write(unit/'RESERVATION.json',dict(**cost,utc=utc()));write(LOCK,dict(pid=os.getpid(),unit=str(unit)))
  args=[sys.executable,'-B',str(HERE/'supervisor.py'),'--manifest',str(manifest),'--receipt',str(unit/'SUPERVISOR.json'),'--limit','900','--minimum-free-bytes',str(20*1024**3)]
  for key,value in options.items():args += ['--'+key.replace('_','-'),str(value)]
  args+=list(map(str,argv));write(unit/'COMMAND.json',args);start=time.monotonic();code=None;status='FAILED'
+ stream=None
+ if stream_folder is not None:
+  from smol_stream import StateStream
+  from smol_state import pack
+  stream=StateStream(stream_folder,pack)
  try:
   with (unit/'host.log').open('x') as f:code=subprocess.run(args,stdout=f,stderr=subprocess.STDOUT,timeout=950).returncode
   r=read(unit/'SUPERVISOR.json');assert r['cleanup_verified'] and r['job_accounting']['active_processes']==0
@@ -45,6 +54,7 @@ def supervised(name,manifest,argv,cost,**options):
  finally:
   ledger=Ledger(ROOT/'ledger.sqlite',LIMITS);ledger.finish('smol-'+name,status,code);ledger.close()
   if (unit/'SUPERVISOR.json').exists() and read(unit/'SUPERVISOR.json').get('cleanup_verified'):LOCK.unlink(missing_ok=True)
+  if stream is not None:stream.finish()
 def admit():
  a=SROOT/'admission';models=read(SROOT/'AUTHENTICATION.json')['models']
  unit,rc=supervised('admission',a/'FILES.json',[a/'build/Release/admission.exe',*[f['path'] for f in models]],dict(requests=0,token_rows=0,operators=0));assert rc==0

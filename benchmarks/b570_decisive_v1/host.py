@@ -3,6 +3,7 @@ from pathlib import Path
 import datetime,hashlib,json,os,shutil,subprocess,sys,time
 HERE=Path(__file__).resolve().parent
 TOOLKIT=HERE.parent/'tpds_decisive_v1'
+if not TOOLKIT.exists():TOOLKIT=HERE.parent/'recovery-toolkit'
 if not TOOLKIT.exists():TOOLKIT=HERE.parent/'toolkit'
 sys.path.insert(0,str(TOOLKIT))
 from runner import Ledger

@@ -20,6 +20,12 @@ class Extended(c.Structure):
     _fields_=[('basic',Basic),('io',IO),('process_mem',c.c_size_t),('job_mem',c.c_size_t),('peak_process',c.c_size_t),('peak_job',c.c_size_t)]
 class Accounting(c.Structure):
     _fields_=[(x,c.c_longlong) for x in ['user','kernel','period_user','period_kernel']]+[(x,w.DWORD) for x in ['page_faults','total_processes','active_processes','terminated_processes']]
+class Memory(c.Structure):
+    _fields_=[('length',w.DWORD),('load',w.DWORD)]+[(x,c.c_ulonglong) for x in ('total_phys','avail_phys','total_page','avail_page','total_virtual','avail_virtual','avail_extended')]
+K.GlobalMemoryStatusEx.argtypes=[c.POINTER(Memory)];K.GlobalMemoryStatusEx.restype=w.BOOL
+
+def available_ram():
+    m=Memory();m.length=c.sizeof(m);check(K.GlobalMemoryStatusEx(c.byref(m)),'RAM telemetry');return m.avail_phys
 def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def sha(p):
     with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
@@ -52,7 +58,7 @@ def main():
         env.update(explicit)
     if a.capture:env['HS_STAGE_CAPTURE']=str(a.capture.resolve())
     exe=Path(a.argv[0]).resolve();env['PATH']=str(exe.parent)+os.pathsep+os.environ.get('SystemRoot','C:/Windows')+'/System32'
-    rc={'status':'pending','started_utc':utc(),'argv':a.argv,'manifest_sha256':sha(a.manifest),'limit_seconds':a.limit,'capture':str(a.capture) if a.capture else None,'module_paths':[],'model_performance_claim':False}
+    rc={'status':'pending','started_utc':utc(),'argv':a.argv,'manifest_sha256':sha(a.manifest),'supervisor_source_sha256':sha(__file__),'limit_seconds':a.limit,'progress_bound_seconds':a.progress_limit,'capture':str(a.capture) if a.capture else None,'module_paths':[],'model_performance_claim':False,'provisioning_to_ready_seconds':None,'minimum_available_ram_bytes':available_ram(),'ram_reserve_bytes':2*1024**3,'poll_seconds':.1,'provisioning_scope':'process/DLL/backend/model/context setup before native HS_READY; observed with polling, not pure weight-load time'}
     write(a.receipt,rc);job=K.CreateJobObjectW(None,None);check(job,'CreateJobObject failed')
     info=Extended();check(1<=a.process_limit<=4,'Process bound');info.basic.flags=0x2000|0x8|0x200;info.basic.active=a.process_limit;info.job_mem=16*1024**3
     check(K.SetInformationJobObject(job,9,c.byref(info),c.sizeof(info)),'SetInformationJobObject failed')
@@ -66,9 +72,11 @@ def main():
             write(a.receipt,rc);check(N.NtResumeProcess(handle)==0,'Resume failed')
             progress_at=None;progress_size=0;progress_count=0
             while worker.poll() is None:
+                ram=available_ram();rc['minimum_available_ram_bytes']=min(ram,rc['minimum_available_ram_bytes']);check(ram>=rc['ram_reserve_bytes'],'Runtime RAM reserve')
                 if a.progress_limit:
                     check(a.progress_limit>0,'Finite request progress bound')
                     raw=a.receipt.with_suffix('.stdout.log').read_bytes().replace(b'\r\n',b'\n')
+                    if rc['provisioning_to_ready_seconds'] is None and b'HS_READY\n' in raw:rc['provisioning_to_ready_seconds']=time.monotonic()-start
                     if len(raw)!=progress_size:
                         count=raw.count(b'HS_READY\n')+raw.count(b'HS_RESULT ')
                         if count>progress_count:progress_at=time.monotonic();progress_count=count
@@ -76,6 +84,7 @@ def main():
                     if progress_at is not None:check(time.monotonic()-progress_at<a.progress_limit,'Request progress timeout')
                 seen.update(modules(handle));check(time.monotonic()-start<a.limit,'Native timeout');check(shutil.disk_usage(a.receipt.parent).free>a.minimum_free_bytes,'Runtime disk reserve');time.sleep(.1)
             rc['progress_bound_seconds']=a.progress_limit
+            if rc['provisioning_to_ready_seconds'] is None and b'HS_READY\n' in a.receipt.with_suffix('.stdout.log').read_bytes().replace(b'\r\n',b'\n'):rc['provisioning_to_ready_seconds']=time.monotonic()-start
             rc.update(exit_code=worker.returncode,exit_observed=True,status='complete' if worker.returncode==0 else 'failed')
         acct=Accounting();check(K.QueryInformationJobObject(job,1,c.byref(acct),c.sizeof(acct),None),'Job accounting failed')
         rc['job_accounting']={key:getattr(acct,key) for key,_ in Accounting._fields_}

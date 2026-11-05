@@ -6,11 +6,13 @@ _chunks=OrderedDict();_verified_states=set()
 
 def chunk(h):
  assert len(h)==64 and set(h)<=set('0123456789abcdef')
- p=SROOT/'state-token-cas'/h[:2]/h;st=p.stat();assert st.st_size==196608
+ # CAS objects are append-only during capture and immutable during read-only
+ # verification. Reuse authenticated bytes; a fresh restored audit hashes each
+ # unique object again instead of repeating filesystem probes per prefix.
  if h in _chunks:
-  stamp,data=_chunks.pop(h)
-  if stamp!=(st.st_size,st.st_mtime_ns):data=p.read_bytes();assert hashlib.sha256(data).hexdigest()==h
- else:data=p.read_bytes();assert hashlib.sha256(data).hexdigest()==h
+  cached=_chunks.pop(h);_chunks[h]=cached;return cached[1]
+ p=SROOT/'state-token-cas'/h[:2]/h;st=p.stat();assert st.st_size==196608
+ data=p.read_bytes();assert hashlib.sha256(data).hexdigest()==h
  _chunks[h]=((st.st_size,st.st_mtime_ns),data)
  if len(_chunks)>2048:_chunks.popitem(last=False)
  return data

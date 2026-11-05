@@ -62,7 +62,7 @@ def execute():
   argv=list(template);argv[0]=str(SROOT/'forced-reference01/build/Release/b570-closeout-target.exe')
   unit,rc=supervised(name,SROOT/'forced-reference01/FILES.json',argv,dict(requests=1,token_rows=len(job['prompt_ids'])+len(job['forced_suffix']),operators=0),stdin_file=req,environment_file=env);assert rc==0
   for p in sorted(Path(job['output']+'.states').glob('*.bin')):pack(p)
-def check():
+def check(save=True):
  a=read(SROOT/'qual02-0-heavy-capture.json');free=read(SROOT/'observer-R-0-capture.json');bank={};duplicate=0
  for job in read(SROOT/'FORCED_JOBS-0.json')['jobs']:
   r=read(native_path(job['output']));assert r['role']=='forced_reference' and r['candidate_values_received'] is False
@@ -80,6 +80,8 @@ def check():
  for i,x in enumerate(free['state_snapshots']):
   key=tuple(free['prompt_ids']+free['ids'][:i])
   if key in bank:assert native_path(x['frontier']).read_bytes()==native_path(bank[key]['frontier']).read_bytes()
- write(SROOT/'QUALIFICATION-0.json',dict(status='FINITE_NATIVE_CAPTURE_MATCH' if all(vector_matches+state_matches) else 'NUMERICAL_MISMATCH',contract='T',full_conditional_vectors=len(vector_matches),vectors_equal=sum(vector_matches),committed_states=len(state_matches),states_equal=sum(state_matches),independent_forced_paths=len(read(SROOT/'FORCED_JOBS-0.json')['jobs']),duplicate_reference_prefixes_checked=duplicate,autonomous_reference_never_received_candidate_tape=True,heavy_off_final_state_equal=read(SROOT/'COMMITTED_STATE_CHECK-0.json')['heavy_off_final_equal'],scope='One exposed historical development input, repaired whole-prompt draft UB1; not a main-panel qualification or performance claim'))
+ report=dict(status='FINITE_NATIVE_CAPTURE_MATCH' if all(vector_matches+state_matches) else 'NUMERICAL_MISMATCH',contract='T',full_conditional_vectors=len(vector_matches),vectors_equal=sum(vector_matches),committed_states=len(state_matches),states_equal=sum(state_matches),independent_forced_paths=len(read(SROOT/'FORCED_JOBS-0.json')['jobs']),duplicate_reference_prefixes_checked=duplicate,autonomous_reference_never_received_candidate_tape=True,heavy_off_final_state_equal=read(SROOT/'COMMITTED_STATE_CHECK-0.json')['heavy_off_final_equal'],scope='One exposed historical development input, repaired whole-prompt draft UB1; not a main-panel qualification or performance claim')
+ if save:write(SROOT/'QUALIFICATION-0.json',report)
+ return report
 if __name__=='__main__':
  {'stage':stage,'jobs':jobs,'run':execute,'check':check}[sys.argv[1]]()

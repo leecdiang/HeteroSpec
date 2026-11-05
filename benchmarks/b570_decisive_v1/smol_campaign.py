@@ -84,7 +84,8 @@ def execute(name,arm,requests,heavy=False,original=False,forced=False):
  argv[0]=str(d/('b570-closeout-target.exe' if original else 'build/Release/b570-closeout-target.exe' if arm=='M' else 'build/Release/b570-closeout-native.exe'))
  manifest=SROOT/'original-FILES.json' if original else d/'FILES.json'
  cost=dict(requests=len(jobs),token_rows=sum(len(x['prompt_ids'])+len(x.get('forced_suffix',[])) if forced else (len(x['prompt_ids'])+128 if arm=='M' else 2*len(x['prompt_ids'])+512) for x in jobs),operators=0)
- unit,rc=supervised(EPOCH+'-'+name,manifest,argv,cost,stdin_file=inp,environment_file=envfile,progress_limit=180)
+ streamed=any(x.get('heavy_state') or x.get('audit_final') or x.get('state_prefixes') for x in jobs)
+ unit,rc=supervised(EPOCH+'-'+name,manifest,argv,cost,stdin_file=inp,environment_file=envfile,progress_limit=180,stream_folder=folder if streamed else None)
  assert rc==0,(name,rc)
  finish_native(name,manifest)
  return jobs

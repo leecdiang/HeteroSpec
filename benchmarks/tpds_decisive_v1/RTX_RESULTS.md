@@ -153,6 +153,24 @@ Artifacts: [RTX decisive evidence release](https://github.com/leecdiang/HeteroSp
 The compact `D-boundary-repro.zip` can be inspected without the full campaign
 bundle; the full bundle is `raw-evidence.zip.partNNN` plus its parts index.
 
+The release is published within the repository's existing **private** access
+scope; repository visibility was not changed. Download using an authorized
+GitHub session, for example:
+
+```powershell
+gh release download rtx-decisive-v1-evidence-20261105 --repo leecdiang/HeteroSpec --pattern 'raw-evidence.zip.part*' --pattern restore_delivered_host.py --dir evidence
+```
+
+The complete ZIP stream has 77 parts and 20,522,078,183 bytes (about 19.1 GiB),
+representing 76,167 logical files and 409,899,607,100 logical bytes before duplicate
+sharing. Choose only the required restoration subtree and allow its disk space.
+`ARTIFACT_DELIVERY_PUBLISHED.json` records all server SHA256/size checks; an
+authenticated index download was independently checked against its local hash.
+Stream construction, chunk checks and part uploads took 4284.234s; publication
+and metadata checks took 24.844s. These are separate CPU/delivery clocks, not
+model-service or GPU time. Subsequent access/document checks are not included
+in those two measurements. The full remote bundle was not downloaded again.
+
 `restore_delivered_host.py` accepts either the ZIP or its `.parts.json` index.
 The latter seeks across verified parts without creating another full-size ZIP.
 It writes only under a fresh destination and shares duplicate payloads locally.

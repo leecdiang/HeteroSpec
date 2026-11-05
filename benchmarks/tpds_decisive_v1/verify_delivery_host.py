@@ -17,9 +17,9 @@ def main():
         with zipfile.ZipFile(writer,'w') as z:
             for h,c in zip(hashes,chunks):z.writestr('chunks/'+h[:2]+'/'+h,zlib.compress(c,1))
             z.writestr('FILES.json',json.dumps(dict(files=[row,dict(row,path='D:/selected/same.bin')])) )
-        writer.finish_part();index=remote/'raw-evidence.zip.parts.json';index.write_text(json.dumps(dict(parts=writer.parts)))
+        writer.finish_part();writer.flush_uploads();index=remote/'raw-evidence.zip.parts.json';index.write_text(json.dumps(dict(parts=writer.parts)))
         restore(index,'D:/selected',base/'restored')
         assert (base/'restored/nested/state.bin').read_bytes()==raw and (base/'restored/same.bin').read_bytes()==raw
-        put(ROOT/'ARTIFACT_TOOL_VALIDATION.json',dict(cpu_transport_only=True,cross_part_seek_zip=True,all_part_chunk_file_hashes_verified=True,duplicate_payload_hardlink_restore=True,parts=len(writer.parts),bytes=len(raw),gpu_qualification_claim=False))
+        put(ROOT/'ARTIFACT_TOOL_VALIDATION_V2.json',dict(cpu_transport_only=True,cross_part_seek_zip=True,all_part_chunk_file_hashes_verified=True,duplicate_payload_hardlink_restore=True,bounded_parallel_asset_upload_test=True,parts=len(writer.parts),bytes=len(raw),gpu_qualification_claim=False))
 
 if __name__=='__main__':main()

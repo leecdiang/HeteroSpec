@@ -90,6 +90,11 @@ def main():
         summary['known_work_lower_bound_including_completed_failed_slots']['operators']+=r.get('completed_operator_executions_lower_bound',0)
     summary['host_attempt_wall_seconds']=summary['host_process_seconds']
     summary['host_wall_scope']='Attempt clocks include prelaunch binding/model checks and postlaunch receipt validation. Outer normalization, archival and repair gaps are additionally captured by ELAPSED_STAGE_SPANS.json; spans/components overlap and must not be added.'
+    publication=ROOT/'ARTIFACT_DELIVERY_PUBLISHED.json'
+    if publication.exists():
+        delivered=json.loads(publication.read_bytes())
+        summary['artifact_delivery']={k:delivered[k] for k in ('release','total_zip_bytes','logical_files','logical_bytes','stream_and_part_upload_wall_s','publication_wall_s','wall_scope')}
+        summary['artifact_delivery']['receipt_sha256']=sha(publication)
     write(DEST/'UNIFIED_COSTS.json',summary)
     engineering=[]
     for root in (ROOT,Path('D:/rtx184-operator')):

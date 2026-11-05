@@ -1,6 +1,7 @@
 """Restore a selected original-path subtree from the portable evidence ZIP.
 
-Concatenate numbered ZIP parts first. Only writes beneath a fresh destination;
+Accepts a ZIP or the parts index with all numbered parts alongside it.
+Only writes beneath a fresh destination;
 original Windows absolute paths are identifiers, never restoration destinations.
 """
 import argparse,hashlib,json,os,zlib,zipfile,io,bisect

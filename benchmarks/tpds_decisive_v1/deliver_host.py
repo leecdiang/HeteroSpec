@@ -4,31 +4,38 @@ Run only after RTX work stops. No model weights, unrelated workspaces or secrets
 are collected. Server-reported asset SHA256/size must match each uploaded part.
 """
 from build_host import *
-import io,os,zlib,zipfile
+import io,os,zlib,zipfile,concurrent.futures
 GH='C:/Program Files/GitHub CLI/gh.exe'
 REPO='leecdiang/HeteroSpec'
 TAG='rtx-decisive-v1-evidence-20261105'
 OUT=Path('D:/rtx184-delivery')
 STORES=[Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/rtx184-evidence'),Path('F:/rtx184-O-evidence')]
+RELEASE_ID=None
 
-def gh(*args):return subprocess.check_output([GH,*args],text=True)
+def gh(*args):return subprocess.check_output([GH,*args],text=True,encoding='utf-8')
+
+def release():
+    global RELEASE_ID
+    if RELEASE_ID is None:
+        RELEASE_ID=int(gh('api','repos/'+REPO+'/releases?per_page=100','--jq','.[] | select(.tag_name=="'+TAG+'") | .id').strip())
+    return json.loads(gh('api','repos/'+REPO+'/releases/'+str(RELEASE_ID)))
 
 def upload(path):
     for attempt in range(3):
         result=subprocess.run([GH,'release','upload',TAG,str(path),'--repo',REPO])
         if result.returncode==0:break
-        release=json.loads(gh('api','repos/'+REPO+'/releases/tags/'+TAG))
-        if any(a['name']==path.name for a in release['assets']):break
+        state=release()
+        if any(a['name']==path.name for a in state['assets']):break
         if attempt==2:raise RuntimeError('asset upload failed; staging bytes retained')
         time.sleep(5)
-    release=json.loads(gh('api','repos/'+REPO+'/releases/tags/'+TAG))
-    asset=next(a for a in release['assets'] if a['name']==path.name)
+    state=release()
+    asset=next(a for a in state['assets'] if a['name']==path.name)
     h=sha(path)
     if asset['size']!=path.stat().st_size or asset.get('digest')!='sha256:'+h:raise RuntimeError('remote asset digest/size mismatch')
     return dict(name=path.name,bytes=path.stat().st_size,sha256=h,url=asset['browser_download_url'],asset_id=asset['id'])
 
 class PartsWriter(io.RawIOBase):
-    def __init__(self):self.position=0;self.current=None;self.size=0;self.parts=[];self.limit=256*1024**2
+    def __init__(self):self.position=0;self.current=None;self.size=0;self.parts=[];self.pending=[];self.next_index=0;self.limit=256*1024**2
     def writable(self):return True
     def seekable(self):return False
     def tell(self):return self.position
@@ -37,18 +44,26 @@ class PartsWriter(io.RawIOBase):
     def finish_part(self):
         if not self.current:return
         p=Path(self.current.name);self.current.close();self.current=None
-        record=upload(p);self.parts.append(record)
-        (OUT/'upload-progress.json').write_text(json.dumps(self.parts,indent=2))
-        print('uploaded, server SHA256 verified',p.name,record['bytes'],flush=True)
-        # Only the staging copy is retired; original evidence chunks remain.
-        if p.resolve().parent!=OUT.resolve():raise RuntimeError('unexpected staging path')
-        p.unlink();self.size=0
+        self.pending.append(p);self.size=0
+        if len(self.pending)==4:self.flush_uploads()
+    def flush_uploads(self):
+        if not self.pending:return
+        # Four independent assets; at most1GiB of staged ZIP parts. Retain every
+        # staging file if any upload/verification fails.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+            records=list(pool.map(upload,self.pending))
+        for p,record in zip(self.pending,records):
+            self.parts.append(record)
+            print('uploaded, server SHA256 verified',p.name,record['bytes'],flush=True)
+            if p.resolve().parent!=OUT.resolve():raise RuntimeError('unexpected staging path')
+            p.unlink()
+        self.pending=[];(OUT/'upload-progress.json').write_text(json.dumps(self.parts,indent=2))
     def write(self,data):
         n=len(data);view=memoryview(data)
         while view:
             if self.current is None:
                 if shutil.disk_usage(OUT).free<21*1024**3:raise RuntimeError('delivery disk reserve')
-                self.current=(OUT/('raw-evidence.zip.part%03d'%len(self.parts))).open('xb')
+                self.current=(OUT/('raw-evidence.zip.part%03d'%self.next_index)).open('xb');self.next_index+=1
             take=min(len(view),self.limit-self.size);self.current.write(view[:take]);view=view[take:];self.position+=take;self.size+=take
             if self.size==self.limit:self.finish_part()
         return n
@@ -106,7 +121,7 @@ def main():
             index[name]=row
         manifest=dict(schema=1,chunk_size=1024*1024,compression='zlib',files=sorted(index.values(),key=lambda r:r['path'].casefold()),models_included=False,model_identity='Model SHA256 pins and original-host paths are in job/build/freeze receipts.',original_path_identifiers_only=True)
         write('FILES.json',json.dumps(manifest,separators=(',',':')).encode(),True)
-    writer.finish_part()
+    writer.finish_part();writer.flush_uploads()
     receipt=dict(schema=1,format='concatenated ZIP parts; PartsReader avoids concatenation',parts=writer.parts,total_bytes=writer.position,unique_chunks=len(seen),logical_files=len(index),logical_bytes=sum(r['bytes'] for r in index.values()),release='https://github.com/'+REPO+'/releases/tag/'+TAG,all_remote_digests_verified=True,delivery_wall_before_index_upload_s=time.monotonic()-began)
     put(OUT/'raw-evidence.zip.parts.json',receipt);remote=upload(OUT/'raw-evidence.zip.parts.json');put(ROOT/'ARTIFACT_DELIVERY.json',dict(receipt,index_asset=remote))
     print('evidence delivery complete',len(index),'files',len(writer.parts),'parts',flush=True)

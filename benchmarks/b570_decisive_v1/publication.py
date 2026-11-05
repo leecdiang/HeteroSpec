@@ -5,6 +5,11 @@ REMOTE=ROOT.parent/'b570-decisive-readback-20261105'
 RESTORED=ROOT.parent/'b570-decisive-restored-20261105'
 TAG='b570-decisive-v1-evidence-20261105'
 def pack():
+ for role,label in [('original-final','original-runtime'),('shared-01','candidate-runtime')]:
+  target=ROOT/'historical'/label;target.mkdir()
+  for f in read(OLD/role/'FILES.json')['files']:
+   assert sha(f['path'])==f['sha256']
+   shutil.copyfile(f['path'],target/Path(f['path']).name)
  # The old transport code has already delivered authenticated evidence on this host.
  legacy=Path('I:/HeteroSpec/b570-prefix-reuse-20261104/repro')
  delivery=ROOT/'delivery';delivery.mkdir()

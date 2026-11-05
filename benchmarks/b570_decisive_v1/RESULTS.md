@@ -103,3 +103,17 @@ A no-model post-panel check found execution sources, binaries and inputs still i
 The separate v2 raw release contains actual binaries, portable frontend inputs, arguments, manifests and all included raw bytes, without GGUF weights. The immutable initial v1 release remains unchanged. Restore the objects and run `python -B RESTORED/delivery-v2/recompute.py RESTORED` with the pinned host requirements. Fresh-download restoration is recorded in `evidence/recovery/DELIVERY_READBACK.json` when delivery completes. Verification is authenticated on the same B570 host; it does not claim external native replication or anonymous access.
 
 No merge, paper edit, new model download, rental or cross-platform pooling.
+
+## Completed delivery
+
+The [independent v2 raw release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-decisive-recovery-v2-evidence-20261105)
+is published. All 15 parts and 28,113 unique objects passed actual authenticated
+fresh-download verification. All 85,229 logical files (56,943,464,706 bytes) were
+restored. The complete reconstructed audit report is byte-identical to the
+original stdout, SHA256 `490747c21ea04c3fff4065d80d4c0322a0f32db9eefabaef162fea6c046abba0`.
+No native experiment was repeated for delivery. All four delivery actions and
+their actual elapsed costs are retained in `evidence/recovery/DELIVERY_COSTS.json`;
+there were no transport retries. `DELIVERY_COMPLETION.json` and
+`DELIVERY_READBACK.json` record the source/index bindings and restoration proof.
+These final post-publication receipts supplement the archived result-source
+commit `4c4330dbdebb563f6458a915ac0ee2b2dadf9aa0`; they do not alter frozen execution.

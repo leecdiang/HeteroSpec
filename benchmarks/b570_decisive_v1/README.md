@@ -166,3 +166,12 @@ configurable through `HS_DECISIVE_DELIVERY_ROOT`; original run files stay in pla
 Native jobs and phase receipts are metered, including setup, warmups and failures.
 Some CPU preparation, early packing and final mechanism/boundary aggregation were
 not separately wall-metered. No complete total engineering-time claim is made.
+
+The [v2 raw release](https://github.com/leecdiang/HeteroSpec/releases/tag/b570-decisive-recovery-v2-evidence-20261105)
+is now published. All 15 parts were freshly downloaded; all 85,229 logical files
+were restored and the complete audit stdout matched the original byte for byte
+(SHA256 `490747c21ea04c3fff4065d80d4c0322a0f32db9eefabaef162fea6c046abba0`).
+See [delivery completion](evidence/recovery/DELIVERY_COMPLETION.json),
+[restoration receipt](evidence/recovery/DELIVERY_READBACK.json) and
+[actual delivery costs](evidence/recovery/DELIVERY_COSTS.json). This is an
+authenticated same-host verification, with no external native replication claim.

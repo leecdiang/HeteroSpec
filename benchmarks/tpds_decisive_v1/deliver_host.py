@@ -55,12 +55,12 @@ class PartsWriter(io.RawIOBase):
 
 def files():
     roots=[ROOT,Path(__file__).resolve().parent,Path('D:/rtx184-runs'),Path('D:/rtx184-qualification'),Path('D:/rtx184-operator'),OLD,Path('E:/rtx164/active03/qwen_config01'),Path('E:/tpds167/build01/source'),Path('E:/tpds167/oracle01'),Path('E:/rtx170/witness-8B/native'),Path('E:/rtx170/witness-0.6B/native'),Path('D:/rtx184-tools/downloads'),Path('E:/rtx164/pool06'),Path('E:/rtx164/exposure-pr163')]
-    extensions={'.json','.jsonl','.log','.txt','.bin','.f32','.cpp','.c','.h','.hpp','.cu','.cuh','.inc','.cmake','.py','.md','.exe','.dll','.a','.lib','.sqlite','.patch','.def','.rc','.in','.s','.sh','.bat','.ps1'}
+    extensions={'.json','.jsonl','.log','.txt','.bin','.f32','.state','.cpp','.c','.h','.hpp','.cu','.cuh','.inc','.cmake','.py','.md','.exe','.dll','.a','.lib','.sqlite','.patch','.def','.rc','.in','.s','.sh','.bat','.ps1'}
     for root in roots:
         for p in sorted(root.rglob('*')):
             if not p.is_file() or any(x in p.parts for x in ('.git','__pycache__')):continue
             if p.name.startswith(('EVIDENCE_DEDUP-','ARTIFACT_DELIVERY','upload-progress')):continue
-            if p.suffix.lower() in extensions or p.name in ('CMakeLists.txt','LICENSE','COPYING'):yield p
+            if p.suffix.lower() in extensions or 'cas' in p.parts or p.name in ('CMakeLists.txt','LICENSE','COPYING'):yield p
     for name,h in json.loads((ROOT/'selection-v3/EXCLUSIONS.json').read_bytes())['source_pins'].items():
         p=Path(name)
         if sha(p)!=h:raise RuntimeError('exposure source drift')
@@ -70,6 +70,7 @@ def files():
     for p in Path('D:/rtx184-tools').glob('*.json'):yield p
 
 def main():
+    began=time.monotonic()
     if Path('D:/HeteroSpec-PC/RTX_EXPERIMENT.lock').exists():raise RuntimeError('GPU work still active')
     OUT.mkdir(exist_ok=False);writer=PartsWriter();index={};seen=set();inodes={}
     with zipfile.ZipFile(writer,'w',compression=zipfile.ZIP_STORED,allowZip64=True) as archive:
@@ -100,13 +101,13 @@ def main():
                     while raw:=f.read(1024*1024):
                         full.update(raw);size+=len(raw);h=hashlib.sha256(raw).hexdigest();parts.append(h)
                         if h not in seen:chunk(h,zlib.compress(raw,1))
-                row=dict(path=str(p.resolve()),sha256=full.hexdigest(),bytes=size,chunks=parts);inodes[identity]=row
+                row=dict(path=str(p.resolve()),sha256=full.hexdigest(),bytes=size,chunks=parts,mtime_ns=stat.st_mtime_ns);inodes[identity]=row
             if name in index and (index[name]['sha256'],index[name]['bytes'])!=(row['sha256'],row['bytes']):raise RuntimeError('live/archived path differs')
             index[name]=row
         manifest=dict(schema=1,chunk_size=1024*1024,compression='zlib',files=sorted(index.values(),key=lambda r:r['path'].casefold()),models_included=False,model_identity='Model SHA256 pins and original-host paths are in job/build/freeze receipts.',original_path_identifiers_only=True)
         write('FILES.json',json.dumps(manifest,separators=(',',':')).encode(),True)
     writer.finish_part()
-    receipt=dict(schema=1,format='concatenated ZIP parts; PartsReader avoids concatenation',parts=writer.parts,total_bytes=writer.position,unique_chunks=len(seen),logical_files=len(index),logical_bytes=sum(r['bytes'] for r in index.values()),release='https://github.com/'+REPO+'/releases/tag/'+TAG,all_remote_digests_verified=True)
+    receipt=dict(schema=1,format='concatenated ZIP parts; PartsReader avoids concatenation',parts=writer.parts,total_bytes=writer.position,unique_chunks=len(seen),logical_files=len(index),logical_bytes=sum(r['bytes'] for r in index.values()),release='https://github.com/'+REPO+'/releases/tag/'+TAG,all_remote_digests_verified=True,delivery_wall_before_index_upload_s=time.monotonic()-began)
     put(OUT/'raw-evidence.zip.parts.json',receipt);remote=upload(OUT/'raw-evidence.zip.parts.json');put(ROOT/'ARTIFACT_DELIVERY.json',dict(receipt,index_asset=remote))
     print('evidence delivery complete',len(index),'files',len(writer.parts),'parts',flush=True)
 

@@ -38,7 +38,7 @@ The unchanged mandatory D1 contract failed, so this lane is closed negative.
 actual GPU diagnostic and its successful CPU reconstruction from delivered-format
 bytes. Finite development qualification did not prove every natural test boundary.
 
-## Lane O: original-host qualification
+## Lane O: complete qualified panel, limited strongest-control gain
 
 The same newly compiled CUDA/base modules are supplied to graph_tiles,
 backend_loop4 and packed. The old PR171 oracle remains separate. All saved real
@@ -55,10 +55,45 @@ plugin was bridged with2592 additional real GPU operator executions while
 preserving the CUDA/base/core/executable bytes. Total operator reservations are
 7488, including the early failed attempts, below8192.
 
-The natural-service qualification and formal-panel disposition are recorded in
-the accompanying versioned O receipts. A build, parser test or readiness flag is
-not a GPU qualification. Any invalidated main panel is reported without a
-partial-subset performance estimate.
+All twelve arm/root natural-service qualifications, their old-R/observer bridges,
+heavy/off checks and exact priming checks passed. The complete runtime, including
+the CPU host-buffer plugin and actually loaded external OpenMP module, is bound
+to the receipts. The twelve-root, three-arm, six-session panel was published in
+`5e1120fd37da94ed1c05e725dc8869ec571020a0` and read back before test outputs.
+All216 measurements and216 immediate warmups completed with identical autonomous
+outputs, active target KV and final frontier. There were no main retries.
+
+Ratios below are numerator service time / denominator service time; values above1
+favor the denominator. Intervals are the frozen10,000-draw root-cluster,
+family-adjusted95% intervals across the three contrasts. Repetitions are not
+independent roots.
+
+| Numerator / denominator | Primary paired geometric ratio | Primary family95 | Total-service ratio | Total family95 |
+|---|---:|---|---:|---|
+| graph_tiles / backend_loop4 | 1.039120 | [1.013766, 1.065643] | 1.037981 | [1.014886, 1.061901] |
+| graph_tiles / packed | 1.055686 | [1.027305, 1.087877] | 1.053897 | [1.028870, 1.083232] |
+| backend_loop4 / packed | 1.015942 | **[0.999886, 1.029652]** | 1.015334 | [1.002420, 1.028274] |
+
+The prespecified primary interval for packed versus the strong loop4 control
+includes1. The secondary total-service interval excludes1. Thus there is a small
+favorable point estimate and a positive secondary signal, but no stable primary
+superiority conclusion. Two roots (`MATH/counting_and_probability/train/390` and
+`MATH/algebra/train/464`) and two sessions favor loop4; all remain included.
+This is not an equivalence claim. Loop4 explains much of the larger tiles gap;
+the result does not justify presenting that whole gap as a unique packing gain.
+No gain is attributed to four-row verification, which does not enter wide packing.
+
+| Arm (72 measurements each) | Total service s | Mean service s | Total prefill s | Descriptive p95 service s |
+|---|---:|---:|---:|---:|
+| graph_tiles | 169.270079 | 2.350973 | 89.274269 | 5.439914 |
+| backend_loop4 | 163.076223 | 2.264948 | 83.899717 | 5.145627 |
+| packed | 160.613421 | 2.230742 | 81.468936 | 5.149208 |
+
+The p95 is descriptive over the fixed repeated-root panel, not an SLA claim.
+`O-MAIN-RECORDS.json` retains every planned slot. The original analysis is retained;
+`O-MAIN-ANALYSIS-WITH-COSTS.json` independently recomputes exactly the same frozen
+statistics while attaching full costs. No statistical result changes during that
+accounting step. RTX GPU work stopped after this complete panel.
 
 ## Costs, failures and engineering
 
@@ -70,6 +105,26 @@ must not be added twice. `ENGINEERING_COSTS.json` retains separately measured
 configure, compile, link and tokenizer costs. Missing failed-work measurements
 remain unknown, not zero. Artifact/installation time without an independent
 receipt is not presented as measured zero.
+
+The complete ledger reserves992 model trajectories,5,170,326 decoded rows and7488
+operator executions. Confirmed complete work is972 trajectories,400,479 decoded
+rows and6912 operator executions; including completed slots inside the interrupted
+attempt raises the documented lower bounds to974 trajectories and401,451 rows.
+The remaining failed work is unresolved, explicitly bounded by retained
+reservations, and is not reported as zero. Known complete-plus-failed-slot service
+cost is3033.091091s; summed recorded host-attempt wall is10051.711872s.
+One recovered controller-finalization wall uses its documented upper bound;
+it is not silently presented as an exact native duration.
+
+For O's432 main slots, actual decoded work is276,984 rows. Measurements cost
+492.959722s and immediate warmups455.594342s. The216 version-worker loads cost
+888.509955s, pool setup5.764572s and post-service state diagnostics200.740996s;
+these components are nested in3569.577s of main-attempt wall. Independent test
+references and outer state checks bring the full O confirmation calendar span to
+4057.176s. O natural-service qualification, including CPU comparison, archival,
+priming and storage repair, spans2975.732s. These spans must not be added to their
+nested components. `ELAPSED_STAGE_SPANS.json` also retains D and operator
+engineering spans, including intervening pauses instead of silently excluding them.
 
 Every native launch uses finite request/row/operator reservations, an owned host
 lock, time limit, live memory/disk polling and GPU reserve checks. Historical early
@@ -93,6 +148,10 @@ losslessly compressed chunks. Model GGUF files are not included; their complete
 SHA256 identities are in the freezes and jobs. Saved projection operands,
 original/candidate source, compiled workers/modules, reference payloads,
 failures, build commands, exposure inputs and telemetry are included.
+
+Artifacts: [RTX decisive evidence release](https://github.com/leecdiang/HeteroSpec/releases/tag/rtx-decisive-v1-evidence-20261105).
+The compact `D-boundary-repro.zip` can be inspected without the full campaign
+bundle; the full bundle is `raw-evidence.zip.partNNN` plus its parts index.
 
 `restore_delivered_host.py` accepts either the ZIP or its `.parts.json` index.
 The latter seeks across verified parts without creating another full-size ZIP.

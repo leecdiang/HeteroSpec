@@ -31,6 +31,15 @@ def main():
         receipt=base/'session-result.json'
         if receipt.exists():
             result=json.loads(receipt.read_bytes());record['actual_work']=result['actual_work'];services += [dict(x,attempt=attempt['id']) for x in result['records']] if 'records' in result else []
+        elif record.get('host_exit',{}).get('status')=='COMPLETE' and (base/'native/result.json').exists():
+            result=json.loads((base/'native/result.json').read_bytes())
+            if isinstance(result.get('requests'),list):
+                actual=dict(requests=len(result['requests']),token_rows=0,operators=0)
+                for item in result['requests']:
+                    r=json.loads((base/'native'/item['record']).read_bytes());n=len(r['prompt_ids'])
+                    actual['token_rows']+=n+(n+len(r['cycles'])*8 if r['draft_enabled'] else len(r['ids'])-1)
+                    services.append(dict(attempt=attempt['id'],slot=item['slot_id'],arm=r.get('arm','R'),kind='qualification',service_s=r['service_seconds'],native_record=item['record'],cost_provenance='completed original bridge native journal'))
+                assert all(actual[k]<=record['reserved'][k] for k in actual);record['actual_work']=actual
         for file in ('result.json','PROVISIONED.json'):
             p=base/'native'/file
             if p.exists():
@@ -44,6 +53,7 @@ def main():
             r=json.loads(p.read_bytes())
             if 'service_seconds' not in r:continue
             detail=dict(path=str(p),slot=p.parent.name,seconds={k:v for k,v in r.items() if 'seconds' in k or k=='prefill_wall_s'})
+            n=len(r['prompt_ids']);detail['decoded_token_rows']=n+(n+len(r['cycles'])*8 if r['draft_enabled'] else len(r['ids'])-1)
             slot_details.append(detail)
         if slot_details:
             record['slot_costs']=slot_details
@@ -62,13 +72,24 @@ def main():
                 if record.get('host_exit',{}).get('status')=='COMPLETE':record['actual_work']=dict(requests=0,token_rows=0,operators=record['completed_operator_executions_lower_bound'])
             elif record.get('host_exit',{}).get('status')=='COMPLETE':record['actual_work']=dict(record['reserved'])
             if (base/'load.json').exists():record['model_load']=json.loads((base/'load.json').read_bytes())
-        if (base/'RECOVERED_COMPLETED_NATIVE.json').exists():record['recovery']=json.loads((base/'RECOVERED_COMPLETED_NATIVE.json').read_bytes())
+        if (base/'RECOVERED_COMPLETED_NATIVE.json').exists():
+            record['recovery']=json.loads((base/'RECOVERED_COMPLETED_NATIVE.json').read_bytes())
+            if record['recovery']['native_return_code']==0 and record.get('completed_operator_executions_lower_bound')==record['reserved']['operators']:
+                record['actual_work']=dict(requests=0,token_rows=0,operators=record['reserved']['operators'])
         native.append(record)
     summary=dict(as_of_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),attempts=attempts,native=native,reserved_total={k:sum(x[k] for x in attempts) for k in ('requests','token_rows','operators')},host_process_seconds=sum(x.get('host_exit',{}).get('seconds',0) for x in native),service_seconds=sum(x['service_s'] for x in services),services=services,interpretation='Reservations never refunded. Service/model/provision components are nested within host process wall and must not be added to it. Running/failed attempts remain explicit; missing actual-work fields are not zeros.')
     summary['failed_attempt_completed_slot_service_seconds_lower_bound']=sum(s['seconds'].get('service_seconds',0) for r in native if r['status']!='COMPLETE' for s in r.get('slot_costs',[]))
     summary['known_complete_and_failed_slot_service_seconds_lower_bound']=summary['service_seconds']+summary['failed_attempt_completed_slot_service_seconds_lower_bound']
     summary['confirmed_work_lower_bound']={k:sum(r.get('actual_work',{}).get(k,0) for r in native) for k in ('requests','token_rows','operators')}
     summary['actual_work_unresolved_attempts']=[r['attempt'] for r in native if 'actual_work' not in r]
+    summary['known_work_lower_bound_including_completed_failed_slots']={k:v for k,v in summary['confirmed_work_lower_bound'].items()}
+    for r in native:
+        if 'actual_work' in r:continue
+        summary['known_work_lower_bound_including_completed_failed_slots']['requests']+=len(r.get('slot_costs',[]))
+        summary['known_work_lower_bound_including_completed_failed_slots']['token_rows']+=sum(s['decoded_token_rows'] for s in r.get('slot_costs',[]))
+        summary['known_work_lower_bound_including_completed_failed_slots']['operators']+=r.get('completed_operator_executions_lower_bound',0)
+    summary['host_attempt_wall_seconds']=summary['host_process_seconds']
+    summary['host_wall_scope']='Attempt clocks include prelaunch binding/model checks and postlaunch receipt validation. Outer normalization, archival and repair gaps are additionally captured by ELAPSED_STAGE_SPANS.json; spans/components overlap and must not be added.'
     write(DEST/'UNIFIED_COSTS.json',summary)
     engineering=[]
     for root in (ROOT,Path('D:/rtx184-operator')):

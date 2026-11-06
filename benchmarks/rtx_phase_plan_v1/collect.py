@@ -48,7 +48,14 @@ def collect():
     storage_costs=[]
     for p in [ROOT/'COLD_ARCHIVE_RECEIPT.json',ROOT/'COLD_ARCHIVE_RELOCATION.json',*ROOT.glob('smol-engineering-*.json'),*ROOT.glob('FINAL_MATRIX_STORAGE-*.json')]:
         if p.exists():storage_costs.append(dict(path=str(p),**json.loads(p.read_bytes())))
-    write(DEST/'ENGINEERING_COSTS.json',dict(recorded_command_wall_s=sum(r['seconds'] for r in commands),commands=commands,lossless_storage_recovery=storage_costs,other_engineering_time_not_assumed_zero=True))
+    transport={}
+    published=ROOT/'ARTIFACT_DELIVERY_PUBLISHED.json';readback=ROOT/'ARTIFACT_READBACK.json'
+    if published.exists():
+        r=json.loads(published.read_bytes());transport.update({k:r[k] for k in ('stream_and_part_upload_wall_s','publication_wall_s','total_zip_bytes','logical_files','logical_bytes','unique_chunks')})
+    if readback.exists():
+        r=json.loads(readback.read_bytes());transport.update(selected_download_and_saved_state_readback_wall_s=r['wall_s'],downloaded_parts_wall_s=sum(x['wall_s'] for x in r['downloaded_parts']),downloaded_part_bytes=sum(x['bytes'] for x in r['downloaded_parts']),new_GPU_requests=r['new_GPU_requests'])
+    transport['scope']='Transport is separate from native attempt/service clocks. Part download times are nested in readback wall. Initial index-upload and some preparation components lack separate clocks and are unknown, not zero. Readback recomputes saved GPU evidence; it is not a new GPU qualification.'
+    write(DEST/'ENGINEERING_COSTS.json',dict(recorded_command_wall_s=sum(r['seconds'] for r in commands),commands=commands,lossless_storage_recovery=storage_costs,evidence_transport=transport,other_engineering_time_not_assumed_zero=True))
     print('Collected',len(attempts),'attempts;',costs['reserved'],'reserved;',len(services),'service records',flush=True)
 
 if __name__=='__main__':collect()

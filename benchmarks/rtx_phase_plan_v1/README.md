@@ -30,6 +30,14 @@ regressions, failed reservations, reference/teacher work and complete observed
 costs remain available. No extra sessions or new AUTO are fitted. RTX model work
 is stopped; no B570/arXiv change, rental or merge is performed.
 
+The authenticated evidence release is published:39 parts,10310114228 ZIP bytes
+and35043 logical files, with every server SHA256/size verified. Fresh downloaded
+parts reproduce the retained boundary's six saved R/SIMPLE/LOCAL frontier/state
+files, including complete active KV equality across771 positions/all layers.
+This selected readback adds zero GPU requests; it does not claim full-bundle
+redownload or qualify a new runtime. Final publication, readback and toolchain
+receipts are under `host_evidence/host/`; engineering costs include transport.
+
 The inherited B570 source/cost scan and CPU/C++ helpers are retained unchanged.
 They do not provide new B570 measurements or RTX GPU qualification. Same-context
 execution and inherited loop4/packed kernels alone are not claimed novel; see

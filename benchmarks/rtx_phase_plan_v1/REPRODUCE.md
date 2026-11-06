@@ -39,6 +39,16 @@ contains model setup, qualification, teacher replay and failed work; service and
 phase clocks are nested components, not additional wall time. An absent component
 clock is unknown. Failed reservations are never refunded.
 
+Publication is bound by `host_evidence/host/ARTIFACT_DELIVERY_PUBLISHED.json`;
+`ARTIFACT_READBACK.json` records a fresh authenticated download and recomparison
+of the retained head767/q4 boundary's saved original-R, SIMPLE and LOCAL frontier
+vectors and complete active KV at prefix771. Its six restored files are a
+selected transport/readback check, not a full-bundle fresh download or a new
+runtime qualification. `ENGINEERING_COSTS.json` keeps publication and readback
+clocks separate from native service. `TOOLCHAIN_IDENTITY.json` pins Python3.11.9,
+Zig0.16.0, CMake4.4.3 and Ninja1.13.2, including actual executable hashes and the
+retained initial version-query failure.
+
 ## Replay comparisons without new GPU work
 
 `develop.compare_cases` compares full originally requested vectors and committed

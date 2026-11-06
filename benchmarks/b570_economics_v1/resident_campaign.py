@@ -3,8 +3,8 @@ from campaign_host import *
 from costs import decompose
 
 def build_for(stage,arm,mode):
- if mode==1:return ROOT/'observed01'/f'{stage}-{arm}'
- return ROOT/('resident04' if stage=='resident' else 'parallel03')/f'{arm}-mode{mode}'
+ if mode==1:return ROOT/'observed02'/f'{stage}-{arm}'
+ return ROOT/('resident04' if stage=='resident' else 'parallel04')/f'{arm}-mode{mode}'
 def modes(stage):return ('R',) if stage=='resident' else ('S','L')
 def env_for(stage,method,trace=False):
  e={}
@@ -30,6 +30,7 @@ def qualification(stage):
      for k in ('reset_phase','continuation_phase'):
       p=metrics[k];assert p['same_context'] and p['same_KV_owner'] and not p['state_transfer'] and p['offline_witness_bytes']==0
     assert metrics['continuation_phase']['destination_ub']==(128 if arm=='M' else 2 if stage=='parallel' else 1)
+    assert metrics['target_continuation_ub']==metrics['continuation_phase']['destination_ub']
     results.append(dict(root=i,method=method,**q));print('RESIDENT_QUALIFIED',stage,i,method,arm,flush=True)
  write(ROOT/(stage.upper()+'_QUALIFIED.json'),dict(status='COMPLETE_T_CONTRACT_PASS',results=results,original_R_unchanged=True,strong_H1_and_caller_only_retained=True))
 

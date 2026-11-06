@@ -3,9 +3,9 @@ from native_host import *
 from stage_costs import once
 
 def build(stage,arm):
- d=ROOT/'observed01'/f'{stage}-{arm}'
+ d=ROOT/'observed02'/f'{stage}-{arm}'
  if (d/'FILES.json').exists():return d
- base=ROOT/('resident04' if stage=='resident' else 'parallel03')/f'{arm}-mode1';d.mkdir(parents=True)
+ base=ROOT/('resident04' if stage=='resident' else 'parallel04')/f'{arm}-mode1';d.mkdir(parents=True)
  for p in base.iterdir():
   if p.is_file() and p.suffix.lower() in ('.cpp','.h','.hpp','.txt'):shutil.copyfile(p,d/p.name)
  shutil.copyfile(HERE/'native/trim_trace.hpp',d/'trim_trace.hpp')

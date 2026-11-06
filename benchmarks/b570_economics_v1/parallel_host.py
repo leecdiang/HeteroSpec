@@ -57,7 +57,7 @@ def core_parallel():
  return d
 
 def parallel_frontend(arm,mode=0):
- c=core_parallel();d=ROOT/'parallel03'/f'{arm}-mode{mode}'
+ c=core_parallel();d=ROOT/'parallel04'/f'{arm}-mode{mode}'
  if (d/'FILES.json').exists():return d
  base=ROOT/'resident04'/f'{arm}-mode{mode}'
  d.mkdir(parents=True)
@@ -80,6 +80,7 @@ static void economics_policy(const std::string&role,const std::string&phase){
  key='void end(llama_context * ctx,int code) {';s=once(s,key,key+'economics_policy("target","prefill");');p.write_text(s)
  if arm!='M':
   p=d/'native.cpp';s=p.read_text();s=once(s,'const auto continuation_phase=econ_phase(ctx_tgt,observer,1,pending);','const auto continuation_phase=econ_phase(ctx_tgt,observer,2,pending);');p.write_text(s)
+  s=once(s,'{"target_continuation_ub",continuation_cp.n_ubatch}','{"target_continuation_ub",llama_n_ubatch(ctx_tgt)}');p.write_text(s)
  p=d/'CMakeLists.txt';s=p.read_text();s=once(s,(ROOT/'core01/build/Release/llama.lib').as_posix(),(c/'build/Release/llama.lib').as_posix());p.write_text(s)
  command(['cmake','-S',d,'-B',d/'build','-G','Visual Studio 17 2022','-A','x64'],d/'configure.log')
  command(['cmake','--build',d/'build','--config','Release','--target','b570-closeout-'+('target' if arm=='M' else 'native'),'--parallel','4'],d/'compile.log')

@@ -12,6 +12,9 @@ def a1():
   for j,kind in enumerate(('warmup','measure')):
    p=folder/f'{j}.json';d=read(p);assert (d['prompt_ids'],d['ids'],d['eog'])==(old['prompt_ids'],old['ids'],old['eog'])
    metrics=read(str(p)+'.metrics.json');sidecar=read(str(p)+'.cost.json') if x['mode'] else None
+   if sidecar:
+    migration=('transition','export_source','export_destination','export_source_after','import_state','context_create','context_destroy','state_checks','sampler_clone')
+    assert all(sidecar['phases'][k]['calls']==(0 if x['arm']=='M' else 1) for k in migration),(x['name'],'online migration call coverage')
    row=dict(**x,kind=kind,input_id=r['id'],root_id=r['root_id'],metrics_sha256=sha(str(p)+'.metrics.json'),endpoint_equal=True)
    row.update(decompose(metrics['service_ms']/1000,sidecar));rows.append(row)
  groups={}

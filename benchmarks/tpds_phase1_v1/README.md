@@ -1,5 +1,11 @@
 # TPDS phase one: reviewed execution framework v2
 
+**RTX original-host results are complete:** [RESULT.md](RESULT.md) reports actual
+native four-way qualification, the full fixed append matrix and all six resident
+worker arms. [REPRODUCE_RTX.md](REPRODUCE_RTX.md) provides the source build and
+evidence entry. The design text below describes the original prospective update;
+its statement that no GPU work had run applies to that authoring commit only.
+
 **Read `REVIEW_V2.md` first.** It implements the author's pre-timing review of
 PR192/193. `RTX.md`, `B570.md`, `EXECUTION.md` and `HOST_ADAPTER.md` retain the
 original design/integration details; the v2 amendment overrides their fixed

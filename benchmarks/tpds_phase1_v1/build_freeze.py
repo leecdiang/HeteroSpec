@@ -15,7 +15,8 @@ from design import require, write_new
 
 ENV_KEYS = {'PATH', 'INCLUDE', 'LIB', 'LIBPATH', 'CC', 'CXX', 'CFLAGS', 'CXXFLAGS',
             'CPPFLAGS', 'LDFLAGS', 'CUDA_PATH', 'CUDACXX', 'CMAKE_PREFIX_PATH',
-            'VULKAN_SDK', 'GGML_CUDA_FORCE_MMQ', 'GGML_CUDA_FORCE_CUBLAS'}
+            'VULKAN_SDK', 'GGML_CUDA_FORCE_MMQ', 'GGML_CUDA_FORCE_CUBLAS',
+            'ZIG_GLOBAL_CACHE_DIR', 'ZIG_LOCAL_CACHE_DIR', 'TEMP', 'TMP'}
 
 
 def sha(path):

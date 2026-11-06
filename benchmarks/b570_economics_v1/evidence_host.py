@@ -73,7 +73,7 @@ def bank(group,index):
    if k not in out or 'sequence' in x:out[k]=x
  for receipt in receipts:
   for p in read(receipt)['captures']:
-   d=read(p);assert d['candidate_values_received'] is False
+   d=read(native_path(p));assert d['candidate_values_received'] is False
    for x in d['prefixes']:
     k=tuple(x['prefix'])
     if k in out:assert native_path(out[k]['frontier']).read_bytes()==native_path(x['frontier']).read_bytes()

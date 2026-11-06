@@ -1,48 +1,45 @@
-# B570: reference-compatible target parallelism and speculation economics
+# B570 native resident and target-parallel economics
 
-**Prospective design + tested CPU tools. Native integration and new GPU execution: NOT_RUN.**
+Original-host execution from PR189 actual latest head
+`03bc44b6f382919e08a8c1aaa198c2dd723b5c8f`, on independent result branch
+`codex/b570-economics-results-20261106`.
 
-Base: PR187 `b01040d3b303abfc31c5ce2dbcb100cac7490b27`.
-This independent result-free branch does not alter PR188 or wait for RTX.
+Read [RESULTS.md](RESULTS.md) for native qualification, complete clean service,
+all exposed controls, occupied physical target graphs, full paid costs and the
+development decision. [REPRODUCE.md](REPRODUCE.md) describes raw restoration,
+zero-model reconstruction and portable native builds. The original
+[PLAN.md](PLAN.md), [HISTORY.md](HISTORY.md) and [HOST_ADAPTER.md](HOST_ADAPTER.md)
+remain the prospective protocol/history.
 
-The question is not whether removing serialization alone can rescue speculation.
-PR64 and PR82 already tested resident phase binding without ordinary-reference
-profit. Reuse that mechanism, preserve the current target contract, and determine
-whether useful target parallel work savings pay for the entire draft/lifecycle bill.
+The primary deployment is the independently referenced PR187 SmolLM2-1.7B/135M
+Q8 family. Original R retains whole-prompt/512-chunk UB128 prefill. The new native
+core reuses PR64/82 phase binding, preserves one live target/KV owner, and shares
+legal numerical repairs and graph reuse across M, SIMPLE and LOCAL. Clean
+service retains strong H1/D1, D4 and caller-only controls. Residence is historical
+work, not a new discovery or profit guarantee.
 
-Read `PLAN.md`, `HISTORY.md`, `HOST_ADAPTER.md`, then `HOST_PROMPT.md`.
+`native_host.py` and `campaign_host.py` reuse the original request ledger,
+supervisor and independent R bank. `resident_host.py`, `parallel_host.py` and
+`resident_campaign.py` implement native builds, contract qualification, separate
+mechanism/cost windows and the fixed clean pilot. `probe_host.py` covers known
+q2/q4/q32, physical boundaries, rollback/replay, cap1 and separate k3 rejection
+branches. `audit_host.py` reconstructs the raw result without model execution;
+`rebuild_host.py` uses delivered source/dependencies, with new binaries requiring
+their own R qualification.
 
-## Already implemented
+The raw release retains failed attempts and all charged requests, warmups and
+reference work. `evidence/` contains compact projections and source/hash receipts;
+the complete raw records are in the linked release with an explicit immutable
+PR187 dependency. Missing clocks remain null. Host envelopes and device-kernel
+times are distinct; inclusive clocks are not added twice.
 
-- `costs.py`: reconstruct PR187 saved service/coarse windows from authenticated
-  metrics; missing phase times remain null. Compute non-double-counted diagnostic
-  partitions and the target-savings/draft/other cost identity.
-- `stage_costs.py` + `native/cost_clock.hpp`: generate frontend-only mode0,
-  host-envelope and synchronized-diagnostic builds. Cover BOTH observer wrappers
-  and direct M prompt-decode begin/end. Preserve online transfer checks; time its
-  three exports, import, context creation/destruction and comparisons separately.
-- `stage_resident_core.py`: private source overlay reusing PR64's
-  synchronize / phase-ubatch / scheduler-reserve mechanism. It does NOT copy
-  PR64's enlarged output reservation or silently change numerical R.
-- `native/phase_binding.hpp`: identity/position guard around a host-bound phase
-  mutation. Not a KV-byte proof, graph-cache certificate or production fallback.
-- `design.py`, `analyze.py`: outcome-free root selection, balanced schedules,
-  explicit development decisions, complete-panel root-cluster comparisons.
+No new natural panel is run to consume a ceiling or rescue a negative pilot.
+Optional Qwen requires independent original-R/capacity admission and is not
+admitted by Smol. Historical Qwen failures, PR175 AUTO null and PR187 results
+remain unchanged. No RTX/arXiv edit, merge, model download or rental.
 
-## Run local helper checks
+The 32 helper tests pass; they are separate from actual native qualification:
 
-```sh
-python -m unittest discover -s tests -v
-python -O -m unittest discover -s tests -v
-c++ -std=c++17 -Wall -Wextra -Werror -pedantic -fsanitize=undefined \
-  -DB570_COST_MODE=2 tests/test_native.cpp -o /tmp/b570-econ-tests
-/tmp/b570-econ-tests
+```powershell
+python -B -m unittest discover -s benchmarks/b570_economics_v1/tests -v
 ```
-
-These tests are synthetic/standalone only. Native Windows builds, original-R
-bridges, phase-binding integration, Vulkan graph/dispatch observations and timing
-must be completed on the original host. Do not stop at helper tests.
-
-Use the existing PR187 supervisor, request reservations, full-vector/state and
-free/forced reference tools. Adapt paths and reviewed ABI normally; do not start
-another universal auditing framework. Package only the needed evidence once.

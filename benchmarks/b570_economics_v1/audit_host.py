@@ -62,7 +62,7 @@ def units_and_costs():
   if 'repro' in p.relative_to(ROOT).parts:continue
   v=read(p)
   if 'wall_seconds' in v:commands.setdefault(sha(p),dict(path=str(p.relative_to(ROOT)),**v))
- return dict(reserved=totals,ceilings=LIMITS,by_stage=stages,units=rows,ledger=ledger,native_seconds=sum(x['native_seconds'] for x in rows),owned_worker_seconds=sum(x['owned_seconds'] or 0 for x in rows),streamed_storage=dict(units=len(streams),packing_seconds=sum(x['packing_seconds'] for x in streams),post_native_drain_seconds=sum(x.get('post_native_drain_seconds',0) for x in streams),overlaps_native_not_additive=True),retained_command_receipts=list(commands.values()),retained_command_wall_seconds=sum(x['wall_seconds'] for x in commands.values()),driver_receipts={p.name:read(p) for p in sorted((ROOT/'driver-costs').glob('*.json'))},failed_reservations=[x for x in ledger if x['status']=='FAILED'],no_refunds=True,old_reserved_unchanged=dict(requests=1706,token_rows=1804796,operators=0),device_kernel_times=None,unmetered_engineering_CPU_time=None,clocks_are_not_additive=True)
+ return dict(reserved=totals,ceilings=LIMITS,by_stage=stages,units=rows,ledger=ledger,native_seconds=sum(x['native_seconds'] for x in rows),owned_worker_seconds=sum(x['owned_seconds'] or 0 for x in rows),streamed_storage=dict(units=len(streams),packing_seconds=sum(x['packing_seconds'] for x in streams),post_native_drain_seconds=sum(x.get('post_native_drain_seconds',0) for x in streams),overlaps_native_not_additive=True),retained_command_receipts=list(commands.values()),sum_of_retained_command_wall_seconds_including_nested=sum(x['wall_seconds'] for x in commands.values()),driver_receipts={p.name:read(p) for p in sorted((ROOT/'driver-costs').glob('*.json'))},failed_reservations=[x for x in ledger if x['status']=='FAILED'],no_refunds=True,old_reserved_unchanged=dict(requests=1706,token_rows=1804796,operators=0),device_kernel_times=None,unmetered_engineering_CPU_time=None,clocks_are_not_additive=True)
 
 def qualification(row,arm,heavy,off=None,cap1=False,known=False):
  old,ref=bank(row['group'],row['index']);a=read(heavy/'1.json')
@@ -103,7 +103,7 @@ def qualifications():
  return dict(rows=rows,vectors=sum(x['vectors'] for x in rows),states=sum(x['states'] for x in rows),all_equal=True,independent_roots=4,original_R_unchanged=True)
 
 def pilot(stage):
- result=read(ROOT/(stage.upper()+'_PILOT.json'));groups={};inputs=read(ROOT/'EXPOSED_INPUTS.json')['inputs']
+ result=read(ROOT/(stage.upper()+'_PILOT.json'));groups={};samples={};inputs=read(ROOT/'EXPOSED_INPUTS.json')['inputs']
  assert len(result['records'])==(64 if stage=='resident' else 128)
  for x in result['records']:
   j=0 if x['kind']=='warmup' else 1;folder=ROOT/'runs'/x['name'];p=folder/f'{j}.json.metrics.json'
@@ -111,8 +111,12 @@ def pilot(stage):
   a=read(folder/f'{j}.json');old,_=bank(inputs[x['root']]['group'],inputs[x['root']]['index'])
   assert (a['prompt_ids'],a['ids'],a['eog'])==(old['prompt_ids'],old['ids'],old['eog'])
   key=x['method']+'_'+x['arm'];g=groups.setdefault(key,dict(measure=0.,warmup=0.,measurements=0,warmups=0,proposed=0,accepted=0))
-  g[x['kind']]+=x['service_s'];g['measurements' if j else 'warmups']+=1
+  samples.setdefault(key,dict(measure=[],warmup=[]))[x['kind']].append(x['service_s']);g['measurements' if j else 'warmups']+=1
   if j:g['proposed']+=x['drafted'];g['accepted']+=x['accepted']
+ # Match the decision's builtin sum, including Python 3.12 compensated float
+ # summation; sequential += differs by one ulp on two retained arm totals.
+ for key,g in groups.items():
+  for kind in ('measure','warmup'):g[kind]=sum(samples[key][kind])
  assert all(x['measurements']==x['warmups']==8 for x in groups.values())
  return groups
 
@@ -132,14 +136,26 @@ def known_work():
    rows.append(dict(method=method,case=case['name'],actual_decoded_rows_per_request=actual,post_rollback_rows_per_request=extra,occupied=occupied,includes_warmup=True,natural_performance=False))
  return rows
 
+def draft_observations():
+ rows=[]
+ for i in range(4):
+  scalar=read(ROOT/'runs'/f'resident-qual-r{i}-R-H1-heavy/1.json')['draft_prefill_vectors'][0]['path'];baseline=native_path(scalar).read_bytes()
+  for method in ('S','L'):
+   for arm in ('H1','C4U4','C4U1'):
+    capture=read(ROOT/'runs'/f'parallel-qual-r{i}-{method}-{arm}-heavy/1.json');path=capture['draft_prefill_vectors'][0]['path'];raw=native_path(path).read_bytes()
+    prior=read(ROOT/'runs'/f'resident-qual-r{i}-R-{arm}-heavy/1.json')['draft_prefill_vectors'][0]['path'];old=native_path(prior).read_bytes()
+    x=np.frombuffer(raw,dtype='<f4');y=np.frombuffer(baseline,dtype='<f4');assert x.size==y.size==49152 and np.isfinite(x).all()
+    rows.append(dict(root=i,method=method,arm=arm,draft_frontier_equal_resident_same_arm=raw==old,draft_frontier_equal_resident_H1=raw==baseline,max_absolute_difference_from_H1=float(np.max(np.abs(x-y))),candidate_draft_values_never_used_to_filter=True))
+ return rows
+
 def audit():
  assert not LOCK.exists(),'Read-only reconstruction requires quiescent native workers'
  pins=read(ROOT/'HOST_BINDINGS.json');assert pins['reference_changed'] is False and pins['reference_producer_ub']==128 and pins['reference_outer_batch']==512
  assert sha(OLD_CAMPAIGN/'FREEZE.json')==pins['pr187_freeze_sha256'] and sha(OLD_CAMPAIGN/'RECORDS.json')==pins['pr187_records_sha256']
  for f in pins['original_files']:checked_file(f['path'],f['sha256'])
  a0=scan_saved(OLD_CAMPAIGN,OSMOL/'cohort/PANEL.json');assert a0==read(ROOT/'a0/saved-costs.json') and a0['model_forwards']==0 and a0['slots']==864
- q=qualifications();print('AUDIT_QUALIFICATION_PASS',q['vectors'],q['states'],file=sys.stderr,flush=True)
+ q=qualifications()
  decision=read(ROOT/'DEVELOPMENT_DECISION.json');p=pilot('parallel');assert all(p[m+'_'+a]['measure']==decision['complete_clean_service_totals_s'][m+'_'+{'M':'M','H1':'D1','C4U4':'D4','C4U1':'C4U1'}[a]] for m in ('S','L') for a in ('M','H1','C4U4','C4U1'))
- return dict(status='COMPLETE_NATIVE_EXPOSED_ECONOMICS_RECONSTRUCTION',a0=dict(slots=a0['slots'],model_forwards=0,summary=a0['summary']),qualification=q,resident_pilot=pilot('resident'),parallel_pilot=p,known_work=known_work(),decision=decision,costs=units_and_costs(),fresh_natural_confirmation_started=False,external_native_replication=False,prior_release_dependency='b570-decisive-recovery-v2-evidence-20261105',weights_needed_for_read_only_recompute=False)
+ return dict(status='COMPLETE_NATIVE_EXPOSED_ECONOMICS_RECONSTRUCTION',a0=dict(slots=a0['slots'],model_forwards=0,summary=a0['summary']),qualification=q,resident_pilot=pilot('resident'),parallel_pilot=p,known_work=known_work(),draft_observations=draft_observations(),decision=decision,costs=units_and_costs(),fresh_natural_confirmation_started=False,external_native_replication=False,prior_release_dependency='b570-decisive-recovery-v2-evidence-20261105',weights_needed_for_read_only_recompute=False)
 
 if __name__=='__main__':print(json.dumps(audit(),indent=2))

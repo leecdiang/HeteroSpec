@@ -43,31 +43,115 @@ def natural_decision(evidence):
     return 'CLOSE_R1_NATURAL_ONLY_CONTINUE_R2_AND_PORTABILITY'
 
 
-def normalize_receipt(path, slot, reference_id, qualified):
-    r=json.loads(Path(path).read_text())
-    t=r.get('service_seconds')
-    require(type(t) in (int,float) and math.isfinite(t) and t>0,'Missing native service_seconds')
+def normalize_receipt(path, slot, reference_id, qualified, *, window, coordinate=None):
+    """Bind a timing to its declared window. Never substitute service for append."""
+    raw=Path(path).read_bytes();r=json.loads(raw)
     require(type(qualified) is bool and isinstance(reference_id,str) and reference_id,'Explicit qualification binding required')
+    if window == 'complete_resident_service':
+        t=r.get('service_seconds');unit='service_seconds'
+    elif window == 'append_after_valid_state':
+        require(isinstance(coordinate,dict), 'Structural coordinate binding required')
+        require(r.get('capacity_observed') == coordinate['capacity'], 'Native capacity not observed or mismatched')
+        require(r.get('requested_mask') == coordinate['requested_outputs'], 'Requested mask mismatch')
+        expected_rows=coordinate['width'] if coordinate['requested_outputs']=='all' else 1
+        require(r.get('observed_copied_rows')==expected_rows, 'Requested output buffer/row coverage not observed')
+        require(r.get('phase1_clean') is True and r.get('prefill_outside_append') is True and
+                r.get('append_includes_phase_bind_sync_and_requested_copy') is True, 'Not the registered clean append window')
+        counters=r.get('append_observer_calls')
+        keys={'state_exports','state_imports','reference_replays','heavy_captures'}
+        require(isinstance(counters,dict) and set(counters)==keys and all(type(v) is int and v==0 for v in counters.values()),
+                'Real clean observer counters required; absence/flags alone is not zero work')
+        require(isinstance(r.get('native_admission_receipt'),str) and r['native_admission_receipt'],
+                'Bind actual allocation, output reserve, signed budget and clean-observer qualification')
+        begin,end=r.get('append_begin_us'),r.get('append_end_us')
+        require(type(begin) is int and type(end) is int and end>begin,'Native append begin/end clocks required')
+        ms=r.get('append_ms')
+        require(type(ms) in (int,float) and math.isfinite(ms) and math.isclose(ms,(end-begin)/1000.,rel_tol=1e-10,abs_tol=1e-9),
+                'append_ms disagrees with native append clocks')
+        t=ms/1000.;unit='append_ms/1000'
+    else:raise ValueError('Unknown cost window')
+    require(type(t) in (int,float) and math.isfinite(t) and t>0,'Missing native timing for '+window)
     return dict(slot_id=slot,status='COMPLETE',qualified=qualified,service_s=t,reference_id=reference_id,
-                native_receipt_sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest())
+                window=window,native_timing_field=unit,native_receipt_sha256=hashlib.sha256(raw).hexdigest())
 
 
-def saved_costs(path):
-    """PR190 published result records; never materialize a full KV archive."""
+def _coverage(values, expected):
+    require(expected is None or type(expected) is int and expected>=len(values), 'Invalid expected request count')
+    known=[]
+    for v in values:
+        if v is not None:
+            require(type(v) in (int,float) and math.isfinite(v) and v>=0,'Invalid recorded cost')
+            known.append(v)
+    complete=expected is not None and expected>0 and len(values)==expected and len(known)==expected
+    return dict(total_s=math.fsum(known) if complete else None,
+                observed_sum_s=math.fsum(known) if known else None,
+                measured_requests=len(known),present_requests=len(values),expected_requests=expected,
+                status='COMPLETE' if complete else 'INCOMPLETE_OR_UNMEASURED')
+
+
+def saved_costs(path, expected_sessions=6):
+    """Read saved PR190-style records. Empty phase maps never imply measured zero.
+
+    Whole-arm totals require a declared root/session matrix (or expected_requests).
+    Partial observed sums are named as such. Missing rows and missing nested fields
+    propagate null independently; this function does not repair historic records.
+    """
+    require(type(expected_sessions) is int and expected_sessions>0, 'Positive expected session count required')
     j=json.loads(Path(path).read_text());out={}
+    defaults={'target_phases':('PREFILL','ORDINARY','VERIFY'),
+              'draft_phases':('PREFILL','DRAFT_SYNC','PROPOSE')}
     for family,f in j['families'].items():
         out[family]={}
         for name,a in f['arms'].items():
-            rows=a['rows']; require(rows,'Missing published request rows')
-            terms={k:[] for k in ('service_s','planning_s','output_copy_s','reset_s','teardown_s','other_service_s')}
-            target={};draft={}
-            for r in rows:
-                for key in terms: terms[key].append(r.get(key))
-                for key,value in r.get('target_phases',{}).items():target[key]=target.get(key,0.)+value
-                for key,value in r.get('draft_phases',{}).items():draft[key]=draft.get(key,0.)+value
-            totals={k:None if any(v is None for v in values) else math.fsum(values) for k,values in terms.items()}
-            out[family][name]=dict(requests=len(rows),totals=totals,target_phases_s=target,draft_phases_s=draft,
-                note='Host envelopes; missing fields remain null. No device-time attribution from activity counts.')
+            rows=a['rows'];require(isinstance(rows,list),'Missing published request rows')
+            expected=a.get('expected_requests')
+            if 'roots' in f:
+                require(len(set(f['roots']))==len(f['roots']),'Duplicate expected root')
+                matrix={(root,session) for root in f['roots'] for session in range(expected_sessions)}
+                seen=set()
+                for row in rows:
+                    key=(row.get('root'),row.get('session'))
+                    require(key in matrix and key not in seen,'Duplicate/unexpected request cannot complete coverage')
+                    seen.add(key)
+                expected=len(matrix)
+            coverage={k:_coverage([r.get(k) for r in rows],expected)
+                      for k in ('service_s','planning_s','output_copy_s','reset_s','teardown_s','other_service_s')}
+            all_complete=all(row.get('status','COMPLETE')=='COMPLETE' for row in rows)
+            if not all_complete:
+                for value in coverage.values():value.update(total_s=None,status='INCOMPLETE_REQUEST_STATUS')
+            phases={}
+            for role,default_keys in defaults.items():
+                keys=set(default_keys)
+                for row in rows:
+                    value=row.get(role)
+                    require(value is None or isinstance(value,dict),'Phase mapping must be object/null')
+                    if value:keys.update(value)
+                phases[role]={}
+                for key in sorted(keys):
+                    values=[];unverified_zero=0;not_executed=0
+                    for row in rows:
+                        raw=row.get(role);value=None if raw is None else raw.get(key)
+                        if value is not None:
+                            require(type(value) in (int,float) and math.isfinite(value) and value>=0, 'Invalid nested phase cost')
+                        marker=row.get('phase_measurement_status',{}).get(role,{}).get(key)
+                        if marker=='NOT_EXECUTED':
+                            require(value in (None,0),'NOT_EXECUTED conflicts with nonzero cost')
+                            not_executed+=1;value=None
+                        elif value==0 and marker!='MEASURED':
+                            # Old default zeros are not silently certified timings.
+                            unverified_zero+=1;value=None
+                        values.append(value)
+                    summary=_coverage(values,expected)
+                    if not all_complete:summary.update(total_s=None,status='INCOMPLETE_REQUEST_STATUS')
+                    summary.update(unverified_zero_requests=unverified_zero,not_executed_requests=not_executed)
+                    if expected is not None and len(rows)==expected and not_executed==expected:
+                        summary['status']='NOT_APPLICABLE';summary['total_s']=None
+                    phases[role][key]=summary
+            out[family][name]=dict(requests_present=len(rows),expected_requests=expected,
+                totals={k:v['total_s'] for k,v in coverage.items()},coverage=coverage,
+                target_phases_s={k:v['total_s'] for k,v in phases['target_phases'].items()},
+                draft_phases_s={k:v['total_s'] for k,v in phases['draft_phases'].items()},phase_coverage=phases,
+                note='Host envelopes only. Null means unmeasured, partial, or not applicable; see coverage. Observed sums are not full totals.')
     return out
 
 
@@ -93,8 +177,8 @@ def source_bundle(manifest, output):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('task',choices=['saved-costs','decision','source-bundle'])
-    p.add_argument('input',type=Path);p.add_argument('out',type=Path);a=p.parse_args()
+    p.add_argument('input',type=Path);p.add_argument('out',type=Path);p.add_argument('--expected-sessions',type=int,default=6);a=p.parse_args()
     j=None if a.task=='saved-costs' else json.loads(a.input.read_text())
     if a.task=='source-bundle':print(json.dumps(source_bundle(j,a.out)))
-    else: write_new(a.out,saved_costs(a.input) if a.task=='saved-costs' else {'R1_natural':natural_decision(j)})
+    else: write_new(a.out,saved_costs(a.input,a.expected_sessions) if a.task=='saved-costs' else {'R1_natural':natural_decision(j)})
 if __name__=='__main__': main()

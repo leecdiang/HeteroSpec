@@ -45,6 +45,8 @@ def patch(text):
  if(!phase1_clean)observer.evidence.commit(ctx);
  const int rollback=req.value("rollback",0);''')
     text=once(text,'{"explicit_output_reserve",32}', '''{"capacity_observed",phase1_capacity},{"requested_mask",width<=4?"all":"last"},
+ {"phase1_clean",phase1_clean},{"append_begin_us",phase1_append_begin},{"append_end_us",phase1_append_end},
+ {"prefill_outside_append",true},
  {"observed_copied_rows",phase1_requested.size()/phase1_vocab},
  {"append_ms",(phase1_append_end-phase1_append_begin)/1000.0},
  {"append_includes_phase_bind_sync_and_requested_copy",true}''')
@@ -59,7 +61,7 @@ def stage(source, expected_sha256, out):
     out.parent.mkdir(parents=True,exist_ok=True);out.write_text(result,encoding='utf8')
     write_new(out.with_suffix(out.suffix+'.binding.json'),dict(status='SOURCE_OVERLAY_NOT_NATIVE_QUALIFIED',
         parent_sha256=expected_sha256,output_sha256=digest(out),core_changed=False,
-        host_required=['Actual context/output allocation','Original UB128 producer','Signed capacity','Independent scalar R','Clean observer behavior']))
+        host_required=['Actual context/output allocation','Original UB128 producer','Signed capacity','Independent scalar R','Clean observer behavior with actual append counters','Actual output allocation and C4096 signed reserve; no label-only admission','Complete build input freeze before formal timing']))
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('source',type=Path);p.add_argument('expected_sha256');p.add_argument('out',type=Path)

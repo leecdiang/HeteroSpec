@@ -9,6 +9,7 @@ from pathlib import Path
 
 SEED = 2026110601
 FACTOR = ('W_L4', 'W_P', 'L_L4', 'L_P')
+# Legacy four labels remain readable; new R2 schedules require baselines.baseline_set.
 BURST = ('W_M_TARGET_ONLY', 'L_M_TARGET_ONLY', 'L_M_MATCHED', 'L_D4')
 WILLIAMS = ((0, 1, 3, 2), (1, 2, 0, 3), (2, 3, 1, 0), (3, 0, 2, 1))
 ROOT_FIELDS = {'root', 'content_sha256', 'domain', 'prompt_tokens'}
@@ -80,7 +81,8 @@ def panel(candidates, exposed_roots, exposed_hashes):
 
 def stamp(jobs):
     for index, row in enumerate(jobs):
-        row['slot_id'] = f"{row['stage']}-{index:05d}"
+        row['slot_id'] = f"v2-{row['stage']}-{index:05d}"
+        row['protocol_version'] = 'review-v2'
         row['status'] = 'PLANNED_NOT_RUN'
     return jobs
 
@@ -130,21 +132,33 @@ def natural(cohorts):
     return stamp(jobs)
 
 
-def burst(roots, primers):
+def burst(roots, primers, baseline_review):
+    from baselines import baseline_set
+    coverage = baseline_set(baseline_review)
+    arms = tuple(coverage['arms'])
     roots = validate_roots(roots)
     require(isinstance(primers, list) and len(primers) == 2 and len(set(primers)) == 2, 'Two distinct exposed primer IDs required')
     require(all(isinstance(p, str) and p.strip() for p in primers), 'Invalid primer ID')
     require(not set(primers) & {r['root'] for r in roots}, 'Primers must not overlap test roots')
     workers = []
+    # Preserve four sessions and the existing ceiling. For >4 arms this is a
+    # prespecified cyclic subset, NOT a fully balanced Williams crossover.
+    n = len(arms)
+    base = [0]
+    for j in range(1, n):
+        base.append((j+1)//2 if j % 2 else n-j//2)
     for session in range(4):
         order = list(range(16)); random.Random(seed_for('burst', session)).shuffle(order)
-        for position, ai in enumerate(WILLIAMS[session]):
-            arm = BURST[ai]
+        sequence = WILLIAMS[session] if n == 4 else [(x+session) % n for x in base]
+        for position, ai in enumerate(sequence):
+            arm = arms[ai]
             requests = [dict(root=p, kind='primer') for p in primers]
             requests += [dict(roots[i], kind='measurement', root_index=i) for i in order]
-            workers.append(dict(stage='R2_BURST', family='Qwen', worker_id=f'R2-s{session}-{arm}', session=session,
-                arm=arm, arm_position=position, residency='matched' if arm in ('L_M_MATCHED', 'L_D4') else 'target_only',
+            workers.append(dict(stage='R2_BURST', protocol_version='review-v2', family='Qwen',
+                worker_id=f'R2-v2-s{session}-{arm}', session=session, arm=arm, arm_position=position,
+                residency='target_only' if arm in coverage['target_only_arms'] else 'matched',
                 draft=arm == 'L_D4', draft_width=4 if arm == 'L_D4' else 1,
+                baseline_coverage=coverage, order_design='Williams4' if n == 4 else 'four_predeclared_cyclic_rows_not_fully_balanced',
                 requests=requests, reset_each_request=True, load_once=True, status='PLANNED_NOT_RUN'))
     return workers
 
@@ -153,13 +167,18 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('task', choices=['rtx-struct', 'b570-struct', 'natural', 'burst'])
     p.add_argument('--inputs', type=Path); p.add_argument('--primers', nargs=2)
+    p.add_argument('--baseline-review', type=Path, help='Required pre-R2 four-strategy review v2')
     p.add_argument('--out', type=Path, required=True); a = p.parse_args()
     if a.task.endswith('-struct'):
         result = structural(a.task.split('-')[0])
     else:
         require(a.inputs is not None, '--inputs required')
         data = json.loads(a.inputs.read_text(encoding='utf8'))
-        result = natural(data) if a.task == 'natural' else burst(data['Qwen'], a.primers)
+        if a.task == 'natural':
+            result = natural(data)
+        else:
+            require(a.baseline_review is not None, '--baseline-review required for a new R2 freeze')
+            result = burst(data['Qwen'], a.primers, json.loads(a.baseline_review.read_text()))
     write_new(a.out, result)
     print(json.dumps({'status': 'SCHEDULE_ONLY_NOT_EXECUTED', 'entries': len(result)}))
 

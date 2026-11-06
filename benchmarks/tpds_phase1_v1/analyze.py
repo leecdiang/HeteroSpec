@@ -21,6 +21,9 @@ def complete(plan, records):
         key = r.get('slot_id')
         require(key in expected and key not in actual, 'Unknown or duplicate record slot')
         require(r.get('status') == 'COMPLETE' and r.get('qualified') is True, 'Failed/unqualified version; retain records, no complete-panel inference')
+        require(r.get('window') == expected[key]['window'], 'Timing window differs from frozen plan')
+        if expected[key]['window']=='append_after_valid_state':
+            require(r.get('native_timing_field') in ('append_ms/1000','append_seconds'), 'Structural comparisons require append timing, not full service')
         t = r.get('service_s')
         require(type(t) in (int, float) and math.isfinite(t) and t > 0, 'Invalid complete timing')
         require(isinstance(r.get('reference_id'), str) and r['reference_id'], 'Missing numerical reference binding')
@@ -95,7 +98,14 @@ def analyze_structural(plan, records):
 
 def analyze_burst(plan, records, draws=10000):
     expected = {w['worker_id']: w for w in plan}; seen=set(); rows=[]; windows=[]
-    require(len(expected) == len(plan) == 16, 'Expected 16 long-lived workers')
+    from baselines import baseline_set
+    require(plan and all(w.get('protocol_version') == 'review-v2' for w in plan), 'Use v1 code for an already frozen v1 panel')
+    coverage = plan[0]['baseline_coverage']
+    require(coverage == baseline_set(coverage['review']), 'Baseline review identity mismatch')
+    arms = tuple(coverage['arms']); controls = tuple(coverage['target_only_arms'])
+    require(all(w.get('baseline_coverage') == coverage for w in plan), 'Mixed baseline freezes')
+    require(len(expected) == len(plan) == 4*len(arms), 'Missing or duplicate persistent workers')
+    require({(w['session'], w['arm']) for w in plan} == {(s,a) for s in range(4) for a in arms}, 'Invalid worker matrix')
     for record in records:
         key=record.get('worker_id'); require(key in expected and key not in seen, 'Unknown/duplicate worker')
         seen.add(key); worker=expected[key]
@@ -118,10 +128,11 @@ def analyze_burst(plan, records, draws=10000):
         require(record['test_burst_wall_s']<=record['worker_wall_s'], 'Inconsistent burst clock')
         windows.append(dict(worker_id=key, arm=worker['arm'], session=worker['session'], **{n:record[n] for n in names}))
     require(seen==set(expected), 'Missing workers')
-    primary=paired_summary(rows,BURST,[('L_D4','W_M_TARGET_ONLY'),('L_D4','L_M_TARGET_ONLY')],seed_for('burst-primary'),draws)
-    sensitivity=paired_summary(rows,BURST,[('L_M_MATCHED','L_M_TARGET_ONLY')],seed_for('burst-sensitivity'),draws)
-    return dict(primary=primary, separately_labelled_residency_sensitivity=sensitivity, actual_host_windows=windows,
-                note='Root-cluster intervals condition on these four shared worker sessions; worker overhead descriptive, not 256 independent processes.')
+    primary=paired_summary(rows,arms,[('L_D4',a) for a in controls],seed_for('burst-primary-v2'),draws)
+    sensitivity=paired_summary(rows,arms,[('L_M_MATCHED','L_M_TARGET_ONLY')],seed_for('burst-sensitivity-v2'),draws)
+    return dict(primary=primary, baseline_coverage=coverage, all_fixed_target_only_contrasts_reported=True,
+                separately_labelled_residency_sensitivity=sensitivity, actual_host_windows=windows,
+                note='Root-cluster intervals condition on these four shared worker sessions; worker overhead descriptive, not independent worker replicates per request. No post-hoc minimum-M test replaces the simultaneous fixed controls.')
 
 
 def main():

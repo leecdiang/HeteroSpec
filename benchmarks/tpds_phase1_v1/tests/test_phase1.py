@@ -22,7 +22,21 @@ def roots(family='Qwen',n=16):
 def flat(plan,values=None):
     values=values or {}
     return [dict(slot_id=x['slot_id'],status='COMPLETE',qualified=True,reference_id='SYNTHETIC_R_'+x['family'],
+                 window=x['window'],native_timing_field='append_ms/1000' if x['window']=='append_after_valid_state' else 'service_seconds',
                  service_s=values.get(x['arm'],1.)*(1+x.get('root_index',0)/100)) for x in plan]
+
+
+def baseline_review(all_distinct=False):
+    included = dict(status='INCLUDE', target_only_qualification='SYNTHETIC/qualification',
+                    source_binding='SYNTHETIC/source', trace_binding='SYNTHETIC/trace')
+    rows = {x: dict(included) for x in d.FACTOR}
+    if not all_distinct:
+        for x, representative in [('W_P','W_L4'),('L_L4','L_P')]:
+            rows[x] = dict(status='EQUIVALENT',representative=representative,
+                same_reference_evidence='SYNTHETIC/reference', source_equivalence='SYNTHETIC/source',
+                native_trace_equivalence='SYNTHETIC/trace', frontend_and_cost_window_equivalence='SYNTHETIC/frontend')
+    return dict(schema='phase1.r2-baselines.v2', selection_scope='development_before_R2',
+                reference_id='SYNTHETIC_R',development_binding='SYNTHETIC/dev',reviewer='synthetic_test', strategies=rows)
 
 class Scheduling(unittest.TestCase):
     def test_williams(self):
@@ -70,15 +84,15 @@ class Scheduling(unittest.TestCase):
     def test_selection_order(self):
         x=roots(n=40);self.assertEqual(d.panel(x,[],[]),d.panel(list(reversed(x)),[],[]))
     def test_burst_shape(self):
-        x=d.burst(roots(),['EXPOSED/a','EXPOSED/b']);self.assertEqual(len(x),16)
+        x=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review());self.assertEqual(len(x),16)
         self.assertEqual(sum(len(w['requests']) for w in x),288)
         for w in x:self.assertEqual([r['kind'] for r in w['requests'][:2]],['primer','primer'])
     def test_burst_shared_order(self):
-        x=d.burst(roots(),['EXPOSED/a','EXPOSED/b'])
+        x=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review())
         for session in range(4):
             orders={tuple(r['root'] for r in w['requests']) for w in x if w['session']==session};self.assertEqual(len(orders),1)
     def test_primer_overlap_rejected(self):
-        with self.assertRaises(ValueError):d.burst(roots(),[roots()[0]['root'],'EXPOSED/b'])
+        with self.assertRaises(ValueError):d.burst(roots(),[roots()[0]['root'],'EXPOSED/b'],baseline_review())
     def test_write_new(self):
         with tempfile.TemporaryDirectory() as t:
             p=Path(t)/'x.json';d.write_new(p,{'x':1})
@@ -120,16 +134,16 @@ class Analysis(unittest.TestCase):
                            launch_to_first_result_s=2.,launch_to_first_test_result_s=4.,test_burst_wall_s=20.,worker_wall_s=30.,model_setup_s=1.,peak_device_bytes=100))
         return rr
     def test_burst_analysis(self):
-        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b']);x=a.analyze_burst(p,self.burst_records(p),draws=100)
+        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review());x=a.analyze_burst(p,self.burst_records(p),draws=100)
         self.assertEqual(x['primary']['family_size'],2);self.assertAlmostEqual(x['primary']['contrasts'][0]['total_ratio'],.8)
     def test_fake_multiple_workers_rejected(self):
-        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b']);rr=self.burst_records(p);rr[0]['process_count']=16
+        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review());rr=self.burst_records(p);rr[0]['process_count']=16
         with self.assertRaises(ValueError):a.analyze_burst(p,rr,draws=20)
     def test_missing_host_clock_rejected(self):
-        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b']);rr=self.burst_records(p);del rr[0]['test_burst_wall_s']
+        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review());rr=self.burst_records(p);del rr[0]['test_burst_wall_s']
         with self.assertRaises(ValueError):a.analyze_burst(p,rr,draws=20)
     def test_burst_order_rejected(self):
-        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b']);rr=self.burst_records(p);rr[0]['requests'].reverse()
+        p=d.burst(roots(),['EXPOSED/a','EXPOSED/b'],baseline_review());rr=self.burst_records(p);rr[0]['requests'].reverse()
         with self.assertRaises(ValueError):a.analyze_burst(p,rr,draws=20)
 
 class HostTools(unittest.TestCase):
@@ -146,7 +160,7 @@ class HostTools(unittest.TestCase):
         with self.assertRaises(ValueError):r.signature([{'group_rows':4}])
     def test_saved_missing_null(self):
         with tempfile.TemporaryDirectory() as t:
-            p=Path(t)/'a.json';p.write_text(json.dumps({'families':{'Q':{'arms':{'M':{'rows':[{'service_s':1.,'target_phases':{'PREFILL':.5}}]}}}}}))
+            p=Path(t)/'a.json';p.write_text(json.dumps({'families':{'Q':{'arms':{'M':{'expected_requests':1,'rows':[{'service_s':1.,'target_phases':{'PREFILL':.5}}]}}}}}))
             x=r.saved_costs(p);self.assertIsNone(x['Q']['M']['totals']['planning_s']);self.assertEqual(x['Q']['M']['totals']['service_s'],1.)
     def test_source_bundle(self):
         with tempfile.TemporaryDirectory() as t:

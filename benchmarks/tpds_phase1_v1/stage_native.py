@@ -29,7 +29,7 @@ def residency_patch(text):
 
     This requires original request/provision to use a null draft only when its
     draft flag is false. The host inspects that call chain and qualifies it.
-    Same derivative frontend serves all four R2 arms.
+    Same derivative frontend serves every retained R2 arm.
     """
     start='int main(int argc,char**argv){'
     text=once(text,start,start+'\n    const auto phase1_main_started=Clock::now();')
@@ -65,6 +65,15 @@ def residency_patch(text):
 def snapshot(spec):
     root=Path(spec['root']).resolve(); require(root.is_dir(),'Source root missing')
     require(spec.get('files'), 'Explicit files/hash manifest required')
+    # An isolated source tree is required; .git metadata alone is excluded.
+    actual=set()
+    for p in root.rglob('*'):
+        rel=p.relative_to(root)
+        if '.git' in rel.parts: continue
+        require(not p.is_symlink(), 'Symlink in build source tree')
+        if p.is_file(): actual.add(rel.as_posix())
+    require(actual == set(spec['files']),
+            'Incomplete source manifest (including headers/generated/build files); create a source-only snapshot and enumerate it fully')
     data={}
     for relative, expected in spec['files'].items():
         rel=Path(relative)
@@ -87,7 +96,8 @@ def stage(binding, destination, residency=True):
     require(not out.exists() and all(not out.is_relative_to(r) and not r.is_relative_to(out) for r in roots),'Fresh independent staging root required')
     for recipe in ('loop4','packed'):
         require(set(FRONTEND)<=set(snapshots[('frontends',recipe)]),'Incomplete final frontend snapshot')
-    for name in FRONTEND:
+    require(set(snapshots[('frontends','loop4')]) == set(snapshots[('frontends','packed')]), 'Frontend dependency sets differ')
+    for name in snapshots[('frontends','loop4')]:
         require(snapshots[('frontends','loop4')][name]==snapshots[('frontends','packed')][name],
                 'Frontend difference needs development review before factorial attribution: '+name)
     base=snapshots[('frontends','loop4')]
@@ -103,7 +113,9 @@ def stage(binding, destination, residency=True):
     arms={}
     for arm,cut,recipe in [('W_L4','SIMPLE','loop4'),('W_P','SIMPLE','packed'),('L_L4','LOCAL','loop4'),('L_P','LOCAL','packed')]:
         arms[arm]=dict(core=recipe,frontend='frontend',job_overlay=dict(lowering=cut,draft=False,draft_width=1,residency='matched'))
-    r2={'W_M_TARGET_ONLY':dict(lowering='SIMPLE',draft=False,draft_width=1,residency='target_only',core='loop4'),
+    r2={'W_P_M_TARGET_ONLY':dict(lowering='SIMPLE',draft=False,draft_width=1,residency='target_only',core='packed'),
+        'L_L4_M_TARGET_ONLY':dict(lowering='LOCAL',draft=False,draft_width=1,residency='target_only',core='loop4'),
+        'W_M_TARGET_ONLY':dict(lowering='SIMPLE',draft=False,draft_width=1,residency='target_only',core='loop4'),
         'L_M_TARGET_ONLY':dict(lowering='LOCAL',draft=False,draft_width=1,residency='target_only',core='packed'),
         'L_M_MATCHED':dict(lowering='LOCAL',draft=False,draft_width=1,residency='matched',core='packed'),
         'L_D4':dict(lowering='LOCAL',draft=True,draft_width=4,residency='matched',core='packed')}
@@ -112,7 +124,7 @@ def stage(binding, destination, residency=True):
     manifest=dict(status='SOURCE_STAGED_NOT_COMPILED_OR_QUALIFIED',arms=arms,burst_arms=r2 if residency else {},residency_overlay=bool(residency),
         core_differences_requiring_attribution_review=changes,source_binding=binding,
         output_files={str(p.relative_to(out)).replace('\\','/'):digest(p) for p in out.rglob('*') if p.is_file()},
-        host_work=['Compile both cores/shared frontend','Validate null-draft provision chain','Verify attention recipe identical aside from cut scope',
+        host_work=['Complete compiler dependency closure and build_freeze.py receipt before formal timing','Compile both cores/shared frontend','Validate null-draft provision chain','Verify attention recipe identical aside from cut scope',
                    'Observe actual projection dispatch','Native original-R qualification','Persistent-worker first-result clocks'])
     write_new(out/'STAGED.json',manifest)
     return manifest

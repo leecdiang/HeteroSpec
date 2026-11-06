@@ -1,5 +1,5 @@
 {
-  "schema": "tpds-phase1-implementation.v1",
+  "schema": "tpds-phase1-implementation.v2",
   "created": "2026-11-06",
   "status": "FRAMEWORK_AND_SOURCE_OVERLAY_NATIVE_NOT_RUN",
   "research_goal": "Improve contribution attribution, practical baselines and deployment portability for TPDS without outcome-driven repetition",
@@ -57,16 +57,25 @@
       "roots": 16,
       "arms": [
         "W_M_TARGET_ONLY",
+        "W_P_M_TARGET_ONLY",
+        "L_L4_M_TARGET_ONLY",
         "L_M_TARGET_ONLY",
         "L_M_MATCHED",
         "L_D4"
       ],
       "sessions": 4,
-      "measurements": 256,
+      "measurements": null,
       "primers_per_worker": 2,
-      "workers": 16,
-      "primers": 32,
-      "reuse_R1_roots_not_new_independent_samples": true
+      "workers": null,
+      "primers": null,
+      "reuse_R1_roots_not_new_independent_samples": true,
+      "maximum_measurements": 384,
+      "maximum_workers": 24,
+      "maximum_primers": 48,
+      "baseline_review_required": true,
+      "baseline_policy": "All qualified distinct target-only factorial strategies; omission only by documented source/native-trace/cost equivalence or native inapplicability before R2 outcomes",
+      "order_design": "Williams4 when four arms; predeclared four cyclic rows for five/six arms, not fully balanced",
+      "primary_comparisons": "L_D4 against every included fixed target-only arm, family-adjusted; matched-residency sensitivity separate"
     },
     "B570_B1": {
       "model": "Smol",
@@ -126,5 +135,16 @@
   "runtime_request_lifecycle": "Reuse platform supervisor/ledger; this package does not create a second general runner",
   "statistics_dependency": "NumPy for analysis; Python >=3.11 for tools",
   "automatic_GPU_launch": false,
-  "executing_agent_original_host_authorized_after_binding_and_qualification": true
+  "executing_agent_original_host_authorized_after_binding_and_qualification": true,
+  "review_revision": 2,
+  "review_amendment": "REVIEW_V2.md",
+  "host_execution_state": "UNKNOWN_CHECK_HOST_BEFORE_ADOPTION",
+  "preserve_existing_freezes": true,
+  "legacy_design_heads": {
+    "RTX": "0fddf2255830a563433cb40ae8f6e09341bc702a",
+    "B570": "b718b4a28c8617c116ae7b069c8007797d026585"
+  },
+  "build_freeze_required": "Complete compiler dependency closure, generated/config/response files, compiler/link options, tools/link inputs and actual modules after qualification before performance",
+  "cost_record_policy": "Unknown/null and NOT_EXECUTED distinct; complete totals require declared root/session or request coverage; partial sums named observed_sum_s",
+  "structural_cost_policy": "Native append-only clock after valid state preparation, never service fallback; clean observer scope verified"
 }

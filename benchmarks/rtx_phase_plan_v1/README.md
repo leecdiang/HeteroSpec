@@ -1,5 +1,12 @@
 # Resident reference-derived phase-plan experiment
 
+**Original-host execution:** `host.py` and `native/resident_context.hpp` now bind
+the resident executor to compiled llama/CUDA workers. `host_evidence/` contains
+actual Qwen original-R/observer bridges, boundary and six-arm qualifications,
+CUDA traces, retained failures and costs. `SHARED_RULE_FREEZE.json` records the
+exact candidate bytes before the Smol transfer. The design description below
+records the original PR188 authoring boundary; it is not a GPU completion claim.
+
 Read PLAN.md, B570_COST_SCAN.md, and HOST_PROMPT.md. This is an additive package
 based on PR186. The old D failure and the completed operator panel stay unchanged.
 

@@ -3,6 +3,15 @@ from native_host import *
 sys.path.insert(0,str(PREVIOUS))
 import smol_state as codec
 import numpy as np
+_BANK_CACHE={}
+
+# Only a byte-exact, separately metered CPU storage validation can activate this
+# encoder. Native executables, GPU buffers and the independent R stay unchanged.
+if (ROOT/'ENCODER_VALIDATION.json').exists():
+ from fast_storage import encode as _storage_encode
+ _validation=read(ROOT/'ENCODER_VALIDATION.json')
+ assert _validation['status']=='BYTE_EXACT_OFFLINE_STORAGE_ONLY' and _validation['encode_source_sha256']==sha(HERE/'fast_storage.py')
+ codec.encode=_storage_encode
 
 def native_path(value):
  p=Path(value)
@@ -45,6 +54,9 @@ def state_equal(x,y):
  return x['prefix']==y['prefix'] and codec.canonical_verified(x['sequence'])==codec.canonical_verified(y['sequence']) and native_path(x['frontier']).read_bytes()==native_path(y['frontier']).read_bytes()
 
 def bank(group,index):
+ receipts=sorted((ROOT/'reference'/f'{group}-{index}').glob('COMPLETE-*.json'))
+ cache_key=(group,index,tuple(sha(p) for p in receipts))
+ if cache_key in _BANK_CACHE:return _BANK_CACHE[cache_key]
  key=('dev' if group=='development' else 'test')+'-'+str(index);out={}
  old=read(OLD_CAMPAIGN/'runs'/(key+'-oldR')/'0.json')
  assert old==read(OLD_CAMPAIGN/'runs'/(key+'-oldR')/'1.json')
@@ -55,13 +67,17 @@ def bank(group,index):
    k=tuple(x['prefix'])
    if k in out:assert native_path(out[k]['frontier']).read_bytes()==native_path(x['frontier']).read_bytes()
    if k not in out or 'sequence' in x:out[k]=x
- for receipt in sorted((ROOT/'reference'/f'{group}-{index}').glob('COMPLETE-*.json')):
+ for receipt in receipts:
   for p in read(receipt)['captures']:
    d=read(p);assert d['candidate_values_received'] is False
    for x in d['prefixes']:
     k=tuple(x['prefix'])
     if k in out:assert native_path(out[k]['frontier']).read_bytes()==native_path(x['frontier']).read_bytes()
     if k not in out or 'sequence' in x:out[k]=x
+ for k in list(_BANK_CACHE):
+  if k[:2]==cache_key[:2]:del _BANK_CACHE[k]
+ if len(_BANK_CACHE)>=8:_BANK_CACHE.pop(next(iter(_BANK_CACHE)))
+ _BANK_CACHE[cache_key]=(old,out)
  return old,out
 
 def qualify(row,arm,heavy,off,baseline=None):

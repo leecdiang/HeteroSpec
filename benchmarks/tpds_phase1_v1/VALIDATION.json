@@ -1,0 +1,37 @@
+{
+  "status": "CPU_HELPER_CHECKS_PASSED_NATIVE_NOT_RUN",
+  "date": "2026-11-06",
+  "python_version": "3.13.5",
+  "python_tests": {
+    "normal": 47,
+    "optimized_minus_O": 47
+  },
+  "cpp": {
+    "standard": "C++17",
+    "flags": [
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fsanitize=undefined"
+    ],
+    "explicit_checks": 8,
+    "scope": "standalone clock helper; no llama/model ABI"
+  },
+  "source_overlays": "synthetic fixture validation only; original-host compile and qualification required",
+  "GPU_requests": 0,
+  "cloud_spend": 0,
+  "approved_sources": {
+    "rtx_pr": 190,
+    "rtx_sha": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+    "b570_pr": 191,
+    "b570_sha": "acc86d9cb07c2afa983f73e28a1048fb99c63e3a"
+  },
+  "review_corrections": [
+    "R2 staging can be skipped to avoid blocking R1",
+    "R1 optional-natural closure does not close independent R2",
+    "Native B570 probe replaces hardcoded1024 and reserve32 metadata, keeps q32 last-only",
+    "No native launch or state supervisor reimplemented",
+    "Complete panels require all warmups and qualification",
+    "No occurrence of assert used for Python runtime validations"
+  ]
+}

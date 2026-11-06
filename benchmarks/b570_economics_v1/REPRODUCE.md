@@ -14,7 +14,8 @@ reconstruction; model weights are not needed for that reconstruction.
 
 Download every `raw-objects-*.zip`, `INDEX.json`, `MEMBERS.json`,
 `object_archive.py`, `recompute.py` and `README.md` from the new release into
-one fresh DOWNLOAD directory. Use GitHub access appropriate to this repository.
+one fresh DOWNLOAD directory. Use Python 3.12, matching the recorded float-summation
+semantics, and GitHub access appropriate to this repository.
 The final result PR's `evidence/DELIVERY_READBACK.json` records the new index and
 authenticated fresh-download verification. This is same-host verification,
 not independent external native replication or an anonymous-access claim.

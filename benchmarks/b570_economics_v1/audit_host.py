@@ -44,11 +44,15 @@ def units_and_costs():
   for match in re.finditer(r'HS_BUDGET heap=(\d+) physical=(\d+) budget=(\d+) usage=(\d+) signed_remaining=(-?\d+)',text):
    heap,physical,budget,usage,remaining=map(int,match.groups());assert remaining==budget-usage and 0<budget<=physical and remaining>=128*1024**2
    budgets.append(remaining)
-  assert budgets,unit
-  rows.append(dict(unit=unit.name,status=s['status'],requests_reserved=entry['requests'],rows_reserved=entry['token_rows'],native_seconds=s['charged_seconds'],owned_seconds=receipt['owned_seconds'],provisioning_to_ready_seconds=s['provisioning_to_ready_seconds'],poll_seconds=s['poll_seconds'],supervisor_sha256=s['supervisor_source_sha256'],minimum_signed_GPU_reserve_bytes=min(budgets),cleanup=True))
+  bridge=None
+  if not budgets:
+   assert unit.name.startswith('forced-') and read(manifest)['source_manifest_sha256']==read(OLD_CAMPAIGN/'FREEZE.json')['forced_reference_manifest_sha256']
+   bridge=next(x for x in read(ROOT/'REFERENCE_RESOURCE_BRIDGE.json')['results'] if x['original_unit']==unit.name)
+   assert bridge['all_equal'] and bridge['minimum_signed_GPU_reserve_bytes']>=128*1024**2
+  rows.append(dict(unit=unit.name,status=s['status'],requests_reserved=entry['requests'],rows_reserved=entry['token_rows'],native_seconds=s['charged_seconds'],owned_seconds=receipt['owned_seconds'],provisioning_to_ready_seconds=s['provisioning_to_ready_seconds'],poll_seconds=s['poll_seconds'],supervisor_sha256=s['supervisor_source_sha256'],minimum_signed_GPU_reserve_bytes=min(budgets) if budgets else None,missing_original_budget_observation_not_invented=not budgets,resource_observer_bridge_unit=bridge['resource_observer_unit'] if bridge else None,cleanup=True))
  stages={}
  for x in rows:
-  name=x['unit'];stage='original-R-forced' if name.startswith('forced-') else 'A1-qualification' if name.startswith('a1-qual-') else 'A1-timing' if name.startswith(('a1-time-','a1-sync-')) else 'known-mechanism' if name.startswith('known-') else 'cap1-contract' if name.startswith('cap1-') else 'k3-protocol' if name.startswith('protocol-') else '-'.join(name.split('-')[:2])
+  name=x['unit'];stage='original-R-forced' if name.startswith('forced-') else 'original-R-resource-observer' if name.startswith('resource-ref01-') else 'A1-qualification' if name.startswith('a1-qual-') else 'A1-timing' if name.startswith(('a1-time-','a1-sync-')) else 'known-mechanism' if name.startswith('known-') else 'cap1-contract' if name.startswith('cap1-') else 'k3-protocol' if name.startswith('protocol-') else '-'.join(name.split('-')[:2])
   z=stages.setdefault(stage,dict(requests_reserved=0,rows_reserved=0,native_seconds=0,owned_seconds=0,provisioning_seconds=0,unmetered_provisioning_units=0))
   for k in ('requests_reserved','rows_reserved','native_seconds','owned_seconds'):z[k]+=x[k] or 0
   if x['provisioning_to_ready_seconds'] is None:z['unmetered_provisioning_units']+=1
@@ -148,14 +152,32 @@ def draft_observations():
     rows.append(dict(root=i,method=method,arm=arm,draft_frontier_equal_resident_same_arm=raw==old,draft_frontier_equal_resident_H1=raw==baseline,max_absolute_difference_from_H1=float(np.max(np.abs(x-y))),candidate_draft_values_never_used_to_filter=True))
  return rows
 
+def reference_resource_bridge():
+ proof=read(ROOT/'REFERENCE_RESOURCE_BRIDGE.json');vectors=states=0
+ assert proof['status']=='ORIGINAL_R_RESOURCE_OBSERVER_BYTE_EXACT_BRIDGE_PASS' and proof['original_reference_data_not_replaced'] and proof['natural_performance_samples']==0
+ for r in proof['results']:
+  a=read(ROOT/'runs'/r['original_unit']/'0.json');b=read(ROOT/'runs'/r['resource_observer_unit']/'0.json')
+  assert not a['candidate_values_received'] and not b['candidate_values_received'] and a['prompt_ids']==b['prompt_ids']
+  assert [x['prefix'] for x in a['prefixes']]==[x['prefix'] for x in b['prefixes']]
+  for x,y in zip(a['prefixes'],b['prefixes']):
+   assert native_path(x['frontier']).read_bytes()==native_path(y['frontier']).read_bytes();vectors+=1
+   if 'sequence' in x:assert state_equal(x,y);states+=1
+ assert (vectors,states)==(proof['full_vectors'],proof['states'])
+ return proof
+
 def audit():
  assert not LOCK.exists(),'Read-only reconstruction requires quiescent native workers'
  pins=read(ROOT/'HOST_BINDINGS.json');assert pins['reference_changed'] is False and pins['reference_producer_ub']==128 and pins['reference_outer_batch']==512
  assert sha(OLD_CAMPAIGN/'FREEZE.json')==pins['pr187_freeze_sha256'] and sha(OLD_CAMPAIGN/'RECORDS.json')==pins['pr187_records_sha256']
  for f in pins['original_files']:checked_file(f['path'],f['sha256'])
  a0=scan_saved(OLD_CAMPAIGN,OSMOL/'cohort/PANEL.json');assert a0==read(ROOT/'a0/saved-costs.json') and a0['model_forwards']==0 and a0['slots']==864
+ costs=units_and_costs();resource=reference_resource_bridge()
+ missing={x['unit'] for x in costs['units'] if x.get('missing_original_budget_observation_not_invented')}
+ assert missing=={x['original_unit'] for x in resource['results']}
+ observed={x['unit']:x for x in costs['units']}
+ for x in resource['results']:assert observed[x['resource_observer_unit']]['minimum_signed_GPU_reserve_bytes']==x['minimum_signed_GPU_reserve_bytes']
  q=qualifications()
  decision=read(ROOT/'DEVELOPMENT_DECISION.json');p=pilot('parallel');assert all(p[m+'_'+a]['measure']==decision['complete_clean_service_totals_s'][m+'_'+{'M':'M','H1':'D1','C4U4':'D4','C4U1':'C4U1'}[a]] for m in ('S','L') for a in ('M','H1','C4U4','C4U1'))
- return dict(status='COMPLETE_NATIVE_EXPOSED_ECONOMICS_RECONSTRUCTION',a0=dict(slots=a0['slots'],model_forwards=0,summary=a0['summary']),qualification=q,resident_pilot=pilot('resident'),parallel_pilot=p,known_work=known_work(),draft_observations=draft_observations(),decision=decision,costs=units_and_costs(),fresh_natural_confirmation_started=False,external_native_replication=False,prior_release_dependency='b570-decisive-recovery-v2-evidence-20261105',weights_needed_for_read_only_recompute=False)
+ return dict(status='COMPLETE_NATIVE_EXPOSED_ECONOMICS_RECONSTRUCTION',a0=dict(slots=a0['slots'],model_forwards=0,summary=a0['summary']),qualification=q,resident_pilot=pilot('resident'),parallel_pilot=p,known_work=known_work(),draft_observations=draft_observations(),reference_resource_bridge=resource,decision=decision,costs=costs,fresh_natural_confirmation_started=False,external_native_replication=False,prior_release_dependency='b570-decisive-recovery-v2-evidence-20261105',weights_needed_for_read_only_recompute=False)
 
 if __name__=='__main__':print(json.dumps(audit(),indent=2))

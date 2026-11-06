@@ -39,8 +39,10 @@ root=Path(sys.argv[1]).resolve();prior=Path(sys.argv[2]).resolve()
 os.environ['HS_ECON_ROOT']=str(root);os.environ['HS_ECON_PR187']=str(prior);os.environ['HS_DECISIVE_ROOT']=str(prior)
 historical=[Path(p).resolve() for p in ('I:/HeteroSpec/b570-economics-20261106','I:/HeteroSpec/b570-decisive-20261105','E:/HeteroSpec/b570-decisive-recovery-restored-20261105')]
 def confined(event,args):
+ if event in ('subprocess.Popen','os.system','os.exec','os.posix_spawn'):raise RuntimeError('Native/process launch refused during read-only reconstruction')
  if event!='open' or not isinstance(args[0],(str,bytes,os.PathLike)):return
  p=Path(os.fsdecode(args[0])).resolve()
+ if p.suffix.lower()=='.gguf':raise RuntimeError('Model-weight access refused during read-only reconstruction')
  if any(p==r or r in p.parents for r in (root,prior)):return
  if any(p==r or r in p.parents for r in historical):raise RuntimeError('Original-host evidence fallback refused: '+str(p))
 sys.addaudithook(confined)

@@ -49,14 +49,18 @@ def execute(name,arm,requests,mode=0,heavy=False,frozen=False,build=None,forced=
  manifest=frozen_manifest(arm) if frozen else d/'FILES.json'
  if forced:
   assert arm=='M' and heavy
-  manifest=ROOT/'bindings/forced-FILES.json'
-  if not manifest.exists():
-   original=OSMOL/'forced-reference02/FILES.json';files=[]
-   freeze=read(OLD_CAMPAIGN/'FREEZE.json');assert sha(original)==freeze['forced_reference_manifest_sha256']
-   for x in read(original)['files']:
-    p=old_path(x['path']);assert sha(p)==x['sha256'];files.append(dict(x,path=str(p)))
-   write(manifest,dict(files=files,source_manifest_sha256=sha(original)))
-  argv[0]=str(OSMOL/'forced-reference02/build/Release/b570-closeout-target.exe')
+  if build is not None:
+   assert read(Path(build)/'RESOURCE_ONLY_SOURCE_BINDING.json')['original_producer_unchanged']
+   manifest=Path(build)/'FILES.json';argv[0]=str(Path(build)/'build/Release/b570-closeout-target.exe')
+  else:
+   manifest=ROOT/'bindings/forced-FILES.json'
+   if not manifest.exists():
+    original=OSMOL/'forced-reference02/FILES.json';files=[]
+    freeze=read(OLD_CAMPAIGN/'FREEZE.json');assert sha(original)==freeze['forced_reference_manifest_sha256']
+    for x in read(original)['files']:
+     p=old_path(x['path']);assert sha(p)==x['sha256'];files.append(dict(x,path=str(p)))
+    write(manifest,dict(files=files,source_manifest_sha256=sha(original)))
+   argv[0]=str(OSMOL/'forced-reference02/build/Release/b570-closeout-target.exe')
  cost=dict(requests=len(jobs),token_rows=sum(len(x['prompt_ids'])+len(x['forced_suffix']) if forced else len(x['prompt_ids'])+128 if arm=='M' else 2*len(x['prompt_ids'])+256*(draft_k+1) for x in jobs),operators=0)
  stream=StateStream(folder,pack) if any(x.get('heavy_state') or x.get('audit_final') or x.get('state_prefixes') for x in jobs) else None
  unit,rc=supervised(name,manifest,argv,cost,inp,envfile,stream)

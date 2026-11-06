@@ -14,6 +14,7 @@ def wait_for(pid):
 def main(pid):
  wait_for(pid);d=read(ROOT/'DEVELOPMENT_DECISION.json')
  assert not LOCK.exists() and not d['provisional_joint_opportunities'] and not d['frozen_confirmation_started']
+ assert (ROOT/'REFERENCE_RESOURCE_BRIDGE.json').exists()
  assert 'DEVELOPMENT_COMPLETE_NO_BLIND_OUTPUTS_STARTED' in (ROOT/'development-native02.log').read_text()
  from delivery_host import inputs
  if not (ROOT/'repro/native-inputs/INPUTS.json').exists():inputs()
@@ -41,8 +42,9 @@ def main(pid):
  write(ev/'DEVELOPMENT_GATE.json',dict(raw_receipt_sha256=sha(ROOT/'DEVELOPMENT_DECISION.json'),**{k:v for k,v in d.items() if k!='physical_work'}))
  c=a['costs'];write(ev/'COSTS.json',{k:v for k,v in c.items() if k not in ('units','ledger','retained_command_receipts')})
  a1=read(ROOT/'A1_COSTS.json');write(ev/'A1_SUMMARY.json',{k:v for k,v in a1.items() if k!='records'})
- for n in ('HOST_BINDINGS','COMPONENT_PROTOCOL','SUPERVISOR_ADAPTER','SUPERVISOR02_VALIDATION','ENCODER_VALIDATION','KNOWN_PROBE_PLAN','KNOWN_PROBE_RESULTS','CAP1_RESULTS','K3_PROTOCOL_RESULTS','MODELS_POST_RUN','HELPER_BINDINGS','BUILD_INVENTORY'):
+ for n in ('HOST_BINDINGS','COMPONENT_PROTOCOL','SUPERVISOR_ADAPTER','SUPERVISOR02_VALIDATION','ENCODER_VALIDATION','KNOWN_PROBE_PLAN','KNOWN_PROBE_RESULTS','CAP1_RESULTS','K3_PROTOCOL_RESULTS','MODELS_POST_RUN','HELPER_BINDINGS','BUILD_INVENTORY','REFERENCE_RESOURCE_PLAN','REFERENCE_RESOURCE_BRIDGE','MODELS_POST_RESOURCE_REFERENCE','FINAL_NATIVE_CLOSED','EXPERIMENT_CLOSED'):
   shutil.copyfile(ROOT/(n+'.json'),ev/(n+'.json'))
+ shutil.copyfile(ROOT/'forced-resource02/RESOURCE_ONLY_SOURCE_BINDING.json',ev/'REFERENCE_RESOURCE_SOURCE.json')
  write(ev/'KNOWN_ACTUAL_WORK.json',dict(rows=a['known_work'],derived_from_actual_caller_rows_and_occupied_micrographs=True,used_worker='known-probe02',metadata_only_unused_followup='known-probe03'))
  proofs={}
  for name in ('core01','parallel-core02'):

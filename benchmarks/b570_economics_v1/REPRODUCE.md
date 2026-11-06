@@ -60,6 +60,7 @@ The actual used source and runtime are retained at:
 | Separate observed frontends | `observed02` |
 | Used known-token mechanism worker | `known-probe02` |
 | Unused metadata-only follow-up build | `known-probe03` |
+| Resource-only original-reference observer | `forced-resource02`, `REFERENCE_RESOURCE_BRIDGE.json` |
 | Header/library/generated-version dependencies | `repro/native-inputs` |
 | Inherited Vulkan backend and all shader source | `repro/native-inputs/pr169-ggml` |
 | Native run arguments and environment | `units/*/COMMAND.json`, `runs/*/{REQUESTS.jsonl,ENV.json}` |

@@ -87,7 +87,11 @@ def supervised(name,manifest,argv,cost,stdin_file,environment_file,stream=None):
   s=Path(m['path']).stat();assert s.st_size==m['bytes'] and s.st_mtime_ns==m['mtime_ns']
  ledger=Ledger(ROOT/'ledger.sqlite',LIMITS);ledger.reserve(name,cost);ledger.close()
  write(unit/'RESERVATION.json',dict(**cost,utc=utc()));write(LOCK,dict(pid=os.getpid(),unit=str(unit)))
- args=[sys.executable,'-B',str(PREVIOUS/'supervisor.py'),'--manifest',str(manifest),'--receipt',str(unit/'SUPERVISOR.json'),'--limit','900','--minimum-free-bytes',str(20*1024**3),'--stdin-file',str(stdin_file),'--environment-file',str(environment_file),'--progress-limit','180',*map(str,argv)]
+ sup=PREVIOUS/'supervisor.py'
+ if (ROOT/'supervisor02.py').exists():
+  sup=ROOT/'supervisor02.py';binding=read(ROOT/'SUPERVISOR_ADAPTER.json');proof=read(ROOT/'SUPERVISOR02_VALIDATION.json')
+  assert sha(sup)==binding['adapted_sha256']==proof['adapted_sha256'] and sha(PREVIOUS/'supervisor.py')==binding['base_sha256']
+ args=[sys.executable,'-B',str(sup),'--manifest',str(manifest),'--receipt',str(unit/'SUPERVISOR.json'),'--limit','900','--minimum-free-bytes',str(20*1024**3),'--stdin-file',str(stdin_file),'--environment-file',str(environment_file),'--progress-limit','180',*map(str,argv)]
  write(unit/'COMMAND.json',args);started=time.monotonic();status='FAILED';code=None
  try:
   with (unit/'host.log').open('x') as f:code=subprocess.run(args,stdout=f,stderr=subprocess.STDOUT,timeout=950).returncode

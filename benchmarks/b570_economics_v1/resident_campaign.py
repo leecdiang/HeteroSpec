@@ -41,10 +41,11 @@ def diagnostics(stage):
  for i,r in enumerate(inputs):
   for method in modes(stage):
    for arm in ('M','H1','C4U4','C4U1'):
-    key=f'{stage}-diagnostic-r{i}-{method}-{arm}';folder=ROOT/'runs'/key
+    cost_key=f'{stage}-diagnostic-r{i}-{method}-{arm}-cost-only'
+    key=f'{stage}-mechanism02-r{i}-{method}-{arm}';folder=ROOT/'runs'/key
     # Cost windows have clocks only. Heavy final-state and physical tracing
     # get their own separately charged mechanism request pair below.
-    cost_key=key+'-cost-only';cost_folder=ROOT/'runs'/cost_key
+    cost_folder=ROOT/'runs'/cost_key
     if not (cost_folder/'MODULE_AUDIT.json').exists():execute(cost_key,arm,[r,r],mode=1,build=build_for(stage,arm,1),environment=env_for(stage,method))
     old,_=bank(r['group'],r['index'])
     for j in (0,1):

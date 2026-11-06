@@ -75,6 +75,18 @@ class TestStages(unittest.TestCase):
    self.assertFalse((r/'out').exists())
  def test_no_legacy_timer_relabel(self):
   with self.assertRaises(ValueError):stage_costs.frontend(NATIVE.replace('service_ms','generation_ms'))
+ def test_only_active_frozen_frontend_requires_service_clock(self):
+  for active,inactive in (('target','native.cpp'),('native','target.cpp')):
+   with tempfile.TemporaryDirectory() as t:
+    r=Path(t);s,p=self.fixture(r);q=s/inactive;q.write_text(q.read_text().replace('service_ms','generation_ms'))
+    pins=json.loads(p.read_text());pins['files'][inactive]=hashlib.sha256(q.read_bytes()).hexdigest();p.write_text(json.dumps(pins))
+    x=stage_costs.stage(s,p,r/'out',1,active)
+    self.assertEqual(x['active_frontend'],active);self.assertEqual((r/'out'/inactive).read_bytes(),q.read_bytes())
+ def test_selected_active_clock_still_required(self):
+  with tempfile.TemporaryDirectory() as t:
+   r=Path(t);s,p=self.fixture(r);q=s/'target.cpp';q.write_text(TARGET.replace('service_ms','generation_ms'))
+   pins=json.loads(p.read_text());pins['files']['target.cpp']=hashlib.sha256(q.read_bytes()).hexdigest();p.write_text(json.dumps(pins))
+   with self.assertRaises(ValueError):stage_costs.stage(s,p,r/'out',1,'target')
  def test_resident_overlay(self):
   with tempfile.TemporaryDirectory() as t:
    r=Path(t);src=r/'original';(src/'src').mkdir(parents=True)

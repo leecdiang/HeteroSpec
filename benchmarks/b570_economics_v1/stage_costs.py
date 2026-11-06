@@ -61,9 +61,9 @@ def frontend(text, target=False):
     text=once(text,old,new)
     return once(text,close,close+'\n    b570_cost::write(observer.path+".cost.json");')
 
-def stage(source, pins, out, mode):
+def stage(source, pins, out, mode, active='both'):
     source=Path(source).resolve();out=Path(out).resolve()
-    if mode not in (0,1,2) or out.exists() or source in out.parents or out in source.parents:
+    if mode not in (0,1,2) or active not in ('both','target','native') or out.exists() or source in out.parents or out in source.parents:
         raise ValueError('Use a fresh output outside the frozen source, mode0/1/2')
     manifest=json.loads(Path(pins).read_text())
     raw={}
@@ -75,8 +75,10 @@ def stage(source, pins, out, mode):
             raise ValueError('Frozen source SHA256 differs: '+name)
     text={k:v.decode().replace('\r\n','\n') for k,v in raw.items()}
     text['observer.h']=observer(text['observer.h'])
-    text['native.cpp']=frontend(text['native.cpp'])
-    text['target.cpp']=frontend(text['target.cpp'],True)
+    # PR187 froze each arm's measured frontend; its unused companion may retain
+    # the earlier generation-only clock. Never relabel that inactive clock.
+    if active in ('both','native'):text['native.cpp']=frontend(text['native.cpp'])
+    if active in ('both','target'):text['target.cpp']=frontend(text['target.cpp'],True)
     text['CMakeLists.txt']+='\n# Diagnostic-only frontend build, never rebuild numerical DLLs here.\n'
     for target,spec in (('b570-closeout-native',1),('b570-closeout-target',0)):
         text['CMakeLists.txt']+=f'if(TARGET {target})\n target_compile_definitions({target} PRIVATE B570_COST_MODE={mode} B570_ECON_SPEC={spec})\nendif()\n'
@@ -91,7 +93,8 @@ def stage(source, pins, out, mode):
         'base_receipt':manifest.get('receipt'), 'input_sha256':{k:digest(v) for k,v in raw.items()},
         'output_sha256':{k:digest((out/k).read_bytes()) for k in text},
         'numerical_DLL_changes':False, 'removed_transfer_checks':False,
-        'new_GPU_forwards':0,'native_bridge':'REQUIRED','extra_sync':mode==2}
+        'new_GPU_forwards':0,'native_bridge':'REQUIRED','extra_sync':mode==2,
+        'active_frontend':active}
     (out/'STAGE.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
 
@@ -99,4 +102,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('source','pins','out'):p.add_argument('--'+key,type=Path,required=True)
     p.add_argument('--mode',type=int,choices=(0,1,2),required=True)
-    a=p.parse_args();print(json.dumps(stage(a.source,a.pins,a.out,a.mode),indent=2))
+    p.add_argument('--active',choices=('both','target','native'),default='both')
+    a=p.parse_args();print(json.dumps(stage(a.source,a.pins,a.out,a.mode,a.active),indent=2))

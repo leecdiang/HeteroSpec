@@ -2,6 +2,7 @@
 from develop import *
 import zlib
 from normalize import trace_from_row
+from storage import read_bytes as evidence_bytes
 
 class HistoricalChunks:
     def __init__(self):
@@ -59,7 +60,7 @@ class Bank:
 
     def state(self,prefix):
         entry=self.entries[tuple(prefix)]
-        if 'sequence_file' in entry:return parse(Path(entry['sequence_file']).read_bytes(),list(range(len(prefix))),self.p)[0]
+        if 'sequence_file' in entry:return parse(evidence_bytes(entry['sequence_file']),list(range(len(prefix))),self.p)[0]
         if self.old is None:self.old=HistoricalChunks()
         container,row=entry['historical'];return self.old.read(container,row['active_kv'])
 
@@ -75,7 +76,7 @@ class Bank:
         for i,cycle in enumerate(r['cycles']):
             batch=[cycle['seed']]+cycle['proposals'];uses=[u['prefix'] for u in d['vector_uses'] if u['key'].startswith('step'+str(i)+'/')]
             full=uses[-1];wanted=[len(x) for x in uses if tuple(x) in missing]
-            wanted_states=[len(x) for x in missing_states if list(x)==full[:len(x)] and len(x)>len(prompt)]
+            wanted_states=[len(x) for x in missing_states if tuple(x) not in covered and list(x)==full[:len(x)] and len(x)>len(prompt)]
             wanted=sorted(set(wanted+wanted_states))
             if not wanted:continue
             suffix=full[len(prompt):];name='path'+str(i)
@@ -89,7 +90,7 @@ class Bank:
         return outputs
 
 def qualify(family,arm):
-    out=ROOT/'runs'/(family+'-'+arm+'-development');free_root=ROOT/'runs'/(family+'-old-free')/'native';rows=[]
+    out=arm_output(family,arm);free_root=ROOT/'runs'/(family+'-old-free')/'native';rows=[]
     for ix,input in enumerate(roots(family)):
         base=out/'native'/f'r{ix}-heavy';r=json.loads((base/'receipt.json').read_bytes());clean=json.loads((out/'native'/f'r{ix}-clean/receipt.json').read_bytes());bank=Bank(family,ix,free_root/f'r{ix}-heavy')
         r['study_cap']=input['cap'];_,d=trace_from_row(r,r['prompt_ids'],bank.meta['vocab'],bank.meta['eog_ids'],'rtx')
@@ -105,7 +106,7 @@ def qualify(family,arm):
         selected=[('initial',d['states'][0]),('terminal',d['states'][-1])]
         if r['cycles']:selected.insert(1,('commit-0',d['states'][1]))
         for key,s in selected:
-            prefix=s['prefix'];directory=base/'target/state'/key;actual,_=parse((directory/'sequence.bin').read_bytes(),list(range(len(prefix))),bank.p);reference=bank.state(prefix)
+            prefix=s['prefix'];directory=base/'target/state'/key;actual,_=parse(evidence_bytes(directory/'sequence.bin'),list(range(len(prefix))),bank.p);reference=bank.state(prefix)
             states.append(dict(key=key,position=len(prefix),active_KV_equal=actual==reference,frontier_equal=(directory/'frontier.f32').read_bytes()==bank.vector(prefix),unmaterialized_suffix=s['unmaterialized_suffix'],next_pending=s['next_pending'],terminal=s['terminal']))
         api=clean['observed_API_calls_within_service'];zero_online=all(v==0 for v in api.values())
         row=dict(root=input['id'],endpoint_equal=r['endpoint']==bank.endpoint,heavy_clean_endpoint_equal=r['endpoint']==clean['endpoint'],independent_trace_valid=True,full_requested_vectors=vectors,selected_committed_states=states,online_API_calls=api,zero_online_transition_state_work=zero_online,additional_original_R_teacher_jobs=teacher,historical_GPU_bank_reused=family=='Qwen')

@@ -1,6 +1,7 @@
 """Original RTX host build/run bindings. A build is never a qualification."""
 from pathlib import Path
 import argparse,ctypes,hashlib,json,os,shutil,subprocess,sys,time
+from native_metadata import fields as native_fields
 HERE=Path(__file__).resolve().parent
 PREVIOUS=HERE.parent/'tpds_decisive_v1'
 sys.path.insert(0,str(PREVIOUS))
@@ -134,6 +135,7 @@ def execute(label,name,family,payload,reservation,output=None):
         else:cmd=[str(exe),str(out/'job.json'),str(out/'native')]
         put(out/'launch.json',dict(argv=cmd,reservation=reservation,limits=LIMITS,wall_limit_s=1800,output_disk_free_min=20*1024**3,system_disk_free_min=10*1024**3,ram_free_min=4*1024**3,gpu_free_min=128*1024**2))
         env={k:v for k,v in os.environ.items() if not k.startswith(('HS_','GGML_','JSA_','HSC_'))}
+        env['TEMP']=str(ROOT/'temp');env['TMP']=env['TEMP'];Path(env['TEMP']).mkdir(exist_ok=True)
         with (out/'stdout.log').open('xb') as stdout,(out/'stderr.log').open('xb') as stderr,(out/'resources.jsonl').open('x') as telemetry:
             p=subprocess.Popen(cmd,stdin=subprocess.PIPE if historical else None,stdout=stdout,stderr=stderr,env=env,creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
             if historical:p.stdin.write(b'RUN\n'+b'CONTINUE\n'*len(payload['historical']['slots']));p.stdin.close()
@@ -146,7 +148,7 @@ def execute(label,name,family,payload,reservation,output=None):
                 assert row['seconds']<1800 and row['disk_free']>=20*1024**3 and row['ledger_disk_free']>=20*1024**3 and row['system_free']>=10*1024**3 and row['ram_free']>=4*1024**3 and gpu>=128*1024**2,'live resource limit'
                 time.sleep(2)
             code=p.returncode;assert code==0,('native exit',code)
-        result=json.loads((out/'native/result.json').read_bytes());assert result['status']=='COMPLETE'
+        result=native_fields(out/'native/result.json',['status','trajectories','token_rows','modules_before','modules_after','modules','requests']);assert result['status']=='COMPLETE'
         if historical:
             records=[json.loads((out/'native'/r['record']).read_bytes()) for r in result['requests']]
             actual=dict(requests=len(records),token_rows=sum(len(r['prompt_ids'])+len(r['ids'])-1 for r in records),operators=0)
@@ -180,11 +182,16 @@ def dedup():
     pool=ROOT/'evidence-cas';pool.mkdir(exist_ok=True);rows=[]
     paths=[p for base in [ROOT/'runs',Path('E:/rtx188/runs')] for p in base.rglob('*') if p.is_file() and p.suffix in ('.bin','.f32')]
     paths+=list(ROOT.glob('*/bin/*.dll'))+list(ROOT.glob('*/runtime-*/bin/*.dll'))
+    inode_hashes={}
     for p in sorted(paths):
-        h=sha(p);volume_pool=pool if p.drive.casefold()==ROOT.drive.casefold() else Path('E:/rtx188/evidence-cas');volume_pool.mkdir(parents=True,exist_ok=True);dest=volume_pool/h[:2]/h;dest.parent.mkdir(exist_ok=True)
+        stat=p.stat();identity=(stat.st_dev,stat.st_ino,stat.st_size,stat.st_mtime_ns)
+        if identity not in inode_hashes:inode_hashes[identity]=sha(p)
+        h=inode_hashes[identity];volume_pool=pool if p.drive.casefold()==ROOT.drive.casefold() else Path('E:/rtx188/evidence-cas');volume_pool.mkdir(parents=True,exist_ok=True);dest=volume_pool/h[:2]/h;dest.parent.mkdir(exist_ok=True)
         if dest.exists():
-            assert sha(dest)==h
             if os.path.samefile(p,dest):continue
+            ds=dest.stat();di=(ds.st_dev,ds.st_ino,ds.st_size,ds.st_mtime_ns)
+            if di not in inode_hashes:inode_hashes[di]=sha(dest)
+            assert inode_hashes[di]==h
             temporary=p.with_name(p.name+'.dedup');assert not temporary.exists();os.link(dest,temporary);os.replace(temporary,p)
         else:os.link(p,dest)
         rows.append(dict(path=str(p),sha256=h,bytes=p.stat().st_size))

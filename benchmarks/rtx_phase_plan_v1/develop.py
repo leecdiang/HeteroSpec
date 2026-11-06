@@ -3,6 +3,7 @@ from host import *
 import numpy as np
 from active_kv import parse
 from trace import reconstruct
+from storage import read_bytes as evidence_bytes
 
 MATRIX_VERSIONS={'SIMPLE':'SIMPLE/runtime-v4','LOCAL':'LOCAL/runtime-v3','R-Qwen':'R-Qwen/runtime-v2','R-Smol':'R-Smol/runtime-v2'}
 VERSIONS=dict(MATRIX_VERSIONS,SIMPLE='SIMPLE/runtime-v5',LOCAL='LOCAL/runtime-v4')
@@ -27,14 +28,14 @@ def finished(label,name,family,payload,reservation,output=None):
     return execute(label,name,family,payload,reservation,out)
 
 def compare_cases(reference,candidate,cases,family,label):
-    rr=json.loads((reference/'native/result.json').read_bytes());cr=json.loads((candidate/'native/result.json').read_bytes());assert rr['model_structure']==cr['model_structure']
+    rr=native_fields(reference/'native/result.json',['model_structure']);cr=native_fields(candidate/'native/result.json',['model_structure']);assert rr['model_structure']==cr['model_structure']
     p=profile(rr,family);rows=[]
     for case in cases:
         for n in case['observe_positions']:
             a=candidate/'native'/case['name']/'captures'/str(n);b=reference/'native'/case['name']/'captures'/str(n)
             row=dict(case=case['name'],prefix=n,full_vector_equal=sha(a/'frontier.f32')==sha(b/'frontier.f32'))
             if n in case['state_positions']:
-                av,_=parse((a/'sequence.bin').read_bytes(),list(range(n)),p);bv,_=parse((b/'sequence.bin').read_bytes(),list(range(n)),p);row['active_KV_equal']=av==bv
+                av,_=parse(evidence_bytes(a/'sequence.bin'),list(range(n)),p);bv,_=parse(evidence_bytes(b/'sequence.bin'),list(range(n)),p);row['active_KV_equal']=av==bv
             rows.append(row)
     result=dict(rows=rows,all_passed=all(all(v for k,v in r.items() if k.endswith('equal')) for r in rows),reference=str(reference),candidate=str(candidate),observed_boundaries='All originally requested vector rows; final committed active KV for every controlled call.',source_graph_geometry_in_native_result=True)
     receipt=ROOT/(label+'.json')
@@ -65,7 +66,11 @@ def matrix(family='Qwen',batch_index=None):
             for p in choices:p.mkdir(parents=True,exist_ok=True)
             runs=max(choices,key=lambda p:shutil.disk_usage(p).free)
             put(placement,dict(runs=str(runs),reason='Whole-model diagnostic captures placed by available space only; all methods in this batch share the same volume. Fixed natural timing always uses D.',reserve_bytes=20*1024**3))
-        r=finished(label+'-R',versions['R-'+family],family,dict(lowering='SIMPLE',cases=group),reservation,runs/(label+'-R'))
+        reference_label=label+'-R'
+        if (runs/reference_label).exists() and not (runs/reference_label/'COMPLETE.json').exists():
+            assert (ROOT/'COLD_ARCHIVE_RECEIPT.json').exists(),'preserve failed reference until storage repair is verified'
+            reference_label+='-storage-v2'
+        r=finished(reference_label,versions['R-'+family],family,dict(lowering='SIMPLE',cases=group),reservation,runs/reference_label)
         for lowering in ('SIMPLE','LOCAL'):
             c=finished(label+'-'+lowering,versions[lowering],family,dict(lowering=lowering,cases=group),reservation,runs/(label+'-'+lowering))
             compare_cases(r,c,group,family,label+'-'+lowering+'-QUALIFICATION');dedup()
@@ -81,6 +86,11 @@ def roots(family):
     else:selected.append(next(x for x in panel if x['source_index']==4))
     if not (ROOT/(family+'-EXPOSED-ROOTS.json')).exists():put(ROOT/(family+'-EXPOSED-ROOTS.json'),dict(source='Fixed exposed math roots0..2 plus retained Qwen failure / first exposed Smol code root. Chosen before natural candidate outputs.',source_roots=[dict(id=x['id'],tokens=len(x['prompt_ids'])) for x in selected],new_test_exposure=False,inputs=selected))
     return selected
+
+def arm_output(family,arm):
+    recovery=ROOT/f'{family}-{arm}-STORAGE-RESUME.json'
+    if recovery.exists():return Path(json.loads(recovery.read_bytes())['view'])
+    return ROOT/'runs'/(family+'-'+arm+'-development')
 
 def natural(family,arm):
     selected=roots(family);inputs=[]
@@ -126,9 +136,52 @@ def final_runtime_bridge():
     for lowering in ('SIMPLE','LOCAL'):
         label='Qwen-final-runtime-'+lowering;out=finished(label,VERSIONS[lowering],'Qwen',dict(lowering=lowering,cases=cases),reservation);compare_cases(reference,out,cases,'Qwen',label+'-QUALIFICATION');dedup()
 
+def exact_version_matrix():
+    # The final adapter adds timing fields only. Still execute every prescribed
+    # cell on its exact final bytes; reuse immutable actual scalar-R captures.
+    design=json.loads((ROOT/'Qwen-MATRIX-DESIGN.json').read_bytes());cases=design['cases']
+    for start in range(0,len(cases),4):
+        group=cases[start:start+4];ix=start//4;reference=ROOT/'runs'/f'Qwen-matrix-{ix}-R'
+        reserve=dict(requests=len(group),token_rows=sum(sum(len(x['ids']) for x in c['forced']) for c in group),operators=0)
+        for method in ('SIMPLE','LOCAL'):
+            label=f'Qwen-exact-version-matrix-{ix}-{method}'
+            proofs=list(ROOT.glob(label+'*-QUALIFICATION.json'))
+            if proofs:
+                for proof in proofs:
+                    q=json.loads(proof.read_bytes());assert q['all_passed']
+                    assert {r['case'] for r in q['rows']}=={c['name'] for c in group}
+                    assert json.loads((Path(q['candidate'])/'binding.json').read_bytes())['exe']==sha(ROOT/VERSIONS[method]/'bin/worker.exe')
+                continue
+            failed=ROOT/'runs'/label
+            if failed.exists() and not (failed/'COMPLETE.json').exists():
+                assert (ROOT/'BOUNDED-METADATA-RECOVERY.json').exists()
+                label+='-resource-v2'
+                if (ROOT/'runs'/label).exists() and not (ROOT/'runs'/label/'COMPLETE.json').exists():
+                    assert (ROOT/'COLD_ARCHIVE_RELOCATION.json').exists() and list(ROOT.glob('FINAL_MATRIX_STORAGE-*.json'))
+                    assert json.loads((ROOT/'runs'/label/'failure.json').read_bytes())['error']=="AssertionError('live resource limit')"
+                    label=label.removesuffix('v2')+'v3'
+                    if (ROOT/'runs'/label).exists() and not (ROOT/'runs'/label/'COMPLETE.json').exists():
+                        assert (ROOT/'FINAL_STORAGE_HEADROOM.json').exists()
+                        assert json.loads((ROOT/'runs'/label/'failure.json').read_bytes())['error']=="AssertionError('live resource limit')"
+                        label=label.removesuffix('v3')+'v4'
+            out=finished(label,VERSIONS[method],'Qwen',dict(lowering=method,cases=group),reserve)
+            compare_cases(reference,out,group,'Qwen',label+'-QUALIFICATION');dedup()
+            from storage import retire_known
+            retire_known()
+        print('Exact final Qwen matrix',ix,'passed',flush=True)
+    receipts=[]
+    for i in range(12):
+        for method in ('SIMPLE','LOCAL'):
+            proofs=list(ROOT.glob(f'Qwen-exact-version-matrix-{i}-{method}*-QUALIFICATION.json'));assert proofs
+            for p in proofs:
+                q=json.loads(p.read_bytes());assert q['all_passed'];receipts.append(dict(path=str(p),sha256=sha(p),batch=i,method=method))
+    output=ROOT/'EXACT_FINAL_MATRIX_COMPLETE.json'
+    if not output.exists():put(output,dict(cells_per_lowering=48,actual_GPU_qualification_receipts=receipts,all_passed=True,reference_R_unchanged=True))
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('action');p.add_argument('--family',default='Qwen');p.add_argument('--batch',type=int);p.add_argument('--arm');a=p.parse_args()
     if a.action=='matrix':matrix(a.family,a.batch)
     elif a.action=='natural':natural(a.family,a.arm)
     elif a.action=='bridge':original_bridge(a.family)
     elif a.action=='runtime-bridge':final_runtime_bridge()
+    elif a.action=='exact-matrix':exact_version_matrix()

@@ -14,21 +14,23 @@ The positive goal is a small, reusable native execution plan across phases and
 model structures, keeping fixed R without copying full KV to enforce each phase
 transition. It is not a new AUTO or generic all-reject guard framework.
 
-Implemented in this delivery:
-- C++17 typed dense-prefix model, actual-requirement contiguous planner, structural
-  graph identity, original-output-mask-preserving byte collector and grouped
-  execution interface with poisoned-context failure handling.
-- Read-only B570 source-work/cost calculator plus archived-slot metric scanner.
-- Python and C++ tests, including dynamic extents and failure/row ownership.
+Implemented and exercised on the original RTX host:
+- The native extractor/planner/executor in `native/resident_context.hpp`, with
+  immutable per-call groups and owned requested output rows on one target KV.
+- Separate rebuilt SIMPLE/LOCAL native workers and their original-R observer
+  adapters, actual metadata/dispatch bindings, finite vector/KV/frontier checks,
+  resource-bounded launch accounting and separate CUDA activity traces.
+- A pre-Smol common-rule publication, followed by transfer to different native
+  head mapping/dimensions. See `RESULTS.md` and the exact receipts for scope.
 
-Not implemented/verified here:
-- Original-host native metadata/dispatch extraction and binding of the callback
-  executor to llama, the same-R single-context candidate, or any new GPU result.
-  The executor must build these using the existing PR186/PR171 code. Helper test
-  success is not GPU qualification. Do not treat a type/shape key as a proof.
-- Full B570 per-slot phase aggregation: the private release's raw metadata was
-  not restored in this authoring workspace. Per-operation migration timers do
-  not exist in the reviewed source. The scan does not invent their values.
+The inherited B570 source-work calculator and helper tests remain unchanged.
+They supply neither RTX qualification nor B570 measurements. Raw metadata for
+its old per-slot aggregation was not restored here, and no missing timer is
+invented. This result does not execute or modify B570.
+
+The commands below are inherited helper checks; actual GPU qualification is in
+`host_evidence/`, never inferred from these tests. Reproduction is documented in
+`REPRODUCE.md`.
 
 CPU checks:
 ```

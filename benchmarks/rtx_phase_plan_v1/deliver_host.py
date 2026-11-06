@@ -71,7 +71,7 @@ class PartsWriter(io.RawIOBase):
 
 def files():
     roots=[ROOT,Path('E:/rtx188/runs'),HERE,PREVIOUS,OLD,META]
-    extensions={'.json','.jsonl','.log','.txt','.bin','.f32','.state','.cpp','.c','.h','.hpp','.cu','.cuh','.inc','.cmake','.py','.md','.exe','.dll','.a','.lib','.sqlite','.patch','.def','.rc','.in','.s','.sh','.bat','.ps1'}
+    extensions={'.json','.jsonl','.log','.txt','.bin','.f32','.state','.cpp','.c','.h','.hpp','.cu','.cuh','.inc','.cmake','.py','.md','.exe','.dll','.a','.lib','.sqlite','.patch','.def','.rc','.in','.s','.sh','.bat','.ps1','.cmd','.npy','.csv','.parquet'}
     for root in roots:
         for p in sorted(root.rglob('*')):
             if not p.is_file() or any(x in p.parts for x in ('.git','__pycache__','compiler-cache','evidence-cas','packages')):continue
@@ -90,6 +90,9 @@ def files():
                 p=Path(path);assert sha(p)==h,'source/exposure dependency drift';yield p
         yield Path('D:/hs144-e5c03228-9eb9-4198-8f14-a7d279d08afa/MODEL_CONTRACT.json')
         yield Path('D:/hs-qb-confirmation-v02/PLAN.json')
+    yield Path('E:/rtx170/profiler/sdk/nvidia/cuda_cupti/bin/cupti64_2025.2.1.dll')
+    for p in Path('E:/rtx170/profiler/sdk/nvidia').glob('*/include/*'):
+        if p.is_file() and p.suffix in ('.h','.hpp'):yield p
 
 def inherited_rows():
     # Only historical original-R payloads actually consumed here, never old timings.

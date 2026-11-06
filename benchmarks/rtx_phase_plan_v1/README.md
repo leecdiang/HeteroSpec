@@ -1,47 +1,36 @@
-# Resident reference-derived phase-plan experiment
+# Resident reference-derived phase plans — RTX results
 
-**Original-host execution:** `host.py` and `native/resident_context.hpp` now bind
-the resident executor to compiled llama/CUDA workers. `host_evidence/` contains
-actual Qwen original-R/observer bridges, boundary and six-arm qualifications,
-CUDA traces, retained failures and costs. `SHARED_RULE_FREEZE.json` records the
-exact candidate bytes before the Smol transfer. The design description below
-records the original PR188 authoring boundary; it is not a GPU completion claim.
+Original-host native execution is complete. Read [RESULTS.md](RESULTS.md) for the
+full six-arm results, qualification scope, setup/warmup costs and retained
+failures; [REPRODUCE.md](REPRODUCE.md) describes the authenticated raw evidence.
+`PLAN.md` and `HOST_PROMPT.md` remain the original prospective PR188 protocol.
 
-Read PLAN.md, B570_COST_SCAN.md, and HOST_PROMPT.md. This is an additive package
-based on PR186. The old D failure and the completed operator panel stay unchanged.
+`native/resident_context.hpp` is the small native interface: obtain real supported
+cache/graph/backend requirements, form immutable groups, execute on the same
+target/KV, and own only the originally requested output rows. SIMPLE uses maximal
+compatible whole-graph groups and loop4; LOCAL uses local prefix attention and
+wide packed projection. Both preserve masks, frontier, pending and stopping
+semantics. The adapter and each native core are actually built and exercised on
+the RTX GPU against an independent unchanged original reference.
 
-The positive goal is a small, reusable native execution plan across phases and
-model structures, keeping fixed R without copying full KV to enforce each phase
-transition. It is not a new AUTO or generic all-reject guard framework.
+Final candidate bytes pass all48 boundary/width cells and all six M/D1/D4
+qualification arms on Qwen and Smol. The common rule was published before Smol
+outputs; the real GQA/head128 and MHA/head64 structures use identical candidate
+executables. Full requested vectors and active KV/frontiers are observed in
+finite development qualification at declared boundaries. Clean confirmation
+checks endpoints and producer/pending/termination traces, without full-KV dumps
+or online numerical reference replay. No helper or readiness field substitutes
+for the saved GPU evidence.
 
-Implemented and exercised on the original RTX host:
-- The native extractor/planner/executor in `native/resident_context.hpp`, with
-  immutable per-call groups and owned requested output rows on one target KV.
-- Separate rebuilt SIMPLE/LOCAL native workers and their original-R observer
-  adapters, actual metadata/dispatch bindings, finite vector/KV/frontier checks,
-  resource-bounded launch accounting and separate CUDA activity traces.
-- A pre-Smol common-rule publication, followed by transfer to different native
-  head mapping/dimensions. See `RESULTS.md` and the exact receipts for scope.
+The new outcome-unexposed panel completes576 measurements and576 immediate
+warmups, eight roots/family and six Williams sessions. LOCAL-D4/SIMPLE-D4 total
+service is0.991096 on Qwen (adjusted interval crosses1) and0.961556 on Smol.
+Smol LOCAL-M remains faster than LOCAL-D4. All six controls,15 contrasts,
+regressions, failed reservations, reference/teacher work and complete observed
+costs remain available. No extra sessions or new AUTO are fitted. RTX model work
+is stopped; no B570/arXiv change, rental or merge is performed.
 
-The inherited B570 source-work calculator and helper tests remain unchanged.
-They supply neither RTX qualification nor B570 measurements. Raw metadata for
-its old per-slot aggregation was not restored here, and no missing timer is
-invented. This result does not execute or modify B570.
-
-The commands below are inherited helper checks; actual GPU qualification is in
-`host_evidence/`, never inferred from these tests. Reproduction is documented in
-`REPRODUCE.md`.
-
-CPU checks:
-```
-python -m unittest discover -s tests -v
-python -O -m unittest discover -s tests -v
-c++ -std=c++17 -O2 -Wall -Wextra -Werror -fsanitize=undefined tests/test_plan.cpp -o test-plan
-./test-plan
-python analysis/b570_online_scan.py --output /fresh/scan.json
-```
-
-Do not install a new numerical library over an old reference. Source-staged
-candidates and independent original references must be separately identified.
-Offline observation and online production work have different clocks. No merge,
-arXiv edit, model download or paid GPU rental is authorized by this package.
+The inherited B570 source/cost scan and CPU/C++ helpers are retained unchanged.
+They do not provide new B570 measurements or RTX GPU qualification. Same-context
+execution and inherited loop4/packed kernels alone are not claimed novel; see
+[RELATED_WORK.md](RELATED_WORK.md) for the narrower composition claim and limits.

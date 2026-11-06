@@ -31,7 +31,8 @@ if(req.contains("known_suffix")) {
  }
  llama_synchronize(ctx);observer.finish({}, {}, input);
  const auto service_end=ggml_time_us();
- pj metrics={{"mechanism_only",true},{"natural_timing",false},{"request_id",req.at("request_id")},{"service_ms",(service_end-whole_start)/1000.0},{"probe_phase",probe_phase},{"rollback",rollback},{"known_tokens",prelude.size()+suffix.size()},{"requested_width",width},{"explicit_output_reserve",32}};
+ const auto replay_rows=rollback?req.at("after_rollback").size():0;
+ pj metrics={{"mechanism_only",true},{"natural_timing",false},{"request_id",req.at("request_id")},{"service_ms",(service_end-whole_start)/1000.0},{"probe_phase",probe_phase},{"rollback",rollback},{"source_known_tokens",prelude.size()+suffix.size()},{"post_rollback_rows",replay_rows},{"decoded_known_rows",prelude.size()+suffix.size()+replay_rows},{"requested_width",width},{"explicit_output_reserve",32}};
  std::ofstream mf(observer.path+".metrics.json");mf<<metrics.dump(2)<<"\n";mf.close();
  b570_cost::write(observer.path+".cost.json");
  std::cout<<"HS_RESULT "<<metrics.dump()<<"\n"<<std::flush;

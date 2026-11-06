@@ -3,7 +3,7 @@ from resident_campaign import *
 from stage_costs import once
 
 def build():
- d=ROOT/'known-probe02'
+ d=ROOT/'known-probe03'
  if (d/'FILES.json').exists():return d
  base=build_for('parallel','M',1);d.mkdir()
  for p in base.iterdir():

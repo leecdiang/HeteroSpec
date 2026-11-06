@@ -17,7 +17,11 @@ def native_path(value):
  p=Path(value)
  if p.is_absolute() and ROOT.resolve() in p.resolve().parents:return p
  parts=PureWindowsPath(str(value)).parts
- allowed=(PureWindowsPath('I:/HeteroSpec/b570-decisive-20261105').parts,PureWindowsPath(str(OLD)).parts)
+ study=PureWindowsPath('I:/HeteroSpec/b570-economics-20261106').parts
+ if tuple(x.lower() for x in parts[:len(study)])==tuple(x.lower() for x in study):
+  result=ROOT.joinpath(*parts[len(study):]);assert ROOT.resolve() in result.resolve().parents
+  return result
+ allowed=(PureWindowsPath('I:/HeteroSpec/b570-decisive-20261105').parts,PureWindowsPath('E:/HeteroSpec/b570-decisive-recovery-restored-20261105').parts,PureWindowsPath(str(OLD)).parts)
  assert any(tuple(x.lower() for x in parts[:len(a)])==tuple(x.lower() for x in a) for a in allowed),'Unexpected evidence root'
  return old_path(value)
 

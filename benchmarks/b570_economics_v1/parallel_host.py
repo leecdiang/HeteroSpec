@@ -3,7 +3,7 @@ from resident_host import *
 PAR=Path('I:/HeteroSpec/b570-parallel-20261103')
 
 def core_parallel():
- bind();d=ROOT/'parallel-core01'
+ bind();d=ROOT/'parallel-core02'
  if (d/'FILES.json').exists():return d
  d.mkdir();source=PAR/'source-00';proof=read(PAR/'SOURCE_BINDING-candidate-D.json')
  for rel,h in proof['compiled_source'].items():assert sha(source/rel)==h,rel
@@ -34,7 +34,7 @@ def core_parallel():
  s=once(s,key,r'''
             uint32_t economics_width=n_ubatch;
             if(hs_b570::mode && std::getenv("HS_ECON_WHOLE")) {
-                if(n_stream!=1 || n_swa || n_ubatch>32)throw std::runtime_error("SIMPLE dense append profile");
+                if(n_stream!=1 || n_swa || balloc.get_n_tokens()>32)throw std::runtime_error("SIMPLE dense append profile");
                 const auto &cells=v_cells[0];const auto end=cells.used_max_p1();
                 if(cells.get_used()!=end || v_heads[0]>end)throw std::runtime_error("SIMPLE non-dense physical owner");
                 const auto &batch=balloc.get_batch();
@@ -57,9 +57,9 @@ def core_parallel():
  return d
 
 def parallel_frontend(arm,mode=0):
- c=core_parallel();d=ROOT/'parallel02'/f'{arm}-mode{mode}'
+ c=core_parallel();d=ROOT/'parallel03'/f'{arm}-mode{mode}'
  if (d/'FILES.json').exists():return d
- base=ROOT/'resident03'/f'{arm}-mode{mode}'
+ base=ROOT/'resident04'/f'{arm}-mode{mode}'
  d.mkdir(parents=True)
  for p in base.iterdir():
   if p.is_file() and p.suffix.lower() in ('.cpp','.h','.hpp','.txt'):shutil.copyfile(p,d/p.name)
@@ -90,7 +90,7 @@ static void economics_policy(const std::string&role,const std::string&phase){
  shutil.copyfile(c/'build/Release/llama.dll',bins/'llama.dll')
  shutil.copyfile(read(c/'FILES.json')['backend']['path'],bins/'ggml-vulkan.dll')
  write(d/'FILES.json',dict(files=[dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p)) for p in bins.iterdir() if p.suffix.lower() in ('.exe','.dll')]))
- write(d/'SOURCE.json',dict(files={p.name:sha(p) for p in d.iterdir() if p.suffix in ('.cpp','.h','.hpp','.txt')},core=str(c),shared_binary_for_SIMPLE_LOCAL=True,target_width=1 if arm=='M' else 2,prefill_width=128,prefill_policy=0,continuation_policy='PR169 QB F32 activation, physical extent identity',simple='HS_ECON_WHOLE set: realign whole micrographs',local='same binary: local attention grouping, wide compatible projections/FFN'))
+ write(d/'SOURCE.json',dict(files={p.name:sha(p) for p in d.iterdir() if p.suffix in ('.cpp','.h','.hpp','.txt')},core=str(c),shared_binary_for_SIMPLE_LOCAL=True,target_capacity=128 if arm=='M' else 2,prefill_capacity=128,ordinary_M_actual_caller_rows=1,prefill_policy=0,continuation_policy='PR169 QB F32 activation, physical extent identity',simple='HS_ECON_WHOLE set: realign whole micrographs',local='same binary: local attention grouping, wide compatible projections/FFN'))
  return d
 
 if __name__=='__main__':

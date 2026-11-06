@@ -3,7 +3,7 @@ from resident_campaign import *
 from stage_costs import once
 
 def build():
- d=ROOT/'known-probe01'
+ d=ROOT/'known-probe02'
  if (d/'FILES.json').exists():return d
  base=build_for('parallel','M',1);d.mkdir()
  for p in base.iterdir():
@@ -19,6 +19,7 @@ def build():
  write(d/'SOURCE.json',dict(files={p.name:sha(p) for p in d.iterdir() if p.suffix in ('.cpp','.h','.hpp','.txt','.inc')},mechanism_only=True,output_reserve=32,natural_pilot_uses_unchanged_reserves=True,known_tokens_from_exposed_R=True))
  return d
 
+@meter('known-probes')
 def known():
  build();r=read(ROOT/'EXPOSED_INPUTS.json')['inputs'][0];old,ref=bank(r['group'],r['index']);ids=old['ids'];cases=[]
  # Real greedy prefixes of dev0: no token padding or natural-input selection.
@@ -42,6 +43,7 @@ def known():
    write(folder/'QUALIFICATION.json',z);assert all(vals) and all(states),z;results.append(z);print('KNOWN_PROBE_PASS',method,case['name'],flush=True)
  write(ROOT/'KNOWN_PROBE_RESULTS.json',dict(results=results,natural_performance_samples=0,reference_producer_unchanged=True))
 
+@meter('cap1-probes')
 def caps():
  r=read(ROOT/'EXPOSED_INPUTS.json')['inputs'][0];old,ref=bank(r['group'],r['index']);reference=dict(old,ids=old['ids'][:1],eog=old['eog'][:1]);results=[]
  for stage in ('resident','parallel'):
@@ -58,6 +60,7 @@ def caps():
     z=dict(stage=stage,method=method,arm=arm,contract=contract,vectors=len(vals),states=len(states),complete_contract_equal=True);write(h/'QUALIFICATION.json',z);results.append(z);print('CAP1_PASS',stage,method,arm,flush=True)
  write(ROOT/'CAP1_RESULTS.json',dict(results=results,unmaterialized_terminal_suffix_preserved=True))
 
+@meter('k3-probes')
 def branches():
  # k1 cannot have a second-proposal rejection. Exercise the same transaction
  # loop separately at k3; these requests never enter the k1 economic panel.

@@ -75,7 +75,7 @@ target_link_libraries(llama PRIVATE "{LIBS.as_posix()}/ggml/src/Release/ggml.lib
  write(d/'FILES.json',dict(files=[dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p)) for p in (d/'build/Release').glob('*.dll')]))
  return d
 
-def frontend(arm,mode=0,core_attempt='core01',attempt='resident03'):
+def frontend(arm,mode=0,core_attempt='core01',attempt='resident04'):
  c=core(core_attempt);bind_arm(arm);d=ROOT/attempt/f'{arm}-mode{mode}'
  if (d/'FILES.json').exists():return d
  stage(OLD_CAMPAIGN/arm,ROOT/'bindings'/(arm+'.json'),d,mode,'target' if arm=='M' else 'native')
@@ -87,7 +87,7 @@ def frontend(arm,mode=0,core_attempt='core01',attempt='resident03'):
   old='    if(transfer){pending_scores=observer.top(ctx,-1);pending=common_sampler_sample(sampler,ctx,-1);\n      ctx=observer.move(ctx,model,continuation_cp,sampler,pending,input.size());}'
   new='''    pending_scores=observer.top(ctx,-1);pending=common_sampler_sample(sampler,ctx,-1);
     if(observer.evidence.final_only){auto*p=llama_get_logits_ith(ctx,-1);observer.evidence.initial_vector.assign(p,p+llama_vocab_n_tokens(vocab));}
-    const auto continuation_phase=econ_phase(ctx,observer,1,pending);'''
+    const auto continuation_phase=econ_phase(ctx,observer,128,pending);'''
   s=once(s,old,new)
   anchor='    pj metrics={{"request_id",req.at("request_id")}';s=once(s,anchor,'    pj metrics={{"reset_phase",reset_phase},{"continuation_phase",continuation_phase},{"request_id",req.at("request_id")}')
  else:

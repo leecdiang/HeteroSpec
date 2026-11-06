@@ -10,10 +10,16 @@ Create a pins JSON `{ "receipt": "actual freeze path + SHA256", "files":
 by checking against the published execution freeze, not by blessing arbitrary bytes.
 
 ```
-python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE0 --mode 0
-python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE1 --mode 1
-python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE2 --mode 2
+python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE0 --mode 0 --active target
+python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE1 --mode 1 --active target
+python stage_costs.py --source RESTORED_ARM --pins bound-sources.json --out FRESH_MODE2 --mode 2 --active target
 ```
+
+Use `--active target` for M and `--active native` for speculative arms. Each
+actual PR187 arm froze its measured frontend with the full-service clock; the
+unused companion can retain its earlier clock. The stager authenticates both
+source files and instruments only the selected frontend. Its active full-service
+clock check remains mandatory; never relabel the unused legacy clock.
 
 The new frontend must link the same original numerical DLLs for Stage A.
 Bridge mode0 against the untouched frozen executable; it must preserve output

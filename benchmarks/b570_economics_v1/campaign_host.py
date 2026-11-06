@@ -1,6 +1,21 @@
 """Fixed exposed-root native experiments. No output screening or selective repeats."""
 from evidence_host import *
 from smol_stream import StateStream
+import functools
+
+def meter(label):
+ def decorate(fn):
+  @functools.wraps(fn)
+  def run(*args,**kwargs):
+   started=utc();wall=time.monotonic();cpu=time.process_time();ok=False
+   try:
+    result=fn(*args,**kwargs);ok=True;return result
+   finally:
+    folder=ROOT/'driver-costs';folder.mkdir(exist_ok=True)
+    key=label+('-'+'-'.join(map(str,args)) if args else '');i=len(list(folder.glob(key+'-attempt*.json')))
+    write(folder/(key+f'-attempt{i}.json'),dict(started_utc=started,finished_utc=utc(),wall_seconds=time.monotonic()-wall,parent_cpu_seconds=time.process_time()-cpu,success=ok,includes_native_and_offline_checks=True,not_additive_to_nested_native_wall=True))
+  return run
+ return decorate
 
 def frozen_manifest(arm):
  out=ROOT/'bindings'/(arm+'-FILES.json')
@@ -90,6 +105,7 @@ def a1_qualification():
     z=qualify(r,arm,h,o,old);print('A1_QUALIFIED',i,arm,mode,z['conditional_vectors'],z['committed_states'],flush=True)
  write(ROOT/'A1_QUALIFIED.json',dict(status='ALL_MODES_COMPLETE_CONTRACT_PASS',roots=4,arms=['M','H1','C4U4'],modes=[0,1,2],original_R_unchanged=True))
 
+@meter('a1-timing')
 def a1_timing():
  assert (ROOT/'A1_QUALIFIED.json').exists()
  schedule=[]

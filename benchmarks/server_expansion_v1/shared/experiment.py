@@ -63,8 +63,14 @@ def schedule(study, panel_name, roots):
     for a, b in panel['contrasts']:
         require(a in arms and b in arms and a != b, 'Contrast outside fixed arms')
     workers = []; slots = []
+    rows = panel.get('worker_order_rows')
+    if rows is not None:
+        require(len(rows) == sessions and all(len(r) == len(arms) and set(r) == set(arms) for r in rows), 'Invalid frozen worker rows')
+        require(all(sum(r[p] == a for r in rows) == sessions // len(arms) for a in arms for p in range(len(arms))), 'Worker positions are not balanced')
+        pairs = [(a,b) for r in rows for a,b in zip(r,r[1:])]
+        require(len(pairs) == len(set(pairs)) == len(arms)*(len(arms)-1), 'Directed adjacent pairs are not balanced')
     for session in range(sessions):
-        order = arms[session % len(arms):] + arms[:session % len(arms)]
+        order = rows[session] if rows is not None else arms[session % len(arms):] + arms[:session % len(arms)]
         cohort = list(ids); random.Random(study['seed'] + session).shuffle(cohort)
         for arm in order:
             wid = f"{study['id']}-{panel_name}-s{session}-{arm}"
@@ -80,7 +86,7 @@ def schedule(study, panel_name, roots):
                 measurements=len(slots), primers=sum(w['primer_count'] for w in workers),
                 reference_and_qualification_requests='SEPARATE_CHARGED',
                 sample_scope=panel['scope'], metric=panel.get('metric', 'service_s'),
-                order_design='Prospective cyclic worker rows; not claimed fully carryover-balanced',
+                order_design='Prospective Williams rows: position and within-session directed adjacency balanced' if rows is not None else 'Prospective cyclic worker rows; not claimed fully carryover-balanced',
                 status='PLAN_ONLY_NOT_GPU_EXECUTION')
 
 

@@ -6,7 +6,7 @@ import argparse, csv, json, sys
 def main():
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--runtime',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     sys.path.insert(0,str(a.runtime.resolve()));from common import need,read,save,sha
-    w=a.work.resolve();out=a.out.resolve();need(read(w/'PIPELINE_STATUS.json')['status']=='COMPLETE','Only complete fixed panel');need(not out.exists(),'Fresh derived report');out.mkdir(parents=True)
+    w=a.work.resolve();out=a.out.resolve();status=w/('PIPELINE_STATUS-02.json' if (w/'PIPELINE_STATUS-02.json').exists() else 'PIPELINE_STATUS.json');need(read(status)['status']=='COMPLETE','Only complete fixed panel');need(not out.exists(),'Fresh derived report');out.mkdir(parents=True)
     plan=read(w/'panel-01/PLAN.json');checked=read(w/'panel-01/CHECKED.json');workers={x['id']:x for x in plan['workers']};records=[];clocks=[];physical={}
     for c in checked:
         worker=workers[c['id']];clocks.append(dict(id=c['id'],session=worker['session'],arm=worker['arm'],**c['actual_host_clocks']))

@@ -64,6 +64,17 @@ groups must occur in prefill and be absent in q4 verification. This is generatio
 cap8 with k3, reserve4 and q4 verification, not M2. The formal executables remain
 the original M1 observer relinks. Kernel-symbol profiling is not claimed.
 
+The first projection checker version stopped after its first completed proof:
+its `verify` callable was overwritten by a list of graph nodes, so the second
+arm's already completed native outputs could not be checked. The retained failed
+source is in commit `f05ca4a2ab9f203e348139a8972bfc1c9cc2dce9`.
+The repaired checker uses separate names and explicit `--resume-complete-native`
+admission: it verifies every retained job/build/module/COMPLETE receipt, preserves
+the first checked proof, checks the second arm's existing bytes, and executes only
+the remaining unstarted diagnostics. `continue_dispatch.py` binds this repair and
+preserves the original failed pipeline status/log. Numerical binaries, R and the
+prospective M1 panel are unchanged; no native diagnostic or formal slot is replayed.
+
 Use a separate mutable source checkout, work root and ledger. The original
 single-UUID authorization, foreign-process checks, cooperative lock,2 CPU threads,
 reserves and900s worker timeout remain. M1 retains the supervisor's stricter4M

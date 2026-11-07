@@ -11,7 +11,7 @@ def main():
     p=argparse.ArgumentParser()
     for key in ('work','out','builds','runtime'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args();sys.path.insert(0,str(a.runtime.resolve()));from common import need,read,save,sha
-    w=a.work.resolve();out=a.out.resolve();need(read(w/'PIPELINE_STATUS.json')['status']=='COMPLETE','No export during timing')
+    w=a.work.resolve();out=a.out.resolve();status=w/('PIPELINE_STATUS-02.json' if (w/'PIPELINE_STATUS-02.json').exists() else 'PIPELINE_STATUS.json');need(read(status)['status']=='COMPLETE','No export during timing')
     need(not out.exists() and not out.is_relative_to(w),'New external export epoch');out.mkdir(parents=True)
     # Copy exact build receipts into this lane for relative archive identities;
     # the actual linked archives and originals remain at their existing paths.
@@ -30,8 +30,8 @@ def main():
         s=re.sub(r'("(?:allocation_id|authorization_id)"\s*:\s*)"[^"\n]*"',r'\1"<EXPLICIT_PRIVATE_ALLOCATION>"',s)
         return s
     chosen=set()
-    for name in ('ledger.jsonl','PRIOR_ACCOUNTING.json','BINDING.json','PIPELINE_STATUS.json','pipeline-events.jsonl',
-                 'capability-negatives-phase-01.log','confirmation-phase-01.log'):
+    for name in ('ledger.jsonl','PRIOR_ACCOUNTING.json','BINDING.json','PIPELINE_STATUS.json','PIPELINE_STATUS-02.json','DISPATCH_CONTINUATION-02.json','pipeline-events.jsonl',
+                 'capability-negatives-phase-01.log','dispatch-checker-phase-02.log','confirmation-phase-01.log'):
         if (w/name).is_file():chosen.add(w/name)
     chosen.update(w.glob('helper-*.log'))
     prefixes=['inputs-01','qualification-01','qualification-dispatch-01','capability-negatives-01','panel-01',*[name for _,name in sources]]

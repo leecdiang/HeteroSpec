@@ -11,18 +11,21 @@ import run_m1 as m
 def main():
     p=argparse.ArgumentParser()
     for key in ('work','baseline','runtime','repo','builds','observer-builds'):p.add_argument('--'+key,type=Path,required=True)
+    p.add_argument('--resume-complete-native',action='store_true')
     a=p.parse_args();m.load_runtime(a.runtime.resolve());w=a.work.resolve();baseline=a.baseline.resolve();out=w/'qualification-dispatch-01';need,read,save,sha=m.need,m.read,m.save,m.sha
-    need(not out.exists() and read(w/'qualification-01/NATIVE_CHECKS_COMPLETE.json')['passed'],'Fresh projection diagnostic after all finite gates');out.mkdir()
+    need(read(w/'qualification-01/NATIVE_CHECKS_COMPLETE.json')['passed'],'All finite gates first')
+    need(out.exists() if a.resume_complete_native else not out.exists(),'Explicit diagnostic continuation or fresh epoch required')
+    out.mkdir(exist_ok=a.resume_complete_native)
     need(read(a.observer_builds/'BUILD_COMPLETE.json')['passed'],'Complete observer builds first')
     trace,parse=m.checks.legacy_readers(a.repo.resolve());profiles=read(baseline/'qualification-02/STATE_PROFILES.json')
     index={x['path']:x['sha256'] for x in read(baseline.parent/'public-export-final-01/BINARY_CAPTURE_INDEX.json')['files']};verified=set()
-    def verify(path):
+    def verify_file(path):
         path=Path(path)
         if path.is_relative_to(baseline) and str(path) not in verified:
             key=str(path.relative_to(baseline));need(sha(path)==index[key],'Frozen R operand changed');verified.add(str(path))
     for name in ('vector_pair','state_pair'):
         original=getattr(m.checks,name)
-        def pair(x,y,*args,_original=original,**kwargs):verify(x);verify(y);return _original(x,y,*args,**kwargs)
+        def pair(x,y,*args,_original=original,**kwargs):verify_file(x);verify_file(y);return _original(x,y,*args,**kwargs)
         setattr(m.native,name,pair)
     models=read(w/'inputs-01/MODELS.json')['Qwen'];root=read(w/'inputs-01/Qwen-DEVELOPMENT.json')['inputs'][0];root=dict(root,cap=8)
     def execute_reference(label,family,job):
@@ -37,13 +40,22 @@ def main():
     bank.ep={**ep,'ids':ep['ids'][:8],'eog':ep['eog'][:8],'terminal_kind':'CAP','stop_reason':'CAP'};bank.free=free
     for path in sorted((baseline/'qualification-02/jobs').glob('Qwen-root0-R-*.json')):
         bank.add(baseline/'qualification-02/runs'/path.stem,read(path)['cases'])
-    structures={role:m.checks.gguf_structure(models[role+'_model']) for role in ('target','draft')};proofs=[]
+    structures={role:m.checks.gguf_structure(models[role+'_model']) for role in ('target','draft')};proofs=[];preserved=[]
     for arm,(core,cut,_) in m.ARMS.items():
         base={**models,'draft':True,'residency':'matched','draft_width':4,'lowering':cut,'profile':False,'capability_request':m.capability(models,structures,core,cut)}
         paths={}
         for kind,build in (('observer',a.observer_builds/core/'BUILD.json'),('formal-bridge',a.builds/core/'BUILD.json')):
             inputs=[dict(name='heavy',input=root,capture=True),dict(name='clean',input=root,capture=False)] if kind=='observer' else [dict(name='clean',input=root,capture=False)]
-            job=out/'jobs'/(arm+'-'+kind+'.json');save(job,{**base,'inputs':inputs});dest=out/'runs'/(arm+'-'+kind);m.host.run(w/'config.json',build,job,dest,'development');paths[kind]=dest
+            job=out/'jobs'/(arm+'-'+kind+'.json');payload={**base,'inputs':inputs};dest=out/'runs'/(arm+'-'+kind)
+            if a.resume_complete_native and dest.exists():
+                need(read(job)==payload and read(dest/'HOST.json')['status']=='COMPLETE','Never replay an incomplete/failed native diagnostic')
+                launch=read(dest/'launch.json');need(launch['job_sha256']==sha(job) and launch['build_sha256']==sha(build),'Retained native diagnostic identity changed')
+                for module,row in read(dest/'LOADED_MODULES.json').items():
+                    if row['kind']=='ELF_file':need(sha(module)==row['sha256'],'Retained diagnostic module changed')
+                preserved.append(dict(arm=arm,kind=kind,launch_sha256=sha(dest/'launch.json'),native_result_sha256=sha(dest/'native/result.json'),native_replayed=False))
+            else:
+                need(not job.exists(),'Unexpected unstarted diagnostic job artifact');save(job,payload);m.host.run(w/'config.json',build,job,dest,'development')
+            paths[kind]=dest
         actual=paths['observer'];bridge=paths['formal-bridge'];meta=read(actual/'native/result.json')
         proof=bank.check(actual/'native/heavy',bridge/'native/clean',meta,True);need(proof['passed'],'Observer/formal bridge numerical mismatch')
         observer_clean=read(actual/'native/clean/receipt.json');bridge_clean=read(bridge/'native/clean/receipt.json');observer_clean['study_cap']=bridge_clean['study_cap']=8
@@ -54,8 +66,8 @@ def main():
         need(all(x['phase']=='PREFILL' for x in packed),'Unexpected packed verification in k3/q4 negative control')
         if core=='packed':need(packed and all(x['ne'][1]==4 and x['ne'][2]>=2 and x['sources'][0]['type']=='q8_0' and x['sources'][1]['type']=='f32' for x in packed),'Actual independent four-column packed groups not observed')
         else:need(loop4 and not packed,'Actual marked loop4 graph not observed')
-        verify=[x for x in graph if x['phase']=='VERIFY' and x['sources'] and x['sources'][0]['type']=='q8_0']
-        need(verify and all(x['ne'][1]<=4 and x['ne'][2]==1 for x in verify),'q4 projection negative-control shape')
+        verify_nodes=[x for x in graph if x['phase']=='VERIFY' and x['sources'] and x['sources'][0]['type']=='q8_0']
+        need(verify_nodes and all(x['ne'][1]<=4 and x['ne'][2]==1 for x in verify_nodes),'q4 projection negative-control shape')
         cut_hist={}
         for i in range(4):
             natural=read(w/'qualification-01/runs'/('Qwen-natural-'+arm)/'native'/f'dev-{i}-heavy'/'receipt.json')
@@ -63,13 +75,17 @@ def main():
                 if e['phase']=='VERIFY':cut_hist[str(e['width'])]=cut_hist.get(str(e['width']),0)+1
         if cut=='LOCAL':need(set(cut_hist)=={'4'},'Actual LOCAL verification must retain physical q4')
         else:need(any(int(k)<4 for k in cut_hist),'Fixed unaligned natural counterexample must exercise SIMPLE rechunking')
-        save(out/(arm+'-CHECKED.json'),dict(passed=True,arm=arm,numerical_bridge=proof,projection_graph_nodes=len(graph),packed_nodes=len(packed),marked_loop4_nodes=len(loop4),
-            q4_verify_projection_nodes=len(verify),q4_wide_packing_active=False,actual_graph_evidence_sha256=sha(actual/'native/heavy/receipt.json'),
+        checked=dict(passed=True,arm=arm,numerical_bridge=proof,projection_graph_nodes=len(graph),packed_nodes=len(packed),marked_loop4_nodes=len(loop4),
+            q4_verify_projection_nodes=len(verify_nodes),q4_wide_packing_active=False,actual_graph_evidence_sha256=sha(actual/'native/heavy/receipt.json'),
             independent_natural_qualification_verify_width_hist=cut_hist,aligned_short_diagnostic_may_coalesce_across_cuts=True,
             formal_bridge_receipt_sha256=sha(bridge/'native/clean/receipt.json'),observer_build_sha256=sha(a.observer_builds/core/'BUILD.json'),formal_build_sha256=sha(a.builds/core/'BUILD.json'),
             requested_generation_cap=8,verification_width=4,k=3,output_reserve=4,reference='Unchanged frozen R greedy prefix and complete independent per-prefix vectors/states',
-            observation_scope='Actual scheduled GPU MUL_MAT graph descriptors and device buffers; not CUDA kernel-symbol profiling'))
-        path=out/(arm+'-CHECKED.json');proofs.append(dict(path=str(path),sha256=sha(path)));print('PROJECTION_DISPATCH_PASS',arm,len(packed),len(loop4),flush=True)
+            observation_scope='Actual scheduled GPU MUL_MAT graph descriptors and device buffers; not CUDA kernel-symbol profiling')
+        path=out/(arm+'-CHECKED.json')
+        if path.exists():need(a.resume_complete_native and read(path)==checked,'Preserved completed diagnostic proof changed')
+        else:save(path,checked)
+        proofs.append(dict(path=str(path),sha256=sha(path)));print('PROJECTION_DISPATCH_PASS',arm,len(packed),len(loop4),flush=True)
+    if a.resume_complete_native:save(out/'NATIVE_CONTINUATION-02.json',dict(reason='Python verifier callable name was shadowed by a graph-node list after first arm',preserved=preserved,numerical_binaries_changed=False,independent_R_changed=False,no_native_replays=True))
     save(out/'CHECKED.json',dict(passed=True,all_four_D4_paths=True,proofs=proofs,formal_binaries_replaced=False,M2='NOT_RUN',R_binary_or_freeze_changed=False,
         historical_binary_operands_reverified=len(verified),finite_only=True))
 

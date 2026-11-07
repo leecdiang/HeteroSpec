@@ -47,11 +47,22 @@ Example commands, using approved private paths as arguments:
 ```sh
 M=benchmarks/server_expansion_v1/M
 python "$M/build_native.py" --baseline "$BASELINE" --runtime "$RUNTIME" --out "$M1_BUILDS"
+python "$M/build_dispatch.py" --builds "$M1_BUILDS" --runtime "$RUNTIME" --out "$M1_OBSERVER_BUILDS"
 python "$M/run_m1.py" prepare --work "$M1_WORK" --baseline "$BASELINE" --runtime "$RUNTIME" --repo "$SUCCESSOR_REPO" --builds "$M1_BUILDS"
 python "$M/run_m1.py" qualify --work "$M1_WORK" --baseline "$BASELINE" --runtime "$RUNTIME" --repo "$SUCCESSOR_REPO" --builds "$M1_BUILDS"
-python "$M/negative_capabilities.py" --work "$M1_WORK" --runtime "$RUNTIME" --builds "$M1_BUILDS"
+python "$M/negative_capabilities.py" --work "$M1_WORK" --runtime "$RUNTIME" --builds "$M1_BUILDS" --baseline "$BASELINE" --repo "$SUCCESSOR_REPO" --observer-builds "$M1_OBSERVER_BUILDS"
 python "$M/run_panel.py" --work "$M1_WORK" --baseline "$BASELINE" --runtime "$RUNTIME" --repo "$SUCCESSOR_REPO" --builds "$M1_BUILDS"
 ```
+
+Before timing, `negative_capabilities.py` also runs `check_dispatch.py`. A second
+observer build changes only the heavy callback filter to retain all actual
+MUL_MAT graph nodes. For each of the four arms, an exposed short generation with
+cap8 is compared to the formal executable's clean request and to the unchanged
+independent R prefix bank using the existing full-vector/state/transaction reader.
+The actual marked loop4 or packed graph descriptors must be observed. Wide packed
+groups must occur in prefill and be absent in q4 verification. This is generation
+cap8 with k3, reserve4 and q4 verification, not M2. The formal executables remain
+the original M1 observer relinks. Kernel-symbol profiling is not claimed.
 
 Use a separate mutable source checkout, work root and ledger. The original
 single-UUID authorization, foreign-process checks, cooperative lock,2 CPU threads,

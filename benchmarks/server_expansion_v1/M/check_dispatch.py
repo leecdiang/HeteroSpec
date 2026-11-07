@@ -56,8 +56,16 @@ def main():
         else:need(loop4 and not packed,'Actual marked loop4 graph not observed')
         verify=[x for x in graph if x['phase']=='VERIFY' and x['sources'] and x['sources'][0]['type']=='q8_0']
         need(verify and all(x['ne'][1]<=4 and x['ne'][2]==1 for x in verify),'q4 projection negative-control shape')
+        cut_hist={}
+        for i in range(4):
+            natural=read(w/'qualification-01/runs'/('Qwen-natural-'+arm)/'native'/f'dev-{i}-heavy'/'receipt.json')
+            for e in natural['executions']:
+                if e['phase']=='VERIFY':cut_hist[str(e['width'])]=cut_hist.get(str(e['width']),0)+1
+        if cut=='LOCAL':need(set(cut_hist)=={'4'},'Actual LOCAL verification must retain physical q4')
+        else:need(any(int(k)<4 for k in cut_hist),'Fixed unaligned natural counterexample must exercise SIMPLE rechunking')
         save(out/(arm+'-CHECKED.json'),dict(passed=True,arm=arm,numerical_bridge=proof,projection_graph_nodes=len(graph),packed_nodes=len(packed),marked_loop4_nodes=len(loop4),
             q4_verify_projection_nodes=len(verify),q4_wide_packing_active=False,actual_graph_evidence_sha256=sha(actual/'native/heavy/receipt.json'),
+            independent_natural_qualification_verify_width_hist=cut_hist,aligned_short_diagnostic_may_coalesce_across_cuts=True,
             formal_bridge_receipt_sha256=sha(bridge/'native/clean/receipt.json'),observer_build_sha256=sha(a.observer_builds/core/'BUILD.json'),formal_build_sha256=sha(a.builds/core/'BUILD.json'),
             requested_generation_cap=8,verification_width=4,k=3,output_reserve=4,reference='Unchanged frozen R greedy prefix and complete independent per-prefix vectors/states',
             observation_scope='Actual scheduled GPU MUL_MAT graph descriptors and device buffers; not CUDA kernel-symbol profiling'))

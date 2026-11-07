@@ -46,7 +46,7 @@ def main():
         native_negatives=read(w/'capability-negatives-01/CHECKED.json'),finite_only=True,formal_deep_state_checks=False))
     save(out/'PROJECTION_DISPATCH.json',dict(passed=True,formal_binaries_replaced=False,M2='NOT_RUN',
         scope='Supplemental fixed generation-cap8, k3/reserve4/q4 observer and clean formal-executable bridges, separate from primary timing',
-        arms=[{k:x[k] for k in ('arm','projection_graph_nodes','packed_nodes','marked_loop4_nodes','q4_verify_projection_nodes','q4_wide_packing_active','actual_graph_evidence_sha256','formal_bridge_receipt_sha256','observer_build_sha256','formal_build_sha256','observation_scope')} for x in dispatch],
+        arms=[{k:x[k] for k in ('arm','projection_graph_nodes','packed_nodes','marked_loop4_nodes','q4_verify_projection_nodes','q4_wide_packing_active','independent_natural_qualification_verify_width_hist','aligned_short_diagnostic_may_coalesce_across_cuts','actual_graph_evidence_sha256','formal_bridge_receipt_sha256','observer_build_sha256','formal_build_sha256','observation_scope')} for x in dispatch],
         supplemental_requested_vectors=sum(len(x['numerical_bridge']['vectors']) for x in dispatch),supplemental_committed_states=sum(len(x['numerical_bridge']['states']) for x in dispatch)))
     save(out/'CLOCK_SUMMARY.json',dict(workers=clocks,window_overlap='Inclusive worker, wrapper, adapter, startup and burst windows overlap; never add them',
         per_arm={a:{k:sum(c[k] for c in clocks if c['arm']==a) for k in ('worker_wall_s','wrapper_wall_s','adapter_run_inclusive_s','test_burst_wall_s','launch_to_first_result_s','launch_to_first_test_result_s','model_load_s','pool_setup_s')} for a in plan['arms']},

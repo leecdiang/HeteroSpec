@@ -158,8 +158,10 @@ total engineering cost is reported.
 
 One explicitly allocated RTX A5000 is used, with2 runtime threads and a2-job
 build limit. Other company services remain running. Maximum sampled selected
-device usage is 9,266MiB; 2s samples are a lower bound on peak, not a per-process
-high-water measure. M1 charges 382 logical requests, 889,908 reserved rows and
+total-minus-free is 9,266MiB. This includes reserved/unavailable device memory,
+not just NVML memory.used. The 2s samples bound the peak of that unavailable-memory
+quantity, not a per-process high-water measure. The archived original labels and
+values are retained; see MEMORY_SCOPE_NOTE.json. M1 charges 382 logical requests, 889,908 reserved rows and
 34 native workers, including two expected native admission failures. Historical
 plus M1 counters are 1,239 requests and2,442,247 rows. Counters were not reset and
 no costs refunded.

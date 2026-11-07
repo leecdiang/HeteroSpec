@@ -33,6 +33,7 @@ def main():
     for name in ('ledger.jsonl','PRIOR_ACCOUNTING.json','BINDING.json','PIPELINE_STATUS.json','pipeline-events.jsonl',
                  'capability-negatives-phase-01.log','confirmation-phase-01.log'):
         if (w/name).is_file():chosen.add(w/name)
+    chosen.update(w.glob('helper-*.log'))
     prefixes=['inputs-01','qualification-01','qualification-dispatch-01','capability-negatives-01','panel-01',*[name for _,name in sources]]
     for prefix in prefixes:
         chosen.update(p for p in (w/prefix).rglob('*') if p.is_file() and p.suffix in ('.json','.jsonl','.log','.txt'))

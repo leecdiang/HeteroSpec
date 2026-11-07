@@ -33,6 +33,8 @@ def main():
         negative_admissions_charged=True,no_refunds=True,M2='NOT_RUN',all_engineering_cost_s=None,
         engineering_cost_limitation='Native worker/wrapper and formal adapter invocation clocks retained; uncaptured total acquisition/preparation and reference-bank validation overhead is not invented or added to overlapping clocks'))
     reports=[read(x) for x in sorted((w/'qualification-01').glob('*-CHECKED.json'))];need(len(reports)==8 and all(x['passed'] for x in reports),'Eight finite native reports')
+    dispatch=[read(w/'qualification-dispatch-01'/(arm+'-CHECKED.json')) for arm in plan['arms']]
+    need(all(x['passed'] for x in dispatch),'All four native projection witnesses')
     save(out/'QUALIFICATION.json',dict(passed=True,scope='Four D4 paths x Qwen/Smol fixed development cases; cap1, cap128/native EOG, heavy/clean; immutable predecessor geometry reused',
         reports=len(reports),root_arm_cases=sum(len(x['roots']) for x in reports),
         original_requested_vectors=sum(len(r['vectors']) for x in reports for r in x['roots'])+len(reports),
@@ -42,6 +44,10 @@ def main():
         all_committed_frontier_vectors_equal=all(s['frontier']['equal'] for x in reports for r in x['roots'] for s in r['states']) and all(r['terminal_frontier']['equal'] for x in reports for r in x['roots']),
         actual_EOG=[dict(arm=x['arm'],family=x['family'],root=r['root']) for x in reports for r in x['roots'] if r['terminal_kind']=='EOG'],
         native_negatives=read(w/'capability-negatives-01/CHECKED.json'),finite_only=True,formal_deep_state_checks=False))
+    save(out/'PROJECTION_DISPATCH.json',dict(passed=True,formal_binaries_replaced=False,M2='NOT_RUN',
+        scope='Supplemental fixed generation-cap8, k3/reserve4/q4 observer and clean formal-executable bridges, separate from primary timing',
+        arms=[{k:x[k] for k in ('arm','projection_graph_nodes','packed_nodes','marked_loop4_nodes','q4_verify_projection_nodes','q4_wide_packing_active','actual_graph_evidence_sha256','formal_bridge_receipt_sha256','observer_build_sha256','formal_build_sha256','observation_scope')} for x in dispatch],
+        supplemental_requested_vectors=sum(len(x['numerical_bridge']['vectors']) for x in dispatch),supplemental_committed_states=sum(len(x['numerical_bridge']['states']) for x in dispatch)))
     save(out/'CLOCK_SUMMARY.json',dict(workers=clocks,window_overlap='Inclusive worker, wrapper, adapter, startup and burst windows overlap; never add them',
         per_arm={a:{k:sum(c[k] for c in clocks if c['arm']==a) for k in ('worker_wall_s','wrapper_wall_s','adapter_run_inclusive_s','test_burst_wall_s','launch_to_first_result_s','launch_to_first_test_result_s','model_load_s','pool_setup_s')} for a in plan['arms']},
         maximum_sampled_device_bytes=max(c['peak_observed_device_bytes'] for c in clocks)))

@@ -23,7 +23,8 @@ def export(work,out,private_literals=()):
   return s
  selected=set()
  for name in ('EXACT_MODEL_BINDINGS.json','PIPELINE_START.json','PIPELINE_INPUT_WAIT_RESUME.json',
-              'PIPELINE_STATUS.json','pipeline-events.jsonl','ledger.jsonl','CUDA_SOURCE_REVIEW.json',
+              'PIPELINE_STATUS.json','PIPELINE_STATUS-02.json','CONTINUATION-02.json',
+              'pipeline-events.jsonl','ledger.jsonl','CUDA_SOURCE_REVIEW.json',
               'UPSTREAM_ARCHIVE_IMPORT.json','UPSTREAM_REBUILD_CHECK.json'):
   if (w/name).is_file():selected.add(w/name)
  for prefix in ('inputs-01','reference-01','panel-01'):

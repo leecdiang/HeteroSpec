@@ -108,7 +108,7 @@ python "$B/prepare_study.py" --work "$WORK" --stage "$WORK/stage-04" --repo "$PW
 python "$B/panel_native.py" prepare --work "$WORK" --repo "$PWD"
 python "$B/run_reference.py" --work "$WORK" --config "$WORK/config-01.json" \
   --build "$WORK/build-R-01/BUILD.json"
-python "$B/qualify_native.py" --work "$WORK" --repo "$PWD" --epoch qualification-01
+python "$B/qualify_partitioned.py" --work "$WORK" --repo "$PWD" --epoch qualification-01
 python "$B/panel_native.py" run --work "$WORK" --repo "$PWD" \
   --qualification "$WORK/qualification-01"
 ```
@@ -126,6 +126,19 @@ receipts in `$ROOT/models-ms-01`, binds exact model paths, then invokes the same
 phases. Its `--resume-input-wait` is restricted to a wait before model binding;
 it never retries model jobs. It assumes the three build receipts and prepared
 `inputs-01` already exist.
+
+The observed initial `qualify_native.py` attempt packed all12 geometry cases into
+one heavy worker. Each completed Qwen W_L4 case took about95s, exceeding the900s
+ceiling for the complete matrix. `qualify_partitioned.py` applies identical
+comparison and natural-transaction rules with3 geometry cases per candidate
+worker, uniformly across all arms and both families. It changes no numerical
+binary or formal worker and keeps the900s ceiling. Use it directly for a fresh
+reproduction as above. `continue_partitioned_study.py` is a one-time recorded
+continuation of that specific retained timeout: no formal reservations may
+exist, the old status/budget are preserved, the previously completed independent
+R matrix is validated before reuse, and no candidate captures from the failed
+worker count as completed qualification. It cannot retry a partially observed
+formal panel. The original coordinator still records its own original outcome.
 
 Qualification uses independent free R endpoints and separately rebuilt forced
 prefixes for requested vectors and committed states. It covers all fixed

@@ -18,6 +18,10 @@ def main():
     w=a.baseline.resolve();out=a.out.resolve();need(not out.exists(),'Fresh D14 build epoch');out.mkdir(parents=True)
     frontend=out/'frontend';lock=read(w/'stage-04/SOURCE_LOCK.json');verify_tree(w/'stage-04/frontend',lock['frontend']);shutil.copytree(w/'stage-04/frontend',frontend)
     shutil.copy2(Path(__file__).parent/'native/deployment.hpp',frontend/'d14_deployment.hpp')
+    worker=frontend/'worker.cpp';text=worker.read_text()
+    text=replace(text,'if(name.rfind("kq",0)!=0&&name.rfind("hs_",0)!=0)return false;',
+        'if(name.rfind("kq",0)!=0&&name.rfind("hs_",0)!=0&&t->op!=GGML_OP_MUL_MAT)return false;')
+    worker.write_text(text) # Only phase_observe/heavy captures reach this filter.
     placement='mp.n_gpu_layers=999;mp.split_mode=LLAMA_SPLIT_MODE_NONE;'
     override=placement+'llama_model_tensor_buft_override fullgpu[]={{".*",ggml_backend_dev_buffer_type(gpu)},{nullptr,nullptr}};mp.tensor_buft_overrides=fullgpu;'
     entry=frontend/'entry.cpp';text=entry.read_text();text=replace(text,'static json module_inventory()','#include "d14_deployment.hpp"\nstatic json module_inventory()')
@@ -54,7 +58,7 @@ def main():
         save(dest/'DEPENDENCIES.json',{**deps,'files':names,'qualified_archive_reuse':True,'original_build_sha256':sha(old/'BUILD.json')})
         save(dest/'BUILD.json',{**b,'executable':str(exe),'executable_sha256':sha(exe),'dependency_closure_sha256':sha(dest/'DEPENDENCIES.json'),
             'status':'D14_OBSERVER_RELINK_NOT_YET_QUALIFIED','numerical_archives_pristine':role=='reference',
-            'frontend_modified':True,'frontend_modifications':['Full-GPU weight placement','Versioned native capability and actual buffer observation'],
+            'frontend_modified':True,'frontend_modifications':['Full-GPU weight placement','Versioned native capability and actual buffer observation','All MUL_MAT descriptors in heavy captures only; clean callback returns before filter'],
             'original_build_sha256':sha(old/'BUILD.json'),'native_capability_schema':'heterospec.d14.native-capability.v1',
             'numerical_archive_reuse':True,'fresh_CUDA_recompilation':False})
         print('D14_DEPLOYMENT_BUILT',role,sha(exe),flush=True)

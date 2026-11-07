@@ -138,6 +138,25 @@ def qualify(a):
     eog=[dict(arm=x['arm'],root=r['root']) for x in natural for r in x['roots'] if r['terminal_kind']=='EOG']
     need({x['arm'] for x in eog}==set(ARMS),'Actual14B native EOG on every control required')
     need(all(any(len(r['rejection_cycles'])>=2 for r in x['roots']) for x in natural if x['arm'].endswith('D4')),'First/later rejection on both D4 paths')
+    dispatch=[]
+    for arm,(core,cut,draft) in ARMS.items():
+        run=s.out/'runs'/(FAMILY+'-natural-'+arm);packed=[];loop4=[];q4=[];hist={}
+        for i in range(4):
+            row=read(run/'native'/f'dev-{i}-heavy/receipt.json');graph=[x for x in row['geometry'] if x['op']=='MUL_MAT']
+            packed += [x for x in graph if x['name'].startswith('frontier_packed_')]
+            loop4 += [x for x in graph if x['name'].startswith('hs_backend_loop4_')]
+            q4 += [x for x in graph if x['phase']=='VERIFY' and x['sources'] and x['sources'][0]['type']=='q8_0']
+            for x in row['executions']:
+                if x['phase']=='VERIFY':hist[str(x['width'])]=hist.get(str(x['width']),0)+1
+        if core=='packed':need(packed and all(x['ne'][1]==4 and x['ne'][2]>=2 and x['sources'][0]['type']=='q8_0' and x['sources'][1]['type']=='f32' for x in packed),'Real14B independent four-column packed groups')
+        else:need(loop4 and not packed,'Real14B marked loop4 path')
+        need(all(x['phase']=='PREFILL' for x in packed),'Wide packing absent from q4/ordinary negative controls')
+        if draft:
+            need(q4 and all(x['ne'][1]<=4 and x['ne'][2]==1 for x in q4),'Real14B q4 verification projection')
+            if cut=='LOCAL':need(set(hist)=={'4'},'LOCAL retains physical q4')
+        dispatch.append(dict(arm=arm,packed_graph_nodes=len(packed),marked_loop4_graph_nodes=len(loop4),q4_graph_nodes=len(q4),
+            verify_physical_width_hist=hist,observation='Actual scheduled GPU graph descriptors and device buffers, not kernel-symbol profiling'))
+    save(s.out/'PROJECTION_DISPATCH.json',dict(passed=True,arms=dispatch,heavy_only=True,formal_binary_bridge='Same executable heavy/clean checks; zero heavy observer calls in clean service'))
     complete=s.out/'NATIVE_CHECKS_COMPLETE.json';save(complete,dict(passed=True,finite_only=True,all_six_arms=True,all12_geometry_cases=True,
         native_EOG_observed=eog,first_later_rejection=True,proofs=[dict(path=str(x),sha256=sha(x)) for x in s.reports]))
     kinds={'source_freeze','whole_prompt_producer','full_requested_logits','active_KV','frontier','pending','rollback','cap','native_EOG','clean_no_state_transfer','physical_work','actual_module_map','all_fixed_controls'}
@@ -145,8 +164,25 @@ def qualify(a):
         executables=[dict(build=str(a.builds/core/'BUILD.json'),loaded_modules=str(s.modules[(core,FAMILY)])) for core in ('loop4','packed')])
     registry['checks']['source_freeze']['evidence']=str(s.out/'SOURCE_REVIEW.json');save(s.out/'REGISTRY.json',registry);print('D14_FINITE_NATIVE_QUALIFICATION_COMPLETE',flush=True)
 
+def negatives(a):
+    w=a.work;need(read(w/'qualification-01/NATIVE_CHECKS_COMPLETE.json')['passed'],'All finite gates before native negatives')
+    base=read(w/'qualification-01/jobs'/(FAMILY+'-natural-W_L4_D4.json'));base['inputs']=[x for x in base['inputs'] if x['name']=='cap1-clean']
+    need(len(base['inputs'])==1,'One bounded negative request');rows=[]
+    for name,error in [('unknown-field','Unknown D14 native job field'),('ignored-output-capacity','Native D14 capability differs from complete requested contract')]:
+        job=copy.deepcopy(base)
+        if name=='unknown-field':job['unimplemented_context_option']=True
+        else:job['capability_request']['target']['context']['outputs_max']=8
+        path=w/'capability-negatives-01/jobs'/(name+'.json');out=w/'capability-negatives-01/runs'/name;save(path,job)
+        try:host.run(w/'config-reference-frozen-01.json',a.builds/'loop4/BUILD.json',path,out,'development')
+        except RuntimeError:
+            need(read(out/'HOST.json')['status']=='FAILED','Retain actual native negative')
+            need(read(out/'native/failure.json')['error']==error and not (out/'native/result.json').exists(),'Expected pre-input capability rejection')
+        else:raise RuntimeError('Bad capability reached native inputs')
+        rows.append(dict(name=name,job_sha256=sha(path),launch_sha256=sha(out/'launch.json'),failure_sha256=sha(out/'native/failure.json'),charged=True))
+    save(w/'capability-negatives-01/CHECKED.json',dict(passed=True,tests=rows,model_forwards=0,no_native_replays=True))
+
 def main():
-    p=argparse.ArgumentParser();p.add_argument('action',choices=['prepare','reference','qualify'])
+    p=argparse.ArgumentParser();p.add_argument('action',choices=['prepare','reference','qualify','negatives'])
     for key in ('work','baseline','runtime','builds','repo','admission','target','draft'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args()
     for key,value in vars(a).items():

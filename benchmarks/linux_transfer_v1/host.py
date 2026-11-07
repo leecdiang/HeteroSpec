@@ -105,6 +105,33 @@ def modules_from_result(path):
             output[name]={'sha256':sha(p),'kind':'ELF_file'}
     return output
 
+def confirmation_identity(freeze,build_path,build,job_path,out,reserved):
+    """Admit one original frozen slot, even when two arms share request bytes.
+
+    Numerical build and slot identity are part of execution identity. A packed
+    and loop4 M job can have identical JSON; treating the JSON hash alone as a
+    retry silently prevents a required control from ever being launched.
+    """
+    plan_path=Path(freeze['plan']['path']).resolve()
+    need(sha(plan_path)==freeze['plan']['sha256'],'Frozen plan changed')
+    plan=read(plan_path);workers={w['id']:w for w in plan['workers']}
+    need(len(workers)==len(plan['workers'])==24,'Original24 unique frozen slots required')
+    out=Path(out).resolve();slot=workers.get(out.name)
+    need(slot is not None and out==plan_path.parent/'runs'/slot['id'],'Unregistered confirmation output slot')
+    need(Path(job_path).resolve()==plan_path.parent/slot['job'] and sha(job_path)==slot['job_sha256'],'Different frozen slot job')
+    need(build['role']==slot['core'],'Different numerical core for frozen slot')
+    known=freeze['executables'].get(build['executable_sha256'])
+    need(known is not None and sha(build_path)==known['build']['sha256'],'Different frozen numerical build')
+    for row in reserved:
+        if row.get('phase')!='confirmation':continue
+        prior_out=Path(row['out']).resolve();prior=workers.get(prior_out.name)
+        need(prior is not None and prior_out==plan_path.parent/'runs'/prior['id'],'Unresolved prior confirmation identity; do not guess')
+        need(row['job_sha256']==prior['job_sha256'],'Prior slot/job binding changed')
+        if row.get('plan_sha256') is not None:need(row['plan_sha256']==freeze['plan']['sha256'],'Prior plan binding changed')
+        if row.get('confirmation_slot_id') is not None:need(row['confirmation_slot_id']==prior['id'],'Prior explicit slot binding changed')
+        need(prior['id']!=slot['id'],'Frozen confirmation slot already reserved; retain failed/finished slot, no selective retry')
+    return {'confirmation_slot_id':slot['id'],'plan_sha256':freeze['plan']['sha256'],'build_sha256':sha(build_path)}
+
 def run(config_path,build_path,job_path,out,phase):
     config=read(config_path);build=read(build_path);job=read(job_path);out=Path(out).resolve()
     need(config.get('approved_by_user') is True and config.get('allocation_id'),'User/scheduler GPU allocation required')
@@ -136,14 +163,15 @@ def run(config_path,build_path,job_path,out,phase):
     lockpath=lockdir/(config['gpu_uuid']+'.lock')
     with lockpath.open('a+') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        initial=check_resources(config);out.mkdir(parents=True)
+        initial=check_resources(config)
         req,rows=reservation(job);ledger=work/'ledger.jsonl'
         prior=[json.loads(x) for x in ledger.read_text().splitlines()] if ledger.exists() else []
         reserved=[r for r in prior if r.get('event')=='RESERVE']
-        if phase=='confirmation':need(not any(r.get('phase')=='confirmation' and r.get('job_sha256')==sha(job_path) for r in reserved),'Frozen confirmation job already reserved; retain failed/finished slot, no selective retry')
+        identity=confirmation_identity(freeze,build_path,build,job_path,out,reserved) if phase=='confirmation' else {}
         need(sum(r['requests'] for r in reserved)+req<=2048 and sum(r['rows'] for r in reserved)+rows<=4000000,'Study budget exhausted; no automatic extension')
-        with ledger.open('a') as f:f.write(json.dumps({'event':'RESERVE','out':str(out),'requests':req,'rows':rows,'phase':phase,'job_sha256':sha(job_path)})+'\n');f.flush();os.fsync(f.fileno())
-        save(out/'launch.json',{'job_sha256':sha(job_path),'build_sha256':sha(build_path),'phase':phase,'requests_reserved':req,'rows_reserved':rows,'initial':initial,'allocation_id':config['allocation_id'],'gpu_uuid':config['gpu_uuid']})
+        out.mkdir(parents=True)
+        with ledger.open('a') as f:f.write(json.dumps({'event':'RESERVE','out':str(out),'requests':req,'rows':rows,'phase':phase,'job_sha256':sha(job_path),**identity})+'\n');f.flush();os.fsync(f.fileno())
+        save(out/'launch.json',{'job_sha256':sha(job_path),'build_sha256':sha(build_path),'phase':phase,'requests_reserved':req,'rows_reserved':rows,'initial':initial,'allocation_id':config['allocation_id'],'gpu_uuid':config['gpu_uuid'],**identity})
         start=time.monotonic();launch_clock=None;exit_clock=None;p=None;status='FAILED';code=None;markers=[];drain_errors=[];thread=None
         try:
             with (out/'stdout.log').open('xb') as so,(out/'stderr.log').open('xb') as se,(out/'resources.jsonl').open('x') as log:

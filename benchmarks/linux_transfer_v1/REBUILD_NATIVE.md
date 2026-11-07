@@ -140,6 +140,26 @@ R matrix is validated before reuse, and no candidate captures from the failed
 worker count as completed qualification. It cannot retry a partially observed
 formal panel. The original coordinator still records its own original outcome.
 
+One later admission defect was observed after the first complete formal worker:
+loop4 and packed M controls can have identical request JSON, while using different
+frozen numerical builds. The original job-hash-only repeat guard blocked the
+second control before reservation/native launch. `host.py` now binds execution
+identity to the original frozen plan's slot, numerical build and request file.
+It still rejects every reserved slot, wrong core, changed plan and invented output
+slot. Six regression cases cover these distinctions normally and under `-O`.
+
+`panel_native.py run --resume-unstarted` is an explicit recorded continuation for
+this admission failure. It requires every previously reserved native slot to have
+COMPLETE HOST/CHECKED records, validates their request/reference/launch/module
+hashes, preserves them without execution, archives only the empty unreserved
+blocked output, and executes the remaining original slots in original order. It
+reuses the original completed free-reference endpoints and unchanged numerical
+freeze/jobs. It rejects an attempted incomplete/failed native slot; it cannot
+selectively rerun one. The first-worker interruption and old statuses remain in
+the final record. Numerical binaries, service timing and input population do not
+change. `PIPELINE_STATUS-03.json` records this continuation independently of the
+retained original coordinator outcomes.
+
 Qualification uses independent free R endpoints and separately rebuilt forced
 prefixes for requested vectors and committed states. It covers all fixed
 q1/4/8/32 geometries, four M controls, both D4 paths, all observed rejection,

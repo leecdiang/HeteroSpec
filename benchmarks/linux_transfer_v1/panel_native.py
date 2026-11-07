@@ -1,5 +1,6 @@
 """Freeze and execute the complete six-arm panel after actual native qualification."""
 from pathlib import Path
+import datetime
 import argparse, copy, hashlib, importlib.util, json, math, sys, types
 from common import need, read, save, sha
 from host import run
@@ -61,21 +62,57 @@ def costs(w,repo,plan,records):
  for kind,data in datasets.items():
   p=w/'panel-01'/(kind.upper()+'-COST-INPUTS.json');save(p,data);save(p.with_name(kind.upper()+'-COST-COVERAGE.json'),reader(p,expected_sessions=4))
 
-def execute(w,repo,qualification):
+def execute(w,repo,qualification,resume_unstarted=False):
  dest=w/'panel-01';plan=read(dest/'PLAN.json');need(read(qualification/'NATIVE_CHECKS_COMPLETE.json')['passed'],'Native qualification required')
  freeze=dest/'CONFIRMATION_FREEZE.json';cfg=read(w/'config-reference-frozen-01.json')
- confirmation(Path(cfg['reference_freeze']),qualification/'REGISTRY.json',dest/'PLAN.json',freeze)
- cfg.update(freeze=str(freeze),freeze_sha256=sha(freeze));config=w/'config-confirmation-01.json';save(config,cfg)
+ config=w/'config-confirmation-01.json'
+ if resume_unstarted:
+  cfg=read(config);frozen=read(freeze)
+  need(sha(freeze)==cfg['freeze_sha256'] and sha(dest/'PLAN.json')==frozen['plan']['sha256'],'Original confirmation freeze/plan changed')
+  need(sha(qualification/'REGISTRY.json')==frozen['qualification_registry']['sha256'],'Original qualification registry changed')
+ else:
+  confirmation(Path(cfg['reference_freeze']),qualification/'REGISTRY.json',dest/'PLAN.json',freeze)
+  cfg.update(freeze=str(freeze),freeze_sha256=sha(freeze));save(config,cfg)
  lookup={x['id']:x for x in read(w/'stage-04/authenticated-kit/samples/R2-INPUTS.json')['inputs']+read(w/'inputs-01/PRIMERS.json')['inputs']}
  order=plan['workers'][0]['primers']+plan['workers'][0]['roots'];need(len(order)==len(set(order))==18,'Fixed free-reference population')
  model=read(w/'inputs-01/MODELS.json')['Qwen'];model.pop('draft_model');model.pop('draft_sha256')
  reference_job=dict(model,residency='target_only',draft=False,inputs=[{'name':f'reference-{i}','input':lookup[key],'capture':False} for i,key in enumerate(order)])
- ref_job=dest/'REFERENCE-JOB.json';save(ref_job,reference_job);ref=dest/'reference-01';run(config,w/'build-R-01/BUILD.json',ref_job,ref,'reference')
+ ref_job=dest/'REFERENCE-JOB.json';ref=dest/'reference-01'
+ if resume_unstarted:
+  need(read(ref_job)==reference_job and read(ref/'HOST.json')['status']=='COMPLETE','Original independent free-reference job incomplete or changed')
+  launch=read(ref/'launch.json');need(launch['job_sha256']==sha(ref_job) and launch['build_sha256']==sha(w/'build-R-01/BUILD.json'),'Original free-reference identity changed')
+ else:save(ref_job,reference_job);run(config,w/'build-R-01/BUILD.json',ref_job,ref,'reference')
  expected={key:read(ref/'native'/f'reference-{i}'/'receipt.json') for i,key in enumerate(order)}
  reference_id='Linux-R-'+sha(Path(cfg['reference_freeze']));trace,_=legacy_readers(repo);records=[];slots={x['id']:'NOT_RUN' for x in plan['workers']}
+ if resume_unstarted:
+  ledger=[json.loads(x) for x in (w/'ledger.jsonl').read_text().splitlines()];reserved=[x for x in ledger if x.get('event')=='RESERVE' and x.get('phase')=='confirmation']
+  preserved=[]
+  for row in reserved:
+   out=Path(row['out']);need(out.parent==dest/'runs' and out.name in slots,'Unknown prior formal reservation')
+   checked=out/'CHECKED.json';need(checked.is_file() and read(out/'HOST.json')['status']=='COMPLETE','Never retry an attempted incomplete/failed native slot')
+   r=read(checked);worker=next(x for x in plan['workers'] if x['id']==out.name)
+   need(r['status']=='COMPLETE' and r['native_checks_passed'] is True and len(r['requests'])==18,'Preserved checked worker incomplete')
+   need(r['id']==worker['id'] and r['job_sha256']==worker['job_sha256']==row['job_sha256'],'Preserved slot identity changed')
+   need(r['launch_sha256']==sha(out/'launch.json') and r['loaded_modules_sha256']==sha(out/'LOADED_MODULES.json'),'Preserved launch/modules changed')
+   for call in r['requests']:
+    need(sha(call['native_receipt'])==call['native_receipt_sha256'],'Preserved native request bytes changed')
+    idx=order.index(call['root']);need(sha(ref/'native'/f'reference-{idx}'/'receipt.json')==call['reference_receipt_sha256'],'Preserved independent endpoint reference changed')
+   preserved.append({'id':out.name,'checked_sha256':sha(checked),'native_worker_replayed':False})
+  need(reserved and len(preserved)==len({x['id'] for x in preserved}),'Explicit continuation needs unique completed prior slots')
+  save(w/'PANEL_CONTINUATION-03.json',{'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'reason':'Different frozen numerical controls share identical request JSON; old job-hash-only retry guard blocked an unstarted slot',
+      'plan_sha256':sha(dest/'PLAN.json'),'confirmation_freeze_sha256':sha(freeze),'reference_freeze_sha256':sha(Path(cfg['reference_freeze'])),
+      'preserved_completed_slots':preserved,'no_native_slot_retries':True,'native_binaries_or_job_bytes_changed':False,
+      'host_adapter_sha256':sha(Path(__file__).with_name('host.py')),'panel_adapter_sha256':sha(Path(__file__)),
+      'old_slot_status_sha256':sha(dest/'ALL_SLOT_STATUS.json'),'old_failure_log_sha256':sha(w/'confirmation-phase-02.log')})
+  (dest/'ALL_SLOT_STATUS.json').rename(dest/'ALL_SLOT_STATUS-identity-block.json')
  try:
   for worker in plan['workers']:
    name=worker['id'];out=dest/'runs'/name;job=dest/worker['job'];slots[name]='STARTED'
+   if resume_unstarted and (out/'CHECKED.json').exists():
+    records.append(read(out/'CHECKED.json'));slots[name]='COMPLETE';print('PRESERVED_COMPLETE_WORKER',name,flush=True);continue
+   if resume_unstarted and out.exists():
+    need(not any(out.iterdir()) and not any(Path(r['out'])==out for r in reserved),'Unstarted slot has unexpected artifacts or prior reservation')
+    retained=dest/'retained-unstarted'/name;retained.parent.mkdir(exist_ok=True);need(not retained.exists(),'Preserve identity-blocked output epoch');out.rename(retained)
    run(config,w/f'build-{worker["core"]}-01/BUILD.json',job,out,'confirmation')
    payload=read(job);meta=read(out/'native/result.json');draft=payload['draft']
    need(meta['total_observed_API_calls']['context_creates']==(2 if draft else 1),'Actual worker residency/model count')
@@ -107,7 +144,11 @@ def execute(w,repo,qualification):
       'no_selective_retries':True,'all_controls_retained':True,'inference_open':len(records)==24})
 
 if __name__=='__main__':
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=('prepare','run'));p.add_argument('--work',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);p.add_argument('--qualification',type=Path)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=('prepare','run'));p.add_argument('--work',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);p.add_argument('--qualification',type=Path);p.add_argument('--resume-unstarted',action='store_true')
  a=p.parse_args();w=a.work.resolve();repo=a.repo.resolve()
  if a.action=='prepare':prepare(w,repo)
- else:need(a.qualification is not None,'Actual qualification directory');execute(w,repo,a.qualification.resolve())
+ else:
+  need(a.qualification is not None,'Actual qualification directory');complete=False
+  try:execute(w,repo,a.qualification.resolve(),a.resume_unstarted);complete=True
+  finally:
+   if a.resume_unstarted:save(w/'PIPELINE_STATUS-03.json',{'status':'COMPLETE' if complete else 'FAILED_RETAINED','last_phase':'COMPLETE' if complete else 'FIXED_SIX_ARM_CONFIRMATION','original_statuses_preserved':True,'no_native_slot_retries':True})

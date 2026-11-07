@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(b570_spec_cost LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(spec_cost spec_cost.cpp)
+target_include_directories(spec_cost PRIVATE "C:/hs/b570-direct-id-v1-src/include" "C:/hs/b570-direct-id-v1-src/ggml/include" "C:/hs/b570-geometry-p0/benchmarks/b570_geometry_state_codesign_v1/_host/pr97/dependencies/pinned-source/vendor")
+target_compile_options(spec_cost PRIVATE /O2 /W4 /fp:precise /utf-8)
+target_link_libraries(spec_cost PRIVATE "C:/hs/b570-spec-bridge-20261020200000/build/Release/llama.lib" "C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml.lib" "C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml-base.lib")

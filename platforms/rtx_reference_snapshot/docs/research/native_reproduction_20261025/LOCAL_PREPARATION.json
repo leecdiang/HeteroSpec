@@ -1,0 +1,111 @@
+{
+  "date_utc": "2026-10-25",
+  "preparation_host": {
+    "os": "Darwin",
+    "machine": "arm64"
+  },
+  "base_commit": "805864b1e370c4d17defa58bed4fac43c1cfb75e",
+  "paper_pr": 145,
+  "scope": "Local source integrity and tooling preparation only",
+  "native_model_requests": 0,
+  "native_qualification": "NOT_RUN",
+  "source_files": [
+    {
+      "path": "README.upstream.txt",
+      "bytes": 1780,
+      "git_blob": "c7e6d90a4dfedccc706bc85832a62481934d4a28",
+      "sha256": "1386fbc4f18be0858aa632f7ff8960f232efbd020dc000e23bae4a1326926c6d"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 1050,
+      "git_blob": "58a5a2d46431a54902bbda4a58d09d9532d76827",
+      "sha256": "6b72ea75d2cfe9d70b54b64439799ba0bf321d3306db319274521d060b40d594"
+    },
+    {
+      "path": "contract.py",
+      "bytes": 2909,
+      "git_blob": "53eddc23787ee84a9c4499dddf00e18ae094e437",
+      "sha256": "fa58673fec7aa73be2f78a9c4b0f070624996102fc369ca50898f0c275d840a7"
+    },
+    {
+      "path": "test_contract.py",
+      "bytes": 2138,
+      "git_blob": "765a6b3b8b522470a539275abfe869396e2ce602",
+      "sha256": "ccb50a4a016d777adf72bc4db5d7b16bcfcbbdca2d8c7858ce4ee38af6739aa5"
+    },
+    {
+      "path": "archived/hs_scope.h",
+      "bytes": 1075,
+      "git_blob": "a6f52cc89632a6c4aa63e482b57b8cfec868bdf8",
+      "sha256": "59229e264c2d0d4afc6fb2e7daec6c7f916d73cf83d9c0a6841758154625cfda"
+    },
+    {
+      "path": "archived/runtime-integration.patch",
+      "bytes": 1597,
+      "git_blob": "c425b7e893579a5729d4102dc00bcab9f11b9840",
+      "sha256": "4521f6b79dc232e52e4d0ad158f1785fd0339d49f52e742d8c13da9dccc76c66"
+    },
+    {
+      "path": "archived/av-preserve.patch",
+      "bytes": 3162,
+      "git_blob": "72e87ece2f8d13c1d30489db4191cad7b108119f",
+      "sha256": "0032fd2b65d98f3274d1ee121d0179b1ac9581c10537655f6f1d354d3e3a7d4e"
+    },
+    {
+      "path": "archived/METHOD_CONDITIONS.md",
+      "bytes": 6602,
+      "git_blob": "8f8a38182c39bc3ed9731488dca07d25f79d5765",
+      "sha256": "4340a95a26ee99c1288a8f7025694b0d62b704c4402777d7e5f894d954b52524"
+    }
+  ],
+  "fresh_copy_verification": {
+    "rtx": {
+      "status": "PASS",
+      "verified_files": [
+        "README.upstream.txt",
+        "SOURCE_INDEX.json",
+        "archived/METHOD_CONDITIONS.md",
+        "archived/av-preserve.patch",
+        "archived/hs_scope.h",
+        "archived/runtime-integration.patch",
+        "contract.py",
+        "test_contract.py"
+      ],
+      "missing": [],
+      "changed": [],
+      "platform": "rtx",
+      "scope": "File integrity only; no GPU execution or native numerical qualification is inferred.",
+      "native_qualification": "NOT_ASSESSED"
+    },
+    "b570": {
+      "status": "PASS",
+      "verified_files": [
+        "README.upstream.txt",
+        "SOURCE_INDEX.json",
+        "archived/METHOD_CONDITIONS.md",
+        "archived/av-preserve.patch",
+        "archived/hs_scope.h",
+        "archived/runtime-integration.patch",
+        "contract.py",
+        "test_contract.py"
+      ],
+      "missing": [],
+      "changed": [],
+      "platform": "b570",
+      "scope": "File integrity only; no GPU execution or native numerical qualification is inferred.",
+      "native_qualification": "NOT_ASSESSED"
+    }
+  },
+  "unit_tests": {
+    "command": "python3 -m unittest discover -s scripts/native_reproduction -p test_*.py -v",
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "remaining": [
+    "Native clean build and real stage/request fixtures on each target host",
+    "RTX matched lifecycle/k bridge",
+    "B570 bounded native smoke; preserve completed PR143 negative cost conclusion"
+  ]
+}

@@ -1,0 +1,93 @@
+--- GPU14/native_repair.cpp
++++ formal_v2/native_formal.cpp
+@@ -15,7 +15,8 @@
+ #include <psapi.h>
+ using J=nlohmann::ordered_json;namespace fs=std::filesystem;
+ static J read(const fs::path&p){std::ifstream f(p);hs113::require(bool(f),"missing JSON");J j;f>>j;return j;}
+-static void write(const fs::path&p,const J&j){hs113::require(!fs::exists(p),"immutable output exists");fs::create_directories(p.parent_path());std::ofstream f(p);f<<j.dump(2)<<"\n";hs113::require(bool(f),"write failed");}
++static size_t gpu_file_limit=0,gpu_total_limit=0;
++static void write(const fs::path&p,const J&j){hs113::require(!fs::exists(p),"immutable output exists");fs::create_directories(p.parent_path());auto body=j.dump()+"\n";if(gpu_file_limit){size_t used=0;for(const auto&e:fs::directory_iterator(p.parent_path()))if(e.is_regular_file())used+=e.file_size();hs113::require(body.size()<=gpu_file_limit&&used+body.size()<=gpu_total_limit,"native metadata output budget before write");}std::ofstream f(p);f<<body;hs113::require(bool(f),"write failed");}
+ static std::vector<unsigned char> bytes(const fs::path&p){std::ifstream f(p,std::ios::binary);hs113::require(bool(f),"missing tensor bytes");return {std::istreambuf_iterator<char>(f),std::istreambuf_iterator<char>()};}
+ static int64_t integer(const J&j,int64_t low,int64_t high){hs113::require(j.is_number_integer()&&!j.is_boolean(),"strict integer required");auto n=j.get<int64_t>();hs113::require(n>=low&&n<=high,"integer outside domain");return n;}
+ static size_t span(const J&m){
+@@ -58,6 +59,7 @@
+         hs113::require(ggml_is_contiguous(t->view_src)&&off%4==0,"generated view owner must be contiguous");return storage(t->view_src,unravel(off/4,t->view_src),raw);}
+     if(t->op==GGML_OP_CONT){size_t linear=x[0]+t->ne[0]*(x[1]+t->ne[1]*(x[2]+t->ne[2]*x[3]));return storage(t->src[0],unravel(linear,t->src[0]),raw);}
+     if(t->op==GGML_OP_REPEAT){for(int i=0;i<4;i++)x[i]%=t->src[0]->ne[i];return storage(t->src[0],x,raw);}
++    if(t->op==GGML_OP_CONCAT){int axis=0;std::memcpy(&axis,t->op_params,sizeof(axis));hs113::require(axis>=0&&axis<4,"CPU concat axis");if(x[axis]<t->src[0]->ne[axis])return storage(t->src[0],x,raw);x[axis]-=t->src[0]->ne[axis];return storage(t->src[1],x,raw);}
+     throw std::runtime_error("CPU test attempted arithmetic instead of storage-only path");
+ }
+ static J address_tests(const J&plan){size_t checked=0,outputs=0;int cases=0;
+@@ -79,11 +81,12 @@
+     }
+     return {{"status","PASS"},{"actual_full_snapshot_graph_cases",cases},{"Q_mask_native_word_checks",checked},{"synthetic_AV_restore_word_checks",outputs},{"arithmetic_computes",0},{"CUDA_queries",0},{"scope","actual GGML storage graph CPU interpreter, not numerical or backend qualification"}};
+ }
++#include "formal_gate.h"
+ static int gpu_run(const J&job,const fs::path&out){
+-    hs113::require(job.contains("approved_stage_F0"),"separate S1 approval binding missing");fs::path root=job.at("root").get<std::string>(),runtime=job.at("runtime_directory").get<std::string>();
+-    hs113::require(job.at("run_id")=="pr113-timer-gpu-regression-v1","new independent regression run only");
++    formal113::admit(job,false);hs113::require(job.at("stage")=="NUMERICAL"&&repair113::same_path(out,job.at("native_output").get<std::string>()),"numeric stage/output required");fs::path root=job.at("root").get<std::string>(),runtime=job.at("runtime_directory").get<std::string>();
++    
+     hs113::require(!fs::exists(out),"immutable scientific output");fs::create_directories(out);J m=read(root/"snapshot.json");std::string kind=job.at("kind"),layout=job.at("layout");
+-    hs113::require(kind=="numeric","14-attempt engineering regression only; no timing/trace");
++    hs113::require(kind=="numeric","formal numerical only; no timing/trace");
+     auto &core=repair113::process_core(runtime/"ggml-base.dll",job.at("core_sha256").get<std::string>());
+     auto host_binding=core.verify_shared_import("ggml_init");
+     auto registry_binding=repair113::verify_registry_import(runtime,job.at("registry_sha256"));
+@@ -93,17 +96,20 @@
+     write(out/"PLUGIN_CORE_IMPORTS.json",repair113::verify_plugin_core_imports(runtime/"ggml-cuda.dll",core.module()));
+     auto backend=ggml_backend_init_by_name("CUDA0",nullptr);hs113::require(backend,"CUDA0 unavailable");
+     auto cudart=GetModuleHandleW(L"cudart64_12.dll");hs113::require(cudart,"actual pinned cudart module absent");auto complete=(int(*)())GetProcAddress(cudart,"cudaDeviceSynchronize");hs113::require(complete,"device-wide completion unavailable");
+-    Graph g(m,layout,kind=="numeric");auto support=g.registry(backend);for(const auto&n:support["nodes"])if(!n["metadata_only"].get<bool>())hs113::require(n["CUDA_support"]==true,"unsupported executable node; CPU fallback forbidden");
++    Graph g(m,layout,kind=="numeric");write(out/"STAGE_DESCRIPTORS.json",{{"QK",descriptor(g.result.stage[0])},{"softmax",descriptor(g.result.stage[1])},{"AV",descriptor(g.result.stage[2])},{"ordinary",descriptor(g.result.ordinary)}});auto support=g.registry(backend);
+     write(out/"RUNTIME_BEFORE_ALLOCATE.json",{{"pid",GetCurrentProcessId()},{"core",core.receipt()},{"modules",modules()},{"graph",support}});
++    for(const auto&n:support["nodes"])if(!n["metadata_only"].get<bool>())hs113::require(n["CUDA_support"]==true,"unsupported executable node; CPU fallback forbidden");
+     auto buffer=ggml_backend_alloc_ctx_tensors(g.ctx,backend);hs113::require(buffer,"CUDA allocation failed");
+-    for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);if(!metadata(t->op))hs113::require(t->buffer&&!ggml_backend_buffer_is_host(t->buffer)&&ggml_backend_buft_get_device(ggml_backend_buffer_get_type(t->buffer))==ggml_backend_get_device(backend),"actual allocation placement mismatch");}
++    auto placed=support;J ownership=J::array();bool all_owners=true;size_t name_queries=0;
++    for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);placed["nodes"][i]["placement"]=t->buffer?J(ggml_backend_buffer_name(t->buffer)):J(nullptr);if(t->buffer)name_queries++;
++        if(!metadata(t->op)){bool host=t->buffer?ggml_backend_buffer_is_host(t->buffer):true;auto actual=t->buffer&&!host?ggml_backend_buft_get_device(ggml_backend_buffer_get_type(t->buffer)):nullptr;auto intended=t->buffer&&!host?ggml_backend_get_device(backend):nullptr;bool valid=t->buffer&&!host&&actual==intended;all_owners&=valid;ownership.push_back({{"node",i},{"has_buffer",bool(t->buffer)},{"buffer_is_host",host},{"actual_device",uint64_t((uintptr_t)actual)},{"intended_device",uint64_t((uintptr_t)intended)},{"valid",valid}});}}
++    placed["actual_placement"]="CUDA0 direct backend; no scheduler";placed["ownership"]=ownership;placed["all_ownership_checks_passed"]=all_owners;placed["buffer_name_queries"]=name_queries;write(out/"PLACEMENT_BEFORE_COMPUTE.json",placed);
++    hs113::require(all_owners,"actual allocation placement mismatch");
+     const char*roles[]={"Q","K","V","mask"};std::vector<std::vector<unsigned char>>initial;
+     for(int i=0;i<4;i++){initial.push_back(bytes(root/m[roles[i]]["file"].get<std::string>()));hs113::require(initial.back().size()==ggml_nbytes(g.in[i]),"whole input span mismatch");ggml_backend_tensor_set(g.in[i],initial.back().data(),0,initial.back().size());}
+-    auto placed=support;for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);placed["nodes"][i]["placement"]=t->buffer?J(ggml_backend_buffer_name(t->buffer)):J(nullptr);}placed["actual_placement"]="CUDA0 direct backend; no scheduler";
+-    write(out/"PLACEMENT_BEFORE_COMPUTE.json",placed);
+     hs113::require(complete()==0,"setup completion failure");
+-    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input before-start readback differs");std::ofstream f(out/(std::string("input_")+roles[i]+".before.bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"input pre dump");}
+-    int warmup=kind=="numeric"?0:1,count=kind=="clean"?8:1;J times=J::array(),intervals=J::array();std::vector<unsigned char>expected;int starts=0;
++    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());formal113::retain(job,out,std::string("input_")+roles[i]+".before",b);hs113::require(b==initial[i],"full input before-start readback differs");}
++    int warmup=0,count=1;J times=J::array(),intervals=J::array();std::vector<unsigned char>expected;int starts=0;
+     for(int i=-warmup;i<count;i++){
+         write(out/("GRAPH_STARTED_"+std::to_string(starts)+".json"),{{"index",starts},{"warmup",i<0}});starts++;
+         auto begin=std::chrono::steady_clock::now();auto rc=ggml_backend_graph_compute(backend,g.g);write(out/"GRAPH_CALL_RETURNED.json",{{"status",int(rc)},{"pid",GetCurrentProcessId()}});
+@@ -111,14 +117,15 @@
+         std::vector<unsigned char>b(ggml_nbytes(g.result.ordinary));ggml_backend_tensor_get(g.result.ordinary,b.data(),0,b.size());if(expected.empty())expected=b;else hs113::require(b==expected,"within-host output repeatability failed");
+         if(i>=0){times.push_back(std::chrono::duration<double,std::milli>(end-begin).count());intervals.push_back({{"begin_ns",std::chrono::duration_cast<std::chrono::nanoseconds>(begin.time_since_epoch()).count()},{"end_ns",std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count()}});}
+     }
+-    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input mutation");std::ofstream f(out/(std::string("input_")+roles[i]+".after.bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"input post dump");}
+-    auto dump=[&](const char*name,ggml_tensor*t){std::vector<unsigned char>b(ggml_nbytes(t));ggml_backend_tensor_get(t,b.data(),0,b.size());std::ofstream f(out/(std::string(name)+".bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"tensor write failed");};
++    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());formal113::retain(job,out,std::string("input_")+roles[i]+".after",b);hs113::require(b==initial[i],"full input mutation");}
++    auto dump=[&](const char*name,ggml_tensor*t){std::vector<unsigned char>b(ggml_nbytes(t));ggml_backend_tensor_get(t,b.data(),0,b.size());formal113::retain(job,out,name,b);};
+     if(kind=="numeric"){dump("QK",g.result.stage[0]);dump("softmax",g.result.stage[1]);dump("AV",g.result.stage[2]);}dump("ordinary",g.result.ordinary);
+     write(out/"RECORD.json",{{"status","COMPLETED"},{"layout",layout},{"kind",kind},{"graph_computes",starts},{"warmups",warmup},{"completed_host_wall_ms",times},{"raw_completed_intervals",intervals},{"pid",GetCurrentProcessId()},{"synchronization","explicit cudaDeviceSynchronize, all device streams; inclusive host wall, not kernel time"},{"input_reset_and_postcheck",true},{"nodes",placed},{"modules",modules()},{"profile","PROFILE_UNAVAILABLE_PLACEMENT_ONLY"},{"kernel_names",nullptr},{"DRAM_bytes",nullptr}});
+     ggml_backend_buffer_free(buffer);ggml_backend_free(backend);return 0;
+ }
+ int main(int argc,char**argv){try{
+     hs113::require(argc==4,"usage native113 --cpu-registry|--cpu-negatives|--gpu-census plan output");std::string mode=argv[1];J plan=read(argv[2]);
++    if(mode=="--gpu-run"){gpu_file_limit=64*1024;gpu_total_limit=192*1024;}if(mode=="--gpu-census"){gpu_file_limit=15*1024*1024;gpu_total_limit=15*1024*1024;}
+     if(mode=="--cpu-negatives"){
+         J bad=plan["descriptors"][0]["metadata"]["Q"];int rejected=0;
+         for(int kind=0;kind<5;kind++){auto x=bad;if(kind==0)x["ne"][0]=true;if(kind==1)x["nb"][1]=1;if(kind==2)x["ne"][0]=0;if(kind==3)x["nb"][2]=4;if(kind==4)x["type"]=3;try{span(x);}catch(...){rejected++;}}
+@@ -135,6 +142,11 @@
+             for(int i=0;i<count(g.g);i++){auto*t=node(g.g,i);hs113::require(t==ggml_graph_node(g.g,i)&&size(t)==ggml_nbytes(t)&&elements(t)==ggml_nelements(t),"DLL tensor ABI");checks++;}graphs++;
+         }repair113::no_gpu_modules();write(argv[3],{{"graphs",graphs},{"tensor_checks",checks},{"host_import",shared},{"registry_import",registry},{"core",core.receipt()},{"modules",modules()},{"graph_computes",0},{"GPU_queries",0}});return 0;
+     }
++    if(mode=="--cpu-wires")return formal113::cpu_wires(plan,argv[3]);
++    if(mode=="--cpu-all-addresses")return formal113::all_addresses(plan,argv[3]);
++    if(mode=="--cpu-cas")return formal113::cpu_cas(plan,argv[3]);
++    if(mode=="--cpu-one-wire"){repair113::no_gpu_modules();formal113::admit(plan,true);repair113::no_gpu_modules();write(argv[3],{{"status","PASS"},{"GPU_queries",0}});return 0;}
++    if(mode=="--gpu-census")return formal113::census(plan,argv[3]);
+     if(mode=="--gpu-run")return gpu_run(plan,argv[3]);
+     hs113::require(mode!="--gpu-census","standalone extra support host not registered");bool gpu=false;hs113::require(gpu||mode=="--cpu-registry","unknown mode");ggml_backend_t backend=nullptr;
+     if(gpu){hs113::require(plan.contains("approved_stage_F0")&&plan["approved_stage_F0"].is_string(),"missing separately approved S1 F0 binding");

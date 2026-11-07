@@ -1,0 +1,126 @@
+{
+  "breakpoint": {
+    "identities": 1,
+    "reused_pids": 0,
+    "status": "IDENTITY_STREAM_PASS"
+  },
+  "churn": {
+    "identities": 201,
+    "reused_pids": 8,
+    "status": "IDENTITY_STREAM_PASS"
+  },
+  "native": {
+    "freeze_cases": [
+      {
+        "case": "source_and_manifest",
+        "reason": "FREEZE_REPLACED"
+      },
+      {
+        "case": "before_child_manifest",
+        "reason": "initial freeze digest mismatch"
+      },
+      {
+        "case": "source_only",
+        "reason": "SOURCE_DRIFT: src/rev2/actor.py"
+      },
+      {
+        "case": "missing_pin",
+        "reason": "initial freeze digest required"
+      }
+    ],
+    "gate_booleans_are_not_the_only_source": true,
+    "healthy_cases": [
+      {
+        "actors": 1,
+        "begin_ns": 47326877332300,
+        "case": "C1",
+        "end_ns": 47328019079200,
+        "identities": [
+          [
+            15340,
+            "134368102923992964"
+          ]
+        ],
+        "label": "D0_C1",
+        "lifetime_seconds": 1.1282612,
+        "nonce": "0ad16a0c81a5c3d2feb220f7092c00fe"
+      },
+      {
+        "actors": 1,
+        "begin_ns": 47328030346300,
+        "case": "C2",
+        "end_ns": 47330283957500,
+        "identities": [
+          [
+            17108,
+            "134368102935521426"
+          ]
+        ],
+        "label": "D0_C2",
+        "lifetime_seconds": 2.2419531,
+        "nonce": "8c93824c26bd0a27f896c94ecd93b90f"
+      },
+      {
+        "actors": 3,
+        "begin_ns": 47330292023000,
+        "case": "C3",
+        "end_ns": 47330717926100,
+        "identities": [
+          [
+            20456,
+            "134368102958135780"
+          ],
+          [
+            1492,
+            "134368102959265701"
+          ],
+          [
+            20176,
+            "134368102960507677"
+          ]
+        ],
+        "label": "D0_C3",
+        "lifetime_seconds": 0.8643804,
+        "nonce": "122150e6dbe77c703fc1fdbdd069f4b6"
+      }
+    ],
+    "healthy_sampling": {
+      "SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1010165400,
+        "samples": 7
+      },
+      "WATCHDOG_SAMPLES.jsonl": {
+        "maximum_effective_gap_ns": 1010394000,
+        "samples": 5
+      }
+    },
+    "stale_detection_age_ns": 5019809500,
+    "status": "NATIVE_GATES_RECONSTRUCTED"
+  },
+  "smokes": [
+    {
+      "closed": 21,
+      "expected_rejection": false,
+      "kind": "review",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 21,
+      "expected_rejection": true,
+      "kind": "case",
+      "observed": 21,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    },
+    {
+      "closed": 65,
+      "expected_rejection": true,
+      "kind": "review",
+      "observed": 65,
+      "review_clean": false,
+      "status": "OBSERVER_SMOKE_PASS"
+    }
+  ]
+}

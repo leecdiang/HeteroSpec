@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "study_id": "rtx_scope_transfer_v1",
+  "status": "PLAN_VALID",
+  "new_native_executions": 0,
+  "repository": "leecdiang/HeteroSpec",
+  "base_branch": "windows/rtx-native-delivery-20261026",
+  "base_commit": "9149b6f5f5a4dcde1b6124c654dc0ba1241ca509",
+  "panel": "FIXED_PR144_EXPOSED_TRANSFER12_QWEN_AND_SMOL",
+  "blind": false,
+  "input_selection": "All twelve stored entries in source order, no outcome-based replacement; original native prompt IDs copied exactly",
+  "families": [
+    "Qwen",
+    "SmolLM2"
+  ],
+  "arms": [
+    "R",
+    "M_GS",
+    "M_PQ",
+    "M_QB",
+    "C_GS",
+    "C_PQ",
+    "C_QB"
+  ],
+  "date_timezone": "Asia/Shanghai",
+  "utc_timestamps_also_required": true,
+  "dates": 3,
+  "sessions_per_date": 2,
+  "date_first_session_gap_hours_minimum": 20,
+  "context": {
+    "n_ctx": 1024,
+    "n_batch": 1024,
+    "target_ub_scoped": 4,
+    "target_ub_R": 1,
+    "draft_ub": 1,
+    "threads": 24,
+    "threads_batch": 24,
+    "kv_dtype": "F16",
+    "flash_attention": false,
+    "k": 3,
+    "cap": 128,
+    "greedy": true,
+    "prompt_reuse": false,
+    "lifecycle": "fresh",
+    "model_residency": "both weights loaded once per diagnostic unit; fresh contexts per request"
+  },
+  "service_timer_definition": "diagnostic only: complete fresh-context request; never eligible for performance estimates",
+  "budget": {
+    "qualification": 196,
+    "formal_measurements": 1008,
+    "warmups": 84,
+    "formal_including_warmups": 1092,
+    "factorial_total": 1288,
+    "family_session_workers": 12,
+    "technical_retry_sessions_max": 2,
+    "technical_retry_requests_max": 182,
+    "technical_retry_per_family_session_max": 1,
+    "llama_A1": 18,
+    "llama_A2": 36,
+    "llama_default_total": 54,
+    "new_operator_replays_default": 0
+  },
+  "host_resource_caps": {
+    "status": "MUST_BE_BOUND_BEFORE_ANY_NATIVE_EXECUTION",
+    "worker_timeout_seconds": null,
+    "total_owned_seconds": null,
+    "payload_bytes": null,
+    "minimum_free_bytes": null,
+    "resident_context_memory_admission": "all R/GS/PQ/QB target contexts and per-scope draft contexts must fit before freeze; otherwise stop and issue a separate all-fresh design"
+  },
+  "order_seed": "rtx-scope-transfer-20261027-v1",
+  "input_order": "SHA256(seed|input-order|family|session|source_index), deterministic sort",
+  "arm_order": "family-specific SHA256 base permutation; rotate by (global_session_index + source_input_index) modulo 7; seven arms contiguous for each input",
+  "warmup": "source index 0, one request for each of seven arms before each family-session, no adaptive additions",
+  "capture_off_sentinels": [
+    0,
+    11
+  ],
+  "sentinel_selection": "source-index positions frozen without new output inspection",
+  "family_order": "Qwen then Smol on date slots 0 and 2; Smol then Qwen on date slot 1; same order within each of the two daily sessions",
+  "primary": [
+    "Qwen: log(M_QB/C_QB)-log(M_GS/C_GS)",
+    "SmolLM2: log(M_QB/C_QB)-log(M_GS/C_GS)"
+  ],
+  "weights": "equal twelve input log contrasts within each session, equal two sessions within date, equal three dates",
+  "weak_interval": "97.5% two-sided paired-date Student t, df2, Bonferroni for two primary family contrasts; approximate normal independent date means; weak sensitivity only",
+  "prohibited_inference": [
+    "requests as independent replicates",
+    "session bootstrap presented as date uncertainty",
+    "general population power claim",
+    "I>0 alone called profitable drafting",
+    "selection or date extension after effects are seen"
+  ],
+  "llama_diagnostic": {
+    "independent_of_factorial": true,
+    "known_failure": "CodeContests/valid/108",
+    "controls": [
+      "CodeContests/valid/43",
+      "GSM8K/test/496"
+    ],
+    "A0": "CPU reconstruction of historical endpoints; raw vectors/cycles required to locate earlier numerical divergence",
+    "A1": "3 inputs x R/C_PQ/C_QB x observer off/heavy =18; fresh contexts",
+    "A2": "3 inputs x P1/P4_NATIVE x M_PQ(C1)/C_PQ/C_QB x off/heavy =36; fixed layout in each context; bundled recipe interpretation",
+    "P1": "one target caller per prompt ID; draft caller recipe recorded separately and held fixed",
+    "P4_NATIVE": "full prompt in one target caller, internal target UB4 partition; not the B570 explicit caller-width4 recipe",
+    "state_transfer_performed": false,
+    "checkpoint_restore_enabled": false,
+    "checkpoint_restore_reserved_upper_bound": 12,
+    "conditional_capture_enabled": false,
+    "conditional_capture_reserved_upper_bound": 8,
+    "operator_replay_enabled": false,
+    "operator_replay_reserved_upper_bound": 24,
+    "candidate_fix_enabled": false,
+    "fix_confirmation_enabled": false,
+    "future_new3_confirmation_budget": 18,
+    "future_old3_rerun_budget": "additional18 if A1 has already executed; never silently reuse spent A1 slots",
+    "requires_fix_success": false
+  },
+  "stopping": "retain numerical failures and all NOT_RUN reasons; no numerical retry or input replacement; full affected fixed-panel factorial cannot qualify; independent family may continue only with reconciled shared host/process identity",
+  "implementation": {
+    "CPU_prepare_schedule_audit_analysis": true,
+    "native_ArmSpec_extension": false,
+    "family_source_build_routing": false,
+    "native_clock_observer_state_qualification": false,
+    "host_runner_for_new_schema": false,
+    "new_native_commands_available": false
+  },
+  "results": null,
+  "execution_status": "NOT_RUN",
+  "native_status": "NATIVE_EXTENSION_REQUIRED"
+}

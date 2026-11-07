@@ -1,0 +1,226 @@
+{
+  "schema": "heterospec.jsa.b570.validation.design.v1",
+  "state": "PLAN_ONLY_NO_NEW_MODEL_REQUESTS",
+  "model_pair": "SmolLM2-1.7B-Instruct / SmolLM2-135M-Instruct Q8_0; exact bytes in COORDINATION_SNAPSHOT.json",
+  "fallback_model_pairs": [],
+  "candidate_count": 1,
+  "candidate_search_allowed": false,
+  "rtx_result_dependency": false,
+  "hardware": {
+    "physical_device": "Intel Arc B570",
+    "backend": "Vulkan",
+    "offload": "all target/draft layers, dynamic actual layer counts, no CPU fallback"
+  },
+  "contract": {
+    "ctx": 1024,
+    "batch": 512,
+    "threads": 10,
+    "batch_threads": 10,
+    "flash_attention": "off",
+    "seed": 123,
+    "temp": 0,
+    "cap": 128,
+    "sequence": 0,
+    "n_parallel": 1,
+    "runtime_eog": "actual target GGUF/runtime set, never Qwen hardcodes",
+    "effective_sampling": "greedy only; repeat_penalty1, freq/presence penalties0, dry0, grammar empty, mirostat off, reasoning control/budget disabled, backend stochastic sampling off; audit actual values"
+  },
+  "conditions": {
+    "R": {
+      "path": "ordinary target-only port from PR63",
+      "target_prefill_ub": 128,
+      "target_continuation_ub": 128,
+      "speculative": false,
+      "phase_binding": false,
+      "output_reservation": "inherited ordinary construction; audit actual values"
+    },
+    "N": {
+      "path": "original PR63 old_N1; minimal model-neutral IO/metadata port",
+      "target_prefill_ub": 128,
+      "target_continuation_ub": 1,
+      "draft_ub": 1,
+      "k": 2,
+      "speculative": true,
+      "phase_binding": "original N1 behavior; no canonical candidate repair",
+      "output_reservation": "inherited original speculative values; audit actual values"
+    },
+    "M": {
+      "path": "PR64 matched target-only",
+      "target_prefill_ub": 128,
+      "target_continuation_ub": 1,
+      "speculative": false,
+      "phase_binding": true,
+      "target_output_reservation": 512,
+      "target_output_reservation_per_sequence": 1
+    },
+    "C": {
+      "path": "PR64 CANONICAL_PREFILL_INPLACE_PHASE_BINDING",
+      "target_prefill_ub": 128,
+      "target_continuation_ub": 1,
+      "draft_ub": 1,
+      "k": 2,
+      "speculative": true,
+      "phase_binding": true,
+      "target_output_reservation": 512,
+      "target_output_reservation_per_sequence": 1
+    }
+  },
+  "stages": {
+    "A_Qwen_bridge": {
+      "tasks": [
+        "HumanEval/42",
+        "HumanEval/145",
+        "HumanEval/134",
+        "MBPP/72"
+      ],
+      "conditions": [
+        "R",
+        "N",
+        "M",
+        "C"
+      ],
+      "capture": [
+        "on",
+        "off"
+      ],
+      "full_requests": 32,
+      "gate": "Historical own-condition endpoint/raw expectations and capture equivalence. Known N/R mismatch or C/R suffix not a new bridge failure."
+    },
+    "B_second_family_discovery": {
+      "tasks": [
+        "HumanEval/42",
+        "HumanEval/145",
+        "HumanEval/134",
+        "MBPP/72",
+        "MBPP/125",
+        "MBPP/470",
+        "MBPP/475",
+        "MBPP/278",
+        "MBPP/451",
+        "MBPP/312",
+        "MBPP/479",
+        "MBPP/429"
+      ],
+      "conditions": [
+        "R",
+        "N",
+        "M",
+        "C"
+      ],
+      "rounds": 2,
+      "full_requests": 96,
+      "capture_qualification_additional_full_requests": 32,
+      "capture_qualification_tasks": [
+        "HumanEval/42",
+        "HumanEval/145",
+        "HumanEval/134",
+        "MBPP/72"
+      ],
+      "capture_qualification": "Every arm first4 tasks on/off; compare against discovery off raw records. Numerical mismatch to R does not select a new candidate."
+    },
+    "C_optional_natural_cross": {
+      "maximum_tasks": 2,
+      "repeats": 2,
+      "maximum_auxiliary_target_decodes": 64,
+      "primary_cross_decodes": 16,
+      "selection": "First two locked discovery tasks with endpoint R/N or R/C divergence and naturally aligned N/C checkpoint; report all considered/un-aligned tasks. No confirmation tasks or teacher prefix.",
+      "donor_and_sham_full_requests": "Charged within engineering cap; complete own-path raw shams and actual KV/positions required. No trigger/unsupported restoration explicitly reported."
+    },
+    "D_confirmation": {
+      "tasks": 24,
+      "conditions": [
+        "R",
+        "N",
+        "M",
+        "C"
+      ],
+      "rounds": 4,
+      "full_requests": 384,
+      "warm_requests": 16,
+      "fresh_process_sessions": 16,
+      "condition_order": [
+        [
+          "R",
+          "N",
+          "C",
+          "M"
+        ],
+        [
+          "N",
+          "M",
+          "R",
+          "C"
+        ],
+        [
+          "M",
+          "C",
+          "N",
+          "R"
+        ],
+        [
+          "C",
+          "R",
+          "M",
+          "N"
+        ]
+      ],
+      "task_rotation_offsets": [
+        0,
+        6,
+        12,
+        18
+      ],
+      "capture": "off, minimal complete ID/EOG/cost records",
+      "cohort": "B570-host audited, disjoint RTX planned panels, frozen before any second-family forward",
+      "gate": "Engineering/reference/capture/exposure/freeze/timer qualification. Valid method numerical mismatch does not cancel predeclared matrix."
+    }
+  },
+  "qualification": {
+    "primary": "Each arm endpoint IDs/runtime EOG flags/length/stop reason through first target EOG inclusive or cap128 equal paid B570 R for same task in all4 rounds; endpoint repeat stable. All raw suffixes retained and charged. Endpoint qualification only.",
+    "secondary": "Separately report entire raw IDs/EOG/length equality vs R and raw repeat stability, with suffix counts. Endpoint pass never implies complete raw losslessness.",
+    "ordinary_reference": "B570 UB128 target-only, independent of M; never RTX UB1 or RTX arrays",
+    "eligible_speed": "Per comparator pair: full frozen24x4 paid R/C required for R/C; M/C and N/C additionally require their baseline endpoint-qualified to R. Missing or unqualified comparison => qualified_speedup=null, diagnostic time ratios retained. An unrelated N failure does not erase complete qualified R/C. No passing-task subset selection."
+  },
+  "limits": {
+    "engineering_nonwarm_full_request_starts": 256,
+    "confirmation_nonwarm_full_request_starts": 384,
+    "warm_full_request_starts": 64,
+    "all_full_request_starts": 704,
+    "auxiliary_target_decode_starts": 64,
+    "engineering_active_gpu_hours": 8,
+    "confirmation_active_gpu_hours": 8,
+    "all_active_gpu_hours": 16,
+    "calendar_days_from_first_owned_gpu_session": 7,
+    "automatic_scientific_retries": 0,
+    "unused_budget_authorizes_more_candidates": false,
+    "active_gpu_accounting": "Owned GPU session wall time from process creation to exit, including load/warmup/sync/session idle; CPU-only prep/download without owned GPU process excluded."
+  },
+  "cost_summary": {
+    "primary": "Common host timer immediately before sending request to ready resident process through validated payload and required array readback; all synchronous online work paid",
+    "secondary": [
+      "native whole_request_ms with exact source boundaries",
+      "native generation_ms with exact source boundaries"
+    ],
+    "ratio": "baseline/C; task median of4 rounds then GM across all24; also each-round GM and direction counts",
+    "baselines": [
+      "R",
+      "M",
+      "N"
+    ],
+    "cold_load_and_cleanup": "Separate measured fields; formal16warm separately recorded; online phase/context work included",
+    "uncertainty": "Descriptive finite cohort and actual session/date identities; no cross-date CI, independent-day power or production-speed claim. Small gains never auto-extend."
+  },
+  "freeze": "Before first Smol forward freeze all assets/code/config/tokenization/discovery/confirmation/sequence/timer/budget; publish new result Draft PR and remote verify; continue authorized bounded execution without extra PREPARE_ONLY. Recheck reservations before confirmation.",
+  "completion": "Independent CPU verifier; all negative/missing evidence; lightweight result Draft PR, actual CAS restoration and remote readback. No auto merge/manuscript/release.",
+  "not_in_scope": [
+    "LLM-42 Vulkan implementation",
+    "RTX mask3/16-mask search port",
+    "new Qwen optimization search",
+    "missing old E slot rerun",
+    "cross-hardware pooled speeds",
+    "output-driven model/candidate switch",
+    "precision/shader/kernel change",
+    "functional code accuracy",
+    "energy attribution"
+  ]
+}

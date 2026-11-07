@@ -1,0 +1,18 @@
+--- tooling03/parallel_upload_bounded.py
++++ tooling04/parallel_upload_bounded.py
+@@ -79,7 +79,14 @@
+             q=read_only_api(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
+             matches=[x for page in json.loads(q.stdout) for x in page if x['name']==p.name] if q.returncode==0 else []
+             error=log.read_text(encoding='utf-8',errors='replace')
+-            transient=any(t in error for t in ('EOF','connection reset','TLS handshake timeout','i/o timeout'))
++            lookup_transient=False
++            if error.strip()=='release not found' and q.returncode==0 and not matches:
++                identity_args=['gh','api',f'repos/{repo}/releases/{release_id}']
++                identity=read_only_api(identity_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++                obj=json.loads(identity.stdout) if identity.returncode==0 else {}
++                lookup_transient=(obj.get('id')==release_id and obj.get('draft') is True and obj.get('tag_name')==tag and obj.get('target_commitish')==remote['target_commitish'])
++                journal('LOOKUP_RECONCILIATIONS.jsonl',{'event':event,'query':identity_args,'exit_code':identity.returncode,'stderr':identity.stderr,'remote_identity':obj,'same_intended_draft_still_exists':lookup_transient})
++            transient=lookup_transient or any(t in error for t in ('EOF','connection reset','TLS handshake timeout','i/o timeout'))
+             retry=(attempt<3 and code!= -1 and transient and q.returncode==0 and not matches and time.monotonic()+5*attempt<asset_deadline)
+             journal('ATTEMPT_RECONCILIATIONS.jsonl',{'event':event,'query':query_args,'query_exit_code':q.returncode,'query_stderr':q.stderr,'remote_matches':matches,'network_error':error,'retry_only_after_verified_absence':retry,'asset_deadline_not_reset':True})
+             if not retry:return event

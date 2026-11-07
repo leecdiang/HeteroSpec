@@ -1,0 +1,95 @@
+{
+  "status": "RETROSPECTIVE_REPORTED_RATIO_RECONSTRUCTION",
+  "source": "anc/rtx_repair_cost.csv",
+  "source_sha256": "a1c86506b1298becd0a3b23c323f9aa2305ddf891e302da4c61927c3126505fa",
+  "source_git_blob": "e883410f6f97c65455b8fe00710478eb9051ce88",
+  "source_scope": "Original seven-arm campaign: 12 exposed inputs/family, two adjacent sessions, four repetitions; original weights and resident-request window.",
+  "formula": "D_L = S(M_L/M_QB) * D_QB / S(C_L/C_QB); Gamma = S(C_GS/C_QB) / S(M_GS/M_QB)",
+  "rounding_note": "Enclosures propagate +/-0.5e-6 reporting-rounding bounds only. They are not sampling uncertainty or confidence intervals.",
+  "novelty_note": "The draft-value identity and crossover already occur in the earlier manuscript. This release makes the contrast explicit and plots all three policies; it adds no experimental observation.",
+  "not_component_time_decomposition": true,
+  "new_native_executions": 0,
+  "families": {
+    "Qwen3": {
+      "draft_value": {
+        "GS": 0.7097222600128293,
+        "PQ": 1.1251189529355854,
+        "QB": 1.143749
+      },
+      "report_rounding_enclosures": {
+        "GS": [
+          0.7097215174098699,
+          0.7097230026163686
+        ],
+        "PQ": [
+          1.1251173741209561,
+          1.1251205317522066
+        ],
+        "QB": [
+          1.1437485,
+          1.1437495
+        ]
+      },
+      "gamma_QB_from_GS": 1.611544493446387,
+      "gamma_report_rounding_enclosure": [
+        1.611543511741353,
+        1.611545475152159
+      ],
+      "local_repair_crosses_draft_parity": true
+    },
+    "SmolLM2": {
+      "draft_value": {
+        "GS": 0.5921095906299358,
+        "PQ": 0.6163601452882707,
+        "QB": 0.633948
+      },
+      "report_rounding_enclosures": {
+        "GS": [
+          0.592108704472317,
+          0.5921104767885024
+        ],
+        "PQ": [
+          0.6163590738712672,
+          0.6163612167067453
+        ],
+        "QB": [
+          0.6339475,
+          0.6339485
+        ]
+      },
+      "gamma_QB_from_GS": 1.0706599082875063,
+      "gamma_report_rounding_enclosure": [
+        1.0706591503639984,
+        1.0706606662115692
+      ],
+      "local_repair_crosses_draft_parity": false
+    },
+    "Llama": {
+      "draft_value": {
+        "GS": 0.7243386024529158,
+        "PQ": 1.1073961336128268,
+        "QB": 1.11662
+      },
+      "report_rounding_enclosures": {
+        "GS": [
+          0.7243378550830756,
+          0.7243393498233293
+        ],
+        "PQ": [
+          1.1073945495117428,
+          1.1073977177159509
+        ],
+        "QB": [
+          1.1166195,
+          1.1166205
+        ]
+      },
+      "gamma_QB_from_GS": 1.5415718508148732,
+      "gamma_report_rounding_enclosure": [
+        1.5415709505114563,
+        1.5415727511189279
+      ],
+      "local_repair_crosses_draft_parity": true
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "status": "findings",
+  "findings": [
+    {
+      "file": "candidate/source/verify_cpu8.py",
+      "line": 52,
+      "priority": "P1",
+      "trigger": "After an otherwise valid CPU8 run, supply a hashed external completion receipt containing the matching freeze, manifest and tool-binding hashes, valid times, and restoration_verified/tool_exit_verified=true, without performing remote restoration.",
+      "effect": "The verifier returns CPU8_INTEGRATION_PASS. It never authenticates an archive/download receipt or restoration recomputation report; relocated is unused.",
+      "recommendation": "Require and verify external archive, download and restoration evidence bound to this sealed manifest, including packaged-verifier identity and matching recomputation results. Otherwise retain PENDING_DELIVERY."
+    },
+    {
+      "file": "candidate/source/cpu8_supervisor.py",
+      "line": 28,
+      "priority": "P2",
+      "trigger": "The permitted continuation loop accumulates more than 3000 observed descendant starts or 21600 seconds of covered process lifetimes before another formal admission.",
+      "effect": "Admission checks sources, wall time and instantaneous resources, but no cumulative process ceiling. Heartbeat counters are null, and verify_cpu8 likewise does not enforce these retained limits.",
+      "recommendation": "Reconcile unique PID/creation identities and covered lifetime charges across retained attempts, then enforce cumulative ceilings at admission and final verification. Preserve unobserved lifecycle fields as UNKNOWN."
+    },
+    {
+      "file": "candidate/src/rev2/evidence_pack.py",
+      "line": 25,
+      "priority": "P2",
+      "trigger": "Archive a permitted, nearly incompressible 450 MiB sealed tree, or repeat archive creation into different external directories.",
+      "effect": "The logical-size check permits outputs that consume the required 256 MiB reserve, exceed task-wide storage during download/restoration, or create more than two complete archives. External outputs are outside the monitored root and have no cumulative accounting.",
+      "recommendation": "Account for external archives, downloads and restoration allocation against the shared task budget before writing; enforce the reserve, free-disk threshold and two-copy ceiling."
+    },
+    {
+      "file": "candidate/source/evidence_contract.py",
+      "line": 25,
+      "priority": "P2",
+      "trigger": "A sealed-tree file is an NTFS hard link to another file inside or outside the root.",
+      "effect": "Inventory, membership and packaging accept it because only symlinks and junctions are rejected. The alias-free sealing requirement is therefore not enforced.",
+      "recommendation": "Apply the existing legacy hard-link rule to sealed evidence: reject regular files whose st_nlink is not one, in both packaging and verification."
+    }
+  ],
+  "scope": {
+    "complete_static_review": true,
+    "coverage": "Current protocol; all candidate/source and candidate/src/rev2 files; legacy host, acceptance, C#, configuration and historical approval data; Windows startup, identity, exceptions and Job cleanup; source/freeze/continuation budgets; eight CPU8 paths and negative controls; process conversion, D0 replay, monitoring, tool binding, sealing and external delivery.",
+    "input_identities": "All 726 manifest entries matched size and SHA256; no unlisted supplied inputs beyond REVIEW_CONTEXT.md and the manifest. Acquisition comparison identified only the three documented onsite source changes. All four pinned tool identities matched. Final rehash found no input drift."
+  },
+  "candidate_manifest_sha256": "36d6c43ac3774f63399d87e6e1d2b0330715caf025138f3f7193a7efba8f85b6",
+  "limitations": [
+    "Read-only review without delegation or project code, test, script or native-library execution.",
+    "DLL hashed only: c15dd72cb30bcd8dbb614bef08e826f5b3bac96058ef0e4aa14ea050a074a948.",
+    "Supplied native/D0 evidence was inspected, not rerun; this is not native acceptance.",
+    "Post-verdict approvals, bindings and final startup artifacts remain pending by design. No formal freeze or CPU8 run has occurred.",
+    "Historical approvals remain historical; retained failures and missing outer OS lifecycle evidence remain unchanged and UNKNOWN."
+  ]
+}

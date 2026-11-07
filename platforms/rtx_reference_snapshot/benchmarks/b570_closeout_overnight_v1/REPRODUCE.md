@@ -1,0 +1,7 @@
+# Restore and reproduce
+
+The public code is for review. Recover the full private study-root layout from the CAS ZIP in ARCHIVE_RESTORE.json using INDEX.json: verify ZIP CRC, every object SHA256, safe relative paths and every restored file hash. Do not overwrite the old study. Run the restored independent_verify.py with the restored root as its first argument; all derivations must match the sealed INDEPENDENT_VERIFICATION.json. The clean restoration already performed this without model forwards.
+
+Inference replay requires the exact external target/draft hashes, old source/library/compiler/runtime bindings in ASSET_POST.json, actual B570 Vulkan0 and the archived private executables. Restore code/inputs together; set HETEROSPEC_B570_STUDY_ROOT, HETEROSPEC_B570_OLD_ROOT and HETEROSPEC_ASSET_ROOT for runner.py. CMake supports PINNED_SOURCE/PINNED_BUILD cache paths. The generator preserves the exact old native decoding loop. Old absolute dependency paths in other study scripts must be rebound explicitly, never silently replaced with current main.
+
+Resume only the original frozen unique units and hash-verified complete results. A stop marker at study-root STOP prevents new experiments; both inference controller and pipeline hold PID+creation identities. Do not extend the frozen deadline without another timestamped user-authorized amendment. Replaying inference is a new batch, not clean archive verification.

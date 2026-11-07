@@ -1,0 +1,210 @@
+{
+  "status": "BUILT_NOT_QUALIFIED",
+  "source_variant": "metadata4",
+  "source_zip_sha256": "36be0d738ad5d29579b75825f68337003eb127405cc5418abc566cb07718a4d8",
+  "commands": [
+    {
+      "label": "configure",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\cmake\\data\\bin\\cmake.exe",
+        "-S",
+        "E:\\rtx160\\config05\\build\\source",
+        "-B",
+        "E:\\rtx160\\config05\\build\\core",
+        "-G",
+        "Ninja",
+        "-DCMAKE_MAKE_PROGRAM=D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\ninja.exe",
+        "-DCMAKE_C_COMPILER=D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "-DCMAKE_C_COMPILER_ARG1=cc",
+        "-DCMAKE_CXX_COMPILER=D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "-DCMAKE_CXX_COMPILER_ARG1=c++",
+        "-DCMAKE_AR=E:\\rtx160\\config05\\build\\core/ar.cmd",
+        "-DCMAKE_RANLIB=E:\\rtx160\\config05\\build\\core/ranlib.cmd",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_SHARED_LIBS=OFF",
+        "-DGGML_BACKEND_DL=ON",
+        "-DGGML_CPU=OFF",
+        "-DGGML_CUDA=OFF",
+        "-DLLAMA_SUBPROCESS=OFF",
+        "-DLLAMA_BUILD_APP=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_MTMD=OFF",
+        "-DLLAMA_OPENSSL=OFF",
+        "-DLLAMA_BUILD_UI=OFF",
+        "-DLLAMA_USE_PREBUILT_UI=OFF",
+        "-DLLAMA_BUILD_NUMBER=10839",
+        "-DLLAMA_BUILD_COMMIT=0cae43063",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+      ],
+      "pid": 15376,
+      "exit_code": 0,
+      "seconds": 4.47980140009895,
+      "log_sha256": "11216cf57568b707d7b8e1e56a238590322fa05dc8217ec00fbcd4f8fe88a08e"
+    },
+    {
+      "label": "core",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\cmake\\data\\bin\\cmake.exe",
+        "--build",
+        "E:\\rtx160\\config05\\build\\core",
+        "--target",
+        "llama",
+        "vendor-hash",
+        "-j",
+        "4"
+      ],
+      "pid": 16984,
+      "exit_code": 0,
+      "seconds": 48.7054464998655,
+      "log_sha256": "67d5ab797ffec1a9d70caff5d91fba08d3007572ef8f2b921201c5045e6b0ddb"
+    },
+    {
+      "label": "worker",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "c++",
+        "-std=c++17",
+        "-O3",
+        "-DNDEBUG",
+        "-DGGML_BACKEND_DL",
+        "-D_CRT_SECURE_NO_WARNINGS",
+        "-DHS_SOURCE_VARIANT=\"metadata4\"",
+        "-IE:\\rtx160\\config05\\build\\source\\src",
+        "-IE:\\rtx160\\config05\\build\\core\\src",
+        "-IE:\\rtx160\\config05\\build\\source\\include",
+        "-IE:\\rtx160\\config05\\build\\source\\ggml\\include",
+        "-IE:\\rtx160\\config05\\build\\source\\common",
+        "-IE:\\rtx160\\config05\\build\\source\\vendor",
+        "-IE:\\rtx160\\config05\\build",
+        "-c",
+        "E:\\rtx160\\config05\\build\\worker.cpp",
+        "-o",
+        "E:\\rtx160\\config05\\build\\worker.obj"
+      ],
+      "pid": 3204,
+      "exit_code": 0,
+      "seconds": 7.132809299975634,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "link",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "c++",
+        "-O3",
+        "E:\\rtx160\\config05\\build\\worker.obj",
+        "E:\\rtx160\\config05\\build\\core\\src\\libllama.a",
+        "E:\\rtx160\\config05\\build\\core\\ggml\\src\\ggml.a",
+        "E:\\rtx160\\config05\\build\\core\\ggml\\src\\ggml-base.a",
+        "E:\\rtx160\\config05\\build\\core\\vendor\\hash\\libvendor-hash.a",
+        "-lpsapi",
+        "-lws2_32",
+        "-lbcrypt",
+        "-o",
+        "E:\\rtx160\\config05\\build\\bin\\rtx-scope-transfer.exe"
+      ],
+      "pid": 42716,
+      "exit_code": 0,
+      "seconds": 0.22288469993509352,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "numerical_modules": {
+    "cublas64_12.dll": "e40202fe4223c1cd2d2dce7beec59e1ed61c7801bd827309183be9b50e358f4c",
+    "cublasLt64_12.dll": "2a896460bef60ed57ef32b0875812f355a6984e671d638bb632f5e8c1d7a831f",
+    "cudart64_12.dll": "d28e42265da7462162a54da6b7a99ea4fa2caf8139d862bb500db875d0b32dfc",
+    "ggml-base.dll": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+    "ggml-cpu-alderlake.dll": "828294f25fb13ce3e85626be36817266b1fb186ef358fabd3307cbdacab75382",
+    "ggml-cpu-cannonlake.dll": "d9cb9580ad7756488a3ac30d5b0e3088c0fedff309ded7fed614d4c41559b212",
+    "ggml-cpu-cascadelake.dll": "1d01b1dab6dd19dab5b26fbf5d065cec8fa7862ec853a842ab21ef091032c2cd",
+    "ggml-cpu-cooperlake.dll": "27accf4887cd023390b2fbf46264cfd6c2c2db9e2cedcd3c4dd07b9af637833e",
+    "ggml-cpu-haswell.dll": "0c2157069d7a6634e40c1450f60fb96dd98741a042db7d066e46f716f0970c40",
+    "ggml-cpu-icelake.dll": "c1520000395fe3b5b0dd16c15eb5d5f3ba1126b0cb8c522d21e7462c544385b0",
+    "ggml-cpu-ivybridge.dll": "c4f0a4e20451f653f83f2c30b0426e463019c5864d79dc917d5d9f4ee64bce9a",
+    "ggml-cpu-piledriver.dll": "904c3e6fa24fdd964cf7648caefbdc9740df9f5085513f072b1355f241e6cf38",
+    "ggml-cpu-sandybridge.dll": "2f41f55427086a020d978d9bff425dd1e76ba4bfb5ef959d58a9d5d2e4b86f0e",
+    "ggml-cpu-sapphirerapids.dll": "1f45e161132f8180d379ed4c3a12de186bec3f49c41d90ff79e24e857666c618",
+    "ggml-cpu-skylakex.dll": "3505979a9ac1a21eccb054df27402f171ffe0d50a303a0db3b39163a82b3a3c0",
+    "ggml-cpu-sse42.dll": "b221c80c0a2f1cdc5669ec01f45c8ceb388f5f3cae1b33674e5b934231e54c89",
+    "ggml-cpu-x64.dll": "7c2b08a83dbd900bc1190ff40096b0c75718ecab6573441009d44b87321e492a",
+    "ggml-cpu-zen4.dll": "f08ea2b0dfb05ca03c3cdab74eb14e1318f8a69cfeeefc924b0cfff36710edf6",
+    "ggml-cuda.dll": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+    "ggml.dll": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+    "libomp.dll": "a12116ba72d1d6820407cf30be23da04ce79d6bb8a71a5ee71759c5a1faa6f1c"
+  },
+  "tools": {
+    "zig": {
+      "path": "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+      "sha256": "086ce9d47ba42f33a514e1a6e04eb1d4a8fa1d75e0868e0213caad447c91e864"
+    },
+    "cmake": {
+      "path": "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\cmake\\data\\bin\\cmake.exe",
+      "sha256": "ab8247ca4554871e5d75c0ee118ee8663727bd6fdf37ad76b17e9cc8d5f286a8"
+    },
+    "ninja": {
+      "path": "D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\ninja.exe",
+      "sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4"
+    }
+  },
+  "native_requests": 0,
+  "source_changes": {
+    "src/hs_scope.h": {
+      "before": "bd3c14474c336fc88da4b96a02f1c91fdcfae19af57dcd392f8075db52871cd8",
+      "after": "59229e264c2d0d4afc6fb2e7daec6c7f916d73cf83d9c0a6841758154625cfda"
+    }
+  },
+  "repair_source_changes": {
+    "mode": "STABLE_HEAD_NORM_OFFLOAD",
+    "roles": 0,
+    "rowwise": {
+      "mode": "NO_ARITHMETIC_PATCH",
+      "roles": 0
+    },
+    "file": "ggml/src/ggml-backend.cpp",
+    "before_sha256": "3991dfa1ccff2b2aae82ef610205f4e5a4db6545ee6724fa3eb6c283ffd1d9d6",
+    "after_sha256": "2f46bdf92f17672e0bafbbc939183368a8facfbb085641edb3997cbd4af674ec",
+    "header_sha256": "65b7411194461fe883e421cd567f633626f4260ee071a5fea7cffa55fad3c2d8",
+    "scope": "Scoped target Q/K head normalization offload preference evaluated at one token; actual graph operands and operations unchanged. Native correspondence untested."
+  },
+  "candidate_extension": {
+    "mechanism": "Equal causal-prefix extents preserve the scalar reduction tree at physical KV padding boundaries.",
+    "changed_files": {
+      "src/llama-kv-cache.h": {
+        "before": "1ae34e7d3d8cc0b0169cba4b15b5df45c48a82466c991cc46c83e8d540980516",
+        "after": "3ab1a04e62476393225a271b6a860050c9a4ad1df9724e8eebef32eed6e0b5fc"
+      },
+      "src/llama-kv-cache.cpp": {
+        "before": "e4d2aa977c8aa048ddd79c878683e94909f5f24ac109b0fcd1c0b59ef70f3899",
+        "after": "bb05b1b53c93315143407352281a880585f08c8888645b8222a53d1901cf6c53"
+      },
+      "src/llama-graph.h": {
+        "before": "f32e6b41781f30a1b2ff6c63f7c98b60a80addeb0f260e5045b85993de887d71",
+        "after": "99bd6db1b16a5d00c5877ac0788d2042ea67d53d159fba484c496ad073e953d5"
+      },
+      "src/llama-graph.cpp": {
+        "before": "2ca4f5cd56b4945f9c2a4fdf78a1debce9e51b04d617d74b187038e9337c31d3",
+        "after": "10657bf1b9e6b7f02938808407317cd52681dd319bfc61c4cbb8ba179b8292f3"
+      }
+    },
+    "numerical_policy_changed": true,
+    "qwen_norm_offload_fix": true,
+    "guards": "Dense contiguous single-stream append, ordered single-sequence causal non-flash attention; maximal adjacent equal-extent groups; unchanged generic path otherwise.",
+    "reference_policy": "Unscoped single-row R is unchanged. No task ID, answer token, output index, layer or margin condition.",
+    "graph_reuse": "Cache the physical per-row prefix extent vector with the graph input and reject reuse if it changes.",
+    "policy": "Physical prefix extent grouping plus pinned PR159 head-norm offload preference"
+  },
+  "repair_spec": {
+    "study_id": "rtx_reference_repair_v1",
+    "base": "47c93985010d0f3c0c55f975f4cd7761e64bcae2",
+    "rowwise_roles": 0,
+    "stable_norm_offload": true,
+    "new_reference_allowed": false,
+    "native_compilation_performed_here": false
+  },
+  "worker_source_sha256": "e6dca9e58f61dc2aae0bf43e8d90f2147067f9447a043e5e1b4b025adcee8a2a",
+  "arm_spec_sha256": "bc440e8fa8c356eed4f3799949cdd1546e4bf20f45301ff348f8b11ba6621ed7",
+  "executable_sha256": "040481dcf668b358c902c6dd665190e3647e4221ec0b0842a02687ecdc20a933",
+  "core_sha256": "85ffd12a731cd0bd9e850c80b28874b18387447e6a1d2b933a085a619f2eba8b",
+  "compile_commands_sha256": "a6a81ab6833ee521f77213af162fc0711ee79d15ee86f1be61646e1515306066"
+}

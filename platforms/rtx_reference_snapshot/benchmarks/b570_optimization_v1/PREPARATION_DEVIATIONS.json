@@ -1,0 +1,36 @@
+[
+  {
+    "kind": "CPU_COMPILE_REJECTED",
+    "reason": "Inherited llama_model_params uses load_mode and has no use_mmap member; removed nonexistent override and kept native default load mode.",
+    "preserved_source": "versions/memory_load.pre-field-fix.cpp",
+    "model_forward_calls": 0
+  },
+  {
+    "kind": "BOUNDED_ZERO_FORWARD_PROBE_REVISION",
+    "reason": "Explicit n_outputs_max=1 models sequential/native target path instead of conservative4-output batched reservation. All prior loads/results retained; load budget never reset.",
+    "preserved_source": "versions/memory_load.v1-outputs4.cpp",
+    "model_forward_calls": 0
+  },
+  {
+    "kind": "CPU_INVENTORY_ENCODING_REPAIR",
+    "reason": "Corrected unsupported utf8-sig spelling and explicitly emitted UTF8 from Windows PowerShell. No inference.",
+    "model_forward_calls": 0
+  },
+  {
+    "kind": "ZERO_FORWARD_MEMORY_LOGGING_REPAIR",
+    "reason": "V2 threw on budget overrun before writing that sample. Original Llama Q8 attempt/partial evidence retained. V3 records signed budget/usage before stopping; one explicit zero-forward repair load charged without resetting family load or engineering budget.",
+    "original": "LLAMA_Q8_UB32_OUT1_LOAD.stdout.jsonl",
+    "repaired": "LLAMA_Q8_LOGFIX_UB32_OUT1_LOAD.stdout.jsonl",
+    "model_forward_calls": 0
+  },
+  {
+    "kind": "CPU_NATIVE_INTERVAL_ACCOUNTING_REPAIR",
+    "reason": "FINAL had no timestamp; initial summary fell back to BEFORE_LOAD and zeroed completed native intervals. Recomputed from last actual timed native row. Original summaries and CPU source retained under versions. Conservative whole-study GPU-lifetime upper bound never omitted these loads.",
+    "originals": [
+      "versions/BUDGET_ACCOUNTING.before-time-fix.json",
+      "versions/LOAD_SOURCE_BINARY_BINDINGS.before-time-fix.json",
+      "versions/bind_closeout.before-time-fix.py"
+    ],
+    "model_forward_calls": 0
+  }
+]

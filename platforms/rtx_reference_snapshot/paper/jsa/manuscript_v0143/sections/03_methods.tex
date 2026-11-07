@@ -1,0 +1,56 @@
+\section{Study Design and Measurement Contracts}
+\label{sec:methods}
+\subsection{Systems, inputs, and evidence roles}
+The principal cases use the contracts in Table~\ref{tab:contracts}. All final targets are Qwen3-8B: changing the device, draft representation or backend does not create a second target family. HumanEval~\cite{humaneval} and sanitized MBPP~\cite{mbpp} supply coding inputs; M4 also uses a prospective Spec-Bench partition~\cite{specbench}. Prompt construction remains campaign-specific. The measured output property is reference reproduction, not benchmark test-pass accuracy.
+
+\begin{table*}[t]\centering\small
+\caption{Principal study contracts. Each case processes one request at a time. Historical text checks, which are weaker than direct-ID qualification, are retained separately in the supplement.}
+\label{tab:contracts}
+\begin{tabularx}{\linewidth}{@{}p{.17\linewidth}p{.26\linewidth}XX@{}}\toprule
+Case & Runtime/model setting & Output and exposure & Paid interval\\\midrule
+RTX expansion & 5070 Ti Laptop; CUDA; Q8\_0 target/draft; private b10839-based frontend & Full response through EOG/cap128; 24 project-unused MBPP, four repeats & Server generation; resident HTTP request\\
+B570 repair & Arc B570; Vulkan; Q8\_0 target/draft; phase-binding frontend & First-EOG/cap128 endpoint; 15 project-unused inputs, two repeats & Native generation; whole request; host return\\
+M4 runtime & MacBook Air M4; Metal; Q8\_0 target/draft & Direct generated IDs; prospective 30 HumanEval plus 30 Spec-Bench, three repeats & Registered post-prefill runtime interval\\
+358H stateful & Arc B390 Vulkan target; symmetric INT4 OpenVINO CPU/NPU draft & Direct IDs; 30 prompts, three repeats per draft condition & Registered stateful interval and target-work accounting\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+The late RTX and B570 candidates use non-flash attention, greedy sampling and separately frozen capacities, phase settings and runtime/model bindings (Supplement \S S1 and \S S5.2). Their campaigns are not pooled. We distinguish five evidence roles: prediction reproduces native behavior; selected-boundary crosses diagnose local dependence; exposed probes select a repair; a frozen recipe is checked on project-unused inputs; and separate paid sessions measure qualified cost. Repetitions describe stability and cost variation. Forks and within-request decision events remain associated with their parent tasks, rather than increasing the independent input count.
+
+For the RTX expansion, eligibility and the recipe were frozen before new reference outputs were generated. The exposure audit excluded previously executed or ambiguous inputs and selected 24 MBPP tasks from 224 eligible candidates. No eligible unused HumanEval inputs remained at that stage, so a pre-output amendment selected MBPP. Project-unused means absent from accessible project execution records, not unseen during training. The panel becomes exposed when reused for width studies and later CPU analyses. B570's 15-input panel follows its own accessible-history audit; omitted RTX bulk records were not independently rescanned.
+
+\subsection{Registering the output requirement}
+Let $R(x)$ denote ordinary output under fixed weights, tokenizer, prompt formatting, sampler, runtime, backend and stopping rule. RTX qualification compares the full response array, length, terminal ID and stop reason, and checks reference repeat stability. The expansion contains a complete $24\times4\times4$ task/condition/repetition matrix: 384 rows and 96 qualified responses per condition. Reference lengths range from 11 to 128 IDs; 23 tasks stop at EOG and one at the cap.
+
+B570 retains IDs through the first runtime EOG or token 128, whichever comes first. A speculative response can satisfy this endpoint requirement while containing additional raw suffix IDs. Those IDs remain charged. Endpoint equality, raw-array equality and unknown historical raw comparisons are reported separately. Historical re-tokenized-text checks retain their original weaker contract (Supplement \S S1).
+
+We call a latency ratio a reference-preserving speedup only after its output gate passes. A shorter divergent response does not qualify, and repeat stability alone cannot certify agreement with $R$. These finite checks establish neither functional correctness nor equality of all intermediate values or arbitrary future outputs.
+
+\subsection{Controlled state and current-recipe crosses}
+At a naturally reached boundary, express the decision as
+\begin{equation}
+d=F(p,s,e),
+\label{eq:decision}
+\end{equation}
+where $p$ is the committed prefix, $s$ the retained runtime/numerical state and $e$ the current execution recipe. Cross two naturally formed donors $s_0,s_1$ with recipes $e_0,e_1$, holding the registered prefix and current logical input fixed. In the resulting matrix, a within-row change is a current-recipe effect for that donor; a within-column change is a donor-state effect for that recipe. Dependence on one factor only under a particular value of the other indicates a local interaction. Token IDs are categories; their numerical differences are not effect sizes.
+
+A valid cross requires consistent cache ownership and positions, faithful restoration, and compatible pending and sampler semantics. Own-path shams restore each donor under its native recipe and compare with uninterrupted execution. Natural donors use online proposals, without feeding future reference answers or a recorded proposal tape into the candidate. Earlier sealed-proposal prediction studies answer a separate reproduction question (Supplement \S S2.1). The selected cuts probe known sensitivity; they do not estimate its prevalence or provide a complete counterfactual suffix for every cell.
+
+\subsection{Two paid baselines and task-level estimation}
+Let $M$ be target-only execution on the repaired path and $C$ speculation on that path. Together with ordinary $R$, they distinguish the deployment change $R/C$, target-path change $R/M$ and incremental draft benefit $M/C$. Each baseline is executed and charged. $R$ is the registered comparator, rather than a proven optimum over ordinary implementations.
+
+For late RTX and B570, first take each task's median absolute time in each condition, then form its baseline/candidate ratio. For $n$ complete task pairs,
+\begin{equation}
+S_{b/c}=\exp\left[\frac{1}{n}\sum_{i=1}^{n}\log\left(t_{i,b}/t_{i,c}\right)\right].
+\label{eq:gm}
+\end{equation}
+A ratio above one favors the denominator path. For common tasks and this aggregation,
+\begin{equation}
+S_{R/C}=S_{R/M}S_{M/C}.
+\label{eq:identity}
+\end{equation}
+This multiplicative identity cannot allocate attention, KV, synchronization or host cost. M4 retains its frozen estimator and random streams; 358H uses a median of paired ratios before the task geometric mean, a different estimator.
+
+RTX ordinary-reference ratios are a later CPU reanalysis of the same paid records; the expansion originally emphasized matched comparisons. Descriptive 95\% intervals resample the 24 task-median ratios with 10,000 common index resamples, NumPy PCG64 seed 20261008 and linear/type-7 quantiles. The earlier bootstrap convention remains in Supplement \S S4.1. Task resampling does not estimate session or day variation, and round-specific geometric means are reported separately from the task-median estimator.
+
+The RTX server-generation field \texttt{predicted\_ms} charges draft and verification work between its timestamps, excluding initial prompt work and first sampling and potentially final bookkeeping. Resident-request time covers non-streaming HTTP response receipt and parsing. Loading, warmup, boundary telemetry and shutdown are excluded; post-response asynchronous cleanup is not certified inside this interval. Their difference is not a measured host component. B570's native-generation, whole-request and host-return boundaries are defined separately in Supplement \S S5.4. Unlike timers are not pooled into a platform ranking.

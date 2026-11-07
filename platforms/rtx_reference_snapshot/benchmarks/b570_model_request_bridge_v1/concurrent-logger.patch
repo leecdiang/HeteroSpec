@@ -1,0 +1,26 @@
+--- a/ggml/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -18214,6 +18214,14 @@
+         // End the command buffer and submit/wait
+         GGML_ASSERT(!ctx->compute_ctx.expired());
+         compute_ctx = ctx->compute_ctx.lock();
++        // Concurrent timestamps are emitted at dependency boundaries. Close the
++        // last interval too, otherwise its nodes (e.g. the output projection)
++        // are omitted from both the reported groups and the total.
++        if (vk_perf_logger_concurrent) {
++            GGML_ASSERT(ctx->query_idx < ctx->num_queries);
++            ctx->query_node_idx[ctx->query_idx] = cgraph->n_nodes;
++            compute_ctx->s->buffer->buf.writeTimestamp(vk::PipelineStageFlagBits::eAllCommands, ctx->query_pool, ctx->query_idx++);
++        }
+         ggml_vk_ctx_end(compute_ctx);
+ 
+         ggml_vk_submit(compute_ctx, ctx->device->fence);
+@@ -18239,7 +18247,7 @@
+                 std::vector<ggml_tensor *> nodes;
+                 std::vector<const char *> names;
+                 for (int node_idx = prev_node_idx; node_idx < cur_node_idx; ++node_idx) {
+-                    if (ggml_op_is_empty(cgraph->nodes[node_idx]->op)) {
++                    if (ggml_vk_is_empty(cgraph->nodes[node_idx]) || (cgraph->nodes[node_idx]->flags & GGML_TENSOR_FLAG_COMPUTE) == 0) {
+                         continue;
+                     }
+                     nodes.push_back(cgraph->nodes[node_idx]);

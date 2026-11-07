@@ -1,0 +1,150 @@
+{
+  "status": "GPU_TIMELINE_NOT_AVAILABLE",
+  "attempted_admission": true,
+  "native_P3_starts": 0,
+  "bounded_metadata_bytes": 67108864,
+  "reason": "Pinned public Vulkan backend API exposes no raw queue/commandbuffer/querypool timestamps. Inspected local Vulkan source has performance logger with fence wait/query but exports aggregated duration log only, discards absolute timestamps and queue/fusion identity; cannot construct required queue interval/overlap timeline without unverified numerical backend substitution. Local source lineage not independently certified; no claim to exact shader identity.",
+  "source_file": "baseline/source/ggml-vulkan.inspected.cpp",
+  "source_sha256": "04615c97998a76d2d0b15d2ebb93bf381eb3fb565492d7714d3fc9d1c333b98d",
+  "public_header_sha256": "7eae5dad2cc7bb4d3eca828539f441816d5fd59fdc7b224d49aa229fc7b7248c",
+  "export_evidence": "versions/ggml-vulkan.dll.exports.txt",
+  "CPU_vulkaninfo": "HOST_ADMISSION.json",
+  "old_stage_wall": "MODEL_TIMING_UNAVAILABLE",
+  "no_new_ETW_or_API_dump": true,
+  "host_capabilities": [
+    {
+      "path": "/capabilities/device/extensions/VK_EXT_calibrated_timestamps",
+      "value": 2
+    },
+    {
+      "path": "/capabilities/device/extensions/VK_KHR_calibrated_timestamps",
+      "value": 1
+    },
+    {
+      "path": "/capabilities/device/properties/VkPhysicalDeviceProperties/limits/timestampComputeAndGraphics",
+      "value": true
+    },
+    {
+      "path": "/capabilities/device/properties/VkPhysicalDeviceProperties/limits/timestampPeriod",
+      "value": 52.0833
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/0/VkQueueFamilyProperties",
+      "value": {
+        "minImageTransferGranularity": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "queueCount": 1,
+        "queueFlags": [
+          "VK_QUEUE_GRAPHICS_BIT",
+          "VK_QUEUE_COMPUTE_BIT",
+          "VK_QUEUE_TRANSFER_BIT",
+          "VK_QUEUE_SPARSE_BINDING_BIT"
+        ],
+        "timestampValidBits": 64
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/0/VkQueueFamilyQueryResultStatusPropertiesKHR",
+      "value": {
+        "queryResultStatusSupport": true
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/0/VkQueueFamilyVideoPropertiesKHR",
+      "value": {
+        "videoCodecOperations": []
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/1/VkQueueFamilyProperties",
+      "value": {
+        "minImageTransferGranularity": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "queueCount": 4,
+        "queueFlags": [
+          "VK_QUEUE_COMPUTE_BIT",
+          "VK_QUEUE_SPARSE_BINDING_BIT"
+        ],
+        "timestampValidBits": 64
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/1/VkQueueFamilyQueryResultStatusPropertiesKHR",
+      "value": {
+        "queryResultStatusSupport": true
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/1/VkQueueFamilyVideoPropertiesKHR",
+      "value": {
+        "videoCodecOperations": []
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/2/VkQueueFamilyProperties",
+      "value": {
+        "minImageTransferGranularity": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "queueCount": 2,
+        "queueFlags": [
+          "VK_QUEUE_TRANSFER_BIT",
+          "VK_QUEUE_SPARSE_BINDING_BIT"
+        ],
+        "timestampValidBits": 64
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/2/VkQueueFamilyQueryResultStatusPropertiesKHR",
+      "value": {
+        "queryResultStatusSupport": true
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/2/VkQueueFamilyVideoPropertiesKHR",
+      "value": {
+        "videoCodecOperations": []
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/3/VkQueueFamilyProperties",
+      "value": {
+        "minImageTransferGranularity": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "queueCount": 2,
+        "queueFlags": [
+          "VK_QUEUE_VIDEO_DECODE_BIT_KHR"
+        ],
+        "timestampValidBits": 64
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/3/VkQueueFamilyQueryResultStatusPropertiesKHR",
+      "value": {
+        "queryResultStatusSupport": true
+      }
+    },
+    {
+      "path": "/capabilities/device/queueFamiliesProperties/3/VkQueueFamilyVideoPropertiesKHR",
+      "value": {
+        "videoCodecOperations": [
+          "VK_VIDEO_CODEC_OPERATION_DECODE_H264_BIT_KHR",
+          "VK_VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR",
+          "VK_VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_KHR",
+          "VK_VIDEO_CODEC_OPERATION_DECODE_VP9_BIT_KHR"
+        ]
+      }
+    }
+  ]
+}

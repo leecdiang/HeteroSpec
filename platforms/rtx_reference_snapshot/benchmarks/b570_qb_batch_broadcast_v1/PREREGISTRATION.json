@@ -1,0 +1,156 @@
+{
+  "experiment": "B570_QB_BATCH_BROADCAST_FIX_CROSS",
+  "scope": "Independent exploratory minimal crossover; no CPU8 changes",
+  "coordinates": [
+    {
+      "key": 1023,
+      "q": 1,
+      "mode": "QB"
+    },
+    {
+      "key": 1023,
+      "q": 1,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1023,
+      "q": 2,
+      "mode": "QB"
+    },
+    {
+      "key": 1023,
+      "q": 2,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1023,
+      "q": 4,
+      "mode": "QB"
+    },
+    {
+      "key": 1023,
+      "q": 4,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1024,
+      "q": 1,
+      "mode": "QB"
+    },
+    {
+      "key": 1024,
+      "q": 1,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1024,
+      "q": 2,
+      "mode": "QB"
+    },
+    {
+      "key": 1024,
+      "q": 2,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1024,
+      "q": 4,
+      "mode": "QB"
+    },
+    {
+      "key": 1024,
+      "q": 4,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1025,
+      "q": 1,
+      "mode": "QB"
+    },
+    {
+      "key": 1025,
+      "q": 1,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1025,
+      "q": 2,
+      "mode": "QB"
+    },
+    {
+      "key": 1025,
+      "q": 2,
+      "mode": "QH_C"
+    },
+    {
+      "key": 1025,
+      "q": 4,
+      "mode": "QB"
+    },
+    {
+      "key": 1025,
+      "q": 4,
+      "mode": "QH_C"
+    }
+  ],
+  "phase_order": [
+    "all 18 mode-slots device support, first failure stops",
+    "all 18 mode-slots independent FP64 stage/final checks and pair final equivalence, first failure stops",
+    "only after every numerical check passes, two warmups each then ten measured calls each in alternating QB/QH_C order"
+  ],
+  "parameters": {
+    "d": 128,
+    "dv": 128,
+    "h": 8,
+    "hkv": 8,
+    "Q": "F32 compact [128,q,8,1]",
+    "K": "F16 [128,key,8,1]",
+    "V": "F16 [key,128,8,1]",
+    "mask": "F32 [key,32,1,1]; mask[j,t]=-infinity for t>key-q+j, zero otherwise",
+    "reference": "Serial double loops, fixed dyadic input values; not a GGML CPU graph",
+    "tolerance": "abs_error <= 0.0002 + 0.002*abs(reference)",
+    "raw_stage_layout": "QB: query,head,element; QH_C: head,query,element; final/reference: query,head,element"
+  },
+  "fix": {
+    "baseline_cpp_sha256": "04615c97998a76d2d0b15d2ebb93bf381eb3fb565492d7714d3fc9d1c333b98d",
+    "changes": "Only allow batch-3 broadcast for plain MUL_MAT, F16 x F32, contiguous source A, A.batch=1, B.batch=2 or 4, B.columns=1, equal head dimension",
+    "shaders": "147 unchanged precompiled shader objects reused from frozen local build; full object SHA256 list recorded, C++ dispatch/support source rebuilt",
+    "native_path": "Existing mat-vec broadcast3 push constant/indexing; noncontiguous Q is packed by existing backend path; its runtime cost stays in measured graph",
+    "KV": "Original K and V object identities asserted; no REPEAT graph nodes allowed; no K/V replication or padding"
+  },
+  "budget": {
+    "total_seconds": 300,
+    "prior_charge_seconds": 1.7474647,
+    "remaining_before_attempt_seconds": 298.2525353,
+    "charge": "Entire native process wall including device init, file I/O, numerical reference, shader initialization, staging and cleanup",
+    "wrapper_deadline_seconds": 270,
+    "kill_wait_seconds": 5,
+    "capture_wait_seconds": 5,
+    "internal_cutoff_seconds": 240,
+    "no_retry_after_failure": true
+  },
+  "timing": {
+    "clock": "Host steady clock graph compute plus explicit backend synchronization",
+    "resident": true,
+    "warmups_each": 2,
+    "samples_each": 10,
+    "order": "QB then QH_C on even rounds, QH_C then QB on odd rounds",
+    "excluded": "Setup, allocation, upload, CPU reference and explicit readback",
+    "included": "Backend graph dispatch and any internal Q staging/copy. Cold first-graph time separately retained.",
+    "claims": "Exploratory only; no GPU timestamp, model latency or cross-device speedup claim"
+  },
+  "forbidden": [
+    "models",
+    "actor",
+    "RTL",
+    "CPU8/F0 execution",
+    "REPEAT4 relabelled QB",
+    "CPU fallback",
+    "silent dimension padding",
+    "retry after first failure"
+  ],
+  "old_evidence": [
+    "C:/hs/b570-qb-q1-smoke-20261020053419",
+    "C:/hs/b570-qb-qhc-cross-20261020054700"
+  ]
+}

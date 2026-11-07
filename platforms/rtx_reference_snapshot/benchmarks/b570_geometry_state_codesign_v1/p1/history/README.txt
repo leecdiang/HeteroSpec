@@ -1,0 +1,1 @@
+Intermediate CPU analysis written before the independent F0 cadence audit. Superseded by p1/ANALYSIS_P1.json and p1/EXECUTION_CONTRACT_AUDIT.json. No intermediate output certifies a compliant P1 panel. Raw native evidence was not edited.

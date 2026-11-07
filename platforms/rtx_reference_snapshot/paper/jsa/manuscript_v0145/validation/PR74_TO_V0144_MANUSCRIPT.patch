@@ -1,0 +1,383 @@
+--- v0143/main.tex
++++ v0144/main.tex
+@@ -4,7 +4,7 @@
+ \usepackage{microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl,placeins}
+ \usepackage[hypertexnames=false]{hyperref}
+ \setlength{\emergencystretch}{2em}
+-\hypersetup{hidelinks,pdfauthor={Author-review draft},pdftitle={Reference-Preserving Speculative Decoding on Consumer Systems},pdfsubject={JSA v0.14.3 author-review manuscript; not submitted}}
++\hypersetup{hidelinks,pdfauthor={Author-review draft},pdftitle={Reference-Preserving Speculative Decoding on Consumer Systems},pdfsubject={JSA v0.14.4 author-review manuscript; not submitted}}
+ \newcommand{\RQtag}[1]{\textbf{RQ#1}}
+ \makeatletter
+ \def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty\def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+--- v0143/supplement.tex
++++ v0144/supplement.tex
+@@ -1,14 +1,14 @@
+-\documentclass[preprint,12pt,nopreprintline]{elsarticle}
++\documentclass[final,5p,times,twocolumn]{elsarticle}
+ \usepackage[T1]{fontenc}
+ \renewcommand{\ttdefault}{lmtt} % Embedded vector Latin Modern Typewriter
+-\usepackage{lmodern,microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl}
+-\usepackage{hyperref}
++\usepackage{microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,longtable,xurl,placeins}
++\usepackage[hypertexnames=false]{hyperref}
+ \setlength{\emergencystretch}{2em}
+ \renewcommand{\topfraction}{0.9}
+ \renewcommand{\bottomfraction}{0.8}
+ \renewcommand{\textfraction}{0.08}
+ \renewcommand{\floatpagefraction}{0.55}
+-\hypersetup{hidelinks,bookmarksnumbered=true,pdfauthor={Author-review draft},pdftitle={Supplementary Material: Reference-Preserving Speculative Decoding},pdfsubject={JSA v0.14.3 supplementary author-review material}}
++\hypersetup{hidelinks,bookmarksnumbered=true,pdfauthor={Author-review draft},pdftitle={Supplementary Material: Reference-Preserving Speculative Decoding},pdfsubject={JSA v0.14.4 supplementary author-review material}}
+ \makeatletter
+ \def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty\def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+ \makeatother
+@@ -17,16 +17,16 @@
+ \title{Supplementary Material: Reference-Preserving Speculative Decoding on Consumer Systems}
+ \author{Author information pending confirmation}
+ \begin{abstract}
+-This supplement records the output contracts, implementation boundaries, campaign-level results, negative findings, historical measurements and missing observations supporting manuscript v0.14.3. It preserves distinct task panels and timer conventions. The accompanying author source package reproduces figures and arithmetic from committed exports without model inference. Verification is limited to inspected sources and exports; inherited original-host raw audits are identified separately. Sections S1--S7 retain their topic numbering independently of the main manuscript.
++This supplement records the output contracts, implementation boundaries, campaign-level results, negative findings, historical measurements and missing observations supporting manuscript v0.14.4. It preserves distinct task panels and timer conventions. The accompanying author source package reproduces figures and arithmetic from committed exports without model inference. Verification is limited to inspected sources and exports; inherited original-host raw audits are identified separately. Sections S1--S7 retain their topic numbering independently of the main manuscript.
+ \end{abstract}
+ \end{frontmatter}
+ \renewcommand{\thesection}{S\arabic{section}}
+ \renewcommand{\thetable}{S\arabic{table}}
++\renewcommand{\thefigure}{S\arabic{figure}}
+ \renewcommand{\theequation}{S\arabic{equation}}
+ \setcounter{tocdepth}{2}
+-\clearpage
+ \tableofcontents
+-\clearpage
++
+ \input{supplement/01_scope}
+ \input{supplement/02_diagnosis}
+ \input{supplement/03_implementation}
+@@ -34,6 +34,7 @@
+ \input{supplement/05_b570}
+ \input{supplement/06_history}
+ \input{supplement/07_reproducibility}
++\FloatBarrier
+ \begingroup\small
+ \bibliographystyle{elsarticle-num}\bibliography{references}
+ \endgroup
+--- v0143/sections/04_diagnosis.tex
++++ v0144/sections/04_diagnosis.tex
+@@ -12,7 +12,7 @@
+ 
+ \begin{figure*}[t]
+ \centering\includegraphics[width=\linewidth]{figures/figure_2_natural_crosses.pdf}
+-\caption{Three local dependencies and the limit of a local check. Rows select natural donor states; columns select the current recipe. Token IDs are categorical, with colors grouping equality within each case. (A) RTX /15 follows the current path. (B) RTX /25 and (D,E) B570 HumanEval show interactions. (C) B570 MBPP/72 follows retained state under identical UB1/reservation3 columns. The B570 HumanEval columns change UB and output reservation together. E denotes the alternate donor: ordinary N0 in (C), the alternate cross recipe in (D,E). Own-path shams pass. (F) A separate B570 study finds 0/72 immediate but 18/72 downstream changes under sustained alternate UB128 continuation; it does not isolate a single-block aftereffect.}
++\caption{Three local dependencies and the limit of a local check. Rows select natural donor states; columns select the current recipe. Token IDs are categorical, with colors grouping equality within each case. (A) RTX /15 follows the current path. (B) RTX /25 and (D,E) B570 HumanEval show interactions. (C) B570 MBPP/72 follows retained state under identical UB1/reservation3 columns. The B570 HumanEval columns change UB and output reservation together. N0 in (C) is the ordinary donor; Alt. in (D,E) is the cross recipe E\_k1\_ub2. Here $r$ denotes output reservation; the two HumanEval recipes use UB1/$r=3$ and UB2/$r=2$. Own-path shams pass. (F) A separate B570 study finds 0/72 immediate but 18/72 downstream changes under sustained alternate UB128 continuation; it does not isolate a single-block aftereffect.}
+ \label{fig:cross}
+ \end{figure*}
+ 
+@@ -24,7 +24,7 @@
+ Continuation gives a different answer (Figure~\ref{fig:cross}F). Complete committed-ID trajectories differ in 18/72 executions from six of 24 tasks. Later alternate blocks continue to use UB128, and proposals evolve under the accepted history. This result concerns a sustained continuation policy, not one altered block followed by restoration. The practical lesson is to qualify the registered output beyond the sampled block: a local discrete null can coexist with later divergence, and score movement alone does not predict an immediate decision change. Neither the 72 forks nor the 195 internal events constitute additional independent tasks.
+ 
+ \subsection{B570 crosses identify a whole-recipe boundary}
+-For B570, N1 labels the repaired prior frontend. The figure uses E for the alternate donor: the cross recipe E\_k1\_ub2 on HumanEval, but ordinary N0 on MBPP/72. Neither denotes the later phase-binding candidate. These crosses test whether the RTX diagnostic distinction remains useful in a different runtime. Three tasks in six repeated contexts provide 12 own-path shams and 24 auxiliary target cells. Restored states retain checked byte contents, sequence-zero ownership and logical positions. At HumanEval/145's prefix 56, the selected matrix is $[(71465,279),(279,279)]$; at /42's prefix 73 it is $[(432,1817),(1817,1817)]$ (Figure~\ref{fig:cross}D,E). Both show a local interaction. At MBPP/72's prefix 40, $[(320,320),(308,308)]$ varies only with donor state, under identical current UB1/output-reservation-3 columns (Figure~\ref{fig:cross}C).
++For B570, N1 labels the repaired prior frontend. The figure labels the alternate HumanEval donor Alt. (E\_k1\_ub2) and the ordinary MBPP/72 donor N0. Neither denotes the later phase-binding candidate. These crosses test whether the RTX diagnostic distinction remains useful in a different runtime. Three tasks in six repeated contexts provide 12 own-path shams and 24 auxiliary target cells. Restored states retain checked byte contents, sequence-zero ownership and logical positions. At HumanEval/145's prefix 56, the selected matrix is $[(71465,279),(279,279)]$; at /42's prefix 73 it is $[(432,1817),(1817,1817)]$ (Figure~\ref{fig:cross}D,E). Both show a local interaction. At MBPP/72's prefix 40, $[(320,320),(308,308)]$ varies only with donor state, under identical current UB1/output-reservation-3 columns (Figure~\ref{fig:cross}C).
+ 
+ The HumanEval recipes change microbatch capacity and output reservation together, so the factor tested is the whole recipe. These crosses do not isolate UB or transfer the RTX repair to Vulkan. Full counterfactual continuations for each cell are unavailable; the subsequent B570 candidate undergoes its own native endpoint qualification. The greedy sampler history, clone metadata and shams support the tested restoration, while opaque sampler bytes and general stochastic-state restoration remain outside that check. Across the cases, the same committed prefix can conceal path, state or interaction dependence, requiring different control placements.
+ 
+--- v0143/supplement/01_scope.tex
++++ v0144/supplement/01_scope.tex
+@@ -4,7 +4,7 @@
+ 
+ For diagnosis, Section~\ref{supp:diagnosis} contains predictions, controlled interventions and donor-state crosses. RTX graph and phase qualification are in Section~\ref{supp:implementation}; the expanded R/M/C comparisons, per-task medians, width failures and reset checks are in Section~\ref{supp:rtx_cost}. B570's missing payload, endpoint/raw distinctions and paid suffix work are in Section~\ref{supp:b570}. Section~\ref{supp:history} retains historical estimators, stops and energy domains, with M4 control in Section~\ref{supp:m4_control} and 358H state/cost budgets in Section~\ref{supp:358h_budgets}. Section~\ref{supp:reproducibility} distinguishes this revision's CPU checks from inherited raw audits.
+ 
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Campaign units and distinct roles. Panels overlap unless described as project-unused at their own freeze.}
+ \label{tab:study_units}
+ \begin{tabularx}{\linewidth}{@{}p{.30\linewidth}p{.25\linewidth}X@{}}\toprule
+@@ -21,9 +21,13 @@
+ M4 formal runtime & 60 tasks, three conditions, three repeats & 540 formal requests; direct-ID gate\\
+ 358H closed Phase 3 & 30 tasks, three repeats per draft device & 90 direct-ID pairs per path\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ The late RTX target/draft pair is Qwen3-8B/0.6B Q8\_0, with full CUDA offload, flash attention off, one slot, context 4096, caller batch capacity 2048, 24 threads and greedy seed 123. The ordinary reference is mask 0/UB1. Matched target-only and the anchor use mask 3/UB4, with the anchor's $k=3$. The expansion starts from a frozen private server and CUDA libraries. Four separate resident processes per round each receive one excluded warmup and 24 formal requests. Condition order and task order rotate. Zero actual cache reuse is recorded; the final-slot \texttt{tokens\_cached} field is not a cache-hit measure.
++
++% REVISION_ADDITION_BEGIN: standalone comparator key
++In the late cost tables, $R$ denotes the executed ordinary reference, $M$ the matched repaired target-only path, and $C$ the speculative candidate. RTX $C_3$ and $C_{15}$ use masks 3 and 15; B570 old N1 is a separate earlier frontend. A baseline/candidate ratio above one favors the candidate. These labels do not pool unlike campaigns or timers.
++% REVISION_ADDITION_END
+ 
+ The 24 expansion inputs are unused in the accessible experiment inventory at selection. An unused HumanEval pool is unavailable at that stage; the amendment selecting MBPP is recorded before new outputs. Of 224 eligible MBPP inputs, 24 are frozen. This is project exposure accounting, not a training-contamination claim or a random population sample. The width and post-hoc ordinary analyses subsequently reuse those exposed inputs.
+ 
+--- v0143/supplement/03_implementation.tex
++++ v0144/supplement/03_implementation.tex
+@@ -22,7 +22,7 @@
+ \label{supp:implementation_variants}
+ Table~\ref{tab:implementation_history} retains the early local implementation comparisons. Their baselines and observer costs differ from the final frozen expansion. Request gains against global UB1 include a prefill/path change; they are not matched speculative increments. The strict final local comparison disables observers and matches target graph, UB4 and prefill, giving $1.256449\times$ generation and $1.077451\times$ request over 19 task medians, with 19/19 and 16/19 tasks faster. All observations are from that campaign, not paired with later costs.
+ 
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Earlier RTX implementation variants. Ratios are baseline/candidate under each stated campaign.}
+ \label{tab:implementation_history}
+ \begin{tabularx}{\linewidth}{@{}Xlrr@{}}\toprule
+@@ -33,6 +33,6 @@
+ Query-batch $k=3$; new frontend global UB1 & 76/76 & 1.242 & 1.852\\
+ Query-batch $k=3$; strict matched target & 76/76 & 1.256 & 1.077\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ The ordinary $k=3$ path in the second campaign qualifies only 68/76, with /18 and /25 failing in every repeat. Its timing cannot become a lossless speed claim. Serial, per-query and query-batch comparisons preserve both successful and unsuccessful cost outcomes.
+--- v0143/supplement/05_b570.tex
++++ v0144/supplement/05_b570.tex
+@@ -14,11 +14,21 @@
+ 
+ Unlike old N1, it removes a second target context, state handoff and three serialized witness readbacks. Capture-on checks compare KV before and after binding; capture-off avoids witness readback. Those checks do not supply a separate profile of the saved cost. The frontend still pays for synchronization, phase reservation, draft work, target work and reconciliation. The author source package includes \texttt{phase.h}, \texttt{target.cpp}, \texttt{native.cpp} and the private-library delta with source bindings.
+ 
++% REVISION_ADDITION_BEGIN: B570 source-bound visual explanation
++Figure~\ref{fig:b570_contract} connects the phase-binding operations to the separate endpoint and paid-work contracts; it also shows why the old-N1 comparison has one fewer complete task pair.
++
++\begin{figure*}[t]
++\centering\includegraphics[width=\linewidth]{figures/figure_S1_b570_contract.pdf}
++\caption{B570 implementation and accounting boundaries. (A) Ordinary prefill, one pending sample, in-place phase binding and the native loop retain one target context and live sampler; this is a source-bound schematic, not a timing profile. Reservation values are total/per sequence. (B) The endpoint gate retains IDs through the first inclusive EOG or cap128, while all online suffix work remains paid. The counts aggregate 30 formal candidate responses. (C) Available payloads and complete two-round task pairs remain distinct; the missing old-N1 MBPP/400 round-1 payload is unavailable, not zero cost.}
++\label{fig:b570_contract}
++\end{figure*}
++% REVISION_ADDITION_END
++
+ \subsection{Qualification counts and unresolved raw comparisons}
+ \label{supp:b570_missingness}
+ Table~\ref{tab:b570_qualification} retains endpoint and raw-array distinctions. The 48 baseline-development rows have only 32 ordinary-reference-equal endpoints; they are not all qualified candidate evidence. The 12 shams are separate from the 299 rows in the qualification export. Stage D contains 56 exposed tasks evaluated twice. Stage E combines eight bridge records and 119 formal records; their roles are not interchangeable.
+ 
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{B570 candidate qualification stages and raw comparison limits. Equality is to the registered endpoint reference unless stated otherwise.}
+ \label{tab:b570_qualification}
+ \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{.25\linewidth}rr>{\raggedright\arraybackslash}X@{}}\toprule
+@@ -28,7 +38,7 @@
+ E candidate formal & 30 & 30 & Included in the E total below; suffix cost retained\\
+ E all available plus bridge & 127 & 127 & 80 equal, 47 different\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ The four-condition formal matrix is 119/120. The missing unit is \nolinkurl{E/FORMAL/1/old_N1/MBPP/400}, with \nolinkurl{INFRASTRUCTURE_INTERRUPTION_NO_PAYLOAD}. Its runtime cost and interrupted teardown time remain unknown. Each of ordinary $R$, matched $M$ and candidate $C$ has 30 complete formal observations and 15 complete two-round task pairs. Old N1 has 29 observations and only 14 complete task pairs. The available MBPP/400 old-N1 round is retained but cannot supply its two-round median. There is no interpolation, zero-cost assumption, silent task removal from other comparisons or scientific rerun. The study's administrative closeout remains \nolinkurl{PARTIAL_INFRASTRUCTURE_BUDGET_CLOSED}.
+ 
+@@ -41,3 +51,4 @@
+ \input{tables/b570_task_cost}
+ 
+ Candidate formal endpoint IDs total 1,150 and raw IDs 1,176. All 26 suffix IDs are charged. Drafted/accepted IDs total 888/702, and target/draft continuation caller tokens 1,332/1,362. These denominators describe different runtime quantities and cannot be collapsed into one acceptance-adjusted cost. The narrowed target common-sampling measurement of 851.52 ms omits other work; it is not a full component profile. The known complete-campaign host subtotal is approximately 6,541.86 s, excluding the unknown interruption/teardown. It is not the cost of every planned request or a normalized per-task speed estimator.
++
+--- v0143/supplement/06_history.tex
++++ v0144/supplement/06_history.tex
+@@ -6,7 +6,7 @@
+ 
+ Table~\ref{tab:historical_cost} preserves the closed historical outcomes. M4's representative 24Q and separately preregistered HumanEval30 have opposite measured outcomes in distinct sessions. This does not identify a workload-only cause. Early MLX precision/correctness failures are separate from the final Q8\_0 Metal configuration. RTX historical CPU-to-GPU and same-GPU controls retain different integration costs. B570's formal failure triggers its stop; a later six-prompt serial text probe passes 18/18, whereas its full 30-prompt serial text comparison reaches only 60/90. Remote-interaction-contaminated diagnostic observations are excluded from the final cells. Legacy ``exact'' labels do not upgrade the text contract.
+ 
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Historical latency outcomes under their original contracts. Intervals are descriptive and source-specific. Text agreement is not a direct-ID certificate.}
+ \label{tab:historical_cost}
+ \begin{tabularx}{\linewidth}{@{}Xrrl@{}}\toprule
+@@ -19,7 +19,7 @@
+ 358H CPU stateful, HumanEval30 & 0.733915 & [0.692920,0.771090] & 90/90 IDs\\
+ 358H NPU stateful, HumanEval30 & 0.351663 & [0.332595,0.368949] & 90/90 IDs\\\bottomrule
+ \end{tabularx}
+-\end{table}
++\end{table*}
+ 
+ Historical M4 24Q takes a within-prompt GM of three paired ratios, then resamples prompts 10,000 times with Python Random seed 20260907 and sorted draw indices 249/9749. M4 HumanEval uses the same within-prompt aggregation but 100,000 draws, seed 20260910 and indices 2500/97499. Historical RTX uses 10,000 draws, seed 20260910, indices 249/9749. B570 fallback uses 10,000 draws, seed 20260910 and indices 250/9750 in archived insertion order. Sorting tasks changes its finite-seed endpoints and is not substituted. 358H uses prompt medians of three paired ratios, 10,000 draws, NumPy default\_rng seed 20260919 and .025/.975 quantiles. These policies are not replaced by late RTX's ratio-of-medians estimator.
+ 
+@@ -104,7 +104,17 @@
+ \end{equation}
+ For a uniform fractional reduction $\delta$ in target work, the corresponding zero-other-work ceiling increases by $1/(1-\delta)$. If its original value is $F<1$, parity therefore requires $\delta\geq 1-F$. Table~\ref{tab:358h_accounting} reports this necessary budget separately for the prompt and pooled-total estimators. It assumes fixed baseline and committed progress; changing either requires fresh qualification and measurement.
+ 
+-\begin{table}[ht]\centering\small
++% REVISION_ADDITION_BEGIN: 358H conditional budget visual explanation
++Figure~\ref{fig:358h_budget} places the measured prompt-estimator speeds beside their conditional ceilings and the necessary target-work cuts. The pooled-total estimator remains separate in Table~\ref{tab:358h_accounting}.
++
++\begin{figure*}[t]
++\centering\includegraphics[width=\linewidth]{figures/figure_S2_358h_budget.pdf}
++\caption{358H measured speed and a conditional optimization budget. (A) Filled circles and bars show the saved speed estimates and descriptive prompt-bootstrap intervals; open diamonds show arithmetic ceilings if all other nonnegative work were removed while baseline, target work and committed progress stayed fixed. All points use the original geometric mean of 30 prompt medians of three paired ratios. Ceiling markers have no confidence intervals. (B) Reaching parity in that optimistic case requires a uniform target-work cut of at least $1-F$, where $F$ is the original ceiling. These are necessary budgets, not achieved savings or an impossibility claim about NPUs. The 180-row original-host ceiling audit remains inherited.}
++\label{fig:358h_budget}
++\end{figure*}
++% REVISION_ADDITION_END
++
++\begin{table*}[t]\centering\small
+ \caption{358H measured accounting and conditional zero-other-work ceilings. Percentages describe the saved synchronous regions; prompt and pooled estimators remain distinct.}
+ \label{tab:358h_accounting}
+ \begin{tabular}{@{}lrr@{}}\toprule
+@@ -119,6 +129,7 @@
+ Necessary uniform target cut, prompt (\%) & 16.278079 & 15.515989\\
+ Necessary uniform target cut, pooled (\%) & 17.254702 & 16.481415\\\bottomrule
+ \end{tabular}
+-\end{table}
++\end{table*}
+ 
+ No prompt-median ceiling reaches parity; maximum prompt ceilings are 0.9736196764 CPU and 0.9999089575 NPU. One NPU repetition has $B/T=1.000163695$, so not every individual run-level ceiling is below one. The budgets are necessary arithmetic reductions under fixed progress, not achieved optimizations or proof against NPUs. A persistent-state/wider-target candidate stops at qualification: CPU restore/reconcile correctness is unavailable under the tested representation, and the frozen dynamic-shape NPU IR lacks the required state-capable path. Same-prefix target-only and proposal-replay diagnostics identify greedy divergence but not a unique rollback bug. No formal runtime performance or energy result exists for that failed candidate; the completed earlier Phase-3 costs remain valid under their own contract.
++
+--- v0143/supplement/07_reproducibility.tex
++++ v0144/supplement/07_reproducibility.tex
+@@ -1,6 +1,6 @@
+ \section{CPU Reconstruction, Provenance, and Access Limits}
+ \label{supp:reproducibility}
+-The author source package contains editable LaTeX, vector PDF/SVG figures, bibliography, Highlights, CPU verification and build scripts, selected authenticated implementation/report records, the 26-claim evidence map and the 28-group experiment ledger. Compile \texttt{main.tex} or \texttt{supplement.tex} with pdfLaTeX using the supplied assets. The local build rechecks frozen exports and preserves the visual revision's figures and tables byte for byte. Structured and flat source archives are separately rebuilt; compilation does not establish live Overleaf or Editorial Manager acceptance.
++The author source package contains editable LaTeX, vector PDF/SVG figures, bibliography, Highlights, CPU verification and build scripts, selected authenticated implementation/report records, the 26-claim evidence map and the 28-group experiment ledger. Compile \texttt{main.tex} or \texttt{supplement.tex} with pdfLaTeX using the supplied assets. The local build rechecks frozen exports. Four main figures remain byte-identical to the visual revision; Figure 2 corrects recipe labels without changing categorical observations. Two supplementary figures explain the bound B570 source/exports and 358H saved estimates/budgets. Every inherited table cell and supplementary result is retained in the double-column layout. Structured and flat source archives are separately rebuilt; compilation does not establish live Overleaf or Editorial Manager acceptance.
+ 
+ The verifiers authenticate the copied-source bindings and reconstruct the RTX 384-row matrix, response-ID digest joins, qualification flags, absolute-time medians, all 12 cost comparisons, descriptive intervals, task regressions, round reversal and ratio identities. They reconstruct B570's 119 formal rows, 15 versus 14 complete task pairs, three timers and paid suffix counts. Phase booleans, natural-cross matrices, fixed-UB task-ratio aggregates and M4 medians/oracle are also checked. Version-specific receipts identify the source, figure, PDF and archive hashes actually checked; earlier receipts retain their historical attribution.
+ 
+--- v0143/tables/b570_task_cost.tex
++++ v0144/tables/b570_task_cost.tex
+@@ -1,17 +1,10 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+ \begingroup\small
+-\begin{longtable}{@{}rrrrrrr@{}}
+-\caption{All B570 two-round task-median speed ratios. G/W denote generation/whole request; old N1 has no complete pair for MBPP/400.}\label{tab:b570_task_cost}\\
++\begin{table*}[t]\centering
++\caption{All B570 two-round task-median speed ratios. G/W denote generation/whole request; old N1 has no complete pair for MBPP/400.}\label{tab:b570_task_cost}
++\begin{tabular}{@{}rrrrrrr@{}}
+ \toprule
+ MBPP & $R/C$ G & $R/C$ W & $M/C$ G & $M/C$ W & N1/$C$ G & N1/$C$ W\\\midrule
+-\endfirsthead
+-\toprule
+-MBPP & $R/C$ G & $R/C$ W & $M/C$ G & $M/C$ W & N1/$C$ G & N1/$C$ W\\\midrule
+-\endhead
+-\midrule\multicolumn{7}{r}{Continued on next page}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+ 125 & 0.320296 & 0.270051 & 0.319891 & 0.243047 & 2.437945 & 1.908679\\
+ 130 & 0.299904 & 0.252594 & 0.304551 & 0.257891 & 2.269168 & 1.978931\\
+ 132 & 0.264679 & 0.162455 & 0.271252 & 0.169635 & 8.515349 & 4.089033\\
+@@ -27,6 +20,7 @@
+ 475 & 0.276814 & 0.196772 & 0.278850 & 0.201003 & 5.011890 & 3.193580\\
+ 479 & 0.310439 & 0.196746 & 0.312663 & 0.200719 & 5.061865 & 2.965935\\
+ 69 & 0.286855 & 0.163151 & 0.292541 & 0.169808 & 8.776569 & 4.056630\\
+-\end{longtable}
++\bottomrule\end{tabular}
++\end{table*}
+ 
+ \endgroup
+--- v0143/tables/fixed_ub.tex
++++ v0144/tables/fixed_ub.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{Fixed-UB4 width costs: baseline/candidate. Anchor is $k=3$, wide is $k=7$, and matched has no draft. Partitions are descriptive.}\label{tab:fixed_ub}
+ \begin{tabular}{@{}llrr@{}}\toprule
+ Panel & Ratio & Generation & Request\\\midrule
+@@ -12,4 +12,4 @@
+ HE (4) & Matched/Wide & 1.307590 & 1.164148\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}
+--- v0143/tables/m4_strata.tex
++++ v0144/tables/m4_strata.tex
+@@ -1,5 +1,5 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+-\begin{table}[ht]\centering\small
++\begin{table*}[t]\centering\small
+ \caption{M4 formal post-prefill baseline/candidate speeds from three-repeat condition medians. Family strata are descriptive.}\label{tab:m4_strata}
+ \begin{tabular}{@{}lrrr@{}}\toprule
+ Panel & Tasks & Target/Always & Target/Guard\\\midrule
+@@ -8,4 +8,4 @@
+ Spec-Bench & 30 & 1.155485 & 1.106160\\
+ \bottomrule\end{tabular}
+ 
+-\end{table}
++\end{table*}
+--- v0143/tables/rtx_all_comparisons.tex
++++ v0144/tables/rtx_all_comparisons.tex
+@@ -1,17 +1,10 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+ \begingroup\small
+-\begin{longtable}{@{}llrrr@{}}
+-\caption{All RTX expansion comparisons, baseline/candidate. Each uses 24 task medians; $C_3$/$C_{15}$ are mask 3/15 speculation.}\label{tab:rtx_all}\\
++\begin{table*}[t]\centering
++\caption{All RTX expansion comparisons, baseline/candidate. Each uses 24 task medians; $C_3$/$C_{15}$ are mask 3/15 speculation.}\label{tab:rtx_all}
++\begin{tabular}{@{}llrrr@{}}
+ \toprule
+ Ratio & Timer & Speed & Descriptive interval & Faster\\\midrule
+-\endfirsthead
+-\toprule
+-Ratio & Timer & Speed & Descriptive interval & Faster\\\midrule
+-\endhead
+-\midrule\multicolumn{5}{r}{Continued on next page}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+ $R$/$C_3$ & Gen. & 1.170124 & [1.117013,1.217681] & 22/24\\
+ $M$/$C_3$ & Gen. & 1.169238 & [1.117115,1.217153] & 22/24\\
+ $R$/$M$ & Gen. & 1.000758 & [0.995290,1.007752] & 11/24\\
+@@ -24,6 +17,7 @@
+ $R$/$C_{15}$ & Request & 1.690202 & [1.610916,1.768226] & 24/24\\
+ $M$/$C_{15}$ & Request & 1.004542 & [0.975846,1.031662] & 12/24\\
+ $C_{15}$/$C_3$ & Request & 1.030391 & [1.022464,1.038939] & 23/24\\
+-\end{longtable}
++\bottomrule\end{tabular}
++\end{table*}
+ 
+ \endgroup
+--- v0143/tables/rtx_task_generation.tex
++++ v0144/tables/rtx_task_generation.tex
+@@ -1,17 +1,10 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+ \begingroup\small
+-\begin{longtable}{@{}rrrrrr@{}}
+-\caption{RTX generation absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.}\label{tab:rtx_task_generation}\\
++\begin{table*}[t]\centering
++\caption{RTX generation absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.}\label{tab:rtx_task_generation}
++\begin{tabular}{@{}rrrrrr@{}}
+ \toprule
+ Task & $R$ ms & $M$ ms & $C_3$ ms & $R/C_3$ & $M/C_3$\\\midrule
+-\endfirsthead
+-\toprule
+-Task & $R$ ms & $M$ ms & $C_3$ ms & $R/C_3$ & $M/C_3$\\\midrule
+-\endhead
+-\midrule\multicolumn{6}{r}{Continued on next page}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+ 439 & 590.217 & 553.925 & 516.623 & 1.142453 & 1.072203\\
+ 415 & 2870.787 & 2805.883 & 2469.301 & 1.162591 & 1.136307\\
+ 124 & 408.370 & 416.421 & 495.281 & 0.824523 & 0.840778\\
+@@ -36,6 +29,7 @@
+ 393 & 386.363 & 387.622 & 395.548 & 0.976780 & 0.979963\\
+ 242 & 229.418 & 233.043 & 192.592 & 1.191210 & 1.210035\\
+ 397 & 478.100 & 476.432 & 415.627 & 1.150309 & 1.146296\\
+-\end{longtable}
++\bottomrule\end{tabular}
++\end{table*}
+ 
+ \endgroup
+--- v0143/tables/rtx_task_request.tex
++++ v0144/tables/rtx_task_request.tex
+@@ -1,17 +1,10 @@
+ % Generated by scripts/reconstruct.py from frozen exports.
+ \begingroup\small
+-\begin{longtable}{@{}rrrrrr@{}}
+-\caption{RTX request absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.}\label{tab:rtx_task_request}\\
++\begin{table*}[t]\centering
++\caption{RTX request absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.}\label{tab:rtx_task_request}
++\begin{tabular}{@{}rrrrrr@{}}
+ \toprule
+ Task & $R$ ms & $M$ ms & $C_3$ ms & $R/C_3$ & $M/C_3$\\\midrule
+-\endfirsthead
+-\toprule
+-Task & $R$ ms & $M$ ms & $C_3$ ms & $R/C_3$ & $M/C_3$\\\midrule
+-\endhead
+-\midrule\multicolumn{6}{r}{Continued on next page}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+ 439 & 1337.685 & 804.939 & 825.507 & 1.620439 & 0.975084\\
+ 415 & 3638.915 & 3056.087 & 2802.469 & 1.298468 & 1.090498\\
+ 124 & 1087.418 & 650.070 & 779.296 & 1.395385 & 0.834176\\
+@@ -36,6 +29,9 @@
+ 393 & 1064.315 & 627.877 & 666.169 & 1.597667 & 0.942519\\
+ 242 & 954.557 & 478.594 & 466.815 & 2.044832 & 1.025233\\
+ 397 & 1163.200 & 708.823 & 701.044 & 1.659239 & 1.011096\\
+-\end{longtable}
+-Matched-request regressions: MBPP/439, MBPP/124, MBPP/458, MBPP/437, MBPP/115, MBPP/454, MBPP/393. Round GMs: 1.028699, 0.940220, 1.051749, 1.044236.
++\bottomrule\end{tabular}
++
++\par\smallskip\begin{minipage}{\linewidth}Matched-request regressions: MBPP/439, MBPP/124, MBPP/458, MBPP/437, MBPP/115, MBPP/454, MBPP/393. Round GMs: 1.028699, 0.940220, 1.051749, 1.044236.
++\end{minipage}
++\end{table*}
+ \endgroup

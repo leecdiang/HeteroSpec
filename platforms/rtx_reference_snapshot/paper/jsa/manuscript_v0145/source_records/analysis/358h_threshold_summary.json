@@ -1,0 +1,169 @@
+{
+  "schema": "heterospec.358h.threshold_summary.v1",
+  "formal": true,
+  "exactness": {
+    "status": "PASS",
+    "pairs": 18
+  },
+  "devices": {
+    "CPU": {
+      "schema": "heterospec.358h.phase2_gate.v1",
+      "formal_measurement": false,
+      "input": "C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\analysis\\358h_threshold_input_cpu.json",
+      "bootstrap": {
+        "method": "independent empirical resampling",
+        "seed": 20260919,
+        "resamples": 10000
+      },
+      "formula": "speedup = T_b*C/(T_d(2)+V_2*T_b+T_x)",
+      "T_x_policy": "fixed zero favorable bound; output is predictive eligibility, not realized end-to-end speedup",
+      "overall_classification": "BORDERLINE",
+      "phase3_entry": "Only GO or BORDERLINE context points may enter Phase 3; stop if every point is NO-GO.",
+      "points": [
+        {
+          "context_tokens": 512,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.9036797573849948,
+            "ci95": [
+              0.8897371543281674,
+              0.955532282572693
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.3555196360774922,
+            "ci95": [
+              1.334605731492251,
+              1.4332984238590394
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        },
+        {
+          "context_tokens": 2048,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.8848428021816782,
+            "ci95": [
+              0.8724250834883147,
+              1.0103659101468736
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.3272642032725175,
+            "ci95": [
+              1.308637625232472,
+              1.5155488652203102
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        },
+        {
+          "context_tokens": 8192,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.7559460806390801,
+            "ci95": [
+              0.745614649128905,
+              0.7861441187232643
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.13391912095862,
+            "ci95": [
+              1.1184219736933572,
+              1.1792161780848962
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        }
+      ]
+    },
+    "NPU": {
+      "schema": "heterospec.358h.phase2_gate.v1",
+      "formal_measurement": false,
+      "input": "C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\analysis\\358h_threshold_input_npu.json",
+      "bootstrap": {
+        "method": "independent empirical resampling",
+        "seed": 20260919,
+        "resamples": 10000
+      },
+      "formula": "speedup = T_b*C/(T_d(2)+V_2*T_b+T_x)",
+      "T_x_policy": "fixed zero favorable bound; output is predictive eligibility, not realized end-to-end speedup",
+      "overall_classification": "BORDERLINE",
+      "phase3_entry": "Only GO or BORDERLINE context points may enter Phase 3; stop if every point is NO-GO.",
+      "points": [
+        {
+          "context_tokens": 512,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.9055528209998641,
+            "ci95": [
+              0.8908117770894731,
+              0.9570212653428097
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.3583292314997961,
+            "ci95": [
+              1.3362176656342095,
+              1.4355318980142147
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        },
+        {
+          "context_tokens": 2048,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.9038043176616494,
+            "ci95": [
+              0.8898609338370648,
+              1.0158989866129993
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.3557064764924742,
+            "ci95": [
+              1.3347914007555972,
+              1.523848479919499
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        },
+        {
+          "context_tokens": 8192,
+          "classification": "BORDERLINE",
+          "reason": "neither the frozen GO nor NO-GO rule is satisfied",
+          "central_C2": {
+            "median": 0.8396179674476891,
+            "ci95": [
+              0.8276862277397512,
+              0.8648580117854894
+            ]
+          },
+          "optimistic_C3": {
+            "median": 1.2594269511715337,
+            "ci95": [
+              1.241529341609627,
+              1.2972870176782338
+            ]
+          },
+          "T_x_ms": 0.0,
+          "verification_exactness_admissible": true
+        }
+      ]
+    }
+  }
+}
+

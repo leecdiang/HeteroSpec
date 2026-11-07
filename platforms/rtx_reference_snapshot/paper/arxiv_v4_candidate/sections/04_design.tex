@@ -1,0 +1,49 @@
+\section{Experimental design}
+\label{sec:experiments}
+\subsection{Systems, panels and distinct evidence roles}
+The implementation uses pinned llama.cpp/GGML sources~\cite{llamacpp,studyrecords}. CUDA experiments run on an RTX~5070~Ti Laptop GPU with Q8\_0 target/draft pairs: Qwen3-8B/0.6B~\cite{qwen3}, SmolLM2-1.7B-Instruct/135M-Instruct, and Llama-3.1-8B-Instruct/3.2-1B-Instruct. The models share a backend but include different head dimensions and attention-head mappings. Weight files and runtime libraries are byte-pinned, with exact versions recorded in the ancillary source manifest.
+
+The ordinary CUDA reference uses physical UB1. Repaired execution uses target caller UB4, draft UB1, $k=3$, F16 KV, non-flash attention and context size 1024. The requested logical batch of 2048 is clamped to 1024; the frontend uses 24 host threads. One request is active at a time and prompt-cache reuse is disabled. The original Vulkan state studies instead use an Arc~B570 and Llama-3.1-8B-Instruct Q6\_K, with F16 KV, context 1024 and ten host threads. They are state and portability experiments, not a controlled comparison of GPU speed.
+
+Input texts come from sanitized MBPP and GSM8K~\cite{mbpp,gsm8k}; HumanEval probes are used for earlier engineering tests~\cite{humaneval}. We measure response preservation and runtime, not answer accuracy. Table~\ref{tab:campaigns} distinguishes the panels so that repeated execution is not confused with new-input validation.
+
+\begin{table*}[t]\centering\small
+\caption{Principal evidence groups. Counts include the indicated repeats, not independent tasks. Exact sources, failure records and access scope are indexed in \sref{supp:reproduction}.}
+\label{tab:campaigns}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{5.2cm}Y@{}}\toprule
+Study & Design & Question answered\\\midrule
+CUDA output confirmation & 24 project-unused inputs per family; 5 arms; 2 sessions; 5 repeats; 3,600 requests & Complete-output qualification of a frozen repair and ordinary baselines\\
+CUDA repair comparison & 12 exposed inputs per family; 7 arms; 2 sessions; 4 repeats; 2,016 formal requests & PQ/QB/GS costs and matched draft increment\\
+CUDA E2 replication & Same 12-input panel; 6 separated sessions; 324 fresh workers; 1,620 requests including 324 warmups & Independent-process PQ/QB comparison across two dates\\
+CUDA E1 replay & 3 families $\times$ 3 layers $\times$ 2 phases $\times$ 4 query widths; 216 model requests and 432 replays & Same-input QK, softmax and AV correspondence\\
+Vulkan state studies & Prefill partitioning, admitted whole-state crosses, and 32 controls plus 160 subset requests & State formation and component substitution\\
+Vulkan port and source audit & Stopped natural pilot; 432 synthetic CPU fixtures and frozen support-predicate analysis & Endpoint counterexamples and backend admission\\
+Later mapping studies & RTX replay/padding controls and independent B570 representation transactions & Mapping admissibility under a strong software baseline\\
+Fresh-context service panels & Four exposed inputs and four process sessions per platform; separate references and policies & Real two-query execution, layout cost and draft economics\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+The 24-input output-confirmation panel was frozen after exclusion against accessible project execution history. The repair comparison and E2 intentionally reuse 12 exposed texts, six from each domain. E1 selects one exposed prompt per family before capture. Vulkan state interventions use two known divergent inputs, two stable controls and separately labelled synthetic prefixes. These selections support different claims and are not pooled into a single sample size.
+
+\subsection{Matched alternatives and complete-request timing}
+The seven repair-comparison arms are $R$, $M_{\QB}$, $C_{\QB}$, $M_{\PQ}$, $C_{\PQ}$, $M_{\GS}$ and $C_{\GS}$. $M$ is target-only; $C$ adds the same draft protocol. GS physically serializes active target rows without changing the registered draft or stopping rule. PQ and QB retain surrounding batching. E2 retains $R$ and the four PQ/QB arms, using two serial-reference endpoints for each task/session.
+
+The paid CUDA interval is a complete nonstreaming resident-process HTTP request, including encoding/submission, generation, response parsing and endpoint validation. Model loading, artifact writes, hashes and registered warmups are outside it. The counts channel adds no heavy tensor readback or observation synchronization. Diagnostic times are separate and are not subtracted from request measurements.
+
+For task $i$, session $s$ and arms $a,b$, let $t_{i,s,a}$ be the registered request measurement, or the within-session median where repetitions are specified. We use equal task and session log weights:
+\begin{equation}
+S_{a/b}=\exp\!\left(\frac{1}{|\mathcal S|}\sum_s\frac{1}{|X|}\sum_i\log\frac{t_{i,s,a}}{t_{i,s,b}}\right).
+\label{eq:ratio}
+\end{equation}
+Values above one favor the denominator. Full required pairs must qualify; missing and divergent records are retained without imputation. On a common paired panel, ratio products obey algebraic identities, but they do not decompose operator time.
+
+E2 uses fresh processes, short PQ/QB blocks and counterbalanced order. Six sessions span 24.45 hours from first to last start, with at least one hour between a completion and the next start. The registered interval is a 95\% percentile bootstrap of six session-level log contrasts, using 10,000 resamples. It describes this fixed panel on one host; six sessions across two dates are not six independent dates. The practical ratio threshold is 1.02: for PQ/QB, this corresponds to a QB latency reduction of $1-1/1.02\approx1.96\%$. The later service studies instead register a 2\% reduction relative to their PQ control mean. We retain both original definitions. No request-level bootstrap, outlier trimming or significance-dependent stopping is used.
+
+\subsection{Numerical and state controls}
+E1 freezes actual Q/K/V/mask bytes, shapes, strides, head maps and parameters. Native MQ capture/replay correspondence, within-arm repeatability and capture-on/off endpoint equality precede PQ/QB comparison. Each of 72 fresh workers runs a counts warmup, a heavy capture and a counts observer control; MQ, PQ and QB are then replayed twice per context. A failed control withholds the corresponding numerical claim.
+
+Vulkan interventions reconstruct a declared continuation boundary: complete sequence KV and positions, initial full FP32 logits consumed by the native greedy sampler, an empty generated prefix and correct pending-token ownership. Sixteen own-path shams precede whole-KV crosses. Subset tests retain recipient initial logits and verify actual imported bytes. Subsequent four-cell analyses compare full logits only at a shared consumed prefix.
+
+Later mapping and fresh-context service studies use their own registered windows and references (Sections~\ref{sec:mappingcosts}--\ref{sec:service}). They do not replace the resident HTTP timer, $k=3$ policy or task weights of the preceding campaigns.
+
+Each campaign has its own frozen source and amendment record. The supplement retains the pre-start E2 recovery, separately built E1 protocol, incomplete Vulkan transfer pilot and rejected alias-dependent operator controls alongside the results they constrain.

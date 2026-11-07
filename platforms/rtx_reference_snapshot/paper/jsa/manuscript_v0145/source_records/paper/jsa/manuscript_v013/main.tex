@@ -1,0 +1,38 @@
+\documentclass[preprint,12pt,nopreprintline]{elsarticle}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,graphicx,booktabs,amsmath,amssymb,array,tabularx,xurl}
+\usepackage[hypertexnames=false]{hyperref}
+\hypersetup{pdfauthor={Author review draft},pdftitle={Execution State and Cost Boundaries of Reference-Preserving Speculative Decoding},pdfsubject={JSA structural revision v0.13.0, not submitted}}
+\setlength{\emergencystretch}{2em}
+\newcommand{\R}{R}\newcommand{\M}{M}\newcommand{\C}{C}
+\makeatletter
+\def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty\def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+\makeatother
+\begin{document}
+\begin{frontmatter}
+\title{Execution State and Cost Boundaries of Reference-Preserving Speculative Decoding}
+\date{}
+\author{Author-review draft}
+\begin{abstract}
+Speculative decoding changes both the numerical trajectory and the cost of language-model execution. We study their interaction in quantized consumer-system deployments. Early interventions and a matched target-only bridge show that exact output prediction does not establish useful repair or a need for complex reproduction machinery. Natural retained-state crosses on CUDA and Vulkan then distinguish current-path effects, state effects, and local interactions despite equal committed prefixes. A finite RTX target-attention constraint preserves full reference responses on 24 project-unused inputs. Generation speed is 1.170 times ordinary decoding and 1.169 times matched draft-free execution. Resident-request speed is 1.742 times ordinary but only 1.035 times matched execution: the target-path change already provides 1.683 times without speculation. Wider fixed-capacity drafting and B570 endpoint repair qualify while losing performance. Historical M4 and 358H studies expose limits on adaptation and draft-only optimization. The contribution connects execution diagnosis, finite repair design, and paid two-baseline evaluation through positive cases and qualified counterexamples. The numerical recipes and mechanism evidence remain deployment-specific.
+\end{abstract}
+\begin{keyword}
+speculative decoding \sep execution state \sep numerical consistency \sep runtime architecture \sep performance evaluation \sep consumer systems
+\end{keyword}
+\end{frontmatter}
+\input{sections/01_introduction}
+\input{sections/02_background}
+\input{sections/03_design}
+\input{sections/04_studies}
+\input{sections/05_diagnosis}
+\input{sections/06_repair}
+\input{sections/07_cost}
+\input{sections/08_discussion}
+\input{sections/09_limits}
+\label{maintextend}
+\begingroup\small
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+\endgroup
+\end{document}
+

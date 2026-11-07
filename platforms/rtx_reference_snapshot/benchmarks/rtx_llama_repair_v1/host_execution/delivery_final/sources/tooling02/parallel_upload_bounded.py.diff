@@ -1,0 +1,68 @@
+--- tooling01/parallel_upload_bounded.py
++++ tooling02/parallel_upload_bounded.py
+@@ -5,7 +5,7 @@
+ only when GitHub's uploaded state, size and SHA256 digest match local bytes and
+ the preceding uploader's durable success receipts. Never clobber or silently retry.
+ """
+-import argparse,concurrent.futures,datetime,hashlib,json,os,pathlib,re,subprocess,time
++import argparse,concurrent.futures,datetime,hashlib,json,os,pathlib,re,subprocess,time,threading
+ 
+ def sha(p):
+     h=hashlib.sha256()
+@@ -25,8 +25,10 @@
+     deadline=start+remaining
+     def save(name,obj):
+         with (out/name).open('x',encoding='utf-8') as f:json.dump(obj,f,indent=2);f.write('\n')
++    journal_lock=threading.Lock()
+     def journal(name,obj):
+-        with (out/name).open('a',encoding='utf-8') as f:f.write(json.dumps(obj)+'\n');f.flush();os.fsync(f.fileno())
++        with journal_lock:
++            with (out/name).open('a',encoding='utf-8') as f:f.write(json.dumps(obj)+'\n');f.flush();os.fsync(f.fileno())
+     query=subprocess.run(['gh','api',f'repos/{repo}/releases/{release_id}'],capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
+     (out/'INITIAL_REMOTE.log').write_text(query.stderr,encoding='utf-8');assert query.returncode==0,'Remote metadata failed'
+     remote=json.loads(query.stdout);save('INITIAL_REMOTE.json',remote)
+@@ -45,13 +47,28 @@
+     def transfer(p):
+         pin={'name':p.name,'bytes':p.stat().st_size,'sha256':sha(p)}
+         args=['gh','release','upload',tag,'--repo',repo,str(p)]
+-        begin=time.monotonic();remaining=deadline-begin
+-        if remaining<=0:return dict(pin,exit_code=-2,error='recorded cumulative transport deadline before transfer',seconds=0)
+-        with (out/'commands'/(p.name+'.log')).open('xb') as f:
+-            process=subprocess.Popen(args,env=env,stdout=f,stderr=subprocess.STDOUT)
+-            try:code=process.wait(timeout=min(7200,remaining))
+-            except subprocess.TimeoutExpired:process.kill();process.wait();code=-1
+-        return dict(pin,argv=args,pid=process.pid,exit_code=code,seconds=time.monotonic()-begin,utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
++        started=time.monotonic();asset_deadline=min(deadline,started+7200)
++        for attempt in range(1,4):
++            begin=time.monotonic();remaining=asset_deadline-begin
++            if remaining<=0:return dict(pin,exit_code=-2,error='finite cumulative asset/transport deadline',seconds=time.monotonic()-started)
++            log=out/'commands'/(p.name+'.attempt%02d.log'%attempt)
++            with log.open('xb') as f:
++                process=subprocess.Popen(args,env=env,stdout=f,stderr=subprocess.STDOUT)
++                try:code=process.wait(timeout=remaining)
++                except subprocess.TimeoutExpired:process.kill();process.wait();code=-1
++            event=dict(pin,argv=args,pid=process.pid,exit_code=code,attempt=attempt,seconds=time.monotonic()-begin,utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
++            journal('ATTEMPTS.jsonl',event)
++            if code==0:return event
++            query_args=['gh','api','--paginate','--slurp',f'repos/{repo}/releases/{release_id}/assets?per_page=100']
++            q=subprocess.run(query_args,capture_output=True,text=True,encoding='utf-8',env=env,timeout=120)
++            matches=[x for page in json.loads(q.stdout) for x in page if x['name']==p.name] if q.returncode==0 else []
++            error=log.read_text(encoding='utf-8',errors='replace')
++            transient=any(t in error for t in ('EOF','connection reset','TLS handshake timeout','i/o timeout'))
++            retry=(attempt<3 and code!= -1 and transient and q.returncode==0 and not matches and time.monotonic()+5*attempt<asset_deadline)
++            journal('ATTEMPT_RECONCILIATIONS.jsonl',{'event':event,'query':query_args,'query_exit_code':q.returncode,'query_stderr':q.stderr,'remote_matches':matches,'network_error':error,'retry_only_after_verified_absence':retry,'asset_deadline_not_reset':True})
++            if not retry:return event
++            time.sleep(5*attempt)
++        raise AssertionError('bounded attempt loop')
+     errors=[];active={};report=None
+     def settle(event):
+         journal('COMMANDS.jsonl',event)
+@@ -100,7 +117,7 @@
+                 assert event['exit_code']==0,'Index upload failed; receipt retained'
+                 save('UPLOAD.json',{'status':'UPLOAD_COMPLETE_NOT_YET_VERIFIED','tag':tag,'release_id':release_id,'parts':report['parts'],
+                     'raw_index_sha256':event['sha256'],'seconds':time.monotonic()-start,'native_requests_added':0,'script_sha256':sha(pathlib.Path(__file__)),
+-                    'method':'At most five concurrent uploads within the pinned cumulative transport deadline. Original command failures are retained; exact already-uploaded server SHA256/size can reconcile an ambiguous completion without retry. Prior assets adopted only after receipt/local/server SHA256 verification. Supplied packer next-shard barrier and final full-index equality. No clobber, silent retry or published release; fresh remote every-member verification still required.'})
++                    'method':'At most five concurrent uploads within the pinned cumulative transport deadline. Original command failures are retained; exact already-uploaded server SHA256/size can reconcile an ambiguous completion without retry. Prior assets adopted only after receipt/local/server SHA256 verification. Supplied packer next-shard barrier and final full-index equality. At most three logged network attempts per asset, only after verified remote absence, within one two-hour asset deadline. No clobber, silent retry or published release; fresh remote every-member verification still required.'})
+                 print('UPLOAD_COMPLETE',len(completed),flush=True);return
+             else:time.sleep(5)
+ 

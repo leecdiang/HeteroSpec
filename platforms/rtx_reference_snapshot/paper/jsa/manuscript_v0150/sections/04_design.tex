@@ -1,0 +1,56 @@
+\section{Experimental design}
+\label{sec:experimental}
+\subsection{Systems and evidence roles}
+Table~\ref{tab:systems} states the principal settings. The accompanying Supplementary material 1 provides evidence contracts, complete comparison tables, task-level figures and the historical ledger. The exact campaign records and their independent host-side audits are retained separately~\cite{rtxconfirm,rtxpostaudit,rtxrepair,bpartition,bfinal}. The implementations build on pinned llama.cpp/GGML sources~\cite{llamacpp}. The CUDA target/draft pairs are Qwen3-8B/0.6B, SmolLM2-1.7B/135M and Llama-3.1-8B/3.2-1B, all using the pinned Q8\_0 conversions. Exact converted bytes and vocabulary compatibility were checked on the original host; complete ancestry of each conversion to an official checkpoint was not certified. The three families share a related GGML/CUDA implementation environment, so they provide cross-family evidence, not three independent backend implementations.
+
+\begin{table*}[t]
+\centering\small
+\caption{Principal campaigns and their distinct roles. Counts are requests or sampled contexts, not independent task counts. B570 uses a different numerical representation and frontend and is not a cross-device QB performance replica.}
+\label{tab:systems}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{.14\textwidth}>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}Y@{}}\toprule
+Campaign & Runtime/model setting & Input and execution design & Evidence role\\\midrule
+CUDA confirmation & RTX 5070 Ti Laptop; three Q8\_0 target/draft pairs & 24 inputs; 5 arms; 2 adjacent sessions; 5 repeats; 3,600 requests & Frozen cross-family complete-output confirmation and baseline qualification\\
+CUDA repair comparison & Same three families; PQ/QB/GS, FA off, F16 KV & 12 exposed inputs; 7 arms; 2 sessions; 4 repeats; 2,016 requests & Same-reference implementation cost\\
+CUDA operator replay & Captured layer-0 Q/K/V/mask; pinned backend & 12 exposed tasks; prefill and continuation cuts; 24 contexts; 216 replays & Fixed-input attention numerical correspondence\\
+Vulkan partition & Arc B570; Llama-3.1-8B Q6\_K; target-only & 7 exposed/synthetic inputs; A/B/C; 3 repeats; 63 requests & Fixed-context external prefill intervention\\
+Vulkan final mechanism & Same target and numerical DLLs & 133 requests, including 16 restore shams and 40 cross cells; 40 operator calls & Projection frontier, qualified KV intervention and failed-control boundaries\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+For the CUDA implementation comparison, context size is 1024, the requested logical batch 2048 is effectively clamped to 1024, K/V are F16, attention is non-flash, and the frontend uses 24 host threads. The ordinary reference uses physical UB1; the repaired caller setting is UB4, with draft UB1 and $k=3$. Models and relevant runtime libraries are byte-pinned. A single request is active at a time, and prompt-cache reuse is excluded. The Vulkan causal actor uses context 1024, logical batch 512, ten threads, F16 KV, and output capacity 1. Its later causal experiments are target-only, not speculative latency measurements.
+
+The input texts come from sanitized MBPP~\cite{mbpp} and GSM8K~\cite{gsm8k}, with HumanEval~\cite{humaneval} used in historical diagnostics. We measure output reproduction and runtime, not benchmark answer accuracy. The confirmation panel has 12 inputs from each of MBPP and GSM8K and was frozen after accessible-history exclusion. ``Project-unused'' means absent from accessible execution history, not unseen during training. The repair-cost panel has six inputs from each domain and is exposed. Operator diagnostics deliberately use known divergent and agreeing cases. Synthetic 127/128/129-token native-ID prefixes are not complete benchmark questions.
+
+\subsection{Comparator definitions}
+The principal repair campaign uses seven arms: $R$, $M_{\QB}$, $C_{\QB}$, $M_{\PQ}$, $C_{\PQ}$, $M_{\GS}$ and $C_{\GS}$. $M$ denotes target-only execution; $C$ adds the same $k=3$ draft protocol. GS retains configured caller/output capacities while constraining the target's physical microbatch to one throughout its active computation. PQ and QB preserve batched surrounding operators. Model bytes, native prompt IDs, sampler, EOG/cap rules, state reset and speculative transaction semantics are shared within each family.
+
+The larger confirmation additionally includes $M_0$, target-only UB4 without mask3, and $R_{\rm prod}$, an ordinary configuration selected using earlier exposed engineering inputs. The latter is not allowed to change the registered reference. If it fails full-output qualification on confirmation inputs, its measured times remain diagnostic rather than lossless deployment comparisons. This guards against promoting a faster but numerically different ordinary implementation to a supposedly equivalent baseline.
+
+PQ and GS are in-stack repair alternatives, not claims to reproduce an external determinism system's best implementation. A historical adaptation of fixed-shape verification is separately documented in the supplement, including output-contract failures and incomplete confirmation. No external method's published speedup is inserted into the tables as if it shared the same model, hardware, reference and paid interval.
+
+\subsection{What the timing estimator measures}
+Let $t_{i,s,a}$ be the median absolute request time over registered repetitions for task $i$, session $s$ and arm $a$. The reported ratio is
+\begin{equation}
+S_{a/b}=\exp\!\left(\frac{1}{|\mathcal S|}\sum_s
+\frac{1}{|\mathcal X|}\sum_i\log\frac{t_{i,s,a}}{t_{i,s,b}}\right).
+\label{eq:ratio}
+\end{equation}
+Both sessions and tasks receive equal log weights. A ratio above one favors the denominator. All required pairs must qualify; task-level regressions are retained. On a common complete panel, $S_{R/C}=S_{R/M}S_{M/C}$, but this identity does not decompose component time. We do not divide aggregate speedups to infer a measured attention, KV or host share.
+
+The CUDA paid interval is a complete nonstreaming resident-process HTTP request: JSON encoding and submission, response/native-ID and stop parsing, and endpoint validation. Loading, artifact writes, byte hashing and excluded warmups are outside it. The main counts channel introduces no heavy tensor readback, extra observation synchronization or component elapsed hooks. Diagnostic captures have a separate timing scope; their estimated overhead is never subtracted from formal requests. ``Resident'' refers to the serving process, not an independently certified absence of GPU paging.
+
+The implementation campaign uses four repetitions per task/session; the larger confirmation uses five. Both use two adjacent sessions, not independently sampled dates. We report point estimates and regressions without inventing date-level confidence intervals or treating repeated requests as independent samples. The small PQ/QB differences should be interpreted in that finite workload/runtime setting. Historical generation-only and differently instrumented timers are not pooled with these request intervals.
+
+\subsection{Fixed-input and state-intervention controls}
+CUDA replay preserves actual captured Q, K, V and mask spans, dtypes, strides and logical positions, verifies input readback, and canonicalizes output indexing. Each of MQ, PQ and QB is repeated three times at each context. Same-arm native/replay correspondence and capture-on/off endpoint checks are distinct controls. Fused post-mask scores are not separately exposed and are marked non-comparable. A flattened operator argmax is not a model's next-token logit decision.
+
+Vulkan retained-state experiments require more than sequence-KV serialization. The qualified boundary0 receiver reconstructs the necessary state for the tested greedy continuation: every sequence K/V layer and position, full initial FP32 logits supplied to the native greedy sampler, an empty committed prefix, correct pending-token consumption, and a common clean UB512 context. Sixteen own-path shams must reproduce complete natural endpoints before any donor cross is interpreted. This validates the declared boundary reconstruction, not arbitrary opaque context cloning. All interventions use naturally generated prefixes and no future reference answers.
+
+\subsection{Failures, amendments and reproducibility}
+The original hosts retained failed starts and immutable records. Four PQ engineering warmups failed because graph metadata capacity was insufficient. A prospective resource-only correction increased that capacity according to the already declared maximum $q=4$; it did not change the numerical operators, model, precision or panel. Earlier Qwen records were retained, affected unstarted arms were requalified, and there were no formal request retries. Alias-based topology admission and a later archive-packaging correction are recorded separately.
+
+For the final Vulkan campaign, full external driver-body hashes were authenticated after the P1A/P1B partition runs, although model, numerical DLL, executable hashes and driver version/capabilities were initially pinned. Those runs are therefore supplementary diagnostic observations, not fully compliant confirmation under the stricter preregistration rule. Hash authentication preceded the operator and state stages. Eight scale/MUL replay calls failed same-arm correspondence because a captured operand had been overwritten by an in-place consumer; they are retained and excluded from causal interpretation. Supplement~S5 states these limits alongside the results, not as missing successful experiments.
+
+
+\subsection{Figure preparation and AI assistance}
+OpenAI Codex (GPT-6, OpenAI; October 2026) assisted with editable TikZ/PGFPlots figure code and reported-value checks. Numerical figures derive from the companion tables and pinned records. The two task-level supplementary figures are generated from the pinned report's arm medians, with their coordinates checked by a separate implementation. Local checks recompute reported aggregates and verify figure values without new model measurements; they do not replace original-host audits or final author review.

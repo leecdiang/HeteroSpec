@@ -1,0 +1,62 @@
+{
+  "study": "B570_COMMON_Q_COMPLETE_TRANSACTION",
+  "status": "FROZEN_BEFORE_GPU",
+  "purpose": "Close the charged representation-cost branch after unresolved resident A/A retest; no selector or hardware proposal.",
+  "parent_pr128": "73d07c328da335cfdfc48ad0719181b69bd2e467",
+  "runtime_sha256": "79b0031bea367da64a8f580f1b00fe1108c83cc2ab73e893739d9740e4408423",
+  "geometry": {
+    "key": [
+      1023,
+      1024,
+      1025
+    ],
+    "q": [
+      1,
+      2,
+      4
+    ],
+    "Hq": 8,
+    "Hkv": 8,
+    "d": 128,
+    "dv": 128
+  },
+  "inputs": "Three fixed dyadic input sets inherited unchanged logically from balanced_retest_v1; different Q,K,V values across inputs.",
+  "arms": {
+    "QB_A": "permuted Q, same QB factory as QB_B",
+    "QB_B": "identical implementation, separate allocation",
+    "QH_C": "compact Q produced by charged host transpose"
+  },
+  "window": "Continuous common preexisting permuted host Q -> copy/transpose -> Q upload/sync -> graph compute/sync -> full ordinary readback/sync; preallocated host/device targets, resident K/V/mask.",
+  "excluded": [
+    "natural model Q producer",
+    "KV cache updates",
+    "first compilation/allocation",
+    "oracle and validation comparisons",
+    "model request critical path"
+  ],
+  "controls": "q1 all use identical compact/common-original graph and memcpy. QB A/B node metadata equality. No padding, K/V replication, REPEAT, model, actor, RTL or CPU8.",
+  "qualification": "All 81 support slots then all FP64 QK/softmax/AV/final checks, exact finals across arms, actual input readbacks, and all81 actual transaction checks before timing in each session; every transaction checked after window.",
+  "design": {
+    "fresh_serial_processes": 3,
+    "fixed_inputs": 3,
+    "paired_blocks_per_input_coordinate_session": 6,
+    "all_arm_permutations_per_block": 6,
+    "calls_per_visit": 5,
+    "warmups_per_arm": 5,
+    "primer_each_block": 1,
+    "timed_calls_total": 43740
+  },
+  "analysis": "Unchanged analyze.py from balanced retest: 20000 session-then-block bootstrap; 10 claims, 99.5% per-claim intervals; practical screen max(1us,2% QB,p95 AA), all inputs/sessions consistent; q1 screen invalidates observer.",
+  "limits": "Three process clusters on one device/date; descriptive screen, no population equivalence or resolution certification. No causal comparison of old compact resident and new permuted transaction absolute latency.",
+  "budget": {
+    "total_seconds": 300,
+    "prior_charged_seconds": 27.8414773,
+    "remaining_seconds": 272.1585227,
+    "native_internal_deadline_seconds": 50,
+    "parent_deadline_seconds": 60,
+    "minimum_admission_remaining_seconds": 70,
+    "charge": "full parent wall including initialization, reference, raw I/O and cleanup"
+  },
+  "stop": "First support, numerical, transaction, process, capture, cleanup or budget failure stops downstream GPU. No retries.",
+  "decision": "If no benefit clears screen against both QB controls, retain QB and close this tested optimization branch; report unresolved effects and hardware SOFTWARE_FIRST/HOLD."
+}

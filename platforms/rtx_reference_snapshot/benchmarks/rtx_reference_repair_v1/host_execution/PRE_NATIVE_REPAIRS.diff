@@ -1,0 +1,31 @@
+diff --git a/.gitattributes b/.gitattributes
+index 70d134a..db567d5 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -52,3 +52,7 @@ benchmarks/rtx_native_bridge_20261026/** -text
+ 
+ scripts/native_reproduction/rtx_delivery/** -text
+ benchmarks/rtx_native_delivery_20261026/** -text
++
++# Reference repair authenticates source fixtures and frozen runtime bytes.
++scripts/experiments/rtx_reference_repair_v1/** -text
++benchmarks/rtx_reference_repair_v1/** -text
+diff --git a/scripts/experiments/rtx_reference_repair_v1/tests/test_repair.py b/scripts/experiments/rtx_reference_repair_v1/tests/test_repair.py
+index dd5569f..5d7b206 100644
+--- a/scripts/experiments/rtx_reference_repair_v1/tests/test_repair.py
++++ b/scripts/experiments/rtx_reference_repair_v1/tests/test_repair.py
+@@ -203,11 +203,12 @@ class CostTests(unittest.TestCase):
+ class CppPrimitiveTests(unittest.TestCase):
+     def test_cpp_graph_and_stride_contract(self):
+         import shutil,subprocess
+-        compiler=shutil.which('g++') or shutil.which('clang++')
++        compiler=shutil.which('g++') or shutil.which('clang++') or shutil.which('zig')
+         if not compiler:self.skipTest('C++ compiler unavailable; native host build still required')
+         with tempfile.TemporaryDirectory() as d:
+             exe=Path(d)/('mock.exe' if os.name=='nt' else 'mock')
+-            subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'tests/stubs'),'-I'+str(HERE),str(HERE/'tests/rowwise_contract.cpp'),'-o',str(exe)],check=True,capture_output=True,text=True)
++            command=[compiler,'c++'] if Path(compiler).stem=='zig' else [compiler]
++            subprocess.run(command+['-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'tests/stubs'),'-I'+str(HERE),str(HERE/'tests/rowwise_contract.cpp'),'-o',str(exe)],check=True,capture_output=True,text=True)
+             r=subprocess.run([str(exe)],check=True,capture_output=True,text=True)
+             self.assertIn('CPP_GRAPH_ADDRESS_CONTRACT_PASS',r.stdout)
+ 

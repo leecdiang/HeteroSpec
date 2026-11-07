@@ -1,0 +1,45 @@
+--- PR97/llama-context.cpp
++++ PR108/llama-context.cpp
+@@ -1861,6 +1861,7 @@
+             ++b570_micrographs;
+             b570_micrograph_rows += ubatch.n_tokens;
+             ++b570_micrograph_widths[ubatch.n_tokens];
++            if(b570_order_enabled)b570_order.push_back(ubatch.n_tokens);
+         }
+ 
+         // plot the computation graph in dot format (for debugging purposes)
+@@ -4337,7 +4338,7 @@
+ 
+ // Isolated research phase binding. No model arithmetic or KV reconstruction.
+ void llama_context::b570_pilot_bind_phase_ubatch(uint32_t ub) {
+-    if ((ub != 1 && ub != 32 && ub != 128 && ub != 512) || cparams.n_ctx != 1024 || cparams.n_batch != 512 || cparams.n_seq_max != 1) {
++    if ((ub != 1 && ub != 4 && ub != 32 && ub != 128 && ub != 512) || cparams.n_ctx != 1024 || cparams.n_batch != 512 || cparams.n_seq_max != 1) {
+         throw std::runtime_error("Frozen B570 phase-binding contract violated");
+     }
+     synchronize();
+@@ -4361,3 +4362,25 @@
+ extern "C" __declspec(dllexport) uint64_t llama_b570_work_width(const llama_context * ctx, uint32_t w) {
+     auto it = ctx->b570_micrograph_widths.find(w); return it == ctx->b570_micrograph_widths.end() ? 0 : it->second;
+ }
++
++// Single-threaded host graph construction; each context owns its binding identity.
++thread_local int b570_active_layout=0;
++void llama_context::b570_geometry_bind(int role,int phase,int layout,uint32_t ub,int capacity) {
++ if(role<0||role>1||phase<0||phase>4||layout<0||layout>2||capacity<1||capacity>4||
++    (phase==0&&(layout!=0||(ub!=128&&ub!=512)))||
++    (role==1&&(layout!=0||(phase!=0&&ub!=1)))||
++    (role==0&&phase!=0&&ub!=4&&ub!=128)) throw std::runtime_error("PR108 phase guard");
++ std::string key=std::to_string(role)+":"+std::to_string(phase)+":"+std::to_string(layout)+":"+std::to_string(ub)+":"+std::to_string(capacity);
++ b570_active_layout=layout;
++ if(key!=b570_geometry_key){
++  synchronize();
++  b570_pilot_bind_phase_ubatch(ub);
++  gf_res_prev->reset(); // invalidate even when ub is unchanged; counts switch is irrelevant
++  b570_geometry_key=key;
++ }
++}
++extern "C" __declspec(dllexport) void llama_b570_geometry_bind(llama_context *ctx,int role,int phase,int layout,uint32_t ub,int capacity){ctx->b570_geometry_bind(role,phase,layout,ub,capacity);}
++
++extern "C" __declspec(dllexport) void llama_b570_order_enable(llama_context *ctx,bool enabled){ctx->b570_order_enabled=enabled;ctx->b570_order.clear();}
++extern "C" __declspec(dllexport) uint64_t llama_b570_order_count(llama_context *ctx){return ctx->b570_order.size();}
++extern "C" __declspec(dllexport) uint32_t llama_b570_order_item(llama_context *ctx,uint64_t i){return ctx->b570_order.at(i);}

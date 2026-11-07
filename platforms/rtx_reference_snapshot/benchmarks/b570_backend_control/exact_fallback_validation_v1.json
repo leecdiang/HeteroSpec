@@ -1,0 +1,122 @@
+{
+  "schema": "heterospec.b570.exact_fallback_validation.v1",
+  "status": "FROZEN_BEFORE_FORMAL_EXECUTION",
+  "frozen_at": "2026-09-12T18:30:00+08:00",
+  "branch": "windows/b570-backend-control",
+  "qualification_commit": "385f3fc590e4b37d27d7ae6db9211aa7803c84ba",
+  "parent_preregistration": "benchmarks/b570_backend_control/preregistration_v2.json",
+  "post_gate_context": {
+    "fast_path_correctness": "FAIL",
+    "diagnostic_humaneval30_runs": "180/180 complete",
+    "fast_path_exact_pairs": "45/90",
+    "fast_path_exact_prompts": "15/30",
+    "fast_path_stable_mismatch_prompts": "15/30",
+    "V2_raw": {"512": 1.2426, "2048": 1.6373},
+    "raw_speedup_geometric_mean": 0.5383,
+    "raw_speedup_bootstrap_95_ci": [0.5302, 0.5465],
+    "raw_faster_prompts": "0/30",
+    "raw_board_energy_ratio": 0.6961,
+    "raw_board_energy_ratio_exact_subset": 0.7107,
+    "scientific_policy": "All fast-path results remain frozen and are not rerun or overwritten."
+  },
+  "candidate": {
+    "name": "serialized n_ubatch=1 speculative execution",
+    "selection": "Uniquely fixed before the diagnostic extension; not selected by B570 parameter search.",
+    "only_change_from_fast_path": "speculative n_ubatch changes from 128 to 1",
+    "prior_six_prompt_gate": "PASS, 18/18 exact normalized pairs",
+    "prior_fallback_v2": {
+      "observed_raw": {"512": 2.0352, "2048": 2.0177},
+      "classification": "INVALID / REMOTE-CONTAMINATED",
+      "policy": "Retained for provenance only and excluded from formal inference."
+    },
+    "candidate_count_limit": 1,
+    "no_further_search": true
+  },
+  "platform": {
+    "llama_cpp_build": 10839,
+    "runtime_commit": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "backend": "Vulkan",
+    "device": "Vulkan0",
+    "device_name": "Intel(R) Arc(TM) B570 Graphics",
+    "target": {"filename": "Qwen3-8B-Q8_0.gguf", "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6", "gpu_layers": "all", "required_offload": "37/37"},
+    "draft": {"filename": "Qwen3-0.6B-Q8_0.gguf", "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031", "gpu_layers": "all", "required_offload": "29/29"}
+  },
+  "frozen_configuration": {
+    "decode": "greedy",
+    "temperature": 0,
+    "seed": 123,
+    "speculation_k": 2,
+    "n_ctx": 1024,
+    "n_batch": 512,
+    "baseline_n_ubatch": 128,
+    "fallback_speculative_n_ubatch": 1,
+    "semantic_output_cap": 128,
+    "baseline_cli_n_predict": 128,
+    "speculative_cli_n_predict": 127,
+    "flash_attention": "off",
+    "target_gpu_offload": "all",
+    "draft_gpu_offload": "all",
+    "baseline_cli_template": ["llama-completion.exe", "--model", "Qwen3-8B-Q8_0.gguf", "--device", "Vulkan0", "--n-gpu-layers", "all", "--fit", "off", "--ctx-size", "1024", "--batch-size", "512", "--ubatch-size", "128", "--flash-attn", "off", "--file", "PROMPT", "--n-predict", "128", "--temp", "0", "--top-k", "0", "--top-p", "1", "--min-p", "0", "--seed", "123", "--reasoning", "off", "--simple-io", "--display-prompt", "--no-warmup", "--log-verbosity", "4", "--perf", "--no-conversation"],
+    "serialized_speculative_cli_template": ["llama-speculative.exe", "--model", "Qwen3-8B-Q8_0.gguf", "--device", "Vulkan0", "--n-gpu-layers", "all", "--fit", "off", "--ctx-size", "1024", "--batch-size", "512", "--ubatch-size", "1", "--flash-attn", "off", "--file", "PROMPT", "--n-predict", "127", "--temp", "0", "--top-k", "0", "--top-p", "1", "--min-p", "0", "--seed", "123", "--verbose", "--spec-type", "draft-simple", "--spec-draft-model", "Qwen3-0.6B-Q8_0.gguf", "--spec-draft-device", "Vulkan0", "--spec-draft-ngl", "all", "--spec-draft-n-max", "2", "--spec-draft-n-min", "0"],
+    "v2_exact_cli_template": ["llama-bench.exe", "-v", "-m", "Qwen3-8B-Q8_0.gguf", "-dev", "Vulkan0", "-ngl", "99", "-fa", "off", "-p", "1,2", "-n", "0", "-d", "CONTEXT", "-b", "512", "-ub", "1", "-r", "20", "-o", "json"]
+  },
+  "correctness_contract": {
+    "unit": "generated target-model token IDs only",
+    "prompt_prefix": "excluded",
+    "maximum_tokens": 128,
+    "eos": "Completion terminates at EOS if earlier than token 128.",
+    "comparison": "Exact sequence equality after the frozen b10839 CLI-boundary normalization from preregistration_v2.json.",
+    "raw_cli_counts_not_equality_criterion": true
+  },
+  "stage_a_v2_exact": {
+    "definition": "V2_exact(n) = median PP2 target-forward time / median PP1 target-forward time using llama-bench on the serialized ubatch=1 path.",
+    "contexts": [512, 2048],
+    "repetitions_per_cell": 20,
+    "batch": 512,
+    "ubatch": 1,
+    "interpretation": "Mechanism proxy only; not end-to-end speedup.",
+    "run_even_if_prior_remote_observation_exists": true
+  },
+  "stage_b_humaneval30": {
+    "runs_regardless_of_v2_outcome": true,
+    "dataset": "datasets/humaneval/HumanEval.jsonl.gz",
+    "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "task_ids": ["HumanEval/3", "HumanEval/10", "HumanEval/19", "HumanEval/20", "HumanEval/28", "HumanEval/32", "HumanEval/44", "HumanEval/47", "HumanEval/48", "HumanEval/50", "HumanEval/54", "HumanEval/57", "HumanEval/62", "HumanEval/64", "HumanEval/68", "HumanEval/70", "HumanEval/89", "HumanEval/90", "HumanEval/101", "HumanEval/104", "HumanEval/105", "HumanEval/106", "HumanEval/107", "HumanEval/111", "HumanEval/119", "HumanEval/123", "HumanEval/126", "HumanEval/128", "HumanEval/129", "HumanEval/162"],
+    "conditions": ["baseline", "serialized_vulkan_k2"],
+    "repetitions_per_condition_per_prompt": 3,
+    "total_workloads": 180,
+    "schedule_seed": 20260912,
+    "pairing": "Within task and repetition; condition order is deterministically shuffled before execution.",
+    "baseline_n_ubatch": 128,
+    "serialized_speculative_n_ubatch": 1
+  },
+  "statistics": {
+    "primary_unit": "prompt-level geometric mean of repetition-paired ratios",
+    "speedup_ratio": "baseline elapsed seconds / serialized speculative elapsed seconds",
+    "energy_ratio": "baseline board joules per generated token / serialized speculative board joules per generated token; greater than 1 means the fallback uses less B570 board energy per token",
+    "bootstrap": {"resamples": 10000, "seed": 20260910, "confidence_interval": 0.95},
+    "exactness": "Report all 90 pair results and prompt-level stability. Global performance is admissible only if all 90 pairs are exact; otherwise label overall timing diagnostic and report the exact subset separately."
+  },
+  "telemetry": {
+    "collector": "PresentMon custom telemetry collector",
+    "metric": "PM_METRIC_GPU_CARD_POWER",
+    "interval_ms": 100,
+    "boundary": "Intel Arc B570 graphics-adapter board only",
+    "integration": "Trapezoidal integration over exact QPC workload boundaries",
+    "not_measured": ["CPU package", "wall outlet", "whole system"]
+  },
+  "remote_protocol": {
+    "scheduler_delay_seconds": 120,
+    "disconnected_idle_settling_seconds": 60,
+    "todesk": "Must remain disconnected throughout V2, HumanEval30, and board-energy measurement intervals.",
+    "fail_closed": true
+  },
+  "completion": {
+    "archive_raw_and_processed": true,
+    "update_reports": true,
+    "push_same_branch": true,
+    "pull_request": 7,
+    "close_platform_after_this_candidate": true,
+    "automatic_shutdown": true
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_DEFINED_SERIALIZATION_SCOPE",
+  "source": "baseline/native/candidate-src/llama-context.cpp",
+  "source_sha256": "4d1798b73d84edcaea62fdec6d2697ffa05120fa85b9d06def74f47c0ad8405d",
+  "state_write_data": [
+    "model arch string",
+    "memory module state"
+  ],
+  "state_seq_write_data": [
+    "memory module sequence state"
+  ],
+  "not_serialized": [
+    "dynamic output/logit buffers",
+    "frontend pending/committed prefix",
+    "sampler ownership",
+    "scheduler/workqueue/reservation state"
+  ],
+  "separate_diagnostics": [
+    "native top2 values",
+    "full FP32 logits SHA256"
+  ],
+  "frozen_prose_correction": "PLAN/F0A fork_reason wording KV/logits is imprecise: logits are separately captured/hash-bound, not included by these serialized-state APIs. Frozen files preserved unchanged; fork admission remains NOT_IMPLEMENTABLE."
+}

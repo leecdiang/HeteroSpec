@@ -1,0 +1,127 @@
+--- PR109/worker.cpp
++++ PR112/worker.cpp
+@@ -32,8 +32,8 @@
+ extern "C" __declspec(dllimport) void llama_b570_order_enable(llama_context *,bool);
+ extern "C" __declspec(dllimport) uint64_t llama_b570_order_count(llama_context *);
+ extern "C" __declspec(dllimport) uint32_t llama_b570_order_item(llama_context *,uint64_t);
+-int consumer108=0,capacity108=4;std::string layout108;
+-json initial108=json::array();json binding108=json::array();std::string request_dir108;
++int consumer112=0,capacity112=4;std::string layout112;
++json initial112=json::array();json binding112=json::array();std::string request_dir112;
+ struct ProducerPlan {int ub;std::string role;};
+ 
+ std::string observation_mode;
+@@ -103,7 +103,7 @@
+  }
+  void require(std::string point){auto r=sample(point);emit(r);if(r["device_local_headroom_bytes"].get<int64_t>()<threshold)throw std::runtime_error("MEMORY_BLOCKED:"+point);}
+  void start(){samples.clear();violation=false;max_gap_ms=0;active=true;sample("REQUEST_BEGIN");timer=std::thread([&]{try{while(active){sample("SAFETY_PERIODIC");std::this_thread::sleep_for(std::chrono::milliseconds(100));}}catch(...){violation=true;}});}
+- json stop(){if(active){sample("ENGINEERING_END");active=false;if(timer.joinable())timer.join();}return {{"samples",samples},{"max_observed_gap_ms",max_gap_ms},{"requested_period_ms",heavy()?json(5):json(nullptr)},{"sampled_not_continuous_residency",true},{"violation",bool(violation)}};}
++ json stop(){if(active){sample("ENGINEERING_END");active=false;if(timer.joinable())timer.join();}return {{"samples",samples},{"max_observed_gap_ms",max_gap_ms},{"requested_period_ms",json(100)},{"sampled_not_continuous_residency",true},{"violation",bool(violation)}};}
+  ~Memory(){bool failed=active;auto last=stop();if(failed&&!failure_file.empty()){std::ofstream f(failure_file);f<<last.dump()<<"\n";}if(instance)vkDestroyInstance(instance,nullptr);}
+ };
+ struct Context {
+@@ -136,10 +136,10 @@
+   uint64_t g0=llama_b570_work_graphs(ctx),r0=llama_b570_work_rows(ctx);std::vector<uint64_t> widths(513);if(counted())for(int w=1;w<=512;++w)widths[w]=llama_b570_work_width(ctx,w);
+   
+   // Guard is independent of counters and observers. Draft plan belongs to its context.
+-  int phase108=phase=="PREFILL"?0:phase=="VERIFY"?1:phase=="ORDINARY"?2:phase=="PROPOSE"?3:4;
+-  if(phase108!=0&&ids.size()>(role=="TARGET"?2u:1u))throw std::runtime_error("PR108 caller width");
++  int phase112=phase=="PREFILL"?0:phase=="VERIFY"?1:phase=="ORDINARY"?2:phase=="PROPOSE"?3:4;
++  if(phase112!=0&&ids.size()>(role=="TARGET"?2u:1u))throw std::runtime_error("PR112 caller width");
+   if(role=="TARGET"&&capacity==1){if(phase=="VERIFY"||all)throw std::runtime_error("Shadow is ordinary only");}
+-  else llama_b570_geometry_bind(ctx,role=="TARGET"?0:1,phase108,phase108==0||role=="DRAFT"?0:consumer108,phase108==0?ub:(role=="DRAFT"?1:4),capacity);
++  else llama_b570_geometry_bind(ctx,role=="TARGET"?0:1,phase112,phase112==0||role=="DRAFT"?0:consumer112,phase112==0?ub:(role=="DRAFT"?1:4),capacity);
+   emit({{"event","FORWARD_START"},{"role",role},{"phase",phase},{"caller_rows",ids.size()},{"pos",pos},{"pid",GetCurrentProcessId()}});
+   int rc=llama_decode(ctx,b);
+   emit({{"event","FORWARD_RETURN"},{"role",role},{"phase",phase},{"returncode",rc},{"pid",GetCurrentProcessId()}});++decodes;llama_batch_free(b);if(rc)throw std::runtime_error("Actual native decode failure:"+std::to_string(rc));
+@@ -157,7 +157,7 @@
+   if(memory->violation)throw std::runtime_error("MEMORY_BLOCKED:ENGINEERING_PEAK");
+   if(capture){
+  json wh=json::object();for(int w=1;w<=512;++w){auto d=llama_b570_work_width(ctx,w)-widths[w];if(d)wh[std::to_string(w)]=d;}
+- trace.push_back({{"role",role},{"phase",phase},{"pos",pos},{"input_ids",ids},{"ub",llama_n_ubatch(ctx)},{"all_outputs",all},{"requested_logit_positions",[&](){std::vector<int>p;for(size_t j=0;j<ids.size();++j)if(all||j+1==ids.size())p.push_back(pos+int(j));return p;}()},{"attention_layout",phase=="PREFILL"||role=="DRAFT"?"MQ":layout108},{"output_capacity",capacity},{"caller_rows",ids.size()},{"kv_min",llama_memory_seq_pos_min(llama_get_memory(ctx),0)},{"kv_max",llama_memory_seq_pos_max(llama_get_memory(ctx),0)},{"ordered_micrograph_widths",[&](){std::vector<int>v;auto count=llama_b570_order_count(ctx);for(uint64_t i=g0;i<count;++i)v.push_back(llama_b570_order_item(ctx,i));return v;}()},{"successful_micrographs",llama_b570_work_graphs(ctx)-g0},{"occupied_rows",llama_b570_work_rows(ctx)-r0},{"physical_width_hist",wh},{"GPU_completed_stage_wall",nullptr}});
++ trace.push_back({{"role",role},{"phase",phase},{"pos",pos},{"input_ids",ids},{"ub",llama_n_ubatch(ctx)},{"all_outputs",all},{"requested_logit_positions",[&](){std::vector<int>p;for(size_t j=0;j<ids.size();++j)if(all||j+1==ids.size())p.push_back(pos+int(j));return p;}()},{"attention_layout",phase=="PREFILL"||role=="DRAFT"?"MQ":layout112},{"output_capacity",capacity},{"caller_rows",ids.size()},{"kv_min",llama_memory_seq_pos_min(llama_get_memory(ctx),0)},{"kv_max",llama_memory_seq_pos_max(llama_get_memory(ctx),0)},{"ordered_micrograph_widths",[&](){std::vector<int>v;auto count=llama_b570_order_count(ctx);for(uint64_t i=g0;i<count;++i)v.push_back(llama_b570_order_item(ctx,i));return v;}()},{"successful_micrographs",llama_b570_work_graphs(ctx)-g0},{"occupied_rows",llama_b570_work_rows(ctx)-r0},{"physical_width_hist",wh},{"GPU_completed_stage_wall",nullptr}});
+ }
+  }
+  void prefill(const std::vector<int>&ids){
+@@ -165,21 +165,21 @@
+   // PR101 final-only policy, one complete caller, context-local internal partition.
+   decode(ids,0,false,"PREFILL");
+  }
+- void handoff108(){
++ void handoff112(){
+   if(role!="TARGET"||capacity==1)return;
+   auto lo=llama_memory_seq_pos_min(llama_get_memory(ctx),0),hi=llama_memory_seq_pos_max(llama_get_memory(ctx),0);
+   std::vector<uint8_t>a,b;
+   if(capture){a.resize(llama_state_seq_get_size(ctx,0));a.resize(llama_state_seq_get_data(ctx,a.data(),a.size(),0));}
+-  llama_b570_geometry_bind(ctx,0,1,consumer108,4,capacity);
++  llama_b570_geometry_bind(ctx,0,1,consumer112,4,capacity);
+   if(lo!=llama_memory_seq_pos_min(llama_get_memory(ctx),0)||hi!=llama_memory_seq_pos_max(llama_get_memory(ctx),0))throw std::runtime_error("Phase positions changed");
+   if(capture){b.resize(llama_state_seq_get_size(ctx,0));b.resize(llama_state_seq_get_data(ctx,b.data(),b.size(),0));if(a!=b)throw std::runtime_error("Phase sequence bytes changed");
+-   auto hash=sha96(a.data(),a.size());std::ofstream f(request_dir108+"/initial.seqkv.bin",std::ios::binary);f.write((const char*)a.data(),a.size());f.close();if(!f)throw std::runtime_error("KV evidence persistence");
+-   std::ofstream after_file(request_dir108+"/handoff.after.seqkv.bin",std::ios::binary);after_file.write((const char*)b.data(),b.size());after_file.close();if(!after_file)throw std::runtime_error("After-state persistence");
+-   binding108.push_back({{"role",role},{"phase","HANDOFF"},{"kv_min",lo},{"kv_max",hi},{"serialized_sequence_sha256",hash},{"before_after_sequence_bytes_equal",true},{"cross_runtime_logical_KV_identity","NOT_CHECKED"}});
+-  }
+- }
+- void initial_logits108(){if(!capture)return;const float*l=llama_get_logits_ith(ctx,-1);auto bytes=sizeof(float)*llama_vocab_n_tokens(llama_model_get_vocab(model));
+-  std::ofstream f(request_dir108+"/"+role+".initial.logits.f32",std::ios::binary);f.write((const char*)l,bytes);f.close();if(!f)throw std::runtime_error("Initial logits persistence");initial108.push_back({{"role",role},{"bytes",bytes},{"sha256",sha96(l,bytes)},{"path",role+".initial.logits.f32"}});
++   auto hash=sha96(a.data(),a.size());std::ofstream f(request_dir112+"/initial.seqkv.bin",std::ios::binary);f.write((const char*)a.data(),a.size());f.close();if(!f)throw std::runtime_error("KV evidence persistence");
++   std::ofstream after_file(request_dir112+"/handoff.after.seqkv.bin",std::ios::binary);after_file.write((const char*)b.data(),b.size());after_file.close();if(!after_file)throw std::runtime_error("After-state persistence");
++   binding112.push_back({{"role",role},{"phase","HANDOFF"},{"kv_min",lo},{"kv_max",hi},{"serialized_sequence_sha256",hash},{"before_after_sequence_bytes_equal",true},{"cross_runtime_logical_KV_identity","NOT_CHECKED"}});
++  }
++ }
++ void initial_logits112(){if(!capture)return;const float*l=llama_get_logits_ith(ctx,-1);auto bytes=sizeof(float)*llama_vocab_n_tokens(llama_model_get_vocab(model));
++  std::ofstream f(request_dir112+"/"+role+".initial.logits.f32",std::ios::binary);f.write((const char*)l,bytes);f.close();if(!f)throw std::runtime_error("Initial logits persistence");initial112.push_back({{"role",role},{"bytes",bytes},{"sha256",sha96(l,bytes)},{"path",role+".initial.logits.f32"}});
+  }
+  void boundary_snapshot96(int index,int sampled){
+  if(!diagnostic96||!capture||role!="TARGET"||cuts96.count(boundary96)==0)return;
+@@ -207,7 +207,7 @@
+ int main(int argc,char **argv){
+  try{
+   if(argc!=12)throw std::runtime_error("Arguments: profile target draft|NONE ub mode k trace_dir probe|resident observation_mode");
+-  std::string profile=argv[1],target=argv[2],draft=argv[3],mode=argv[5],dir=argv[7],action=argv[8];int ub=std::stoi(argv[4]),k=std::stoi(argv[6]);layout108=argv[10];capacity108=std::stoi(argv[11]);consumer108=layout108=="MQ"||layout108=="ordinary"?0:layout108=="PQ"?1:layout108=="QB"?2:-1;if(consumer108<0||(capacity108!=1&&capacity108!=4))throw std::runtime_error("Layout/capacity contract");observation_mode=argv[9];if(observation_mode!="baseline"&&observation_mode!="counts"&&observation_mode!="lite"&&observation_mode!="diagnostic")throw std::runtime_error("Unknown observation mode");{std::ifstream f(std::filesystem::path(argv[0]).parent_path()/"COUNTER_HASH.txt");std::getline(f,counter_hash);if(counter_hash.size()!=64)throw std::runtime_error("Counter semantics binding missing");}
++  std::string profile=argv[1],target=argv[2],draft=argv[3],mode=argv[5],dir=argv[7],action=argv[8];int ub=std::stoi(argv[4]),k=std::stoi(argv[6]);layout112=argv[10];capacity112=std::stoi(argv[11]);consumer112=layout112=="MQ"||layout112=="ordinary"?0:layout112=="PQ"?1:layout112=="QH_C"?3:layout112=="QH_D"?4:-1;if(consumer112<0||(capacity112!=1&&capacity112!=4))throw std::runtime_error("Layout/capacity contract");observation_mode=argv[9];if(observation_mode!="baseline"&&observation_mode!="counts"&&observation_mode!="lite"&&observation_mode!="diagnostic")throw std::runtime_error("Unknown observation mode");{std::ifstream f(std::filesystem::path(argv[0]).parent_path()/"COUNTER_HASH.txt");std::getline(f,counter_hash);if(counter_hash.size()!=64)throw std::runtime_error("Counter semantics binding missing");}
+   int64_t threshold=536870912;if(profile!="STANDARD_Q6")throw std::runtime_error("PR90 only STANDARD_Q6");
+   std::string tf=std::filesystem::path(target).filename().string(),df=std::filesystem::path(draft).filename().string();
+   if(tf!=(profile=="STANDARD_Q6"?"Meta-Llama-3.1-8B-Instruct-Q6_K.gguf":"Meta-Llama-3.1-8B-Instruct-Q8_0.gguf"))throw std::runtime_error("Profile target quantization mismatch");
+@@ -216,10 +216,10 @@
+   if(mode!="ordinary"&&mode!="native_greedy"&&mode!="vulkan_batched_repair"&&mode!="N_unrepaired")throw std::runtime_error("Unknown mode");
+   if(k!=1||action!="resident")throw std::runtime_error("Unknown k/action");
+   if(profile=="TIGHT_Q8"&&mode!="ordinary"&&ub!=32)throw std::runtime_error("Tight candidate prefill must be32");
+-  if(draft!="NONE"&&df!="Llama-3.2-1B-Instruct-Q4_K_M.gguf")throw std::runtime_error("PR90 only Q4 draft");if(draft!="NONE"&&mode!="native_greedy")throw std::runtime_error("PR108 fixed generic k1");if(mode=="ordinary"&&draft!="NONE")throw std::runtime_error("Ordinary draft forbidden");
++  if(draft!="NONE"&&df!="Llama-3.2-1B-Instruct-Q4_K_M.gguf")throw std::runtime_error("PR90 only Q4 draft");if(draft!="NONE"&&mode!="native_greedy")throw std::runtime_error("PR112 fixed generic k1");if(mode=="ordinary"&&draft!="NONE")throw std::runtime_error("Ordinary draft forbidden");
+   std::filesystem::create_directories(dir);Memory memory(profile,threshold);memory.require("BEFORE_LOAD");ggml_backend_load_all();llama_backend_init();
+   // All speculative and matched modes reserve four outputs, including smaller k.
+-  Context tgt(target,"TARGET",ub,capacity108,&memory);std::unique_ptr<Context>dft;if(draft!="NONE"){dft=std::make_unique<Context>(draft,"DRAFT",128,1,&memory);vocab_guard(tgt,*dft);}
++  Context tgt(target,"TARGET",ub,capacity112,&memory);std::unique_ptr<Context>dft;if(draft!="NONE"){dft=std::make_unique<Context>(draft,"DRAFT",128,1,&memory);vocab_guard(tgt,*dft);}
+   if(mode=="vulkan_batched_repair"){llama_b570_pilot_bind_phase_ubatch(tgt.ctx,1);memory.require("REPAIR_WORKSPACE");llama_b570_pilot_bind_phase_ubatch(tgt.ctx,ub);}
+   memory.require("LOADED");emit({{"event","READY"},{"profile",profile},{"mode",mode},{"pid",GetCurrentProcessId()},{"forward_calls",0},{"residency_status","RESIDENCY_UNKNOWN"},{"paging_observation","UNAVAILABLE_UNINSTRUMENTED_WDDM"}});
+   if(action=="probe"){std::string finish;if(!std::getline(std::cin,finish)||finish!="PROBE_FINISH")throw std::runtime_error("Explicit zero-forward probe close required");emit({{"event","PROBE_COMPLETE"},{"forward_calls",0},{"target_graphs",llama_b570_work_graphs(tgt.ctx)},{"draft_graphs",dft?llama_b570_work_graphs(dft->ctx):0}});return 0;}
+@@ -227,8 +227,8 @@
+    auto req=json::parse(line);if(req.value("op","")=="CHECK"){memory.require("PRE_REQUEST");checked=true;emit({{"event","CHECK_OK"},{"pid",GetCurrentProcessId()}});continue;}
+    if(!checked)throw std::runtime_error("Explicit outside-timer memory admission required");checked=false;std::string rid=req.at("request_id");
+    observation_mode=req.value("observation_mode",observation_mode);if(observation_mode!="baseline"&&observation_mode!="counts"&&observation_mode!="lite"&&observation_mode!="diagnostic")throw std::runtime_error("Unknown request observation mode");
+-   initial108=json::array();binding108=json::array();request_dir108=dir;auto normalized=req.at("normalized108");
+-   if(normalized.at("recipe").at("continuation")!=layout108||normalized.at("target_output_capacity")!=capacity108||normalized.at("producer_plan").at("ubatch")!=ub||normalized.at("prompt_ids")!=req.at("prompt_ids")||normalized.at("cap")!=req.at("cap")||normalized.at("mode")!=observation_mode||normalized.at("recipe").at("draft")!=(draft!="NONE"))throw std::runtime_error("Wire/CLI role mismatch");
++   initial112=json::array();binding112=json::array();request_dir112=dir;auto normalized=req.at("normalized112");
++   if(normalized.at("recipe").at("continuation")!=layout112||normalized.at("target_output_capacity")!=capacity112||normalized.at("producer_plan").at("ubatch")!=ub||normalized.at("prompt_ids")!=req.at("prompt_ids")||normalized.at("cap")!=req.at("cap")||normalized.at("mode")!=observation_mode||normalized.at("recipe").at("draft")!=(draft!="NONE"))throw std::runtime_error("Wire/CLI role mismatch");
+    auto start=clock_type::now();auto inp=req.at("prompt_ids").get<std::vector<int>>();int cap=req.at("cap");bool capture=req.at("capture");if(capture!=(observation_mode=="diagnostic"))throw std::runtime_error("Observation mismatch");if(capture&&!heavy())throw std::runtime_error("Full capture only heavy engineering");Work current(int(inp.size()));work=&current;
+  diagnostic96=req.value("phase96_diagnostic",false);sham96=req.value("own_bind_sham",false);cuts96.clear();boundaries96=json::array();prefix96.clear();boundary96=0;sham_count96=0;
+  if(diagnostic96&&!heavy())throw std::runtime_error("Boundary capture needs heavy");
+@@ -236,7 +236,7 @@
+  if(req.contains("boundary_cuts"))for(int c:req["boundary_cuts"].get<std::vector<int>>()){if(c<0||c>127)throw std::runtime_error("Cut out of range");cuts96.insert(c);}
+    if(inp.empty()||inp.size()>768||cap<1||cap>128||inp.size()+cap+k+1>1024)throw std::runtime_error("Request bounds");
+    auto *v=llama_model_get_vocab(tgt.model);for(int id:inp)if(id<0||id>=llama_vocab_n_tokens(v))throw std::runtime_error("Prompt ID invalid");
+-   tgt.capture=capture;tgt.reset();if(dft){dft->capture=capture;dft->reset();}memory.failure_file=dir+"/"+rid+".failed-memory.json";memory.start();tgt.prefill(inp);memory.require("TARGET_PREFILL");tgt.initial_logits108();tgt.handoff108();if(dft){dft->prefill(inp);memory.require("DRAFT_PREFILL");dft->initial_logits108();}
++   tgt.capture=capture;tgt.reset();if(dft){dft->capture=capture;dft->reset();}memory.failure_file=dir+"/"+rid+".failed-memory.json";memory.start();tgt.prefill(inp);memory.require("TARGET_PREFILL");tgt.initial_logits112();tgt.handoff112();if(dft){dft->prefill(inp);memory.require("DRAFT_PREFILL");dft->initial_logits112();}
+    if(mode=="vulkan_batched_repair"){work->inc("phase_binding_calls");auto bind_begin=timed()?clock_type::now():clock_type::time_point{};auto pos=llama_memory_seq_pos_max(llama_get_memory(tgt.ctx),0);std::vector<uint8_t>before,after;if(capture){before.resize(llama_state_get_size(tgt.ctx));before.resize(llama_state_get_data(tgt.ctx,before.data(),before.size()));}llama_b570_pilot_bind_phase_ubatch(tgt.ctx,1);if(llama_memory_seq_pos_max(llama_get_memory(tgt.ctx),0)!=pos)throw std::runtime_error("Phase KV position changed");if(capture){after.resize(llama_state_get_size(tgt.ctx));after.resize(llama_state_get_data(tgt.ctx,after.data(),after.size()));if(before!=after)throw std::runtime_error("Phase KV bytes changed");tgt.trace.push_back({{"phase","BINDING"},{"before_bytes",before.size()},{"after_bytes",after.size()},{"actual_full_state_bytes_equal",before==after},{"from_ub",ub},{"to_ub",1}});}work->span("PHASE_BINDING",bind_begin,"INHERITED_COMPLETION_SYNC_AND_POSSIBLE_RESERVATION_NOT_EXCLUSIVE_WALL");memory.require("AFTER_PHASE_BINDING");}
+    std::vector<int> out;std::vector<bool> flags;json verifies=json::array();int proposed=0,accepted=0,rollbacks=0;int next=tgt.sample(-1);int base=int(inp.size());
+    auto commit=[&](int id){return b570_commit(out,flags,id,cap,llama_vocab_is_eog(v,id));};
+@@ -255,7 +255,7 @@
+    llama_synchronize(tgt.ctx);work->inc("inherited_explicit_sync_calls");if(dft){llama_synchronize(dft->ctx);work->inc("inherited_explicit_sync_calls");}memory.require("REQUEST_COMPLETE");auto mem=memory.stop();if(counted()){work->w["output_ids_count"]=out.size();work->f["reconcile_output_ids"]=out.size();}
+    auto end=clock_type::now();std::string stop=flags.back()?"EOG":"CAP";
+    json result={{"event","RESULT"},{"request_id",rid},{"pid",GetCurrentProcessId()},{"profile",profile},{"mode",mode},{"ids",out},{"eog",flags},{"length",out.size()},{"terminal_id",out.back()},{"stop_reason",stop},{"cap",cap},{"prompt_ids",inp},{"reset_target_min",tgt.reset_min},{"reset_target_max",tgt.reset_max},{"reset_draft_min",dft?json(dft->reset_min):json(nullptr)},{"reset_draft_max",dft?json(dft->reset_max):json(nullptr)},{"target_decode_calls",tgt.decodes},{"draft_decode_calls",dft?dft->decodes:0},{"proposed",proposed},{"accepted",accepted},{"rollback_operations",rollbacks},{"target_continuation_ub",llama_n_ubatch(tgt.ctx)},{"native_request_ms",std::chrono::duration<double,std::milli>(end-start).count()},{"residency_status","RESIDENCY_UNKNOWN"},{"memory_violation",bool(memory.violation)}};
+-   result["initial108"]=initial108;result["binding108"]=binding108;result["normalized108"]=normalized;result["effective_k108"]=dft?1:0;result["native_arg_k108"]=k;result["layout108"]=layout108;result["observation_mode"]=observation_mode;result["actual_condition"]={{"prefill_ub",ub},{"continuation_ub",llama_n_ubatch(tgt.ctx)},{"output_capacity",capacity108},{"maximum_k",dft?1:0},{"logical_batch",512},{"n_ctx",1024},{"threads",10},{"kv","F16"},{"flash_attention",false}};
++   result["initial112"]=initial112;result["binding112"]=binding112;result["normalized112"]=normalized;result["effective_k112"]=dft?1:0;result["native_arg_k112"]=k;result["layout112"]=layout112;result["observation_mode"]=observation_mode;result["actual_condition"]={{"prefill_ub",ub},{"continuation_ub",llama_n_ubatch(tgt.ctx)},{"output_capacity",capacity112},{"maximum_k",dft?1:0},{"logical_batch",512},{"n_ctx",1024},{"threads",10},{"kv","F16"},{"flash_attention",false}};
+    result["workload"]=counted()?work->w:json(nullptr);result["feature_units"]=counted()?work->f:json(nullptr);
+    result["observation"]={{"phase_timers",timed()},{"heavy_capture",capture},{"etw",false},{"added_sync",heavy()}};
+    result["elapsed_hooks"]=timed()?work->spans:json(nullptr);result["component_completed_wall"]=nullptr;result["GPU_completion_event_ms"]=nullptr;

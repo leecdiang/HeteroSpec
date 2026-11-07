@@ -1,0 +1,48 @@
+\section{Execution and Measurement Contracts}
+\label{sec:contracts}
+\subsection{Output as a registered system requirement}
+Fix model weights, tokenizer, prompt format, sampler, runtime, backend, and output endpoint. Let $R(x)$ be the paid ordinary reference for input $x$. Qualification compares token IDs, committed length, terminal token when available, and stop reason. It measures reference reproduction, not program correctness, equal logits, or distributional equivalence.
+
+The RTX input expansion checks the full saved response array through runtime end-of-generation (EOG) or the token cap. B570 registers the prefix through the first runtime EOG or token 128. Its raw response can contain a suffix while satisfying that endpoint; actual suffix work remains in candidate cost. Endpoint preservation and raw-array equality are separate results.
+
+This contract fixes what a repair must preserve before costs are interpreted. A faster execution with shorter or divergent output is not a qualified speedup. Finite qualification supports the recorded inputs and configuration, not arbitrary future inputs.
+
+\subsection{The state--current-path cross}
+At a naturally reached boundary, let $p$ be the committed token prefix, $s$ the retained numerical/runtime state, and $e$ the current recipe. The decision is
+\begin{equation}
+d=F(p,s,e).
+\end{equation}
+Holding $p$ fixed and crossing two natural donors $s_0,s_1$ with two current recipes $e_0,e_1$ yields four observations. Within-row differences identify a current-recipe effect for that donor. Within-column differences identify a donor-state effect for that recipe. A recipe effect under only one donor is a local interaction. A discrete null does not imply equal continuous scores.
+
+A valid cross requires cache ownership and position alignment, faithful restoration, and a shared continuation boundary. Own-path shams check whether restoring each donor under its own recipe reproduces the native decision. Natural donors use live proposals rather than a future proposal tape supplied to the candidate. These controls support local interventions; they do not isolate a unique operator or prove complete counterfactual suffix equality.
+
+\subsection{Repair placement and the matched comparator}
+A repair constrains specific execution phases rather than merely declaring execution serialized or changing a global capacity option. The RTX family has four switches: target prefill, target continuation, draft prefill, and draft continuation. A passing switch set determines which phases require the local attention-layout constraint on the measured panel.
+
+The system boundary extends beyond verification. Restored output requires valid acceptance, committed state, stopping, and subsequent continuation. Leaving the draft unconstrained in a passing panel does not license arbitrary draft behavior in every implementation. B570 changes several runtime settings together and is evaluated as a whole recipe.
+
+Three paths assess the repair:
+\begin{itemize}
+\item $R$: the paid ordinary reference without a draft;
+\item $M$: the candidate's target path and prefill configuration, without a draft;
+\item $C$: that target path with native drafting and verification.
+\end{itemize}
+$R/C$ measures the full deployment change; $M/C$ measures speculation's increment on the repaired path. $R/M$ exposes the target-path change available without speculation. A qualified $R$ is not necessarily the fastest possible ordinary decoder.
+
+\subsection{Cost estimators and their interpretation}
+For task $i$, take the median absolute time $t_{i,b}$ or $t_{i,c}$ within each condition, then the ratio. The late RTX estimator is
+\begin{equation}
+S_{b/c}=\exp\left(\frac{1}{n}\sum_{i=1}^{n}\log\frac{t_{i,b}}{t_{i,c}}\right).
+\label{eq:gm}
+\end{equation}
+Values above one favor the candidate. Repetitions are collapsed before the ratio, not counted as independent inputs. Descriptive bootstrap intervals resample tasks after this collapse. For common tasks, timers, and aggregation,
+\begin{equation}
+S_{R/C}=S_{R/M}S_{M/C}.
+\label{eq:identity}
+\end{equation}
+This identity links comparisons, not additive component costs. Request minus generation time or differences between ratios cannot identify attention, transfer, synchronization, or host overhead without independent profiling.
+
+Late RTX generation excludes prompt processing, its first-sample boundary, and some final bookkeeping. Resident-request time covers complete HTTP response receipt and parsing, excluding loading, warmup, and shutdown; asynchronous post-response cleanup is not certified inside it. Historical studies retain their boundaries and, on 358H, a different median-of-paired-ratios estimator.
+
+Qualification precedes the speed claim. Both aggregates and task variation matter: a positive geometric mean can coexist with regressions. These measurements characterize operating points, not global optimality or production concurrency.
+

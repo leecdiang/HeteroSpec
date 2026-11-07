@@ -1,0 +1,39 @@
+\section{Study Design and Evidence Organization}
+\label{sec:studies}
+\subsection{Systems and research questions}
+Late RTX studies use an RTX 5070 Ti Laptop, Qwen3-8B/Qwen3-0.6B Q8\_0, the frozen non-flash CUDA graph, greedy sampling with seed 123, context 4096, 24 host threads, and one slot. B570 uses Qwen3 with its Vulkan recipe. Historical M4 uses Metal; 358H combines a Vulkan target with CPU or NPU drafting, including symmetric INT4 OpenVINO drafting. Hardware, runtime, backend, and interfaces jointly vary.
+
+We ask three questions:
+\begin{enumerate}
+\item Which decision changes follow retained state, the current recipe, or their interaction, and what does a simpler execution already explain?
+\item Which phases need a finite constraint to qualify the reference, and where does that repair cease to qualify?
+\item When qualification holds, does paid cost improve against ordinary and matched draft-free execution, and what simpler alternative captures the available benefit?
+\end{enumerate}
+These questions organize the cases; experiments are not pooled into a matched platform comparison.
+
+\begin{table}[t]
+\centering\small
+\caption{Evidence roles. Counts remain campaign-specific; the supplement gives the expanded inventory.}
+\label{tab:studies}
+\begin{tabularx}{\linewidth}{@{}p{.20\linewidth}XX@{}}\toprule
+Role & Main evidence & What it establishes\\\midrule
+Prediction and simpler paths & B57024, RTX43, fresh RTX19 bridge, offline selection & Reproduction, repair/regression, and need for added complexity\\
+Local diagnosis & RTX donors and width boundary; B570 crosses & Selected-state/current-recipe effects with shams\\
+Finite repair & RTX 16 masks and exposed scope costs & Qualification and inclusion-minimal scope in a fixed family\\
+Input expansion & RTX24, four conditions, four repetitions & Frozen-recipe qualification and paid two-baseline costs\\
+Cost boundaries & Width, B57015, historical M4/358H & Qualified failures and bounded opportunities\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Exposure, qualification, and timing}
+RTX separates four exposed HumanEval probes~\cite{humaneval}, the 16-mask factorial, exposed qualification/cost panels, a frozen MBPP expansion~\cite{mbpp}, and width/length tests. Exposure accounting before reference generation identifies 24 eligible MBPP inputs. Project-unused means unused in accessible experiment history, not absent from pretraining or a new model family. They become exposed for later analysis once measured.
+
+The expansion has 24 tasks, four conditions, and four repetitions: 384 formal paid requests and 16 excluded warmups. All conditions have 96 qualified responses, with stable references. Output lengths range from 11 to 128; 23 tasks end at EOG and one at the cap. Capture is off. Four condition-specific resident processes per round use rotated condition and task orders; recorded cache reuse is zero. A separate request-reset study adds no independent expansion inputs.
+
+Auxiliary diagnostic forwards are not latency measurements. Discovery and screening costs are not pooled with confirmation. B570's endpoint rule does not certify RTX full arrays; historical parsed-text checks do not acquire the strength of later direct-ID checks retrospectively.
+
+\subsection{Reconstruction and access}
+This reconstruction organizes saved experiments and launches no inference, GPU campaign, or warmup. The late 26-file bundle is preserved byte-for-byte. Historical source extracts are matched to latest repository blobs. The build recomputes public RTX costs, qualification-hash joins, B570 costs, and selected workload summaries.
+
+Arithmetic validation inherits original-host verification of private outputs and timers. It does not independently reopen every raw archive, weight, or runtime. The source package provides calculations and provenance boundaries; full independent hardware replay is a different task.
+

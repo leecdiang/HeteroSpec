@@ -1,0 +1,41 @@
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=3 by 1,horizontal sep=.68cm},
+width=.305\textwidth,height=6.1cm,ymin=.5,ymax=2.65,ytick={1,2},
+tick label style={font=\footnotesize},title style={font=\small},label style={font=\footnotesize,align=center},
+axis lines*=left,axis line style={aux,line width=.45pt},tick style={aux},
+grid=major,grid style={gray!12},clip=false]
+\nextgroupplot[title={\textbf{A} Layout increment},xlabel={$T_{\QB}/\bar T_{\PQ}$\\$<1$: QB faster},xmin=.82,xmax=1.18,xtick={.85,1,1.15},yticklabels={B570,RTX}]
+\addplot[aux,dashed,line width=.65pt] coordinates {(1,.5)(1,2.65)};
+\addplot[aux,densely dotted] coordinates {(.98,.5)(.98,2.65)};
+\addplot[only marks,mark=o,mark size=1.3pt,mark options={draw=qualified,fill=white,line width=.5pt},qualified] coordinates {(1.139826244244,1.790) (0.945849532204,1.817) (0.923908031504,1.844) (0.922589990337,1.871) (1.037840796194,1.898) (1.060687483585,1.925) (0.964678996272,1.952) (1.095850644734,1.979) (0.867051748054,2.006) (1.075364022151,2.033) (1.063243809835,2.060) (1.031135431587,2.087) (0.929089961795,2.114) (0.942869964094,2.141) (0.910151770722,2.168) (0.965631764151,2.195)};
+\addplot[only marks,mark=diamond*,mark size=2.8pt,qualified] coordinates {(0.989283832162,2)};
+\node[font=\footnotesize,text=qualified,anchor=south] at (axis cs:0.989283832162,2.23){0.9893};
+\addplot[only marks,mark=o,mark size=1.3pt,mark options={draw=qualified,fill=white,line width=.5pt},qualified] coordinates {(0.994434518096,0.790) (0.994346955730,0.817) (0.997636159223,0.844) (0.998559725528,0.871) (0.995388158443,0.898) (0.990654252807,0.925) (0.997896355971,0.952) (0.997327956447,0.979) (0.997377153779,1.006) (0.992338895142,1.033) (0.996575875826,1.060) (0.998197853655,1.087) (0.991359732503,1.114) (0.990675696924,1.141) (0.997016709214,1.168) (0.992578048127,1.195)};
+\addplot[only marks,mark=diamond*,mark size=2.8pt,qualified] coordinates {(0.995143975812,1)};
+\node[font=\footnotesize,text=qualified,anchor=south] at (axis cs:0.995143975812,1.23){0.9951};
+\nextgroupplot[title={\textbf{B} Identical-PQ control},xlabel={$T_{\PQ_A}/T_{\PQ_B}$\\identical implementation},xmin=.80,xmax=1.18,xtick={.85,1,1.15},yticklabels={,}]
+\addplot[aux,dashed,line width=.65pt] coordinates {(1,.5)(1,2.65)};
+\addplot[aux,densely dotted] coordinates {(.98,.5)(.98,2.65)};
+\addplot[aux,densely dotted] coordinates {(1.02,.5)(1.02,2.65)};
+\addplot[only marks,mark=o,mark size=1.3pt,mark options={draw=target,fill=white,line width=.5pt},target] coordinates {(0.995683567795,1.790) (0.948687206972,1.817) (1.002893498473,1.844) (0.937857123081,1.871) (1.018199057240,1.898) (0.928511175631,1.925) (1.133151458846,1.952) (0.908678851591,1.979) (0.836859699631,2.006) (0.996816614475,2.033) (0.950265018054,2.060) (1.012025769051,2.087) (0.951652309469,2.114) (0.953906893171,2.141) (0.890919556111,2.168) (1.005416311802,2.195)};
+\addplot[only marks,mark=diamond*,mark size=2.8pt,target] coordinates {(0.964859750025,2)};
+\node[font=\scriptsize,text=aux,anchor=south] at (axis cs:0.99,2.24){max. task imbalance 5.21\%};
+\addplot[only marks,mark=o,mark size=1.3pt,mark options={draw=target,fill=white,line width=.5pt},target] coordinates {(1.000263373246,0.790) (0.998378236952,0.817) (0.999694644835,0.844) (1.001035132081,0.871) (0.997047068817,0.898) (1.001825902924,0.925) (1.000688705872,0.952) (0.998169208021,0.979) (1.001209202542,1.006) (0.997665280704,1.033) (0.998639552710,1.060) (0.998604248688,1.087) (0.999614281800,1.114) (0.992960821525,1.141) (1.000503281379,1.168) (0.972323667784,1.195)};
+\addplot[only marks,mark=diamond*,mark size=2.8pt,target] coordinates {(0.997390415137,1)};
+\node[font=\scriptsize,text=aux,anchor=south] at (axis cs:0.99,1.24){max. task imbalance 0.75\%};
+\nextgroupplot[title={\textbf{C} Value of drafting},xlabel={Service / $T_R$ (log scale)\\$<1$: speculation faster},xmode=log,log basis x=10,xmin=.44,xmax=3.45,xtick={.5,1,2,3},xticklabels={0.5,1,2,3},yticklabels={,}]
+\addplot[aux,dashed,line width=.65pt] coordinates {(1,.5)(1,2.65)};
+\addplot[only marks,mark=o,mark size=1.1pt,mark options={draw=qualified,fill=white,line width=.45pt},qualified] coordinates {(0.860709500935,2.090) (0.626760614714,2.103) (0.620301508760,2.116) (0.536318432454,2.129) (0.605208924945,2.142) (0.598746155267,2.155) (0.643792756015,2.168) (0.587714386461,2.181) (0.507935515395,2.194) (0.574851260097,2.207) (0.656442531287,2.220) (0.530408922715,2.233) (0.516897971637,2.246) (0.519814743067,2.259) (0.528263723757,2.272) (0.492411464129,2.285)};
+\addplot[only marks,mark=diamond*,mark size=2.5pt,qualified] coordinates {(0.582325110976,2.190)};
+\node[font=\scriptsize,text=qualified,anchor=south] at (axis cs:0.582325110976,2.300){QB 0.5823};
+\addplot[only marks,mark=o,mark size=1.1pt,mark options={draw=target,fill=white,line width=.45pt},target] coordinates {(0.755123428050,1.720) (0.662643045616,1.733) (0.671388804522,1.746) (0.581318286640,1.759) (0.583142353976,1.772) (0.564488753316,1.785) (0.667364748795,1.798) (0.536308838513,1.811) (0.585819146937,1.824) (0.534564341243,1.837) (0.617396052735,1.850) (0.514393072401,1.863) (0.556348677623,1.876) (0.551311170004,1.889) (0.580412784714,1.902) (0.509937102744,1.915)};
+\addplot[only marks,mark=square*,mark size=2.5pt,target] coordinates {(0.588633001010,1.820)};
+\node[font=\scriptsize,text=target,anchor=south] at (axis cs:0.588633001010,1.930){PQ 0.5886};
+\addplot[only marks,mark=o,mark size=1.1pt,mark options={draw=qualified,fill=white,line width=.45pt},qualified] coordinates {(2.594995842505,1.090) (2.670002306074,1.103) (2.622363844693,1.116) (2.603504205863,1.129) (2.601387062271,1.142) (2.645054922828,1.155) (2.619781081148,1.168) (2.604889445075,1.181) (2.602635519004,1.194) (2.647093847080,1.207) (2.619384718054,1.220) (2.602523908884,1.233) (2.592298609216,1.246) (2.645997993711,1.259) (2.617612598821,1.272) (2.628099334862,1.285)};
+\addplot[only marks,mark=diamond*,mark size=2.5pt,qualified] coordinates {(2.619762936381,1.190)};
+\node[font=\scriptsize,text=qualified,anchor=south] at (axis cs:2.619762936381,1.300){QB 2.6198};
+\addplot[only marks,mark=o,mark size=1.1pt,mark options={draw=target,fill=white,line width=.45pt},target] coordinates {(2.609519073689,0.720) (2.685181757420,0.733) (2.628577383096,0.746) (2.607259374984,0.759) (2.613439832700,0.772) (2.670008143944,0.785) (2.625303785781,0.798) (2.611868471385,0.811) (2.609479783192,0.824) (2.667530074694,0.837) (2.628384633415,0.850) (2.607222505392,0.863) (2.614891975358,0.876) (2.670902296209,0.889) (2.625445064894,0.902) (2.647750813975,0.915)};
+\addplot[only marks,mark=square*,mark size=2.5pt,target] coordinates {(2.632546646573,0.820)};
+\node[font=\scriptsize,text=target,anchor=south] at (axis cs:2.632546646573,0.930){PQ 2.6325};
+\end{groupplot}
+\end{tikzpicture}

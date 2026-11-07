@@ -1,0 +1,95 @@
+{
+  "study": "B570_PREFILL_DIAGNOSTIC_V1",
+  "version": 1,
+  "tasks": [
+    "HumanEval/58",
+    "HumanEval/156",
+    "HumanEval/134",
+    "HumanEval/42",
+    "HumanEval/122",
+    "HumanEval/114",
+    "HumanEval/93",
+    "HumanEval/115",
+    "HumanEval/151",
+    "HumanEval/63",
+    "HumanEval/125",
+    "HumanEval/133",
+    "HumanEval/43",
+    "HumanEval/139",
+    "HumanEval/77",
+    "HumanEval/35",
+    "HumanEval/27",
+    "HumanEval/34",
+    "HumanEval/145",
+    "HumanEval/82",
+    "HumanEval/154",
+    "HumanEval/78",
+    "HumanEval/96",
+    "HumanEval/138"
+  ],
+  "cases": [
+    "HumanEval/134",
+    "HumanEval/42",
+    "HumanEval/145",
+    "HumanEval/138"
+  ],
+  "conditions": [
+    "R",
+    "T0",
+    "N0",
+    "T1",
+    "N1"
+  ],
+  "repetitions": 3,
+  "planned": 360,
+  "base_commit": "3dac2600f84955b36944a6bd19574577775ccdfb",
+  "science_commit": "01682f3b992a11b36b309fbd6c9e9950f1dc5d89",
+  "endpoint": "inclusive-first-runtime-EOG or first 128 IDs; retain raw native overshoot exactly as legacy collector",
+  "candidate": "target prefill context UB128, pending first sample in that context, serialized KV plus post-sample sampler clone to UB1; same transfer in T0/N0; draft stays UB1",
+  "caller_grouping": {
+    "target_only": "common_prompt_batch_decode chunks <=512",
+    "native": "prompt[:-1] then prompt[-1]; unchanged across N0/N1"
+  },
+  "known_grouping_difference": "T1 uses original H1 grouping, N1 uses original native grouping; comparison is migration across these preserved callers, not identical prefill batch APIs",
+  "g0_tasks": [
+    "HumanEval/134",
+    "HumanEval/42",
+    "HumanEval/145",
+    "HumanEval/138",
+    "HumanEval/58"
+  ],
+  "g0_repetitions": 3,
+  "g0_variants": [
+    "R_old",
+    "T_old",
+    "N_old",
+    "R",
+    "T_plain",
+    "N_plain",
+    "T0",
+    "N0"
+  ],
+  "order": [
+    "G0",
+    "PROTOCOL_FROZEN",
+    "BASELINES",
+    "T1_CAPTURE",
+    "T1_SEALED",
+    "N1_LIVE",
+    "ANALYZE",
+    "PACKAGE",
+    "COMPLETE"
+  ],
+  "retries": {
+    "infrastructure": 2,
+    "valid_output": 0,
+    "deterministic_crash": 0,
+    "select": "first valid complete attempt; never rerun different valid IDs"
+  },
+  "budget_hours": 10,
+  "analysis_reserve_hours": 0.75,
+  "exposure": "all 24 tasks previously exposed; no candidate native output seen before seal",
+  "isolation": "native process receives asset paths, prompt and fixed config only; evaluation arrays not supplied; shared OS is not adversarial isolation",
+  "timing": "local ledger supports ordering, no independently certified absolute timestamp",
+  "performance_claims": false
+}

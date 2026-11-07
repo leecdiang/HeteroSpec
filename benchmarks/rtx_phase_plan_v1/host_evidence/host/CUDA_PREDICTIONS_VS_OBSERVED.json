@@ -1,0 +1,75 @@
+{
+  "rows": [
+    {
+      "family": "Qwen",
+      "SIMPLE": {
+        "MMVQ": 15702,
+        "quantization": 10473,
+        "all_kernel_activities": 45633
+      },
+      "LOCAL": {
+        "MMVQ": 10473,
+        "quantization": 10473,
+        "all_kernel_activities": 40404
+      },
+      "observed_SIMPLE_minus_LOCAL": {
+        "MMVQ": 5229,
+        "quantization": 0,
+        "all_kernel_activities": 5229
+      },
+      "prediction": {
+        "prompt_tokens": 99,
+        "layers": 36,
+        "outer_prefill_widths": [
+          32,
+          32,
+          32,
+          3
+        ],
+        "wide_projection_nodes_per_block": 249,
+        "expected_SIMPLE_minus_LOCAL_MMVQ_launches": 5229,
+        "expected_SIMPLE_minus_LOCAL_quantization_launches": 0
+      },
+      "predicted_MMVQ_matches": true,
+      "predicted_quantization_matches": true,
+      "zero_dropped_records": true,
+      "activity_count_is_not_a_host_launch_API_count": true
+    },
+    {
+      "family": "Smol",
+      "SIMPLE": {
+        "MMVQ": 11882,
+        "quantization": 9077,
+        "all_kernel_activities": 36599
+      },
+      "LOCAL": {
+        "MMVQ": 9242,
+        "quantization": 9242,
+        "all_kernel_activities": 34289
+      },
+      "observed_SIMPLE_minus_LOCAL": {
+        "MMVQ": 2640,
+        "quantization": -165,
+        "all_kernel_activities": 2310
+      },
+      "prediction": {
+        "prompt_tokens": 77,
+        "layers": 24,
+        "outer_prefill_widths": [
+          32,
+          32,
+          13
+        ],
+        "wide_projection_nodes_per_block": 165,
+        "expected_SIMPLE_minus_LOCAL_MMVQ_launches": 2640,
+        "expected_SIMPLE_minus_LOCAL_quantization_launches": -165
+      },
+      "predicted_MMVQ_matches": true,
+      "predicted_quantization_matches": true,
+      "zero_dropped_records": true,
+      "activity_count_is_not_a_host_launch_API_count": true
+    }
+  ],
+  "CUDA_activity_not_clean_timing": true,
+  "no_speedup_inferred_from_counts": true
+}

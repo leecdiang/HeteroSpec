@@ -192,4 +192,3 @@ python /path/to/pinned/linux_transfer_v1/readback_export.py --export .
 
 M2, additional model panels, rentals, manuscript edits and automatic merges are
 not part of this result.
-

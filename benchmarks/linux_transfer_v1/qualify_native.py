@@ -195,8 +195,10 @@ class Bank:
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--work',required=True);p.add_argument('--repo',required=True);p.add_argument('--epoch',default='qualification-01');a=p.parse_args()
  s=Study(a.work,a.repo,a.epoch)
- for family in ('Qwen','Smol'):s.matrix(family)
- for family in ('Qwen','Smol'):s.natural(family)
+ # Complete the primary-family geometry AND transaction checks before applying
+ # the same already recorded reader/comparison rules to structural transfer.
+ for family in ('Qwen','Smol'):
+  s.matrix(family);s.natural(family)
  reports=[read(p) for p in s.reports];natural=[x for x in reports if 'roots' in x]
  need(len(natural)==12 and all(x['passed'] for x in reports),'All controls/model geometries required')
  eog=[{'family':x['family'],'arm':x['arm'],'root':r['root']} for x in natural for r in x['roots'] if r['terminal_kind']=='EOG']

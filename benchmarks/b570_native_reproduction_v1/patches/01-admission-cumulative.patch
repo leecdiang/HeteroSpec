@@ -1,0 +1,60 @@
+--- a/ggml/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -10254,6 +10254,7 @@
+         ggml_vk_mul_mat_vec_p021_f16_f32(ctx, subctx, cgraph, node_idx);
+     } else if (src0->type == GGML_TYPE_F16 && !ggml_is_contiguous(src0) && !ggml_is_transposed(src1) && dst->ne[1] == 1 &&
+                !ggml_is_permuted(src0) && !ggml_is_permuted(src1) &&
++               src0->ne[3] == src1->ne[3] && // nc shader has no batch-3 broadcast
+                src0->ne[3] <= ctx->device->properties.limits.maxComputeWorkGroupCount[0] &&
+                src0->ne[1] <= ctx->device->properties.limits.maxComputeWorkGroupCount[1] &&
+                src1->ne[2] <= ctx->device->properties.limits.maxComputeWorkGroupCount[2]) {
+@@ -18214,6 +18215,14 @@
+         // End the command buffer and submit/wait
+         GGML_ASSERT(!ctx->compute_ctx.expired());
+         compute_ctx = ctx->compute_ctx.lock();
++        // Concurrent timestamps are emitted at dependency boundaries. Close the
++        // last interval too, otherwise its nodes (e.g. the output projection)
++        // are omitted from both the reported groups and the total.
++        if (vk_perf_logger_concurrent) {
++            GGML_ASSERT(ctx->query_idx < ctx->num_queries);
++            ctx->query_node_idx[ctx->query_idx] = cgraph->n_nodes;
++            compute_ctx->s->buffer->buf.writeTimestamp(vk::PipelineStageFlagBits::eAllCommands, ctx->query_pool, ctx->query_idx++);
++        }
+         ggml_vk_ctx_end(compute_ctx);
+ 
+         ggml_vk_submit(compute_ctx, ctx->device->fence);
+@@ -18239,7 +18248,7 @@
+                 std::vector<ggml_tensor *> nodes;
+                 std::vector<const char *> names;
+                 for (int node_idx = prev_node_idx; node_idx < cur_node_idx; ++node_idx) {
+-                    if (ggml_op_is_empty(cgraph->nodes[node_idx]->op)) {
++                    if (ggml_vk_is_empty(cgraph->nodes[node_idx]) || (cgraph->nodes[node_idx]->flags & GGML_TENSOR_FLAG_COMPUTE) == 0) {
+                         continue;
+                     }
+                     nodes.push_back(cgraph->nodes[node_idx]);
+@@ -18973,7 +18982,24 @@
+                     a = op->src[2];
+                     b = op->src[1];
+                 }
+-                if (a->ne[3] != b->ne[3]) {
++                // The mat-vec shader already broadcasts batch 3; keep this allowance scoped to QB.
++                const bool qb_batch_broadcast = op->op == GGML_OP_MUL_MAT &&
++                    a->type == GGML_TYPE_F16 && b->type == GGML_TYPE_F32 &&
++                    a->ne[3] == 1 && (b->ne[3] == 2 || b->ne[3] == 4) &&
++                    b->ne[1] == 1 && a->ne[2] == b->ne[2] && ggml_is_contiguous(a);
++                // Experimental Qwen3 32/8 GQA, d=128, capacity=1024 only.
++                // K is head-interleaved; V has a capacity-strided row.
++                // Both use the existing copy + broadcast matvec path for q>1.
++                const bool gqa_k = a->ne[0] == 128 && (a->ne[1] == 256 || a->ne[1] == 512) &&
++                    a->nb[0] == 2 && a->nb[1] == 2048 && a->nb[2] == 256 && a->nb[3] == 2097152;
++                const bool gqa_v = (a->ne[0] == 256 || a->ne[0] == 512) && a->ne[1] == 128 &&
++                    a->nb[0] == 2 && a->nb[1] == 2048 && a->nb[2] == 262144 && a->nb[3] == 2097152;
++                const bool qb_gqa_broadcast = op->op == GGML_OP_MUL_MAT &&
++                    a->type == GGML_TYPE_F16 && b->type == GGML_TYPE_F32 &&
++                    a->ne[2] == 8 && b->ne[2] == 32 && a->ne[3] == 1 &&
++                    (b->ne[3] == 2 || b->ne[3] == 4) && b->ne[1] == 1 &&
++                    b->nb[0] == 4 && (gqa_k || gqa_v);
++                if (a->ne[3] != b->ne[3] && !qb_batch_broadcast && !qb_gqa_broadcast) {
+                     return false;
+                 }
+                 if (!(ggml_vk_dim01_contiguous(op->src[0]) || op->src[0]->type == GGML_TYPE_F32 || op->src[0]->type == GGML_TYPE_F16 || op->src[0]->type == GGML_TYPE_BF16) ||

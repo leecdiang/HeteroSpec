@@ -148,6 +148,15 @@ absolute totals, per-root/per-session ratios and equal-root geometric sensitivit
 Inference is conditional on these sessions, including the disclosed interruption;
 no Windows timing is pooled and no posthoc minimum-M baseline is selected.
 
+In these four cyclic rows, SIMPLE-loop4-D4 always immediately precedes
+LOCAL-packed-D4. Their observed2.0% service difference simultaneously changes
+cutting and projection, and fixed order can confound it with warmup/time drift.
+The narrow root-cluster interval does not remove this ordering factor. This panel
+therefore does not identify an independent causal LOCAL effect. A subsequent
+four-D4 factorial panel with balanced positions and directed predecessor pairs
+is a separate prospective experiment; this completed panel is not reordered or
+rerun after its outcomes.
+
 Service includes reset, planning, output ownership, target/draft execution,
 sampling and synchronization. Startup/first complete result/test-burst/worker
 wall are actual subprocess and marker-arrival clocks. First response is not TTFT.

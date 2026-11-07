@@ -1,12 +1,12 @@
 """One sequential D14 lane, bounded by admission, source, R and native gates."""
 from pathlib import Path
-import argparse, datetime, json, subprocess, sys, time
+import argparse, datetime, fcntl, json, subprocess, sys, time
 
 def main():
     p=argparse.ArgumentParser()
     for key in ('baseline','runtime','builds','repo','admission','admission-audit','target','draft','work','audit','predecessor-runtime'):
         p.add_argument('--'+key,type=Path,required=True)
-    p.add_argument('--source-commit',required=True);a=p.parse_args();sys.dont_write_bytecode=True
+    p.add_argument('--source-commit',required=True);p.add_argument('--stop-before-panel',action='store_true');a=p.parse_args();sys.dont_write_bytecode=True
     sys.path.insert(0,str(a.runtime.resolve()));from common import need,read,save,sha
     need(not a.audit.exists() and not a.work.exists(),'Fresh sequential study epoch');a.audit.mkdir(parents=True)
     here=Path(__file__).resolve().parent
@@ -26,9 +26,12 @@ def main():
             if status.exists():need(read(status)['status']!='FAILED','Admission failed; no inference launched')
             need(time.monotonic()-start<10800,'Bounded admission wait expired; no inference launched');time.sleep(30)
         need(read(a.admission/'ADMISSION.json')['status']=='ZERO_FORWARD_C1024_ADMISSION_PASS','Actual admission gate')
+        schedule=(a.baseline.parent/'STUDY_SCHEDULING.lock').open('a')
+        fcntl.flock(schedule,fcntl.LOCK_EX)
         args=[]
         for key in ('work','baseline','runtime','builds','repo','admission','target','draft'):args+=['--'+key,str(getattr(a,key).resolve())]
-        for phase in ('prepare','reference','qualify','negatives','panel'):
+        phases=('prepare','reference','qualify','negatives')+(() if a.stop_before_panel else ('panel',))
+        for phase in phases:
             for path,h in frozen.items():need(sha(path)==h,'Frozen study source changed: '+path)
             save(a.audit/(phase+'-START.json'),dict(phase=phase,elapsed_s=time.monotonic()-start,source_commit=a.source_commit))
             if phase=='panel':
@@ -40,8 +43,8 @@ def main():
                 result=subprocess.run(command,stdout=out,stderr=err)
             need(result.returncode==0,'Retained failed phase: '+phase+'; no automatic replay')
             save(a.audit/(phase+'-COMPLETE.json'),dict(phase=phase,elapsed_s=time.monotonic()-start))
-        save(a.audit/'STATUS.json',dict(status='COMPLETE',last_phase=phase,wall_s=time.monotonic()-start,
-            results_sha256=sha(a.work/'panel-01/RESULTS.json'),C4096='NOT_RUN',M2='NOT_RUN'))
+        save(a.audit/'STATUS.json',dict(status='QUALIFIED_FORMAL_NOT_RUN' if a.stop_before_panel else 'COMPLETE',last_phase=phase,wall_s=time.monotonic()-start,
+            results_sha256=None if a.stop_before_panel else sha(a.work/'panel-01/RESULTS.json'),C4096='NOT_RUN',M2='NOT_RUN'))
     except BaseException as e:
         save(a.audit/'STATUS.json',dict(status='FAILED_RETAINED',last_phase=phase,error=str(e),wall_s=time.monotonic()-start,no_automatic_retry=True));raise
 

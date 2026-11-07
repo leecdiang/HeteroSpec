@@ -1,0 +1,65 @@
+\section{Results}
+\label{sec:results}
+\subsection{Structural repair and unseen confirmation}
+The CUDA prefix repair removes the known Llama reference failure; disabling it restores the two historical speculative-arm failures. On Vulkan, the combined precision and prefix repair removes both endpoint failures and the 99 latent committed-vector differences. The independent factor reversals recover their respective predecessor trajectories. The results identify a common grouping rule with a backend-specific arithmetic requirement.
+
+All 24 confirmation inputs pass on each platform. Saved comparisons establish exact committed full-vocabulary vector correspondence with each original reference, in addition to endpoint agreement. The implementations were frozen before confirmation; each platform uses its own independently selected input panel.
+
+\begin{table*}[t]
+\centering\small
+\caption{Numerical requirements exercised by each measured model/backend configuration.}
+\label{tab:coverage}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{3.7cm}Y@{}}\toprule
+Model/backend & Active requirement and evidence & Interpretation\\\midrule
+Llama Q8 / CUDA & Prefix grouping; known failure reversed; 24 unseen inputs & Active repair and input transfer on the frozen native implementation.\\
+Llama Q8 / Vulkan & F32 activation path plus prefix grouping; independent reversals; 24 unseen inputs & Both factors are required for the observed numerical correspondence.\\
+Qwen3-14B / CUDA & Scalar-path head-normalization placement; 12 unseen inputs in the earlier repair study & A second reference-sensitive operator mechanism, with successful targeted repair.\\
+Qwen3-8B and 14B / CUDA & Combined build loads placement and prefix code; regression passes & Compatibility of the combined build; actual Qwen prefix-split activation is not established by these records.\\
+Qwen3 / Vulkan & Historical layout adapter; new precision and prefix switches off & Old-path compatibility only; the new rules have not been actively transferred.\\
+SmolLM2 / CUDA & Earlier PQ/QB and scope experiments & Supports the local layout comparison; not a regression of the new prefix/precision integration.\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+Table~\ref{tab:coverage} distinguishes active numerical repairs from compatibility regressions. The completed cross-backend result is the shared Llama physical-prefix rule; the Qwen placement result establishes a separate reference-sensitive operator requirement.
+
+\subsection{Complete cost after Llama repair}
+Table~\ref{tab:costs} reports all primary and descriptive ratios from the complete timing blocks. The two speculative layout reductions are 2.4469\% on CUDA and 4.9451\% on Vulkan. Every session favors QB. CUDA's reduction is below its 2.9832\% A/A screen; Vulkan exceeds its 2.9418\% screen, retaining the two slower blocks among all 144 blocks.
+
+\input{cost_table}
+
+\begin{figure*}[t]\centering
+\input{figures/layout_cost}
+\caption{Speculative QB versus the arithmetic pair of PQ controls on the two independently frozen Llama panels. Dots show all six session ratios; diamonds show the equal-weight aggregate. The dashed threshold is each study's predeclared practical screen, including A/A imbalance. Lower values favor QB. These are within-platform comparisons; the shared axis does not rank GPU speed.}
+\label{fig:layoutcost}
+\end{figure*}
+
+Draft value is 0.9736 on CUDA and 0.3343 on Vulkan. Thus speculative QB costs about 1.027 and 2.992 times their respective target-only QB paths. The CPU-draft placement is part of the Vulkan execution, but no isolated placement intervention attributes the entire cost difference to it.
+
+Target-only requests use multirow capacity during prefill and single-row autoregressive continuation. Their complete-request QB/PQ ratios are 1.0044 on CUDA and 0.8993 on Vulkan, corresponding to a 10.07\% Vulkan reduction. These post-hoc paired comparisons describe the combined prefill, generation and teardown cost. Relative to the original scalar recipes, $M_{\QB}/R$ is 0.4469 and 0.5444. Those savings include changes in prefill geometry and scoped arithmetic; the current service timer measures their combined effect.
+
+\subsection{A second arithmetic mechanism: Qwen3-14B}
+The earlier CUDA placement repair preserves all 12 preselected Qwen3-14B confirmation inputs against the original reference~\cite{rtxqwenrepair}. Its same-layout draft value is 1.4256, and complete $C_{\QB}/R$ is 0.3205 under the fixed partial-offload contract. The QB/PQ reduction is 2.61\%, below that campaign's 3.384\% practical screen. This supplies a positive drafting case alongside the new Llama results, under a different panel and placement. It also demonstrates why reference-compatible execution includes operator placement as well as attention representation.
+
+\subsection{Repair scope and the local representation increment}
+An earlier registered seven-arm study varies GS/PQ/QB and drafting on two fixed twelve-input panels over three dates~\cite{rtxscopetransfer}. Qwen3's draft value rises from 0.835 under global serialization to 1.122 under PQ and 1.188 under QB. SmolLM2 remains below parity at 0.684, 0.805 and 0.805. Each date preserves these draft decisions.
+
+\begin{figure*}[t]\centering
+\resizebox{\textwidth}{!}{\input{figures/scope_transfer}}
+\caption{Earlier repair-scope study, retained under its original panel and resident-service window. $D_L>1$ favors drafting. Open symbols are the three actual date means; diamonds pool them with equal log weights. The line spans observed date values, not a confidence interval. Qwen3 benefits from drafting under local repair; SmolLM2 does not.}
+\label{fig:scope}
+\end{figure*}
+
+The same-panel scope interaction factors as
+\begin{equation}
+\frac{D_{\QB}}{D_{\GS}}
+=\frac{D_{\PQ}}{D_{\GS}}\,
+\frac{D_{\QB}}{D_{\PQ}}.
+\end{equation}
+The factors are $1.3441\times1.0593$ for Qwen3 and $1.1770\times0.9995$ for SmolLM2. This separates the change from global to local repair from QB's incremental representation effect. Recorded logical work is matched across Qwen3 scopes; SmolLM2's work changes, making its result a joint request-path effect.
+
+Separate three-family local-layout measurements find 2.83--6.17\% lower speculative request latency for QB than PQ, and 72 real attention contexts establish bitwise PQ/QB stage correspondence~\cite{studyrecords}. A matched Qwen3 study retains the $k=3$ layout benefit with resident and fresh contexts, at 6.26\% and 5.36\%; neither $k=1$ cell passes its practical screen~\cite{rtxnativebridge}. These measurements motivate retaining QB inside compatible groups. Their short-context correspondence does not replace the later physical-prefix repair.
+
+\subsection{State as a requirement on composition}
+The earlier Vulkan producer--consumer study establishes a state-composition effect~\cite{b570producer}. On two of eight inputs, changing the producer state switches PQ/QB from divergence to preservation while both natural serial continuations retain the same original reference. All sixteen input--producer pairs preserve PQ/QB agreement. The input state therefore affects whether local correspondence composes with the reference.
+
+The Llama repairs connect this state-composition concern to concrete activation and attention operations. The Qwen producer-state cases retain their original status: the new Vulkan policies were inactive in their regression.

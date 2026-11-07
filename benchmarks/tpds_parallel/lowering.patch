@@ -1,0 +1,117 @@
+--- a/src/llama-graph.cpp
++++ b/src/llama-graph.cpp
+@@ -1377,7 +1377,7 @@
+         key.insert(key.end(), {t->ne[0], t->ne[1], t->ne[2], t->type, t->src[1]->type});
+         const bool host = t->src[1]->buffer && ggml_backend_buffer_is_host(t->src[1]->buffer);
+         key.push_back(host);
+-        if (!host || !hs_scope::active || t->ne[2] <= 1 || t->ne[2] > 4) continue;
++        if (!host || !hs_scope::active || t->ne[2] <= 1 || t->ne[2] > 32) continue;
+         auto one = *t;
+         one.ne[2] = 1;
+         for (int i = 0; i + 1 < ggml_backend_sched_get_n_backends(params.sched); ++i) {
+@@ -1566,7 +1566,21 @@
+           ggml_tensor * w,
+           ggml_tensor * cur,
+           ggml_tensor * w_s) const {
+-    ggml_tensor * res = ggml_mul_mat(ctx0, w, cur);
++    ggml_tensor * res = nullptr;
++    if (hs_query_batch && w->type == GGML_TYPE_Q8_0 && cur->type == GGML_TYPE_F32 &&
++        cur->ne[1] > 4 && cur->ne[1] <= 32 && cur->ne[2] == 1 && cur->ne[3] == 1) {
++        // A wide MM dispatch is a different numerical operation on this backend.
++        // Preserve four-column parallel matmuls across the physical KV cut.
++        for (int64_t i = 0; i < cur->ne[1]; i += 4) {
++            const int64_t rows = std::min<int64_t>(4, cur->ne[1] - i);
++            auto * x = ggml_view_2d(ctx0, cur, cur->ne[0], rows, cur->nb[1], i*cur->nb[1]);
++            auto * block = ggml_mul_mat(ctx0, w, x);
++            ggml_format_name(block, "tpds_projection_%s_%lld", w->name, (long long)i);
++            res = res ? ggml_concat(ctx0, res, block, 1) : block;
++        }
++    } else {
++        res = ggml_mul_mat(ctx0, w, cur);
++    }
+ 
+     if (w_s) {
+         res = ggml_mul(ctx0, res, w_s);
+@@ -2986,7 +3000,7 @@
+     bool ordered=ubatch.pos && ubatch.n_seqs_unq==1;
+     for (uint32_t row=1;ordered && row<ubatch.n_tokens;++row) ordered=ubatch.pos[row]==ubatch.pos[0]+int(row);
+     const bool grouped=hs_query_batch && cparams.causal_attn && !cparams.flash_attn && ordered &&
+-        q->ne[2]>1 && prefix.size()==size_t(q->ne[2]) && prefix.front()!=prefix.back() &&
++        q->ne[2]>1 && prefix.size()==size_t(q->ne[2]) && (prefix.front()!=prefix.back() || q->ne[2]>4) &&
+         k->ne[3]==1 && v->ne[3]==1 && kq_b==nullptr && sinks==nullptr && v_mla==nullptr;
+     if (hs_query_batch && std::getenv("HS_RTX164_TRACE") && !prefix.empty()) {
+         std::fprintf(stderr,"RTX164_ATTN layer=%d heads=%lld kv_heads=%lld rows=%lld first=%u last=%u split=%d position=%d\n",
+@@ -3000,8 +3014,13 @@
+         const uint64_t dispatch = uint64_t(q->ne[0]) | (uint64_t(q->ne[1]) << 16) |
+                                   (uint64_t(k->ne[1]) << 32) | (uint64_t(transposed) << 48);
+         const auto groups=hs_reference_batching::partition_adjacent(prefix, arithmetic, dispatch);
+-        for (const auto & planned : groups) {
+-            const size_t begin=planned.begin;
++        // Physical query tiles preserve the validated backend layout. Q, K, V,
++        // projection and FFN still belong to the single caller graph.
++        for (const auto & run : groups) {
++          const size_t tile = hs_scope::layout95()==1 ? 1 : 4;
++          for (size_t begin=run.begin; begin<run.end; begin+=tile) {
++            auto planned=run; planned.begin=begin;
++            planned.end=std::min(run.end,begin+tile);
+             const int64_t width=planned.end-planned.begin,extent=planned.requirement.extent;
+             GGML_ASSERT(extent>0 && extent<=k->ne[2] && extent<=kq_mask->ne[0]);
+             auto * qg=ggml_view_3d(ctx0,q,q->ne[0],q->ne[1],width,q->nb[1],q->nb[2],begin*q->nb[2]);
+@@ -3011,7 +3030,11 @@
+             if (!ggml_is_contiguous(mg)) mg=ggml_cont(ctx0,mg);
+             auto * group=build_attn_mha(qg,kg,vg,nullptr,mg,nullptr,nullptr,0,kq_scale,il);
+             cb(group,"hs_prefix_attention",il);
++            if (std::getenv("HS_TPDS_TRACE") && il==0)
++                std::fprintf(stderr,"TPDS_TILE base=%d begin=%zu width=%lld extent=%lld\n",
++                    int(ubatch.pos[0]),begin,(long long)width,(long long)extent);
+             cur=cur?ggml_concat(ctx0,cur,group,1):group;
++          }
+         }
+         ggml_build_forward_expand(gf,cur);
+     } else {
+--- a/src/llama-kv-cache.h
++++ b/src/llama-kv-cache.h
+@@ -156,6 +156,7 @@
+     //
+ 
+     uint32_t get_size()     const;
++    uint32_t scalar_padding() const { return std::max(n_pad,256u); }
+     uint32_t get_n_stream() const;
+ 
+     bool get_has_shift() const;
+--- a/src/llama-context.cpp
++++ b/src/llama-context.cpp
+@@ -2352,6 +2352,11 @@
+             std::min(n_tokens, cparams.n_outputs_max),
+             (uint64_t) cparams.n_seq_max * cparams.n_outputs_max_per_seq);
+ 
++    // Each PQ row adds views, softmax and output nodes in every layer.
++    // Size the arena before the scheduler reserves its synthetic graph.
++    if (cparams.n_ubatch > 4 && cparams.n_ubatch <= 32) {
++        res += 32 * cparams.n_ubatch * model.hparams.n_layer();
++    }
+     res += n_sampling_nodes;
+     if (n_sampling_outputs_max > 1) {
+         res += (n_sampling_outputs_max - 1) * n_sampling_nodes_max;
+--- a/src/hs_reference_batching.hpp
++++ b/src/hs_reference_batching.hpp
+@@ -97,7 +97,7 @@
+ // directly consumed by rotary embedding, inside the admitted verification width.
+ inline bool use_scalar_head_preference(bool active, bool rotary_head_scale,
+                                        uint64_t rows, bool scalar, bool batch) {
+-    return active && rotary_head_scale && rows >= 2 && rows <= 4 ? scalar : batch;
++    return active && rotary_head_scale && rows >= 2 && rows <= 32 ? scalar : batch;
+ }
+ 
+ enum class Backend : uint32_t { cuda = 1, vulkan = 2 };
+--- a/ggml/src/repair_offload.hpp
++++ b/ggml/src/repair_offload.hpp
+@@ -12,7 +12,7 @@
+         norm && norm->op == GGML_OP_RMS_NORM && weight &&
+         weight->ne[0] == tensor->ne[0] && weight->ne[1] == 1 &&
+         weight->ne[2] == 1 && weight->ne[3] == 1 && tensor->ne[3] == 1;
+-    if (!hs_scope::active || !head_scale || tensor->ne[2] <= 1 || tensor->ne[2] > 4) return batch;
++    if (!hs_scope::active || !head_scale || tensor->ne[2] <= 1 || tensor->ne[2] > 32) return batch;
+     auto one = *tensor;
+     one.ne[2] = 1;
+     const bool scalar = ggml_backend_offload_op(backend, &one);

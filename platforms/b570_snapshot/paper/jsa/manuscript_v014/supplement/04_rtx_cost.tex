@@ -1,0 +1,32 @@
+\section{RTX Expansion, Statistics, Width, and Reset}
+\label{supp:rtx_cost}
+\subsection{Complete expansion and two timer boundaries}
+The expansion contains exactly 384 complete unique formal keys: 24 tasks, four conditions and four repeats. All four conditions qualify 96/96 full responses; ordinary reference is stable in all repeats. Lengths range from 11 to 128 IDs; 23 tasks stop at EOG and one at cap128. No extra full-stream suffix is present in the selected response records. This does not certify any unrecorded internal sampling stream.
+
+The retained server generation field is \texttt{predicted\_ms}: the interval from its prompt/first-sample boundary to the last generation update, with the source's minimum one-microsecond floor. It charges draft and target work within the interval, excludes initial prefill and first sampling, and may exclude final bookkeeping. Resident-request time is client wall time for complete non-streaming response receipt and parsing. Model load, process startup, excluded warmups, boundary telemetry and shutdown are outside it; post-response asynchronous cleanup is not certified inside it. Neither timer is a component profile. Subtraction of generation from request does not identify a host, KV or attention cost.
+
+For each condition/task, take the median of four absolute times, form baseline/candidate ratios, then their unweighted geometric mean across tasks. Table~\ref{tab:rtx_all} preserves all 12 timer comparisons. The ordinary-reference comparisons are post-hoc CPU analyses of already paid, qualified observations. They are not new measurements or a new preregistered primary campaign. The mathematical identity $R/C=(R/M)(M/C)$ holds for 48 task-timer cells and both aggregate timers; it is not an additive cost decomposition.
+
+\input{tables/rtx_all_comparisons}
+
+The primary descriptive CPU bootstrap uses NumPy Generator PCG64, seed 20261008, 10,000 task resamples of 24 indices in saved task order, and one shared index matrix for comparisons. Percentiles use linear/type-7 interpolation. The historical interval convention uses Python \texttt{random.Random.choices}, seed 20261005, 4,000 draws and sorted indices 99/3899. S2 retains and checks both conventions without replacing one with the other. No bootstrap treats repetitions or conditions as additional independent inputs.
+
+Tables~\ref{tab:rtx_task_generation} and~\ref{tab:rtx_task_request} give all absolute medians and primary ratios. The seven matched-request regressions are listed explicitly beneath the latter. Four matched-request round geometric means are retained; round 2 is $0.940220\times$. Task resampling cannot remove that observed reversal or estimate independent day/session uncertainty.
+
+\input{tables/rtx_task_generation}
+\input{tables/rtx_task_request}
+
+\subsection{Geometry failures and their natural-state check}
+The wider-geometry boundary arm uses 11 exposed tasks, $(k,\mathrm{UB})$ pairs $(1,2),(3,4),(5,6),(7,8)$, caps 128/256/512, three modes and two repetitions: 792 formal requests and 24 excluded warmups. MBPP/229 fails at $k=5$/UB6 and $k=7$/UB8 across all caps and repeats, 12 failures. Ordinary and matched wider target-only controls pass this task. The earlier outside-panel HumanEval/18 wide failure remains a separate boundary; it is not erased by a panel rule. Maximum actual output length is 261, so cap512 is not evidence of 512 generated positions on every task.
+
+At a shared 47-ID prefix for MBPP/229, naturally formed ordinary and constrained donors are crossed with current UB6 layouts. Four own-path shams over two caps pass. The donor state changes whether EOG is selected under both current layouts; current geometry changes scores without independently flipping this observed decision. EOG-minus-alternative margins are $[-0.09283,-0.62923]$ for one donor and $[0.99707,1.48868]$ for the other. They are selected-alternative margins, not true top-two margins. Maximum measured score differences are approximately 0.44920 and 0.38070. This is a local same-prefix witness, not a complete counterfactual suffix, a unique kernel identification or a new independent task for each cap.
+
+\subsection{Fixed UB4 and width costs}
+Holding mask 3 and UB4 fixed, $k=3,5,7$ each qualifies 56/56 requests on 28 exposed tasks in two repeats. The widest passing $k=7$ is selected from qualification alone, followed by a separate capture-off cost arm with four conditions, four repetitions, 448 requests and 16 excluded warmups. Table~\ref{tab:fixed_ub} retains pooled and saved MBPP/HumanEval partitions. The ordinary wider speculative condition fails qualification and has no admissible speed result.
+
+\input{tables/fixed_ub}
+
+Formal draft/accepted counts are 3,528/2,772 at $k=3$ and 5,392/3,192 at $k=7$. Separate captured qualification counts give 305/232/199 target caller calls for $k=3/5/7$, but 305/463/397 micrographs. They include their own warmups and witness synchronization and are not a kernel-launch profile or a denominator for the formal timing. Long-cap fixed-UB checks remain qualified, with matched speed about $1.0001\times/0.9649\times$ at cap256 and $0.9715\times/0.9340\times$ at cap512. The caps, timers and small exposed task panels remain distinct from the expansion.
+
+\subsection{Resident reset as a finite serial check}
+The resident D study contains 100 reset/capture requests including four warmups, and a separate 96-request cost arm with four excluded warmups. Two task orders retain reference output for the anchor recipe. Matched generation/request speed is approximately $1.1812\times/1.0385\times$. It checks reset semantics in a serial resident loop. It does not establish concurrent scheduling, throughput, multi-slot behavior or qualification of the widened draft in a resident setting.

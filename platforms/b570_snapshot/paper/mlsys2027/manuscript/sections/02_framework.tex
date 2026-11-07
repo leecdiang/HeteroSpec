@@ -1,0 +1,23 @@
+\section{Output Contracts and Decision Criteria}
+\label{sec:framework}
+\subsection{Reference, reproduction and intervention}
+Let $k$ denote maximum draft width and UB the target micro-batch capacity. A greedy speculative round verifies proposals, commits the agreeing prefix and a correction or bonus when budget permits, and removes inconsistent suffix state. UB is a capacity; it does not specify actual occupied graph shape or the history of forwards.
+
+Our output contract compares the complete committed generated-ID array and endpoint with a matched target-only greedy reference. Prompt IDs and uncommitted proposals are excluded. A terminal end-of-generation ID (EOG) is inclusive; otherwise the study cap applies. ``Complete'' describes this bounded output, not all internal states or all untruncated process output. Historical text-path agreement (H) and direct-ID qualification (Q) remain distinct. Neither token equality nor mismatch measures functional code correctness or pass@$k$.
+
+Write $R$ for the reference, $P_0,P_1$ for frozen baseline/intervention predictions, and $N_0,N_1$ for native outcomes. Reproduction $P_j=N_j$ differs from compatibility $N_j=R$. A task is restored if $N_0\ne R$ and $N_1=R$, newly divergent if $N_0=R$ and $N_1\ne R$, and persistently divergent if both fail. Persistent deviation is an output no-op only when $N_0=N_1$ as well. Three repetitions test stability, not three independent tasks.
+
+The descriptions are manually constructed programs. B570 transfers target-only prefill, pending-token and sampler state into continuation. RTX separately orchestrates live proposal/target workers and suffix reconciliation using the native path's pinned numerical routines. Native uses its own live draft without supplied answers. Neither description is a learned predictor or independent numerical implementation.
+
+The new simple-baseline study denotes ordinary target-only UB2 by $U_2$. Reproducing $N_1$ with $U_2$ tests whether a simpler existing path suffices for that output objective. It does not require $U_2=R$, prove identical KV/logits, or establish a cost saving.
+\input{figures/framework_v011.tex}
+
+\subsection{Cost and intervention selection}
+Let $T_b$ be matched target-only time per output token, $C$ all committed output per round, $T_d^{\mathrm{real}}$ the complete draft subsystem, $T_{\mathrm{target,round}}^{\mathrm{real}}$ all target work, and $T_x$ residual charged work. Then
+\begin{align}
+S&=\frac{T_bC}{T_d^{\mathrm{real}}+T_{\mathrm{target,round}}^{\mathrm{real}}+T_x}\label{eq:physical}\\
+ &=\frac{C}{\dreal+\rtarget+X}.\label{eq:normalized}
+\end{align}
+These accounting identities are established tools \citep{specllm}, not new profitability theory. Target-forward proxies omit drafting and integration, and incompatible measurements cannot isolate a component by subtraction. Compatibility supplies eligibility for a cost claim, not the gain itself.
+
+For intervention selection, we use a stricter workload-level objective: restore every baseline deviation without creating a new one. A selector may abstain; ordinary reference fallback remains a baseline. Its cost includes observations, probes, selection and final verification. Reproduction, restoration, causal localization and deployed performance are therefore evaluated separately.

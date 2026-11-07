@@ -1,0 +1,137 @@
+--- a/common/hs_observer.h
++++ b/common/hs_observer.h
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include "llama.h"
++#include "../src/hs_scope.h"
+ #include "ggml.h"
+ #include "sampling.h"
+ #include "nlohmann/json.hpp"
+@@ -34,6 +35,7 @@
+     }return a;
+ }
+ inline int decode(llama_context*c,llama_batch b,const char*role){
++    hs_scope::guard scope(role,phase=="prefill");
+     if(!enabled())return llama_decode(c,b); // no observer metadata or forced sync
+     roles[c]=role;graphs=j::array();j ids=j::array(),pos=j::array(),seq=j::array(),mask=j::array();
+     int start=position(c)["max"].get<int>()+1;
+@@ -41,7 +43,7 @@
+         if(b.seq_id){for(int k=0;k<b.n_seq_id[i];k++)s.push_back(b.seq_id[i][k]);}else s.push_back(0);
+         seq.push_back(s);mask.push_back(b.logits?bool(b.logits[i]):i==b.n_tokens-1);}
+     auto before=position(c);int rc=llama_decode(c,b);llama_synchronize(c);
+-    emit({{"event","decode"},{"role",role},{"phase",phase},{"tokens",ids},{"positions",pos},{"sequence_ids",seq},{"logits_mask",mask},
++    emit({{"event","decode"},{"scope_mask",hs_scope::mask()},{"scope_active",hs_scope::active},{"role",role},{"phase",phase},{"tokens",ids},{"positions",pos},{"sequence_ids",seq},{"logits_mask",mask},
+       {"caller_batch",b.n_tokens},{"ub_capacity",llama_n_ubatch(c)},{"before",before},{"after",position(c)},{"graphs",graphs},{"returncode",rc}});
+     return rc;
+ }
+--- /dev/null
++++ b/src/hs_scope.h
+@@ -0,0 +1,31 @@
++#pragma once
++#include <cstdlib>
++#include <cstring>
++#include <stdexcept>
++namespace hs_scope {
++inline thread_local bool active = false;
++inline int mask() {
++    static const int value = [] {
++        const char * p = std::getenv("HS_SCOPE_MASK");
++        if (!p) return -1;
++        char * end = nullptr;
++        long v = std::strtol(p, &end, 10);
++        if (!*p || *end || v < 0 || v > 15) throw std::runtime_error("invalid scope mask");
++        return int(v);
++    }();
++    return value;
++}
++struct guard {
++    bool prior;
++    guard(const char * role, bool prefill) : prior(active) {
++        int m = mask();
++        if (m < 0) { active = std::getenv("HS_ATTENTION_QUERY_BATCH") != nullptr; return; }
++        int bit;
++        if (std::strcmp(role, "target") == 0) bit = prefill ? 1 : 2;
++        else if (std::strcmp(role, "draft") == 0) bit = prefill ? 4 : 8;
++        else throw std::runtime_error("unsupported scope role");
++        active = (m & bit) != 0;
++    }
++    ~guard() { active = prior; }
++};
++}
+--- a/src/llama-context.cpp
++++ b/src/llama-context.cpp
+@@ -1,4 +1,5 @@
+ #include "llama-context.h"
++#include "hs_scope.h"
+ 
+ #include "ggml.h"
+ #include "llama-arch.h"
+@@ -2486,6 +2487,7 @@
+         /*.n_outputs   =*/ n_outputs,
+         /*.cb          =*/ graph_get_cb(),
+         /*.res         =*/ res,
++        /*.hs_query_batch =*/ hs_scope::active,
+     };
+ }
+ 
+--- a/src/llama-graph.cpp
++++ b/src/llama-graph.cpp
+@@ -1454,6 +1454,7 @@
+ 
+ llm_graph_context::llm_graph_context(const llm_graph_params & params) :
+     arch             (params.arch),
++    hs_query_batch   (params.hs_query_batch),
+     hparams          (params.hparams),
+     cparams          (params.cparams),
+     ubatch           (params.ubatch),
+@@ -2627,7 +2628,7 @@
+     k = ggml_permute(ctx0, k, 0, 2, 1, 3);
+     v = ggml_permute(ctx0, v, 0, 2, 1, 3);
+ 
+-    if (std::getenv("HS_ATTENTION_QUERY_BATCH") && q->ne[1] > 1) {
++    if (hs_query_batch && q->ne[1] > 1) {
+         GGML_ASSERT(arch == LLM_ARCH_QWEN3 && !cparams.flash_attn);
+         GGML_ASSERT(q->ne[1] <= 4 && q->ne[3] == 1 && k->ne[3] == 1);
+         GGML_ASSERT(kq_b == nullptr && sinks == nullptr && v_mla == nullptr);
+--- a/src/llama-graph.h
++++ b/src/llama-graph.h
+@@ -809,9 +809,12 @@
+ 
+     llm_graph_result * res;
+ 
++    bool hs_query_batch = false;
++
+     // return true if the "other" params would result in a graph with the same topology as with the current params
+     //   having the same topology allows us to reuse the graph in some cases
+     bool allow_reuse(const llm_graph_params & other) const {
++        if (hs_query_batch != other.hs_query_batch) return false;
+         // first check the ubatch
+         bool can_reuse_ubatch =
+             ubatch.equal_seqs() == other.ubatch.equal_seqs() &&
+@@ -982,6 +985,7 @@
+ 
+ struct llm_graph_context {
+     const llm_arch arch;
++    const bool hs_query_batch;
+ 
+     const llama_hparams & hparams;
+     const llama_cparams & cparams;
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -3132,6 +3132,7 @@
+ 
+                     // TODO: maybe move branch to outside of this loop in the future
+                     if (slot.state == SLOT_STATE_STARTED) {
++                        hs::phase="prefill";
+                         slot.stats.update_prompt_start();
+ 
+                         slot.state = SLOT_STATE_PROCESSING_PROMPT;
+@@ -3861,7 +3862,7 @@
+ 
+             common_sampler_accept(slot.smpl.get(), id, true);
+             if(slot.stats.n_gen==0){
+-                hs::emit({{"event","first_pending"},{"pending_id",id},{"logits_index",tok_idx},{"modules",hs::modules()}});
++                if(hs::enabled())hs::emit({{"event","first_pending"},{"pending_id",id},{"logits_index",tok_idx},{"modules",hs::modules()}});
+                 auto cp=common_context_params_to_llama(params_base);
+                 auto*destination=hs::move(ctx_tgt,model_tgt,cp,slot.smpl,id,tok_idx);
+                 if(destination!=ctx_tgt){hs_continuation.reset(destination);ctx_tgt=destination;slot.ctx_tgt=destination;slot.mem.init(ctx_tgt,ctx_dft);}

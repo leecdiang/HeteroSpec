@@ -1,0 +1,811 @@
+   Reference-Preserving Speculative Decoding on Consumer Systems: Diagnosis, Repair
+                                  Scope, and Paid Cost
+
+                                              Author information pending confirmation
+
+
+
+
+Abstract
+Speculative decoding changes both execution cost and the numerical history of a quantized runtime. When an application must
+reproduce a fixed ordinary greedy output, the designer needs to determine where to constrain execution and whether the qualified
+design pays. We study these decisions using natural donor-state crosses, a phase-scoped attention implementation, and paid ordinary
+and matched target-only baselines. CUDA and Vulkan crosses distinguish local current-path, retained-state and interaction effects.
+A separate B570 fork study finds unchanged immediate decisions but different trajectories under sustained alternate continuation.
+On RTX, a query-layout transformation retains batched projection and feed-forward work; target prefill and continuation form an
+inclusion-minimal passing set within a tested four-switch family. The frozen design qualifies full responses on 24 project-unused
+inputs. Generation speed is 1.170 times ordinary and 1.169 times matched target-only execution. Resident-request speed is 1.742
+times ordinary but 1.035 times matched: the draft-free path change already gives 1.683 times. Seven tasks regress against matched
+request time, and one round reverses direction. Wider fixed-capacity drafting and a B570 endpoint repair qualify while losing
+performance. Separate M4 and 358H cases limit added control and draft-only optimization. The study connects implementation-
+specific diagnosis, finite qualification and paid comparisons to runtime choices, with repair evidence restricted to the tested Qwen3
+family and configurations.
+Keywords: speculative decoding, numerical consistency, execution state, runtime design, performance evaluation, consumer systems
+
+
+1. Introduction                                                           Conversely, different scores can produce the same immediate
+                                                                          greedy decision while later outputs diverge. Distinguishing these
+   Speculative decoding uses a draft to propose tokens and a              cases helps decide whether to constrain state formation, current
+target to evaluate several positions at once [1]. On consumer             verification, or both.
+systems, this extra work within a request can amortize target                Performance attribution requires a second distinction. A repair
+execution when memory capacity and request traffic limit batch-           may improve the target path before a draft is added. Comparing
+ing across requests. The implementation also changes how the              repaired speculation only with ordinary decoding measures the
+target executes: scalar continuation becomes multi-position veri-         combined deployment change. A matched target-only execution,
+fication, cache contents follow a different history, and rejected         using the repaired path without a draft, measures how much addi-
+positions require reconciliation. A valid sampling rule therefore         tional benefit speculation supplies. Both paths must be executed
+leaves two practical questions open: does the quantized runtime           and charged under the same output requirement; acceptance
+reproduce the required output, and does it reduce the cost of             rates and target-call counts cannot replace their measured costs.
+producing it?                                                                Our results make these choices concrete. An RTX continua-
+   We study systems in which ordinary greedy decoding under               tion intervention repairs one task and regresses another, leaving
+a fixed runtime configuration defines the reference. Such a re-           aggregate reference agreement unchanged. A later phase-scoped
+quirement arises in regression tests and applications that need           attention implementation qualifies full responses on 24 inputs
+repeatable outputs. Reference preservation means matching the             unused in the accessible project history. Its resident-request
+registered token sequence or endpoint; it does not establish that         speed is 1.742× ordinary decoding, but the matched draft-free
+the answer is functionally correct or that every intermediate             path already achieves 1.683×; adding speculation gives 1.035×.
+floating-point value is identical. The runtime designer must              A distinct B570 implementation preserves its registered end-
+choose where to enforce consistency and then measure the re-              point while remaining substantially slower than both draft-free
+sulting cost. A constraint can repair one input while breaking            baselines. We organize the study around three questions:
+another, or recover the output at the expense of the intended
+acceleration.                                                               1. RQ1, diagnosis: does the observed deviation follow re-
+   The visible token prefix does not determine the necessary                   tained state, the current recipe, or their interaction?
+constraint. Two executions can emit identical tokens while                  2. RQ2, repair: which phase constraints preserve the refer-
+retaining different key/value (KV) values, pending tokens or                   ence within a defined implementation family?
+sampler history. Their next decision can follow the retained state,         3. RQ3, cost: after qualification, what benefit remains against
+the current execution recipe, or an interaction between the two.               ordinary decoding and the matched target path?
+                                                                      1
+   The study contributes three forms of implementation evidence.          2.2. Reference preservation and determinism
+First, natural donor-state crosses with own-path controls distin-            Our requirement fixes an ordinary path and an output end-
+guish local state, path and interaction effects on CUDA and               point. A matching token sequence may still have different logits
+Vulkan; a separate same-state B570 fork study tests the limits of         or cache values, while a repeat-stable candidate can consistently
+immediate agreement. Second, an RTX query-layout transfor-                disagree with the reference. Numerical-consistency work ex-
+mation retains batched projection and feed-forward work while a           plains how execution shapes and reductions affect this distinc-
+complete four-switch factorial identifies a sufficient target-phase       tion. Batch-invariant inference constrains reduction strategies
+scope. Third, paid ordinary/matched/speculative comparisons               across batches [4]. LLM-42 combines decode–verify–rollback,
+expose when a repair, wider draft or added control is useful and          padded verification shapes and replacement of decoded KV en-
+when a qualified design should be rejected.                               tries with verifier entries; it permits different consistent strategies
+   These contributions concern runtime design and finite qual-            for prefill and decode [5]. Stage-Replay examines fixed-prefix
+ification. The crosses are offline experiments, and the repair            precision controls and bidirectional cache transplantation [6].
+remains specific to the tested Qwen3 family and configurations.           Vosti specifies and verifies deterministic system behavior [7],
+Sections 2 and 3 define the implementation context and mea-               and MarginGate uses margin-triggered verification with repair
+surement contracts; Sections 4–6 answer the three questions.              of confirmed mismatches [8].
+Section 7 draws the resulting design choices and states their lim-           Our implementation uses these established consistency and
+its. The supplement retains campaign details, historical results          verification principles. Its additional evidence links natural
+and the complete evidence trail.                                          donor-state diagnosis to a concrete query-layout and phase de-
+                                                                          sign, followed by finite native-output qualification and paid com-
+2. Runtime Architecture and Research Context                              parisons. Table 1 summarizes this scope. We do not implement a
+                                                                          same-contract comparison with LLM-42, Stage-Replay or Vosti,
+2.1. Execution as a stateful transaction                                  so the results establish no speed or preservation advantage over
+   A speculative iteration advances a committed prefix through            those methods.
+drafting, target verification and reconciliation. The draft pro-
+poses up to k tokens; the target evaluates the pending token and          2.3. Performance and heterogeneous execution
+proposal positions, often in a caller batch containing several
+                                                                             Heterogeneous placement and draft-budget control offer es-
+tokens. Acceptance, correction and a possible bonus token deter-
+                                                                          tablished ways to improve execution. Dovetail and DuoDe-
+mine the committed output. Rejected positions must be removed
+                                                                          coding exploit complementary CPU/GPU capabilities [11, 12];
+or reconciled before the next iteration, and stopping follows the
+                                                                          TurboSpec and BanditSpec adapt speculation to execution con-
+registered EOG and cap rule. Figure 1 connects these operations
+                                                                          ditions [13, 14]. The published HeteroSpec studies contextual
+to the state and phase controls studied here.
+                                                                          heterogeneity in verification allocation [15]. The present study
+   Target and draft retain distinct state (Figure 1A). KV owner-
+                                                                          addresses a different design requirement: preserving a selected
+ship, logical positions, pending logits or tokens, sampler history
+                                                                          ordinary output while deciding whether the transformation pays.
+and loop counters connect successive calls. A token can already
+                                                                             Lossless but Not Free examines consumer backend cost and
+be sampled and accepted into the sampler while still awaiting
+                                                                          cache choreography when verification fails to amortize target
+evaluation into the cache. Repeating or omitting either event
+                                                                          work [9]. Performance or Illusion? shows why reductions in
+changes the transaction. The early intervention frontends there-
+                                                                          apparent decoding work do not guarantee production-engine per-
+fore preserve pending and sampler state as well as KV. The later
+                                                                          formance [10]. We add reference qualification and the matched
+B570 candidate binds phases within one target context and live
+                                                                          draft-free comparator to that decision. M4 control and 358H
+sampler; the measured RTX candidate uses no state transplant.
+                                                                          offload results supply separate examples of cost limits, rather
+   Microbatch capacity UB limits how the backend partitions
+                                                                          than replications of the RTX repair.
+a caller batch. It is distinct from k, the occupied query count
+and the frontend’s output reservation. A UB2 caller may contain
+only one continuation token; increasing k can reduce caller count         3. Study Design and Measurement Contracts
+while increasing the number of micrographs; changing output
+reservation can alter the recipe without changing UB. These               3.1. Systems, inputs, and evidence roles
+distinctions are needed to interpret both diagnostic crosses and             The principal cases use the contracts in Table 2. All final tar-
+performance counters.                                                     gets are Qwen3-8B: changing the device, draft representation or
+   The implementations use pinned llama.cpp releases and pri-             backend does not create a second target family. HumanEval [16]
+vate frontends [2]. The late RTX path uses Qwen3-8B and                   and sanitized MBPP [17] supply coding inputs; M4 also uses
+Qwen3-0.6B [3], both Q8_0, with non-flash CUDA attention.                 a prospective Spec-Bench partition [18]. Prompt construction
+Its transformation uses existing ggml views and operations, with          remains campaign-specific. The measured output property is
+no new CUDA arithmetic kernel or acceptance rule. B570 uses               reference reproduction, not benchmark test-pass accuracy.
+Vulkan and a distinct phase-binding frontend. Historical Metal               The late RTX and B570 candidates use non-flash attention,
+and OpenVINO cases retain their own contracts. Because hard-              greedy sampling and separately frozen capacities, phase set-
+ware, backend and frontend vary together, these cases compare             tings and runtime/model bindings (Supplement §S1 and §S5.2).
+execution designs rather than hardware alone.                             Their campaigns are not pooled. We distinguish five evidence
+                                                                      2
+    (A) Preserve the stateful transaction                                           (B) Move query columns into the batch axis
+
+                                                                                        Ordinary query view                         Constrained view
+            Target KV +                            Draft KV +
+            pending state                         sampler state                                                     view                           4
+                                                                                                                                               3
+                                                                                          1    2    3     4                               2
+                                                                                                                                      1
+
+          Target verification                        Propose
+                                                                                           (d, q, h, 1)                                (d, 1, h, q)
+
+                  Accept / correct / commit / rollback                                              K/V broadcast across query batches
+
+         Separate target and draft ownership; no state transplant                                   Mask: (nKV , q, 1, 1) → (nKV , 1, 1, q)
+                    in the measured RTX candidate.
+                                                                                           Projection, output projection and FFN remain batched.
+
+    (C) Select the graph by role and phase
+
+          Target prefill          Target continuation
+              bit 1                      bit 2
+                                                                           Scope                          Graph flag                       Reuse only if
+                                                                           guard                        active / inactive                  flag matches
+          Draft prefill            Draft continuation
+             bit 4                        bit 8
+
+                                 Implemented scope: Qwen3, non-flash attention, one KV stream; see Section 5 for guards.
+
+Figure 1: State ownership and implemented consistency controls. (A) Target and draft keep distinct state through proposal, verification and reconciliation. (B) The
+RTX query view moves query columns into the batch axis while retaining batched projection and FFN work; numbered tiles are illustrative. (C) Role and phase select
+the query-batch graph flag, which must also match for topology reuse. The measured RTX candidate uses no state transplant. Section 5 defines the transformation and
+its implementation guards.
+
+
+roles: prediction reproduces native behavior; selected-boundary                     task/condition/repetition matrix: 384 rows and 96 qualified re-
+crosses diagnose local dependence; exposed probes select a re-                      sponses per condition. Reference lengths range from 11 to 128
+pair; a frozen recipe is checked on project-unused inputs; and                      IDs; 23 tasks stop at EOG and one at the cap.
+separate paid sessions measure qualified cost. Repetitions de-                         B570 retains IDs through the first runtime EOG or token 128,
+scribe stability and cost variation. Forks and within-request                       whichever comes first. A speculative response can satisfy this
+decision events remain associated with their parent tasks, rather                   endpoint requirement while containing additional raw suffix IDs.
+than increasing the independent input count.                                        Those IDs remain charged. Endpoint equality, raw-array equality
+   For the RTX expansion, eligibility and the recipe were frozen                    and unknown historical raw comparisons are reported separately.
+before new reference outputs were generated. The exposure                           Historical re-tokenized-text checks retain their original weaker
+audit excluded previously executed or ambiguous inputs and                          contract (Supplement §S1).
+selected 24 MBPP tasks from 224 eligible candidates. No el-                            We call a latency ratio a reference-preserving speedup only
+igible unused HumanEval inputs remained at that stage, so a                         after its output gate passes. A shorter divergent response does not
+pre-output amendment selected MBPP. Project-unused means                            qualify, and repeat stability alone cannot certify agreement with
+absent from accessible project execution records, not unseen dur-                   R. These finite checks establish neither functional correctness
+ing training. The panel becomes exposed when reused for width                       nor equality of all intermediate values or arbitrary future outputs.
+studies and later CPU analyses. B570’s 15-input panel follows
+its own accessible-history audit; omitted RTX bulk records were                     3.3. Controlled state and current-recipe crosses
+not independently rescanned.                                                           At a naturally reached boundary, express the decision as
+
+3.2. Registering the output requirement                                                                           d = F(p, s, e),                              (1)
+
+   Let R(x) denote ordinary output under fixed weights, tok-                        where p is the committed prefix, s the retained run-
+enizer, prompt formatting, sampler, runtime, backend and stop-                      time/numerical state and e the current execution recipe. Cross
+ping rule. RTX qualification compares the full response array,                      two naturally formed donors s0 , s1 with recipes e0 , e1 , holding
+length, terminal ID and stop reason, and checks reference re-                       the registered prefix and current logical input fixed. In the re-
+peat stability. The expansion contains a complete 24 × 4 × 4                        sulting matrix, a within-row change is a current-recipe effect for
+                                                                                3
+                 Table 1: Research context and additional evidence in this study. The cited methods are not same-contract performance baselines.
+Prior work                               Established basis                                             Additional evidence here
+Batch-invariant inference; LLM-          Reduction/shape consistency; verified tokens and KV           Qwen3 query views and phase dispatch, finite qualifi-
+42 [4, 5]                                reconciliation                                                cation, and ordinary/matched paid costs
+Stage-Replay; Vosti [6, 7]               Fixed-prefix state intervention; specified system de-         Natural donor × current-recipe crosses with shams;
+                                         terminism                                                     output qualification in a tested implementation family
+Consumer cost anatomy; Perfor-           Backend verification cost and limits of performance           Qualified fixed-UB width failure and separation of
+mance or Illusion? [9, 10]               proxies                                                       target-path from speculative request gains
+
+
+Table 2: Principal study contracts. Each case processes one request at a time. Historical text checks, which are weaker than direct-ID qualification, are retained
+separately in the supplement.
+Case                           Runtime/model setting                         Output and exposure                         Paid interval
+RTX expansion                  5070 Ti Laptop; CUDA; Q8_0 tar-               Full response through EOG/cap128;           Server generation; resident HTTP re-
+                               get/draft; private b10839-based fron-         24 project-unused MBPP, four re-            quest
+                               tend                                          peats
+B570 repair                    Arc B570; Vulkan; Q8_0 target/draft;          First-EOG/cap128 endpoint; 15               Native generation; whole request;
+                               phase-binding frontend                        project-unused inputs, two repeats          host return
+M4 runtime                     MacBook Air M4; Metal; Q8_0 tar-              Direct generated IDs; prospective           Registered post-prefill runtime inter-
+                               get/draft                                     30 HumanEval plus 30 Spec-Bench,            val
+                                                                             three repeats
+358H stateful                  Arc B390 Vulkan target; symmetric             Direct IDs; 30 prompts, three repeats       Registered stateful interval and
+                               INT4 OpenVINO CPU/NPU draft                   per draft condition                         target-work accounting
+
+
+that donor; a within-column change is a donor-state effect for                      This multiplicative identity cannot allocate attention, KV, syn-
+that recipe. Dependence on one factor only under a particular                       chronization or host cost. M4 retains its frozen estimator and
+value of the other indicates a local interaction. Token IDs are                     random streams; 358H uses a median of paired ratios before the
+categories; their numerical differences are not effect sizes.                       task geometric mean, a different estimator.
+   A valid cross requires consistent cache ownership and posi-                         RTX ordinary-reference ratios are a later CPU reanalysis of
+tions, faithful restoration, and compatible pending and sampler                     the same paid records; the expansion originally emphasized
+semantics. Own-path shams restore each donor under its na-                          matched comparisons. Descriptive 95% intervals resample the
+tive recipe and compare with uninterrupted execution. Natural                       24 task-median ratios with 10,000 common index resamples,
+donors use online proposals, without feeding future reference                       NumPy PCG64 seed 20261008 and linear/type-7 quantiles. The
+answers or a recorded proposal tape into the candidate. Earlier                     earlier bootstrap convention remains in Supplement §S4.1. Task
+sealed-proposal prediction studies answer a separate reproduc-                      resampling does not estimate session or day variation, and round-
+tion question (Supplement §S2.1). The selected cuts probe                           specific geometric means are reported separately from the task-
+known sensitivity; they do not estimate its prevalence or provide                   median estimator.
+a complete counterfactual suffix for every cell.                                       The RTX server-generation field predicted_ms charges
+                                                                                    draft and verification work between its timestamps, excluding
+3.4. Two paid baselines and task-level estimation                                   initial prompt work and first sampling and potentially final book-
+   Let M be target-only execution on the repaired path and C                        keeping. Resident-request time covers non-streaming HTTP re-
+speculation on that path. Together with ordinary R, they distin-                    sponse receipt and parsing. Loading, warmup, boundary teleme-
+guish the deployment change R/C, target-path change R/M and                         try and shutdown are excluded; post-response asynchronous
+incremental draft benefit M/C. Each baseline is executed and                        cleanup is not certified inside this interval. Their difference
+charged. R is the registered comparator, rather than a proven                       is not a measured host component. B570’s native-generation,
+optimum over ordinary implementations.                                              whole-request and host-return boundaries are defined separately
+   For late RTX and B570, first take each task’s median absolute                    in Supplement §S5.4. Unlike timers are not pooled into a plat-
+time in each condition, then form its baseline/candidate ratio.                     form ranking.
+For n complete task pairs,
+                               n                         
+                               1 X                                               4. Locating the Consistency Boundary (RQ1)
+                S b/c = exp          log ti,b /ti,c  .
+                                                         
+                                                              (2)
+                                  n i=1
+                                                                                    4.1. A repair and a regression under the same intervention
+A ratio above one favors the denominator path. For common
+tasks and this aggregation,                                                           The continuation experiment tests whether a local path change
+                                                                                    can recover the reference. The RTX intervention changes target
+                           S R/C = S R/M S M/C .                          (3)       continuation from UB2 to UB1 while retaining prefill, draft
+                                                                                4
+settings and caller grouping. On 19 exposed HumanEval tasks,              72 eligible forks. Every paired raw score record changes, yet
+the predictor reproduces both native conditions in all 57 repeated        immediate top-1 IDs and acceptance decisions remain equal
+complete arrays. HumanEval/15 repairs, /25 regresses and /18              across 195 paired decision events: no execution or task changes
+remains divergent, leaving reference agreement at 51/57 in both           its immediate decision.
+conditions. The unchanged aggregate conceals opposing task                   Continuation gives a different answer (Figure 2F). Complete
+effects, so continuation-only control does not satisfy recovery           committed-ID trajectories differ in 18/72 executions from six
+without regression.                                                       of 24 tasks. Later alternate blocks continue to use UB128, and
+   A separately selected 24-task MBPP panel reaches 72/72                 proposals evolve under the accepted history. This result concerns
+prediction/native agreement in each condition, but only 66/72             a sustained continuation policy, not one altered block followed
+reference agreement. MBPP/304 remains a divergent 47-ID                   by restoration. The practical lesson is to qualify the registered
+response while changing token 488 to 481 at zero-based position           output beyond the sampled block: a local discrete null can
+33. An accurate predictor, a changed response and a restored              coexist with later divergence, and score movement alone does
+reference are therefore distinct outcomes. These results motivate         not predict an immediate decision change. Neither the 72 forks
+examining retained state and the current call separately.                 nor the 195 internal events constitute additional independent
+                                                                          tasks.
+4.2. Natural donor state crossed with the current call
+                                                                          4.4. B570 crosses identify a whole-recipe boundary
+   Figure 2 provides the matrix readout. Rows select naturally
+                                                                             For B570, N1 labels the repaired prior frontend. The fig-
+formed donor states and columns select the current recipe at a
+                                                                          ure uses E for the alternate donor: the cross recipe E_k1_ub2
+shared committed prefix. Horizontal changes expose current-
+                                                                          on HumanEval, but ordinary N0 on MBPP/72. Neither de-
+path dependence; vertical changes expose retained-state depen-
+                                                                          notes the later phase-binding candidate. These crosses test
+dence. The displayed IDs label decisions rather than numerical
+                                                                          whether the RTX diagnostic distinction remains useful in a
+distances. A change confined to one donor/recipe pairing in-
+                                                                          different runtime. Three tasks in six repeated contexts pro-
+dicates an interaction. Own-path shams check that restoration
+                                                                          vide 12 own-path shams and 24 auxiliary target cells. Restored
+itself preserves the native decision.
+                                                                          states retain checked byte contents, sequence-zero ownership
+   For RTX, N0 and N1 denote the native baseline and
+                                                                          and logical positions. At HumanEval/145’s prefix 56, the se-
+continuation-intervention histories. Four exposed HumanEval
+                                                                          lected matrix is [(71465, 279), (279, 279)]; at /42’s prefix 73 it
+probes yield 24 donors, 48 state/current-path forks and 24 shams
+                                                                          is [(432, 1817), (1817, 1817)] (Figure 2D,E). Both show a local
+across repetitions. Donors preserve actual pending state, cache
+                                                                          interaction. At MBPP/72’s prefix 40, [(320, 320), (308, 308)]
+positions and sampler history. The shams pass and forking
+                                                                          varies only with donor state, under identical current UB1/output-
+leaves the original context unchanged. At /15’s 13-token cut,
+                                                                          reservation-3 columns (Figure 2C).
+either donor gives 9147 under current UB2 and 4199 under
+                                                                             The HumanEval recipes change microbatch capacity and out-
+UB1 at the third submitted decision (Figure 2A). The local de-
+                                                                          put reservation together, so the factor tested is the whole recipe.
+cision follows the current path. At /25’s four-token cut, only
+                                                                          These crosses do not isolate UB or transfer the RTX repair to
+the N1-donor/current-UB1 cell changes, producing the sequence
+                                                                          Vulkan. Full counterfactual continuations for each cell are un-
+271,750,8168 rather than beginning with 1406 (Figure 2B). This
+                                                                          available; the subsequent B570 candidate undergoes its own
+is a local state–path interaction. The selected /18 and /31 cuts
+                                                                          native endpoint qualification. The greedy sampler history, clone
+are discrete nulls, which do not establish invariance over their
+                                                                          metadata and shams support the tested restoration, while opaque
+remaining trajectories.
+                                                                          sampler bytes and general stochastic-state restoration remain
+   The KV checks help narrow the design question. All
+                                                                          outside that check. Across the cases, the same committed pre-
+12 prompt-KV donor comparisons agree, whereas 70 of 72
+                                                                          fix can conceal path, state or interaction dependence, requiring
+generated-prefix K/V tensor comparisons differ; the tested first-
+                                                                          different control placements.
+layer K/V remain equal. The discriminating /15 bonus row is
+itself a single-token microbatch under either history. Its final          4.5. Prediction and simple execution constrain added machin-
+nominal shape alone therefore cannot explain the decision: in-                  ery
+puts and preceding state formation also matter. The evidence
+                                                                             Prediction fidelity alone does not establish an online repair
+motivates attention-related controls without isolating a unique
+                                                                          mechanism. B570 prospective prediction matches 72/72 native
+kernel cause. Auxiliary short continuations and their 1,278 for-
+                                                                          arrays on a reserved 24-task cohort even though reference agree-
+wards are diagnostic work, not a paid performance panel.
+                                                                          ment is 60/72. RTX’s initial target-only batched-path predictor
+                                                                          reaches 24/36 and fails its frozen 36/36 gate, so no reserved
+4.3. One unchanged block does not certify the remaining trajec-           inference follows. A later independent-proposal replay obtains
+     tory                                                                 H2/native and reference-only/native agreement of 72/72, again
+  Immediate agreement need not certify the remaining trajectory.          with 60/72 reference agreement. The later study resolves the ear-
+A separate B570 experiment forks the same live state, with byte-          lier reproduction interface, but neither result establishes cheap
+checked KV, at the first eligible verification block after at least       online correction.
+64 committed IDs. It processes that block under UB1 or UB128.                A simpler target-only bridge strengthens that distinction. On
+Twenty-four reserved prompts and three repetitions produce                the 19 RTX tasks, draft-free U2 reproduces all 57 intervention
+                                                                      5
+    Hold the committed prefix fixed; cross natural donor state with the current recipe.
+
+     (A) Current-path effect                                (B) State-path interaction                            (C) Retained-state effect
+                           RTX HE/15                                            RTX HE/25                                           B570 MBPP/72
+      Donor                                                 Donor                                                 Donor
+         N0      9147                4199                      N0      1406               1406                       N1       320                320
+
+         N1      9147                4199                      N1      1406                271                        E       308                308
+
+                 UB2                 UB1                                UB2                UB1                              UB1/r3              UB1/r3
+
+
+
+     (D) Whole-recipe interaction                           (E) Whole-recipe interaction                          (F) Continue beyond a local check
+                          B570 HE/145                                           B570 HE/42                                  B570: same-state forks
+      Donor                                                 Donor
+         N1     71465                279                       N1       432               1817                        Immediate decision changes: 0 / 72
+
+
+          E      279                 279                        E      1817               1817
+                                                                                                                          Downstream changes: 18 / 72
+                   N1                  E                                 N1                 E
+                 recipe              recipe                            recipe             recipe
+                                                                                                                      Later alternate blocks remain UB128.
+
+                          IDs are categorical; colors indicate equality within a case only. Own-path shams reproduce native decisions.
+
+Figure 2: Three local dependencies and the limit of a local check. Rows select natural donor states; columns select the current recipe. Token IDs are categorical, with
+colors grouping equality within each case. (A) RTX /15 follows the current path. (B) RTX /25 and (D,E) B570 HumanEval show interactions. (C) B570 MBPP/72
+follows retained state under identical UB1/reservation3 columns. The B570 HumanEval columns change UB and output reservation together. E denotes the alternate
+donor: ordinary N0 in (C), the alternate cross recipe in (D,E). Own-path shams pass. (F) A separate B570 study finds 0/72 immediate but 18/72 downstream changes
+under sustained alternate UB128 continuation; it does not isolate a single-block aftereffect.
+
+
+N1 arrays and stop boundaries, including /15’s repair and /25’s                          After the existing query/key/value permutations, the sup-
+regression. It needs no draft, transplant, proposal tape or ref-                      ported single-KV-stream query has dimensions (d, q, h, 1). A
+erence answer. This establishes output equivalence, without a                         ggml_view_4d reinterprets it as (d, 1, h, q), preserving the
+speed claim or demonstrated equality of live logits/KV.                               source strides and assigning the original query-column stride to
+   The offline selection study also supplies no supported ad-                         the new batch axis. Shared K/V broadcast across query batches;
+vantage for added screening. RTX direct enumeration and                               the mask view changes from (nKV , q, 1, 1) to (nKV , 1, 1, q). Ex-
+proxy screening both abstain after 114 record equivalents be-                         isting key-query multiplication, softmax, value multiplication
+yond common acquisition; B570 direct verification requires 72                         and contiguous recombination perform attention. The design re-
+and proxy screening 144. Unknown counterfactuals remain                               tains the tested scalar-query computation structure locally while
+unknown. These are evidence-acquisition counts, not latency                           preserving parallel work elsewhere; it adds no new backend
+measurements. RQ1 is thus answered by local diagnostic dis-                           arithmetic.
+tinctions; it does not yield a validated automatic repair selector.                      Implementation guards admit Qwen3 non-flash attention, one
+                                                                                      KV stream and compatible mask dimensions, with no atten-
+                                                                                      tion bias, sinks or MLA value projection. The initial limit is
+5. Phase-Scoped Implementation and Qualification (RQ2)                                four queries; a later width build extends the admitted graph to
+                                                                                      eight. Native qualification is required within those guards, and
+5.1. Constraining attention while retaining batched work                              unsupported model graphs, precisions or backends inherit no
+   The RTX design targets the attention graph rather than se-                         preservation claim.
+rializing the whole network. An initial implementation builds
+one non-flash Qwen3 attention subgraph per query and con-                             5.2. Phase dispatch and graph reuse are part of the implemen-
+catenates the results. The later query-batch implementation                                tation
+represents query columns in the ggml batch dimension, allowing                           The transformation must be active in the intended phase, in-
+existing operations to process them in parallel while preserving                      cluding when diagnostic capture is disabled. A process-fixed
+one-column query structure. Projection, output projection and                         mask and thread-local guard select target prefill/continuation bits
+feed-forward computation remain batched (Figure 1B).                                  1/2 and draft prefill/continuation bits 4/8 (Figure 1C). The guard
+                                                                                  6
+restores the prior active state on exit and executes before the                At MBPP/229’s common 47-token prefix, crossing naturally
+capture-disabled fast path returns to native decoding. Diagnostic           retained ordinary and constrained states under two current UB6
+settings therefore cannot silently bypass the constraint.                   layouts changes the EOG decision with the donor. Current
+   The active query-batch flag is copied into graph parameters              layout changes continuous scores without a separate discrete
+and context. Reuse is rejected if it differs from the cached                flip; four own-path shams pass. This local retained-state effect
+topology key, preventing a phase-layout mismatch even when                  explains why changing only the current layout at that boundary
+ordinary microbatch fields agree. A new prompt resets the                   is insufficient, without identifying a unique cause of all width
+phase to prefill. These conditions make role and phase part of              failures. Two cap contexts repeat one task boundary. The joint
+graph construction and reuse, rather than annotations on a timing           k/UB sweep remains distinct from the fixed-UB draft-width cost
+record.                                                                     experiment in Section 6.
+   Qualification checks captured multi-query nodes and capture-
+on/off behavior; paid capture-off sessions omit observer meta-              5.5. A separate B570 implementation and qualification scope
+data and forced witness synchronization. The optional target-                  B570 tests a different control interface. The candidate forms
+state-move branch is inactive in the expansion configuration.               target state with the ordinary prompt caller and output reserva-
+The measured candidate charges native drafting, verification and            tion, samples the pending token once, then binds continuation
+reconciliation without that transplant. Implementation details              from UB128 to UB1 in the same context and live sampler. A pri-
+and timer boundaries are retained in Supplement §S3.1.                      vate API synchronizes, changes capacity and requests scheduler
+                                                                            reservation under a frozen context/batch/sequence contract. In-
+5.3. The finite phase family
+                                                                            strumented checks compare serialized KV across binding; paid
+   The factorial tests which phases require the query-batch con-            capture-off requests omit witness readbacks. The existing k = 2,
+straint in this implementation. Figure 3A tests all 16 masks at             draft-UB1 accept/bonus/rollback loop remains.
+k = 3/UB4 on four exposed HumanEval probes, twice each: 128                    The candidate qualifies 12 development requests, 112 requests
+requests. Outputs and stop boundaries are repeat-stable. Masks              on 56 exposed inputs and 30 requests on 15 project-unused
+3, 7, 11 and 15 pass the complete panel. /15 and /31 pass every             inputs under its endpoint contract. It removes the old second
+mask, /25 needs at least one target-phase bit, and /18 needs both;          context and three witness readbacks but does not implement the
+draft bits do not change this pattern.                                      RTX query-layout transformation. Earlier B570 repair produced
+   Mask 3 alone has no passing strict subset, making it inclusion-          a local long-panel gain yet failed MBPP/72 on a new-input
+minimal in the tested four-switch family. This selects a sufficient         panel and five UB2 alternatives (Supplement §S5.1). The later
+target-phase scope, not a universal requirement on every input              same-context binding supplies a separately qualified repair; its
+or implementation. Acceptance, cache ownership and stopping                 engineering value depends on the paid comparisons below.
+still need to preserve the transaction. The factorial also uses
+different geometry from the earlier UB2/UB1 intervention, so
+/15’s all-mask agreement does not negate that path effect.                  6. Does the Qualified Design Pay? (RQ3)
+   A smaller scope need not be faster. In a separate 19-task,
+six-repetition cost panel, mask 3 gives 1.278× generation and               6.1. RTX: deployment gain and speculative increment
+1.113× request speed against matched target-only. Removing                     The RTX comparison separates two decisions before measur-
+draft constraints from mask 15 adds only 1.004× generation                  ing their benefit (Figure 4A). Ordinary target-only R uses mask
+speed, with descriptive interval [0.998, 1.009], below the frozen           0/UB1; matched target-only M uses mask 3/UB4; speculative C,
+1.03× extra-generation gate. The later 24-input expansion gives             also denoted C3 , adds a draft at k = 3 on that path. A fourth con-
+1.015× over mask 15. Scope selection therefore follows qualifi-             dition, C15 , constrains all phases. Each of four balanced rounds
+cation, with its cost assessed separately.                                  uses a separate resident process for each condition, with one
+                                                                            excluded warmup and 24 formal requests per process. Condition
+5.4. Frozen inputs and geometry boundaries                                  and task orders rotate and recorded cache reuse is zero. The
+   The frozen mask-3/k = 3/UB4 recipe qualifies all 96 candidate            comparisons share tasks and a campaign, without sharing one
+responses on the 24-input expansion. Matched target-only and                simultaneous resident process.
+mask-15 speculation also qualify. This extends the repair from                 Table 3 and Figure 4B,C show why both baselines matter.
+exposed probes to a separately frozen panel, within the same                Generation speed is 1.170× ordinary and 1.169× matched target-
+model family and configuration.                                             only, with 22/24 tasks faster in either comparison. Resident-
+   Figure 3B shows where that sufficiency breaks. An indepen-               request speed is 1.742× ordinary but 1.035× matched. The
+dent 11-input panel tests (k, UB) = (1, 2), (3, 4), (5, 6), (7, 8) at       target-only path change itself gives R/M = 1.683× request
+caps128/256/512, with fresh scalar references and two repeats.              speed. Thus most of the measured deployment improvement is
+The first two pairs qualify; MBPP/229 fails at both wider pairs             already available without a draft; 1.742× describes the complete
+across all caps and repetitions while matched controls pass. The            change, whereas 1.035× is the speculative increment on the
+earlier HumanEval/18 wide target-only failure remains a sepa-               matched path.
+rate boundary outside this denominator. The longest observed                   The identity in Equation 3 holds for all 48 task-timer cells
+reference has 261 IDs, so cap512 is a limit rather than evidence            and both aggregate timers. Generation R/M is near parity while
+of a 512-token trajectory.                                                  request R/M is much larger. The target-path change affects
+                                                                        7
+        (A) Locate a sufficient phase scope
+                                 Constraints enabled            Full-response match                            (B) Recheck wider geometry
+                      T-P       T-C       D-P        D-C        /15       /18       /25       /31
+              00
+                                                                                                                        Full-panel output qualification
+              01
+              02                                                                                               k / UB           128        256         512
+              03                                                                                    *
+              04
+              05                                                                                               1/2
+              06
+ Phase mask
+
+
+
+
+              07                                                                                    +          3/4
+              08
+              09
+                                                                                                               5/6
+              10
+              11                                                                                    +
+              12                                                                                               7/8
+              13
+              14                                                                                                 11 inputs; fresh references at each cap.
+              15                                                                                    +              MBPP/229 fails at UB6 and UB8.
+
+                                                                                                                Cap 512 is a limit; observed length ≤ 261.
+                   T / D: target / draft; P / C: prefill / continuation
+                   Filled square: enabled. * minimal mask 3; + passing supersets                               ● match     × failure   (two repeats)
+
+
+Figure 3: Qualification of phase scope and geometry. (A) All 16 masks at k = 3, UB4 and cap128 on four HumanEval probes, with two repetitions (128 requests).
+Filled squares enable constraints; circles indicate full-response matches and crosses failures. Passing masks are 3/7/11/15; mask 3 is inclusion-minimal within this
+four-switch family. (B) A separate 11-input panel changes k and UB jointly at caps128/256/512, using fresh scalar references and two repeats. MBPP/229 fails at
+UB6/8 while matched controls pass. Actual output length reaches at most 261; the earlier HE/18 target-only failure is outside this panel.
+
+
+                                                                                          Figure 5C exposes a second limitation. The within-round
+Table 3: RTX frozen expansion paid ratios: 24 task medians, four repeats. Gen.
+denotes generation; Request denotes resident request. Intervals describe task          matched-request geometric means are 1.029, 0.940, 1.052 and
+resampling. C3 is mask 3 speculation.                                                  1.044: round 2 reverses direction. These round summaries differ
+                        Ratio Timer        Speed     95% interval                      from the geometric mean formed after taking each task’s four-
+                                                                                       repetition absolute-time medians. The descriptive task-bootstrap
+                        R/C3     Gen.       1.170   [1.117,1.218]
+                                                                                       interval for that median-based aggregate lies above one, but does
+                        R/C3     Request    1.742   [1.655,1.827]
+                        M/C3     Gen.       1.169   [1.117,1.217]
+                                                                                       not remove the observed round reversal or estimate independent
+                        M/C3     Request    1.035   [1.005,1.063]                      session/day uncertainty.
+                        R/M      Gen.       1.001   [0.995,1.008]                         The operating point is qualified and positive in aggregate,
+                        R/M      Request    1.683   [1.590,1.766]                      with a small, uneven request increment. Separate resident ses-
+                                                                                       sions, laptop scheduling and thermal variation can affect that
+                                                                                       estimate; balanced order and task medians do not eliminate
+prefill microbatch/attention behavior and continuation capacity                        session confounding. The larger generation gain applies to its
+jointly, and the timer boundaries differ. Their contrast cannot                        defined interval rather than replacing the request result. Indepen-
+allocate a measured host, attention, KV or synchronization share.                      dent session/day replication would be needed to assess stable
+A faster qualified ordinary implementation could also narrow the                       deployment acceleration.
+deployment benefit: the registered R is an executed reference,                            A separate serial resident-reset study checks whether the an-
+not a proven fastest ordinary decoder.                                                 chor preserves output when reused across requests. Two or-
+                                                                                       ders retain the registered reference after target-state reset, with
+                                                                                       matched generation/request speeds about 1.181 × /1.039×. This
+6.2. Task variation and session uncertainty
+                                                                                       supports finite reset semantics for the original k = 3/UB4 recipe,
+   The matched-path benefit varies across tasks and rounds. Fig-                       without establishing concurrency, throughput or resident qualifi-
+ure 5A,B retains all 24 tasks in the same request-sorted order                         cation of the widened draft. These rows are not pooled with the
+and scale. Generation improves on 22/24 tasks, but request time                        expansion.
+improves on only 17/24. Seven tasks regress against matched
+execution, despite all 24 being faster than ordinary request cost.                     6.3. Fixed UB: wider drafting qualifies but becomes slower
+The average request gain therefore does not justify an uncondi-                           The fixed-UB experiment tests the cost of widening a qualified
+tional per-task acceleration claim.                                                    draft. Unlike the joint k/UB geometry sweep, this experiment
+                                                                                   8
+    (A) Separate the two design decisions
+                                            Change target path                                            Add draft
+
+             R: ordinary target only                               M: constrained target only                               C: constrained speculation
+                 mask 0 / UB1                                           mask 3 / UB4                                          mask 3 / UB4 / k = 3
+
+
+
+                                       (B) Generation                                                       (C) Resident request
+
+                                                                    1.170×                                                                      1.742×
+                   Deployment R/C                                                                     R/C
+                                       1.001×                                                                                                1.683×
+                   Target path R/M                                                                   R/M
+                                                                    1.169×                                  1.035×
+              Draft increment M/C                                                                    M/C
+
+
+                                         1.0               1.1           1.2                                1.0       1.2        1.4    1.6       1.8
+                                               Baseline / compared-path time                                        Baseline / compared-path time
+
+                                  Request ratios: 1.742 ≃ 1.683 × 1.035; most deployment gain exists without a draft.
+                          Different timer intervals and x-axis ranges; ratios are multiplicative comparisons, not component costs.
+
+
+Figure 4: Deployment gain and incremental draft benefit. (A) R is ordinary target-only execution, M the repaired target-only path, and C speculation on that path.
+(B,C) Geometric means of 24 task ratios formed from four-repetition absolute-time medians; bars show descriptive 95% task-bootstrap intervals. A ratio above one
+favors the denominator. Generation and resident-request timers use different intervals and axis ranges. Request ratios satisfy R/C = (R/M)(M/C); this multiplication
+separates comparisons rather than component costs.
+
+
+fixes UB4 and mask 3 while testing k = 3, 5, 7 on 24 now-                            checks under their own timers and panels.
+exposed MBPP inputs and four exposed HumanEval probes.
+Each width qualifies in two repetitions. The highest passing                         6.4. B570: repair improves an old path but loses to strong
+width, k = 7, is then measured in a separate capture-off arm:                             baselines
+four conditions, four repetitions and 448 formal requests. Quali-
+fication timings do not select the width by speed.                                      The B570 repair must pass both the output and cost tests. Its
+                                                                                     formal four-condition matrix contains 119/120 payloads; old
+   The qualified wider draft loses the cost comparison. Relative
+                                                                                     N1’s first-round MBPP/400 record is missing after an infrastruc-
+to k = 3, k = 7 gives 0.829× generation and 0.890× request
+                                                                                     ture interruption. Its time remains unknown, without imputation
+speed. Against matched target-only it gives 0.997 × /0.950×,
+                                                                                     or a scientific rerun. Ordinary R, matched M and candidate C
+whereas the anchor gives 1.203 × /1.068× in this campaign.
+                                                                                     each have 30 complete responses and 15 two-round task-median
+Ordinary same-width speculation fails its output gate, so its
+                                                                                     pairs. Old-N1 comparisons use 14 complete pairs.
+timing cannot serve as qualified speed evidence. For these inputs
+                                                                                        The candidate fails the latency objective against both strong
+and this configuration, the measured anchor is preferable to the
+                                                                                     baselines (Table 4). Generation/whole-request speed is 0.283 ×
+wider qualified draft.
+                                                                                     /0.201× against ordinary R and 0.286×/0.206× against matched
+   The counters explain why caller reduction is insufficient as a                    target-only. Both baselines are faster in every available paired
+selection rule. Drafted tokens rise from 3,528 to 5,392, while                       round. The target-only paths are close in cost, with R/M =
+accepted draft tokens rise from 2,772 to 3,192. Separate captured                    0.989 × /0.979×; the roughly fivefold candidate request cost is
+qualification sessions record target continuation caller counts                      therefore not explained by the target-path consistency constraint
+falling from 305 to 199 but micrographs increasing from 305                          alone.
+to 397. These counts include their own warmups and forced                               Against the prior old-N1 frontend, the candidate improves
+synchronization; they cannot be divided into formal timing to                        generation/request speed by 3.993 × /2.634× over 14 pairs. That
+create a component profile. Micrographs are not CUDA kernel                          improvement measures progress from a slow frontend, rather
+launches, and no unique slowdown component is isolated.                              than benefit over ordinary deployment. MBPP/245 also reverses
+  The saved partitions further limit the pooled result. At k = 7,                    the old-path whole/host request comparison in round 2. End-
+matched generation/request speed is 0.953 × /0.919× on 24                            point recovery and aggregate improvement do not guarantee
+MBPP inputs and 1.308 × /1.164× on four HumanEval probes.                            improvement in every round.
+Four exposed probes do not validate an online routing rule.                             The endpoint contract retains all online work. Candidate end-
+Supplement §S4.3 retains these partitions and the longer-cap                         point IDs total 1,150 while raw IDs total 1,176, with all 26
+                                                                                 9
+                                                 (A) Generation                                    (B) Resident request                                              (C) Request rounds
+                                                       22/24 faster; GM 1.169                               17/24 faster; GM 1.035
+                                           124                                                                                                                                       1.029
+                                           393                                                                                                                  1
+                                           454
+                                           439                                                                                                                        0.940
+                                           115
+ MBPP task (shared request-sorted order)
+
+
+
+
+                                           437                                                                                                                  2
+
+
+
+
+                                                                                                                                                        Round
+                                           458                                                                                                                                           1.052
+                                           234
+                                           397                                                                                                                  3
+                                           242                                                                                                                                          1.044
+                                           133
+                                            18                                                                                                                  4
+                                            93
+                                            12
+                                           299                                                                                                                         0.94      1.00     1.06
+                                           274                                                                                                                         Matched / speculative
+                                           230
+                                           441
+                                           415
+                                           436                                                                                                                         Round 2 reverses
+                                           443                                                                                                                      the aggregate direction.
+                                           253
+                                           229                                                                                                                      24 task pairs per round;
+                                           448                                                                                                                      no session-level interval
+                                                                                                                                                                           is inferred.
+                                             0.8        1.0         1.2          1.4             0.8         1.0         1.2          1.4
+                                                      Matched / speculative time                           Matched / speculative time
+
+
+                                                                Filled circles: faster   Open left triangles: slower     Dashed: parity   Dotted: task-median GM
+
+                                                             A and B share the same x-axis scale and task order; C reports round GMs, not task-median aggregation.
+
+
+Figure 5: Variation behind the matched RTX benefit. (A,B) All 24 tasks share order and scale; ratios use four-repetition absolute-time medians. Generation improves
+on 22/24 and request time on 17/24. Filled circles denote faster speculation and open left triangles slower speculation, separately for each timer. Dashed lines mark
+parity; dotted lines mark task-median geometric means. (C) Geometric means within four request rounds, with reversal in round 2. Round summaries are not the
+task-median estimator or a session-level uncertainty interval.
+
+
+                                                                                                                       6.5. Global serialization, control, and draft-side limits
+Table 4: B570 paid baseline/candidate task-median ratios. n counts complete
+two-round task pairs: 15 for R/C, M/C and R/M, and 14 for old N1/C. Gen.,                                                 The other campaigns test three tempting shortcuts. First,
+Request and Host denote generation, whole request and host-observed time. The                                          global serialization can recover output while increasing cost.
+missing old-N1 task is not imputed; raw suffix work stays charged.                                                     An earlier RTX arm qualifies 57/57 arrays on 19 exposed tasks
+                                                     Ratio        n   Gen. Request       Host                          but achieves 0.677× target-only speed, with descriptive interval
+                                                     R/C        15 0.283        0.201 0.202                            [0.662, 0.692] and no task faster. Its synchronized post-prefill-
+                                                     M/C        15 0.286        0.206 0.206                            to-slot-release timer includes instrumentation and logging. It is
+                                                     Old N1/C   14 3.993        2.634 2.633                            a separate negative operating point, not an earlier point on the
+                                                     R/M        15 0.989        0.979 0.979                            expansion’s server-generation curve; Supplement §S6.4 retains
+                                                                                                                       the host amendment and preceding V3 stop.
+                                                                                                                          Second, added control must pay for itself. The prospective
+                                                                                                                       M4 campaign has 60 tasks, three conditions, three repeats and
+                                                                                                                       540 requests under a post-prefill contract. Always specula-
+                                                                                                                       tion and Guard each qualify 180/180 direct-ID comparisons.
+suffix IDs charged. The records contain 888 drafted and 702                                                            Target-only/Always speed is 1.347×, but the paired secondary
+accepted tokens, and target/draft continuation caller-token totals                                                     Guard/Always latency ratio is 1.027, with descriptive interval
+of 1,332/1,362. These quantities describe different parts of the                                                       [1.013, 1.044]: the measured guard is slower. A hindsight oracle
+transaction; endpoint equality does not assert raw suffix equal-                                                       choosing only target-only or Always offers about 0.069% fur-
+ity. Removing witness readbacks, an extra context and handoff                                                          ther geometric-mean latency reduction. This narrow two-action
+improves the frontend, but phase reservation, synchronization,                                                         opportunity does not bound intra-request policies; the primary
+drafting and rollback remain. Without a full component profile,                                                        and secondary statistical streams remain distinct (Supplement
+the remaining bottleneck cannot be assigned uniquely. The paid                                                         §S6.6).
+decision is to reject this candidate for latency against R and M.                                                         Third, cheaper drafting may leave a target-work floor. On
+                                                                                                                10
+358H, CPU/NPU drafting each qualifies 90 direct-ID compar-                renewed qualification, as the failures demonstrate. No second-
+isons but gives 0.734 × /0.352× speed. With measured target               family result or preservation guarantee on arbitrary inputs is
+work and committed progress fixed, eliminating every other non-           established.
+negative cost yields prompt-estimator ceilings of 0.837×/0.845×.             Discrete agreement is weaker than numerical equivalence.
+Even that idealization needs a uniform target-work reduction of           The score/KV witnesses do not separate every reduction, pre-
+at least 16.28%/15.52% to reach parity. Draft-only optimization           cision, layout or scheduling effect, and shams cannot exhaust
+cannot close this conditional budget; changing the target path            hidden backend state. Selected cuts and a four-switch family can-
+or state interface requires new qualification and measurement.            not establish universal minimality. Prior preservation methods
+These are necessary budgets, not achieved optimizations or an             were not implemented as same-contract baselines, so superiority
+impossibility result for NPUs (Supplement §S6.7). M4 and                  over them remains untested.
+358H inform separate design decisions and do not replicate the               Task medians and descriptive intervals leave session, ther-
+RTX repair.                                                               mal and infrastructure variation unresolved. The B570 old-N1
+                                                                          payload and some historical raw comparisons remain missing.
+                                                                          Timer and historical energy domains differ; later direct-ID qual-
+7. Design Implications and Limits                                         ification cannot validate earlier text-based timing. The repro-
+                                                                          ducible CPU checks cover included sources and exports, with
+7.1. Constrain the transaction where evidence warrants it                 original-host private-archive audits identified separately in Sup-
+   The diagnostic distinction guides control placement. A                 plement §S7.
+current-path effect motivates constraining verification geometry;
+a retained-state effect motivates preserving state formation or           8. Conclusion
+changing its interface; an interaction requires testing both. The
+RTX design applies target-phase attention constraints, whereas               A runtime that must reproduce an ordinary greedy output
+B570 binds a whole recipe within one context. These are dis-              needs to preserve the stateful transaction as well as its acceptance
+tinct implementations informed by local observations, without a           rule. In the tested RTX implementation, a query-layout change
+unique kernel diagnosis or an automatic selector.                         during target prefill and continuation retains other batched work
+   The sequence of checks is equally important. Own-path shams            and qualifies a finite full-response panel. Natural crosses mo-
+validate restoration at the tested boundary; crosses reveal local         tivate that scope, while the complete phase matrix and wider-
+dependence; complete registered-output checks qualify the can-            geometry failures bound it.
+didate. B570’s unchanged immediate decisions and changed                     Paid ordinary and matched comparisons then change the per-
+continuation make the last step essential. Cost follows qualifica-        formance interpretation: 1.742× RTX request speed includes
+tion: constraining fewer phases or accepting a wider draft can            a 1.683× draft-free target-path gain, leaving 1.035× from spec-
+still fail the performance objective.                                     ulation on that path. The increment is uneven and reverses in
+                                                                          one round. A wider qualified draft loses, B570 endpoint repair
+7.2. Use both paid baselines for operating decisions                      remains slower than strong baselines, and the separate M4/358H
+                                                                          cases constrain the value of added control and draft-only opti-
+   The ordinary comparison answers whether the deployment                 mization. These outcomes support a concrete design practice
+change helps; the matched comparison answers whether adding               within the studied family: diagnose local dependence, qualify
+a draft helps on the repaired path. RTX exposes a substantial             the complete output under an explicit configuration, then charge
+draft-free target-path opportunity followed by a modest, uneven           both baselines before selecting speculation.
+request increment. Both values are needed to choose an imple-
+mentation. A faster qualified ordinary decoder could reduce the
+former, since the registered R is not a demonstrated optimum.             Author-review declarations
+   The negative results also determine operating choices. Retain
+the measured RTX anchor rather than its slower qualified wider              Authorship and contributions. Author names, affiliations,
+draft; reject the B570 recipe for latency against both strong             corresponding-author details and individual CRediT roles await
+baselines; avoid adding the measured M4 guard on an assumed               author confirmation. This draft does not assign authorship or
+control benefit; and address 358H target work or state interfaces         contributions.
+before expecting draft-only optimization to reach parity. Each              Funding and competing interests. Funding sources and
+decision follows its own output and timer contract, rather than a         competing-interest declarations await confirmation by all au-
+pooled hardware ranking.                                                  thors; absence of a funding source or competing interest is not
+                                                                          asserted.
+                                                                            Data and software availability. The author-review source
+7.3. Scope of the evidence
+                                                                          package includes frozen committed evidence exports, source
+   The repair covers one Qwen3 target/draft family, finite panels         bindings, selected implementation and report records, and CPU-
+and pinned runtime variants. RTX’s project-unused panel con-              only code for recalculation and figures. Original runtime code
+sists of 24 selected MBPP inputs; unused refers to accessible             and experiment records are retained in the HeteroSpec project.
+project history, not training exposure. Changed geometry needs            Availability and permitted redistribution of private raw archives,
+                                                                     11
+model artifacts and a permanent public data/software location                               26/hash/554e056fe2b6d9fd27ffcd3367ae1267-Abstract-Con
+require author confirmation before submission. The supplied                                 ference.html
+                                                                                       [11] L. Zhang, Z. Zhang, B. Xu, R. Li, Z. Tian, S. Mei, D. Li, Dovetail:
+exports enable the numerical checks specified in Supplement                                 A CPU/GPU heterogeneous speculative decoding for LLM inference,
+§S7; they do not substitute for a full private-archive audit or a                           arXiv preprint arXiv:2412.18934v2, accessed 9 October 2026 (2025).
+rerun of model inference.                                                                   doi:10.48550/arXiv.2412.18934.
+   Declaration of generative AI and AI-assisted technologies                                URL https://arxiv.org/abs/2412.18934v2
+                                                                                       [12] K. Lv, H. Guo, Q. Guo, X. Qiu, DuoDecoding: Hardware-aware het-
+in manuscript preparation. OpenAI ChatGPT/Codex was used                                    erogeneous speculative decoding with dynamic multi-sequence drafting,
+to assist with restructuring and drafting text, source and bibliog-                         arXiv preprint arXiv:2503.00784v1, accessed 9 October 2026 (2025).
+raphy checks, CPU analysis and plotting code, and the execution-                            doi:10.48550/arXiv.2503.00784.
+architecture illustration. Quantitative figures are generated from                          URL https://arxiv.org/abs/2503.00784v1
+                                                                                       [13] X. Liu, J. Park, L. Hu, W. Kwon, Z. Li, C. Zhang, K. Du, X. Mo,
+the identified experimental exports, without generative replace-                            K. You, A. Cheung, Z. Deng, I. Stoica, H. Zhang, TurboSpec: Closed-
+ment of observations. This author-review version still requires                             loop speculation control system for optimizing LLM serving goodput,
+the authors’ final scientific, bibliographic and language verifica-                         arXiv preprint arXiv:2406.14066v3, accessed 9 October 2026 (2025).
+tion. The final declaration and responsibility statement must be                            doi:10.48550/arXiv.2406.14066.
+                                                                                            URL https://arxiv.org/abs/2406.14066v3
+confirmed by the authors before submission.                                            [14] Y. Hou, F. Zhang, C. Du, X. Zhang, J. Pan, T. Pang, C. Du, V. Tan, Z. Yang,
+                                                                                            BanditSpec: Adaptive speculative decoding via bandit algorithms, in:
+                                                                                            Proceedings of the 42nd International Conference on Machine Learning,
+References                                                                                  Vol. 267, PMLR, 2025, pp. 24045–24079, accessed 9 October 2026.
+                                                                                            URL https://proceedings.mlr.press/v267/hou25h.html
+ [1] Y. Leviathan, M. Kalman, Y. Matias, Fast inference from transformers via          [15] S. Liu, Y. Ye, Q. Zhu, Z. Cao, Y. He, HeteroSpec: Leveraging contextual
+     speculative decoding, in: Proceedings of the 40th International Conference             heterogeneity for efficient speculative decoding, in: Proceedings of the
+     on Machine Learning, Vol. 202, PMLR, 2023, pp. 19274–19286, accessed                   64th Annual Meeting of the Association for Computational Linguistics
+     9 October 2026.                                                                        (Volume 1: Long Papers), Association for Computational Linguistics,
+     URL https://proceedings.mlr.press/v202/leviathan23a.ht                                 2026, pp. 12930–12947, accessed 9 October 2026. doi:10.18653/v1/
+     ml                                                                                     2026.acl-long.589.
+ [2] ggml-org llama.cpp contributors, llama.cpp [software], Releases b10809                 URL https://aclanthology.org/2026.acl-long.589/
+     and b10839; private study patches included in the author source package,          [16] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. Ponde de Oliveira Pinto, J. Ka-
+     b10809 released 4 September 2026; b10839 released 7 September 2026.                    plan, H. Edwards, Y. Burda, N. Joseph, G. Brockman, A. Ray, R. Puri,
+     Accessed 9 October 2026 (2026).                                                        G. Krueger, M. Petrov, H. Khlaaf, G. Sastry, P. Mishkin, B. Chan, S. Gray,
+     URL https://github.com/ggml-org/llama.cpp/releases/ta                                  N. Ryder, M. Pavlov, A. Power, L. Kaiser, M. Bavarian, C. Winter, P. Tillet,
+     g/b10839                                                                               F. Petroski Such, D. Cummings, M. Plappert, F. Chantzis, E. Barnes,
+ [3] A. Yang, et al., Qwen3 technical report, arXiv preprint                                A. Herbert-Voss, W. Hebgen Guss, A. Nichol, A. Paino, N. Tezak, J. Tang,
+     arXiv:2505.09388v1, accessed 9 October 2026 (2025).                 doi:               I. Babuschkin, S. Balaji, S. Jain, W. Saunders, C. Hesse, A. N. Carr,
+     10.48550/arXiv.2505.09388.                                                             J. Leike, J. Achiam, V. Misra, E. Morikawa, A. Radford, M. Knight,
+     URL https://arxiv.org/abs/2505.09388v1                                                 M. Brundage, M. Murati, K. Mayer, P. Welinder, B. McGrew, D. Amodei,
+ [4] H. He, Thinking Machines Lab, Defeating nondeterminism in llm infer-                   S. McCandlish, I. Sutskever, W. Zaremba, Evaluating large language
+     ence, Thinking Machines Lab: Connectionism, accessed 9 October 2026                    models trained on code, arXiv preprint arXiv:2107.03374v2, accessed 9
+     (2025). doi:10.64434/tml.20250910.                                                     October 2026 (2021). doi:10.48550/arXiv.2107.03374.
+     URL https://thinkingmachines.ai/blog/defeating-nondete                                 URL https://arxiv.org/abs/2107.03374v2
+     rminism-in-llm-inference/                                                         [17] J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
+ [5] R. Gond, A. K. Kamath, R. Ramjee, A. Panwar, LLM-42: Enabling                          E. Jiang, C. Cai, M. Terry, Q. Le, C. Sutton, Program synthesis with large
+     determinism in LLM inference with verified speculation, arXiv preprint                 language models, arXiv preprint arXiv:2108.07732v1, accessed 9 October
+     arXiv:2601.17768v2, accessed 9 October 2026 (2026). doi:10.48550                       2026 (2021). doi:10.48550/arXiv.2108.07732.
+     /arXiv.2601.17768.                                                                     URL https://arxiv.org/abs/2108.07732v1
+     URL https://arxiv.org/abs/2601.17768v2                                            [18] H. Xia, Z. Yang, Q. Dong, P. Wang, Y. Li, T. Ge, T. Liu, W. Li, Z. Sui,
+ [6] A. B. Lorup, Stage-replay divergence follows the KV cache: Fixed-prefix                Unlocking efficiency in large language model inference: A compre-
+     precision controls and bidirectional cache transplantation, arXiv preprint             hensive survey of speculative decoding, in: Findings of the Associa-
+     arXiv:2607.28495v1, accessed 9 October 2026 (2026). doi:10.48550                       tion for Computational Linguistics: ACL 2024, Association for Com-
+     /arXiv.2607.28495.                                                                     putational Linguistics, 2024, pp. 7655–7671, accessed 9 October 2026.
+     URL https://arxiv.org/abs/2607.28495v1                                                 doi:10.18653/v1/2024.findings-acl.456.
+ [7] J. Qin, A. Du, D. Zhang, M. Lentz, D. Zhuo, Vosti: Specifying, im-                     URL https://aclanthology.org/2024.findings-acl.456/
+     plementing, and verifying deterministic llm inference, arXiv preprint
+     arXiv:2609.38981v1, accessed 9 October 2026; arXiv reports DOI regis-
+     tration pending (2026). doi:10.48550/arXiv.2609.38981.
+     URL https://arxiv.org/abs/2609.38981v1
+ [8] K. Chu, Y. Zhou, W. Zhang, MarginGate:                    Sparse margin-
+     triggered verification for batch-invariant LLM inference, arXiv preprint
+     arXiv:2605.30218v1, accessed 9 October 2026 (2026). doi:10.48550
+     /arXiv.2605.30218.
+     URL https://arxiv.org/abs/2605.30218v1
+ [9] P. Chordiya, Lossless but not free: An empirical anatomy of speculative
+     decoding on consumer hardware, arXiv preprint arXiv:2607.17283v1,
+     accessed 9 October 2026 (2026). doi:10.48550/arXiv.2607.17283.
+     URL https://arxiv.org/abs/2607.17283v1
+[10] X. Liu, J. Yu, J. Park, I. Stoica, A. Cheung, Speculative decoding: Per-
+     formance or illusion?, in: Proceedings of Machine Learning and Systems,
+     Vol. 8, 2026, accessed 9 October 2026.
+     URL https://proceedings.mlsys.org/paper_files/paper/20
+
+                                                                                  12
+

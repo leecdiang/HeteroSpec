@@ -1,0 +1,20 @@
+\section{Introduction}
+Speculative decoding reduces sequential target invocations by verifying several draft tokens together~\cite{leviathan2023,chen2023}. Verification changes the target's execution geometry. In a quantized deployment, that change can alter finite-precision evaluation and the resulting greedy response. We optimize execution under a specified numerical reference. Matched scope--draft and producer--consumer experiments test the cost and reference behavior of a local attention transformation.
+
+Global serialization (GS) processes target rows individually through projections, attention and feed-forward layers. Per-query attention (PQ) confines the separation to attention and retains batching around it, but constructs an attention subgraph for each query. We study the effect of this repair scope on draft profitability and provide a lower-cost representation of local attention repair.
+
+Phase-scoped query-to-batch attention (QB) views Q as $(d,1,h,q)$ instead of $(d,q,h,1)$ and transforms the mask in parallel. Existing attention operators process each query as a separate batch instance while K/V storage remains shared within one sequence. Head mapping and ordered recombination retain the native attention semantics. Role/phase guards and a layout-sensitive graph cache keep the selected organization consistent with the speculative transaction.
+
+Batch-invariant kernels constrain reductions~\cite{thinkingmachines}; CoRun controls execution shapes~\cite{corun}; LLM-42 verifies a fast path and repairs its KV state~\cite{llm42}. QB integrates paired views of existing non-flash operators with the native speculative transaction. We test agreement with a specified deployed numerical stack and compare the complete cost of passing implementations.
+
+The principal cost result comes from a registered GS/PQ/QB by draft-on/off study on the already-exposed Qwen3 and SmolLM2 transfer panels, using seven-arm input blocks on three dates. Qwen3's draft value rises from 0.835 under GS to 1.122 under PQ and 1.188 under QB; local repair changes its draft decision on every date. SmolLM2 remains faster without drafting under every scope. Local repair reduces the drafting penalty without reversing the decision. The request-level estimate includes changes in logical work (Section~\ref{sec:scopefinal}). The earlier three-family comparison and six-session E2 study also measure local implementation cost: QB reduces speculative request latency over PQ by 2.83--6.17\%, and 72 fixed attention contexts establish bitwise PQ/QB correspondence.
+
+A local repair's reference behavior also depends on its input state. In a controlled Vulkan experiment, two of eight inputs retain the same serial-reference endpoint under both prefill producers, yet PQ/QB preserve that reference under one producer and depart from it under the other. Both local consumers agree throughout. Their eligibility depends on the producer--consumer combination within the validated clean receiver. A separate Llama counterexample also retains PQ/QB agreement while both depart from the reference.
+
+The contributions are:
+\begin{enumerate}[label=(\arabic*),itemsep=2pt]
+\item A phase-scoped attention transformation with paired Q/mask views, shared-KV and head semantics, ordered output recovery and layout-sensitive graph reuse.
+\item Matched evidence that repair scope changes draft profitability, including a preregistered three-date transfer study and separate measurements of QB's PQ-relative cost.
+\item Producer--consumer and backend interventions that establish concrete reference-qualification requirements, supported by complete request and native replay records.
+\end{enumerate}
+A matched Qwen3 study finds practical QB benefits at $k=3$ with resident and fresh contexts~\cite{rtxnativebridge}. The source package reconstructs reported data; native kits and reference archives have separate access instructions~\cite{studyrecords,rtxnativedelivery,b570nativedelivery}.

@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-12T01:03:10.176478+00:00",
+  "CPU_tests": 40,
+  "formal_forwards": 0,
+  "paid_events": 1220,
+  "native_numerics_unchanged": true,
+  "cause": "Pinned Llama detokenization display removes a space before .75; target/draft native input IDs and native decoded text are exactly equal. Decode display equality to raw template was an extra CPU assertion, not a design input gate.",
+  "repair": "Retain raw rendered template and actual shared native IDs. Record display difference; no candidate removed, text changed or output/speed consulted. Reuse existing six actual zero-forward vocabulary/tokenization outputs after exact query/vocabulary/model-template verification.",
+  "differences": [
+    {
+      "task": "GSM8K/test/89",
+      "formatted": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nSolve the following problem and explain your reasoning.\n\nChristina is planning a birthday party and needs .75 gift bags per invited guest, because 1/4 of attendees don't show up. She invited 16 friends. Gift bags are $2 each. How much will she spend?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "actual_native_detokenized": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nSolve the following problem and explain your reasoning.\n\nChristina is planning a birthday party and needs.75 gift bags per invited guest, because 1/4 of attendees don't show up. She invited 16 friends. Gift bags are $2 each. How much will she spend?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "target_draft_IDs_and_native_detokenized_equal": true
+    }
+  ],
+  "existing_static_outputs": {
+    "Llama-draft.stderr.log": "82186ef5de8efa6d21d3dbc265c49f06ec2cb98c3def923a9a8d8482da345807",
+    "Llama-draft.stdout.jsonl": "0f82d3ef65521299b095bd001e4737757f8d6c16487dc9958a66dc3e8eecd1b1",
+    "Llama-QUERIES.json": "c4a12e2f23cd7c22a0c7b25ddb64f5fcc5a2bb8a7840d224b5a6aed5360f8003",
+    "Llama-target.stderr.log": "e0e6431116936099617d88392fb711759c431d5075960197c121c6c558894934",
+    "Llama-target.stdout.jsonl": "0f82d3ef65521299b095bd001e4737757f8d6c16487dc9958a66dc3e8eecd1b1",
+    "Qwen-draft.stderr.log": "96170d900c34fe1d1f373569d249a0a08d950575234abc3af45eefad93b53d5c",
+    "Qwen-draft.stdout.jsonl": "57dc2adb9dbcf470f1a9072dfab8bba96087e51d530f612fe44bb1292eda807b",
+    "Qwen-QUERIES.json": "c0d7de7d30963011473e65926b945eb890fa63f7cdf16274c013b4147babf6c7",
+    "Qwen-target.stderr.log": "ba3b21de5959f0bca487cb31dc04c68904078a33a6b9f6ae71cc2a0909c3452d",
+    "Qwen-target.stdout.jsonl": "57dc2adb9dbcf470f1a9072dfab8bba96087e51d530f612fe44bb1292eda807b",
+    "SmolLM2-draft.stderr.log": "0b9454b694bbd78569ea01894e681175f9e2a4cfdb650d0f97f4488e189f3563",
+    "SmolLM2-draft.stdout.jsonl": "a388f6ad526d38f8743cd6c54f191e9f2ec265d271d1dafc513d972c027587c2",
+    "SmolLM2-QUERIES.json": "b2b2c044d607bea2ddf45a39ce1454b3f02b9520ccb6feeec47f2baff84e5888",
+    "SmolLM2-target.stderr.log": "b436323e78882f9953b7a5e8d9c5b54b2e113094cc26c248d5ec279612319d4f",
+    "SmolLM2-target.stdout.jsonl": "a388f6ad526d38f8743cd6c54f191e9f2ec265d271d1dafc513d972c027587c2"
+  }
+}

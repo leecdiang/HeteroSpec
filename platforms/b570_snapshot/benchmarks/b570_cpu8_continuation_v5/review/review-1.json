@@ -1,0 +1,127 @@
+{
+  "findings": [
+    {
+      "title": "[P2] Require tool evidence references to belong to the sealed tree",
+      "body": "chunk 2/2:\n\nThe binding and its intent/initial/final references are read with unrestricted `root / path` joins. Absolute paths and `../` therefore allow verification to consume tool evidence outside the root covered by `manifest_check`. A bundle can receive `CPU8_INTEGRATION_PASS` while its terminal tool evidence is absent from the archive, making the claimed restoration dependent on external files. Confine each reference to a canonical member of the sealed evidence tree before reading it.",
+      "priority": "P2",
+      "confidence": 0.98,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/tool_binding.py",
+        "line": 10
+      },
+      "source_attribution": null
+    },
+    {
+      "title": "[P2] Reconstruct outer Job and handle closure from raw events",
+      "body": "chunk 2/2:\n\nCPU8 verification accepts `outer_job_empty` and `owned_handles_closed` from the receipt, but `watchdog_check` only reconciles supervisor creation/exit and the embedded receipt. Neither it nor `cpu8_monitor.check` requires the emitted `OUTER_JOB_EMPTY` or handle-closure events. Removing those records and resequencing the journal therefore leaves successful verification possible despite missing raw cleanup evidence. Require the empty-Job observation and unique supervisor-thread, supervisor-process, and outer-Job closures in lifecycle order, and reconcile them with the receipt.",
+      "priority": "P2",
+      "confidence": 0.97,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/verify_cpu8.py",
+        "line": 38
+      },
+      "source_attribution": null
+    }
+  ],
+  "overall_correctness": "patch is incorrect",
+  "overall_explanation": "Review passes returned. chunk 1/2: 0 finding(s), chunk 2/2: 2 finding(s). See preserved pass reports for provider conclusions.",
+  "overall_confidence": 0.72,
+  "pass_reports": [
+    {
+      "label": "chunk 1/2",
+      "report": {
+        "findings": [],
+        "overall_correctness": "patch is correct",
+        "overall_explanation": "No actionable P0\u2013P2 defect is established by this chunk. Historical configurations, reviews and manifests are provenance, not current approval or PASS evidence. This assessment covers the supplied handoff and legacy runtime source; the current continuation-policy, freeze and CPU8 verification implementations are not present in this chunk. No project code was executed, and native Windows behavior remains unverified.",
+        "overall_confidence": 0.72,
+        "provider_report": {
+          "findings": [],
+          "overall_correctness": "patch is correct",
+          "overall_explanation": "No actionable P0\u2013P2 defect is established by this chunk. Historical configurations, reviews and manifests are provenance, not current approval or PASS evidence. This assessment covers the supplied handoff and legacy runtime source; the current continuation-policy, freeze and CPU8 verification implementations are not present in this chunk. No project code was executed, and native Windows behavior remains unverified.",
+          "overall_confidence": 0.72
+        }
+      }
+    },
+    {
+      "label": "chunk 2/2",
+      "report": {
+        "findings": [
+          {
+            "title": "[P2] Require tool evidence references to belong to the sealed tree",
+            "body": "The binding and its intent/initial/final references are read with unrestricted `root / path` joins. Absolute paths and `../` therefore allow verification to consume tool evidence outside the root covered by `manifest_check`. A bundle can receive `CPU8_INTEGRATION_PASS` while its terminal tool evidence is absent from the archive, making the claimed restoration dependent on external files. Confine each reference to a canonical member of the sealed evidence tree before reading it.",
+            "priority": "P2",
+            "confidence": 0.98,
+            "category": "bug",
+            "code_location": {
+              "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/tool_binding.py",
+              "line": 10
+            },
+            "source_attribution": null
+          },
+          {
+            "title": "[P2] Reconstruct outer Job and handle closure from raw events",
+            "body": "CPU8 verification accepts `outer_job_empty` and `owned_handles_closed` from the receipt, but `watchdog_check` only reconciles supervisor creation/exit and the embedded receipt. Neither it nor `cpu8_monitor.check` requires the emitted `OUTER_JOB_EMPTY` or handle-closure events. Removing those records and resequencing the journal therefore leaves successful verification possible despite missing raw cleanup evidence. Require the empty-Job observation and unique supervisor-thread, supervisor-process, and outer-Job closures in lifecycle order, and reconcile them with the receipt.",
+            "priority": "P2",
+            "confidence": 0.97,
+            "category": "bug",
+            "code_location": {
+              "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/verify_cpu8.py",
+              "line": 38
+            },
+            "source_attribution": null
+          }
+        ],
+        "overall_correctness": "patch is incorrect",
+        "overall_explanation": "The supplied chunk contains two actionable gaps in sealed evidence membership and raw cleanup reconstruction that can permit unsupported PASS results. Assessment was static; no project code or native Windows code was executed. Omitted context and historical artifacts were not treated as current authorization or execution proof.",
+        "overall_confidence": 0.94,
+        "provider_report": {
+          "findings": [
+            {
+              "title": "[P2] Require tool evidence references to belong to the sealed tree",
+              "body": "The binding and its intent/initial/final references are read with unrestricted `root / path` joins. Absolute paths and `../` therefore allow verification to consume tool evidence outside the root covered by `manifest_check`. A bundle can receive `CPU8_INTEGRATION_PASS` while its terminal tool evidence is absent from the archive, making the claimed restoration dependent on external files. Confine each reference to a canonical member of the sealed evidence tree before reading it.",
+              "priority": "P2",
+              "confidence": 0.98,
+              "category": "bug",
+              "code_location": {
+                "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/tool_binding.py",
+                "line": 10
+              },
+              "source_attribution": null
+            },
+            {
+              "title": "[P2] Reconstruct outer Job and handle closure from raw events",
+              "body": "CPU8 verification accepts `outer_job_empty` and `owned_handles_closed` from the receipt, but `watchdog_check` only reconciles supervisor creation/exit and the embedded receipt. Neither it nor `cpu8_monitor.check` requires the emitted `OUTER_JOB_EMPTY` or handle-closure events. Removing those records and resequencing the journal therefore leaves successful verification possible despite missing raw cleanup evidence. Require the empty-Job observation and unique supervisor-thread, supervisor-process, and outer-Job closures in lifecycle order, and reconcile them with the receipt.",
+              "priority": "P2",
+              "confidence": 0.97,
+              "category": "bug",
+              "code_location": {
+                "file_path": "benchmarks/b570_cpu8_continuation_v5/runtime/source/verify_cpu8.py",
+                "line": 38
+              },
+              "source_attribution": null
+            }
+          ],
+          "overall_correctness": "patch is incorrect",
+          "overall_explanation": "The supplied chunk contains two actionable gaps in sealed evidence membership and raw cleanup reconstruction that can permit unsupported PASS results. Assessment was static; no project code or native Windows code was executed. Omitted context and historical artifacts were not treated as current authorization or execution proof.",
+          "overall_confidence": 0.94
+        }
+      }
+    }
+  ],
+  "usage": {
+    "attempts": 2,
+    "reported_attempts": 2,
+    "unknown_attempts": 0,
+    "partial_attempts": 0,
+    "complete": true,
+    "tokens": {
+      "input_tokens": 317214,
+      "cached_input_tokens": 0,
+      "output_tokens": 1931,
+      "reasoning_output_tokens": 1320
+    }
+  },
+  "review_status": "findings"
+}

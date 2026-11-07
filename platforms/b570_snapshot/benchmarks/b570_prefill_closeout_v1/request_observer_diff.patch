@@ -1,0 +1,55 @@
+--- PR135/qualified-request
++++ PR141/request-with-expanded-observer
+@@ -20,6 +20,7 @@
+ Clock::time_point whole;double deadline=230;void cutoff(){need(seconds(whole)<deadline,"internal deadline");}
+ struct Obs{
+  int prefill_q_max=0,prefill_q_nodes=0;std::map<std::string,json>prefill_shapes;
++ json prefill_events=json::array(), prefill_masks=json::array();
+  std::string phase="setup";bool bad=false;int requests=0;std::map<std::string,json>seen;
+  static json tensor(ggml_tensor*t){return{{"name",t->name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"type",ggml_type_name(t->type)}};}
+  static bool cb(ggml_tensor*t,bool ask,void*u){
+@@ -27,7 +28,15 @@
+   if(o.phase=="PREFILL"){
+    std::string name=t->name;
+    if(name.rfind("Qcur",0)==0||name.rfind("kq-",0)==0){auto j=tensor(t);j["op"]=ggml_op_name(t->op);o.prefill_shapes[j.dump()]=j;}
+-   if(name.rfind("kq-",0)==0&&t->op==GGML_OP_MUL_MAT){o.prefill_q_max=std::max(o.prefill_q_max,int(t->ne[1]));o.prefill_q_nodes++;}
++   if(name.rfind("kq-",0)==0&&t->op==GGML_OP_MUL_MAT){
++    o.prefill_q_max=std::max(o.prefill_q_max,int(t->ne[1]));o.prefill_q_nodes++;
++    auto j=tensor(t);j["sources"]=json::array();
++    for(int i=0;i<GGML_MAX_SRC;i++)if(t->src[i])j["sources"].push_back(tensor(t->src[i]));
++    o.prefill_events.push_back(j);if(t->ne[1]!=1)o.bad=true;
++   }
++   if(name.rfind("kq",0)==0&&t->op==GGML_OP_SOFT_MAX&&t->src[1]){
++    o.prefill_masks.push_back({{"node",tensor(t)},{"mask",tensor(t->src[1])}});
++   }
+   }
+   if(o.phase!="VERIFY")return false;
+   std::string name=t->name;if(name.rfind("hs_",0)!=0&&name.rfind("kq",0)!=0)return false;
+@@ -75,6 +84,14 @@
+  target.prefill(prompt);if(draft){if(bulk_prefill)draft->decode(prompt,0,false,"PREFILL");else draft->prefill(prompt);}
+  int next=target.sample(-1,"initial"),base=int(prompt.size()),cycle=0;
+  auto commit=[&](int id){o.ids.push_back(id);o.eog.push_back(llama_vocab_is_eog(v,id));return o.eog.back()||o.ids.size()==size_t(cap);};
++ if(capture&&draft){
++  dump(dir/"prefill-events.json",{{"qk",draft->obs.prefill_events},{"masks",draft->obs.prefill_masks},
++       {"prompt_ids",prompt},{"positions","consecutive 0..prompt_length-1"},
++       {"sequence_id",0},{"last_token_logits_only",true},
++       {"draft_kv_max",llama_memory_seq_pos_max(llama_get_memory(draft->c),0)},
++       {"target_kv_max",llama_memory_seq_pos_max(llama_get_memory(target.c),0)}});
++  need(draft->obs.prefill_q_nodes==int(prompt.size())*llama_model_n_layer(d),"incomplete layer/ubatch q observations");
++ }
+  bool done=commit(next);
+  while(!done){
+   cutoff();
+@@ -108,6 +125,7 @@
+     found=true;}}
+   need(found,"requested layout not integrated");
+  }
++ o.record["observers_installed"]=capture;
+  o.record["target_decode_seconds"]=target.decode_seconds;o.record["draft_decode_seconds"]=draft?json(draft->decode_seconds):json::object();
+  if(capture&&draft){json shapes=json::array();for(auto&kv:draft->obs.prefill_shapes)shapes.push_back(kv.second);
+  dump(dir/"draft-prefill-shapes.json",{{"q_max",draft->obs.prefill_q_max},{"observations",draft->obs.prefill_q_nodes},{"shapes",shapes}});
+@@ -117,3 +135,4 @@
+  o.record["draft_prefill_api_calls"]=draft?(bulk_prefill?1:int(prompt.size())):0;o.record["draft_microbatch_limit"]=1;o.record["target_calls"]=target.calls;o.record["draft_calls"]=draft?draft->calls:0;
+  return o;
+ }
++

@@ -1,0 +1,91 @@
+{
+  "end_ns": 111079278351600,
+  "exit_code": 0,
+  "id": "extract-authenticated-remote-manifest",
+  "inventory_allocation_upper_bytes": 218189824,
+  "missing": [],
+  "processes": {
+    "48480": {
+      "create": {
+        "at_ns": 111079028117100,
+        "command": "C:/Users/DIANG/AppData/Local/Programs/Python/Python312/python.exe -B -c \"import hashlib,json,zipfile;from pathlib import Path;b=Path('C:/hs/b570-zero-gpu-repair-v1-20261016');z=b/'restore-e447d42/RAW_EVIDENCE.zip';data=zipfile.ZipFile(z).read('RAW_MANIFEST.json');expected=json.loads((b/'repo/benchmarks/b570_zero_gpu_repair_v1/results/ARCHIVE.json').read_text(encoding='utf-8'))['manifest_sha256'];assert hashlib.sha256(data).hexdigest()==expected;out=b/'task/REMOTE_RAW_MANIFEST.json';f=out.open('xb');f.write(data);f.close();print('remote embedded manifest',len(data),'bytes, sha256',expected)\"",
+        "command_sha256": "288c7dc35d127f308afc218f05b2b1fae8da03de8c169e0a9ec8bc2fe8e29228",
+        "created_filetime": 134366109873246226,
+        "exit_filetime": 0,
+        "image": "C:\\Users\\DIANG\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "kernel_100ns": 0,
+        "kind": "PROCESS_CREATE",
+        "launch_ns": 111079021132300,
+        "parent_pid": 12304,
+        "pid": 48480,
+        "request_id": "extract-authenticated-remote-manifest",
+        "role": "remote_manifest_authentication",
+        "seq": 1769,
+        "task": "PR117",
+        "thread": 18100,
+        "user_100ns": 0,
+        "utc": "2026-10-16T07:56:27Z"
+      },
+      "exit": {
+        "at_ns": 111079272219900,
+        "created_filetime": 134366109873246226,
+        "exit_code": 0,
+        "exit_filetime": 134366109875712502,
+        "exit_observed_ns": 111079268264500,
+        "kernel_100ns": 625000,
+        "kind": "PROCESS_CLOSED",
+        "lifetime_seconds": 0.2466276,
+        "pid": 48480,
+        "request_id": "extract-authenticated-remote-manifest",
+        "seq": 1772,
+        "user_100ns": 1406250,
+        "utc": "2026-10-16T07:56:27Z"
+      }
+    },
+    "50260": {
+      "create": {
+        "at_ns": 111079035785000,
+        "command": "\\??\\C:\\WINDOWS\\system32\\conhost.exe 0x4",
+        "command_sha256": "417222c4a0ecb4d60a457ebe8e26fddf3d5406bffb16a5c59af8eeb241beca51",
+        "created_filetime": 134366109873328885,
+        "exit_filetime": 0,
+        "image": "C:\\Windows\\System32\\conhost.exe",
+        "kernel_100ns": 0,
+        "kind": "PROCESS_CREATE",
+        "launch_ns": null,
+        "parent_pid": 48480,
+        "pid": 50260,
+        "request_id": "extract-authenticated-remote-manifest",
+        "role": "descendant",
+        "seq": 1770,
+        "task": "PR117",
+        "thread": 17172,
+        "user_100ns": 0,
+        "utc": "2026-10-16T07:56:27Z"
+      },
+      "exit": {
+        "at_ns": 111079277041000,
+        "created_filetime": 134366109873328885,
+        "exit_code": 0,
+        "exit_filetime": 134366109875771720,
+        "exit_observed_ns": 111079273680500,
+        "kernel_100ns": 0,
+        "kind": "PROCESS_CLOSED",
+        "lifetime_seconds": 0.2442835,
+        "pid": 50260,
+        "request_id": "extract-authenticated-remote-manifest",
+        "seq": 1774,
+        "user_100ns": 312500,
+        "utc": "2026-10-16T07:56:27Z"
+      }
+    }
+  },
+  "root_pid": 48480,
+  "start_ns": 111079021132300,
+  "status": "COMPLETE",
+  "stderr": "C:\\hs\\b570-zero-gpu-repair-v1-20261016\\task\\extract-authenticated-remote-manifest.stderr.log",
+  "stdout": "C:\\hs\\b570-zero-gpu-repair-v1-20261016\\task\\extract-authenticated-remote-manifest.stdout.log",
+  "task_child_lifetime_sum_seconds": 8379.156940099998,
+  "task_child_starts": 494,
+  "termination": null
+}

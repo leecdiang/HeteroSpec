@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(b570_optimization_native_v1 LANGUAGES CXX)
+find_package(Vulkan REQUIRED)
+add_executable(b570-opt-memory-load memory_load.cpp)
+target_compile_features(b570-opt-memory-load PRIVATE cxx_std_17)
+target_compile_definitions(b570-opt-memory-load PRIVATE LLAMA_SHARED GGML_SHARED GGML_BACKEND_SHARED _CRT_SECURE_NO_WARNINGS)
+target_include_directories(b570-opt-memory-load PRIVATE C:/hs/b570-direct-id-v1-src/include C:/hs/b570-direct-id-v1-src/ggml/include C:/hs/b570-direct-id-v1-src/vendor C:/hs/b570-opt-v1/scripts/platform/b570_optimization_v1)
+target_link_libraries(b570-opt-memory-load PRIVATE C:/hs/b570-direct-id-v1-build/src/Release/llama.lib C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml.lib C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml-base.lib Vulkan::Vulkan)

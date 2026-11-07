@@ -1,0 +1,49 @@
+\section{Historical finite-panel service results and prefill closeout}
+\label{supp:service}
+\subsection{Panel identities and qualification}
+Table~\ref{tab:servicecontracts} lists the two service contracts. Each panel has four exposed inputs, $k=1$, 32/8 target GQA, F16 KV and actual two-query verification in all 36 target layers. The draft and target models are Qwen3-0.6B and Qwen3-8B Q8\_0. Model/tokenizer hashes and exact driver identities are pinned separately; the shared family names do not make these a paired GPU experiment.
+
+\begin{table*}[t]\centering\small
+\caption{Distinct service contracts. The entries describe the recorded experiments, not recommended production configurations.}
+\label{tab:servicecontracts}
+\begin{tabularx}{\textwidth}{@{}p{3.0cm}YY@{}}\toprule
+Property & RTX service study & B570 formal request study\\\midrule
+Reference and inputs & New R/PQ full-logit references, historical native endpoints; MBPP/413, GSM8K/120,322,443 & Prospective q1 reference; HumanEval/38,65,115,127 with their recorded chat formatting\\
+Output window & Native EOG or cap128 & Native EOG or cap64\\
+Target/draft capacity & R target UB1; speculative target UB4; draft UB1 & Target verification UB4; draft UB1; serialized q1 prefill\\
+Context and host policy & Context1024, 24 host threads & Context1024, eight context thread parameters\\
+Measurement & 64 requests in four timing processes; 64 explicit warmups & 64 requests in four timing processes; 16 explicit warmups\\
+Qualification & Eight reference requests and 12 independent qualification requests; 1,106+1,794 vectors & 12 qualification requests; 346 saved PQ/QB full-logit pairs\\
+Primary window & Fresh-context creation/reservation through prefill, generation, state/synchronization and teardown & Same declared service components; separate private driver and prefill policy\\
+Excluded / separately charged & Shared model loading, post-timer comparison and raw-file I/O & Shared model loading, post-timer comparison and raw-file I/O\\\bottomrule
+\end{tabularx}\end{table*}
+
+The RTX source/driver registration precedes every model start; its independently generated R/PQ reference is sealed before qualification, and the qualification record is sealed before timing~\cite{rtxservicerecords}. R uses its matching reference; PQ and QB use the matching PQ target/draft vectors, including rejected verification rows. Their complete speculative traces also agree. This does not assert that every internal PQ value equals a serial R value. Query geometry and mask extents/strides are observed, whereas visible-key counts are derived from the registered causal positions. No operator readback is inserted into the natural CUDA graph.
+
+The B570 AV repair first passes six synthetic key256/512 by $q=1,2,4$ coordinates with unchanged PQ stage files, then a model integration passes one exposed 16-token bridge. Its first cost pilot preserves a 5.123483-second discrepancy between identical PQ arms. The apparently favorable aggregate is not promoted into a speedup. A separately registered four-input panel uses a 64-token cap and natural EOG, and qualifies complete R/PQ/QB endpoints, 346 PQ/QB vectors and full speculative cycle traces before timing~\cite{b570gqarecords,b570servicerecords}. The old Llama Q6\_K references and their failures remain separate.
+
+\subsection{Every input and paired block}
+\input{tables/service_input_table}
+\input{tables/service_block_table}
+\begin{figure*}[t]
+\centering\input{figures/service_panels}
+\caption{Service costs under separate platform contracts. Small outlined points show all 16 input/session blocks per contrast; large markers are equal-weight geometric means. A: QB/dual-PQ. B: identical-PQ A/A, with the largest absolute input-aggregate imbalance used by the screen. C: both speculative paths relative to target-only R. Dashed lines mark parity; dotted lines show 2\%. Vertical offsets separate observations. Ratios below one favor the numerator. The platform panels are analyzed separately.}
+\label{fig:servicepanels}
+\end{figure*}
+The tables and Figure~\ref{fig:servicepanels} are generated from the saved block records. RTX blocks retain all four arm service times, permitting direct recomputation of each ratio. B570 aggregates are reconstructed from archived paired ratios; the original service logs and full raw logits are outside the manuscript package. \texttt{anc/check\_closure.py} verifies exact Git blob identities, weights, input/session coverage, ratios, plot coordinates and printed cells.
+
+The primary layout estimator gives equal weight to each input and session in log space. Its A/A criterion is the largest absolute per-input geometric-mean PQ\_A/PQ\_B deviation from one, not the largest individual block deviation. The finite engineering screen also requires more than 2\% reduction and all session aggregates below one. RTX session ratios are 0.979094, 1.038635, 1.005512 and 0.936718, and the A/A criterion is 5.208\%. B570 session ratios are 0.996243, 0.995313, 0.996120 and 0.992904, with A/A criterion 0.754\%; its 0.486\% layout point reduction is below 2\%. Neither panel passes the practical layout screen.
+
+All 16 RTX QB/R blocks are below one and all 16 B570 QB/R blocks exceed one. Aggregate ratios are 0.582325 and 2.619763 respectively. RTX dual-PQ/R is 0.588633, showing that the speculative-policy benefit is already present with PQ. The RTX estimate corresponds to a 41.8\% service-time reduction; throughput uses the inverse time ratio. These four-input panels report descriptive paired estimates and every process-session block.
+
+Warmups are separately recorded, but their presence alone establishes neither cold-driver behavior nor warmed state for all shapes. B570 uses the old 16-token key256 request for warmup; key512 pipeline persistence across processes is uncontrolled. The RTX panel warms each input/arm. Continuous exclusive device ownership is not established in either study. All blocks and reversals are retained; no outlier deletion or significance-driven extension is used.
+
+\subsection{Draft-policy counterfactual and completed prefill follow-up}
+The B570 thread-parameter study fixes the PR134 QB references and changes draft context parameters from 8 to 1 while keeping the target at 8. All 346 vectors and endpoints/state traces remain unchanged. Four timing processes yield 64 measurements plus 16 warmups. DRAFT1/dual-baseline service is 1.003994, DRAFT1/R is 2.633056 and the A/A criterion is 0.793\%. The session ratios 0.998803, 1.007142, 1.010567 and 0.999512 do not support a practical improvement~\cite{b570policyrecords}. A temporary ggml pool object in an OpenMP build does not establish per-call creation of OS threads; the one-task GET\_ROWS/SET\_ROWS plan can clamp effective workers before the parameter takes effect.
+
+The same reviewed commit also contains a draft-prefill submission follow-up. Its first attempt fails an observer-axis check; this failure is retained. A prospective observer-only repair checks the consumed QK tensor and all four inputs then qualify, with 346 matching logits, one draft-prefill API call and physical prefill $q=1$. A later registered closeout completes this cost comparison under its separate CPU-draft service contract~\cite{b570prefillrecords}. It records 156 requests: four calibration, 24 qualification, 64 matched warmups and 64 measurements. SUBMIT/dual-baseline is 0.999161, a 0.084\% point reduction against 0.369\% input-aggregate A/A and a 2\% practical floor. One session favors the baseline. Fewer submissions therefore do not establish lower complete service cost, and QB/thread8 remains the baseline. SUBMIT/R is 1.203678 in this later contract; it cannot be compared with PR134's 2.619763 as a controlled improvement because device placement and service policy differ. The recorded helper-process reservation was not a complete observed count; full resource-protocol compliance is not established. The valid negative cost result and that accounting limitation are both retained.
+
+\subsection{Evidence and execution accounting}
+The RTX study completes 12 native processes and 148 requests: eight references, 12 qualification, 64 measured and 64 warmups. All native exits and cleanup are recorded, with no scientific retry. The conditional 24 profiling slots remain unstarted under the registered stopping rule. Native parent lifetime is 446.746733 seconds; GPU-active time is unmeasured. The preparation staging failure is retained, and its earlier compiler lifetime was not captured.
+
+The locally retained RTX archive contains 3,110 members and 2,900 vectors and is 2,270,281,687 bytes. The originating host reports reopening and hashing every member. The present manuscript package contains reported blocks, derived values, source identities and the original consistency inputs; it does not contain that full native archive. Local restoration, GitHub compact-record reconstruction and independent full-raw access are different evidence levels. B570's original full vectors also remain separately held.

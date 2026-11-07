@@ -37,9 +37,14 @@ def parse(raw:bytes,positions:list[int],profile:dict)->tuple[bytes,dict]:
         if not trans:need(rd('Q')==size,'V row size');vs.append(take(n*size))
         else:
             need(rd('I')==2 and rd('I')==l['v_elements'],'V element layout')
-            b=take(n*size);out=bytearray(n*size)
-            for t in range(n):
-                for c in range(l['v_elements']):out[t*size+2*c:t*size+2*c+2]=b[(c*n+t)*2:(c*n+t)*2+2]
+            b=take(n*size)
+            try:
+                import numpy as np
+                out=np.frombuffer(b,dtype='<u2').reshape(l['v_elements'],n).T.copy().tobytes()
+            except ImportError:
+                out=bytearray(n*size)
+                for t in range(n):
+                    for c in range(l['v_elements']):out[t*size+2*c:t*size+2*c+2]=b[(c*n+t)*2:(c*n+t)*2+2]
             vs.append(bytes(out))
     need(i==len(raw),'trailing bytes; register different actual format rather than ignoring them')
     out=bytearray()

@@ -1,0 +1,57 @@
+{
+  "status": "PUBLISHED_TOTALS_AND_SOURCE_WORK_SCAN",
+  "new_model_requests": 0,
+  "raw_slot_metrics_scanned": false,
+  "sources": {
+    "result": "https://github.com/leecdiang/HeteroSpec/blob/b01040d3b303abfc31c5ce2dbcb100cac7490b27/benchmarks/b570_decisive_v1/RESULTS.md",
+    "campaign": "https://github.com/leecdiang/HeteroSpec/blob/b01040d3b303abfc31c5ce2dbcb100cac7490b27/benchmarks/b570_decisive_v1/smol_campaign.py",
+    "state_profile": "https://github.com/leecdiang/HeteroSpec/blob/b01040d3b303abfc31c5ce2dbcb100cac7490b27/benchmarks/b570_decisive_v1/smol_state.py",
+    "bulk_observer": "https://github.com/leecdiang/HeteroSpec/blob/b01040d3b303abfc31c5ce2dbcb100cac7490b27/benchmarks/b570_decisive_v1/smol_bulk.hpp",
+    "inherited_move": "https://github.com/leecdiang/HeteroSpec/blob/66594b349955e66146702325559c26019ea16485/benchmarks/b570_closeout_overnight_v1/code/src/observer.h",
+    "inherited_timer": "https://github.com/leecdiang/HeteroSpec/blob/66594b349955e66146702325559c26019ea16485/benchmarks/b570_closeout_overnight_v1/code/src/native.cpp"
+  },
+  "inputs_are_transcribed_report_values": true,
+  "mean_request_seconds": {
+    "M": 1.2010856388888889,
+    "H1": 11.558210236111112,
+    "C1U1": 11.564342930555556,
+    "C4U1": 11.548519555555556,
+    "C4U2": 11.654481541666666,
+    "C4U4": 11.235785166666666
+  },
+  "fastest_speculative_over_M": 9.354691125156378,
+  "seconds_per_request_to_remove_for_parity": 10.034699527777779,
+  "fraction_of_spec_service_to_remove_for_parity": 0.8931017618197112,
+  "width4_reduction_vs_H1": 0.02789576092301016,
+  "source_transition": {
+    "exports": 3,
+    "imports": 1,
+    "host_full_equality_comparisons": 2,
+    "new_continuation_context": 1,
+    "sampler_clone": 1,
+    "executes_with_trace_off": true,
+    "offline_bulk_observer_does_not_optimize_move": true
+  },
+  "active_payload_lower_bound": {
+    "basis": "source-derived work volume, NOT measured traffic or time",
+    "layers": 24,
+    "k_elements_per_layer": 2048,
+    "v_elements_per_layer": 2048,
+    "bytes_per_element": 2,
+    "bytes_per_active_token": 196608,
+    "mean_prompt_tokens": 450.0,
+    "mean_single_active_KV_MiB": 84.375,
+    "mean_three_exports_plus_one_import_MiB": 337.5,
+    "single_pass_bytes_72_measures": 6370099200,
+    "three_exports_plus_one_import_GiB_72_measures": 23.73046875,
+    "all_five_spec_arms_measured_GiB": 118.65234375
+  },
+  "unmeasured_seconds": {
+    "export": null,
+    "import": null,
+    "context_create_destroy": null,
+    "host_comparison": null,
+    "sampler_clone": null
+  },
+  "interpretation": "The transition has removable-looking work, but its duration and the benefit of removal require controlled native evidence. Keeping R does not require freezing this candidate lifecycle."
+}

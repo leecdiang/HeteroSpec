@@ -115,6 +115,11 @@ int main() {
     assert(projection_requirement(false,true,A::f32,A::q8_1,true) == ProjectionAction::unsupported);
     assert(projection_requirement(true,true,A::q8_1,A::f32,true) == ProjectionAction::unsupported);
     assert(projection_requirement(true,true,A::f32,A::f32,true) == ProjectionAction::unchanged);
+    // A scalar veto applies only to an admitted active rotary head scale.
+    assert(!use_scalar_head_preference(true, true, 4, false, true));
+    assert(use_scalar_head_preference(false, true, 4, false, true));
+    assert(use_scalar_head_preference(true, false, 4, false, true));
+    assert(use_scalar_head_preference(true, true, 5, false, true));
     std::cout << "PASS: " << states << " scalar allocation states; " << sequences
               << " exhaustive partition cases; policy identity and projection decisions\n";
 }

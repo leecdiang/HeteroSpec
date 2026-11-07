@@ -1,0 +1,112 @@
+{
+  "status": "PASS",
+  "scope": "Exact source-byte authentication and independent compact timing/counterexample reconstruction; no new native execution or full raw-vector audit.",
+  "source_files_authenticated": 13,
+  "rtx": {
+    "Qwen": {
+      "candidate_over_dual_control": 0.9677811809618649,
+      "candidate_over_R": 0.5605767553364538,
+      "dual_control_over_R": 0.5792391569128301,
+      "aa_max_input": 0.047781258680038685,
+      "session_ratios": [
+        0.9756688082851604,
+        0.9606039796821231,
+        0.9677729778573908,
+        0.9671378871898618
+      ],
+      "practical_screen_pass": false,
+      "reversed_blocks": 8,
+      "measured_requests": 192,
+      "warmup_requests": 192,
+      "paired_blocks": 48
+    },
+    "SmolLM2": {
+      "candidate_over_dual_control": 0.9300555558417274,
+      "candidate_over_R": 1.0070074101608135,
+      "dual_control_over_R": 1.0827389867581,
+      "aa_max_input": 0.015014227229102506,
+      "session_ratios": [
+        0.9280005163891835,
+        0.9290858099853583,
+        0.9318679378915442,
+        0.9312732988637296
+      ],
+      "practical_screen_pass": true,
+      "reversed_blocks": 0,
+      "measured_requests": 192,
+      "warmup_requests": 192,
+      "paired_blocks": 48
+    }
+  },
+  "rtx_counterexamples": [
+    {
+      "stage": "E1",
+      "family": "Qwen",
+      "task_id": "GSM8K/test/70",
+      "input_index": 1,
+      "prompt_tokens": 75,
+      "arm": "NATIVE_FAST",
+      "first_different_output_index_zero_based": 68
+    },
+    {
+      "stage": "E1",
+      "family": "Llama",
+      "task_id": "CodeContests/valid/108",
+      "input_index": 8,
+      "prompt_tokens": 737,
+      "arm": "PQ",
+      "first_different_output_index_zero_based": 81
+    },
+    {
+      "stage": "E1",
+      "family": "Llama",
+      "task_id": "CodeContests/valid/108",
+      "input_index": 8,
+      "prompt_tokens": 737,
+      "arm": "QB",
+      "first_different_output_index_zero_based": 81
+    },
+    {
+      "stage": "calibration",
+      "family": "SmolLM2",
+      "task_id": "GSM8K/test/111",
+      "arm": "NATIVE_FAST",
+      "first_different_output_index_zero_based": 8
+    },
+    {
+      "stage": "calibration",
+      "family": "Llama",
+      "task_id": "GSM8K/test/111",
+      "arm": "NATIVE_FAST",
+      "first_different_output_index_zero_based": 22
+    }
+  ],
+  "rtx_request_disposition": {
+    "COMPLETED": 1018,
+    "NOT_RUN": 758
+  },
+  "rtx_e2_complete_categories": {
+    "warmup": 384,
+    "measured": 384
+  },
+  "rtx_llama_cost": "NOT_RUN; no qualified cost estimate",
+  "b570": {
+    "candidate_over_dual_control": 0.9991613016897527,
+    "candidate_over_R": 1.2036779934566173,
+    "dual_control_over_R": 1.2046883635515024,
+    "aa_max_input": 0.003688690361986824,
+    "session_ratios": [
+      1.0005918808834429,
+      0.9988269373238996,
+      0.9994477598680488,
+      0.997780703564486
+    ],
+    "practical_screen_pass": false,
+    "reversed_blocks": 5,
+    "measured_requests": 64,
+    "warmup_requests": 64,
+    "paired_blocks": 16
+  },
+  "b570_fully_protocol_resource_compliant": false,
+  "new_native_requests": 0
+}

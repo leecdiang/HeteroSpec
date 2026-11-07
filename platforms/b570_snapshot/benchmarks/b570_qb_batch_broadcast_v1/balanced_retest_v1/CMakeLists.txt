@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(b570_qb_aa_balanced LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(balanced balanced.cpp)
+target_include_directories(balanced PRIVATE "C:/hs/llama-b10839/ggml/include" "C:/hs/b570-geometry-p0/benchmarks/b570_geometry_state_codesign_v1/_host/pr97/dependencies/pinned-source/vendor" "C:/hs/b570-query-head-lowering/benchmarks/b570_query_head_lowering_v1/native")
+target_link_libraries(balanced PRIVATE "C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml-base.lib")
+target_compile_options(balanced PRIVATE /O2 /W4 /fp:precise)

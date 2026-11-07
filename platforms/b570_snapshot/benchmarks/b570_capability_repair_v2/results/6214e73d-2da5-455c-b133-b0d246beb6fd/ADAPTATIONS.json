@@ -1,0 +1,101 @@
+{
+  "status": "UNQUALIFIED_STOPPED_CANDIDATE",
+  "reviewed_repair_runtime_unchanged": true,
+  "legacy_adaptations": [
+    {
+      "path": "legacy/repo/benchmarks/b570_supervision_fix_v2/host/common.py",
+      "original_sha256": "70cae58d4e21ddd3d5a001b1126806d61d3b735dcc028106d1a717cece8889a5",
+      "candidate_sha256": "c0ccc64ad25ac0646d468cf3b8de40699c18c0f82ea5533d3bdae0450c6ae168",
+      "purpose": "Explicit legacy BASE binding"
+    },
+    {
+      "path": "legacy/repo/benchmarks/b570_supervision_fix_v2/host/raw_audit.py",
+      "original_sha256": "4556374156bee5a064f62f6c68c7e678cffa483b31cc015214b5efe1e3d24040",
+      "candidate_sha256": "16b0366b42d6019381dd6018b05e29dbceff590ec658a4940cf4b667afa4e04f",
+      "purpose": "Explicit original-root mapping for restoration"
+    },
+    {
+      "path": "legacy/repo/benchmarks/b570_supervision_fix_v2/host/launch.ps1",
+      "original_sha256": "c679a0e18d7004465b97de790206688279bcc90a7f46d67da17f4a4a9b1d93ec",
+      "candidate_sha256": "13154f55e937520401c7968e652752c39ff92143efb2a436cfa470712e5650f7",
+      "purpose": "Explicit root admission and compiled DLL path only"
+    }
+  ],
+  "new_files": [
+    {
+      "path": "source/bridge.py",
+      "sha256": "6d8afc998d2e744415b21151449cd0540d20a4f6c725e35830c43ef7a944ebcd"
+    },
+    {
+      "path": "source/cpu8_audit.py",
+      "sha256": "fcd838365214f9bb28e685188b8f13dd6aa66c01ef573866eca5767602ddf5fa"
+    },
+    {
+      "path": "source/cpu8_supervisor.py",
+      "sha256": "aeebbc8423b857b9fb537dc1a6adbaa3df6285d4378602594d4dd4b9d7637763"
+    },
+    {
+      "path": "source/freeze_cpu8.py",
+      "sha256": "6754def2a52fbef5da88dd8f5f0b6fccfa350d6290125e76e7fb3dab0e403a19"
+    },
+    {
+      "path": "source/native_freeze_gates.py",
+      "sha256": "9d3751ff3883e59d50d587c1a081b489928e98b9ba1eca7fd4b219db5723a804"
+    },
+    {
+      "path": "source/native_gate_audit.py",
+      "sha256": "ee6cc208b80b8cb90db1e9a000d94dc732679a29e8a2111a027bc45c901cfc9f"
+    },
+    {
+      "path": "source/observe.py",
+      "sha256": "b1cf99030ab97801b4312d51116671240c03dfc64723428ae17c4bf70628c954"
+    },
+    {
+      "path": "source/outer_watchdog.py",
+      "sha256": "770f4d2ca984ef8d45e5ba7c052de2a76e80fc2d3bf20969d2aba30d885be5cb"
+    },
+    {
+      "path": "source/preflight.py",
+      "sha256": "b0ff364b4ebb5f66c062adeb5631395d2d3cb6d9036ec5bdd5c5098d38b5c609"
+    },
+    {
+      "path": "source/source_guard.py",
+      "sha256": "b4a52e306bb5af93c1d514f705c82dfdf39efe451f283d9e9d3e5e15b8f4cd4c"
+    },
+    {
+      "path": "source/stall_harness.py",
+      "sha256": "c3ee33d4dcd80d8792015f045f1c634320bdcce975ff6aa743aa669a59ef67b6"
+    },
+    {
+      "path": "source/stall_supervisor.py",
+      "sha256": "79b7e3dac85f2d44f5c40c40887e5019bc3ec9855e87e7dcdafdc647936c8f96"
+    },
+    {
+      "path": "source/test_budget_limits.py",
+      "sha256": "e78b6bd1bc7b039d77c3254794e0dc10d6af62a92f27766644911db98b354d03"
+    },
+    {
+      "path": "source/test_cpu8_bridge.py",
+      "sha256": "148c1900a60857c92aaefc075ef7ecdcebe96dd243754ba2e7b7e20b4d1c1a52"
+    },
+    {
+      "path": "source/verify_cpu8.py",
+      "sha256": "8d4a4239e1c84c6c4620b59090ca87995a458f087a6082e8f38f1b420226da82"
+    }
+  ],
+  "criteria_unchanged": [
+    "watcher/controller/C# capture",
+    "100ms nominal inner cadence",
+    "1000000000ns inner effective gap",
+    "pending completion/SEALED_WRITE/object control",
+    "source-only import tree and separate compiled DLL"
+  ],
+  "known_blocking_defect": {
+    "path": "source/stall_supervisor.py",
+    "line": 3,
+    "error": "ModuleNotFoundError: No module named 'win'",
+    "cause": "Moved entrypoint lacks explicit runtime import path; no fourth revision performed"
+  },
+  "unused_entry": "outer_watchdog.py --mode cpu8 is an unqualified candidate; never launched",
+  "no_approved_formal_entry": true
+}

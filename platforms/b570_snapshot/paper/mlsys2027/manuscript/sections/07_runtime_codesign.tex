@@ -1,0 +1,20 @@
+\section{Runtime Control under Qualified Fixed Modes}
+\label{sec:runtime}
+The separate M4 runtime study tests whether continuation control improves a qualified speculative path. It uses its own frozen policy, direct-ID gate and cost boundary; historical M4 timing is background rather than its qualification evidence.
+
+\subsection{A prospective cost guard on M4}
+Guard tests a frozen rule against target-only and fixed speculation, using Qwen3-8B/0.6B Q8\_0 on llama.cpp Metal, fixed $k=\RTK$, greedy generation and a \RTCap-token cap. It starts on Always-Spec's path and may fall back permanently to target-only. At eligible completed rounds it divides all charged generation cost by committed progress, including the initial seed and correction/bonus; rejected proposals do not count. It continues when cost per token is at most $(1-m)R_{\mathrm{ref}}$, otherwise falling back after reconciling invalid suffix state. Zero progress also triggers fallback.
+
+Calibration freezes the target reference and selects margin \RTMargin\ with decisions starting after \RTRounds\ rounds. The controller receives no task labels, future length or request-specific oracle. The post-prefill timer charges control and transition costs; Appendix T retains the full rule, grid, tie-breaks and timing boundary.
+
+\subsection{Held-out evaluation}
+Historical outcomes informed the design; prospective means policy freeze before reserved outcomes. Exposure exclusion and deterministic selection give disjoint calibration, qualification and held-out splits of \RTCalibration, \RTQualification\ and \RTPrompts\ prompts, balanced across HumanEval and Spec-Bench. Policy and reference precede qualification/formal measurement; the appendix retains the audited freeze-hash metadata defect. Always-Spec and Guard each qualify \RTQualPairs/\RTQualPairs\ direct-ID pairs.
+
+The held-out study runs \RTReps\ repetitions of three conditions on \RTPrompts\ prompts (\RTObservations\ observations), randomizing condition order within prompt/repetition. Both speculative paths preserve \RTExact/\RTExact\ complete direct-ID sequences. Prompt condition medians precede latency ratios and the GM; \RTBootstrap\ prompt-bootstrap draws use seed \RTSeed. The supplement retains exact estimator, exposure and metadata-recovery details.
+
+\input{tables/07_runtime.tex}
+Guard is faster than target-only, but fixed speculation has the higher speedup (Table~\ref{tab:runtime}). A post-study paired comparison gives Guard/Always-Spec latency \RTSecondary\ [\RTSecondaryLo, \RTSecondaryHi], entirely above parity. Guard is faster on \RTGuardFaster\ prompt medians, Always-Spec on \RTAlwaysFaster, with \RTTies\ ties. Fallback occurs in \RTFallback\% of \RTExact\ executions, measuring activity rather than beneficial decisions. Guard/oracle is \RTOracle$\times$; this hindsight oracle chooses the lower target-only or Always-Spec median, not an achievable runtime policy.
+
+Reconstructing all original medians finds target-only faster than Always on only \DerTargetFaster/\RTPrompts\ prompts, both Spec-Bench. Always/oracle is \DerAlwaysOracle$\times$. Choosing the better of these two measured fixed modes after seeing outcomes therefore offers about \DiagMOpportunity\% GM latency reduction from Always, computed from the full-precision ratio. Guard falls back in all six executions of those two prompts but still loses to target-only on their medians. The family-stratified sensitivity analysis also leaves Guard slower (Appendix P). These post-study comparisons estimate neither transition cost nor opportunity for arbitrary within-request switching.
+
+Guard preserves IDs but supplies no incremental benefit over Always-Spec. Fallback activity does not establish beneficial decisions or risk reduction. No runtime energy claim is made. Policy transfer and stable small-stratum effects remain unestablished; the archived policy-freeze defect and original stopped pipeline markers are documented separately.

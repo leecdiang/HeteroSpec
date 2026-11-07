@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\run_cpu_tests.py", line 59, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\run_cpu_tests.py", line 52, in main
+    p=run('actual_cache_and_roles',[str(ROOT/'native/build/bin/native-cache113.exe')]);assert json.loads(p.stdout)['status']=='PASS'
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\run_cpu_tests.py", line 12, in run
+    save(DEST/'cpu_tests'/(label+'-EXIT.json'),dict(exit_code=p.returncode,expected=expected));assert p.returncode==expected,(label,p.stderr[-2000:]);return p
+                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('actual_cache_and_roles', b'actual graph identity/role guard failed\r\n')

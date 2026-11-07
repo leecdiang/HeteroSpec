@@ -1,0 +1,70 @@
+\section{Numerical preservation and repair efficiency}
+\label{sec:evaluation}
+\subsection{Identical-input attention correspondence}
+In the fixed-input study~\cite{rtxrepair}, across all 24 captured CUDA contexts, PQ and QB produce bitwise-identical QK, softmax and AV outputs (Figure~\ref{fig:numeric}). Ordinary MQ differs from both at QK, and the difference remains visible at subsequent sampled stages. Native MQ replay correspondence and within-arm repeats pass in the recorded comparisons. This establishes a local numerical property under actual fixed operands rather than attributing a difference between two whole runs to whichever tensor happens to be observed last.
+
+\begin{figure}[t]
+\centering\input{figures/numeric.tex}
+\caption{Fixed-input CUDA attention replay. Entries count contexts with bitwise-equal outputs out of 24. These are sampled layer-0 prefill/continuation contexts, not 24 independent model shapes. PQ/QB correspondence does not establish a general device reduction-order theorem.}
+\label{fig:numeric}
+\end{figure}
+
+The evidence establishes bitwise attention correspondence on the sampled identical-input contexts. Runtime operations and tensor geometry were recorded, but full kernel scheduling was unavailable, so the responsible CUDA kernels and reduction trees remain unidentified. Some layer-0 prefill captures share early prefixes. Complete-decoder qualification is therefore tested separately below.
+
+\subsection{Three-family complete-output qualification}
+The larger confirmation~\cite{rtxconfirm} gives a separate test of decoder behavior. For each family, all 240 repeated outputs of $R$, $M_3$ and $C_3$ meet the complete registered endpoint. The unconstrained matched-capacity target-only path $M_0$ fails on 50/240 Qwen3, 140/240 SmolLM2 and 90/240 Llama requests (Table~\ref{tab:qual}). These failures are repeat observations over 5, 14 and 9 distinct tasks respectively, not independent failure trials. The contrast shows that merely using the target-only batched configuration is not sufficient for the chosen reference.
+
+\begin{table}[t]\centering\small
+\caption{Larger confirmation: matching complete endpoints /240 requests per arm. $M_0$ is unconstrained UB4. The $R_{\rm prod}$ values are independent of $M_0$ even when their counts coincide.}
+\label{tab:qual}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Arm & Qwen3 & SmolLM2 & Llama\\\midrule
+$R$ &240&240&240\\
+$M_0$ &190&100&150\\
+$M_3$ &240&240&240\\
+$C_3$ &240&240&240\\
+$R_{\rm prod}$ &240&100&160\\\bottomrule
+\end{tabular}
+\end{table}
+
+The engineering-selected ordinary $R_{\rm prod}$ keeps UB1 for Qwen3 and uses UB512 for the other two families. On the confirmation panel, SmolLM2 and Llama fail the registered reference in 140 and 80 requests respectively. Their ordinary-production comparisons cannot be promoted to qualified lossless speedups. Selection on exposed engineering tasks does not exempt a configuration from later qualification.
+
+In the seven-arm repair campaign, every arm in every family completes and qualifies 96/96 outputs. Thus the direct PQ/QB/GS costs compare identical registered outputs within each family and task. This new result supplies cross-family implementation evidence while retaining the historical minimality boundary: it does not show that mask3 is minimal on all three families or that every unseen input will agree.
+
+\subsection{The cost of the repair implementation}
+Table~\ref{tab:cost} reports all 21 primary comparison estimates. QB is less expensive in aggregate than PQ for both target-only and speculative execution in each family. The speculative PQ/QB ratios are 1.044, 1.068 and 1.022 for Qwen3, SmolLM2 and Llama. The corresponding target-only ratios are 1.027, 1.038 and 1.013. PQ/QB is the closest implementation comparison: both constrain attention locally and retain surrounding batching, while differing in how they represent the attention queries. The modest measured advantage quantifies the cost of this representation choice under the tested conditions.
+
+\begin{table*}[t]\centering\small
+\caption{Complete same-reference request comparisons from the 12-task implementation campaign. Ratios above one favor the denominator; parentheses give the number of tasks on which the denominator is slower, out of 12. All 21 comparisons qualify. These are aggregate ratios, not latency-reduction percentages or kernel timings.}
+\label{tab:cost}
+\begin{tabular}{@{}lrrrrrrr@{}}\toprule
+ & \multicolumn{2}{c}{Local repair} & \multicolumn{2}{c}{Global serialization} & Draft benefit & \multicolumn{2}{c}{Ordinary reference}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-6}\cmidrule(l){7-8}
+ & $M_{\PQ}/M_{\QB}$ & $C_{\PQ}/C_{\QB}$ & $M_{\GS}/M_{\QB}$ & $C_{\GS}/C_{\QB}$ & $M_{\QB}/C_{\QB}$ & $R/M_{\QB}$ & $R/C_{\QB}$\\\midrule
+Qwen3 &1.027 (2)&1.044 (0)&1.330 (0)&2.144 (0)&1.144 (1)&1.334 (0)&1.526 (0)\\
+SmolLM2 &1.038 (0)&1.068 (0)&1.366 (0)&1.463 (0)&0.634 (12)&1.370 (0)&0.868 (10)\\
+Llama &1.013 (1)&1.022 (2)&1.412 (0)&2.176 (0)&1.117 (1)&1.426 (0)&1.592 (0)\\\bottomrule
+\end{tabular}
+\end{table*}
+
+There are task-level exceptions. Qwen3's target-only PQ/QB comparison regresses on two GSM8K tasks; Llama regresses on one target-only task and two speculative tasks. No PQ/QB regression occurs in the SmolLM2 panel. The target-only comparisons also reverse direction between sessions: Qwen3's $M_{\PQ}/M_{\QB}$ is 0.971 and 1.085, and Llama's is 0.994 and 1.033. By contrast, $C_{\PQ}/C_{\QB}$ favors QB in both sessions for all three families (Supplement~S4, Figure~S2). Thus the aggregate target-only advantage is session-sensitive; it should be distinguished from the consistently directed speculative session aggregates. Neither two adjacent sessions nor this small selected panel establishes long-term stability of a one-percent difference.
+
+The distinction from global serialization is larger. GS/QB speculative ratios are 2.144, 1.463 and 2.176, and target-only ratios are 1.330, 1.366 and 1.412; every task favors QB in these comparisons. GS removes target-wide batching while QB constrains the attention organization only. The comparison supports the value of retaining other batched work under the common reference requirement. It does not isolate a measured fraction attributable to projection, FFN or graph launch overhead, since the experiments lack a completed component-time partition. GS is the in-stack global-serialization control; external-system performance remains unmeasured.
+
+\begin{figure*}[t]
+\centering\input{figures/cost.tex}
+\caption{Repair efficiency and speculation are different comparisons. Panels A/B: PQ/QB and GS/QB ratios with a draft; both compare qualified repairs. Panel C: adding a draft to the QB target-only path. Axis ranges differ across panels. Points are aggregate request-time estimates from the balanced two-session campaign. SmolLM2 benefits from QB over both repair alternatives while still losing to its own draft-free QB path.}
+\label{fig:costfig}
+\end{figure*}
+
+\subsection{Adding a draft after repair}
+$M_{\QB}/C_{\QB}$ measures the net effect of adding the complete speculative protocol to an already repaired target path. It is 1.144 for Qwen3 and 1.117 for Llama, with one slower task in each, but 0.634 for SmolLM2, with all 12 tasks slower. The last value corresponds to about 1.58 times the target-only request duration. Even so, $C_{\QB}$ is still cheaper than $C_{\PQ}$ and $C_{\GS}$ for SmolLM2. This is direct evidence that repair efficiency and speculative profitability must be stated independently. Supplement~S4, Figure~S1 shows the corresponding task-level comparisons.
+
+The ordinary comparisons answer another question. In this same campaign, $R/M_{\QB}$ is 1.334, 1.370 and 1.426, while $R/C_{\QB}$ is 1.526, 0.868 and 1.592. Changes to target prefill/capacity and layout contribute jointly to ordinary-versus-matched comparisons. Those ratios cannot be attributed entirely to attention repair, and the multiplication with $M/C$ is an estimator identity rather than causal component accounting. The paper's method claim rests primarily on PQ/QB and GS/QB, not on labeling the full ordinary-to-candidate gain as speculative acceleration.
+
+The larger 24-task confirmation has the same qualitative split: $M_3/C_3$ equals 1.135 for Qwen3, 0.607 for SmolLM2 and 1.072 for Llama, with 0/24, 24/24 and 4/24 regressions. Its ordinary-to-matched ratios are 1.383, 1.444 and 1.501. These are supporting results from a different campaign, not successive software-version speedups. Likewise the historical Qwen3 ratio 1.742 versus ordinary and 1.035 versus matched target-only remains in the supplement with its original panel, timer and round reversal; it is not substituted for the new campaign's numbers.
+
+\subsection{Why work proxies are not enough}
+A draft can reduce high-level target callers without reducing physical work proportionally. In a historical fixed-UB4 experiment~\cite{history}, widening $k$ from 3 to 7 preserved the endpoint but reduced relative speed to 0.829 in the generation interval and 0.890 in the request interval. Separate captured work sessions showed fewer target continuation callers but more micrographs, and a larger increase in proposed than accepted draft tokens. Those instrumentation counters cannot be divided by separately measured wall time to create a kernel profile.
+
+Acceptance and query width describe workload generation. Their cost depends on the implementation's physical verification geometry and its measured request cost. The request measurements establish the observed cost comparison. Predicting a break-even point for a new workload would additionally require a validated cost model; asynchronous enqueue spans do not provide exclusive GPU stage times.

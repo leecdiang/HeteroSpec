@@ -1,0 +1,37 @@
+\section{Implementation and reference contracts}
+\label{supp:implementation}\label{supp:contracts}
+The CUDA target/draft pairs use Q8\_0 conversions and F16 KV; the original B570 state-study target uses Q6\_K and the historical draft Q4\_K\_M. Model families, converted files and reference recipes remain distinct between campaigns. Native endpoint checks retain IDs, EOG flags, length, last token and stop reason. Older first-EOG or re-tokenized-text comparisons have their original scope in the ancillary history; they do not qualify newer full-array comparisons.
+
+\subsection{Implementation checks}
+Query views must fit the allocated source span, preserve alignment and nonoverlapping logical coordinates, and maintain the original mask column and GQA mapping. K/V ownership and the output permutation are checked explicitly. The role/phase flag enters graph parameters before the observation-disabled branch, participates in topology reuse and resets on a new request. PQ slices identical operands and masks; GS actually changes physical target microbatching. Neither baseline changes the draft, reconciliation or stopping rule to create a cost difference.
+
+\subsection{Complete phase-selection experiment}
+The four-bit experiment tests four HumanEval probes, two repeats, $k=3$, UB4 and cap128: 128 native requests. Table~\ref{tab:masks} preserves every mask. Mask3 is inclusion-minimal within this tested family and is fixed in the later campaigns. A separate 19-task/six-repeat comparison against all-phase mask15 gave only 1.003569 generation speed, below its registered 1.03 threshold, with an interval including parity. Removing constraints was not itself an established efficiency improvement.
+\begin{table}[t]\centering\small
+\setlength{\tabcolsep}{2.8pt}
+\caption{Historical finite four-switch pattern. TP/TC/DP/DC are target/draft prefill/continuation bits. ``Y'' means full-reference match on that probe in the tested repeats.}
+\label{tab:masks}
+\begin{tabular}{@{}rccccccccc@{}}\toprule
+Mask&TP&TC&DP&DC&HE15&HE18&HE25&HE31&Panel\\\midrule
+0&0&0&0&0&Y&N&N&Y&N\\
+1&1&0&0&0&Y&N&Y&Y&N\\
+2&0&1&0&0&Y&N&Y&Y&N\\
+3&1&1&0&0&Y&Y&Y&Y&Y\\
+4&0&0&1&0&Y&N&N&Y&N\\
+5&1&0&1&0&Y&N&Y&Y&N\\
+6&0&1&1&0&Y&N&Y&Y&N\\
+7&1&1&1&0&Y&Y&Y&Y&Y\\
+8&0&0&0&1&Y&N&N&Y&N\\
+9&1&0&0&1&Y&N&Y&Y&N\\
+10&0&1&0&1&Y&N&Y&Y&N\\
+11&1&1&0&1&Y&Y&Y&Y&Y\\
+12&0&0&1&1&Y&N&N&Y&N\\
+13&1&0&1&1&Y&N&Y&Y&N\\
+14&0&1&1&1&Y&N&Y&Y&N\\
+15&1&1&1&1&Y&Y&Y&Y&Y\\\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Width and runtime boundaries}
+The earlier joint $(k,U)$ sweep tested $(1,2),(3,4),(5,6),(7,8)$ at caps 128/256/512 on 11 inputs. MBPP229 failed in the two wider geometries; a separate HumanEval18 failure retained its own denominator. The maximum observed reference length was 261, so requesting cap512 did not establish a 512-token complete trajectory. In a fixed-UB4 study, widening $k$ to 7 preserved endpoints but yielded generation/request ratios of 0.829442/0.889868 versus $k=3$. Draft proposals increased from 3,528 to 5,392 while accepted draft tokens increased from 2,772 to 3,192. Different captured sessions showed caller counts falling from 305 to 199 and micrographs rising from 305 to 397; these are not additive component timings.
+
+Four engineering PQ warm requests failed when graph metadata capacity was insufficient. A resource-only correction scaled metadata reservation by the already declared maximum $q=4$ without changing numerical operators or the formal panel. SmolLM2/Llama PQ arms use that registered executable; the other arms retain the original route with identical numerical DLLs. Alias-admission and packaging corrections remain in the archive. They are not additional scientific replications.

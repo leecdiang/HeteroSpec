@@ -1,0 +1,11 @@
+# Rigor review — v0.8 (internal model-review simulation)
+
+Reviewed the final v0.8 PDF and six-page appendix, plus the committed B570 closeout/analysis and the v0.8 audit. **Assessment: Weak Accept on internal validity; confidence 4/5 for the narrow claim, 2/5 for full machine-state attestation.** This is not an external review or an independent fresh archive replay.
+
+The core inference has an unusual strength for a diagnosis paper: 12 exposed prompts establish H1 at 36/36 under a prespecified H1/H2 decision tree, then 24 reserved IDs are selected from an exposure-audited inventory. The hypothesis commit precedes reserved inference; a separate prediction commit precedes live outcomes. The primary success threshold is the complete direct-ID sequence on every one of 72 pairs. It passes 72/72, alongside 24/24 classification and 12/12 first-divergence checks for the four divergent prompts. Predicted and actual 60/72 reference equality both remain BLOCKED. The manuscript does not smuggle this result into the earlier 78/90 qualification or historical timing.
+
+The distinction between sufficiency and unique causality is maintained. Target-only UB1 reproduces the serialized trajectory, but it cannot by itself identify a Vulkan kernel or prove no other execution change would do the same. No-known-exposure is explicitly bounded to audited retained records. The later independent validator reports 5,681 passing checks; the current paper-integration environment checked that receipt and core JSON projections but could not replay the 87 MB archive. That limits this review's attestation without invalidating the recorded study.
+
+One wording vulnerability: the abstract's compact “target-partition hypothesis” could be read as causal identification; Section 5 and limitations correctly narrow it. I see no numerical contradiction in the current PDF. Keep the exact freeze chronology prominent and the separate appendix task list; it is central to falsifiability.
+
+**v0.7 blocker:** The held-out prediction materially answers the earlier lack of explanatory/predictive reach within B570. External transfer, performance consequence and completeness of the exposure inventory remain separate open questions.

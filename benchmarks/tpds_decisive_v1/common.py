@@ -7,6 +7,16 @@ from typing import Any
 class Invalid(ValueError):
     pass
 
+def shared_blob(path: Path, raw: bytes) -> None:
+    """Optional same-volume CAS; hard links retain every original logical path."""
+    pool=os.environ.get('TPDS_EVIDENCE_CAS')
+    if not pool:path.write_bytes(raw);return
+    h=hashlib.sha256(raw).hexdigest();p=Path(pool)/h[:2]/h;p.parent.mkdir(parents=True,exist_ok=True)
+    if p.exists():need(p.read_bytes()==raw,'shared CAS collision')
+    else:
+        with p.open('xb') as f:f.write(raw)
+    os.link(p,path)
+
 def need(ok: bool, message: str) -> None:
     if not ok:
         raise Invalid(message)

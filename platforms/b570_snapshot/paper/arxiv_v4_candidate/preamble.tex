@@ -1,0 +1,61 @@
+\usepackage[T1]{fontenc}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{microtype,graphicx,booktabs,amsmath,amssymb,amsthm,array,tabularx,longtable,multirow}
+\usepackage{xcolor,tikz,pgfplots,enumitem,placeins,xurl,needspace,etoolbox,flushend}
+\geometry{reset,a4paper,left=23mm,right=18mm,top=20mm,bottom=21mm,columnsep=6mm,footskip=10mm}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,matrix,backgrounds,patterns}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage[hypertexnames=false,bookmarksnumbered=true,bookmarksopen=false]{hyperref}
+\urlstyle{same}
+\definecolor{linkblue}{HTML}{204D8B}
+\hypersetup{colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue,pdfauthor={Chengzhan Li},pdftitle={Phase-Scoped Query Layouts for Reference-Preserving Speculative Decoding},pdfsubject={Complete article and supplementary material; P0 evidence revision 2026-10-27}}
+\definecolor{target}{HTML}{426B8B}
+\definecolor{draft}{HTML}{936027}
+\definecolor{qualified}{HTML}{3E725E}
+\definecolor{aux}{HTML}{6B7075}
+\definecolor{light}{HTML}{EDF1F3}
+\newcommand{\QB}{\mathrm{QB}}
+\newcommand{\PQ}{\mathrm{PQ}}
+\newcommand{\GS}{\mathrm{GS}}
+\newcommand{\MQ}{\mathrm{MQ}}
+\newcommand{\kw}[1]{\texttt{#1}}
+\newcommand{\same}{\textcolor{qualified}{\ensuremath{=}}}
+\newcommand{\diff}{\textcolor{draft}{\ensuremath{\ne}}}
+\newcommand{\sref}[1]{Supplement~\ref{#1}}
+\newtheorem{proposition}{Proposition}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\setlength{\emergencystretch}{2em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.14}
+\renewcommand{\bibfont}{\small\setlength{\baselineskip}{10.3pt}}
+\setlist{nosep,leftmargin=*}
+\setlength{\textfloatsep}{13pt plus 3pt minus 2pt}
+\setlength{\dbltextfloatsep}{14pt plus 3pt minus 2pt}
+\setlength{\floatsep}{11pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{11pt plus 2pt minus 2pt}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+\renewcommand{\dblfloatpagefraction}{0.7}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+\clubpenalty=8000
+\widowpenalty=8000
+\displaywidowpenalty=8000
+\raggedbottom
+\makeatletter
+\def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty\def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+\makeatother
+\tikzset{box/.style={draw=aux,rounded corners=1pt,align=center,inner sep=5pt,font=\small},flow/.style={-{Latex[length=2mm]},line width=.55pt,draw=aux}}
+
+% Stable build metadata; no shell escape or external programs are needed.
+\pdfinfoomitdate=1
+\pdftrailerid{}
+\pdfsuppressptexinfo=15
+
+% Robust balancing with full-width floats at article and supplement ends.
+\let\balance\flushcolsend
+\let\nobalance\raggedcolsend

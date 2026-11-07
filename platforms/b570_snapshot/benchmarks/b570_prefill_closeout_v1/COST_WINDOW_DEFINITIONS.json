@@ -1,0 +1,10 @@
+{
+  "service_seconds": "Outer native request call, including environment selection, fresh contexts/graph reservation, prefills, native generation/sampling/state and context destruction; excludes prior reference read and subsequent comparisons/result writes.",
+  "request_seconds": "Inherited inner interval after context construction through final synchronization; excludes context teardown and some record finalization.",
+  "decode_phase_seconds": "Sum of inherited inner decode spans from immediately before llama_decode through batch free and llama_synchronize. Excludes batch construction and host loop overhead; not an independently timed whole-prefill interval or GPU time.",
+  "model_load_seconds": "Native model-load interval, separate from individual fresh-context service.",
+  "worker_wall_seconds": "Whole owned native parent lifetime, including load, capture/qualification or warmups/measurements, comparisons, output and cleanup.",
+  "wrapper_total_seconds": "Includes preflight hash/resource checks plus native parent supervision; overlaps worker wall.",
+  "owned_wall_seconds": "Conservative continuous host preparation/coordination wall; includes compilation/audits, not isolated active CPU or GPU occupancy.",
+  "do_not_sum_overlapping_windows": true
+}

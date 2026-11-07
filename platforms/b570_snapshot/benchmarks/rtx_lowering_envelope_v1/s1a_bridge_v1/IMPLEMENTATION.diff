@@ -1,0 +1,377 @@
+--- formal_numerical_v2/run_formal.py
++++ s1a_bridge_v1/run_bridge.py
+@@ -9,6 +9,7 @@
+ from common import V,RUN,load,save,sha,wire,env,pin
+ from lifecycle import Child,process_commit
+ import analyzer
++from bounded import State,Deadline,ByteLedger,BudgetStop,durable
+ 
+ def size(root,exclude_cas=False):
+     total=0
+@@ -17,15 +18,15 @@
+         if p.is_file() and not (exclude_cas and p.relative_to(root).parts[0]=='cas'):total+=p.stat().st_size
+     return total
+ def check(f0,plan):
+-    assert f0['run_id']==plan['run_id']==RUN and f0['stage']=='FORMAL_NUMERICAL_V2' and not f0.get('CPU_fixture_only')
+-    assert f0['plan_sha256']==sha(V/'PLAN.json') and len(plan['descriptors'])==72 and len(plan['numerical_slots'])==720
+-    slots=plan['numerical_slots'];assert all(s['q']==1 for s in slots[:180]) and all(s['q']>1 for s in slots[180:])
+-    assert len({(s['descriptor'],s['layout'],s['repeat']) for s in slots})==720
+-    assert sum(s['registered_support_queries'] for s in slots)==10836
+-    assert f0['budget']==load(V/'BUDGET.json')
++    assert f0['run_id']==plan['run_id']==RUN and f0['stage']=='S1A_BRIDGE_V1' and not f0.get('CPU_fixture_only')
++    assert f0['plan_sha256']==sha(V/'PLAN.json') and len(plan['descriptors'])==24 and len(plan['numerical_slots'])==240
++    slots=plan['numerical_slots'];assert all(s['q']==1 for s in slots[:60]) and all(s['q']>1 for s in slots[60:])
++    assert len({(s['descriptor'],s['layout'],s['repeat']) for s in slots})==240
++    assert sum(s['registered_support_queries'] for s in slots)==3612
++    assert f0['budget']==load(V/'BUDGET_FINAL.json')
+     for p in f0['files']:assert sha(p['path'])==p['sha256'],p['path']
+ def approval_gate(stage,f0_path,approval):
+-    assert approval['stage']=={'census':'FORMAL_V2_CENSUS_ONLY','numerical':'FORMAL_V2_NUMERICAL_EXACT'}[stage]
++    assert approval['stage']=={'census':'BRIDGE_CENSUS_ONLY','numerical':'BRIDGE_NUMERICAL_EXACT'}[stage]
+     assert approval['F0_sha256']==sha(f0_path) and approval['run_id']==RUN
+     assert approval['author_message'] and approval['author_message_sha256']==hashlib.sha256(approval['author_message'].encode()).hexdigest()
+     authenticated=load(V/'AUTHENTICATED_F0.json')
+@@ -55,10 +56,10 @@
+     return rows
+ class Power(ctypes.Structure):
+     _fields_=[('AC',ctypes.c_ubyte),('flags',ctypes.c_ubyte),('percent',ctypes.c_ubyte),('system',ctypes.c_ubyte),('life',W.DWORD),('full',W.DWORD)]
+-def readiness(worker,d,f0,guard):
++def readiness(worker,d,f0,guard,on_start=lambda pid:None):
+     policy=f0['admission_policy'];command=[policy['nvidia_smi'],'--query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu','--format=csv,noheader,nounits']
+     save(d/'READINESS_STARTED.json',dict(command=command,epoch=time.time(),attempts=1))
+-    worker.run(command,d/'readiness',10,env(f0['runtime_directory']),f0['budget']['limits']['readiness_process_commit_bytes'],guard)
++    worker.run(command,d/'readiness',10,env(f0['runtime_directory']),f0['budget']['limits']['readiness_process_commit_bytes'],guard,on_start=on_start)
+     lines=(d/'readiness.stdout').read_text().strip().splitlines();assert len(lines)==1
+     fields=[s.strip() for s in lines[0].split(',')];assert len(fields)==6
+     name,driver,total,used,util,temp=fields
+@@ -72,89 +73,107 @@
+     save(d/'ADMISSION.json',result)
+     assert (name,driver,float(total))==(policy['gpu'],policy['driver'],policy['total_MiB'])
+     assert power.AC==1 and scheme==policy['power_scheme_guid'] and float(util)<=5 and float(temp)<=55 and float(total)-float(used)>=512,'readiness gate: no cooldown/retry'
++
+ def main():
+     begin=time.perf_counter()
+-    a=argparse.ArgumentParser();a.add_argument('--stage',choices=('census','numerical'));a.add_argument('--approval',type=Path);a.add_argument('--dry-check',action='store_true');args=a.parse_args()
++    p=argparse.ArgumentParser();p.add_argument('--stage',choices=('census','numerical'))
++    p.add_argument('--approval',type=Path);p.add_argument('--dry-check',action='store_true');a=p.parse_args()
+     f0=load(V/'F0.json');plan=load(V/'PLAN.json')
+-    if args.dry_check:check(f0,plan);print('PASS CPU-only formal F0/matrix/identities;0 new processes/devices/backends/graphs');return
+-    assert args.stage and args.approval,'explicit stage and separate human approval required'
+-    approval=load(args.approval);approval_gate(args.stage,V/'F0.json',approval)
+-    root=Path(f0['execution_root']);ledger=V/'execution_ledger';ledger.mkdir(exist_ok=True)
+-    start=begin;phase=args.stage.upper();limits=f0['budget']['limits'];stage=f0['budget']['stages'][args.stage]
+-    assert not (ledger/(phase+'_CONTROLLER_STARTED.json')).exists(),'stage already attempted; never restart'
+-    if args.stage=='census':assert not root.exists(),'new run root required'
++    if a.dry_check:
++        check(f0,plan);print('PASS CPU identity/matrix check; no device activity');return
++    assert a.stage and a.approval,'separate human stage approval required'
++    approval=load(a.approval);approval_gate(a.stage,V/'F0.json',approval)
++    assert approval.get('prospective_24_context_amendment_accepted') is True
++    root=Path(f0['execution_root']);phase=a.stage.upper();budget=f0['budget'];limits=budget['limits'];stage=budget['stages'][a.stage]
++    ledger=V/'execution_ledger';ledger.mkdir(exist_ok=True)
++    assert not (ledger/(phase+'_CONTROLLER_STARTED.json')).exists(),'immutable stage already attempted'
++    assert not (root/(phase+'_ENDED.json')).exists()
++    if a.stage=='census':assert not root.exists(),'new root required'
+     else:
+-        assert (root/'CENSUS_SUCCESS.json').exists() and (root/'CENSUS_ENDED.json').exists()
+-        assert load(root/'CENSUS_ENDED.json')['error'] is None and load(root/'CENSUS_DECISION.json')['numerical_admitted']
+-        auth=load(root/'CENSUS_AUTHENTICATED.json');assert auth['authenticated_remote_bytes'] and auth['F0_sha256']==sha(V/'F0.json')
+-        assert auth['census_sha256']==sha(root/'census/native/CENSUS.json') and auth['decision_sha256']==sha(root/'CENSUS_DECISION.json')
+-        assert approval['census_sha256']==auth['census_sha256'] and approval['decision_sha256']==auth['decision_sha256']
+-    save(ledger/(phase+'_CONTROLLER_STARTED.json'),dict(pid=os.getpid(),epoch=time.time(),F0_sha256=sha(V/'F0.json'),approval=approval))
+-    worker=Child(f0['console_helper']);failure=None;stop=threading.Event();prior={};lock=None;current=None;controller_peak=[0]
+-    def guard():
+-        assert time.perf_counter()-start<stage['wall_seconds'],'whole-controller wall/owned ceiling'
+-        commit=process_commit();controller_peak[0]=max(controller_peak[0],commit)
+-        assert commit<=limits['controller_commit_bytes'],'sampled controller private-commit ceiling'
+-        assert size(root)<=limits['raw_root_bytes'],'raw disk ceiling'
+-        assert shutil.disk_usage(root.anchor).free>=limits['minimum_volume_free_during_stage_bytes'],'physical volume headroom gate'
+-        if current:
+-            cap=limits['census_nonCAS_bytes'] if args.stage=='census' else limits['numeric_nonCAS_bytes_per_slot']
+-            assert size(current)<=cap,'slot metadata/log byte ceiling'
+-    def watchdog():
+-        while not stop.wait(.05):
+-            try:guard()
+-            except BaseException as exc:
+-                save(root/(phase+'_WATCHDOG_STOP.json'),dict(reason=repr(exc),epoch=time.time(),no_retry=True));worker.terminate();os._exit(70)
++        auth=load(root/'CENSUS_AUTHENTICATED.json');decision=load(root/'CENSUS_DECISION.json')
++        assert load(root/'CENSUS_ENDED.json')['status']=='COMPLETE'
++        assert auth['authenticated_remote_bytes'] and auth['F0_sha256']==sha(V/'F0.json')
++        assert auth['census_sha256']==sha(root/'census/native/CENSUS.json')==approval['census_sha256']
++        assert auth['decision_sha256']==sha(root/'CENSUS_DECISION.json')==approval['decision_sha256']
++        assert decision['numerical_admitted'],'technical gate is not execution authority'
++    assert shutil.disk_usage(root.anchor).free>=limits['minimum_volume_free_before_start_bytes']
++    # From this point all setup/validation/audit work is within the new stage wall.
++    root.mkdir(exist_ok=a.stage=='numerical');state=State(root,phase);state.start=begin
++    start_receipt=dict(pid=os.getpid(),epoch=time.time(),F0_sha256=sha(V/'F0.json'),approval=approval,approval_file_sha256=sha(a.approval))
++    durable(ledger/(phase+'_CONTROLLER_STARTED.json'),start_receipt)
++    durable(root/(phase+'_CONTROLLER_STARTED.json'),start_receipt)
++    durable(root/(phase+'_ACTIVE_CONTROLLER.lock'),dict(pid=os.getpid(),epoch=time.time(),never_restart=True))
++    worker=Child(f0['console_helper']);prior={};current_dir=None;error=None
++    def monitor():
++        commit=process_commit();state.peak_commit=max(state.peak_commit,commit)
++        assert commit<=limits['controller_commit_bytes'],'controller commit ceiling'
++        assert shutil.disk_usage(root.anchor).free>=limits['minimum_volume_free_during_stage_bytes'],'volume headroom'
++    deadline=Deadline(state,stage['wall_seconds'],worker.terminate,grace=limits['finalization_reserve_seconds'],monitor=monitor).start()
++    account=ByteLedger(root,limits['raw_root_bytes'],root/(phase+'_BYTES.jsonl'))
++    def paths(p):return [x for x in p.rglob('*') if x.is_file()] if p.exists() else []
++    def settle(producer,initial=False):
++        # New/unchanged blobs must have content-addressed names. Full bytes are
++        # verified again here, in addition to native retain and online inspector.
++        new_blobs=[b for b in (root/'cas').glob('*') if b.relative_to(root).as_posix() not in account.files]
++        for b in new_blobs:
++            assert b.suffix=='.bin' and b.stem==sha(b) and b.stat().st_size<=limits['single_blob_bytes']
++        account.adopt(paths(producer)+new_blobs+([x for x in root.iterdir() if x.is_file()] if initial else []))
++        state.accounting=dict(known_file_bytes=sum(x[0] for x in account.files.values()),settled_files=len(account.files),journal_events=account.events,reconciliation_CPU_wall_seconds=account.scan_seconds)
+     try:
+-        if args.stage=='census':
+-            root.mkdir(exist_ok=False);(root/'cas').mkdir()
+-        lock=root/'ACTIVE_CONTROLLER.lock';save(lock,dict(pid=os.getpid(),stage=args.stage))
+-        threading.Thread(target=watchdog,daemon=True).start()
+-        check(f0,plan);owned_conflicts(f0)
+-        assert shutil.disk_usage(root.anchor).free>=limits['minimum_volume_free_before_start_bytes'],'physical volume admission headroom'
+-        if args.stage=='census':
+-            for p in (V/'reference_cas').glob('*.bin'):
+-                assert sha(p)==p.stem;shutil.copyfile(p,root/'cas'/p.name);assert sha(root/'cas'/p.name)==p.stem
++        check(f0,plan);owned_conflicts(f0);deadline.guard()
++        account.reserve(limits['raw_root_bytes']-8*1024**2)
++        (root/'cas').mkdir(exist_ok=True)
++        if a.stage=='census':
++            for b in (V/'reference_cas').glob('*.bin'):
++                deadline.guard();assert sha(b)==b.stem;shutil.copyfile(b,root/'cas'/b.name)
++        settle(root,True);account.reconcile()
+         expected={(r['descriptor_id'],r['layout']):r for r in load(V/'CPU_GRAPH_EXPECTED.json')};refs=load(V/'REFERENCE_INDEX.json')
+-        denied=set(load(root/'CENSUS_DECISION.json')['denied_slots']) if args.stage=='numerical' else set()
+-        slots=[plan['census_wire']] if args.stage=='census' else plan['numerical_slots']
++        denied=set(load(root/'CENSUS_DECISION.json')['denied_slots']) if a.stage=='numerical' else set()
++        slots=[plan['census_wire']] if a.stage=='census' else plan['numerical_slots']
+         for slot in slots:
+-            if slot['id'] in denied:continue # explicit NOT_SUPPORTED preserved by complete-plan analysis
+-            if args.stage=='numerical' and slot['index']==180:assert len(prior)==180,'all five-layout q1 controls and fresh repeats must pass first'
+-            reserve=250 if args.stage=='census' else 70
+-            assert stage['wall_seconds']-(time.perf_counter()-start)>reserve+1,'insufficient remaining frozen lifetime: terminal, no next start'
+-            current=root/'census' if args.stage=='census' else root/'numerical'/('%03d'%slot['index']);current.mkdir(parents=True,exist_ok=False)
+-            save(current/'SLOT_PLANNED.json',slot);guard();readiness(worker,current,f0,guard)
+-            job=wire(slot,V/'F0.json');save(current/'ADMITTED_JOB.json',job)
+-            mode='--gpu-census' if args.stage=='census' else '--gpu-run';command=[f0['executable'],mode,str(current/'ADMITTED_JOB.json'),slot['native_output']]
+-            save(current/'BEFORE_START.json',dict(slot=slot['id'],epoch=time.time(),command=command,graph_cap=slot['graph_computes'],warmups=0,wire_sha256=sha(current/'ADMITTED_JOB.json')))
+-            worker.run(command,current/'native',240 if args.stage=='census' else 60,env(f0['runtime_directory']),limits['native_process_commit_bytes'],guard)
+-            n=current/'native';r=load(n/('CENSUS.json' if args.stage=='census' else 'RECORD.json'))
+-            inventory=module_inventory(r['modules'],f0);save(current/'MODULE_FILES.json',inventory)
+-            if args.stage=='census':
+-                assert r['pid']==load(current/'native.PROCESS.json')['pid'];analyzer.verify_modules(n,r,f0,inventory)
+-                decision=analyzer.census_decision(r,expected,plan);save(root/'CENSUS_DECISION.json',decision)
+-                save(root/'CENSUS_SUCCESS.json',dict(completed_census=True,numerical_admitted=decision['numerical_admitted'],primary_QH='QH_C',graph_calls=0,requires_commit_authenticated_readback_and_new_numerical_authorization=True))
++            if slot['id'] in denied:continue
++            deadline.guard()
++            if a.stage=='numerical' and slot['index']==60:assert len(prior)==60,'q1 controls precede q>1'
++            native_timeout=240 if a.stage=='census' else 60
++            # Full readiness + child + bounded qualification allowance + receipt reserve.
++            state.reserve_start(slot,deadline.remaining(),native_timeout+10+limits['qualification_reserve_seconds']+limits['finalization_reserve_seconds'])
++            current_dir=root/'census' if a.stage=='census' else root/'numerical'/('%03d'%slot['index'])
++            current_dir.mkdir(parents=True,exist_ok=False)
++            account.reserve(limits['census_nonCAS_bytes'] if a.stage=='census' else limits['numeric_producer_reservation_bytes'])
++            save(current_dir/'SLOT_PLANNED.json',slot);readiness(worker,current_dir,f0,deadline.guard,on_start=lambda pid:setattr(state,'active_pid',pid))
++            job=wire(slot,V/'F0.json');save(current_dir/'ADMITTED_JOB.json',job)
++            command=[f0['executable'],'--gpu-census' if a.stage=='census' else '--gpu-run',str(current_dir/'ADMITTED_JOB.json'),slot['native_output']]
++            save(current_dir/'BEFORE_START.json',dict(slot=slot['id'],command=command,epoch=time.time(),graph_cap=slot['graph_computes'],warmups=0,wire_sha256=sha(current_dir/'ADMITTED_JOB.json')))
++            worker.run(command,current_dir/'native',native_timeout,env(f0['runtime_directory']),limits['native_process_commit_bytes'],deadline.guard,on_start=state.native_start)
++            deadline.guard();n=current_dir/'native';record=load(n/('CENSUS.json' if a.stage=='census' else 'RECORD.json'))
++            inventory=module_inventory(record['modules'],f0);save(current_dir/'MODULE_FILES.json',inventory)
++            if a.stage=='census':
++                assert record['pid']==load(current_dir/'native.PROCESS.json')['pid'];analyzer.verify_modules(n,record,f0,inventory)
++                decision=analyzer.census_decision(record,expected,plan);save(root/'CENSUS_DECISION.json',decision)
++                save(root/'CENSUS_SUCCESS.json',dict(completed_census=True,numerical_admitted=decision['numerical_admitted'],graph_calls=0,new_authorization_required=True))
+             else:
+-                result=analyzer.inspect(slot,current,f0,plan,refs,expected[slot['descriptor'],slot['layout']],prior,root)
+-                assert tuple(result['process_identity']) not in {tuple(r['process_identity']) for r in prior.values()},'new native process generation required; numeric PID reuse alone is not a failure'
+-                save(current/'AUDIT.json',result);prior[slot['descriptor'],slot['layout'],slot['repeat']]=result;save(current/'COMPLETED.json',dict(slot=slot['id'],qualified=True))
+-        if args.stage=='numerical':save(root/'NUMERICAL_SUCCESS.json',dict(qualified_completions=len(prior),not_supported=len(denied),no_next_stage_authorization=True))
++                result=analyzer.inspect(slot,current_dir,f0,plan,refs,expected[slot['descriptor'],slot['layout']],prior,root,control_only=True)
++                assert tuple(result['process_identity']) not in {tuple(r['process_identity']) for r in prior.values()}
++                save(current_dir/'AUDIT.json',result);prior[slot['descriptor'],slot['layout'],slot['repeat']]=result
++            deadline.guard()
++            assert size(current_dir)<= (limits['census_nonCAS_bytes'] if a.stage=='census' else limits['numeric_nonCAS_bytes_per_slot'])
++            save(current_dir/'COMPLETED.json',dict(slot=slot['id'],qualified=True))
++            # Settle storage before admitting completion; any accounting failure
++            # remains a stage/control failure, never a scientific retry.
++            finished=current_dir;state.complete();current_dir=None;settle(finished)
++            if state.completed%30==0:account.reconcile()
++        account.reserve(1024**2);account.adopt([x for x in root.iterdir() if x.is_file()]);account.reconcile()
++        deadline.guard()
+     except BaseException as exc:
+-        failure=repr(exc);worker.terminate();root.mkdir(parents=True,exist_ok=True)
+-        if current:save(current/'FAILED.json',dict(error=failure,no_retry=True,epoch=time.time()))
+-        save(root/(phase+'_FAILED.json'),dict(error=failure,no_retry=True,epoch=time.time(),completed=len(prior)))
+-        raise
++        error=repr(exc);state.minimum_stop(error);worker.terminate()
++        if current_dir is not None and not (current_dir/'COMPLETED.json').exists():
++            durable(current_dir/'FAILED.json',dict(reason=error,state=state.current,no_retry=True))
+     finally:
+-        worker.terminate()
+-        if args.stage=='numerical':
+-            try:save(root/'ANALYSIS.json',analyzer.analyze(root,f0,plan,load(V/'REFERENCE_INDEX.json'),{(r['descriptor_id'],r['layout']):r for r in load(V/'CPU_GRAPH_EXPECTED.json')}))
+-            except BaseException as exc:
+-                failure=failure or repr(exc);save(root/'ANALYSIS_FAILED.json',dict(error=repr(exc),no_retry=True))
+-        stop.set()
+-        elapsed=time.perf_counter()-start
+-        save(root/(phase+'_ENDED.json'),dict(seconds=elapsed,conservative_owned_bound_seconds=3*elapsed,error=failure,pid=os.getpid(),budget_not_reset=True,sampled_controller_peak_private_commit_bytes=controller_peak[0]))
+-        if lock and lock.exists() and load(lock)['pid']==os.getpid():lock.unlink()
+-    if failure:raise RuntimeError(failure)
+-    print('Stage ended. Preserve all starts. No automatic timing/actor/S2/S3 or stage restart.')
++        # No analyzer/tree reconstruction here. Watchdog independently seals a
++        # minimum stop and terminal capsule if this bounded finalizer stalls.
++        worker.terminate();state.finish('COMPLETE' if error is None else 'INCOMPLETE_STOPPED')
++        deadline.close()
++    if error:raise RuntimeError(error)
++    print('Stage sealed. Offline analysis is separate. No next stage authorized.')
++
+ if __name__=='__main__':main()
+--- formal_numerical_v2/analyzer.py
++++ s1a_bridge_v1/analyzer.py
+@@ -35,11 +35,11 @@
+     dims={s:meta['native_'+s]['ne'] for s in STAGES[:-1]};d,q,h,_=meta['native_AV']['ne'];dims['ordinary']=[d*h,q,1,1]
+     values={s:difference(a[s],b[s],dims[s]) for s in STAGES}
+     return dict(stages=values,first_divergence_operator=next((s for s in STAGES if not values[s]['bitwise_equal']),None))
+-def verify_numeric(slot,meta,values,reference,historical,previous=None):
++def verify_numeric(slot,meta,values,reference,historical,previous=None,control_only=False):
+     sizes=stage_sizes(meta);assert set(values)==set(STAGES)
+     assert all(len(values[s])==sizes[s] and finite(values[s]) for s in STAGES),'full logical size/nonfinite gate'
+     assert restore(values['AV'],meta)==values['ordinary'],'own-path ordinary AV restore'
+-    vs=relation(reference,values,meta)
++    vs=(dict(stages={s:dict(bitwise_equal=reference[s]==values[s]) for s in STAGES},first_divergence_operator=next((s for s in STAGES if reference[s]!=values[s]),None)) if control_only else relation(reference,values,meta))
+     if slot['layout']=='MQ' or slot['q']==1:assert all(c['bitwise_equal'] for c in vs['stages'].values()),'MQ own-path / all-five q1 public control'
+     if slot['layout'] in ('PQ','QB'):
+         assert all(values[s]==historical[s] for s in STAGES[:-1]),'frozen historical PQ/QB correspondence'
+@@ -106,7 +106,7 @@
+         assert ref['cas_relative']=='cas/'+ref['sha256']+'.bin'
+         out[name]=blob(cas,ref)
+     return out
+-def process_identity(directory,prefix,f0):
++def process_identity(directory,prefix,f0,native_limit=60):
+     proc=load(directory/(prefix+'.PROCESS.json'));life=load(directory/(prefix+'.LIFETIME.json'));events=load(directory/(prefix+'.JOB_EVENTS.json'))
+     assert proc['pid']==life['pid']==events['registered_PID'] and type(proc['creation_filetime_100ns'])is int and proc['creation_filetime_100ns']>0
+     assert proc['creation_filetime_100ns']==life['creation_filetime_100ns'] and life['error'] is None and life['exit_code']==0
+@@ -117,9 +117,9 @@
+     expected=f0['executable'] if prefix=='native' else f0['admission_policy']['nvidia_smi']
+     for e in started:assert norm(e['image'])==norm(expected if e['pid']==proc['pid'] else f0['console_helper']['path'])
+     assert events['console_helper_pin']['sha256']==f0['console_helper']['sha256']
+-    assert 0<=life['seconds']<= (60 if prefix=='native' else 10)
++    assert 0<=life['seconds']<= (native_limit if prefix=='native' else 10)
+     return (proc['pid'],proc['creation_filetime_100ns'])
+-def inspect(slot,directory,f0,plan,refs,expected,prior,root):
++def inspect(slot,directory,f0,plan,refs,expected,prior,root,control_only=False):
+     n=directory/'native';record=load(n/'RECORD.json');pid=load(directory/'native.PROCESS.json')['pid']
+     assert record['pid']==pid and record['status']=='COMPLETED' and record['layout']==slot['layout'] and record['kind']=='numeric'
+     assert record['graph_computes']==1 and record['warmups']==0
+@@ -143,17 +143,17 @@
+         previous=values_for(root/first['directory']/'native',root/'cas',plan['numerical_slots'][first['index']],first['pid'],False)
+         previous={s:previous[s] for s in STAGES}
+     historical={s:blob(root/'cas',refs[slot['descriptor']]['historical'][slot['layout']+'-r'+str(slot['repeat'])+'/'+s]) for s in STAGES[:-1]} if slot['layout'] in ('PQ','QB') else None
+-    result=verify_numeric(slot,meta,values,reference,historical,previous)
++    result=verify_numeric(slot,meta,values,reference,historical,previous,control_only)
+     return dict(slot=slot['id'],index=slot['index'],descriptor=slot['descriptor'],family=slot['family'],layer=slot['layer'],phase=slot['phase'],q=slot['q'],
+         layout=slot['layout'],repeat=slot['repeat'],pid=pid,process_identity=list(identity),directory=directory.relative_to(root).as_posix(),module_input_graph_placement_completion_controls='PASS',**result)
+ def census_decision(census,expected,plan):
+     assert census['GPU_initializations']==1 and census['graph_computes']==0 and census['allocations']==0
+-    assert len(census['records'])==360 and census['support_queries']==5418
++    assert len(census['records'])==len(expected) and census['support_queries']==plan['census_wire']['registered_support_queries']
+     table={};queries=0
+     for r in census['records']:
+         key=(r['descriptor_id'],r['layout']);assert key not in table
+         table[key]=verify_graph(expected[key],r);queries+=len(r['nodes'])
+-    assert set(table)==set(expected) and queries==5418
++    assert set(table)==set(expected) and queries==plan['census_wire']['registered_support_queries']
+     denied=[s['id'] for s in plan['numerical_slots'] if not table[s['descriptor'],s['layout']]]
+     # Unsupported D at q>1 is retained NOT_SUPPORTED, as the original protocol.
+     mandatory_bad=any(not table[s['descriptor'],s['layout']] and (s['q']==1 or s['layout']!='QH_D') for s in plan['numerical_slots'])
+@@ -170,13 +170,14 @@
+             if not (d/'native/RECORD.json').exists():
+                 state='STARTED_FAILED_OR_INCOMPLETE' if (d/'native.PROCESS.json').exists() else 'RESERVED_FAILED_BEFORE_PROCESS_RECEIPT'
+                 failure=failure or state
++            elif not (d/'COMPLETED.json').exists():state='STARTED_UNQUALIFIED';failure=failure or state
+             elif failure is not None:state='STARTED_AFTER_CONTROL_FAILURE_INVALID'
+             else:
+                 try:
+                     r=inspect(s,d,f0,plan,refs,expected[s['descriptor'],s['layout']],prior,root);prior[s['descriptor'],s['layout'],s['repeat']]=r;state='COMPLETED_QUALIFIED'
+                 except Exception as exc:failure=repr(exc);state='CONTROL_FAILED'
+         else:
+-            state='NOT_STARTED_PROTOCOL_STOP' if (root/'NUMERICAL_FAILED.json').exists() or (root/'CENSUS_FAILED.json').exists() else 'NOT_STARTED_CAPABILITY_STOP' if decision and not decision['numerical_admitted'] else 'NOT_STARTED_NOT_AUTHORIZED'
++            state='NOT_STARTED_PROTOCOL_STOP' if (root/'NUMERICAL_FAILED.json').exists() or (root/'NUMERICAL_MINIMUM_STOP.json').exists() or (root/'CENSUS_FAILED.json').exists() else 'NOT_STARTED_CAPABILITY_STOP' if decision and not decision['numerical_admitted'] else 'NOT_STARTED_NOT_AUTHORIZED'
+         rows.append(dict(slot=s['id'],descriptor=s['descriptor'],family=s['family'],layer=s['layer'],phase=s['phase'],q=s['q'],layout=s['layout'],repeat=s['repeat'],status=state,
+             native_process_started=(d/'native.PROCESS.json').exists(),graph_started=(d/'native/GRAPH_STARTED_0.json').exists(),
+             graph_call_return_recorded=(d/'native/GRAPH_CALL_RETURNED.json').exists(),synchronization_return_recorded=(d/'native/SYNCHRONIZATION_RETURNED.json').exists()))
+@@ -192,7 +193,7 @@
+                     pairs.append(dict(left=left,right=right,repeat=repeat,**relation({s:va[s] for s in STAGES},{s:vb[s] for s in STAGES},meta)))
+                 else:pairs.append(dict(left=left,right=right,repeat=repeat,qualified=False,relation=None,reason='Missing/unsupported/failed coordinate retained; comparison withheld'))
+         details.append(dict(descriptor=descriptor,family=d['family'],layer=d['layer'],phase=d['phase'],q=d['q'],visibility=d['visibility'],layouts=entries,pairwise=pairs))
+-    return dict(run_id=plan['run_id'],status='COMPLETE_QUALIFIED_PANEL' if len(prior)==720 else 'INCOMPLETE_OR_UNQUALIFIED_PANEL',planned_cells=720,independent_contexts=72,
++    return dict(run_id=plan['run_id'],status='COMPLETE_QUALIFIED_PANEL' if len(prior)==len(plan['numerical_slots']) else 'INCOMPLETE_OR_UNQUALIFIED_PANEL',planned_cells=len(plan['numerical_slots']),independent_contexts=len(plan['descriptors']),
+         counts={k:sum(r[k] for r in rows) for k in ('native_process_started','graph_started','graph_call_return_recorded','synchronization_return_recorded')},
+         completed_qualified=len(prior),control_failure=failure,slots=rows,contexts=details,claims=dict(full_request_qualification=False,cost_qualification=False,unseen_prompts=False,universal_equivalence=False,kernel_reduction_tree='UNKNOWN'))
+ def main():
+--- formal_numerical_v2/lifecycle.py
++++ s1a_bridge_v1/lifecycle.py
+@@ -30,7 +30,7 @@
+     def terminate(self):
+         if self.job:self.k.TerminateJobObject(self.job,70)
+         if self.active and self.active.poll() is None:self.active.kill()
+-    def run(self,command,prefix,timeout,env,memory,guard=lambda:None,log_cap=32768):
++    def run(self,command,prefix,timeout,env,memory,guard=lambda:None,log_cap=32768,on_start=lambda pid:None):
+         prefix=Path(prefix);prefix.parent.mkdir(parents=True,exist_ok=True)
+         k=self.k;job=k.CreateJobObjectW(None,None);assert job;self.job=job
+         info=Extended();info.basic.flags=0x2000|8|0x100|0x200;info.basic.active=2;info.process_memory=memory;info.job_memory=memory
+@@ -73,6 +73,7 @@
+             created=W.FILETIME();exited=W.FILETIME();kernel=W.FILETIME();user=W.FILETIME();assert k.GetProcessTimes(int(p._handle),ctypes.byref(created),ctypes.byref(exited),ctypes.byref(kernel),ctypes.byref(user))
+             creation=(created.dwHighDateTime<<32)|created.dwLowDateTime
+             save(prefix.with_suffix('.PROCESS.json'),dict(pid=p.pid,creation_filetime_100ns=creation,command=command,epoch=time.time(),suspended_before_job_assignment=True,creation_flags=0x08000000|4,active_process_limit=2,commit_limit_bytes=memory,console_helper_cap=1))
++            on_start(p.pid)
+             listener=threading.Thread(target=process_events,daemon=True);listener.start()
+             assert k.AssignProcessToJobObject(job,int(p._handle)),'assign owned child job'
+             for pipe,suffix in ((p.stdout,'.stdout'),(p.stderr,'.stderr')):
+--- formal_numerical_v2/formal_gate.h
++++ s1a_bridge_v1/formal_gate.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ // Included after the unchanged Graph/address interpreter. No arithmetic here.
+ namespace formal113 {
+-static constexpr const char* RUN="pr113-formal-numerical-v2";
++static constexpr const char* RUN="pr113-s1a-bridge-v1";
+ static std::string file_hash(const fs::path&p){
+     HANDLE f=CreateFileW(p.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+     hs113::require(f!=INVALID_HANDLE_VALUE,"hash input missing");auto s=repair113::hash_handle(f);CloseHandle(f);return s;
+@@ -17,14 +17,14 @@
+     hs113::require(f0path.is_absolute(),"absolute F0 required");
+     if(!cpu)hs113::require(repair113::same_path(f0path,repair113::module_path(nullptr).parent_path()/"F0.json"),"registered F0 path required");
+     auto digest=job.at("approved_stage_F0").get<std::string>();hs113::require(digest.size()==64&&file_hash(f0path)==digest,"exact F0 SHA binding");
+-    J f0=read(f0path);hs113::require(f0.at("run_id")==RUN&&f0.at("stage")=="FORMAL_NUMERICAL_V2","F0 stage/run binding");
++    J f0=read(f0path);hs113::require(f0.at("run_id")==RUN&&f0.at("stage")=="S1A_BRIDGE_V1","F0 stage/run binding");
+     hs113::require(cpu||!f0.value("CPU_fixture_only",false),"CPU fixture is never GPU authorization");
+     hs113::require(file_hash(repair113::module_path(nullptr))==f0.at("executable_sha256"),"actual host SHA binding");
+     fs::path pp=f0.at("plan_path").get<std::string>();hs113::require(file_hash(pp)==f0.at("plan_sha256"),"frozen plan SHA");J plan=read(pp);
+     hs113::require(plan.at("run_id")==RUN,"plan run_id");
+     J expected;
+     if(job.at("stage")=="NUMERICAL"){
+-        auto index=integer(job.at("index"),0,719);expected=plan.at("numerical_slots").at(size_t(index));
++        auto index=integer(job.at("index"),0,239);expected=plan.at("numerical_slots").at(size_t(index));
+         integer(job.at("repeat"),0,1);hs113::require(job.at("kind")=="numeric"&&job.at("graph_computes")==1&&job.at("warmups")==0,"one numeric call only");
+     }else {hs113::require(job.at("stage")=="CENSUS","unsupported stage");expected=plan.at("census_wire");}
+     J supplied=job;supplied.erase("F0_path");supplied.erase("approved_stage_F0");
+@@ -53,7 +53,7 @@
+     auto&core=repair113::process_core(runtime/"ggml-base.dll",job.at("core_sha256"));write(out/"PLUGIN_CORE_IMPORTS.json",repair113::verify_plugin_core_imports(runtime/"ggml-cuda.dll",core.module()));
+     auto backend=ggml_backend_init_by_name("CUDA0",nullptr);hs113::require(backend,"census CUDA0 init");J records=J::array();size_t queries=0;
+     for(const auto&slot:plan.at("numerical_slots"))if(slot.at("repeat")==0){Graph g(read(fs::path(slot.at("root").get<std::string>())/"snapshot.json"),slot.at("layout"),true);auto r=g.registry(backend);queries+=r["nodes"].size();r["descriptor_id"]=slot.at("descriptor");r["layout"]=slot.at("layout");r["stage_outputs"]=true;records.push_back(r);}
+-    hs113::require(records.size()==360&&queries==5418,"complete registered census cardinality");
++    hs113::require(records.size()==120&&queries==1806,"complete registered census cardinality");
+     write(out/"CENSUS.json",{{"run_id",RUN},{"records",records},{"support_queries",queries},{"GPU_initializations",1},{"graph_computes",0},{"allocations",0},{"modules",modules()},{"pid",GetCurrentProcessId()}});ggml_backend_free(backend);return 0;
+ }
+ static int cpu_wires(const J&fixture,const fs::path&output){
+@@ -64,7 +64,7 @@
+         Graph graph(read(fs::path(job.at("root").get<std::string>())/"snapshot.json"),job.at("layout"),true);auto r=graph.registry();checks+=r["nodes"].size();
+         r["slot"]=job.at("id");r["descriptor_id"]=job.at("descriptor");r["layout"]=job.at("layout");r["repeat"]=job.at("repeat");r["stage_outputs"]=true;r["stage_descriptors"]={{"QK",descriptor(graph.result.stage[0])},{"softmax",descriptor(graph.result.stage[1])},{"AV",descriptor(graph.result.stage[2])},{"ordinary",descriptor(graph.result.ordinary)}};r["wire_file_sha256"]=file_hash(p.get<std::string>());records.push_back(r);
+     }
+-    hs113::require(records.size()==720&&checks==10836,"all actual numeric wires required");repair113::no_gpu_modules();
++    hs113::require(records.size()==240&&checks==3612,"all actual numeric wires required");repair113::no_gpu_modules();
+     write(output,{{"status","PASS"},{"records",records},{"graphs",records.size()},{"nodes",checks},{"shared_core",binding},{"modules",modules()},{"GPU_queries",0},{"CUDA_loads",0},{"graph_computes",0},{"model_requests",0}});return 0;
+ }
+ static int cpu_cas(const J&plan,const fs::path&output){

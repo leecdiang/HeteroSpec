@@ -1,0 +1,92 @@
+{
+  "schema": "rtx_pr62_cpu_reference_closeout_v1",
+  "analysis_date_beijing": "2026-10-08",
+  "created_utc": "2026-10-08 13:23:12 UTC",
+  "classification": "post-hoc analysis of already-measured exposed panel; not new preregistration or holdout",
+  "panel_from": "PR62 B_MANIFEST frozen head 8dfa60a2492e0639a0774f7bac842273485ca26a",
+  "conditions": [
+    "scalar_reference",
+    "matched_target",
+    "target_scopes",
+    "all_scopes"
+  ],
+  "repetitions": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "task_count": 24,
+  "formal_requests": 384,
+  "excluded_warmups": 16,
+  "fixed_candidate": "target_scopes",
+  "timers": {
+    "generation": "response.timings.predicted_ms",
+    "whole": "wall_ms"
+  },
+  "ratio_direction": "baseline_ms/candidate_ms; >1 candidate faster",
+  "primary_pairs": [
+    [
+      "scalar_reference",
+      "target_scopes"
+    ],
+    [
+      "matched_target",
+      "target_scopes"
+    ],
+    [
+      "scalar_reference",
+      "matched_target"
+    ]
+  ],
+  "secondary_pairs": [
+    [
+      "scalar_reference",
+      "all_scopes"
+    ],
+    [
+      "matched_target",
+      "all_scopes"
+    ],
+    [
+      "all_scopes",
+      "target_scopes"
+    ]
+  ],
+  "aggregation": "per-task per-condition median of four absolute costs; per-task ratio; unweighted task geometric mean",
+  "bootstrap": {
+    "unit": "task",
+    "seed": 20261008,
+    "resamples": 10000,
+    "percentiles": [
+      2.5,
+      97.5
+    ],
+    "quantile": "numpy.quantile(method='linear'), Hyndman-Fan type 7",
+    "sampling": "numpy.random.Generator(PCG64(seed)).integers(0,24,size=(10000,24))",
+    "same_indices_for_all_comparisons": true
+  },
+  "old_interval_audit": "separately reproduce Python random.Random(5070), 4000 sorted task-resampling GM replicates, indices 99 and 3899 if confirmed by old source",
+  "qualification": "full response.tokens array plus endpoint; four reference repeats stable; no crop",
+  "practical_rule": "historical generation GM>=1.03, whole GM>=1, >=ceil(4*2/3)=3 generation rounds>1; new scalar comparison explicitly post-hoc",
+  "new_model_requests": 0,
+  "new_target_draft_forwards": 0,
+  "new_warmups": 0,
+  "stage_order": [
+    "identity",
+    "data_qualification",
+    "cost",
+    "figures_handoff",
+    "verify_publish"
+  ],
+  "forbidden": [
+    "model loading or invocation",
+    "runner import",
+    "runtime restore",
+    "profiling",
+    "input/config changes",
+    "old evidence mutation",
+    "manuscript edit",
+    "PR merge"
+  ]
+}

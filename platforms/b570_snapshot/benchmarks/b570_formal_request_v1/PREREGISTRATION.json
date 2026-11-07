@@ -1,0 +1,81 @@
+{
+  "study": "B570_FORMAL_FINITE_PANEL_V1",
+  "uuid": "c4e01a7e-6450-48e1-b8b6-5b36c17d12bc",
+  "registered_before_gpu": true,
+  "parent": "34787ab56f0ae8b533d18fe02db2d37e8ebb63a4",
+  "paper_plan": "PR130/7a209727f151f375c28653605f58252b6da77953: reference-preserving method, actual request migration, full costs, hardware only after strong software residual",
+  "authorization": "User requests formal experiment and conclusions; prior old balance explicitly removed as blocking limit. Preserve old historical charge401.2123575s.",
+  "scope": "Formal preregistered finite-panel study, four existing exposed HumanEval inputs; not new-input population confirmation; one machine/date; no E3 two-date claim.",
+  "input_selection": "Fixed IDs38,65,115,127 from existing PROMPT_TOKENS; lengths181,109,349,277. Chosen for short/long geometry before new outputs; not chosen by acceptance or new timing.",
+  "reference": "Prospective R_e: same frozen PR133 runtime, same models, explicit input IDs, greedy q1,64token CAP/EOG, serial prefill. New input/window reference never replaces prior R or extends old16token qualification.",
+  "qualification": {
+    "processes": 4,
+    "order": "R then PQ then QB per input; no cost admission until all four pass",
+    "endpoint": "IDs,EOG,length,terminal,stop exact R/PQ/QB",
+    "full_logits": "All PQ/QB target and draft saved vectors byte exact including discarded verification rows",
+    "trace": "All PQ/QB proposal/accept/rollback/correction cycles exact",
+    "geometry": "actual q2,physical key256/512,GQA32/8,36 target layers on B570"
+  },
+  "timing": {
+    "processes": 4,
+    "warmup_per_process": 4,
+    "steady_requests_per_process": 16,
+    "total_steady_requests": 64,
+    "total_warmup_requests": 16,
+    "arms": [
+      "R",
+      "PQ_A",
+      "PQ_B",
+      "QB"
+    ],
+    "same_implementation": "PQ_A and PQ_B identical code",
+    "warmup": "Each arm executes old16token prompt once, in balanced order, all checked against PR133 reference; reported separately, never treated as free",
+    "orders": [
+      [
+        "R",
+        "PQ_A",
+        "QB",
+        "PQ_B"
+      ],
+      [
+        "PQ_A",
+        "PQ_B",
+        "R",
+        "QB"
+      ],
+      [
+        "PQ_B",
+        "QB",
+        "PQ_A",
+        "R"
+      ],
+      [
+        "QB",
+        "R",
+        "PQ_B",
+        "PQ_A"
+      ]
+    ],
+    "input_order": "cycle input index by process; arm order row=(process+input)%4. Each input/arm appears in each arm position once.",
+    "primary_window": "service_seconds: fresh context creation/graph reserve, both prefills when speculative, proposal/verify/host sample/state, final sync and context destruction. Excludes shared model loading, comparisons and disk writes.",
+    "secondary_window": "request_seconds: inside fresh contexts, includes prefills and generation. Both windows include full host logits copy/finite check and cycle-record work. R measured with draft model resident, no draft context.",
+    "cold": "First-use requests are explicit warmup records. Shared persistent driver caches not reset; no claim cold-boot measurement.",
+    "stages": "Existing per-decode synchronized wall durations, role/phase separated; no extra synchronization or node observer during timing. Residual host/other time remains unassigned; not GPU critical-path attribution."
+  },
+  "analysis": {
+    "primary": "Per-input geometric mean of QB/mean(PQ_A,PQ_B) service ratios over4 sessions; equal-input geometric mean. Request-only ratios reported separately.",
+    "secondary": "QB/R service ratio, draft economics; also per-input lengths/acceptances and actual geometry.",
+    "practical_screen": "All inputs qualified; primary reduction>2%, greater than largest per-input aggregate absolute A/A relative imbalance; QB faster than dualPQ in all4 process-level panel aggregates. Failure => no established practical panel benefit, not equivalence.",
+    "uncertainty": "Four fixed exposed inputs and4 sessions onone date; descriptive ranges and all paired blocks. No population CI/pvalue, no cross-date or held-out claim, no optional stopping for positive result.",
+    "failure": "First support/reference/capture failure stops entire panel before any further GPU execution; preserve failed input and unexecuted cells; no qualified speedup from partial pass subset."
+  },
+  "execution": {
+    "new_operational_envelope_seconds": 3600,
+    "qualification_deadline_seconds": 240,
+    "timing_deadline_seconds": 600,
+    "cleanup_margin_seconds": 10,
+    "maximum_reserved_seconds": 3440,
+    "old_cumulative_seconds": 401.2123575,
+    "no_actor_RTL_CPU8": true
+  }
+}

@@ -25,9 +25,14 @@ CUDA and Vulkan sources still require their native build and model validation.
   the already qualified Vulkan Q8 implementation unchanged.
 
 The native adapter actually calls the shared prefix extractor and group planner.
-Its current graph call supplies the prefix extents; per-row arithmetic and
-dispatch IDs use their default values. Extracting those IDs from the backend is
-still an extension point, not a completed automatic policy pass.
+The CUDA integration also passes actual Q/K/V types, query and KV head
+geometry, and V layout to the row planner. Its scheduler identifies a rotary
+consumer of a head-wise RMS scale through graph edges. For host-resident
+weights it queries the backend's scalar and batch preferences. The graph cache
+checks these placement choices and the physical prefix requirements. The Vulkan
+call in this branch supplies extents only.
+
+See the [RTX host execution](../../benchmarks/reference_batching_transfer_20261103/rtx_execution/RESULTS.md) for commands and results.
 It retains the original Q/K/V/mask views and backend admission guards. A rejected
 prefix state retains the legacy generic path; it is not labelled reference
 preserving by this module.

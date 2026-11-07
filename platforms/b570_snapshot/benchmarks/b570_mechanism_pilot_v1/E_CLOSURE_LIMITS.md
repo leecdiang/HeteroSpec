@@ -1,0 +1,3 @@
+# Closure scope
+
+All frozen model starts fit312/24/48 caps. A budget-charged interrupted old_N1 request has no capture or metrics. We execute only the remaining frozen slots. Evidence verification/archive restoration/public delivery can close; the scientific E matrix cannot be called COMPLETE and its decision remains PARTIAL_INFRASTRUCTURE_BUDGET_CLOSED. All candidate, matched target and paid ordinary R repeats can still be evaluated across the full15-task panel. Old_N1 paired costs have14 complete tasks and are separately labeled. Candidate investment never becomes GO from this partial matrix. Round two occurs on the next calendar day after resumption; stationary environment and statistical/production benefit are not certified.

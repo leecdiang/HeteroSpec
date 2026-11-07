@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "study": "reference_batching_transfer_20261103",
+  "purpose": "Executable structure-derived batching requirements and predictive cross-family transfer while preserving each existing numerical reference.",
+  "shared_method": {
+    "header": "src/reference_batching/reference_batching.hpp",
+    "integrator": "src/reference_batching/integrate_llama_cpp.py",
+    "integration_status_at_authoring": "Shared prefix planner and policy cache identity supplied; native extraction/call sites for arithmetic and dispatch requirements must be completed on the host.",
+    "requirement_sources": [
+      "actual graph/operator role",
+      "tensor shape and strides",
+      "weight/input/activation type",
+      "scalar-reference placement or dispatch",
+      "cache occupancy and slot head",
+      "native padding"
+    ],
+    "rule_selection_excludes": [
+      "model_name",
+      "prompt_id",
+      "answer_token",
+      "output_position",
+      "logit_margin"
+    ],
+    "proof_of_use": "Native trigger records from real calls; zero/default structural IDs or an unused helper do not establish extraction."
+  },
+  "confirmation": {
+    "total_inputs": 8,
+    "selection": "After candidate freeze, natural inputs from pinned existing sources with exact tokenizer and authenticated exposure index.",
+    "desired_strata": [
+      "boundary-near natural prompt length",
+      "ordinary natural prompt length"
+    ],
+    "padding": false,
+    "truncation": false,
+    "failed_input_replacement": false,
+    "checks": [
+      "unchanged numerical R",
+      "complete endpoints",
+      "committed full-vocabulary vectors",
+      "matched PQ/QB transactions and rejected-row correspondence when available"
+    ],
+    "observer_control": "Reuse established capture; one representative heavy/off control per family or changed instrumentation path unless a concrete discrepancy requires more.",
+    "by_family": {
+      "Qwen3-8B": 8
+    }
+  },
+  "cost": {
+    "sessions": 3,
+    "arms": [
+      "R",
+      "M_PQ",
+      "M_QB",
+      "C_PQ",
+      "C_QB"
+    ],
+    "inputs": 8,
+    "measurements": 120,
+    "immediate_same_arm_warmups": true,
+    "order": "Fixed before timing; reuse existing arm/input rotation or randomization.",
+    "aggregate_by": [
+      "platform",
+      "model_family"
+    ],
+    "contrasts": [
+      "M_QB/M_PQ",
+      "C_QB/C_PQ",
+      "M_QB/C_QB",
+      "M_QB/R",
+      "C_QB/R"
+    ],
+    "population_confidence_interval": false,
+    "timing_extension_for_better_result": false,
+    "phase_diagnostics": "Optional small separate subset only; record prefill, generation/verification, reconciliation and repair costs without mixing diagnostic timings into clean primary results.",
+    "cost_scope": "Fresh/resident lifecycle kept fixed within model/contrast; include prefill, generation/draft/verification, reconciliation, synchronization and applicable teardown; loading and reference preparation separately reported."
+  },
+  "preserve": [
+    "original reference implementation and retained original vectors",
+    "model/tokenizer/quantization bytes",
+    "original historical fixture inputs, caps, k and P1 construction",
+    "all new counterexamples and unfavorable timing blocks"
+  ],
+  "completion": [
+    "native shared planner and actual structural extractor invoked",
+    "predicted and observed rule actions documented",
+    "retained development counterexamples resolved by structural rules",
+    "frozen small natural unseen confirmation complete",
+    "one complete fixed same-runtime cost panel",
+    "compact result PR with source, commands and evidence"
+  ],
+  "stop_optional_work_after_completion": true,
+  "excluded_work": [
+    "third platform",
+    "arbitrary new model families",
+    "old full Llama confirmation/timing reruns without a concrete changed-domain reason",
+    "timing until a favorable threshold",
+    "duplicated archival audit as a scientific contribution",
+    "automatic manuscript merge",
+    "arXiv or journal submission"
+  ],
+  "platform": "B570 / Vulkan",
+  "backend_argument": "vulkan",
+  "source_refs": {
+    "llama_results": "10a70566ce01ab707dbdcc57d8270c1434088f07",
+    "frozen_llama_candidate": "5d1272dcb2e53b73e3e72db4c403361fbef7d6c4",
+    "qwen_producer_consumer": "022babfabb3d1b6f4f2a2830dca04b2654d193f9"
+  },
+  "existing_models": [
+    "Qwen3-8B Q8"
+  ],
+  "existing_controls": [
+    "Llama original boundary counterexample",
+    "Llama non-boundary control"
+  ],
+  "priorities": [
+    "Enable actual shared policies on producer and consumer",
+    "Repair the original failing P1+PQ/QB cells",
+    "Derive F32-activation preservation and prefix requirements from actual dispatch/state"
+  ],
+  "retained_fixtures": [
+    {
+      "id": "MATH500/test/prealgebra/1865.json",
+      "must_repair": "P1+PQ and P1+QB against original R",
+      "do_not_substitute": "P4T+PQ/QB already passed"
+    },
+    {
+      "id": "MATH500/test/prealgebra/1804.json",
+      "must_repair": "P1+PQ and P1+QB against original R",
+      "do_not_substitute": "P4T+PQ/QB already passed"
+    },
+    {
+      "id": "GSM8K/train/1184",
+      "purpose": "Producer as well as consumer condition; original P4T natural C1 changes R."
+    }
+  ],
+  "current_legacy_qwen_switches": {
+    "layout": "enabled",
+    "reference_q8": false,
+    "prefix_extent": false
+  },
+  "structural_probes": [
+    {
+      "purpose": "Projection precision action",
+      "expected": "Compare observed scalar and batch activation paths, then invoke the existing F32 batch path when the scalar path requires it."
+    },
+    {
+      "purpose": "Prefix boundary at native k1 query width",
+      "example": {
+        "head": 255,
+        "rows": 2,
+        "padding": 256,
+        "capacity": 1024,
+        "expected_extents": [
+          256,
+          512
+        ],
+        "expected_group_widths": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "purpose": "Nearby k1 non-boundary",
+      "example": {
+        "head": 254,
+        "rows": 2,
+        "padding": 256,
+        "capacity": 1024,
+        "expected_extents": [
+          256,
+          256
+        ],
+        "expected_group_widths": [
+          2
+        ]
+      }
+    },
+    {
+      "purpose": "Retained Llama boundary",
+      "example": {
+        "head": 765,
+        "rows": 4,
+        "padding": 256,
+        "capacity": 1024,
+        "expected_extents": [
+          768,
+          768,
+          768,
+          1024
+        ],
+        "expected_group_widths": [
+          3,
+          1
+        ]
+      }
+    }
+  ],
+  "native_layout_domain_at_authoring": {
+    "head_dim": 128,
+    "q_heads": 32,
+    "kv_heads": 8,
+    "query_widths": [
+      2,
+      3,
+      4
+    ],
+    "key_extents": [
+      256,
+      512,
+      768,
+      1024
+    ]
+  },
+  "input_adapter": {
+    "allowed": "Input/recording adaptation only if old driver has hard-coded fixture lists",
+    "preserve": "Exact numerical call sequence, context settings, libraries, models and greedy rules",
+    "prerequisite": "Retained fixture full vectors equal original executable before new inputs",
+    "disclosure": "New inputs used an input adapter; do not claim the original unmodified executable ran them."
+  },
+  "ordinary_engineering_fixes_authorized": true,
+  "reference_contract": {
+    "target_gpu_layers": 999,
+    "draft_gpu_layers": 999,
+    "threads": 8,
+    "kv_type": "F16",
+    "context": 1024,
+    "historical_k": 1,
+    "cap": "Use each exact retained fixture cap; freeze the new natural request cap before outputs.",
+    "candidate_prefill": "Uniform supported natural prefill policy fixed before new outputs; does not replace historical P1 repair."
+  }
+}

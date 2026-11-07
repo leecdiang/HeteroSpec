@@ -1,0 +1,121 @@
+{
+  "study": "B570_PR128_QB_AA_BALANCED_RETEST",
+  "source_pr128_commit": "a970dbe33083a42877f7f142d27e0eded9de6eea",
+  "runtime_sha256": "79b0031bea367da64a8f580f1b00fe1108c83cc2ab73e893739d9740e4408423",
+  "design": {
+    "sessions": 3,
+    "session_definition": "Fresh serial native OS process with own backend, contexts and buffers; one GPU/date; no claim of independent devices or independent dates",
+    "inputs": [
+      {
+        "id": 0,
+        "type": "PR128 dyadic modular inputs"
+      },
+      {
+        "id": 1,
+        "type": "mix32 counter-hashed Q/K/V; Q and V /64, K /128"
+      },
+      {
+        "id": 2,
+        "type": "different mix32 seed, higher magnitude; Q /16, K and V /32"
+      }
+    ],
+    "coordinates": [
+      {
+        "key": 1023,
+        "q": 1
+      },
+      {
+        "key": 1023,
+        "q": 2
+      },
+      {
+        "key": 1023,
+        "q": 4
+      },
+      {
+        "key": 1024,
+        "q": 1
+      },
+      {
+        "key": 1024,
+        "q": 2
+      },
+      {
+        "key": 1024,
+        "q": 4
+      },
+      {
+        "key": 1025,
+        "q": 1
+      },
+      {
+        "key": 1025,
+        "q": 2
+      },
+      {
+        "key": 1025,
+        "q": 4
+      }
+    ],
+    "arms": [
+      "QB_A",
+      "QB_B",
+      "QH_C"
+    ],
+    "same_implementation": "QB_A/QB_B select exactly the same hs_qh::Mode::QB4 factory branch, independently allocated; canonical node metadata equality asserted",
+    "blocks_per_session_input_coordinate": 6,
+    "arm_orders": "All 6 permutations once per block; each arm twice at every position",
+    "calls_per_arm_visit": 5,
+    "measured_calls_per_arm_block": 30,
+    "cell_order": "Rotate 27 cells by 9*session+5*block, reverse on odd block+session",
+    "permutation_order": "Rotate six permutations by cell+block+session",
+    "warmups": "5 calls per arm after all per-session numerical checks; 1 primer per arm before each cell block",
+    "total_planned_timing_calls": 43740,
+    "total_planned_graph_calls": 46656
+  },
+  "gates": {
+    "per_session": "All 81 actual-device supports_op checks first, then all 81 FP64 QK/softmax/AV/final checks before any timing",
+    "tolerance": "abs_error <= 0.0002 + 0.002*abs(reference)",
+    "pair_final": "Additional exact byte equality of QB_B/QH_C to QB_A at each input/coordinate",
+    "input_integrity": "Full actual before/after numerical and after timing readbacks compared bytewise and saved",
+    "per_block": "Full final output saved and required identical to qualified output after every cell block",
+    "failure": "First unsupported node, numerical/byte mismatch, process failure, missing capture or deadline stops all later sessions; no retry"
+  },
+  "analysis": {
+    "bootstrap_replicates": 20000,
+    "seed": 20261020,
+    "claims": 10,
+    "per_claim_ci_level": 0.995,
+    "unit": "Paired six-permutation block mean",
+    "cluster": "Resample three process sessions, then blocks within fixed inputs; arm pairing retained; common indices across coordinates",
+    "primary": "QH_C minus mean(QB_A,QB_B), microseconds",
+    "secondary": "Paired geometric mean QH_C/mean(QB_A,QB_B)",
+    "threshold": "max(1 us,2% mean QB time,p95 absolute QB_B-QB_A block difference)",
+    "confirmation": "CI wholly beyond threshold; mean direction consistent in all 3 sessions and all 3 inputs; point difference against each QB arm exceeds threshold",
+    "negative_control": "q1 all three arms use same original graph; any q1 raw screen makes observer NOT_CALIBRATED and disables mapping conclusions",
+    "core_panel": "Predeclared equal-weight six q2/q4 coordinates, alongside nine coordinate screens; no post-hoc coordinate selection",
+    "limits": "Few process clusters on one device/date and fixed inputs; descriptive screened evidence, no population or model-speedup claim"
+  },
+  "budget": {
+    "total_seconds": 300,
+    "prior_cumulative_charge": 4.7601167,
+    "remaining_seconds": 295.2398833,
+    "native_internal_cutoff_seconds": 50,
+    "per_session_parent_deadline_seconds": 60,
+    "kill_wait_seconds": 5,
+    "capture_wait_seconds": 5,
+    "charge": "Sum entire native-process parent wall incl GPU initialization, CPU reference, file I/O and cleanup; append-only session receipts, no reset",
+    "admission": "Each new session requires >=70 seconds remaining; at most 3 sessions, no retries"
+  },
+  "forbidden": [
+    "models",
+    "actor",
+    "RTL",
+    "CPU8 changes or execution",
+    "new backend changes",
+    "REPEAT4 substitution",
+    "budget reset",
+    "outlier removal",
+    "post-hoc observer selection"
+  ]
+}

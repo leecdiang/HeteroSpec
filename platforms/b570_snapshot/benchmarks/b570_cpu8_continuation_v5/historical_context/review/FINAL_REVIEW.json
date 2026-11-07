@@ -1,0 +1,48 @@
+{
+  "status": "findings",
+  "scope": "Complete-candidate P0–P2 static implementation review of candidate/source, candidate/src/rev2, candidate/legacy host/dependencies/acceptance, C# launcher source, bound protocols, and targeted native/D0 evidence. Checked all 129 candidate/protocol manifest members without hash mismatches.",
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "D0 bridge prerequisites trust qualification statuses instead of reconstructing raw evidence",
+      "file": "candidate/source/integration_gates.py",
+      "line": 38,
+      "trigger": "A selected D0 qualification retains D0_BRIDGE_SMOKE_PASS while its underlying control, OS-exit, pending-completion, or independent journal-failure evidence is missing or changed.",
+      "effect": "check() still returns ALL_INTEGRATION_GATES_RECONSTRUCTED. Neither this function nor freeze_cpu8.py reruns the selected D0 raw audits and qualification checks, allowing stale summaries to satisfy mandatory prerequisites.",
+      "recommendation": "Authenticate each selected raw input manifest, rerun raw_audit.audit and cpu8_audit.qualify in D0 mode, and reconcile their results with the stored qualification. Preserve the explicitly permitted freeze_binding exclusion."
+    },
+    {
+      "priority": "P2",
+      "title": "CPU8 verification accepts missing outer monitoring evidence",
+      "file": "candidate/source/verify_cpu8.py",
+      "line": 44,
+      "trigger": "SAMPLES.jsonl is empty or lacks SAMPLE records, or WATCHDOG_SAMPLES.jsonl is absent.",
+      "effect": "The progress-validation loop can perform zero checks, and WATCHDOG_SAMPLES.jsonl is never read. The verifier can reach CPU8_INTEGRATION_PASS without reconstructing outer sampling coverage, five-second gaps, or applicable resource limits.",
+      "recommendation": "Require nonempty supervisor and watchdog sample streams and reconstruct their start, inter-sample, read-duration, and terminal gaps, resource limits, and progress linkage using the CPU8 schemas."
+    },
+    {
+      "priority": "P2",
+      "title": "Successful tool receipts are not linked to the observed watchdog invocation",
+      "file": "candidate/source/verify_cpu8.py",
+      "line": 53,
+      "trigger": "The supplied tool records describe another successful command or session whose command text contains the freeze digest and whose working directory matches the root.",
+      "effect": "Both terminal branches can set tool_exit_verified=true without matching the request to WATCHDOG_START.command, the selected run, or the watchdog closure output. An unrelated successful tool invocation can satisfy the terminal-binding requirement.",
+      "recommendation": "Bind the prospective request and actual terminal response to the recorded watchdog command, root, run, and freeze argument, and reconcile the terminal closure output."
+    },
+    {
+      "priority": "P2",
+      "title": "D0 accounting ignores attempts absent from the reservation list",
+      "file": "candidate/source/source_guard.py",
+      "line": 22,
+      "trigger": "An observed D0 attempt exists under an unregistered run, including a bridge failure before CASE_BEGIN.",
+      "effect": "actual_d0() iterates only supplied registrations. Its bridge-observer scan also counts only matching registered run names, so retained unregistered attempts contribute nothing and the twenty-attempt check can pass incorrectly.",
+      "recommendation": "Inventory raw D0 starts independently, reconcile every applicable start to exactly one prospective reservation, and reject unregistered attempts before calculating totals."
+    }
+  ],
+  "candidate_manifest_sha256": "4b7d0445f9060d39aff22cde5e4bf3e5e462fca023ef4bf1e7613002a8f5c899",
+  "limitations": [
+    "Read-only review completed without executing project code, tests, scripts, or native libraries; no delegation was used. The DLL was hashed only.",
+    "Supplied native evidence was inspected selectively and not reproduced. Findings describe statically established validation bypasses, not claims that the supplied successful D0 smokes failed.",
+    "Historical approval remains historical. Final data-only bindings, execution freeze, formal eight-case execution, and restoration have not been certified by this review; documented outer OS lifecycle gaps remain UNKNOWN."
+  ]
+}

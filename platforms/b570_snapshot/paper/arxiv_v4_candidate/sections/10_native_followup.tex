@@ -1,0 +1,14 @@
+\section{Complete-service deployment cost}
+\label{sec:deployment}
+\subsection{Matched deployment: k3 gains survive fresh contexts}
+\label{sec:matchedbridge}
+A new matched study separates the effects of speculative depth and context lifecycle within one runtime~\cite{rtxnativebridge}. It uses the original twelve exposed Qwen3 inputs, unchanged model/tokenizer bytes, context1024, target UB4, draft UB1 and cap128/native EOG. One executable supplies all four $k=1,3$ by resident/fresh cells and the PQ\_A/PQ\_B/QB arms. All 204 qualification requests preserve complete outputs and speculative state; corresponding PQ/QB decision vectors agree, and every output also matches the historical E2 reference.
+
+Six independently loaded process sessions complete 864 measurements and 72 warmups. The order balances cells and arms within input/session blocks. Both models remain loaded. Resident requests clear their existing contexts; fresh requests create and destroy contexts inside the service timer. The shared timer includes prefill, generation, sampling, synchronization and result construction. Heavy capture and additional backend counters are disabled.
+
+\input{tables/native_bridge}
+
+QB reduces service time by 6.26\% at resident $k=3$ and 5.36\% at fresh $k=3$ (Table~\ref{tab:nativebridge}). Both pass the registered practical screen; neither $k=1$ cell passes. The $k=3$ point reductions exceed their respective 4.125\% and 4.388\% input-aggregate A/A imbalances and favor QB in every session. The four primary intervals resample whole process sessions and use a Bonferroni adjustment; the twelve inputs remain a fixed panel.
+
+The layout benefit therefore survives fresh-context service at $k=3$. Secondary paired contrasts favor a stronger layout effect at $k=3$ in both lifecycles, while each individual lifecycle contrast includes parity. Changing $k$ changes the speculative transaction as well as query width. These comparisons identify a deployment-dependent layout effect, not a pure width intervention or a CUDA Graph mechanism. The new driver also does not reconstruct every difference between the older HTTP E2 and fresh-service contracts.
+

@@ -1,0 +1,114 @@
+[
+  {
+    "run": "screen-fa-on-v2",
+    "source_commit": "0b99afb8167021ec2bbe25d03b4082aca9dcfe19",
+    "source_sha256": "c3405373d7578baa736cdafdff9e6b2d24f65fcaac1eccb2cd45282a49c1d024",
+    "input_file": "inputs.json",
+    "inputs_sha256": "10f82881ed5316b06a2ecc3983818ff7c2232d132208d2c33715dc193b4a79be",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k2",
+      "draft_k4",
+      "ngram"
+    ],
+    "flash_attn": "on",
+    "ubatch": 512,
+    "measured_requests": 72,
+    "started": "2026-10-05T15:29:46+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  },
+  {
+    "run": "ablation-fa-off-ub1",
+    "source_commit": "22101b0506e74812ab2736492f949c9df5d9e34e",
+    "source_sha256": "44ee31b059c4607f28b405f36245d87e3f7f6630daacd6a7564d9570db51da55",
+    "input_file": "inputs_ablation.json",
+    "inputs_sha256": "e0cc0670a090aa2141dfbae988479c6394f47c18fb9dd0ea7fb62325b49f9fee",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k4"
+    ],
+    "flash_attn": "off",
+    "ubatch": 1,
+    "measured_requests": 24,
+    "started": "2026-10-05T15:34:54+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  },
+  {
+    "run": "ablation-fa-off-ub512",
+    "source_commit": "22101b0506e74812ab2736492f949c9df5d9e34e",
+    "source_sha256": "44ee31b059c4607f28b405f36245d87e3f7f6630daacd6a7564d9570db51da55",
+    "input_file": "inputs_ablation.json",
+    "inputs_sha256": "e0cc0670a090aa2141dfbae988479c6394f47c18fb9dd0ea7fb62325b49f9fee",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k4"
+    ],
+    "flash_attn": "off",
+    "ubatch": 512,
+    "measured_requests": 24,
+    "started": "2026-10-05T15:37:27+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  },
+  {
+    "run": "ablation-fa-on-ub1",
+    "source_commit": "22101b0506e74812ab2736492f949c9df5d9e34e",
+    "source_sha256": "44ee31b059c4607f28b405f36245d87e3f7f6630daacd6a7564d9570db51da55",
+    "input_file": "inputs_ablation.json",
+    "inputs_sha256": "e0cc0670a090aa2141dfbae988479c6394f47c18fb9dd0ea7fb62325b49f9fee",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k4"
+    ],
+    "flash_attn": "on",
+    "ubatch": 1,
+    "measured_requests": 24,
+    "started": "2026-10-05T15:38:24+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  },
+  {
+    "run": "expansion-fa-on-ub512",
+    "source_commit": "3e20577ed2c2b3dc35fc26e016cdd96f9512a75d",
+    "source_sha256": "44ee31b059c4607f28b405f36245d87e3f7f6630daacd6a7564d9570db51da55",
+    "input_file": "inputs_expansion.json",
+    "inputs_sha256": "efeeb2a96ba9039ca05dd754615cb609e953a8289afa8fdb7002a439a784a218",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k4",
+      "ngram",
+      "hybrid"
+    ],
+    "flash_attn": "on",
+    "ubatch": 512,
+    "measured_requests": 108,
+    "started": "2026-10-05T15:40:23+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  },
+  {
+    "run": "shortdraft-fa-on-ub512",
+    "source_commit": "c7d2e10217b406a4e035072d767f65bac4b4fc21",
+    "source_sha256": "44ee31b059c4607f28b405f36245d87e3f7f6630daacd6a7564d9570db51da55",
+    "input_file": "inputs_shortdraft.json",
+    "inputs_sha256": "6042dde9c018f82fed2d74ac00c931719c4de29fe06d086db83ce416d0847eb3",
+    "runtime_sha256": "571160197211e99ee310529305eccbc61f6cff552dc2b857d42a29061a03fbc7",
+    "rounds": 3,
+    "conditions": [
+      "target",
+      "draft_k2"
+    ],
+    "flash_attn": "on",
+    "ubatch": 512,
+    "measured_requests": 48,
+    "started": "2026-10-05T15:50:27+0800",
+    "boundary": "resident single-slot uncached full request; separately reported generation timer"
+  }
+]

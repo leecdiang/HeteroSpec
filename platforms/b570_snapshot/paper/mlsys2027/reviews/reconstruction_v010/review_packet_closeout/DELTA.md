@@ -1,0 +1,2 @@
+# Closeout delta within the same revision
+Compared to immutable review_packet_final, scientific results, counts, formal arrays, evidenceZIP and conclusion are unchanged. Two omitted editorial fixes: TableA22 now lists current B570prefill and RTXcontinuation studies before its retained historical entries; main4.3 names H as prediction-worker arrays in the45reused qualifier. Verify those two passages and affectedlayout, retain prior review/score and append a delta receipt. No new whole-paper review or rating cycle.

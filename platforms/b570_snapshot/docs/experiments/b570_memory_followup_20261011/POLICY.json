@@ -1,0 +1,128 @@
+{
+  "schema": "heterospec.b570.memory-followup-policy.v1",
+  "study_id": "b570_llama_memory_followup_v1",
+  "state": "DESIGN_NO_B570_LOAD_OR_FORWARD",
+  "primary_profile": "STANDARD_Q6",
+  "profiles": {
+    "STANDARD_Q6": {
+      "role": "primary",
+      "target_asset": "Llama_target_Q6_K",
+      "draft_assets": [
+        "Llama_draft_Q8_0",
+        "Llama_draft_Q4_K_M"
+      ],
+      "dedicated_headroom_min_bytes": 536870912,
+      "candidate_limit": 12,
+      "candidate_prefill_ub": "R_prod_ub",
+      "planned_engineering_forward_units": 510
+    },
+    "TIGHT_Q8": {
+      "role": "secondary",
+      "target_asset": "Llama_target_Q8_0",
+      "draft_assets": [
+        "Llama_draft_Q4_K_M"
+      ],
+      "dedicated_headroom_min_bytes": 134217728,
+      "candidate_limit": 6,
+      "candidate_prefill_ub": 32,
+      "planned_engineering_forward_units": 360
+    }
+  },
+  "candidate_modes": [
+    "native_greedy",
+    "vulkan_batched_repair"
+  ],
+  "candidate_k_max": [
+    1,
+    2,
+    3
+  ],
+  "ordinary_ub_grid": [
+    32,
+    128,
+    512
+  ],
+  "stock_ordinary_ub": 128,
+  "context": 1024,
+  "logical_batch": 512,
+  "draft_ub": 1,
+  "threads": 10,
+  "kv_type": "F16",
+  "flash_attention": false,
+  "seed": 123,
+  "sequences": 1,
+  "max_prompt_native_ids": 768,
+  "max_committed_tokens": 128,
+  "discovery_tasks": 12,
+  "discovery_domains": {
+    "MBPP": 6,
+    "GSM8K": 6
+  },
+  "discovery_repeats": 2,
+  "synthetic_boundary_caps": [
+    1,
+    2,
+    3,
+    4,
+    31,
+    32,
+    128
+  ],
+  "dedicated_zero_forward_probe_max_per_profile": 12,
+  "dedicated_zero_forward_probe_charge_units": 1,
+  "same_configuration_probe_max": 3,
+  "all_probe_samples_must_pass_for_memory_qualification": true,
+  "engineering_unit_hard_cap_per_profile": 640,
+  "confirmation_admission_requires_positive_gain": false,
+  "candidate_score": "min(exposed_repeat_R_prod/C)",
+  "candidate_tiebreak": [
+    "lower_k_max",
+    "lower_observed_peak_bytes",
+    "candidate_id_lexical"
+  ],
+  "ranked_candidates_allowed_full_boundary_gate": 1,
+  "both_profile_selections_frozen_before_any_confirmation": true,
+  "confirmation_tasks": 24,
+  "confirmation_domains": {
+    "MBPP": 12,
+    "GSM8K": 12
+  },
+  "confirmation_rounds": 4,
+  "confirmation_sessions": 2,
+  "confirmation_arms": [
+    "R_stock",
+    "R_prod",
+    "M_match",
+    "C_selected"
+  ],
+  "formal_requests_per_arm": 192,
+  "formal_requests_per_profile": 768,
+  "formal_warmups_per_profile": 32,
+  "request_and_probe_unit_hard_cap_per_profile": 1440,
+  "owned_gpu_lifetime_hours_per_profile": 8,
+  "total_request_and_probe_unit_hard_cap": 2880,
+  "total_owned_gpu_lifetime_hours": 16,
+  "outer_wall_days": 7,
+  "calendar_separation_required": false,
+  "idle_seconds_per_block": 10,
+  "formal_retries": 0,
+  "primary_comparison": "R_prod/C_selected",
+  "secondary_comparisons": [
+    "R_stock/C_selected",
+    "M_match/C_selected"
+  ],
+  "positive_descriptive_gm_min": 1.05,
+  "date_ci": null,
+  "cross_date_status": "UNTESTED",
+  "qualified_ratio_on_any_four_arm_missing_or_divergence": null,
+  "qualified_ratio_on_residency_unknown": null,
+  "cross_precision_reference_reuse": false,
+  "cross_precision_ratio_pooling": false,
+  "headroom_relaxation_after_forward_allowed": false,
+  "hidden_quantization_or_cpu_offload_allowed": false,
+  "gpu_execution_performed_by_this_design": false,
+  "unrepaired_diagnostic_forward_units_per_profile": 25,
+  "unrepaired_diagnostic_draft_asset": "Llama_draft_Q4_K_M",
+  "unrepaired_diagnostic_k_max": 3,
+  "unrepaired_diagnostic_used_in_confirmation_matrix_gate": false
+}

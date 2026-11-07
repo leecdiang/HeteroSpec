@@ -1,0 +1,1278 @@
+{
+  "status": "GPU14_ENGINEERING_PASS",
+  "run_id": "pr113-timer-gpu-regression-v1",
+  "reviewed_commit": "9aefd4c722ac78421994052e41412c2c0417d73b",
+  "F0_sha256": "65a6a60b726572305e29f73e2d852936af9e4c87d9740cba5f95f97f738bd290",
+  "counts": {
+    "controller_starts": 1,
+    "native_host_starts": 14,
+    "readiness_starts": 14,
+    "controlled_process_starts": 29,
+    "graph_starts": 14,
+    "graph_call_returns": 14,
+    "successful_full_device_sync_returns": 14,
+    "confirmed_completed_graphs": 14,
+    "failed": 0,
+    "not_started": 0,
+    "support_API_queries": 166,
+    "model_requests": 0,
+    "warmups": 0,
+    "scientific_retries": 0,
+    "standalone_support_hosts": 0
+  },
+  "accounting": {
+    "native_child_seconds": 7.804874999994354,
+    "readiness_child_seconds": 1.1517179000002216,
+    "child_seconds": 8.956592899994575,
+    "controller_seconds": 35.27470069999981,
+    "conservative_owned_bound_seconds": 70.54940219999844,
+    "owned_ceiling_seconds": 1800,
+    "wall_ceiling_seconds": 900,
+    "cost_qualification": "NONE: engineering execution records, not clean timing or acceleration",
+    "internal_driver_query_count": "UNKNOWN; 14 explicit readiness processes are not a total driver API count"
+  },
+  "q1": {
+    "Qwen": {
+      "hosts": 2,
+      "completed": 2,
+      "MQ_original_bitwise": "PASS",
+      "own_path_inputs_modules_placement": "PASS",
+      "independent_repeat": "BITWISE_PASS"
+    },
+    "SmolLM2": {
+      "hosts": 2,
+      "completed": 2,
+      "MQ_original_bitwise": "PASS",
+      "own_path_inputs_modules_placement": "PASS",
+      "independent_repeat": "BITWISE_PASS"
+    },
+    "Llama": {
+      "hosts": 2,
+      "completed": 2,
+      "MQ_original_bitwise": "PASS",
+      "own_path_inputs_modules_placement": "PASS",
+      "independent_repeat": "BITWISE_PASS"
+    }
+  },
+  "q2": [
+    {
+      "slot": "gpu14/06/Qwen_l00_prefill_q2/MQ/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "MQ",
+      "repeat": 0,
+      "directory": "D:\\hs113-timer-gpu14-v1\\06",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": null,
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {},
+      "status": "BITWISE_MQ_CORRESPONDENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/07/Qwen_l00_prefill_q2/MQ/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "MQ",
+      "repeat": 1,
+      "directory": "D:\\hs113-timer-gpu14-v1\\07",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": true,
+          "different_words": 0,
+          "max_error": 0.0,
+          "max_ULP": 0,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {},
+      "status": "BITWISE_MQ_CORRESPONDENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/08/Qwen_l00_prefill_q2/PQ/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "PQ",
+      "repeat": 0,
+      "directory": "D:\\hs113-timer-gpu14-v1\\08",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": null,
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/09/Qwen_l00_prefill_q2/PQ/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "PQ",
+      "repeat": 1,
+      "directory": "D:\\hs113-timer-gpu14-v1\\09",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/10/Qwen_l00_prefill_q2/QB/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QB",
+      "repeat": 0,
+      "directory": "D:\\hs113-timer-gpu14-v1\\10",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": null,
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "PQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/11/Qwen_l00_prefill_q2/QB/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QB",
+      "repeat": 1,
+      "directory": "D:\\hs113-timer-gpu14-v1\\11",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "PQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/12/Qwen_l00_prefill_q2/QH_C/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QH_C",
+      "repeat": 0,
+      "directory": "D:\\hs113-timer-gpu14-v1\\12",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": null,
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "PQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "QB": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    },
+    {
+      "slot": "gpu14/13/Qwen_l00_prefill_q2/QH_C/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QH_C",
+      "repeat": 1,
+      "directory": "D:\\hs113-timer-gpu14-v1\\13",
+      "module_input_placement_completion_controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "vs_original_MQ": {
+        "QK": {
+          "bitwise_equal": false,
+          "different_words": 9403,
+          "max_error": 0.027706146240234375,
+          "max_ULP": 9854240,
+          "nonfinite_mismatches": 0
+        },
+        "softmax": {
+          "bitwise_equal": false,
+          "different_words": 59,
+          "max_error": 7.43865966796875e-05,
+          "max_ULP": 25794,
+          "nonfinite_mismatches": 0
+        },
+        "AV": {
+          "bitwise_equal": false,
+          "different_words": 4076,
+          "max_error": 7.525086402893066e-05,
+          "max_ULP": 87552,
+          "nonfinite_mismatches": 0
+        }
+      },
+      "pairwise_same_repeat": {
+        "MQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": false,
+              "different_words": 9403,
+              "max_error": 0.027706146240234375,
+              "max_ULP": 9854240,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": false,
+              "different_words": 59,
+              "max_error": 7.43865966796875e-05,
+              "max_ULP": 25794,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": false,
+              "different_words": 4076,
+              "max_error": 7.525086402893066e-05,
+              "max_ULP": 87552,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": "QK",
+          "ordinary": {
+            "bitwise_equal": false,
+            "different_words": 4076,
+            "max_error": 7.525086402893066e-05,
+            "max_ULP": 87552,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "PQ": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        },
+        "QB": {
+          "stages": {
+            "QK": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "softmax": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            },
+            "AV": {
+              "bitwise_equal": true,
+              "different_words": 0,
+              "max_error": 0.0,
+              "max_ULP": 0,
+              "nonfinite_mismatches": 0
+            }
+          },
+          "first_divergence": null,
+          "ordinary": {
+            "bitwise_equal": true,
+            "different_words": 0,
+            "max_error": 0.0,
+            "max_ULP": 0,
+            "nonfinite_mismatches": 0
+          }
+        }
+      },
+      "status": "FINITE_EMPIRICAL_DIFFERENCE",
+      "cost_qualification": "NONE: engineering observer includes IO, not a timing experiment"
+    }
+  ],
+  "module_identity": [
+    {
+      "slot": "gpu14/00/Qwen_l00_prefill_q1/MQ/r0",
+      "pid": 12236,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/01/Qwen_l00_prefill_q1/MQ/r1",
+      "pid": 2824,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/02/SmolLM2_l00_prefill_q1/MQ/r0",
+      "pid": 8448,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/03/SmolLM2_l00_prefill_q1/MQ/r1",
+      "pid": 30740,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/04/Llama_l00_prefill_q1/MQ/r0",
+      "pid": 9472,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/05/Llama_l00_prefill_q1/MQ/r1",
+      "pid": 30444,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/06/Qwen_l00_prefill_q2/MQ/r0",
+      "pid": 34228,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/07/Qwen_l00_prefill_q2/MQ/r1",
+      "pid": 13300,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/08/Qwen_l00_prefill_q2/PQ/r0",
+      "pid": 18168,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/09/Qwen_l00_prefill_q2/PQ/r1",
+      "pid": 24304,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727480230192,
+        "owner": 140727480221696
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/10/Qwen_l00_prefill_q2/QB/r0",
+      "pid": 26548,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727879672112,
+        "owner": 140727879663616
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/11/Qwen_l00_prefill_q2/QB/r1",
+      "pid": 8868,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727879672112,
+        "owner": 140727879663616
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/12/Qwen_l00_prefill_q2/QH_C/r0",
+      "pid": 34716,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727879672112,
+        "owner": 140727879663616
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    },
+    {
+      "slot": "gpu14/13/Qwen_l00_prefill_q2/QH_C/r1",
+      "pid": 2240,
+      "core_path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml-base.dll",
+      "core_sha256": "b9243e8686a2b423b662e528f818a3744146d0245c2a8a42d3b4d5bf8eaa9704",
+      "core_handle": 140726563438592,
+      "host_IAT_target": 140726563449344,
+      "registry": {
+        "path": "D:\\hs104-e1-v1\\native\\build\\bin\\ggml.dll",
+        "sha256": "a624f9cd2c048173b31a12008d3a5225b411898e83c09019a32cda42211d53c3",
+        "backend_load_IAT_target": 140727879672112,
+        "owner": 140727879663616
+      },
+      "plugin_core_imports_verified": 41,
+      "plugin_targets_equal_actual_core_exports": true,
+      "initializer_events": [
+        "path_and_hash_verified",
+        "exact_core_loaded",
+        "owned_exports_resolved",
+        "dll_initializer_returned"
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "slot": "gpu14/00/Qwen_l00_prefill_q1/MQ/r0",
+      "descriptor": "Qwen_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/01/Qwen_l00_prefill_q1/MQ/r1",
+      "descriptor": "Qwen_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/02/SmolLM2_l00_prefill_q1/MQ/r0",
+      "descriptor": "SmolLM2_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/03/SmolLM2_l00_prefill_q1/MQ/r1",
+      "descriptor": "SmolLM2_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/04/Llama_l00_prefill_q1/MQ/r0",
+      "descriptor": "Llama_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/05/Llama_l00_prefill_q1/MQ/r1",
+      "descriptor": "Llama_l00_prefill_q1",
+      "layout": "MQ",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/06/Qwen_l00_prefill_q2/MQ/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "MQ",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/07/Qwen_l00_prefill_q2/MQ/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "MQ",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 8,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "BITWISE_MQ_CORRESPONDENCE"
+    },
+    {
+      "slot": "gpu14/08/Qwen_l00_prefill_q2/PQ/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "PQ",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 24,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    },
+    {
+      "slot": "gpu14/09/Qwen_l00_prefill_q2/PQ/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "PQ",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 24,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    },
+    {
+      "slot": "gpu14/10/Qwen_l00_prefill_q2/QB/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QB",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 14,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    },
+    {
+      "slot": "gpu14/11/Qwen_l00_prefill_q2/QB/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QB",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 14,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    },
+    {
+      "slot": "gpu14/12/Qwen_l00_prefill_q2/QH_C/r0",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QH_C",
+      "repeat": 0,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 13,
+      "controls": "PASS",
+      "repeatability": null,
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    },
+    {
+      "slot": "gpu14/13/Qwen_l00_prefill_q2/QH_C/r1",
+      "descriptor": "Qwen_l00_prefill_q2",
+      "layout": "QH_C",
+      "repeat": 1,
+      "graph_started": 1,
+      "graph_returned": 1,
+      "synchronized": 1,
+      "confirmed_complete": 1,
+      "failed": 0,
+      "support_queries": 13,
+      "controls": "PASS",
+      "repeatability": "BITWISE_PASS",
+      "numerical_status": "FINITE_EMPIRICAL_DIFFERENCE"
+    }
+  ],
+  "historical_720": {
+    "started_failed": 1,
+    "not_started": 719,
+    "confirmed_complete": 0,
+    "not_backfilled": true
+  },
+  "admission": {
+    "prepare_formal_numerical_v2_review": true,
+    "formal_v2_execution_authorized": false,
+    "timing_profile_authorized": false,
+    "S2_S3_authorized": false,
+    "full_actor_admitted": false,
+    "universal_equivalence": false,
+    "kernel_or_reduction_identity": "UNKNOWN"
+  }
+}

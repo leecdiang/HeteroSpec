@@ -1,0 +1,185 @@
+对，现在 **RTX 这边已经把上一次 Block 0 的唯一工程性阻塞点闭环了**：Census 不再存在 LF/CRLF 语义替代，授权绑定的是执行入口实际消费的 **CRLF 原始字节**，CPU 126/126、远端 197 raw 成员也完成认证。因此下一步可以直接授权 **Block 0**，不需要再做 Census，也不要碰 Block 1/2。
+
+我建议直接把下面这段给 RTX agent：
+
+---
+
+### RTX S1B — Block 0 独立 GPU 执行授权
+
+现在授权执行 **PR118 `pr116-s1b-exact-r1` 的 Clean Block 0**。这是一次**独立且一次性的 GPU 授权**。
+
+**只允许执行 Block 0，禁止任何超范围 GPU 工作。**
+
+#### 1. 身份与冻结证据
+
+必须严格使用：
+
+- run_id：`pr116-s1b-exact-r1`
+- F0 SHA256：\
+  `999fe0bda4e68b53b1f41a589623b5c1d00fb64cfee91fb9413c11c98a39fc32`
+- Execution-bound Census SHA256：\
+  `d8c79ed1b4fc748ec8ce22a201137ef6fc201de79052fa7c6c4f7711806e8256`
+- Archive manifest：\
+  `b9f4e80840820b37f1726eb1e35ca4dd637b4cb21116c9e0dc266574e53b542c`
+
+**授权绑定必须是 execution entry 实际读取的 Census 原始字节。禁止 LF/CRLF 归一化、重新序列化、语义等价替代或绕过 hash check。**
+
+如果 F0、Census、entry identity 或任何冻结资产不匹配：
+
+> **立即停止，0 GPU graph calls，不重试。**
+
+不要恢复旧 Block 0 run，也不要修改旧结果。
+
+#### 2. Block 0 唯一实验范围
+
+仅执行：
+
+- **72 个 clean coordinates**
+- PQ：24
+- QB：24
+- QH_C：24
+
+覆盖原固定 24 contexts，不增加任何新坐标。
+
+每个 clean host 严格执行冻结的：
+
+- **1 次 warmup**
+- **8 次正式 measurement**
+
+因此：
+
+- 72 个 host
+- 72 次 warmup
+- **576 次正式 measurement**
+- **648 次 graph calls 总计**
+
+严格按照 F0 中已经冻结的 host/context pairing 和执行顺序，不自行重排或删减。
+
+#### 3. 每个坐标必须记录
+
+完整保留并独立记录：
+
+- CUDA initialization / ownership
+- graph identity
+- input 前后字节完整性
+- allocation
+- packing
+- mask
+- input preparation / copy
+- upload
+- compute
+- synchronization
+- output readback
+- ordinary output correctness
+- resident execution cost
+- input-inclusive total cost
+
+QPC 正式 measurement 必须保存完整原始样本，并计算：
+
+- median
+- p95
+- max
+
+不要只保存汇总数字。
+
+**不要把没有样本记为 0 ms。**
+
+#### 4. 正确性 Gate
+
+正式 timing 结果必须建立在 ordinary correctness 合格基础上。
+
+继续使用已经冻结的独立 CPU/reference 判据，不改变：
+
+- tolerance
+- rounding interpretation
+- reference
+- 输入
+- 算术图
+- serializer
+- layout
+- DLL
+- CUDA/plugin identity
+
+如果出现：
+
+- 非有限输出
+- input mutation
+- graph/identity drift
+- CUDA launch/sync failure
+- ordinary correctness failure
+- 监测失败
+- 日志/容量失败
+- 生命周期违反冻结规则
+- 任何无法认证的结果
+
+**立即停止整个 Block 0，不重试该 slot，也不追加 GPU 实验。**
+
+失败输出和日志原样封存。
+
+#### 5. 资源监测
+
+启动前执行冻结的 GPU readiness gate。
+
+GPU utilization 若超过冻结的 **5%** 上限：
+
+> 不启动任何数值 host，直接停止。
+
+运行期继续使用已经修复的严格 **1,000,000,000 ns** 监测规则。
+
+不要因为退出后的 CPU audit、hash、archive 或日志处理耗时而误判 native runtime；退出时间、后置审计时间和交付成本继续分开记账。
+
+#### 6. 严禁事项
+
+本授权**不包括**：
+
+- Block 1
+- Block 2
+- trace
+- profiling
+- S2/S3
+- actor
+- decoder
+- KV/rollback
+- 模型请求
+- 额外 probe
+- warmup 之外的额外 GPU 查询
+- retry
+- 补跑失败坐标
+- 扩大 context
+- 新增布局
+- 修改 threshold
+- 修改 tolerance
+
+如果 Block 0 中途停止，**停在哪里就停在哪里，不自行续跑。**
+
+#### 7. 最终汇报要求
+
+完成或停止后，返回：
+
+1. 72 coordinates 的逐坐标状态；
+2. warmup / formal measurement 数量；
+3. CUDA graph call 数量；
+4. correctness qualification；
+5. PQ/QB/QH_C 的逐坐标对应关系；
+6. allocation / preparation / upload / compute / sync / readback 成本；
+7. resident 与 input-inclusive 两套成本；
+8. QPC median/p95/max；
+9. 完整资源与 owned accounting；
+10. 所有失败/停止原因；
+11. F0、Census、result archive 的实际 SHA256；
+12. fresh restore / independent audit 结果；
+13. **不要将单点 timing 或 >1.02 的结果直接表述为稳定加速，先保留原始分布。**
+
+如果全部 72 坐标完成，则**停止在 Block 0 完成节点，等待下一次单独授权**。
+
+---
+
+### 我现在的判断
+
+这次可以放行。关键是 **不要再让 agent 自己“顺便检查一下”**——我们现在已经从工程修复阶段进入真正的 **cost qualification** 了。
+
+而且 Block 0 的设计非常合适：**PQ / QB / QH_C × 24 contexts，648 次实际 graph calls**。如果这一块跑通，我们就第一次同时拿到：
+
+> **真实 CUDA ordinary correctness + 三布局 matched timing + allocation/transfer/compute/readback cost**
+
+这才是 RTX 这条线真正有论文价值的 S1B 数据。尤其 **QB 作为强基线、QH_C 作为主候选** 的比较，现在终于可以用真实硬件成本回答，而不是继续靠结构推断。

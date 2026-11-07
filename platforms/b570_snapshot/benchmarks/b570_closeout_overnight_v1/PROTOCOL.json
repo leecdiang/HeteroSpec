@@ -1,0 +1,309 @@
+{
+  "study": "B570_CLOSEOUT_OVERNIGHT_V1",
+  "budget_profile": "NIGHT",
+  "planned_core_requests": 1456,
+  "G0": 164,
+  "B": 512,
+  "C": 504,
+  "C_ANCHOR_LONG": 84,
+  "D_RESET": 96,
+  "D_TIMING": 96,
+  "conditions_B": [
+    {
+      "label": "R_reference",
+      "native": false,
+      "k": 2,
+      "ub": 128,
+      "prefill": 128,
+      "plain": true
+    },
+    {
+      "label": "T_matched",
+      "native": false,
+      "k": 2,
+      "ub": 1,
+      "prefill": 128,
+      "matched": true
+    },
+    {
+      "label": "N0_ordinary",
+      "native": true,
+      "k": 2,
+      "ub": 1,
+      "prefill": 1
+    },
+    {
+      "label": "N1_repaired",
+      "native": true,
+      "k": 2,
+      "ub": 1,
+      "prefill": 128
+    }
+  ],
+  "C_widths": [
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      7,
+      8
+    ]
+  ],
+  "C_shared_count": 4,
+  "C_warmups": 72,
+  "C_anchor_warmups": 12,
+  "caps": [
+    128,
+    256,
+    512
+  ],
+  "context": 1024,
+  "threads": 10,
+  "batch_threads": 10,
+  "FA": "off",
+  "seed": 123,
+  "greedy": true,
+  "target_prefill": 128,
+  "draft_prefill": 1,
+  "draft_continuation": 1,
+  "endpoint": "inclusive first runtime EOG or cap, native n_predict=cap-1; unmodified native loop overshoot fully retained",
+  "reference": "B570 original ordinary target harness UB128, common chunk grouping and serial query; independently paid each repetition",
+  "matched": "native target caller prompt[:-1],prompt[-1], pending sampled in source, sampler clone and real state into specified continuation context; no draft",
+  "generation_timer": "C++ before first target sample/state transfer through all draft/verification/rollback plus final device synchronization",
+  "whole_timer": "before parsing JSON request and resets through context transfer, generation, actual synchronization and cleanup; evidence-file disk writes excluded; host end-to-end artifact latency separately retained",
+  "resident": "models/source contexts loaded once per service; no KV/prompt cache; independently clear both memories, reset samplers and pending on each request",
+  "retries": {
+    "valid_scientific_output": 0,
+    "infrastructure_maximum": 2,
+    "deterministic_crash_oom": 0
+  },
+  "startup": {
+    "study": "B570_CLOSEOUT_OVERNIGHT_V1",
+    "startup_utc": "2026-10-05T18:05:25.6834254+00:00",
+    "startup_beijing": "2026-10-06T02:05:25.6834254+08:00",
+    "monotonic_ticks": 6955606484,
+    "deadline_utc": "2026-10-06T04:05:25.6834254+00:00",
+    "new_experiment_stop_utc": "2026-10-06T02:50:25.6834254+00:00",
+    "prompt_head": "aaa18acd2619dc8c0f91482b3308885d53bbf02e",
+    "main": "e87291d26df32f2cb9571e005ab173b1c7a6830b",
+    "status": "PRECHECK"
+  },
+  "recovery_amendment": {
+    "cached_scientific_requests": 42,
+    "deadline_utc": "2026-10-06T12:37:38.2907252+00:00",
+    "cached_warmups": 2,
+    "reason": "User explicitly resumed interrupted study on 2026-10-06. Original budget and failed attempts preserved. No new MBPP input has run. Renew 10-hour recovery window including 75-minute archive reserve; do not modify prompt v1.",
+    "utc": "2026-10-06T02:37:38.2907252+00:00",
+    "reusable_source_commits": [
+      "d6e1b614c8b7656b31b700efa1f49f7d9fc184b2"
+    ],
+    "previous_failure_utc": "2026-10-05T18:53:16Z",
+    "new_experiment_stop_utc": "2026-10-06T11:22:38.2907252+00:00",
+    "previous_failure_cause": "Frontend stdout reached EOF; previous controller failed to wait for an exact exit code. No Windows Application error in queried interval. Cause unestablished.",
+    "reuse_rule": "Only complete hash-verified old G0 outputs with identical executable and numerical source identity; no valid scientific output is rerun.",
+    "unchanged_numerical_assets": {
+      "build/Release/ggml-cpu.dll": "d64c4fec44cb5524253bb250408032ec5c3dc696bbe36bf2cbef0c42ab66b7f7",
+      "src/CMakeLists.txt": "f70e5e1d2263269f7314fd6070a7e28d6b22770ad46e81384f039b478dec6fef",
+      "build/Release/ggml-vulkan.dll": "a9bcbe815d0fc1b9a7914fceb55b7275750169ec58dc8c4a09691ea0ea12f92c",
+      "src/observer.h": "f4189054cd25e5c7b3e1520d77124f9971cabc5594e944ce2f90f403df3e8785",
+      "build/Release/llama-completion-impl.dll": "af6a902a0d8fb11fa4c5ad5b67e5298636cb9c9b07de3b84678b5cadb7df1acd",
+      "build/Release/b570-closeout-native.exe": "33c9e0a7ac16d10c256bcf665a095268883f8880b2ed80b01106c3fd819057b3",
+      "build/Release/llama.dll": "e67f210150f6e1a4d645b02003cff05eeb9c2989dc93ce9ca3d4984940289c67",
+      "src/native.cpp": "325c78ab10c0ff9a8776bbdb2c2cc2ff68262d6e0186cf82f9737fe9004ef070",
+      "src/target.cpp": "c2918411e1cccf45b61c80374c2f5b05e086c8c9052600d3d0d1dc4e7f8e608f",
+      "build/Release/llama-common.dll": "b3bd85b4f0243e10999f776e189bc1abe434c3605b57b0f28411b4ecdca9ea22",
+      "build/Release/ggml.dll": "f86e55eca56de37225461afaf594d4b074be1332a020e2be3fad0826d5c1a78f",
+      "build/Release/b570-closeout-target.exe": "817b8329938210ae73b6c6c447141f503d7c74848614082402b4ce57e85c5af2",
+      "build/Release/ggml-base.dll": "8da045cc3b9d9287b0a9c4a2158dca2a02c12491a1064172b202a292b63c4808"
+    }
+  },
+  "observed_old_request_mean_seconds": {
+    "R": 4.070749999999985,
+    "native": 24.12908333333333
+  },
+  "ETA_by_profile": {
+    "FULL": {
+      "B_seconds": 15562.057789014925,
+      "C_seconds": 30073.46779132699,
+      "anchor_seconds": 7688.868739350427,
+      "D_seconds": 5202.735666871795,
+      "warm_seconds": 4081.999720421555,
+      "service_load_seconds": 1620,
+      "safety_multiplier": 1.15,
+      "total_seconds": 73863.49916303354
+    },
+    "NIGHT": {
+      "B_seconds": 13832.940256902155,
+      "C_seconds": 19137.66132175354,
+      "anchor_seconds": 4892.916470495727,
+      "D_seconds": 5202.735666871795,
+      "warm_seconds": 4081.999720421555,
+      "service_load_seconds": 1620,
+      "safety_multiplier": 1.15,
+      "total_seconds": 56083.49145191149
+    }
+  },
+  "freeze_remaining_seconds": 23345.965916,
+  "mechanism_pair_selection": "width ascending, cap ascending, frozen task order; at most two pairs",
+  "E_selection": "smallest qualified continuation UB>1, else1; fixed k1/2/3/5/7 plus k2UB1 anchor; <=6 configs; cost-selected pilot requires generation>=1.03, wall>=1, both repeat directions faster; independent confirmation separately required",
+  "prototype": "optional at most one family, not necessary for core; never shader/precision changes",
+  "scientific_failure": "retain complete valid outputs and continue independent stages",
+  "exposure_limit": "accessible history plus fixed RTX exposure receipt; inaccessible RTX bulk histories explicitly not independently rescanned",
+  "sources": {
+    "src\\CMakeLists.txt": "f70e5e1d2263269f7314fd6070a7e28d6b22770ad46e81384f039b478dec6fef",
+    "src\\native.cpp": "e0e32e23031063bebaff1a75a64e140edf6b8e9c774bf533073c5237bef1a7d8",
+    "src\\observer.h": "f4189054cd25e5c7b3e1520d77124f9971cabc5594e944ce2f90f403df3e8785",
+    "src\\target.cpp": "bc144c1926428f69c808a257733c638b3315ac48a2462617c27b2d7a5c4ef539",
+    "runner.py": "b2bd411cda1c0e75d9859e4854ccd22d9063a83b9dc36f3cb3eb77f1cd6634c0",
+    "derive_frontends.py": "c41499600c96ff505d1c362ba1aa238c275950b5d833a0ec0530f9f8cb455100",
+    "campaign.py": "d807bf35d97f68086637eeceaa9325faa2c26b0d836d9afb12f12263c5af09d6"
+  },
+  "source_commit": "fe79627c2ec08c4482818ea3592c3c6259f6413f",
+  "models": {
+    "target": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "draft": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031"
+  },
+  "matched_output_reservation_amendment": {
+    "utc": "2026-10-06T03:59:37.265333+00:00",
+    "reason": "Matched target captured default continuation params before common initialization reduced per-sequence outputs. Default n_outputs_max=0 resolves to batch512, per_seq=0 resolves512 in a newly created context; a one-query continuation only needs one row. Set matched continuation max/per_seq=1. Ordinary R/source prefill and all native executables remain unchanged. Fresh target plain/sham, old reference and all width controls required before ETA/new inputs.",
+    "old_target_sha256": "9b95791a2b1060413e9ebb9062cf90ce459c288a4cedf06c8a0f399f068a83ec",
+    "new_target_sha256": "2b5197a5650e452fc23af4f02d12db78b13b35f361771d0aae7fc5ec55b5764b",
+    "native_unchanged_sha256": "5d5f15d7741ff6212928292a02074d889783e62df3c3e4fcf01051a23f42387b",
+    "new_target_source_sha256": "bc144c1926428f69c808a257733c638b3315ac48a2462617c27b2d7a5c4ef539",
+    "native_source_sha256": "e0e32e23031063bebaff1a75a64e140edf6b8e9c774bf533073c5237bef1a7d8",
+    "native_binary_unchanged": true,
+    "new_task_forwards": 0,
+    "scope": "Actual generation includes all remaining context/state creation costs. No subtraction from recorded times, arithmetic/driver/model change or output retry."
+  },
+  "final_target_control": {
+    "status": "PASS",
+    "requests": 33,
+    "warmups": 9,
+    "failed": [],
+    "width_observations": [
+      {
+        "unit_id": "G0_TARGET_FINAL/5/0/HumanEval/134",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 1,
+          "ub": 2,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/5/1/HumanEval/58",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 1,
+          "ub": 2,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/6/0/HumanEval/134",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 3,
+          "ub": 4,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/6/1/HumanEval/58",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 3,
+          "ub": 4,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/7/0/HumanEval/134",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 5,
+          "ub": 6,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/7/1/HumanEval/58",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 5,
+          "ub": 6,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/8/0/HumanEval/134",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 7,
+          "ub": 8,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      },
+      {
+        "unit_id": "G0_TARGET_FINAL/8/1/HumanEval/58",
+        "config": {
+          "label": "T_FINAL_WIDTH",
+          "native": false,
+          "k": 7,
+          "ub": 8,
+          "prefill": 128,
+          "matched": true,
+          "cap": 128,
+          "capture": true
+        },
+        "reference_equal": true
+      }
+    ],
+    "width_failures_gate_only_their_configuration": true,
+    "unchanged_native_proof": "G0/bridge/rebuilt/sham and original width native observations; exact native binary retained"
+  }
+}

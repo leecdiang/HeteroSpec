@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "title": "P2: Include nested-debugger children in resource accounting",
+      "body": "Resource decisions use only `live`, which is populated from this observer's debug events. Windows stops propagating descendant debug events when a descendant creates a process with `DEBUG_PROCESS` ([Microsoft documentation](https://learn.microsoft.com/en-us/windows/win32/debug/process-functions-for-debugging)). The supplied supervisors do exactly that when launching actors. Those actors remain in the observer's Job but disappear from its process-count and RSS calculations, allowing an over-budget command tree to pass these checks. Build the resource census from Job membership, retaining debug events for the processes this observer actually debugs.",
+      "priority": "P2",
+      "confidence": 0.96,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_entry_repair_v3/source/observe.py",
+        "line": 46
+      },
+      "source_attribution": null
+    },
+    {
+      "title": "P2: Check operational import dependencies before reporting readiness",
+      "body": "`--startup-check` exits inside `bootstrap`, before the entry executes its remaining imports. Consequently, a deployment with a missing or broken `observer_policy` or `source_guard` can receive `STARTUP_PREFLIGHT_PASS`, then immediately fail its operational observer/watchdog launch. Authenticating an inventory does not detect this when the manifest was generated from that incomplete deployment. The fixture tests currently demonstrate this gap by successfully probing entries without those dependencies. Move readiness reporting after each entry's required imports, while keeping argument parsing and operational side effects after the check.",
+      "priority": "P2",
+      "confidence": 0.92,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_entry_repair_v3/source/entry_bootstrap.py",
+        "line": 26
+      },
+      "source_attribution": null
+    }
+  ],
+  "overall_correctness": "patch is incorrect",
+  "overall_explanation": "The supplied change has two actionable gaps: nested debugger children evade observer resource accounting, and startup preflight can report readiness before required operational imports execute. Review completed from the supplied patch and Windows API documentation without executing project code. Native Windows behavior was not tested, and the omitted legacy CPU8 adapter is not certified.",
+  "overall_confidence": 0.92,
+  "provider_report": {
+    "findings": [
+      {
+        "title": "P2: Include nested-debugger children in resource accounting",
+        "body": "Resource decisions use only `live`, which is populated from this observer's debug events. Windows stops propagating descendant debug events when a descendant creates a process with `DEBUG_PROCESS` ([Microsoft documentation](https://learn.microsoft.com/en-us/windows/win32/debug/process-functions-for-debugging)). The supplied supervisors do exactly that when launching actors. Those actors remain in the observer's Job but disappear from its process-count and RSS calculations, allowing an over-budget command tree to pass these checks. Build the resource census from Job membership, retaining debug events for the processes this observer actually debugs.",
+        "priority": "P2",
+        "confidence": 0.96,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_entry_repair_v3/source/observe.py",
+          "line": 46
+        },
+        "source_attribution": null
+      },
+      {
+        "title": "P2: Check operational import dependencies before reporting readiness",
+        "body": "`--startup-check` exits inside `bootstrap`, before the entry executes its remaining imports. Consequently, a deployment with a missing or broken `observer_policy` or `source_guard` can receive `STARTUP_PREFLIGHT_PASS`, then immediately fail its operational observer/watchdog launch. Authenticating an inventory does not detect this when the manifest was generated from that incomplete deployment. The fixture tests currently demonstrate this gap by successfully probing entries without those dependencies. Move readiness reporting after each entry's required imports, while keeping argument parsing and operational side effects after the check.",
+        "priority": "P2",
+        "confidence": 0.92,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_entry_repair_v3/source/entry_bootstrap.py",
+          "line": 26
+        },
+        "source_attribution": null
+      }
+    ],
+    "overall_correctness": "patch is incorrect",
+    "overall_explanation": "The supplied change has two actionable gaps: nested debugger children evade observer resource accounting, and startup preflight can report readiness before required operational imports execute. Review completed from the supplied patch and Windows API documentation without executing project code. Native Windows behavior was not tested, and the omitted legacy CPU8 adapter is not certified.",
+    "overall_confidence": 0.92
+  },
+  "usage": {
+    "attempts": 1,
+    "reported_attempts": 1,
+    "unknown_attempts": 0,
+    "partial_attempts": 0,
+    "complete": true,
+    "tokens": {
+      "input_tokens": 123296,
+      "cached_input_tokens": 59136,
+      "output_tokens": 2957,
+      "reasoning_output_tokens": 2266
+    }
+  },
+  "review_status": "findings"
+}

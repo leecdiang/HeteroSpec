@@ -1,0 +1,73 @@
+\section{Phase-scoped query-layout design}
+\label{sec:method}
+\subsection{Separating attention from target-wide batching}
+Figure~\ref{fig:design} contrasts the three repair organizations. GS processes target rows one at a time throughout projection, attention and the feed-forward network. PQ retains batched surrounding work but explicitly constructs an attention subgraph for each query and concatenates the results. QB retains that local one-column organization through a view: queries become separate batch instances of the existing attention operators. It does not serialize the surrounding layers or construct a distinct attention subgraph per query.
+
+\begin{figure*}[t]
+\centering\input{figures/design.tex}
+\caption{Three same-reference implementation alternatives. Boxes show logical graph organization, not measured kernel occupancy. QB changes attention representation while keeping surrounding target computation batched. Numbered query and mask tiles depict logical indexing, not copied K/V or independent sequences. Phase selection is part of graph construction and reuse; the speculative transaction is unchanged.}
+\label{fig:design}
+\end{figure*}
+
+We label the ordinary graph with multiple query positions MQ; this denotes execution geometry, not the multi-query attention (MQA) architecture with one shared K/V head. The intervention point follows the native Q/K/V permutations in the non-flash attention builder. Let $d$ be the query/key channel dimension, $q$ the number of occupied queries, $h_Q$ the query-head count, and $n$ the key extent. Using the runtime's axis order, the input query has shape $(d,q,h_Q, 1)$. QB creates a four-dimensional view with shape $(d, 1,h_Q,q)$ and preserves the original query-column stride as the new fourth-axis stride. This is a view of the same input values, not a different projection or a re-encoding of the tokens.
+
+\subsection{Address, mask and head semantics}
+Write the original byte strides as $s_0,s_1,s_2,s_3$ and the base pointer as $b_Q$. For channel $i$, head $a$ and logical query $j$, the original address is
+\begin{equation}
+\operatorname{addr}_{\MQ}(i,j,a, 0)=b_Q+i s_0+j s_1+a s_2.
+\end{equation}
+The transformed view satisfies
+\begin{equation}
+\operatorname{addr}_{\QB}(i, 0,a,j)=b_Q+i s_0+a s_2+j s_1,
+\label{eq:address}
+\end{equation}
+so it selects the same scalar. The singleton query-column stride is immaterial for access, but the implementation still supplies a valid native view descriptor. It must not invent a contiguous layout when the source is strided.
+
+The mask is transformed in parallel from $(n,q, 1,1)$ to $(n, 1,1,q)$. For original mask strides $m_0,m_1$, query $j$ still reads $b_M+t m_0+j m_1$ for key index $t$. The original mask values, including padded or disallowed positions, are retained. Changing the view must not replace a query-dependent causal mask by a single shared column. Logical token positions are unchanged: the new batch coordinate labels queries in one sequence, not independently positioned sequences.
+
+Let $\kappa(a)$ denote the native grouped-query head mapping from query head $a$ to a K/V head. Under an integral grouped-query ratio, the same mapping is used by all three organizations. K and V retain their native values, strides and single-stream ownership and broadcast over the new query-batch coordinate. In mathematical notation, for the already implemented scaling $\alpha$ and admissible mask $m$,
+\begin{align}
+ z_{tja}&=\alpha\sum_i K_{it\kappa(a)}Q_{ija}+m_{tj},\\
+ p_{tja}&=\frac{\exp(z_{tja})}{\sum_u\exp(z_{uja})},\\
+ O_{vja}&=\sum_t V_{vt\kappa(a)}p_{tja}.
+\label{eq:attn}
+\end{align}
+These equations describe logical indices; the actual runtime may store or permute V differently. QB must retain that implementation's mapping rather than reinterpret V by this notation alone.
+
+\begin{proposition}[Mathematical view equivalence]
+For a supported single-stream attention graph, suppose Equation~\eqref{eq:address} and the corresponding mask mapping hold, K/V broadcasting preserves $\kappa$, operator parameters are unchanged, and output recombination restores query order. In exact arithmetic, QB and the original attention graph compute the same logical $O$ in Equation~\eqref{eq:attn}.
+\end{proposition}
+\begin{proof}
+For each fixed $(j,a)$, both representations select identical Q, K, V and mask values. The sums range over the same channel and key indices, and softmax is normalized over the same keys. The batch label in QB separates query instances but changes neither their operands nor their logical dependence. Recombination restores $(v,j,a)$ order. Thus every logical output value agrees in exact arithmetic. Finite-precision correspondence is established separately by the operator and complete-output experiments.
+\end{proof}
+
+After QK, softmax and AV, the native contiguous recombination restores the target's expected query/head order before its batched output projection. PQ realizes the same mathematical separation by slicing one query and its mask column per subgraph. The question tested later is whether QB matches PQ's \emph{observed numerical execution} without paying for the same subgraph structure.
+
+\subsection{Admission conditions are part of the method}
+The evaluated build admits one sequence/KV stream, non-flash attention, supported Qwen3 or dense Llama-family graph paths, compatible head dimensions, an integral GQA ratio, F32 query/mask values and F16 K/V. At most four queries are occupied in the current QB study. Attention bias, sinks and MLA value projections are excluded by the relevant source guards; other positional-bias schemes or unsupported strides require separate handling and validation. The mask may contain padded columns, but its first $q$ logical query columns and original key extent must be represented correctly.
+
+These conditions preserve distinct meanings for sequence ownership, query indexing and head grouping. Additional streams need their own batch coordinate; biases and sinks need their own broadcasting rules. The source guards enforce the supported feature set, and each backend validates operator admission. Wider-geometry and fused-attention paths have separate numerical and execution contracts (\sref{supp:implementation}).
+
+\subsection{Phase binding and graph-cache consistency}
+The transformation is selected by a process-fixed four-bit mask: target prefill, target continuation, draft prefill and draft continuation have bits 1, 2, 4 and 8. Mask 3 enables the two target phases. A scoped guard derives the active flag from the current role and phase, places that flag in graph parameters, and restores its prior value on exit. New requests reset the phase to prefill. Crucially, this guard executes before the observation-disabled fast path returns to native decoding; turning off a diagnostic callback must not disable the repair.
+
+Graph caching creates a second obligation. Two calls can share nominal capacity and tensor extents yet require different attention layouts. The active-layout flag therefore participates in the reuse check. A mismatch rejects reuse and requires an appropriate graph. The original campaigns fix the implementation choice (QB, PQ or GS) within each process. The later matched native bridge uses separate contexts for each layout within a process (Section~\ref{sec:matchedbridge}). Both keep the implementation fixed within a context; they do not validate dynamic PQ/QB switching under one cached graph. Table~\ref{alg:scope} summarizes the dispatch and reuse checks.
+
+\begin{table}[t]
+\caption{Phase-scoped dispatch and reuse obligations.}
+\label{alg:scope}
+\begin{tabularx}{\columnwidth}{@{}rX@{}}\toprule
+1 & On request reset, establish target/draft ownership and set phase to prefill.\\
+2 & Compute the role/phase bit and save the previous scope flag.\\
+3 & Set the active flag before both observed and unobserved decode paths.\\
+4 & If cached topology's layout flag differs, reject reuse.\\
+5 & For an active supported attention graph, apply Q/mask views, native QK--softmax--AV and ordered recombination.\\
+6 & Otherwise retain the declared untransformed graph or reject an unsupported active case.\\
+7 & Complete native acceptance/state updates and restore the prior scope flag.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+The surrounding operators remain batched. Complete-output qualification therefore tests the transformation within its numerical stack, including state formed upstream. The Vulkan projection interventions in Section~\ref{sec:state} locate this producer-side dependency.
+
+\subsection{Selecting the active phases}
+A prior four-switch experiment tested all 16 masks on four exposed HumanEval inputs at $k=3$, UB4 and cap128. Masks 3, 7, 11 and 15 passed both repetitions; mask3 was inclusion-minimal within that finite mask family. It was then fixed for the later model-family tests. The complete pattern and the separate mask3/mask15 cost comparison appear in \sref{supp:implementation}; that comparison did not pass its practical speed threshold.

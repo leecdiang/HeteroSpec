@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {taskClock,taskEnvironment} from '../host/tool_capabilities.mjs';
+import {ColdSession} from '../host/bootstrap_cold.mjs';
+test('public monotonic clock measures elapsed duration, not its origin',()=>{const c=taskClock({beginMs:12345,now:()=>12345.25});assert.equal(c.sample(),250000);});
+test('fractional duration is rounded up',()=>{const c=taskClock({beginMs:0,now:()=>0.0000011});assert.equal(c.sample(),2);});
+test('nonfinite and reversed clocks fail',()=>{for(const n of [NaN,Infinity,0])assert.throws(()=>taskClock({beginMs:1,now:()=>n}).sample());});
+test('clock cannot reverse across samples',()=>{let n=2;const c=taskClock({beginMs:1,now:()=>n});c.sample();n=1.5;assert.throws(()=>c.sample());});
+test('preparation limit fails before process creation',()=>{assert.throws(()=>taskClock({beginMs:0,now:()=>28800000}).sample());});
+test('public environment copies only allowed keys',()=>{assert.deepEqual(taskEnvironment({SystemRoot:'C:/Windows',PATH:'C:/Python',TOKEN:'not-forwarded',NODE_OPTIONS:'not-forwarded'}),{SYSTEMROOT:'C:/Windows',PATH:'C:/Python'});});
+test('missing, invalid or ambiguous environment is refused',()=>{for(const env of [{},{SystemRoot:'x\0y'},{SystemRoot:'A',SYSTEMROOT:'B'}])assert.throws(()=>taskEnvironment(env));});
+test('QPC is sampled before public duration without assuming common origin',async()=>{let calls=[];const session=new ColdSession({now(){calls.push('qpc');return 10000000;},observer(){calls.push('observer');throw Error('stop before files/processes');}},{base:'unused',python:'unused',binding:{},preparationClock:{sample(){calls.push('duration');return 2000000;}}});await assert.rejects(session.start());assert.deepEqual(calls,['qpc','duration','observer']);assert.equal(session.begin,8000000);});

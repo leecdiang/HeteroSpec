@@ -1,0 +1,113 @@
+{
+  "status": "INCOMPLETE_TOTALS_NO_BUDGET_PASS_CLAIM",
+  "observed_process_accounting": {
+    "status": "ACCOUNTING_INCOMPLETE_ENGINEERING_BLOCKED",
+    "scope": "Exact recorded post-arm task children, plus explicit incomplete bootstrap/rebootstrap boundaries; not all-machine accounting",
+    "observed_task_child_starts": 528,
+    "observed_task_child_closes": 528,
+    "observed_child_OS_lifetime_sum_seconds": 8519.465014199995,
+    "recorded_children_closed": true,
+    "record_errors": [],
+    "recorded_engineering_wall_seconds": 6988.138427,
+    "full_engineering_wall_seconds": null,
+    "full_task_process_starts": null,
+    "full_task_lifetime_sum_seconds": null,
+    "missing_observations": [
+      "Initial read-only Git/shell identities and lifetimes before ledger arming",
+      "Broker1 actual OS exit FILETIME",
+      "Initial outer-shell OS boundaries",
+      "Wrapper2 own OS exit FILETIME; tool exit receipt available",
+      "Preparation/tool transient storage and helper peak RSS were not completely observed"
+    ],
+    "outer_containers": [
+      {
+        "role": "broker1",
+        "pid": 20044,
+        "created_FILETIME": "134366049397271288",
+        "exit_FILETIME": null,
+        "observed_armed_to_stop_seconds": 2227.8240694
+      },
+      {
+        "role": "initial_outer_shell",
+        "pid": 44428,
+        "created_FILETIME": null,
+        "exit_FILETIME": null
+      },
+      {
+        "role": "broker2",
+        "pid": 12304,
+        "created_FILETIME": "134366074508012377",
+        "exit_FILETIME": "134366119279705203",
+        "actual_OS_lifetime_seconds": 4477.1692826
+      },
+      {
+        "role": "rebootstrap_outer_shell",
+        "pid": 13128,
+        "created_FILETIME": "134366074505090695",
+        "exit_FILETIME": null,
+        "external_exit_code": 0
+      }
+    ],
+    "first_ledger_sha256": "9377eecdb86a818551f81294da3c618e90d2900b216da4f80d8fbb910dc232d5",
+    "second_ledger_sha256": "f8a2cf90d659afd69dda82a249f1a4c3d97758d25c98f31ec7f666288eb78432",
+    "final_ledger_event": "BROKER_CLOSING",
+    "archive_prefix": "task/snapshots/blocked-final/LEDGER.jsonl; immutable packaged prefix",
+    "tail_boundary": "Final local subprocess commands and broker close are in these final ledger parts; later connector-only metadata commits/PR actions are separately acknowledged and not represented as local child processes",
+    "bootstrap2_tool_exit": {
+      "chunk_id": "4c36d6",
+      "wall_time_seconds": 0.0626389,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  },
+  "limits": {
+    "engineering_seconds": 28800,
+    "calendar_seconds": 172800,
+    "task_child_starts": 3000,
+    "child_lifetime_sum_seconds": 43200,
+    "new_derived_bytes": 1073741824,
+    "evidence_restore_reserve_bytes": 268435456
+  },
+  "development_revisions_used": 5,
+  "full_matrix_attempts": 4,
+  "targeted_matrix_cases_registered": 8,
+  "actual_review_attempts": 1,
+  "actual_review_wall_seconds": 813.9164458,
+  "confirmation_rounds_started": 0,
+  "confirmation_cases_started": 0,
+  "confirmation_cases_unstarted": 57,
+  "storage": {
+    "available_disk_bytes": 149725249536,
+    "begin_ns": 111352023580700,
+    "cap_bytes": 1073741824,
+    "charged_current_plus_closing_reserve_bytes": 731906048,
+    "closing_reserve_bytes": 67108864,
+    "cluster_bytes": 4096,
+    "current_physical_upper_bytes": 664797184,
+    "data_allocation_upper_bytes": 381190144,
+    "directories": 1115,
+    "end_ns": 111364363235400,
+    "files": 68125,
+    "limitations": [
+      "Transient preparation/tool storage peak and initial unobserved processes are not reconstructed; no complete budget qualification is claimed"
+    ],
+    "logical_bytes": 107734203,
+    "metadata_reserve_bytes": 283607040,
+    "method": "Per-file Windows GetCompressedFileSizeW versus cluster rounding, plus 4KiB per-file metadata and one cluster per directory; no old tree copied or deleted",
+    "status": "CURRENT_STORAGE_INVENTORY_ONLY_NOT_COMPLETE_TASK_ADMISSION",
+    "within_current_cap": true
+  },
+  "forbidden_counts": {
+    "GPU_initializations": 0,
+    "GPU_queries": 0,
+    "graph_computes": 0,
+    "model_file_reads": 0,
+    "model_requests": 0,
+    "scientific_native_starts": 0
+  },
+  "prohibited_scope": "Task scientific/GPU/model execution; the explicitly authorized independent Codex implementation review is separately recorded",
+  "known_budget_exceedances": [],
+  "whole_task_budget_qualification": "UNKNOWN/INCOMPLETE; no fixed allowance replaces missing actual process evidence",
+  "calendar_upper_from_PR_creation_seconds": 7643.868
+}

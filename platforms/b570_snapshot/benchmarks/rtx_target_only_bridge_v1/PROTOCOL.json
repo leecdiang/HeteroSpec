@@ -1,0 +1,1301 @@
+{
+  "study": "RTX_TARGET_ONLY_BRIDGE_V1",
+  "version": 1,
+  "source": "16aeada781c475c9641e09c90e93fb0a0e136c34",
+  "upstream": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+  "tasks": [
+    "HumanEval/143",
+    "HumanEval/31",
+    "HumanEval/25",
+    "HumanEval/81",
+    "HumanEval/15",
+    "HumanEval/141",
+    "HumanEval/142",
+    "HumanEval/18",
+    "HumanEval/136",
+    "HumanEval/99",
+    "HumanEval/148",
+    "HumanEval/140",
+    "HumanEval/87",
+    "HumanEval/76",
+    "HumanEval/26",
+    "HumanEval/49",
+    "HumanEval/40",
+    "HumanEval/109",
+    "HumanEval/66"
+  ],
+  "conditions": [
+    "N0",
+    "N1",
+    "U2"
+  ],
+  "repetitions": 3,
+  "planned": 171,
+  "command_templates": {
+    "N0": [
+      "D:\\HeteroSpec-RTX-Target-V1\\work\\rtx-target-v1\\native-build\\bin\\llama-cli.exe",
+      "--model",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-8B-Q8_0.gguf",
+      "--device",
+      "CUDA0",
+      "--n-gpu-layers",
+      "all",
+      "--fit",
+      "off",
+      "--ctx-size",
+      "4096",
+      "--flash-attn",
+      "off",
+      "--ubatch-size",
+      "2",
+      "--file",
+      "{prompt}",
+      "--n-predict",
+      "128",
+      "--temp",
+      "0",
+      "--top-k",
+      "0",
+      "--top-p",
+      "1",
+      "--min-p",
+      "0",
+      "--seed",
+      "123",
+      "--single-turn",
+      "--simple-io",
+      "--no-display-prompt",
+      "--no-warmup",
+      "--cache-ram",
+      "0",
+      "--chat-template-kwargs",
+      "{\"enable_thinking\":false}",
+      "--log-verbosity",
+      "5",
+      "--perf",
+      "--log-file",
+      "{native_log}",
+      "--output-file",
+      "{transcript}",
+      "--spec-type",
+      "draft-simple",
+      "--model-draft",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-0.6B-Q8_0.gguf",
+      "--spec-draft-device",
+      "CUDA0",
+      "--spec-draft-ngl",
+      "all",
+      "--spec-draft-n-max",
+      "2",
+      "--spec-draft-n-min",
+      "0",
+      "--spec-draft-threads",
+      "24",
+      "--spec-draft-threads-batch",
+      "24",
+      "--threads",
+      "24",
+      "--threads-batch",
+      "24"
+    ],
+    "N1": [
+      "D:\\HeteroSpec-RTX-Target-V1\\work\\rtx-target-v1\\native-build\\bin\\llama-cli.exe",
+      "--model",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-8B-Q8_0.gguf",
+      "--device",
+      "CUDA0",
+      "--n-gpu-layers",
+      "all",
+      "--fit",
+      "off",
+      "--ctx-size",
+      "4096",
+      "--flash-attn",
+      "off",
+      "--ubatch-size",
+      "2",
+      "--file",
+      "{prompt}",
+      "--n-predict",
+      "128",
+      "--temp",
+      "0",
+      "--top-k",
+      "0",
+      "--top-p",
+      "1",
+      "--min-p",
+      "0",
+      "--seed",
+      "123",
+      "--single-turn",
+      "--simple-io",
+      "--no-display-prompt",
+      "--no-warmup",
+      "--cache-ram",
+      "0",
+      "--chat-template-kwargs",
+      "{\"enable_thinking\":false}",
+      "--log-verbosity",
+      "5",
+      "--perf",
+      "--log-file",
+      "{native_log}",
+      "--output-file",
+      "{transcript}",
+      "--spec-type",
+      "draft-simple",
+      "--model-draft",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-0.6B-Q8_0.gguf",
+      "--spec-draft-device",
+      "CUDA0",
+      "--spec-draft-ngl",
+      "all",
+      "--spec-draft-n-max",
+      "2",
+      "--spec-draft-n-min",
+      "0",
+      "--spec-draft-threads",
+      "24",
+      "--spec-draft-threads-batch",
+      "24",
+      "--threads",
+      "24",
+      "--threads-batch",
+      "24"
+    ],
+    "U2": [
+      "D:\\HeteroSpec-PC\\tools\\llama-b10839\\llama-cli.exe",
+      "--model",
+      "D:\\HeteroSpec-PC\\models\\gguf\\Qwen3-8B-Q8_0.gguf",
+      "--device",
+      "CUDA0",
+      "--n-gpu-layers",
+      "all",
+      "--fit",
+      "off",
+      "--ctx-size",
+      "4096",
+      "--flash-attn",
+      "off",
+      "--ubatch-size",
+      "2",
+      "--file",
+      "{prompt}",
+      "--n-predict",
+      "128",
+      "--temp",
+      "0",
+      "--top-k",
+      "0",
+      "--top-p",
+      "1",
+      "--min-p",
+      "0",
+      "--seed",
+      "123",
+      "--single-turn",
+      "--simple-io",
+      "--no-display-prompt",
+      "--no-warmup",
+      "--cache-ram",
+      "0",
+      "--chat-template-kwargs",
+      "{\"enable_thinking\":false}",
+      "--log-verbosity",
+      "5",
+      "--perf",
+      "--log-file",
+      "{native_log}",
+      "--output-file",
+      "{transcript}",
+      "--threads",
+      "24",
+      "--threads-batch",
+      "24"
+    ]
+  },
+  "environment_templates": {
+    "N0": {
+      "LLAMA_BATCH_DEBUG": "1",
+      "HS_NATIVE_CAPTURE": "{trace}",
+      "HS_TARGET_CONTINUATION_UB": "2"
+    },
+    "N1": {
+      "LLAMA_BATCH_DEBUG": "1",
+      "HS_NATIVE_CAPTURE": "{trace}",
+      "HS_TARGET_CONTINUATION_UB": "1"
+    },
+    "U2": {
+      "LLAMA_BATCH_DEBUG": "1"
+    }
+  },
+  "balanced_order": [
+    [
+      "N0",
+      "N1",
+      "U2"
+    ],
+    [
+      "N1",
+      "U2",
+      "N0"
+    ],
+    [
+      "U2",
+      "N0",
+      "N1"
+    ]
+  ],
+  "queue": [
+    {
+      "task": "HumanEval/143",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/143/N0/1"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/143/N1/1"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/143/U2/1"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/31/N0/1"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/31/N1/1"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/31/U2/1"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/25/N0/1"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/25/N1/1"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/25/U2/1"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/81/N0/1"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/81/N1/1"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/81/U2/1"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/15/N0/1"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/15/N1/1"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/15/U2/1"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/141/N0/1"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/141/N1/1"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/141/U2/1"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/142/N0/1"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/142/N1/1"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/142/U2/1"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/18/N0/1"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/18/N1/1"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/18/U2/1"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/136/N0/1"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/136/N1/1"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/136/U2/1"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/99/N0/1"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/99/N1/1"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/99/U2/1"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/148/N0/1"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/148/N1/1"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/148/U2/1"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/140/N0/1"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/140/N1/1"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/140/U2/1"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/87/N0/1"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/87/N1/1"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/87/U2/1"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/76/N0/1"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/76/N1/1"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/76/U2/1"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/26/N0/1"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/26/N1/1"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/26/U2/1"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/49/N0/1"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/49/N1/1"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/49/U2/1"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/40/N0/1"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/40/N1/1"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/40/U2/1"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/109/N0/1"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/109/N1/1"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/109/U2/1"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N0",
+      "rep": 1,
+      "key": "HumanEval/66/N0/1"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N1",
+      "rep": 1,
+      "key": "HumanEval/66/N1/1"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "U2",
+      "rep": 1,
+      "key": "HumanEval/66/U2/1"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/143/N1/2"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/143/U2/2"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/143/N0/2"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/31/N1/2"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/31/U2/2"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/31/N0/2"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/25/N1/2"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/25/U2/2"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/25/N0/2"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/81/N1/2"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/81/U2/2"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/81/N0/2"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/15/N1/2"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/15/U2/2"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/15/N0/2"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/141/N1/2"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/141/U2/2"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/141/N0/2"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/142/N1/2"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/142/U2/2"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/142/N0/2"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/18/N1/2"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/18/U2/2"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/18/N0/2"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/136/N1/2"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/136/U2/2"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/136/N0/2"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/99/N1/2"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/99/U2/2"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/99/N0/2"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/148/N1/2"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/148/U2/2"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/148/N0/2"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/140/N1/2"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/140/U2/2"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/140/N0/2"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/87/N1/2"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/87/U2/2"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/87/N0/2"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/76/N1/2"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/76/U2/2"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/76/N0/2"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/26/N1/2"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/26/U2/2"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/26/N0/2"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/49/N1/2"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/49/U2/2"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/49/N0/2"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/40/N1/2"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/40/U2/2"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/40/N0/2"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/109/N1/2"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/109/U2/2"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/109/N0/2"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N1",
+      "rep": 2,
+      "key": "HumanEval/66/N1/2"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "U2",
+      "rep": 2,
+      "key": "HumanEval/66/U2/2"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N0",
+      "rep": 2,
+      "key": "HumanEval/66/N0/2"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/143/U2/3"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/143/N0/3"
+    },
+    {
+      "task": "HumanEval/143",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/143/N1/3"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/31/U2/3"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/31/N0/3"
+    },
+    {
+      "task": "HumanEval/31",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/31/N1/3"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/25/U2/3"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/25/N0/3"
+    },
+    {
+      "task": "HumanEval/25",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/25/N1/3"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/81/U2/3"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/81/N0/3"
+    },
+    {
+      "task": "HumanEval/81",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/81/N1/3"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/15/U2/3"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/15/N0/3"
+    },
+    {
+      "task": "HumanEval/15",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/15/N1/3"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/141/U2/3"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/141/N0/3"
+    },
+    {
+      "task": "HumanEval/141",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/141/N1/3"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/142/U2/3"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/142/N0/3"
+    },
+    {
+      "task": "HumanEval/142",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/142/N1/3"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/18/U2/3"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/18/N0/3"
+    },
+    {
+      "task": "HumanEval/18",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/18/N1/3"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/136/U2/3"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/136/N0/3"
+    },
+    {
+      "task": "HumanEval/136",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/136/N1/3"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/99/U2/3"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/99/N0/3"
+    },
+    {
+      "task": "HumanEval/99",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/99/N1/3"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/148/U2/3"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/148/N0/3"
+    },
+    {
+      "task": "HumanEval/148",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/148/N1/3"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/140/U2/3"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/140/N0/3"
+    },
+    {
+      "task": "HumanEval/140",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/140/N1/3"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/87/U2/3"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/87/N0/3"
+    },
+    {
+      "task": "HumanEval/87",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/87/N1/3"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/76/U2/3"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/76/N0/3"
+    },
+    {
+      "task": "HumanEval/76",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/76/N1/3"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/26/U2/3"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/26/N0/3"
+    },
+    {
+      "task": "HumanEval/26",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/26/N1/3"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/49/U2/3"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/49/N0/3"
+    },
+    {
+      "task": "HumanEval/49",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/49/N1/3"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/40/U2/3"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/40/N0/3"
+    },
+    {
+      "task": "HumanEval/40",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/40/N1/3"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/109/U2/3"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/109/N0/3"
+    },
+    {
+      "task": "HumanEval/109",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/109/N1/3"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "U2",
+      "rep": 3,
+      "key": "HumanEval/66/U2/3"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N0",
+      "rep": 3,
+      "key": "HumanEval/66/N0/3"
+    },
+    {
+      "task": "HumanEval/66",
+      "condition": "N1",
+      "rep": 3,
+      "key": "HumanEval/66/N1/3"
+    }
+  ],
+  "engineering_tasks": [
+    "HumanEval/15",
+    "HumanEval/25",
+    "HumanEval/18",
+    "HumanEval/31"
+  ],
+  "engineering_runs": 12,
+  "warmup": "--no-warmup, fresh processes, cache-ram0; OS file cache not flushed; no latency claim",
+  "qualification": "same byte-identical N0/N1 frontend, retained prior instrumentation qualification; local full endpoint/input/device/thread/handoff smoke; no inter-condition equality gate",
+  "endpoint": "first inclusive EOG or cap128; both stop markers at EOG128; raw samples/decisions retained separately",
+  "diagnostic_limit": 12,
+  "diagnostic_tasks_limit": 4,
+  "diagnostic_selection": "new U2/N1 mismatches or any within-condition instability, sorted by minimum zero-based first divergence then numeric task ID; fill with /15,/25,/18 in that order and /31 if needed; <=4",
+  "retries": {
+    "maximum_attempts": 3,
+    "only": "infrastructure failure after diagnosis; never token disagreement",
+    "stall_seconds": 120,
+    "timeout_policy": "300 seconds with no raw-log growth for 120 seconds; progressing runs may exceed 300 seconds",
+    "restart_limit": 1
+  },
+  "predicates": "full committed-array equality; endpoint equality; conjunction. Difference count=sum(positional substitutions over common length)+absolute length difference; denominator=max(lengths)",
+  "statistics": "19 task units, 57 paired stability observations; no independent-token/repetition inference",
+  "performance_claim": false
+}

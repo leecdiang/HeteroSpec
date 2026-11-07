@@ -1,0 +1,150 @@
+{
+  "schema": "tpds-phase1-implementation.v2",
+  "created": "2026-11-06",
+  "status": "FRAMEWORK_AND_SOURCE_OVERLAY_NATIVE_NOT_RUN",
+  "research_goal": "Improve contribution attribution, practical baselines and deployment portability for TPDS without outcome-driven repetition",
+  "pins": {
+    "repository": "leecdiang/HeteroSpec",
+    "RTX_PR190": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+    "B570_PR191": "acc86d9cb07c2afa983f73e28a1048fb99c63e3a",
+    "RTX_operator_PR186": "e8f1ea5aaa35789216801dd971b17e7d5e9f090f"
+  },
+  "native_input_manifest": null,
+  "native_build_manifest": null,
+  "cloud_purchase_authorized": false,
+  "first_stage": {
+    "RTX_R1_natural": {
+      "models": [
+        "Qwen",
+        "Smol"
+      ],
+      "roots_per_model": 16,
+      "arms": [
+        "W_L4",
+        "W_P",
+        "L_L4",
+        "L_P"
+      ],
+      "sessions": 4,
+      "measurements": 512,
+      "immediate_warmups": 512,
+      "reference": "unchanged current C1024 original R, qualified new hybrids",
+      "seed": 2026110601,
+      "no_outcome_selection": true,
+      "conditional": true,
+      "gate": "Distinct qualified implementations and an unanswered natural-workload question; skip when aligned paths alias or merely repeat PR186/190"
+    },
+    "RTX_R1_structural": {
+      "models": 2,
+      "widths": [
+        4,
+        8,
+        32
+      ],
+      "relations": [
+        "inside",
+        "crossing"
+      ],
+      "boundary": 768,
+      "arms": 4,
+      "repetitions": 2,
+      "measurements": 96,
+      "warmups": 96,
+      "scope": "known-token append diagnostics, not natural requests"
+    },
+    "RTX_R2_optional": {
+      "model": "Qwen",
+      "roots": 16,
+      "arms": [
+        "W_M_TARGET_ONLY",
+        "W_P_M_TARGET_ONLY",
+        "L_L4_M_TARGET_ONLY",
+        "L_M_TARGET_ONLY",
+        "L_M_MATCHED",
+        "L_D4"
+      ],
+      "sessions": 4,
+      "measurements": null,
+      "primers_per_worker": 2,
+      "workers": null,
+      "primers": null,
+      "reuse_R1_roots_not_new_independent_samples": true,
+      "maximum_measurements": 384,
+      "maximum_workers": 24,
+      "maximum_primers": 48,
+      "baseline_review_required": true,
+      "baseline_policy": "All qualified distinct target-only factorial strategies; omission only by documented source/native-trace/cost equivalence or native inapplicability before R2 outcomes",
+      "order_design": "Williams4 when four arms; predeclared four cyclic rows for five/six arms, not fully balanced",
+      "primary_comparisons": "L_D4 against every included fixed target-only arm, family-adjusted; matched-residency sensitivity separate"
+    },
+    "B570_B1": {
+      "model": "Smol",
+      "capacities": [
+        1024,
+        4096
+      ],
+      "boundaries": [
+        768,
+        3072
+      ],
+      "widths": [
+        2,
+        4,
+        32
+      ],
+      "relations": [
+        "inside",
+        "crossing"
+      ],
+      "arms": [
+        "REFERENCE_CONTINUATION",
+        "SIMPLE",
+        "LOCAL"
+      ],
+      "repetitions": 3,
+      "measurements": 108,
+      "warmups": 108,
+      "scope": "new capacity reference fixed before candidate; no draft-profit panel"
+    }
+  },
+  "proposed_all_stage_ceilings": {
+    "RTX": {
+      "native_requests": 3072,
+      "decoded_rows": 4000000
+    },
+    "B570": {
+      "native_requests": 1024,
+      "decoded_rows": 2500000
+    },
+    "note": "Include qualification/reference/warmups/failures; limits are not targets. Actual host binding and reservation required."
+  },
+  "cloud": {
+    "GPU_count_at_once": 1,
+    "first_hardware_options": [
+      "A40 48GB",
+      "RTX A6000 48GB",
+      "A100 80GB"
+    ],
+    "proposed_smoke_ceiling_USD": 10,
+    "proposed_total_ceiling_USD": 50,
+    "cost_approval_required": true,
+    "new_deployment_local_reference": true,
+    "cross_device_bitwise_identity_claim": false
+  },
+  "local_original_host_execution": "Requested via executing-agent handoff after binding/qualification; this authoring session runs no GPU",
+  "runtime_request_lifecycle": "Reuse platform supervisor/ledger; this package does not create a second general runner",
+  "statistics_dependency": "NumPy for analysis; Python >=3.11 for tools",
+  "automatic_GPU_launch": false,
+  "executing_agent_original_host_authorized_after_binding_and_qualification": true,
+  "review_revision": 2,
+  "review_amendment": "REVIEW_V2.md",
+  "host_execution_state": "UNKNOWN_CHECK_HOST_BEFORE_ADOPTION",
+  "preserve_existing_freezes": true,
+  "legacy_design_heads": {
+    "RTX": "0fddf2255830a563433cb40ae8f6e09341bc702a",
+    "B570": "b718b4a28c8617c116ae7b069c8007797d026585"
+  },
+  "build_freeze_required": "Complete compiler dependency closure, generated/config/response files, compiler/link options, tools/link inputs and actual modules after qualification before performance",
+  "cost_record_policy": "Unknown/null and NOT_EXECUTED distinct; complete totals require declared root/session or request coverage; partial sums named observed_sum_s",
+  "structural_cost_policy": "Native append-only clock after valid state preparation, never service fallback; clean observer scope verified"
+}

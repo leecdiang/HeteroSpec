@@ -1,0 +1,53 @@
+**授权执行 S1B Clean Block 0，严格按 PR118 当前冻结 F0/Census/Decision 执行。**
+
+授权范围仅限：
+
+- `run_id = pr116-s1b-cost-v1`
+- 当前 PR118 最新冻结源码与唯一执行入口
+- Block 0
+- **72 张 clean graph**
+- 仅执行已经通过 Census 的 PQ / QB / QH_C 三种布局
+- 不启动 Block 1、Block 2
+- 不启动 trace/profile
+- 不启动 actor / decoder
+- 不增加额外 probe
+- 不增加模型请求
+- 不自行 warmup/retry，除非 F0 已明确规定的 warmup 属于正式实验流程
+
+执行前再次严格核验并绑定：
+
+**F0**\
+`c987d429c12741cf4e4b598174d25522afcd51e996ca7150842a71e5aa2b9774`
+
+**Census**\
+`1cad65ea1816a6c0e0ae28337c17f737f184034275de4370a2583b29368d844e`
+
+**Decision**\
+`b5ed03a307182a87db18ed588bc852239e52860799034da897b48ce0f391373a`
+
+执行过程中严格按照冻结的监督、生命周期、资源和停止条件运行。
+
+**尤其要求：**
+
+1. 每个 clean host 的输入前后字节保持审计；
+2. CUDA module / IAT / graph identity 继续独立核验；
+3. 保留实际 allocation、packing、mask、upload、compute、sync、output readback 等成本分项；
+4. QPC 计时边界严格按照 F0，不把准备阶段、后置审计或清理时间混入驻留执行时间；
+5. ordinary 输出必须完整保存并进行独立检查；
+6. 不使用旧 PR113/114 数值结果填补任何新缺失坐标；
+7. 任一身份漂移、输入修改、CUDA 失败、输出缺失、监督异常或预算异常立即停止；
+8. 不因单个失败自动 retry。
+
+完成后仅返回：
+
+- Block 0 各坐标启动/完成/失效/未启动；
+- CUDA execution 成功率；
+- ordinary 输出正确性；
+- PQ/QB/QH_C 的逐坐标数值关系；
+- allocation / preparation / upload / compute / sync / readback 分项成本；
+- resident-only 与 input-inclusive 两套成本；
+- QPC 原始计时分布、median/p95/max；
+- 资源与 owned 成本；
+- 所有停止条件及异常；
+- F0/Census/结果归档 SHA256；
+- 明确判断 **Block 1/2 是否具备下一阶段技术准入条件**。

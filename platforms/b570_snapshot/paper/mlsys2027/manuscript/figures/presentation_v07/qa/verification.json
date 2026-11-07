@@ -1,0 +1,126 @@
+{
+  "size_in": [
+    6.75,
+    2.12
+  ],
+  "panel_a": [
+    {
+      "path": "M4 Metal",
+      "points": [
+        1.0221818546851145,
+        1.0761256101952625,
+        1.0322635228699186
+      ],
+      "contexts": [
+        512,
+        2048,
+        8192
+      ],
+      "marker": "D",
+      "encoding": "path type only",
+      "filled": true
+    },
+    {
+      "path": "RTX batched",
+      "points": [
+        1.0090304299186035,
+        0.9831479829424705
+      ],
+      "contexts": [
+        0,
+        256
+      ],
+      "marker": "o",
+      "encoding": "path type only",
+      "filled": true
+    },
+    {
+      "path": "RTX serialized",
+      "points": [
+        2.43099575218514,
+        2.1370113117682084
+      ],
+      "contexts": [
+        0,
+        256
+      ],
+      "marker": "s",
+      "encoding": "path type only",
+      "filled": true
+    },
+    {
+      "path": "B570 fast",
+      "points": [
+        1.242576302357408,
+        1.6372954963969044
+      ],
+      "contexts": [
+        512,
+        2048
+      ],
+      "marker": "o",
+      "encoding": "path type only",
+      "filled": true
+    },
+    {
+      "path": "B570 serialized",
+      "points": [
+        1.9826677177654988,
+        1.9917068892555092
+      ],
+      "contexts": [
+        512,
+        2048
+      ],
+      "marker": "s",
+      "encoding": "path type only",
+      "filled": true
+    }
+  ],
+  "panel_b": [
+    {
+      "platform": "RTX",
+      "path": "Batched",
+      "condition": "RTX_BATCHED_K2",
+      "source": "benchmarks/rtx_direct_id_v2/FORMAL_ANALYSIS.json",
+      "exact_pairs": 75,
+      "exact_prompts": 25,
+      "status": "BLOCKED"
+    },
+    {
+      "platform": "RTX",
+      "path": "Serialized",
+      "condition": "RTX_SERIALIZED_K2",
+      "source": "benchmarks/rtx_direct_id_v2/FORMAL_ANALYSIS.json",
+      "exact_pairs": 90,
+      "exact_prompts": 30,
+      "status": "QUALIFIED"
+    },
+    {
+      "platform": "B",
+      "path": "Fast",
+      "condition": "B570_FAST_K2",
+      "source": "benchmarks/b570_direct_id_v1/FORMAL_ANALYSIS.json",
+      "exact_pairs": 60,
+      "exact_prompts": 20,
+      "status": "BLOCKED"
+    },
+    {
+      "platform": "B",
+      "path": "Serialized",
+      "condition": "B570_SERIALIZED_K2",
+      "source": "benchmarks/b570_direct_id_v1/FORMAL_ANALYSIS.json",
+      "exact_pairs": 78,
+      "exact_prompts": 26,
+      "status": "BLOCKED"
+    }
+  ],
+  "threshold": 90,
+  "out_of_bounds_text": [],
+  "inputs": {
+    "paper/mlsys2027/figures/data/figure2_micro_cells.csv": "170085235de04f03a75c2aefa95f5ad7570e4ef43b2ad398c9dbd4c1a4904065",
+    "benchmarks/rtx_direct_id_v2/FORMAL_ANALYSIS.json": "be1d64aa36cab1433d161ac88ae4b4c331178d2754261c1e696198610164ec67",
+    "benchmarks/b570_direct_id_v1/FORMAL_ANALYSIS.json": "fb9f211b00445b08ab534e7d9039bbd319e46ebe2d7bc5312d57864efd30568b"
+  },
+  "scope": "Separate studies, not same-run cost versus correctness; no performance ranking."
+}

@@ -1,0 +1,35 @@
+{
+  "before_import": true,
+  "native_starts": 0,
+  "contract": "BOUNDARY0_COMPLETE_NECESSARY_STATE_EQUIVALENCE_NOT_GENERAL_OPAQUE_CLONE",
+  "retained": [
+    "all32F16K +32F16V tensors, sequencecell metadata and positions",
+    "full ordered128256 FP32 initial logits",
+    "stateless native greedy apply +accept ownership",
+    "empty committedprefix; first natural token pending and consumed once",
+    "UB512/capacity1 clean native receiver scheduler/context reservation",
+    "completed queue sync before import; fresh KV clean; readback and exact reserialization; first continuation atN"
+  ],
+  "omitted_but_reconstructed": [
+    "old dynamicoutput_ids/logits buffer replaced by source-equivalent native samplerapply of fullFP32; row0 recreated on first continuation",
+    "old graphcache/allocator reused pointers deliberately notcopied; receiver independently initialized identical UB512/context",
+    "greedy has no stochastic or acceptance state"
+  ],
+  "source": [
+    "baseline/source/llama-context.cpp",
+    "baseline/source/llama-context.h",
+    "baseline/source/llama-kv-cache.cpp",
+    "baseline/source/llama-sampler.cpp"
+  ],
+  "hard_gate": "Every16 P0 ownpath completeendpoint andrawKV/logits/positions/sampler passes; otherwiseblockall40P2. No hidden forward/no suffix forcing.",
+  "invalid_injection_tests": [
+    "wrong source hash",
+    "croppedFP32vector",
+    "NaNFP32",
+    "KVmagic",
+    "badcellposition",
+    "noncontiguous promptpositions",
+    "missing P0 donor",
+    "wrong first consumed token"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schema": "heterospec.358h.phase0_ac_requalification.v2",
+  "frozen_at_utc": "2026-09-17T18:03:01.945729+00:00",
+  "scope": [
+    "CPU draft",
+    "NPU draft"
+  ],
+  "supersedes_invalid_commit": "a957791b9a13fe51a35e62b66a12f88ace83a6bb",
+  "checks": {
+    "cpu_low_level_binding": true,
+    "cpu_bounded_smoke": true,
+    "npu_8192_bounded_smoke": true,
+    "npu_strict_execution_devices": true,
+    "ut_sensor_sanity": true,
+    "ut_clock_calibration": true,
+    "ut_cpu_ac": true,
+    "ut_npu_ac": true,
+    "telemetry_boundary_documented": true,
+    "target_model_frozen": true,
+    "power_state_after": true,
+    "no_formal_data": true
+  },
+  "qualification_pass": true,
+  "qualification_scope": "core latency and break-even study; energy is a separately qualified conditional track",
+  "energy_admissibility": {
+    "cpu_package": {
+      "admissible": true,
+      "boundary": "RAPL_Package0_PKG package power via Windows Energy Meter direct PDH API",
+      "claim_limit": "CPU package energy only; not wall/system energy and not an isolated CPU-core domain. If only the isolated representative gate passes, the energy-only workload must remain pinned to CPUs 0-11 and the collector to CPUs 12-15."
+    },
+    "npu": {
+      "admissible": false,
+      "reason": "The latest minimal SocWatch qualification failed the unchanged 1% overhead gate; package RAPL does not isolate NPU energy."
+    },
+    "symmetric_cpu_vs_npu_energy_comparison": false
+  },
+  "formal_data_collected": false,
+  "artifacts": [
+    {
+      "role": "environment_cpu",
+      "path": "runs/358h/qualification_ac_20260918/environment_cpu.json",
+      "bytes": 4508,
+      "sha256": "0945c15fbee8cdbca982b17c90afb21b536631a2948e6de71564620bb0abf64b"
+    },
+    {
+      "role": "cpu_smoke",
+      "path": "runs/358h/qualification_ac_20260918/openvino_ir_smoke_cpu.json",
+      "bytes": 5460,
+      "sha256": "fe61d81a00baa1f688e6bd4691aaa88b26d4f0285443b26cb07bde88a58c1919"
+    },
+    {
+      "role": "npu_smoke_8192",
+      "path": "runs/358h/qualification_ac_20260918/openvino_ir_smoke_npu_ctx8192.json",
+      "bytes": 97749,
+      "sha256": "8f285b09f5a830e2f42d010cbdfbf73c76a7337eddd528ac605c58fc1c3817fd"
+    },
+    {
+      "role": "npu_binding_8192",
+      "path": "runs/358h/qualification_ac_20260918/npu_cache_binding_ctx8192.json",
+      "bytes": 1972,
+      "sha256": "c042f4c20317a6d482789097d0b0274a32428d945e3545b8bf1c645597222e3c"
+    },
+    {
+      "role": "ut_cpu_manifest",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/cpu-ut.manifest.json",
+      "bytes": 4071,
+      "sha256": "3229267a58d6b9a4b76f97ba378d5776e07d34cd322be06c8f4645692e923133"
+    },
+    {
+      "role": "ut_npu_manifest",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/npu-ut.manifest.json",
+      "bytes": 5236,
+      "sha256": "4cda96f81b6bdabbe503cfd38c4aebc2e0c622777f3b6368c28498333672acb1"
+    },
+    {
+      "role": "ut_sensor_sanity",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/sensor_sanity_gate.json",
+      "bytes": 733,
+      "sha256": "6d63ade91506efba70f5131a33681a61e97e41adff48867e134260abe59942d5"
+    },
+    {
+      "role": "ut_clock_calibration",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/clock_calibration.json",
+      "bytes": 1045,
+      "sha256": "15547fda049368d2a0c08bfcf757e3755b3b5a4c48f0726cffa4a383a49bbd55"
+    },
+    {
+      "role": "ut_cpu_integration",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/cpu-power-integration.json",
+      "bytes": 1044,
+      "sha256": "9683edcd87410d010d2e8e31d1f2ee4b69b59883b463e0f402eaf77bbc3165da"
+    },
+    {
+      "role": "ut_npu_integration",
+      "path": "runs/358h/qualification_ac_20260918/unified_telemetry_smoke_100ms/npu-power-integration.json",
+      "bytes": 1525,
+      "sha256": "ee55e36028929180733c9489efc895d9decc7f0391a5505dbfa400a9802d6a99"
+    },
+    {
+      "role": "cpu_energy_overhead_short",
+      "path": "runs/358h/qualification_ac_20260918/telemetry_overhead_v5_windows_rapl/overhead_qualification.json",
+      "bytes": 7608,
+      "sha256": "6264dde7c0ea21a23c8493f01b3eac94a89a2d8c2358fa3a4deaac3068549ef1"
+    },
+    {
+      "role": "cpu_energy_overhead_representative",
+      "path": "runs/358h/qualification_ac_20260918/telemetry_overhead_v6_phase1like/overhead_qualification.json",
+      "bytes": 7951,
+      "sha256": "2f881546a7f4239d15b3cb5406b3bf0f4a53c634f49d75f0c4b4734a62eb7f60"
+    },
+    {
+      "role": "cpu_energy_overhead_isolated",
+      "path": "runs/358h/qualification_ac_20260918/telemetry_overhead_v7_phase1like_isolated/overhead_qualification.json",
+      "bytes": 8172,
+      "sha256": "f83ac0b7af411a90f3c11c45db292d6c981c01210ea4062c500a0a7db1f41abf"
+    },
+    {
+      "role": "npu_energy_overhead_last_attempt",
+      "path": "runs/358h/qualification_ac_20260918/telemetry_overhead_v4_100ms_minimal/npu/overhead_qualification.json",
+      "bytes": 8585,
+      "sha256": "8db219178171a18e1ad75aeeccf216ddd7baa06fe63876b3036990ab753f1d8a"
+    },
+    {
+      "role": "target_model",
+      "path": "runs/358h/qualification_ac_20260918/target_model_manifest.json",
+      "bytes": 854,
+      "sha256": "a97ede24e3944d24df16722e8557a211ee579571e04516ba19f54fb93952253a"
+    },
+    {
+      "role": "power_state_after",
+      "path": "runs/358h/qualification_ac_20260918/power_state_after.json",
+      "bytes": 637,
+      "sha256": "4ca99275cf76d54b76d50bc35e02564abf0123b997bcd999d33cfd9d5f01d1c0"
+    },
+    {
+      "role": "package_freeze",
+      "path": "runs/358h/qualification_ac_20260918/pip-freeze.txt",
+      "bytes": 344,
+      "sha256": "bcb8f4bb34d66829d7578a808e5951d359fbab6ee1a99b40c4a419581e0d7822"
+    }
+  ],
+  "scientific_provenance": "Canonical GGUF provenance and STRONGLY_SUPPORTED OpenVINO reconstruction are inherited unchanged from the frozen Phase-0 provenance records."
+}
+

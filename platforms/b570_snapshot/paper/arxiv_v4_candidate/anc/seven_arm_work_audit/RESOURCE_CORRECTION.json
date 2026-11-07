@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-12T17:33:10.380280+00:00",
+  "reason": "PQ metadata allocation abort before any PQ engineering panel or formal slot in SmolLM2/Llama",
+  "changed_source": [
+    "src/llama-context.cpp"
+  ],
+  "patch": "--- v01/src/llama-context.cpp\n+++ v02/src/llama-context.cpp\n@@ -2356,7 +2356,8 @@\n     if (n_sampling_outputs_max > 1) {\n         res += (n_sampling_outputs_max - 1) * n_sampling_nodes_max;\n     }\n-    return res;\n+    // PQ materializes up to four attention subgraphs; reserve metadata capacity only.\n+    return hs_scope::layout95() == 1 ? 4 * res : res;\n }\n \n llm_graph_result * llama_context::get_gf_res_reserve() const {\n",
+  "capacity_factor": 4,
+  "bound_from_predeclared_max_q": 4,
+  "numerical_graph_operations_changed": false,
+  "numerical_backend_DLLs_changed": false,
+  "models_precision_mask_k_panel_unchanged": true,
+  "affected_runtime_arms": [
+    "SmolLM2/M_PQ",
+    "SmolLM2/C_PQ",
+    "Llama/M_PQ",
+    "Llama/C_PQ"
+  ],
+  "failed_warm_slots_never_retried": true,
+  "formal_slots_already_started": 96,
+  "no_formal_retries": true
+}

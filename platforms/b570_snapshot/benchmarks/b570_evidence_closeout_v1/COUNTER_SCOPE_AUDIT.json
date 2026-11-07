@@ -1,0 +1,35 @@
+{
+  "status": "POST_SOURCE_AUDIT_NO_RUNTIME_CHANGE",
+  "utc": "2026-10-12T01:33:05.307961+00:00",
+  "formal_actor_unchanged": true,
+  "phase_binding_source": "native/candidate-src/llama-context.cpp: llama_context::b570_pilot_bind_phase_ubatch",
+  "phase_binding_inherited_synchronize": true,
+  "source_observation": "Inherited phase helper calls synchronize() before any ubatch change/reserve. Formal no-added-sync flag refers to observer-added synchronization; inherited binding/reset/final waits remain inside whole fee.",
+  "elapsed_hook_scope_correction": "Literal lite PHASE_BINDING completion_scope CPU_BINDING_ONLY_NO_NEW_SYNC is inaccurate about CPU-only: it can include the inherited synchronization/reserve. Hooks remain raw observations and are not fitted or treated as a completed component partition.",
+  "inherited_explicit_sync_calls_field_scope": "Direct worker llama_synchronize calls in Context.reset and final completion only; does not include internal phase helper synchronize or backend implicit waits.",
+  "known_source_calls_per_request": {
+    "R_stock": {
+      "direct_worker_sync_calls": 2,
+      "internal_phase_binding_sync_calls": 1
+    },
+    "R_prod": {
+      "direct_worker_sync_calls": 2,
+      "internal_phase_binding_sync_calls": 1
+    },
+    "M_match": {
+      "direct_worker_sync_calls": 2,
+      "internal_phase_binding_sync_calls": 2
+    },
+    "N_k1": {
+      "direct_worker_sync_calls": 4,
+      "internal_phase_binding_sync_calls": 2
+    },
+    "C_k1": {
+      "direct_worker_sync_calls": 4,
+      "internal_phase_binding_sync_calls": 3
+    }
+  },
+  "no_claim_total_backend_wait_count": true,
+  "model_timing_status": "MODEL_TIMING_UNAVAILABLE",
+  "primary_fee_and_output_gates_affected": false
+}

@@ -1,0 +1,32 @@
+{
+  "status": "ENGINEERING_BLOCKED",
+  "reason": "complete candidate review interrupted by production observer duplicate PID guard",
+  "stop_event": {
+    "journal": "processes/full-review/OS_EVENTS.jsonl",
+    "seq": 144,
+    "at_ns": 28336540406300
+  },
+  "review_attempts": 1,
+  "review_complete": false,
+  "review_findings": null,
+  "source_edits": 0,
+  "execution_freeze": null,
+  "formal_cases_started": 0,
+  "formal_cases_unstarted": 8,
+  "known_observed_cleanup": {
+    "cleanup_confirmed": true,
+    "cleanup_error": null,
+    "error": "RuntimeError('duplicate PID')",
+    "unclosed": []
+  },
+  "unmatched_exit": {
+    "pid": 22360,
+    "seq": 154,
+    "created_filetime": null,
+    "exit_filetime": null,
+    "note": "Prior identity closed at seq101. A later EXIT_OBSERVED lacks a new retained identity/actual FILETIME. Offending create PID was not logged, so unique causal matching remains unknown."
+  },
+  "no_retry": true,
+  "no_runtime_fix": true,
+  "recorded_utc": "2026-10-18T10:05:06.829Z"
+}

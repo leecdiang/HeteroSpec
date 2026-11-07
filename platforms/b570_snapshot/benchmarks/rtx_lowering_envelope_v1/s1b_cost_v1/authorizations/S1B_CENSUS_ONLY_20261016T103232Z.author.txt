@@ -1,0 +1,272 @@
+确认接受 HeteroSpec PR118 的有限 clean-first S1B 协议修订，
+并授权执行第一阶段正式支持 Census。
+
+本次授权类型：
+S1B_CENSUS_ONLY
+
+仓库：
+https://github.com/leecdiang/HeteroSpec
+
+Draft PR：
+https://github.com/leecdiang/HeteroSpec/pull/118
+
+已审查提交：
+6da2767d66968951f4c9bf31eefb67a77e0a4440
+
+Run ID：
+pr116-s1b-cost-v1
+
+批准的精确 F0 SHA256：
+c987d429c12741cf4e4b598174d25522afcd51e996ca7150842a71e5aa2b9774
+
+目录：
+benchmarks/rtx_lowering_envelope_v1/s1b_cost_v1/
+
+一、接受有限协议修订
+
+确认接受 AMENDMENT.md 所描述的：
+
+clean_first_trace_deferred_amendment_accepted = true
+
+含义是：
+
+允许先完成独立 Clean Census，
+再根据真实支持结果单独申请 Clean Block 0。
+
+Trace 目前保持 PROFILE_UNAVAILABLE，
+原72个trace坐标、144次图调用和72次warmup
+继续保留在原计划中。
+
+不因为trace不可用而删除这些坐标。
+
+未来即使216个clean宿主全部合格，
+也只能完成clean cost研究，
+不得宣称原始S1B的trace及硬件机制研究完成。
+
+二、本次唯一GPU授权范围
+
+只允许：
+
+1个Census控制器；
+1个显式GPU就绪查询进程；
+1个原生支持检查宿主；
+最多2个已登记conhost辅助进程。
+
+合计最多5个受控进程启动。
+
+检查：
+24个固定上下文×3种布局；
+共72张真实clean图；
+完整828次节点支持API查询。
+
+布局：
+PQ、QB、QH_C。
+
+本轮：
+0次graph_compute；
+0个Clean Timing宿主；
+0次warmup；
+0次正式性能测量；
+0个trace宿主；
+0个profiler；
+0模型请求；
+0额外GPU probe；
+0科学retry。
+
+允许Census明确登记的CUDA加载、
+初始化、图元数据构造及支持查询。
+
+不能将支持检查称为零GPU活动。
+
+三、执行前身份核验
+
+核对：
+
+PR118实际提交；
+F0完整字节及远端认证；
+s1b_clean.exe及其SHA；
+共享GGML核心；
+21个数值DLL；
+Python、driver、CUDA环境及模块身份；
+完整PLAN；
+72张CPU clean图描述；
+828次预定支持查询；
+PR116原始数值资格；
+输入、参考、CAS和分析器。
+
+Clean宿主SHA256必须为：
+073bdc32c6b54866b075d0dc47b5e9a343ec299fa1c87b5cd0937abe32db035b
+
+确认：
+新执行根D:/hs116-s1b-cost-v1不存在；
+Census阶段账本尚未启动；
+此前PR116的GPU任务已结束；
+没有冻结规则列出的冲突任务。
+
+任何身份漂移、已有启动记录或资源不足，
+立即停止并保留证据。
+
+不得重新生成F0或修改冻结实验。
+
+四、建立实际作者授权记录
+
+按当前真实收到的本条消息，
+创建独立Census批准记录。
+
+必须包括：
+
+stage = S1B_CENSUS_ONLY
+
+run_id = pr116-s1b-cost-v1
+
+F0_sha256 =
+c987d429c12741cf4e4b598174d25522afcd51e996ca7150842a71e5aa2b9774
+
+clean_first_trace_deferred_amendment_accepted = true
+
+同时记录实际作者消息原文、
+SHA256和真实接收时间。
+
+不得伪造先前授权，
+不得复用PR116的Numerical批准记录。
+
+不得创建任何Clean Block或Trace授权。
+
+五、唯一冻结执行入口
+
+使用F0绑定Python及-B模式：
+
+& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -B 'D:/hs116-s1b/benchmarks/rtx_lowering_envelope_v1/s1b_cost_v1/run_s1b.py' --stage census --approval '<本次实际S1B_CENSUS_ONLY批准记录的绝对路径>'
+
+只执行一次Census控制器。
+
+不得直接调用原生EXE。
+
+不得使用：
+--stage clean0
+--stage clean1
+--stage clean2
+--stage trace
+
+不得自动进入下一阶段。
+
+六、就绪条件与预算
+
+继续使用冻结A_STRICT_IDLE_V1：
+
+GPU利用率≤5%；
+温度≤55°C；
+空闲显存≥512MiB；
+AC供电；
+设备、driver、容量、电源方案必须与F0一致。
+
+每次正式宿主只允许预定的一次就绪查询。
+不得自动cooldown、重新查询、重试或改阈值。
+
+Census独立预算：
+
+阶段墙钟≤600秒；
+保守owned≤1800秒；
+原生支持宿主≤240秒；
+就绪查询≤10秒。
+
+其余JobObject、内存、磁盘、
+输出和完整监测条件全部沿冻结F0。
+
+全研究派生存储上限维持4GiB，
+不允许删除证据或扩大预算。
+
+发现任何冻结停止条件后立即终止。
+
+七、Census支持判据
+
+核对全部72张实际clean图：
+
+完整节点数量；
+op及参数；
+shape、stride；
+输入来源与节点依赖；
+ordinary输出恢复路径；
+真实CUDA backend support；
+模块、共享核心及41个插件导入身份。
+
+完整核验828次supports_op结果。
+
+所有计划中的PQ、QB、QH_C图
+都必须满足冻结的支持条件。
+
+不能因QH_C不支持而改选QH_D。
+不能修改图、删坐标或调整输入。
+
+本阶段不执行数值图计算，
+因此不建立CUDA clean ordinary资格。
+
+即使72张图全部支持，
+也只能报告后端支持检查通过；
+不得宣称Clean Timing、性能优势或数值对应已经通过。
+
+八、完成后独立CPU封存
+
+Census完整完成或按规则停止后，
+结束全部GPU-owned进程。
+
+使用冻结CPU-only流程核验：
+
+CENSUS_ENDED；
+原生CENSUS.json；
+CENSUS_DECISION.json；
+全部图及节点支持结果；
+PID/JobObject及模块身份；
+原始资源、输出和停止回执。
+
+使用已注册的offline_s1b.py工作流
+进行seal-census及独立census-readback。
+
+实际提交Census、Decision和全部必要原始证据，
+完成远端字节认证及独立CPU重构。
+
+所有认证必须真实执行，
+不预填成功回执。
+
+PR118保持Draft。
+
+九、结束后直接汇报
+
+1. 72张clean图的支持数量。
+2. 828次节点查询的实际完成情况。
+3. PQ、QB、QH_C分别支持多少张图。
+4. 全部NOT_SUPPORTED及失败坐标。
+5. 实际GPU就绪查询数据。
+6. 原生宿主、控制器和辅助进程数量。
+7. 阶段墙钟、owned、资源与存储成本。
+8. F0、Census、Decision三个实际SHA256。
+9. 远端认证commit与独立CPU核验结果。
+10. 是否达到申请Clean Block 0的技术条件。
+
+十、严格停止于Census
+
+Census即使全部通过，
+也不能自动执行Clean Block 0。
+
+Clean Block 0未来范围仍为：
+72个独立clean宿主；
+72次warmup；
+576次正式测量；
+648次图计算。
+
+该阶段需要单独作者授权，
+并绑定本次真实Census和Decision哈希。
+
+Block 1、Block 2分别需要新的阶段授权。
+Trace仍为PROFILE_UNAVAILABLE。
+
+不启动新的数值面板、性能实验、
+trace/profiling、actor、自然decoder、
+S2/S3或硬件RTL。
+
+不修改PR116、PR113/114、PR110、
+B570、论文、main、release或自动化。
+
+按本次精确F0执行一次支持Census。
+完成后封存并停止。
+失败不重试。

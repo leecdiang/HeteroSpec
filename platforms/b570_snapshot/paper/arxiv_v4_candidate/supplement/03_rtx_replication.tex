@@ -1,0 +1,85 @@
+\section{RTX replication and numerical replay}
+\label{supp:cuda}
+\subsection{E2 design and complete estimates}
+The replication retains the 12-task implementation panel and the original reference, models, sampler, timer and runtime routes. Each session has 54 fresh workers: short PQ/QB blocks and serial-reference blocks, with one registered warmup per worker. Across six sessions this gives 864 PQ/QB requests, 432 references and 324 warmups. Each task/session has two matching serial-reference endpoints. All required endpoints and observation checks pass; no latency is trimmed.
+
+The fixed runtime routes use the original executable for every Qwen3 arm and all R/QB arms. SmolLM2 and Llama PQ arms use the recorded metadata4 correction; both builds retain identical hashes for all 21 numerical DLLs. The source/build manifests identify each route. The launcher clears inherited GGML/CUDA environment overrides, but neither that configuration nor GGML topology reuse establishes actual CUDA Graph replay. Per-request capture, replay and fallback counts are absent from the recovered E2 report records.
+
+\texttt{E2\_REQUEST\_LATENCIES.csv} retains all 1,620 rows, including the 324 labelled warmups, with its original Git-blob identity. \texttt{generate\_e2\_absolute\_cost.py} checks the source and reconstructs Table~\ref{tab:e2absolute}. The per-arm geometric means use the same 12-task and six-session weights as Equation~\ref{eq:ratio}, so their quotients reproduce the paired ratios. The table's \texttt{latency\_ms} is the resident request interval; raw start/end nanosecond fields remain in the full request archive.
+
+All consecutive session gaps exceed one hour; first-to-last start is 24.450801 hours. The original interpreter bytes were restored after a pre-start identity mismatch before the final session. The original freeze checks then passed without exception and the untouched scientific slots ran. The earlier stopped record remains part of the history.
+
+Table~\ref{tab:e2full} gives the complete six-session estimates. The intervals use the original random seed 20261014, 10,000 bootstrap draws of six session log means, and linearly interpolated 2.5/97.5 percentiles. They quantify fixed-panel, single-host variation, not a date-level population or multiple-comparison guarantee. Table~\ref{tab:e2tasks} gives all 72 task aggregates; 9 regress. Full session contrasts and observed session times are in \texttt{anc/rtx104/}.
+\begin{table*}[t]\centering\small
+\caption{All completed E2 comparisons. Ratios favor QB above one; regressions count six-session task point estimates below one.}\label{tab:e2full}
+\begin{tabular}{llrrrrl}\toprule
+Family&Path&Ratio&Lower 95\%&Upper 95\%&Regressions&Practical threshold 1.02\\\midrule
+Qwen3&M&1.020563&1.013023&1.026553&2/12&Point above; interval overlaps\\
+Qwen3&C&1.031614&1.025393&1.037926&1/12&Interval above\\
+SmolLM2&M&1.027767&1.021010&1.035017&2/12&Interval above\\
+SmolLM2&C&1.065803&1.063387&1.068399&0/12&Interval above\\
+Llama&M&1.015593&1.009627&1.021622&3/12&Point below; interval overlaps\\
+Llama&C&1.029114&1.020126&1.039149&1/12&Interval above\\
+\bottomrule\end{tabular}\end{table*}
+\begin{table*}[t]\centering\small
+\caption{E2 task-level PQ/QB ratios, geometrically averaged over six sessions. Values below one are italicized; these are descriptive task contrasts, not significance tests.}\label{tab:e2tasks}
+\begin{tabular}{lrrrrrr}\toprule
+&\multicolumn{2}{c}{Qwen3}&\multicolumn{2}{c}{SmolLM2}&\multicolumn{2}{c}{Llama}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
+Task & M & C & M & C & M & C\\\midrule
+GSM8K 111&1.015305&1.028626&1.031259&1.064372&1.027335&1.029118\\
+GSM8K 120&1.007356&1.073052&1.050246&1.073224&1.021427&1.026504\\
+GSM8K 1308&1.018527&1.030064&1.057675&1.070511&1.020762&1.041848\\
+GSM8K 141&\textit{0.992667}&1.035252&1.021013&1.051986&1.012332&1.028335\\
+GSM8K 322&1.001169&1.033028&1.028420&1.059544&1.026791&\textit{0.993618}\\
+GSM8K 443&1.003752&1.021251&1.033367&1.067165&1.024666&1.019558\\
+MBPP 123&1.056908&1.037495&1.044148&1.058628&\textit{0.992752}&1.023365\\
+MBPP 140&\textit{0.981806}&1.052058&1.041709&1.063535&\textit{0.978786}&1.048076\\
+MBPP 255&1.079294&1.032638&\textit{0.972948}&1.090371&1.021555&1.054405\\
+MBPP 401&1.001954&1.024979&1.044272&1.048708&1.026712&1.009394\\
+MBPP 413&1.089971&\textit{0.967860}&\textit{0.978119}&1.089698&\textit{0.986121}&1.035206\\
+MBPP 418&1.004440&1.046335&1.033875&1.052829&1.050112&1.041465\\
+\bottomrule\end{tabular}\end{table*}
+
+Recorded acceptance, rollback and logical-workload counters agree in all 216 speculative task/session pairs. This comparison is limited to the recorded counters and histograms, rather than complete control-trace identity. Model callers and physical micrographs remain distinct from hardware launches.
+
+\subsection{Sensitivity to interval method and session omission}
+The registered percentile bootstrap remains the primary analysis. Table~\ref{tab:e2sensitivity} adds a post-review $t$ interval,
+\[
+\exp\!\left(\bar z\pm t_{0.975,5}\frac{s_z}{\sqrt6}\right),
+\qquad t_{0.975,5}=2.570581835636314,
+\]
+where $z_s$ is the session mean log contrast and $s_z$ its sample standard deviation. This analysis assumes independent, approximately normal session log means; it does not add inputs, dates or hosts. Six further point estimates omit one session each.
+
+All speculative $t$ intervals remain above parity. Qwen3 and SmolLM2 also remain above the practical ratio threshold 1.02; Llama crosses it. Its omit-one estimates all exceed 1.02. Thus the direction of the Llama effect is stable across these checks, while its practical-threshold conclusion depends on the interval method. The source CSV is unchanged; \texttt{scripts/generate\_e2\_sensitivity.py} reconstructs the new table and the complete omit-one estimates.
+\input{tables/e2_sensitivity}
+
+\subsection{Retrospective draft-on/off analysis}
+\label{supp:e2draft}
+For each family, session and input, the reanalysis pairs exactly one non-warmup record from each of $M_{\mathrm{PQ}},M_{\mathrm{QB}},C_{\mathrm{PQ}},C_{\mathrm{QB}}$. There are 216 complete four-arm cells (864 measured requests). The 324 registered warmups and 432 serial-reference measurements are excluded from these contrasts after their source accounting and recorded endpoint metadata are checked. Each session averages twelve task log ratios; the reported estimate averages the six session means. Pointwise exploratory $t_5$ intervals use the six session log means with no multiplicity adjustment. These contrasts were selected retrospectively and do not replace the original primary E2 comparisons or their registered bootstrap analysis. These intervals retain the fixed-input, single-host scope of E2 and do not add a native execution or repeat full token-array qualification. The saved block order is M before C in four of six Qwen3 sessions, three of six SmolLM2 sessions and four of six Llama sessions; the remaining sessions reverse that order. Thus the M/C contrasts use separately scheduled within-session blocks, not newly randomized adjacent per-input M/C measurements, and do not isolate block-order or temporal-drift effects.
+
+The local-layout interaction is $\Gamma=D_{\mathrm{QB}}/D_{\mathrm{PQ}}=(C_{\mathrm{PQ}}/C_{\mathrm{QB}})/(M_{\mathrm{PQ}}/M_{\mathrm{QB}})$. Its estimates are 1.010828, 1.037008 and 1.013313 for Qwen3, SmolLM2 and Llama. The exploratory intervals span parity for Qwen3 and Llama; SmolLM2's interval is [1.027962,1.046134]. Thus an improvement in draft value from QB does not itself imply profitable drafting, as the SmolLM2 result demonstrates.
+
+The six-session QB task aggregates favor drafting for 10/12 Qwen3 inputs, 11/12 Llama inputs and 0/12 SmolLM2 inputs. These task contrasts remain descriptive. The source-pinned reconstruction script \texttt{generate\_e2\_draft\_profitability.py} verifies the complete quartet structure and generates all estimates, session rows and source-line pairings.
+
+\input{tables/e2_draft_profitability_details}
+
+\subsection{E1 coverage and controls}
+The independently frozen diagnostic retains all 21 numerical DLLs and changes only the two admitted capture/replay source files. Its 72 contexts use target layers $0/\lfloor L/2\rfloor/(L-1)$, both phases and $q=1$--4. One exposed text, GSM8K443, is selected by longest inherited prompt with lexical tie-breaking for each tokenizer. It has 105/126/123 prompt IDs for Qwen3/SmolLM2/Llama. Each context has a fresh worker with a counts warmup, heavy capture and counts control; each observed MQ/PQ/QB graph is replayed twice. All 72 contexts are observed and admitted; all requests and 432 operator starts complete.
+
+The physical key extent is 256 in every capture. The per-query visible mask counts are 1 through $q$ in prefill, 106 through $105+q$ for Qwen3 continuation, 127 through $126+q$ for SmolLM2, and 124 through $123+q$ for Llama. Minimum-key selectors refer to tensor extent, not unmasked context; this is not a query-width by visible-length factorial. All exact coordinates are in \texttt{E1\_CONTEXTS.csv}.
+
+PQ/QB bitwise equality is 72/72 at each stage. MQ/PQ and MQ/QB equality is 18/72, exclusively the $q=1$ controls. Table~\ref{tab:e1errors} retains the largest measured differences. These compare operator arrays, not next-token logits.
+\begin{table}[t]\centering\small
+\caption{E1 maximum MQ-to-repair differences; both repairs give the same values. PQ/QB has zero error and ULP distance at all stages.}\label{tab:e1errors}
+\begin{tabular}{lrr}\toprule
+Stage&Max. finite absolute&Max. finite ULP\\\midrule
+QK&0.078582763671875&2,017,357,824\\
+Softmax&0.0009172558784484863&96,633\\
+AV&0.010433197021484375&1,953,885,696\\\bottomrule
+\end{tabular}\end{table}
+
+Large ULP distances near zero or across signs are retained rather than converted into a tolerance-based pass. Input identity is checked before and after replay against frozen hashes. Native worker module receipts are retained; the inherited standalone replay binds executable and DLL paths but does not add a separate loaded-module inventory. Kernel symbols, reduction trees and continuous residency remain unidentified.
+
+\subsection{Restoration and interpretation}
+The host downloaded and restored the authenticated E2, E1 and control archives into a fresh directory, verifying 10,179, 9,696 and 47 members. A separate interpreter reconstructed 11 analysis outputs byte-for-byte. This is same-host restoration, not an external replication. This manuscript's own checker reconstructs the six ratios and bootstrap intervals from the submitted session table, verifies the copied context/time-table identities and checks the report summaries; it does not replay the original tensor archives.

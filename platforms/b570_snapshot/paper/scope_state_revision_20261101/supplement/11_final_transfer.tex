@@ -1,0 +1,65 @@
+\section{Three-date scope transfer and final producer-state tests}
+\label{supp:finaltransfer}
+\subsection{RTX execution and estimator}
+The frozen seven-arm study reuses the complete twelve-input Qwen3 and SmolLM2 panels from the earlier natural-input transfer. It is a new runtime cohort, not a new blind input selection. Within each family, all seven arms share the executable, core, numerical DLLs, model bytes and resident-context lifecycle. GS selects physical target width one; PQ/QB preserve surrounding multirow work. Target-only and speculative requests can share a cleared target context within a fixed scope, never across scopes. Model loading and resident provisioning occur before registered warmups.
+
+Qualification executes $2\times12\times7=168$ heavy requests plus 28 observer-off sentinels, for 196 total. Each of twelve independently loaded family-session processes then executes twelve contiguous seven-arm blocks and seven warmups: $12\times84=1,008$ measurements and $12\times7=84$ warmups. All 1,288 requests complete with no missing slots or technical/numerical retries. The original October 29 start elapsed without formal requests; the disclosed October 30/31/November 1 calendar amendment was committed and authorized before formal collection. The original calendar remains part of the history.
+
+The seven-arm base permutation is rotated by session and source-input index. Six rotations per input across six sessions yield arm-position counts differing by at most one over the 72 blocks per family. Input order is frozen by hash, and family-first order alternates by date. The first sessions of adjacent date slots satisfy the registered 20-hour gates. All measured requests remain within their actual Asia/Shanghai dates.
+
+For input $i$, session $s$ and date $d$, let $z_{dsi,L}=\log[T(M_L)/T(C_L)]$. The study first averages the twelve input log ratios, then its two session means, then its three date means. The same weights apply to $I=z_{\QB}-z_{\GS}$ and all secondary contrasts. No old campaign is pooled into these estimates.
+
+\input{tables/scope_final}
+\input{tables/scope_sessions}
+\input{tables/scope_secondary}
+
+All three date means and all six session means have positive $I$. The full source analysis retains 5/72 negative Qwen3 input/session effects and 27/72 negative SmolLM2 effects; no reversal is removed. Qwen3's recorded logical work is matched across scopes. SmolLM2's is not, so its effect includes the changed speculative path. The secondary Qwen3 target-only QB/PQ ratio changes direction across dates. Its pooled ratio must not be described as an improvement in every session.
+
+The registered 97.5\% two-sided sensitivity interval for each primary family contrast is
+\[
+\exp\!\left(\overline I\pm t_{0.9875,2}\frac{s_I}{\sqrt3}\right),
+\qquad t_{0.9875,2}=6.205346816570706.
+\]
+The two-primary-family Bonferroni allocation assumes independent approximately normal date means. With three dates it is a weak sensitivity summary, not robust population uncertainty or power. The main figure shows the actual three date means and their range. Session repeats and the 1,008 measured requests are not treated as independent dates.
+
+The original source auditor reads all 1,288 request records and associated payloads. This editorial reconstruction independently checks the twelve reported session log vectors, their date and aggregate algebra, and the exact B570 compact CSVs below. It does not rerun the RTX raw-request or full-vector auditor. \texttt{anc/final\_20261101/SOURCE\_INDEX.json} distinguishes these evidence levels.
+
+\subsection{Bounded Llama diagnostic}
+\label{supp:finaldiagnostic}
+A separate 54-request stream retains the known CodeContests/valid/108 counterexample and two controls, CodeContests/valid/43 and GSM8K/test/496. A1 executes three inputs by $R/C_{\PQ}/C_{\QB}$ by observer-off/heavy, giving 18 requests. A2 executes the three inputs by P1/P4\_NATIVE by target-only C1/$C_{\PQ}/C_{\QB}$ by observer setting, giving 36. A0 reads historical evidence and executes no model request.
+
+The known failure reproduces under both observer settings, and both controls match historical $R$. In A2, target-only C1 retains $R$ under both producer recipes on the known input, whereas speculative PQ/QB still agree with each other and depart from $R$. All observer pairs retain the outcome, and paired captured vectors match for PQ/QB. The audit records 5,916 vectors. These naturally generated recipes do not import a common state and therefore do not isolate a consumer-only intervention. No earliest internal operator is identified, no repair is established and diagnostic clocks are excluded from performance analysis.
+
+\subsection{B570 producer--consumer matrix}
+\label{supp:finalproducer}
+The Qwen3-8B/0.6B Q8\_0 experiment retains both models on B570 Vulkan, eight host threads, non-flash attention and F16 KV. P1 and P4T use the same PQ target producer, UB4/output4, token IDs, positions and final-only logits flags. P1 submits one ID at a time; P4T uses width four with a fixed tail-three split into two plus one. Draft production remains the same independent serial recipe for every speculative consumer.
+
+The full producer boundary contains sequence-KV serialization, positions and initial full FP32 logits. Each clean receiver imports the selected boundary, verifies actual post-import readback and consumes the initial logits exactly once. C1 is target-only; PQ/QB use the unchanged $k=1$ transaction. The intervention tests the total boundary-state effect, not a KV-only component effect.
+
+The 32 historical controls include natural/resumed C1 and consumer-specific PQ/QB own-path comparisons with observer-off/heavy guards. On the eight selected inputs, each independently executed strict UB1/output1 $R$ is compared with natural P1+C1. Natural P1/P4T C1, C1 restoration and local PQ/QB continuations supply 120 further requests. All 152 primary requests execute once; 96 actual boundaries and 88 observer/own-path comparisons pass the recorded raw audit. The resulting 48 scientific cells are all evidence-qualified, while only 39 equal strict $R$.
+
+\input{tables/producer_full}
+
+The 16 input--producer PQ/QB pairs agree in complete endpoints, cycles and all captured full-vocabulary vectors, including discarded verification rows. Both serialized KV and initial logits change on 8/8 inputs. Five inputs retain $R$ across all six cells. Prealgebra/1865 and /1804 switch local eligibility while natural C1/$R$ remains fixed; their first departures are one-based outputs 5 and 25. GSM8K/1184 instead changes its natural C1 endpoint under P4T, first at output 30; local continuations differ from their own C1 at outputs 30 and 32 under P1 and P4T.
+
+The source pool was amended before new model forwards after static exposure and length checks could not fill the requested bands. Four original GSM8K and four original MATH-500 problems were chosen by the frozen hash rule, without output- or timing-based selection, truncation or concatenation. The retained panel is mathematical throughout; source and length are confounded. Exact input strings, selection records and static stops remain in the source archive. Natural integrated P4T speculative production was not qualified by this clean-receiver experiment, and its diagnostic resource times are not formal service estimates.
+
+\subsection{Retrospective contrasts and baseline normalization}
+\label{supp:targetedcontrasts}
+Equation~\eqref{eq:scopedecomposition} uses the original equal input, session and date log weights. Multiplication of these geometric ratios is an identity on the common panel; it does not assign fractions of runtime to mechanisms. Table~\ref{tab:scopefactors} reports the pooled factors. The three date values of $\eta$ are 1.027012, 1.052076 and 1.100240 for Qwen3, and 1.013963, 1.001058 and 0.983694 for SmolLM2; all date-level factors remain in the supplied data. Qwen3's target-only QB/PQ comparison reverses across dates, so its pooled value is not a stable per-date ordering.
+
+\input{tables/scope_factors}
+\input{tables/normalized_costs}
+
+Table~\ref{tab:normalizedcosts} uses $T(C_L)/T(R)=1/S_{R/C_L}$ and $T(M_L)/T(R)=D_L/S_{R/C_L}$. These are common-weight geometric ratios, not total wall-clock seconds. For SmolLM2, QB's target-only and speculative paths are respectively 6.579\% and 6.532\% cheaper than PQ, leaving $D_{\QB}/D_{\PQ}=0.999494$. Its speculative path is 30.570\% cheaper than $R$ but 24.243\% more costly than same-layout target-only. All are post-hoc arithmetic descriptions of existing records, with no new measurements or uncertainty test.
+
+\subsection{A finite counterexample to independent pass labels}
+\label{supp:targetedeligibility}
+For either fixed-$R$ prealgebra case, define $V(p,c)$ as one when the endpoint under producer $p$ and consumer $c$ equals that input's strict $R$. Rows $(P1,P4T)$ and columns $(C1,PQ)$ give $V=\bigl(\begin{smallmatrix}1&0\\1&1\end{smallmatrix}\bigr)$; QB has the same outcome. If $V(p,c)=g(p)\wedge h(c)$ for independent binary labels, the two C1 passes force both producer labels to one. The P4T/PQ pass then forces the PQ label to one, incorrectly predicting the P1/PQ cell. No such exact decomposition exists on this observed submatrix. This does not preclude modular verification with relational preconditions~\cite{vosti}.
+
+Across the eight-input matrix, PQ/QB agree in all sixteen input--producer pairs, including four where both differ from strict $R$: both producers for GSM8K/1184 and P1 for the two prealgebra cases. This descriptive count tests the insufficiency of mutual agreement as a reference oracle; it is not a deployment failure rate. The intervention changes KV and initial logits together within the validated clean receiver. The accompanying script enumerates all sixteen binary label assignments and reproduces these counts from the unchanged CSVs.
+
+\subsection{Final evidence delivery}
+RTX's immutable base through date zero and Llama diagnostics has 39 object ZIPs, 8,541 unique objects and 38,087 original-path mappings. Date-one and date-two increments add three ZIPs each, containing 425 and 427 members respectively. B570 publishes six ZIPs plus two manifest/receipt assets containing 6,826 files. Source-host authenticated downloads and readback checks are recorded for every batch; B570's frozen CPU analysis recreates eight outputs byte-for-byte from that downloaded copy. These are source-host delivery checks, distinct from independent-host native reproduction.
+
+The publication source includes exact B570 matrix/state CSVs and an explicitly labelled projection of the RTX session log contrasts. Its CPU script reconstructs all new printed ratios and figures, with fixed-source provenance. Bulk raw vectors, execution capsules and models are accessed separately through the fixed companion records. The new evidence commits are \texttt{29511ed9} for RTX and \texttt{022babfa} for B570. No new model execution is performed by this manuscript revision.

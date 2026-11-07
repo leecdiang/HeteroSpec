@@ -1,0 +1,74 @@
+\section{Vulkan partition and retained-state experiments}
+\label{supp:b570}
+\subsection{Inputs and partition controls}
+A uses UB512/capacity one and a whole-prompt submission; B retains that context and externally submits $128+\mathrm{remainder}$; C uses UB128 with internal partitioning. Only the final absolute prompt position requests logits. Three repeats per input/arm, one capture-off and two capture-on, give 63 requests. All B/C initial full FP32 logits, source-defined sequence-KV payloads and complete endpoints agree.
+\begin{table}[t]\centering\small
+\setlength{\tabcolsep}{3.3pt}
+\caption{Seven original partition inputs. All B/C full endpoints and initial FP32/KV payloads agree. The first difference is A/B, zero-based.}
+\begin{tabular}{@{}lrrl@{}}\toprule
+Input&Prompt IDs&First difference&A/B initial state\\\midrule
+GSM1248&161&47&Different\\
+GSM831&133&81&Different\\
+GSM1011&190&---&Different\\
+GSM1249&163&---&Different\\
+Prefix 1248/127&127&---&Equal\\
+Prefix 1248/128&128&---&Equal\\
+Prefix 1248/129&129&57&Different\\\bottomrule
+\end{tabular}
+\end{table}
+Initial state comprises 64 F16 K/V tensors over 32 layers and recorded logical positions. Full KV payloads are retained at prefill completion; later cuts contain full logits but only KV hashes. The synthetic prefix129 difference at 57 was not added retrospectively as a capture cut.
+
+The final follow-up contains 21 fourth-arm observations, 38 partition-sweep observations, 18 native captures, 16 shams and 40 crosses: 133 whole requests, with a zero-forward load probe separately counted. All 19 schedules are listed in Table~\ref{tab:allpart}. Driver-body hashes were authenticated only after the fourth-arm and sweep stages, which remain diagnostic rather than fully compliant confirmation. Authentication preceded the operator and restoration stages.
+\begin{table}[t]\centering\small
+\caption{All frozen exposed partition schedules. The final column is first output difference from A; no numerical monotonicity is inferred.}
+\label{tab:allpart}
+\begin{tabular}{@{}lllr@{}}\toprule
+Input&Caller widths&Endpoint class&First diff.\\\midrule
+1248&64+64+33&A&---\\
+1248&96+65&A&---\\
+1248&128+33&B/C&47\\
+1248&160+1&A&---\\
+831&64+64+5&A&---\\
+831&96+37&A&---\\
+831&128+5&B/C&81\\
+831&132+1&Third class&40\\
+1011&64+64+62&All&---\\
+1011&96+94&All&---\\
+1011&128+62&All&---\\
+1011&160+30&All&---\\
+1249&64+64+35&All&---\\
+1249&96+67&All&---\\
+1249&128+35&All&---\\
+1249&160+3&All&---\\
+Prefix 129&64+65&A&---\\
+Prefix 129&96+33&A&---\\
+Prefix 129&128+1&B/C&57\\\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[t]\centering\resizebox{\columnwidth}{!}{\input{figures/partition}}
+\caption{Selected partition classes from the complete schedule table. A is whole prefill; B/C is the 128-split class. Numbers are first output differences from A. The map does not imply a universal 128-token threshold.}\label{fig:partition}
+\end{figure}
+
+\subsection{Projection and boundary reconstruction}
+Native comparisons align actual embedding inputs, logical positions and the intended pre-attention RMS producer. Table~\ref{tab:projection} reports the layer-0 projection differences. Listing sibling projections in an audit sequence does not identify a unique first-cause kernel.
+\begin{table}[t]\centering\small
+\caption{Native layer-0 A/B projection differences. Values are maximum absolute differences for the stated tensors, not model-logit perturbation bounds.}
+\label{tab:projection}
+\begin{tabular}{@{}lrr@{}}\toprule
+Projection&1248&831\\\midrule
+Q&0&0.0207662582\\
+K&0.0527343750&0.0703125000\\
+V&0.0023193359&0.0021639541\\\bottomrule
+\end{tabular}
+\end{table}
+Forty standalone calls compare RMS, scale/MUL and Q/K/V projections on two full/split operand geometries, with two repeats. Thirty-two pass native same-arm correspondence; eight scale/MUL calls fail because the captured input aliases a buffer already changed by an in-place consumer. Those failures remain excluded. RMS and the first task's Q controls agree bitwise, while admitted differing projection replays reproduce geometry sensitivity.
+
+The common receiver restores sequence KV and positions, applies the native sampler to a complete 128,256-element initial FP32 vector, and reconstructs the empty generated prefix and pending token. Dynamic output buffers are rebuilt; opaque graph-cache pointers are not cloned. Sixteen own-path shams cover four inputs, both donor states and two repeats. Forty crosses then use three repeats per cell on the two affected tasks and two on the stable controls.
+\begin{figure}[t]\centering\resizebox{\columnwidth}{!}{\input{figures/state}}
+\caption{Admitted boundary0 cross for the affected tasks. All initial logits select 1271. The subsequent suffix follows the KV source under the same reconstructed receiver; stable controls retain their endpoint.}\label{fig:state}
+\end{figure}
+
+\subsection{Separate physical-work and cost boundary}
+An earlier speculative actor executes a logical seed-plus-proposal verification as two occupied width-one target micrographs at $k=1$. The work-witness study retains 563 successful cycles and separate draft counts; one API-observer request failed a logging threshold and was not repeated. Its partial output is not a GPU timeline.
+
+The original stock-relative cost campaign failed reference qualification. A later post-hoc full-output audit supports a different production-path pairing on 24 tasks and 240 repetitions: $R_{\rm prod}/C=0.719264$ and $M_{\rm match}/C=0.727927$, with every task regressing. Those negative same-output economics do not repair the original stock gate. They are not remeasured by the causal studies, and no completed component-time model is admitted.

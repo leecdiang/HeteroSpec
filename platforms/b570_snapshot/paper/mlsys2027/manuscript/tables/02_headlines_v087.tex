@@ -1,0 +1,22 @@
+% Evidence: M4-24, M4-HE, RTX-cpu_k2, RTX-rtx_k2, B570-SERIAL, 358H-CPU/NPU.
+\begin{table*}[t]
+\caption{Decode cost by evidence group. All speedups are baseline/speculative latency ($\times$; higher is faster), with frozen prompt estimators and 95\% CIs. Historical agreement does not qualify direct IDs. RTX V4 matched cost is in Table~\ref{tab:rtxv4cost}; original Figure~\ref{fig:verification} gates have no matched latency.}
+\label{tab:headlines}
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.65in}>{\raggedright\arraybackslash}p{1.52in}>{\centering\arraybackslash}p{0.73in}>{\centering\arraybackslash}p{0.43in}>{\raggedright\arraybackslash}p{0.60in}>{\raggedright\arraybackslash}p{0.81in}}
+\toprule
+Path / workload & Speedup [95\% CI] & Endpoint & Pairs & Faster prompts & Class \\
+\midrule
+\multicolumn{6}{l}{\emph{Historical text-path timing}}\\
+M4 representative 24Q & \MRepSpeed\ [\MRepLo, \MRepHi] & Text-path & \MRepExact/\MRepPairs & \MRepFaster/\MRepN & Primary \\
+M4 HumanEval fixed-$k=2$ & \MHEspeed\ [\MHElo, \MHEhi] & Text-path & \MHEexact/\MHEpairs & \MHEfaster/\MHEprompts & Primary \\
+CPU to RTX 5070 Ti Laptop & \RTXcpuSpeed\ [\RTXcpuLo, \RTXcpuHi] & Text-path & 90/90 & 0/30 & Secondary \\
+RTX 5070 Ti Laptop to itself & \RTXgpuSpeed\ [\RTXgpuLo, \RTXgpuHi] & Text-path & 90/90 & 0/30 & Secondary \\
+B570 serialized fallback & \BSpeed\ [\BLo, \BHi] & Text-path & \BExact/90 & 0/30 & Diagnostic \\
+\midrule
+\multicolumn{6}{l}{\emph{358H direct-ID-qualified complete-loop timing}}\\
+358H CPU draft & \HcpuSpeed\ [\HcpuLo, \HcpuHi] & Direct-ID & 90/90 & 0/30 & Primary \\
+358H NPU draft & \HnpuSpeed\ [\HnpuLo, \HnpuHi] & Direct-ID & 90/90 & 0/30 & Primary \\
+\bottomrule
+\end{tabular}
+\end{table*}

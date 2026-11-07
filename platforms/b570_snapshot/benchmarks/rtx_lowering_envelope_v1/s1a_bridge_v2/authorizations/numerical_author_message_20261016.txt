@@ -1,0 +1,291 @@
+确认授权 HeteroSpec PR116 的 S1A Bridge v2 正式 Numerical 阶段。
+
+授权类型：
+BRIDGE_V2_NUMERICAL_EXACT
+
+仓库：
+https://github.com/leecdiang/HeteroSpec
+
+Draft PR：
+https://github.com/leecdiang/HeteroSpec/pull/116
+
+已审查最终Census提交：
+afa9293981eea328457eeead2ae5026e8c8e7b26
+
+Run ID：
+pr114-s1a-bridge-v2
+
+本次独立授权严格绑定以下三个SHA256：
+
+F0：
+3da19af573ac4c93e73c4b4d9831f0da94fb2460247471395e4498862a7aada0
+
+Census：
+85c9dcd2747491183047b05937abdd29a47cfa9c6675261e94947b0b665a128b
+
+Decision：
+3b621d5686044a0ea7bcef9f2a7861c22d234bf0d27c0910c4849f0c807129a6
+
+有限24上下文协议修订继续有效：
+prospective_24_context_amendment_accepted = true
+
+一、Numerical准入确认
+
+本次Census已经完成并独立认证：
+
+120/120图支持；
+1806/1806节点查询通过；
+denied_slots为空；
+numerical_admitted=true；
+无失败、无重试。
+
+认证数据提交：
+a148db1def2740345fb6048e42f645616b287abc
+
+不得重新执行Census。
+不得使用旧PR114的Census、Numerical授权或运行记录。
+
+执行前核验：
+
+本机F0实际SHA；
+完整Census及Decision实际SHA；
+CENSUS_ENDED=COMPLETE；
+CENSUS_AUTHENTICATED真实远端认证；
+完整源码、原生宿主、共享核心DLL、
+21个数值DLL、输入、模型、PLAN、wire、
+FP64参考、分析器和运行环境身份。
+
+确认Numerical控制器此前没有启动记录，
+没有已有NUMERICAL阶段账本或冲突GPU任务。
+
+任何身份漂移、认证不匹配、
+已有执行记录或资源不足立即停止。
+
+二、创建新的独立作者授权记录
+
+依据当前实际收到的这条确认，
+创建本次Numerical专用批准记录。
+
+必须包含：
+
+stage = BRIDGE_V2_NUMERICAL_EXACT
+
+run_id = pr114-s1a-bridge-v2
+
+F0_sha256 =
+3da19af573ac4c93e73c4b4d9831f0da94fb2460247471395e4498862a7aada0
+
+census_sha256 =
+85c9dcd2747491183047b05937abdd29a47cfa9c6675261e94947b0b665a128b
+
+decision_sha256 =
+3b621d5686044a0ea7bcef9f2a7861c22d234bf0d27c0910c4849f0c807129a6
+
+prospective_24_context_amendment_accepted = true
+
+记录真实作者消息原文、SHA256及实际接收时间。
+不得伪造更早授权，不得修改旧批准记录。
+
+三、唯一执行入口
+
+使用冻结Python及-B模式：
+
+& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -B 'D:/hs114-bridge-v2/benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v2/run_bridge.py' --stage numerical --approval '<本次真实Numerical批准记录的绝对路径>'
+
+只执行一次冻结Numerical控制器。
+
+不得直接调用原生EXE。
+不得执行--stage census。
+不得启动额外GPU探针、模型请求或profiling。
+
+四、科学实验范围
+
+保持原先预注册的24个上下文：
+
+三模型家族：
+Qwen、SmolLM2、Llama；
+
+两种phase：
+prefill、continuation；
+
+q=1、2、3、4及原计划层位置。
+
+五种布局：
+MQ、PQ、QB、QH_C、QH_D。
+
+每个上下文×布局执行两个独立新进程。
+
+共240个数值宿主、240次图计算。
+
+首先执行全部60个q1公共控制；
+全部通过后再执行180个q>1数值槽位。
+
+QH_C保持固定主候选；
+QH_D保持预注册对照。
+
+不修改：
+原始Q/K/V/mask；
+GQA、shape/stride、scale；
+数据精度和量化格式；
+算术图、CUDA DLL和kernel；
+PQ/QB参考路径；
+QH_C/QH_D表示；
+完整输出恢复；
+FP64参考与数值判据。
+
+不得根据结果调整输入、容差或候选选择。
+
+五、严格保持GPU就绪规则
+
+保留冻结：
+A_STRICT_IDLE_V1。
+
+每槽必须满足：
+
+GPU利用率≤5%；
+温度≤55°C；
+空闲显存≥512MiB；
+AC供电；
+设备、driver、容量及电源方案身份一致。
+
+每个宿主只允许一次预定就绪查询。
+
+不得：
+自动cooldown；
+额外等待后重新查询；
+失败后再次执行；
+切换宽松方案B；
+修改5%阈值；
+重新使用已经终止的run_id。
+
+如再次出现利用率超限，
+立即保留真实readiness和停止回执，
+不得归因为QH数值失败。
+
+六、数值与控制判据
+
+每个实际启动的数值宿主必须保留：
+
+完整输入前后字节；
+实际CUDA共享核心与模块身份；
+41个CUDA插件核心导入关系；
+真实buffer/device归属；
+实际图节点、参数与绑定；
+graph_compute调用及完成同步；
+QK、softmax、AV、ordinary完整输出；
+原始MQ own-path；
+PQ/QB历史参考关系；
+q1公共路径与独立进程重复关系。
+
+出现以下异常立即停止后续执行：
+
+崩溃、断言；
+错误设备或模块；
+输入被修改；
+实际图支持或归属错误；
+非有限数值；
+q1公共路径不一致；
+同布局独立重复不一致；
+PQ/QB冻结历史参考控制失败；
+资源、监测、身份或执行预算异常。
+
+q>1有效有限的跨布局数值差异
+按原科学规则保存为观察证据。
+
+不要求MQ与所有候选逐位相同。
+也不通过修改容差使QH更容易通过。
+
+七、预算与计账
+
+Numerical阶段：
+
+墙钟≤1800秒；
+保守owned≤5400秒。
+
+进程上限：
+
+1控制器；
+240原生数值宿主；
+240就绪查询进程；
+最多480个已登记conhost。
+
+合计最多961次受控进程启动。
+
+单原生宿主≤60秒；
+单就绪查询≤10秒。
+
+Windows JobObject、内存、输出、
+磁盘和全部冻结资源约束保持不变。
+
+整体新派生存储遵守F0的4GiB上限。
+
+保持追加式证据账本、容量预留、
+定期完整哈希核验和独立停止回执。
+
+已合格完成的槽位不能被下一个槽位的
+预算或准入失败追溯标记为失败。
+
+未启动、启动失败与合格完成分别登记。
+
+任何冻结停止条件触发后，
+不续跑、不补槽、不重新登记本轮实验。
+
+八、执行后CPU独立审计与认证
+
+Numerical完成或按规则终止后，
+结束全部GPU-owned进程。
+
+使用冻结CPU-only流程完成：
+
+完整数值分析；
+所有计划坐标及缺失关系重构；
+原始字节归档；
+独立远端字节认证；
+fresh restore；
+新解释器独立复算。
+
+CPU交付独立上限：
+墙钟≤900秒；
+保守owned≤2700秒。
+
+保留全部失败、未启动与异常记录。
+不得通过删除证据或替换分析器取得合格结果。
+
+结果推送PR116，保持Draft。
+
+九、最终在对话直接汇报
+
+1. 240次数值宿主的实际启动、合格、失败、未启动数量。
+2. 三家族、两phase、q1至q4实际覆盖情况。
+3. 60个q1公共控制是否全部通过。
+4. 120个独立重复对的有效数量及逐位关系。
+5. 480项布局对照及完整四阶段差异。
+6. PQ、QB、QH_C、QH_D是否维持参考兼容关系。
+7. MQ与候选的首次数值分歧阶段及实际误差。
+8. 原始输入、实际CUDA归属和完成同步证据。
+9. GPU就绪、墙钟、owned、内存、存储及CPU交付成本。
+10. 原始归档SHA、远端认证、fresh restore和结果commit。
+11. 是否满足后续固定24上下文S1B数值前置条件。
+
+如存在缺失或失败，明确保留不能成立的比较，
+不得将部分合格结果包装为完整240图通过。
+
+十、明确后续停止边界
+
+本次只批准Numerical，不包含：
+
+S1B clean timing；
+kernel trace或profiling；
+actor；
+自然decoder；
+S2/S3；
+硬件RTL或架构实验。
+
+即使240/240成功，也只能提出后续S1B技术审查，
+不能自动启动性能实验。
+
+PR113、PR114、B570、PR110、论文、
+main、release和自动化保持不变。
+
+完成封存或按规则失败后立即停止。
+本轮不重试、不重新执行Census。

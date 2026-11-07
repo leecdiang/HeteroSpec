@@ -1,0 +1,70 @@
+{
+  "schema": "heterospec.358h.phase3_runner_qualification.v1",
+  "status": "PASS",
+  "formal": false,
+  "claim_status": "NON_FORMAL / INVALID_FOR_CLAIMS",
+  "formal_phase3_data_seen_before_runner_freeze": false,
+  "phase1_phase2_source_commit": "4b655522225f73aa3aba64e7ae6141081d8270af",
+  "phase3_execution_protocol_commit": "011ebe967fdf0d49f037a80f825951cb6bbfacbd",
+  "blocked_archive_commit": "8e6efbca2c6e2a9813428f3df3754357b68bcb06",
+  "architecture": {
+    "target": "Pinned llama.cpp b10839 C API through ctypes; explicit Vulkan0; persistent KV with suffix removal on rejection.",
+    "draft_cpu": "Frozen OpenVINO INT4 IR, explicit CPU LLMPipeline, full committed-prefix replay per proposal.",
+    "draft_npu": "Frozen OpenVINO INT4 IR, explicit NPU LLMPipeline and qualified cache, full committed-prefix replay per proposal.",
+    "orchestrator": "Greedy k=2 ordered prefix match; correction on first mismatch; target bonus after full acceptance; exact token and per-round accounting.",
+    "replay_timing_policy": "All OpenVINO prefix replay is inside draft_time and future primary end-to-end timing."
+  },
+  "runtime": {
+    "python": "3.11.9 MSC v.1938 AMD64",
+    "compiler": "No new native binary compiled; Python ctypes loads the frozen official llama.dll.",
+    "openvino": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+    "openvino_genai": "2026.3.1.0-3290-56d9685302d",
+    "llama_cpp_commit": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "llama_cpp_build": 10839
+  },
+  "model_hashes": {
+    "target_qwen3_8b_q8_0": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "reference_draft_qwen3_0_6b_q8_0": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+    "openvino_xml": "fc8ad94dbecfc0c45cf3db4f0624344d2bea2cdd6997e0b45ca52d4f7baa1103",
+    "openvino_bin": "2e129cffb1a7239007a3df27e0f3f7bb12f65a40e5c9b1e24a250d952da47837",
+    "npu_cache": "3008579cfaa057bfddc430c70dae3f9f0e184589b72d2df816c2cf157d9ae915"
+  },
+  "source_hashes": {
+    "scripts/platform/358h/phase3_heterogeneous_runner.py": "1d11e42d008f981ee6a91ac7bfeb478f11c060d51e79b9e060fe04ece70153e8",
+    "scripts/platform/358h/phase3_runner_state_tests.py": "628e454cc6362634d75620791de01775f6bcdc7ba6fb721a08d3ff62ae155b96",
+    "reports/358h/358H_RUNNER_SEMANTICS_MAPPING.md": "14a20fcacf6f5aab111300ac6936c3c9378423cc04e077118c90c3dfa8569f0b"
+  },
+  "qualification": {
+    "native_semantics_reference_exact": true,
+    "native_reference_tokens": [39814, 0, 5692, 594, 264, 4285, 13027, 729],
+    "native_reference_draft_rounds": [[0, 5692], [264, 4285]],
+    "custom_reference_draft_rounds": [[0, 5692], [264, 4285]],
+    "cpu_bridge_exact": true,
+    "npu_bridge_exact": true,
+    "cpu_execution_devices": ["CPU"],
+    "npu_execution_devices": ["NPU"],
+    "target_full_offload": "37/37 layers on Vulkan0",
+    "target_kv_layers": "36/36 on Vulkan0",
+    "cpu_npu_same_final_proposals": true,
+    "cpu_npu_same_generated_tokens": true,
+    "cpu_reset_repeat_exact": true,
+    "npu_reset_repeat_exact": true,
+    "forced_state_cases": "PASS: zero accepted, one accepted, two accepted plus bonus, consecutive rejection, reset/repeat",
+    "state_drift": false,
+    "acceptance_accounting": "PASS",
+    "instrumentation": "PASS: end-to-end, draft replay, target verification, derived residual, proposals, accepted tokens, C, token IDs and per-round state positions"
+  },
+  "authoritative_nonformal_artifacts": [
+    "artifacts/358h_phase3_validation/runner-qualification/native-reference.stdout.txt",
+    "artifacts/358h_phase3_validation/runner-qualification/native-reference.stderr.txt",
+    "artifacts/358h_phase3_validation/runner-qualification/gguf-reference-final.json",
+    "artifacts/358h_phase3_validation/runner-qualification/cpu-final-1.json",
+    "artifacts/358h_phase3_validation/runner-qualification/cpu-final-2.json",
+    "artifacts/358h_phase3_validation/runner-qualification/npu-final-1.json",
+    "artifacts/358h_phase3_validation/runner-qualification/npu-final-2.json",
+    "artifacts/358h_phase3_validation/runner-qualification/state-tests.json"
+  ],
+  "formal_phase3_authorized": true,
+  "formal_phase3_started": false
+}
+

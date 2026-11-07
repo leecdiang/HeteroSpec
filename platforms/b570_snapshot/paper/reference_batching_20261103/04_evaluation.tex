@@ -1,0 +1,28 @@
+\section{Evaluation design}
+\label{sec:evaluation}
+\subsection{Systems and comparisons}
+The new Llama experiments use Llama-3.1-8B-Instruct and Llama-3.2-1B-Instruct Q8 target/draft weights, F16 KV, context capacity 1024, non-flash attention, draft length $k=3$ and cap128/native EOG. CUDA runs on an RTX 5070 Ti Laptop GPU. Vulkan runs on Arc B570 with an i5-13400 and driver 32.0.101.9150. Its output-blind capacity admission selects GPU target and CPU draft before scientific forwards~\cite{rtxllamarepair,b570llamarepair}. Each backend preserves its own original UB1 reference. Their input panels and placements are distinct.
+
+We distinguish three comparisons. $R$ defines the response to preserve. $M_L$ is ordinary target-only greedy execution under layout $L$; $C_L$ adds drafting to that same layout. PQ compares local one-query attention with QB's representation. The measurements include $R$, $M_{\PQ}$, $M_{\QB}$, two identical $C_{\PQ}$ controls and $C_{\QB}$. Target-only continuation consumes one pending token per decode; its target capacity of four also affects prefill.
+
+\subsection{Mechanism, confirmation and timing}
+Development starts from retained counterexamples. Same-state consumers, exact-operand replays and factor reversals identify the repairs before the new confirmation panels are selected. Each platform then freezes its candidate and independently selects 24 previously unseen natural inputs, balanced across code/math and short/long strata. The Vulkan panel uses 128--384 or 512--768 native prompt tokens. Input exclusions and exact selection rules are preserved with each platform's panel. The two panels are not one jointly sampled cross-platform cohort.
+
+Each confirmation comprises 48 original-reference requests and 240 candidate requests, including observer controls. Complete endpoints and committed vocabulary vectors are checked against the original scalar execution; speculative transactions and corresponding PQ/QB rows are also compared. The tests preserve rejected rows and failures rather than selecting successful output fragments.
+
+Each platform completes six Williams sessions over all 24 inputs and six labels: 864 measured requests and 864 immediately paired warmups. Fresh contexts are created within each paid request. The service window charges context creation, prefill, generation, draft/verification where enabled, reconciliation, synchronization and teardown. Model loading is outside this window and separately recorded. Heavy tracing is disabled for timing.
+
+\subsection{Estimands}
+For input $i$ and session $s$, define the paired control mean
+\begin{equation}
+\bar t_{is,\PQ}=\tfrac12(t_{is,C_{\PQ_A}}+t_{is,C_{\PQ_B}}).
+\end{equation}
+The speculative layout ratio is the geometric mean of $t_{is,C_{\QB}}/\bar t_{is,\PQ}$, with equal input and session log weights. Draft value is
+\begin{equation}
+D_L=\operatorname{GM}\!\left(t_{is,M_L}/t_{is,C_L}\right);
+\quad D_L>1\ \text{favors drafting}.
+\label{eq:draftvalue}
+\end{equation}
+For PQ, the denominator is the arithmetic control mean. The prospective practical layout screen requires a reduction larger than both 2\% and the largest symmetric input-aggregate A/A imbalance, with every session favoring QB. It is an engineering screen, not a significance test.
+
+The target-only QB/PQ ratio is reconstructed after the experiment from the same complete blocks and weights. It is a descriptive comparison, not a replacement primary endpoint. No new timings are added to change a screen result. Earlier scope, operator and service campaigns retain their original panels, timers and estimators.

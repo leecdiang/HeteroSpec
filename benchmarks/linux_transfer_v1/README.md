@@ -1,5 +1,10 @@
 # Linux source rebuild and independent deployment transfer
 
+The executed Ampere deployment is recorded in
+[the independent Linux results](results_ampere_20261107/README.md), including the
+source rebuild, frozen R, native qualification and complete six-arm panel. The
+authoring-status paragraph below preserves this preparation's original status.
+
 This prospective study follows reviewed RTX PR195 and B570 PR194. It **does not**
 run old Windows executables under Linux. It rebuilds the llama core **and** the
 CPU/base/CUDA numerical backend from pinned source, provides an independent

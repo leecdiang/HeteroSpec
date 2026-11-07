@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\caption{Inputs and local execution contracts. Each program starts from its own prompt prefill. P = draft worker; R = target worker. Shared numerical routines limit implementation independence. UB labels do not specify identical actual forward traces.}
+\label{tab:inputcontracts}
+\centering
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.03in}>{\raggedright\arraybackslash}p{1.43in}>{\raggedright\arraybackslash}p{2.00in}>{\raggedright\arraybackslash}p{1.54in}@{}}
+\toprule
+Program & Generation inputs & Locally computed history / decisions & Separation or missing equivalence \\
+\midrule
+B570 H1 & Prompt; target weights; UB1; no draft or proposals & Own target-only generated prefix, KV and greedy decisions & Draft-free predictor; no unique-cause isolation \\
+RTX target-only UB2 & Prompt; target weights; UB2; no draft or proposals & Own target-only prefix and KV; one generated-ID stream & Capacity-level candidate; equality of actual native forward traces is not established \\
+RTX H2 & Prompt; P's proposals from its own earlier R feedback & R checks own prefix/pending ID; computes sampling, accept/correct/bonus and KV rollback & Separate P/R orchestration; shared llama.cpp/GGML/CUDA \\
+RTX fresh R\_ONLY & Prompt; sealed H2 proposal requests, read sequentially & Fresh R computes its own target decisions and state transitions & Target-only execution of tape; tape generation uses draft; same numerical routines \\
+Native RTX live & Prompt; its own draft proposals; no tape import & Native target/draft history, acceptance and state transitions & Independent live outcome; not an independent numerical implementation \\
+\bottomrule
+\end{tabular}
+\end{table*}

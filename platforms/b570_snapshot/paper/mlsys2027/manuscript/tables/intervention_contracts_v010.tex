@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Distinct controlled studies. UB denotes capacity, not observed graph occupancy. Counts are complete arrays/endpoints over three stable observations per task; cohorts are not pooled into a general success rate. Neither intervention has a performance or energy measurement.}
+\label{tab:interventioncontracts}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.35in}>{\raggedright\arraybackslash}p{2.35in}>{\raggedright\arraybackslash}p{2.55in}@{}}
+\toprule
+Contract & B570 / Vulkan & RTX / CUDA \\
+\midrule
+Cohort & 24 exposed tasks: 4 diagnostic, 20 stable controls & 19 exposed HumanEval; 24 exposure-audited MBPP \\
+Baseline & Target prefill/continuation UB1, draft UB1 & Target prefill/continuation UB2, draft UB2 \\
+Changed stage & Target prefill UB1$\to$UB128 plus protocol first-pending sample/state handoff & Target continuation UB2$\to$UB1 after UB2 prefill; first-pending sample/state handoff \\
+Fixed path & Target continuation UB1, draft UB1, $k=2$ & Target prefill UB2, draft UB2, $k=2$, caller grouping \\
+Prediction inputs & Target-only prompt/assets/configuration; no draft or proposals & Own proposal worker and target worker; shared pinned numerical routines \\
+Native inputs & Own live draft; no sealed prediction inputs & Own live draft; no H tapes/reference IDs \\
+Sham / seal & Same-boundary UB1$\to$UB1 / local seals & Same-boundary UB2$\to$UB2 / remote readback before native \\
+$P_0/N_0$; $P_1/N_1$ & 72/72; 72/72 & 57/57; 57/57 (old), 72/72; 72/72 (new) \\
+$N_0/R\to N_1/R$ & 60/72$\to$72/72 & 51/57$\to$51/57; 66/72$\to$66/72 \\
+\bottomrule
+\end{tabular}
+\end{table*}

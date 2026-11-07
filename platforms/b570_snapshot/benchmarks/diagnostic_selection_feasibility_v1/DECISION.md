@@ -1,0 +1,14 @@
+# NO_GO_NEW_METHOD
+
+Exactly one final recommendation: **NO_GO_NEW_METHOD** for a new intervention-selection method based on the present evidence and primary reference-restoration use case.
+
+- Engineering implementability: charged replay, exhaustive comparison and artifact inspection are feasible on CPU. P2 is implemented and tested; P1 has no executable evidence-supported rule.
+- Evidence sufficiency: enough to reject promotion of the current candidate directions. RTX N1/U2 offset one repair with one new deviation and leave a persistent failure; B570's one qualified workload repair can be verified directly. Exposed checks establish these finite facts, not prospective generalization.
+- Cost advantage: no qualified measurements. P2 adds a full proxy on the accepted B570 workload; RTX rejection could save time only under an unmeasured cheap-proxy regime, with a proxy false-rejection limitation. Run counts do not establish savings.
+- Novelty: P2 is generic paid screening plus verification; P1 would otherwise be a stage/shape or hardware lookup, with missing aligned live state and repair direction. The checked primary literature already motivates replay/state controls and margin verification; this package introduces no distinct selection capability.
+
+This is a scoped research recommendation, not a formal impossibility theorem and not a claim that native N0 or every untested configuration is irrelevant. Missing counterfactuals remain UNKNOWN. Better data could alter a different, specifically defined use case, but uncertainty alone is not a reason to construct a fake classifier or launch a sweep.
+
+Useful results survive: verified per-task repair/regression accounting; ordinary RTX U2's finite N1 reproduction; B570's finite prefill restoration; the distinction between state localization and reference repair; and explicit cost/missingness gates. Suggested paper wording would describe bounded configuration-specific output prediction and mixed restoration outcomes, acknowledge ordinary U2 as a strong reproduction alternative, and omit automated causal-selection/general repair/cost-saving claims. The manuscript is unchanged.
+
+No Phase 2 protocol is prepared or executed. No additional model measurement is recommended now. First require a concrete operational reason to retain speculation rather than ordinary reference fallback and a distinct observable action-selection hypothesis. If such a requirement later exists, a decisive minimal check would measure proxy versus one actual native action and reference/U2 with comparable setup/acquisition/validation boundaries on a separately frozen configuration/workload, including no-change controls and false-rejection accounting. This is conditional decision value, not a new study mandate. More repeats on the exposed cases, a retrospective random split, or a platform-to-stage rule would not resolve the problem.

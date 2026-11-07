@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "scope": "Inspected source and native reports through PR162 e11d2b75 and PR163 10a70566. Enabled policy, observed mechanism trigger, causal repair, and unseen confirmation are distinct evidence levels.",
+  "rows": [
+    {
+      "backend": "CUDA",
+      "family": "Qwen3-8B",
+      "norm_placement": "enabled in PR159/162 regression; no new causal repair attributed here",
+      "reference_q8": "not implemented as the Vulkan activation policy",
+      "prefix_extent": "same implementation enabled in PR162; split-trigger coverage not separately established by inspected regression summary",
+      "QB": "enabled and prior scope/layout qualification",
+      "evidence_class": "combined-policy regression",
+      "requests": 144,
+      "additional_original_R_requests": 24,
+      "new_unseen_confirmation_under_combined_policy": false,
+      "sources": [
+        "rtx_qwen.py",
+        "rtx_regression_build.json",
+        "rtx_qwen8b_audit.json",
+        "rtx_cross_model.json"
+      ]
+    },
+    {
+      "backend": "CUDA",
+      "family": "Qwen3-14B",
+      "norm_placement": "causal repair in PR159: scalar-normalization offload preference stabilizes following RoPE backend; retained in PR162",
+      "reference_q8": "not implemented as the Vulkan activation policy",
+      "prefix_extent": "same implementation enabled in PR162; prefix-specific causality or split-trigger coverage not separately established in inspected regression summary",
+      "QB": "enabled",
+      "evidence_class": "PR159 causal repair and 12-input confirmation; PR162 combined-policy regression",
+      "requests": 192,
+      "additional_original_R_requests": 32,
+      "new_unseen_confirmation_under_combined_policy": false,
+      "prior_unseen_confirmation_inputs": 12,
+      "sources": [
+        "rtx_reference_result.md",
+        "rtx_reference_addendum.md",
+        "rtx_qwen.py",
+        "rtx_regression_build.json",
+        "rtx_qwen14b_audit.json"
+      ]
+    },
+    {
+      "backend": "CUDA",
+      "family": "Llama-8B",
+      "norm_placement": "compiled combined policy; not applicable to absent Q/K head-normalization nodes",
+      "reference_q8": "not applied",
+      "prefix_extent": "causal crossed-extent repair, ablation, 24-input unseen confirmation",
+      "QB": "enabled",
+      "evidence_class": "active causal repair and prospective confirmation",
+      "new_unseen_confirmation_under_combined_policy": true,
+      "unseen_inputs": 24,
+      "sources": [
+        "rtx_results.md",
+        "rtx_prefix.py",
+        "rtx_qualification.json"
+      ]
+    },
+    {
+      "backend": "CUDA",
+      "family": "SmolLM2",
+      "norm_placement": "new repair not evaluated in PR159/162",
+      "reference_q8": "not applied",
+      "prefix_extent": "new repair not evaluated in PR159/162",
+      "QB": "prior PR151 scope/layout experiment",
+      "evidence_class": "historical layout coverage; no combined-policy validation",
+      "new_unseen_confirmation_under_combined_policy": false,
+      "sources": [
+        "rtx_scope_host.md",
+        "rtx_scope_pins.json",
+        "rtx_cross_model.json"
+      ]
+    },
+    {
+      "backend": "Vulkan",
+      "family": "Qwen3-8B",
+      "norm_placement": "CUDA-specific repair not applied",
+      "reference_q8": "OFF in old Qwen adapter",
+      "prefix_extent": "OFF in old Qwen adapter",
+      "QB": "enabled",
+      "evidence_class": "legacy-path compatibility regression",
+      "requests": 12,
+      "new_unseen_confirmation_under_combined_policy": false,
+      "sources": [
+        "b570_scope.cpp",
+        "b570_qwen_adapter.py",
+        "b570_qwen_audit.json",
+        "b570_results.md"
+      ]
+    },
+    {
+      "backend": "Vulkan",
+      "family": "Llama-8B",
+      "norm_placement": "not applicable to absent Q/K head-normalization nodes",
+      "reference_q8": "ON; causal F32-activation-path repair with independent reversal",
+      "prefix_extent": "ON; causal extent/contiguity/dispatch repair with independent reversal",
+      "QB": "enabled",
+      "evidence_class": "two-factor causal repair and prospective confirmation",
+      "new_unseen_confirmation_under_combined_policy": true,
+      "unseen_inputs": 24,
+      "sources": [
+        "b570_worker.cpp",
+        "b570_refq8.py",
+        "b570_prefix.py",
+        "b570_freeze.json",
+        "b570_results.md",
+        "b570_qualification.json"
+      ]
+    }
+  ],
+  "Vulkan_native_layout_domain": {
+    "head_dim": 128,
+    "query_heads": 32,
+    "kv_heads": 8,
+    "query_widths": [
+      2,
+      3,
+      4
+    ],
+    "physical_KV_extents": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "caveat": "This is the admitted existing native layout domain, not evidence of arbitrary head counts, query widths or context lengths.",
+    "source": "b570_source.py"
+  },
+  "important_old_Qwen_counterexamples": {
+    "source": "b570_old_result.md",
+    "fixed_reference_examples": [
+      "MATH500/test/prealgebra/1865.json",
+      "MATH500/test/prealgebra/1804.json"
+    ],
+    "observations": "P1+C1 and P4T+C1 preserve same strict R; P1+PQ/QB fail, P4T+PQ/QB already pass.",
+    "producer_changes_natural_reference_example": "GSM8K/train/1184",
+    "required_transfer_test": "Enable structural policies on both producer and consumer paths against the unchanged original R; do not report an already-passing P4T cell as a repaired P1 counterexample."
+  }
+}

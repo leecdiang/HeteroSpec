@@ -1,0 +1,78 @@
+{
+  "actual_requests": 168,
+  "actual_serialized_roundtrips": 168,
+  "candidate_run_NOT_CREATED": "C:/hs/b570-decision-frontier-v2-cpu/candidate-run-NOT-AUTHORIZED",
+  "combined_v1_plus_candidate_v2_max": {
+    "owned_seconds": 21612.437999999995,
+    "starts": 169
+  },
+  "coverage_matrix": [
+    {
+      "edge": "plan -> registry",
+      "scope": "all 56 cells /168 slots, logical coordinates + actual fixed PR103 bytes",
+      "verified": true
+    },
+    {
+      "edge": "registry -> actual serialized request",
+      "scope": "original Worker.request AND Worker.send, all168; one real lookup each",
+      "verified": true
+    },
+    {
+      "edge": "actual request -> expected import",
+      "scope": "full restore100/prompt/cuts/mode/recipient logits plus payload pins",
+      "verified": true
+    },
+    {
+      "edge": "preverified object -> sender",
+      "scope": "same object, no second registry lookup, mutation/identity/payload guards before first forward",
+      "verified": "CPU_NEGATIVE_CONTROLS_ONLY"
+    },
+    {
+      "edge": "expected import -> native result gate",
+      "scope": "independent source/reeserialization/endpoint and separate counts/heavy gate retained",
+      "verified": "IMPLEMENTED_CPU_TESTED_NATIVE_V2_NOT_RUN"
+    }
+  ],
+  "disk_roundtrip_validation": {
+    "all_source_bytes_checked": true,
+    "logical_cells": 56,
+    "logical_registry_entries": 64,
+    "physical_payloads_may_deduplicate": true,
+    "requests": 168,
+    "selected_identity": "EMPTY=recipient; ALL=other recipient full KV; all states retain recipient initial logits"
+  },
+  "logical_cells": 56,
+  "logical_entries": 64,
+  "native_authorized": false,
+  "next_step": "WAIT_EXPLICIT_AUTHOR_APPROVAL_OF_NEW_BUDGET_AND_NEW_F0",
+  "old_cost": {
+    "owned_seconds": 12.437999999994645,
+    "processes": 1,
+    "requests": 1,
+    "target_decode": 127
+  },
+  "original_request_method_sha256": "fa61c224bfaf6f6d41f4b07dd6bf2db498b4fa88656d352640af4165dfe0a36d",
+  "proposed_new_budget": {
+    "new_output_bytes": 4294967296,
+    "new_starts": 168,
+    "owned_seconds": 21600,
+    "probes": 0,
+    "retries": 0,
+    "stage_starts": [
+      16,
+      32,
+      40,
+      80
+    ],
+    "warmups": 0
+  },
+  "source_to_registry_validation": {
+    "all_source_bytes_checked": true,
+    "logical_cells": 56,
+    "logical_registry_entries": 64,
+    "physical_payloads_may_deduplicate": true,
+    "requests": 168,
+    "selected_identity": "EMPTY=recipient; ALL=other recipient full KV; all states retain recipient initial logits"
+  },
+  "status": "READY_FOR_REVIEW_CPU_ONLY"
+}

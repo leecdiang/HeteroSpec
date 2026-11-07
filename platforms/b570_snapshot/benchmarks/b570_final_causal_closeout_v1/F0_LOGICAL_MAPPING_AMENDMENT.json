@@ -1,0 +1,11 @@
+{
+  "before_P1C_native_forward": true,
+  "reason": "Source-only pre-experiment correction of metadata mapping, no actor/source/numeric/condition/output change. Context reset clears decodes but not observer opcaller/opoffset; second A/C input in same worker may have stale wrapper micrograph_pos.",
+  "preserved_field": "operator100.tensors[].micrograph_pos retained byte-for-byte as non-authoritative",
+  "authoritative_mapping": "ordered actual embedding GET_ROWS src1 inp_tokens I32 readback + width; contiguous native decodepositions + independently crosschecked RoPE src1 inp_pos I32 payload for every physical graph; missing/mismatched raw positions =>UNRESOLVED",
+  "affected_slots": "All previously unstarted P1C slots",
+  "new_native_starts": 0,
+  "result_driven_selection": false,
+  "parser_sha256": "9919405ae6a0320f84e50cdc09255f6b324a5755d1b52d9ea85e2673692da8c5",
+  "utc": "2026-10-13T02:15:19.174Z"
+}

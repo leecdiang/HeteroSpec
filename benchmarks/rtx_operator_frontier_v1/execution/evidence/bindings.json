@@ -1,0 +1,375 @@
+{
+  "gpu": "NVIDIA GeForce RTX 5070 Ti Laptop GPU, GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd, 616.92, 12.0",
+  "frozen_graph": "6c394740ee8bc5ec839190789d91c244d2e9beebd069f0fb51bb9ab9a41083e6",
+  "candidate_graph": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+  "frozen_core": "47bb080dfef4e070800f1e5e86acaf2a2801be4523fe57c459d6a40c9306a795",
+  "candidate_core": "f7a37169313fac7871e161dc4e92b6ac6e1bfd0bb46988a67f0cdea3424a0225",
+  "compiler_builds": {
+    "capture01": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\tpds167\\build01\\source\\src",
+          "-IE:\\tpds167\\build01\\core\\src",
+          "-IE:\\tpds167\\build01\\source\\include",
+          "-IE:\\tpds167\\build01\\source\\ggml\\include",
+          "-IE:\\tpds167\\build01\\source\\common",
+          "-IE:\\tpds167\\build01\\source\\vendor",
+          "-IE:\\tpds167\\build01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\capture01\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\capture01\\driver.obj",
+          "E:\\tpds167\\build01\\core\\src\\libllama.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\tpds167\\build01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\capture01\\driver.exe"
+        ]
+      ],
+      "exe": "83659508255dd154a2bf7f0c4672a1d4bbadaeeb33c6c4f025b4a3e7caefb489",
+      "core": "47bb080dfef4e070800f1e5e86acaf2a2801be4523fe57c459d6a40c9306a795"
+    },
+    "new-driver": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\rtx170\\candidate01\\source\\src",
+          "-IE:\\rtx170\\candidate01\\core\\src",
+          "-IE:\\rtx170\\candidate01\\source\\include",
+          "-IE:\\rtx170\\candidate01\\source\\ggml\\include",
+          "-IE:\\rtx170\\candidate01\\source\\common",
+          "-IE:\\rtx170\\candidate01\\source\\vendor",
+          "-IE:\\rtx170\\candidate01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\new-driver\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\new-driver\\driver.obj",
+          "E:\\rtx170\\candidate01\\core\\src\\libllama.a",
+          "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml.a",
+          "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\rtx170\\candidate01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\new-driver\\driver.exe"
+        ]
+      ],
+      "exe": "be0f9a7eea27dd2cd635de6a7d0ba595828bdb49409417146ff643603ccfbe9d",
+      "core": "f7a37169313fac7871e161dc4e92b6ac6e1bfd0bb46988a67f0cdea3424a0225"
+    },
+    "newprof03": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-DFRONTIER_PROFILE",
+          "-fms-extensions",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_nvcc/include",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_runtime/include",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_cupti/include",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\rtx170\\candidate01\\source\\src",
+          "-IE:\\rtx170\\candidate01\\core\\src",
+          "-IE:\\rtx170\\candidate01\\source\\include",
+          "-IE:\\rtx170\\candidate01\\source\\ggml\\include",
+          "-IE:\\rtx170\\candidate01\\source\\common",
+          "-IE:\\rtx170\\candidate01\\source\\vendor",
+          "-IE:\\rtx170\\candidate01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\newprof03\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\newprof03\\driver.obj",
+          "E:\\rtx170\\candidate01\\core\\src\\libllama.a",
+          "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml.a",
+          "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\rtx170\\candidate01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\newprof03\\driver.exe"
+        ]
+      ],
+      "exe": "d916e146cbee52d099ed51311d47bb1b79d7b7655131331583d2361f5a82a39a",
+      "core": "f7a37169313fac7871e161dc4e92b6ac6e1bfd0bb46988a67f0cdea3424a0225"
+    },
+    "oracle01": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-DTPDS_ORACLE",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\rtx164\\active03\\qwen_config01\\source\\src",
+          "-IE:\\rtx164\\active03\\qwen_config01\\core\\src",
+          "-IE:\\rtx164\\active03\\qwen_config01\\source\\include",
+          "-IE:\\rtx164\\active03\\qwen_config01\\source\\ggml\\include",
+          "-IE:\\rtx164\\active03\\qwen_config01\\source\\common",
+          "-IE:\\rtx164\\active03\\qwen_config01\\source\\vendor",
+          "-IE:\\rtx164\\active03\\qwen_config01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\oracle01\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\oracle01\\driver.obj",
+          "E:\\rtx164\\active03\\qwen_config01\\core\\src\\libllama.a",
+          "E:\\rtx164\\active03\\qwen_config01\\core\\ggml\\src\\ggml.a",
+          "E:\\rtx164\\active03\\qwen_config01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\rtx164\\active03\\qwen_config01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\oracle01\\driver.exe"
+        ]
+      ],
+      "exe": "d29528285151a7c84c66e3d4be4af77ab4c2367e7cad63569d30ae07b1fb42ae",
+      "core": "081006e3de69a08a768c609441d5dac9772d472caaec3af58b32ab4c638efba7"
+    },
+    "prof03": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-DFRONTIER_PROFILE",
+          "-fms-extensions",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_nvcc/include",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_runtime/include",
+          "-IE:/rtx170/profiler/sdk/nvidia/cuda_cupti/include",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\tpds167\\build01\\source\\src",
+          "-IE:\\tpds167\\build01\\core\\src",
+          "-IE:\\tpds167\\build01\\source\\include",
+          "-IE:\\tpds167\\build01\\source\\ggml\\include",
+          "-IE:\\tpds167\\build01\\source\\common",
+          "-IE:\\tpds167\\build01\\source\\vendor",
+          "-IE:\\tpds167\\build01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\prof03\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\prof03\\driver.obj",
+          "E:\\tpds167\\build01\\core\\src\\libllama.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\tpds167\\build01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\prof03\\driver.exe"
+        ]
+      ],
+      "exe": "33c9eadbb5382b38f1f29edf13300d340748f4722bf5b1081bc3f537c9df95e2",
+      "core": "47bb080dfef4e070800f1e5e86acaf2a2801be4523fe57c459d6a40c9306a795"
+    },
+    "replay01": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\tpds167\\build01\\source\\src",
+          "-IE:\\tpds167\\build01\\core\\src",
+          "-IE:\\tpds167\\build01\\source\\include",
+          "-IE:\\tpds167\\build01\\source\\ggml\\include",
+          "-IE:\\tpds167\\build01\\source\\common",
+          "-IE:\\tpds167\\build01\\source\\vendor",
+          "-IE:\\tpds167\\build01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\replay01\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\replay01\\driver.obj",
+          "E:\\tpds167\\build01\\core\\src\\libllama.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\tpds167\\build01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\replay01\\driver.exe"
+        ]
+      ],
+      "exe": "4a0bc62236a7d3968dfcccad6e0a660aae026361a0a341f35f054338726b7c9c",
+      "core": "47bb080dfef4e070800f1e5e86acaf2a2801be4523fe57c459d6a40c9306a795"
+    },
+    "witness02": {
+      "commands": [
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-IE:\\tpds167\\build01",
+          "-std=c++20",
+          "-O3",
+          "-DNDEBUG",
+          "-DGGML_BACKEND_DL",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-DHS_SOURCE_VARIANT=\"original\"",
+          "-IE:\\tpds167\\build01\\source\\src",
+          "-IE:\\tpds167\\build01\\core\\src",
+          "-IE:\\tpds167\\build01\\source\\include",
+          "-IE:\\tpds167\\build01\\source\\ggml\\include",
+          "-IE:\\tpds167\\build01\\source\\common",
+          "-IE:\\tpds167\\build01\\source\\vendor",
+          "-IE:\\tpds167\\build01",
+          "-c",
+          "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\frontier170\\benchmarks\\rtx_operator_frontier_v1\\execution\\driver.cpp",
+          "-o",
+          "E:\\rtx170\\witness02\\driver.obj"
+        ],
+        [
+          "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+          "c++",
+          "-O3",
+          "E:\\rtx170\\witness02\\driver.obj",
+          "E:\\tpds167\\build01\\core\\src\\libllama.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml.a",
+          "E:\\tpds167\\build01\\core\\ggml\\src\\ggml-base.a",
+          "E:\\tpds167\\build01\\core\\vendor\\hash\\libvendor-hash.a",
+          "-lpsapi",
+          "-lws2_32",
+          "-lbcrypt",
+          "-o",
+          "E:\\rtx170\\witness02\\driver.exe"
+        ]
+      ],
+      "exe": "169bff45e8c8243b801de7ddc7f53bae8c952b8143fa593b096c9aca834eb66f",
+      "core": "47bb080dfef4e070800f1e5e86acaf2a2801be4523fe57c459d6a40c9306a795"
+    }
+  },
+  "ggml_cuda": "8df3d5d6363dab0b221f143992e816d1366be4b076b47ce6b1612a148c0bc09c",
+  "cuda_sources": {
+    "ggml-cuda.cu": "0832b007fb5cd0165dd80116ea7833c5acda6dfd44f89f2c248d5d977a3e1fde",
+    "mmvq.cu": "49a8f1d60c06a3c4b7b95fcc6aa0406338a4afc94fdf7fc2d30d94f3670aa525",
+    "mmvq.cuh": "93ef0ea631585f93c35b00087d265e4ca45f82aaca8e7c363d382dc561d85fbd",
+    "mmq.cu": "d4edb8c52ae103aaa01e54b1c16b22ce53cf6ac21bfa9ecd66386b4173af1590",
+    "quantize.cu": "12ab0782e5e9cf273dcc584edc7413729b18609dc20b4bc6c7a53efd5656c48f"
+  },
+  "historical_freeze_sha256": "9885b0d56df86b0d940d741db762f5ba4e84eb26c2e7e07bfc36132cfb3c3d5b",
+  "sdk": {
+    "nvidia_cuda_cupti_cu12-12.9.79-py3-none-win_amd64.whl": "1848a9380067560d5bee10ed240eecc22991713e672c0515f9c3d9396adf93c8",
+    "nvidia_cuda_nvcc_cu12-12.9.86-py3-none-win_amd64.whl": "8ed7f0b17dea662755395be029376db3b94fed5cbb17c2d35cc866c5b1b84099",
+    "nvidia_cuda_runtime_cu12-12.9.79-py3-none-win_amd64.whl": "8e018af8fa02363876860388bd10ccb89eb9ab8fb0aa749aaf58430a9f7c4891"
+  },
+  "service": {
+    "argv": [
+      "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+      "c++",
+      "-O3",
+      "E:\\tpds167\\build01\\service.obj",
+      "E:\\rtx170\\candidate01\\core\\src\\libllama.a",
+      "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml.a",
+      "E:\\rtx170\\candidate01\\core\\ggml\\src\\ggml-base.a",
+      "E:\\rtx170\\candidate01\\core\\vendor\\hash\\libvendor-hash.a",
+      "-lpsapi",
+      "-lws2_32",
+      "-lbcrypt",
+      "-o",
+      "E:\\rtx170\\new-driver\\service.exe"
+    ],
+    "source": "6885c3c6b502ef72d87b87ecfedabb5e4dfc5c003569a76520efaba02397a068",
+    "object": "6e59116b8aab5c7412e1cc775f5a489a6cb1b8051114e88ea957b416757a7b3c",
+    "core": "f7a37169313fac7871e161dc4e92b6ac6e1bfd0bb46988a67f0cdea3424a0225",
+    "result": "99fe2c4a5290697dc690d28cdada2890ccb15f0245475489f9ef5094863d2153"
+  },
+  "failed_builds": {
+    "prof01": {
+      "log_sha256": "74f2fa0a34d8321a9ed9a54fdbeb07d30b8671d04d9d8422bad237214bc96e82",
+      "errors": [
+        "E:/rtx170/profiler/sdk/nvidia/cuda_runtime/include/device_types.h:59:10: fatal error: 'crt/host_defines.h' file not found"
+      ]
+    },
+    "prof02": {
+      "log_sha256": "d52c0be02893f9973f0bea8881c897b874dd5bbfda18a105b41c189e7f2fa254",
+      "errors": [
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:1: error: a type specifier is required for all declarations",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:1: error: use of undeclared identifier 'push'",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:1957:23: error: expected ';' after top level declarator",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:1: error: a type specifier is required for all declarations",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:1: error: use of undeclared identifier 'pop'",
+        "E:/rtx170/profiler/sdk/nvidia/cuda_cupti/include/cupti_activity.h:6790:21: error: expected ';' after top level declarator"
+      ]
+    }
+  }
+}

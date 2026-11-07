@@ -1,0 +1,5073 @@
+{
+  "frozen_rule": "RMS_NORM, norm-weight MUL, Q/K/V MUL_MAT at layer0 of A source operands; 2 cases x5 ops x2 geometries(full vs128/remainder) x2 repeats =40 max replay starts. Same full input values and shader/backend DLLs; no result selection.",
+  "jobs": [
+    {
+      "slot": "OP/GSM8K/test/1248/rms/r0/full",
+      "task": "GSM8K/test/1248",
+      "tag": "rms",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 161,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328.tensor",
+            "bytes": 2637824,
+            "sha256": "194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f.tensor",
+        "bytes": 2637824,
+        "sha256": "e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/rms/r0/split",
+      "task": "GSM8K/test/1248",
+      "tag": "rms",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 161,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328.tensor",
+            "bytes": 2637824,
+            "sha256": "194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f.tensor",
+        "bytes": 2637824,
+        "sha256": "e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/rms/r1/full",
+      "task": "GSM8K/test/1248",
+      "tag": "rms",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 161,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328.tensor",
+            "bytes": 2637824,
+            "sha256": "194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f.tensor",
+        "bytes": 2637824,
+        "sha256": "e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/rms/r1/split",
+      "task": "GSM8K/test/1248",
+      "tag": "rms",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 161,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328.tensor",
+            "bytes": 2637824,
+            "sha256": "194d55fe1459c92354fa731e3108056d8e1579dfa56501e20251adf8e2212328"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f.tensor",
+        "bytes": 2637824,
+        "sha256": "e49e8d79beb25fcc0880a349e3e66017636c7e01a5af3d24137fae8a3bf52a6f"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/scale/r0/full",
+      "task": "GSM8K/test/1248",
+      "tag": "scale",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+        "bytes": 2637824,
+        "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/scale/r0/split",
+      "task": "GSM8K/test/1248",
+      "tag": "scale",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+        "bytes": 2637824,
+        "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/scale/r1/full",
+      "task": "GSM8K/test/1248",
+      "tag": "scale",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+        "bytes": 2637824,
+        "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/scale/r1/split",
+      "task": "GSM8K/test/1248",
+      "tag": "scale",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+        "bytes": 2637824,
+        "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/q/r0/full",
+      "task": "GSM8K/test/1248",
+      "tag": "q",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771.tensor",
+        "bytes": 2637824,
+        "sha256": "025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/q/r0/split",
+      "task": "GSM8K/test/1248",
+      "tag": "q",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771.tensor",
+        "bytes": 2637824,
+        "sha256": "025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/q/r1/full",
+      "task": "GSM8K/test/1248",
+      "tag": "q",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771.tensor",
+        "bytes": 2637824,
+        "sha256": "025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/q/r1/split",
+      "task": "GSM8K/test/1248",
+      "tag": "q",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771.tensor",
+        "bytes": 2637824,
+        "sha256": "025f35c4b7f05775c56df683ddd826427480fb8dfeb186fcd16e32936b123771"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/k/r0/full",
+      "task": "GSM8K/test/1248",
+      "tag": "k",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9.tensor",
+        "bytes": 659456,
+        "sha256": "b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/k/r0/split",
+      "task": "GSM8K/test/1248",
+      "tag": "k",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9.tensor",
+        "bytes": 659456,
+        "sha256": "b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/k/r1/full",
+      "task": "GSM8K/test/1248",
+      "tag": "k",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9.tensor",
+        "bytes": 659456,
+        "sha256": "b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/k/r1/split",
+      "task": "GSM8K/test/1248",
+      "tag": "k",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9.tensor",
+        "bytes": 659456,
+        "sha256": "b8d4f85e5005e62fcb257d374302164aa581821167ef8228dca5bc1cbe6f8ab9"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/v/r0/full",
+      "task": "GSM8K/test/1248",
+      "tag": "v",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3.tensor",
+        "bytes": 659456,
+        "sha256": "b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/v/r0/split",
+      "task": "GSM8K/test/1248",
+      "tag": "v",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3.tensor",
+        "bytes": 659456,
+        "sha256": "b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/v/r1/full",
+      "task": "GSM8K/test/1248",
+      "tag": "v",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        161
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3.tensor",
+        "bytes": 659456,
+        "sha256": "b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/1248/v/r1/split",
+      "task": "GSM8K/test/1248",
+      "tag": "v",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 161,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            161,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2637824,
+            2637824
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969.tensor",
+            "bytes": 2637824,
+            "sha256": "228ce7661df620092cfe826083629147cf62b5972b10bcd6c836a0ea8460b969"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        33
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3.tensor",
+        "bytes": 659456,
+        "sha256": "b94d9db3065f34162409ac76ab3014810a1f8e665f7f7c92da1f74b2359589c3"
+      },
+      "native_source_record": "raw/p1c_r1_A/29f7265ef6b1c8e522bc8bb3010bd19e.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/rms/r0/full",
+      "task": "GSM8K/test/831",
+      "tag": "rms",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 133,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc.tensor",
+            "bytes": 2179072,
+            "sha256": "75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c.tensor",
+        "bytes": 2179072,
+        "sha256": "2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/rms/r0/split",
+      "task": "GSM8K/test/831",
+      "tag": "rms",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 133,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc.tensor",
+            "bytes": 2179072,
+            "sha256": "75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c.tensor",
+        "bytes": 2179072,
+        "sha256": "2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/rms/r1/full",
+      "task": "GSM8K/test/831",
+      "tag": "rms",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 133,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc.tensor",
+            "bytes": 2179072,
+            "sha256": "75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c.tensor",
+        "bytes": 2179072,
+        "sha256": "2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/rms/r1/split",
+      "task": "GSM8K/test/831",
+      "tag": "rms",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 133,
+      "op": "RMS_NORM",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "embd",
+          "op": "GET_ROWS",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580590496,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc.tensor",
+            "bytes": 2179072,
+            "sha256": "75c789e863134a6697e0ba690d34f3f2788181fafe5e7217bd294806db20b8bc"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        925353388,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c.tensor",
+        "bytes": 2179072,
+        "sha256": "2986a1db54c7da689207fd7e1eb045b5d52d00c8ab10d59811e753caae0fbe3c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/scale/r0/full",
+      "task": "GSM8K/test/831",
+      "tag": "scale",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+        "bytes": 2179072,
+        "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/scale/r0/split",
+      "task": "GSM8K/test/831",
+      "tag": "scale",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+        "bytes": 2179072,
+        "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/scale/r1/full",
+      "task": "GSM8K/test/831",
+      "tag": "scale",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+        "bytes": 2179072,
+        "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/scale/r1/split",
+      "task": "GSM8K/test/831",
+      "tag": "scale",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "norm-0",
+          "op": "RMS_NORM",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580592704,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f4c23eca5894bee81b5976917856cafff55e981d3fd38a5623455f4e8c59dc4e",
+          "op_params": [
+            925353388,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        },
+        {
+          "kind": "src1",
+          "name": "blk.0.attn_norm.weight",
+          "op": "NONE",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            16384,
+            16384
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580241904,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2.tensor",
+            "bytes": 16384,
+            "sha256": "8b0e9e0f1409901edb6d62b0cb9ffa9dcbb1ab9bff800160bcef0f10533433d2"
+          },
+          "token_axis": -1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+        "bytes": 2179072,
+        "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/q/r0/full",
+      "task": "GSM8K/test/831",
+      "tag": "q",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab.tensor",
+        "bytes": 2179072,
+        "sha256": "b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/q/r0/split",
+      "task": "GSM8K/test/831",
+      "tag": "q",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab.tensor",
+        "bytes": 2179072,
+        "sha256": "b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/q/r1/full",
+      "task": "GSM8K/test/831",
+      "tag": "q",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab.tensor",
+        "bytes": 2179072,
+        "sha256": "b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/q/r1/split",
+      "task": "GSM8K/test/831",
+      "tag": "q",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_q.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            4096,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            13762560,
+            13762560
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242272,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648.tensor",
+            "bytes": 13762560,
+            "sha256": "83d9668ba17184bf19881c0319a87159d45ab92b1efb8b805e6edc32157ee648"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab.tensor",
+        "bytes": 2179072,
+        "sha256": "b7794f0d9723a814fcfa938a549de8c194b32a614b63e7798992c8d22c0b7cab"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/k/r0/full",
+      "task": "GSM8K/test/831",
+      "tag": "k",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a.tensor",
+        "bytes": 544768,
+        "sha256": "b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/k/r0/split",
+      "task": "GSM8K/test/831",
+      "tag": "k",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a.tensor",
+        "bytes": 544768,
+        "sha256": "b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/k/r1/full",
+      "task": "GSM8K/test/831",
+      "tag": "k",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a.tensor",
+        "bytes": 544768,
+        "sha256": "b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/k/r1/split",
+      "task": "GSM8K/test/831",
+      "tag": "k",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_k.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580242640,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2.tensor",
+            "bytes": 3440640,
+            "sha256": "57985e2ca849476c0f72338174ecaf87a19150404a3967944af9f15ff4f4c5b2"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a.tensor",
+        "bytes": 544768,
+        "sha256": "b0ac91a4ee94f886725bc80b28976a9995ed82c5f241dc848fe50fa5ceaf3b1a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/v/r0/full",
+      "task": "GSM8K/test/831",
+      "tag": "v",
+      "repeat": 0,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a.tensor",
+        "bytes": 544768,
+        "sha256": "3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/v/r0/split",
+      "task": "GSM8K/test/831",
+      "tag": "v",
+      "repeat": 0,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a.tensor",
+        "bytes": 544768,
+        "sha256": "3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/v/r1/full",
+      "task": "GSM8K/test/831",
+      "tag": "v",
+      "repeat": 1,
+      "geometry": "full",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        133
+      ],
+      "native_reference": {
+        "path": "operator_payloads/3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a.tensor",
+        "bytes": 544768,
+        "sha256": "3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    },
+    {
+      "slot": "OP/GSM8K/test/831/v/r1/split",
+      "task": "GSM8K/test/831",
+      "tag": "v",
+      "repeat": 1,
+      "geometry": "split",
+      "N": 133,
+      "op": "MUL_MAT",
+      "operands": [
+        {
+          "kind": "src0",
+          "name": "blk.0.attn_v.weight",
+          "op": "NONE",
+          "dtype": "q6_K",
+          "type": 14,
+          "ne": [
+            4096,
+            1024,
+            1,
+            1
+          ],
+          "nb": [
+            210,
+            3360,
+            3440640,
+            3440640
+          ],
+          "buffer_identity": 1945552935824,
+          "tensor_identity": 1945580243008,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8.tensor",
+            "bytes": 3440640,
+            "sha256": "405e6fc94138ffc7c769362a69db21cc0b732424f3d72ca3b6864e70c4a903e8"
+          },
+          "token_axis": -1
+        },
+        {
+          "kind": "src1",
+          "name": "attn_norm-0",
+          "op": "MUL",
+          "dtype": "f32",
+          "type": 0,
+          "ne": [
+            4096,
+            133,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            16384,
+            2179072,
+            2179072
+          ],
+          "buffer_identity": 1945505575184,
+          "tensor_identity": 1945580593072,
+          "buffer_type": "Vulkan0",
+          "device": "Vulkan0",
+          "view_offset": 0,
+          "op_params_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "op_params": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "payload": {
+            "path": "C:\\Users\\DIANG\\Documents\\ChatGPT\\HeteroSpec\\work\\b570-final-causal-closeout-v1\\operator_payloads\\e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c.tensor",
+            "bytes": 2179072,
+            "sha256": "e7863263702539994628c568a875a5ad75fd9c28b6be3a52b40ef3fdb9c4131c"
+          },
+          "token_axis": 1
+        }
+      ],
+      "op_params": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "schedule": [
+        128,
+        5
+      ],
+      "native_reference": {
+        "path": "operator_payloads/3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a.tensor",
+        "bytes": 544768,
+        "sha256": "3d0c7f1f6a214afa71c3720f5e6cc9bca89fb5cc0ea365cb1fca2cc7ddf9662a"
+      },
+      "native_source_record": "raw/p1c_r1_A/dd58e4be8a24bad0c83dd20955864b81.RESULT.json"
+    }
+  ]
+}

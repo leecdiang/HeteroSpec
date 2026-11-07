@@ -1,0 +1,97 @@
+\section{Repair scope and query-layout cost}
+\label{sec:results}
+\subsection{Three-date scope--draft transfer}
+\label{sec:scopefinal}
+For repair layout $L$, let $M_L$ denote target-only execution and $C_L$ the same layout with drafting. The draft value $D_L=T(M_L)/T(C_L)$ exceeds one when drafting reduces complete-request time. The scope interaction is $\Gamma=D_{\QB}/D_{\GS}$; it measures how the draft increment changes with repair scope. PQ provides the local-repair comparator needed to distinguish that change from QB's representation benefit.
+
+The registered study uses all twelve Qwen3 and all twelve SmolLM2 inputs from the completed transfer panel~\cite{rtxscopetransfer}. These inputs were previously unused when selected for that earlier study and are exposed here. Within each family, the same executable, core, numerical libraries and model bytes supply $R$ and the six GS/PQ/QB by draft-on/off arms. Contexts are resident, kept separate by scope and cleared between requests; target UB4, draft UB1, $k=3$, F16 KV, non-flash attention and cap128/native EOG remain fixed. GS executes physical target width one while local repair retains surrounding multirow computation.
+
+All 196 qualification requests pass before their family's timing. Twelve independently loaded family-session processes collect 1,008 measurements and 84 warmups over October 30, October 31 and November 1. Each input forms a contiguous seven-arm block with a frozen rotation; every date contains two sessions per family. The service timer charges reset/setup, both prefills, generation, transaction/state work, synchronization and result assembly. Model loading, context provisioning and post-request comparison/file writes are separate. This is a complete resident-service window, distinct from the original HTTP timer.
+
+Figure~\ref{fig:scopefinal} shows every date mean. Qwen3 has $D_{\GS}=0.835$, $D_{\PQ}=1.122$ and $D_{\QB}=1.188$. Its draft decision crosses parity under both local repairs on all three dates. SmolLM2 has corresponding ratios 0.684, 0.805 and 0.805: target-only remains cheaper in every scope on every date. The QB/GS interactions are 1.424 and 1.176. A positive scope interaction can therefore coexist with unprofitable drafting.
+
+\begin{figure*}[t]\centering
+\input{figures/scope_transfer}
+\caption{Repair scope and draft value on the fixed two-family panel. A/B: same-layout target-only/speculative ratios, with a shared scale; values above one favor drafting. C: the complete-request interaction $\Gamma=D_{\QB}/D_{\GS}$, shown separately from profitability. Each open symbol is one of three actual date means; filled diamonds pool the dates with equal log weights. Segments span the observed date values, not confidence intervals; vertical offsets separate marks. Qwen3 crosses parity under local repair on all three dates. SmolLM2 has positive interaction but remains below draft parity.}
+\label{fig:scopefinal}
+\end{figure*}
+
+Input log contrasts receive equal weight within session, sessions within date and dates overall. Every date and session mean has a positive interaction. Individual input/session reversals remain: 5/72 for Qwen3 and 27/72 for SmolLM2. The audit finds matched observed logical work across Qwen3's scopes. SmolLM2's work differs, so its estimate identifies a joint request-path effect rather than an execution-cost-only effect. No kernel-time decomposition follows from either ratio.
+
+The three date interaction ranges are 1.361--1.459 for Qwen3 and 1.126--1.205 for SmolLM2. They provide evidence of direction stability over these dates on one host. The registered $t_2$ summaries are retained as weak, assumption-dependent sensitivity checks in \sref{supp:finaltransfer}, alongside all session points, secondary ratios and the execution amendment. The request count is not an independent date sample size.
+
+\paragraph{Separate local repair from representation cost}
+On the same panel and log weights, the scope interaction factors exactly as
+\begin{equation}
+\Gamma=\frac{D_{\PQ}}{D_{\GS}}\,\eta,
+\qquad \eta=\frac{D_{\QB}}{D_{\PQ}}
+=\frac{S_{M_{\QB}/M_{\PQ}}}{S_{C_{\QB}/C_{\PQ}}}.
+\label{eq:scopedecomposition}
+\end{equation}
+The two factors are 1.344110 and 1.059343 for Qwen3, and 1.176962 and 0.999494 for SmolLM2. On SmolLM2, the pooled target-only and speculative QB costs are 6.579\% and 6.532\% lower than PQ. Their similar reductions leave draft value nearly unchanged. This retrospective factorization describes the registered request-cost estimates, not kernel-time shares. Full values, date points and baseline normalization appear in \sref{supp:targetedcontrasts}.
+
+\subsection{Original three-family comparison}
+\label{sec:economics}
+The original seven-arm study qualifies 96/96 endpoints per arm and family on a separate twelve-input panel. Its complete contrasts and Figure~\ref{fig:cost} remain in \sref{supp:cost}. Speculative GS/QB ratios of 2.144, 1.463 and 2.176 contrast global with local repair; PQ/QB ratios of 1.044, 1.068 and 1.022 measure QB's smaller representation increment. The original HTTP timer and two-session estimates remain separate from the three-date resident-service study.
+
+A retrospective audit of all 2,016 measured responses reconstructs 288 matched seven-arm groups. All 1,728 within-path pairings agree in recorded logical-work counters and all 1,728 non-reference endpoints match paired $R$. Physical batching differs as intended. The groups match records across 42 arm-specific workers, not adjacent randomized execution blocks; their work agreement does not remove temporal drift (\sref{supp:sevenarmwork}).
+
+The common-panel draft contrasts obey
+\begin{equation}
+D_L=\frac{S_{M_L/M_{\QB}}}{S_{C_L/C_{\QB}}}\,D_{\QB},\qquad D_{\QB}=S_{M_{\QB}/C_{\QB}},
+\label{eq:draft}
+\end{equation}
+and the scope interaction is
+\begin{equation}
+\Gamma_{\QB\leftarrow\GS}=\frac{D_{\QB}}{D_{\GS}}
+=\frac{S_{C_{\GS}/C_{\QB}}}{S_{M_{\GS}/M_{\QB}}}.
+\label{eq:repairinteraction}
+\end{equation}
+Both PQ and QB make drafting profitable for Qwen3 and Llama on this original panel; SmolLM2 remains faster without drafting. The corresponding retrospective scope interactions are 1.612, 1.071 and 1.542. They describe common-panel request costs, not operator-time shares.
+
+Target-only QB also preserves the reference at lower cost: $R/M_{\QB}=1.334051,1.369890,1.426161$, with every task favoring QB. Target-only QB is useful when drafting adds cost. These requests include prefill; target-only continuation uses the common one-query path. The larger-$k$ counterexample and all task regressions remain in Supplements~\ref{supp:implementation} and \ref{supp:cost}.
+
+\subsection{Local draft decisions across E2 sessions}
+\label{sec:e2draft}
+A retrospective analysis pairs the 864 local-arm E2 measurements into 216 task/session quartets. Qwen3 and Llama favor drafting, while SmolLM2 favors target-only execution under both PQ and QB, in each of six sessions. Under QB, the pooled draft values are 1.084, 0.597 and 1.105. These estimates use the original exposed panel and separately scheduled local-arm blocks. E2 has no GS arm and therefore does not independently repeat the scope interaction. Full exploratory $t_5$ intervals and all original weights remain in \sref{supp:e2draft}.
+
+\subsection{QB's independent implementation benefit}
+\label{sec:e2}
+The registered E2 comparison isolates representation cost within local repair. It completes 1,620 requests in 324 fresh workers, including 324 warmups and 432 serial-reference measurements. There are no request failures, output mismatches, workload errors or heavy-observer flags. The six-session speculative ratios $C_{\PQ}/C_{\QB}$ are 1.031614, 1.065803 and 1.029114, corresponding to 3.06\%, 6.17\% and 2.83\% lower QB request latency. Figure~\ref{fig:e2} shows both paths and their session-level uncertainty.
+
+Table~\ref{tab:e2absolute} gives absolute costs from the source-verified requests, using the same task/session log weights.
+\begin{table}[t]\centering\small
+\caption{Absolute E2 request costs (ms), with equal task and session weights in the geometric mean. Registered warmups are excluded; the paid interval includes submission, full-response parsing and endpoint validation.}\label{tab:e2absolute}
+\input{tables/e2_absolute_cost}
+\end{table}
+
+\begin{figure*}[t]\centering
+\input{figures/sessions}
+\caption{Independent-block E2 replication. Small marks are the six session estimates; large markers and horizontal bars are the equal-weight estimate and its registered 95\% six-session percentile interval. Dashed lines mark parity and the 1.02 practical threshold. $M$ is target-only and $C$ speculative. The fixed exposed panel and single host limit statistical scope.}
+\label{fig:e2}
+\end{figure*}
+
+All 36 family/path/session contrasts favor QB; 9 of the 72 family/path/task aggregates regress. The primary pointwise speculative intervals are [1.025393,1.037926], [1.063387,1.068399] and [1.020126,1.039149], each above the predeclared 1.02 threshold under the registered percentile method. Target-only effects are smaller: Llama's estimate is 1.015593, below the threshold, while Qwen3's interval overlaps it.
+
+The secondary $t_5$ intervals remain above 1.02 for speculative Qwen3 and SmolLM2. Llama's interval is [1.015387,1.043026], above parity but crossing 1.02; its six leave-one-session-out estimates range from 1.024960 to 1.032333. QB's advantage is stable in these checks. Whether the Llama effect exceeds the practical threshold depends on the interval method. \sref{supp:cuda} reports both analyses and all task regressions.
+
+E2 establishes endpoint and recorded-counter correspondence across all 216 speculative PQ/QB task/session pairs: acceptance, rollback and logical-workload counters agree. This supports an implementation-cost comparison under matched recorded work. The original two-session estimates and their target-only direction reversals are reported in \sref{supp:cost}; E2's recorded-counter scope is detailed in \sref{supp:cuda}.
+
+The recovered E2 records do not report actual CUDA Graph capture, replay or fallback counts. The request-cost estimate measures the implementation effect without isolating those mechanisms. The controlled QB/QH replay study in Section~\ref{sec:mappingcosts} has its own execution evidence and comparator.
+
+
+\subsection{Same-input correspondence across layers and phases}
+\label{sec:numeric}
+The initial 24-context replay established PQ/QB correspondence at sampled layer-0 attention boundaries. E1 expands the test to three layer positions, prefill and continuation, and $q=1,2,3,4$ in each family. All 72 contexts pass observation, native-MQ own-path and repeatability checks. PQ and QB are bitwise equal at QK, softmax and AV in every context, with zero maximum error and ULP distance (Figure~\ref{fig:numeric}).
+
+\begin{figure}[t]\centering
+\resizebox{\columnwidth}{!}{\input{figures/numeric}}
+\caption{Completed 72-context CUDA replay. The 18 agreements between MQ and either repair are exactly the $q=1$ common-path controls. The 54 multi-query cases first differ at QK. All PQ/QB stage outputs agree bitwise.}
+\label{fig:numeric}
+\end{figure}
+
+The sampled target layers are $0/18/35$ for Qwen3, $0/12/23$ for SmolLM2 and $0/16/31$ for Llama. Qwen3 and Llama use head dimension 128 with 32 query heads and 8 KV heads; SmolLM2 uses dimension 64 with 32/32 heads. Thus the observed correspondence spans both ordinary and grouped-query attention and more than one head dimension.
+
+MQ agrees with either repaired path only in the 18 single-query controls. Across the other 54 contexts, its first difference is at QK; maximum finite absolute differences are 0.078583 at QK, 0.000917 at softmax and 0.010433 at AV. These are operator differences on identical operands, not model-logit bounds.
+
+All snapshots have tensor key extent 256, including masked padding. The maximum number of visible keys is 109, 130 and 127 by family; prefill captures include early query positions with only one to four visible keys. The experiment covers layers, phases and query widths at these short visible contexts, using one exposed prompt per family. Complete coordinates and operator comparisons appear in \sref{supp:cuda}.

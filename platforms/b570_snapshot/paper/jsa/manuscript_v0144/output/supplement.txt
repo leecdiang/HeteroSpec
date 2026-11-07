@@ -1,0 +1,809 @@
+    Supplementary Material: Reference-Preserving Speculative Decoding on Consumer
+                                       Systems
+
+                                             Author information pending confirmation
+
+
+
+
+Abstract
+The supplemental evidence for manuscript v0.14.4 covers output contracts, implementation boundaries, campaign-level results,
+negative findings, historical measurements and missing observations. Task panels and timer conventions remain distinct. The author
+source package reproduces figures and arithmetic from committed exports without model inference. Verification covers inspected
+sources and exports, with inherited original-host raw audits identified separately. Sections S1–S7 are numbered independently of the
+main manuscript.
+
+
+Contents                                                                  S6.3 Fresh direct-ID gates and independent latency arm 9
+                                                                          S6.4 V3 stop, V4 recovery, and protocol amendment 10
+S1 Study Units, Contracts, and Frozen Sources                 1           S6.5 RTX efficiency screening . . . . . . . . . . . . 10
+                                                                          S6.6 M4 formal control and oracle opportunity . . . 10
+S2 Diagnosis: Predictions, Interventions, and Natural
+                                                                          S6.7 358H state interface, threshold gate, and condi-
+   Crosses                                                    2
+                                                                               tional budgets . . . . . . . . . . . . . . . . . . 11
+   S2.1 Prediction closes a different question from refer-
+        ence recovery . . . . . . . . . . . . . . . . . .     2
+                                                                      S7 CPU Reconstruction, Provenance, and Access Limits 11
+   S2.2 Controlled prefill and continuation interventions     3
+   S2.3 Same-state block and continuation comparison
+        on B570 . . . . . . . . . . . . . . . . . . . . .     3       S1. Study Units, Contracts, and Frozen Sources
+   S2.4 Natural donor-state × current-recipe crosses . .      3
+   S2.5 Bridge and offline selection limits . . . . . . .     3          The principal campaigns use different study units (Table S1).
+                                                                      The author source package’s complete experiment-destination
+S3 Implementation and Phase Qualification                     3
+                                                                      ledger assigns every inherited group to the main text, this supple-
+   S3.1 RTX query layout and dispatch . . . . . . . . .       3
+                                                                      ment, or a preserved historical record, with exact repository en-
+   S3.2 Factorial and scope-cost results . . . . . . . . .    4
+                                                                      tries. Discovery, engineering qualification, formal output checks,
+   S3.3 Implementation variants and paid-boundary
+                                                                      auxiliary crosses and capture-off costs are different evidence
+        changes . . . . . . . . . . . . . . . . . . . . .     4
+                                                                      classes. Their counts are not added to create an independent
+S4 RTX Expansion, Statistics, Width, and Reset                4       sample size.
+   S4.1 Complete expansion and two timer boundaries .         4          For diagnosis, Section S2 contains predictions, controlled
+   S4.2 Geometry failures and their natural-state check       5       interventions and donor-state crosses. RTX graph and phase
+   S4.3 Fixed UB4 and width costs . . . . . . . . . . .       5       qualification are in Section S3; the expanded R/M/C compar-
+   S4.4 Resident reset as a finite serial check . . . . . .   5       isons, per-task medians, width failures and reset checks are in
+                                                                      Section S4. B570’s missing payload, endpoint/raw distinctions
+S5 B570 Repair, Missingness, Suffixes, and Paid Costs         6       and paid suffix work are in Section S5. Section S6 retains histor-
+   S5.1 Earlier finite closeout: a positive local case and            ical estimators, stops and energy domains, with M4 control in
+        failures . . . . . . . . . . . . . . . . . . . . .    6       Section S6.6 and 358H state/cost budgets in Section S6.7. Sec-
+   S5.2 Same-context phase binding . . . . . . . . . .        6       tion S7 distinguishes this revision’s CPU checks from inherited
+   S5.3 Qualification counts and unresolved raw com-                  raw audits.
+        parisons . . . . . . . . . . . . . . . . . . . . .    7          The late RTX target/draft pair is Qwen3-8B/0.6B Q8_0, with
+   S5.4 All measured timers and work . . . . . . . . .        7       full CUDA offload, flash attention off, one slot, context 4096,
+                                                                      caller batch capacity 2048, 24 threads and greedy seed 123.
+S6 Historical Costs, Stops, Control, and Target-Work                  The ordinary reference is mask 0/UB1. Matched target-only
+   Budgets                                                    8       and the anchor use mask 3/UB4, with the anchor’s k = 3. The
+   S6.1 Early four-system inventory and unchanged es-                 expansion starts from a frozen private server and CUDA libraries.
+        timators . . . . . . . . . . . . . . . . . . . . .    8       Four separate resident processes per round each receive one
+   S6.2 Target-forward proxies and energy boundaries .        9       excluded warmup and 24 formal requests. Condition order and
+                                                                  1
+                       Table S1: Campaign units and distinct roles. Panels overlap unless described as project-unused at their own freeze.
+Campaign                                           Units                                        Role
+RTX continuation intervention                      43 tasks, three repeats, two recipes         Predictions/native outputs; repairs and regressions
+RTX natural crosses                                Four probes; 24 donors, 48 forks, 24         Selected aligned boundaries; auxiliary costs excluded
+                                                   shams
+B570 block/continuation study                      24 tasks, 72 runs, 195 events                Immediate and downstream effects
+RTX phase factorial                                16 masks, four probes, two repeats           128 qualification requests
+RTX scope cost                                     19 exposed tasks; three conditions,          342 formal requests, 18 excluded warmups
+                                                   six repeats
+RTX input expansion                                24 project-unused MBPP tasks; four           384 formal requests, 16 excluded warmups
+                                                   conditions, four repeats
+RTX fixed-UB width                                 28 exposed tasks; three widths, two          168 qualification requests; separate 448-request cost arm
+                                                   repeats
+B570 natural crosses                               Three tasks, six repeated contexts, 12       State × whole recipe; 24 auxiliary cells
+                                                   shams
+B570 expanded cost                                 15 project-unused tasks, four condi-         119/120 payloads; 15 or 14 complete pairs
+                                                   tions, two rounds
+M4 formal runtime                                  60 tasks, three conditions, three re-        540 formal requests; direct-ID gate
+                                                   peats
+358H closed Phase 3                                30 tasks, three repeats per draft de-        90 direct-ID pairs per path
+                                                   vice
+
+
+task order rotate. Zero actual cache reuse is recorded; the final-                 S2. Diagnosis: Predictions, Interventions, and Natural
+slot tokens_cached field is not a cache-hit measure.                                   Crosses
+
+   In the late cost tables, R denotes the executed ordinary ref-
+erence, M the matched repaired target-only path, and C the                         S2.1. Prediction closes a different question from reference re-
+speculative candidate. RTX C3 and C15 use masks 3 and 15;                                covery
+B570 old N1 is a separate earlier frontend. A baseline/candidate
+ratio above one favors the candidate. These labels do not pool                        The B570 target-partition predictor is frozen after 36/36 dis-
+unlike campaigns or timers.                                                        covery comparisons. On 24 reserved HumanEval tasks, three
+                                                                                   repeats give 72/72 predictor/native complete endpoint agree-
+   The 24 expansion inputs are unused in the accessible exper-
+                                                                                   ments, while reference/native agreement is only 60/72. All four
+iment inventory at selection. An unused HumanEval pool is
+                                                                                   reference-divergent classifications and first-divergence indices
+unavailable at that stage; the amendment selecting MBPP is
+                                                                                   reproduce. They are HumanEval/134 at index 88 (914 to 1946),
+recorded before new outputs. Of 224 eligible MBPP inputs, 24
+                                                                                   /42 at 73 (432 to 1817), /145 at 103 (1184 to 686), and /138 at 93
+are frozen. This exposure audit establishes neither absence of
+                                                                                   (14374 to 9064). H1 passes its gate; H2 is not built in that B570
+training contamination nor a random population sample. The
+                                                                                   study. Prediction matches native behavior while the reference
+width and post-hoc ordinary analyses subsequently reuse those
+                                                                                   disagreement remains.
+exposed inputs.
+                                                                                      The RTX H1 transfer uses 12 discovery tasks with three re-
+   RTX qualification compares every generated response ID and                      peats and reaches 24/36 against a 36/36 gate. It stops before
+its EOG/cap128 termination metadata. B570 comparison selects                       any reserved inference; H2 is not implemented in that study. A
+the first inclusive EOG or cap128 endpoint from actual com-                        later independently frozen proposal-replay study evaluates 24 re-
+mitted IDs; raw post-endpoint suffixes are retained. Historical                    served tasks. H2/native and a fresh draft-free R-only replay each
+parsed-text agreement re-tokenizes text and is weaker. M4 for-                     reach 72/72; ordinary reference/native reaches 60/72. The replay
+mal runtime and 358H Phase 3 use their own direct generated-ID                     explains complete native output under its numerical routines,
+contracts. A later strict-ID pass does not retrospectively qualify                 but does not establish a cheaper qualified online correction. Its
+historical timings. Token equality is neither functional code                      separately orchestrated workers share pinned routines with the
+correctness nor bitwise logit/KV equality.                                         native implementation; they are not an independent numerical
+                                                                                   implementation.
+   The source package includes authenticated copies of selected                       RTX V4 has 19 HumanEval tasks, with P/R and R-only/native
+implementation patches and original reports alongside compact                      each 57/57. Ordinary target-only UB2/native and UB1 refer-
+exports. Full private raw archives and external model/runtime                      ence/native each reach 51/57. The same task panel is used for
+assets are referenced rather than included. Local verification                     fresh timing, not a newly untouched cohort. Section S6 records
+operates on those exports without inference; version and inheri-                   the host-policy amendment and preceding V3 termination sepa-
+tance receipts remain in the author package (Section S7).                          rately.
+                                                                               2
+S2.2. Controlled prefill and continuation interventions                 At this cut, the observed decision follows current recipe. Hu-
+                                                                        manEval/25 shares four committed IDs and its first-decision
+    B570 changes target prefill UB1 to UB128, while target con-
+                                                                        matrix is [[1406, 1406], [1406, 271]]. The bottom-right three-
+tinuation and draft stay UB1. The protocol also samples and
+                                                                        ID array is [271, 750, 8168], whereas the other cells begin with
+accepts the first pending token and transfers KV, logits, logical
+                                                                        1406. This supports an interaction at the selected boundary. Hu-
+positions and a post-accept sampler clone. Both baseline and in-
+                                                                        manEval/18 and /31 are local nulls under the measured crosses.
+tervention predictions match native execution 72/72. Reference
+                                                                        Logical prompt KV matches in 12/12 donor comparisons, while
+agreement improves from 60/72 to 72/72: four exposed failures
+                                                                        generated-region KV differs in 70/72 layer-side comparisons;
+repair and 20 stable controls remain equal. This intervention
+                                                                        the first layer matches. Tensor inequality alone does not identify
+does not isolate a pure prefill operator or KV-only cause.
+                                                                        a unique kernel. The 1,278 recorded auxiliary forwards are not
+    RTX changes target continuation UB2 to UB1, leaving pre-
+                                                                        latency measurements.
+fill, draft UB2, k = 2 and caller grouping fixed. Across 19
+                                                                           B570’s later natural crosses use six repeated con-
+HumanEval and 24 statically selected MBPP tasks, both predic-
+                                                                        texts over three tasks, with 12 own-path shams.               Hu-
+tors match their native paths in all 129 comparisons per recipe.
+                                                                        manEval/145 gives [[71465, 279], [279, 279]] and /42 gives
+Reference agreement stays 117/129. HumanEval/15 repairs, /25
+                                                                        [[432, 1817], [1817, 1817]]: both support a local interaction be-
+regresses and /18 remains divergent, giving 51/57 before and
+                                                                        tween state and recipe. MBPP/72 gives [[320, 320], [308, 308]],
+after. MBPP/304 and /463 remain divergent, giving 66/72 be-
+                                                                        supporting a state effect; its current columns are deliberately
+fore and after. MBPP/304’s 47-ID output changes at zero-based
+                                                                        identical (UB1, reservation 3). The two HumanEval recipes
+index 33 from 488 to 481. The equal aggregate success counts
+                                                                        change both microbatch and output reservation, so this is a
+conceal task-level repairs and regressions.
+                                                                        whole-recipe cross rather than an isolated UB factor. Recorded
+    Unchanged-capacity shams test handoff at the same boundary.
+                                                                        target score-array difference counts are 3,987,448, 5,218,133
+Historical global-UB1 also changed prefill/draft and effectively
+                                                                        and 6,072,820 across the three cases. Opaque sampler/RNG
+used 12 native threads; this controlled intervention explicitly
+                                                                        bytes are not independently available; the greedy contract, clone
+uses 24. Its G0 qualification includes 75 newly checked native
+                                                                        history and shams bound the claim. The later crosses do not
+arrays at 24 threads and 45 unchanged worker arrays reused. It is
+                                                                        retroactively become experiments in the earlier B570 closeout.
+not 120 new native 24-thread measurements. These differences
+prevent an argument that this intervention alone establishes uni-
+                                                                        S2.5. Bridge and offline selection limits
+versal phase necessity.
+                                                                           The ordinary target-only U2 bridge compares 19 exposed
+                                                                        tasks, three recipes and three repetitions: 171 fresh arrays. U2
+S2.3. Same-state block and continuation comparison on B570
+                                                                        reproduces intervention N1 at 57/57 complete arrays and strict
+   The sampled-fork study uses the 24 reserved tasks, three             boundaries, while both match ordinary reference on 17/19 tasks.
+repeats and a frozen boundary at the first eligible verification        U2 uses one occupied continuation token despite UB2 capacity.
+block after at least 64 committed IDs. Two paths start from             This simpler reproducer limits claims that the complex replay
+the same retained donor state and process the registered block.         frontend is necessary; equal output does not imply equal numer-
+Scores differ in all 72 runs, while immediate top-1 and decision        ical state.
+outcomes remain equal across all 195 internal decision events.             The offline selector feasibility study compares existing evi-
+Downstream output changes in 18 runs from six tasks. The                dence acquisition and decision rules. RTX direct enumeration
+alternate continuation retains later UB128 blocks, with proposals       and proxy acquisition each require 114 equivalents and abstain
+evolving under its accepted history; the secondary result does          under the measured criterion. B570 direct enumeration uses 72
+not isolate one altered block followed by restoration. Immediate        while the proxy uses 144. These equivalents are not measured la-
+agreement cannot stand in for complete trajectory agreement.            tency. Unobserved MBPP U2 counterfactuals remain unknown.
+Runs and decision events are not independent additional tasks;          The feasibility study is complete and negative; it produces no
+the raw verifier results cited here are inherited original-host         validated automatic online selector.
+results, not a new private-payload audit.
+                                                                        S3. Implementation and Phase Qualification
+S2.4. Natural donor-state × current-recipe crosses
+    The RTX experiment uses four selected probes, three repe-           S3.1. RTX query layout and dispatch
+titions and two naturally formed donors at aligned committed               The source-bound implementation modifies the non-flash at-
+boundaries. Each donor is forked under both current recipes,            tention graph, not the quantized projection/FFN kernels or the
+and own-path shams reproduce uninterrupted output. There are            greedy acceptance algorithm. After the standard query permu-
+24 donors, 48 forks and 24 shams. Target-only auxiliary replay          tation, a query tensor with dimensions (d, q, h, 1) is viewed as
+is diagnostic rather than paid deployment performance.                  (d, 1, h, q). KV tensors broadcast over the query batch dimen-
+    For HumanEval/15, the shared committed cut is 13. At                sion. The corresponding mask is viewed with the matching
+the third auxiliary decision, the two donor rows are identical:         layout; existing matrix multiplication, softmax, value multipli-
+[9147, 4199] under current UB2/UB1. Each full three-ID aux-             cation and recombination operations then evaluate each query
+iliary array begins [6256, 5987], followed by the displayed ID.         column with the registered geometry. Batched projection, FFN
+                                                                    3
+and output computation remain available. This shape descrip-                 because the aggregate generation gain is too small. Qualification
+tion is about graph operations, not independently traced CUDA                does not imply a speed gain from fewer constraints.
+kernel dispatch.
+   Assertions restrict the tested graph to Qwen3 non-flash at-               S3.3. Implementation variants and paid-boundary changes
+tention, one KV stream and supported query widths, without                       Table S2 retains the early local implementation comparisons.
+attention bias, sinks or MLA. The initial patch supports up to               Their baselines and observer costs differ from the final frozen
+four queries; the width study extends the admitted graph to eight.           expansion. Request gains against global UB1 include a pre-
+Unsupported cases do not inherit qualification. The earlier im-              fill/path change; they are not matched speculative increments.
+plementation creates per-query attention subgraphs before the                The strict final local comparison disables observers and matches
+later query-batch transformation; their costs differ.                        target graph, UB4 and prefill, giving 1.256449× generation and
+   The four-switch patch records model role and phase through a              1.077451× request over 19 task medians, with 19/19 and 16/19
+thread-local guard entered before graph capture/fast-path selec-             tasks faster. All observations are from that campaign, not paired
+tion. Target prefill and continuation have bits 1 and 2; draft prefill       with later costs.
+and continuation have bits 4 and 8. The process mask selects                     The ordinary k = 3 path in the second campaign qualifies only
+enabled phases. A disabled phase returns to the native graph.                68/76, with /18 and /25 failing in every repeat. Its timing cannot
+The graph parameters and reuse check include the query-batch                 become a lossless speed claim. Serial, per-query and query-
+flag, preventing reuse across differing constraint modes. Reset              batch comparisons preserve both successful and unsuccessful
+re-enters prefill. The switches therefore select the graph during            cost outcomes.
+execution. Capture-off bypasses observer metadata and forced
+witness synchronization. The optional continuation state-move
+helper is inactive in the frozen expansion because its activating            S4. RTX Expansion, Statistics, Width, and Reset
+environment variable is absent.
+                                                                             S4.1. Complete expansion and two timer boundaries
+   The exact scripts, native delta and reports are included under
+source_records/benchmarks/rtx_consistency_cont                                  The expansion contains exactly 384 complete unique formal
+ract_v1 and rtx_consistency_phase2. The author source                        keys: 24 tasks, four conditions and four repeats. All four condi-
+package records their Git blob and SHA-256 identities. The                   tions qualify 96/96 full responses; ordinary reference is stable
+portable manuscript code does not apply patches or execute                   in all repeats. Lengths range from 11 to 128 IDs; 23 tasks
+these runtimes.                                                              stop at EOG and one at cap128. No extra full-stream suffix is
+                                                                             present in the selected response records. This does not certify
+S3.2. Factorial and scope-cost results                                       any unrecorded internal sampling stream.
+                                                                                The retained server generation field is predicted_ms: the
+   All 16 phase masks are run on HumanEval/15, /18, /25 and                  interval from its prompt/first-sample boundary to the last gen-
+/31 twice. The task-level booleans in the original A1 result agree           eration update, with the source’s minimum one-microsecond
+with the committed 16-row aggregate export. Passing masks are                floor. It charges draft and target work within the interval, ex-
+3, 7, 11 and 15; all repeat stably. Masks contain target prefill             cludes initial prefill and first sampling, and may exclude final
+and continuation when they pass. HumanEval/15 and /31 pass                   bookkeeping. Resident-request time is client wall time for com-
+throughout this family; /25 needs at least one target bit; /18               plete non-streaming response receipt and parsing. Model load,
+needs both. The main manuscript’s phase-qualification matrix                 process startup, excluded warmups, boundary telemetry and
+shows every mask and probe.                                                  shutdown are outside it; post-response asynchronous cleanup
+   Mask 3 is inclusion-minimal among passing masks in this                   is not certified inside it. Neither timer is a component profile.
+fixed four-switch family: no strict subset passes. The finite                Subtraction of generation from request does not identify a host,
+search establishes neither a universal phase requirement nor the             KV or attention cost.
+necessity of each bit on every input, and it does not cover all                 For each condition/task, take the median of four absolute
+possible constraints. Natural crosses identify local dependen-               times, form baseline/candidate ratios, then their unweighted
+cies; the factorial qualifies implementations under a different              geometric mean across tasks. Table S3 reports all 12 timer
+complete-output gate.                                                        comparisons. The ordinary-reference comparisons are post-hoc
+   The independent scope-cost arm uses 19 exposed tasks, three               CPU analyses of already paid, qualified observations. They are
+conditions and six balanced repeats: 342 formal requests and                 not new measurements or a new preregistered primary campaign.
+18 excluded warmups, capture off. Mask 3 speculation versus                  The mathematical identity R/C = (R/M)(M/C) holds for 48
+matched target-only gives generation/request speed 1.278076 ×                task-timer cells and both aggregate timers; it is not an additive
+/1.112977×. Mask 15 versus mask 3 cost gives 1.003569 ×                      cost decomposition.
+/1.025686×, with 12/19 generation and 17/19 request tasks                       The primary descriptive CPU bootstrap uses NumPy Genera-
+faster. The extra generation interval is [0.997739, 1.009456].               tor PCG64, seed 20261008, 10,000 task resamples of 24 indices
+Per-round generation ratios are 1.008646, 0.998091, 1.004328,                in saved task order, and one shared index matrix for comparisons.
+1.003691, 1.007860 and 1.006777. The predefined optimization                 Percentiles use linear/type-7 interpolation. The historical inter-
+gate also requires generation speed at least 1.03, request speed             val convention uses Python random.Random.choices, seed
+at least 1.00 and at least four of six faster rounds. It is not met          20261005, 4,000 draws and sorted indices 99/3899. The author
+                                                                         4
+                         Table S2: Earlier RTX implementation variants. Ratios are baseline/candidate under each stated campaign.
+Candidate; comparison baseline                                                                                          ID gate     Generation   Request
+Global serial k = 2; global UB1 target                                                                                  57/57            0.677     0.795
+Per-query k = 2; global UB1 target                                                                                      57/57            0.746     1.041
+Per-query k = 3; new frontend global UB1                                                                                76/76            1.084     1.562
+Query-batch k = 3; new frontend global UB1                                                                              76/76            1.242     1.852
+Query-batch k = 3; strict matched target                                                                                76/76            1.256     1.077
+
+
+                Table S3: All RTX expansion comparisons, baseline/candidate. Each uses 24 task medians; C3 /C15 are mask 3/15 speculation.
+                                      Ratio       Timer            Speed         Descriptive interval       Faster
+                                      R/C3        Gen.          1.170124        [1.117013,1.217681]         22/24
+                                      M/C3        Gen.          1.169238        [1.117115,1.217153]         22/24
+                                      R/M         Gen.          1.000758        [0.995290,1.007752]         11/24
+                                      R/C15       Gen.          1.152348        [1.099880,1.199192]         22/24
+                                      M/C15       Gen.          1.151475        [1.099968,1.198554]         22/24
+                                      C15 /C3     Gen.          1.015426        [1.007525,1.024253]         20/24
+                                      R/C3        Request       1.741569        [1.654608,1.827079]         24/24
+                                      M/C3        Request       1.035071        [1.004552,1.063481]         17/24
+                                      R/M         Request       1.682560        [1.589801,1.766329]         24/24
+                                      R/C15       Request       1.690202        [1.610916,1.768226]         24/24
+                                      M/C15       Request       1.004542        [0.975846,1.031662]         12/24
+                                      C15 /C3     Request       1.030391        [1.022464,1.038939]         23/24
+
+
+source package retains both conventions without replacing one                   witness, not a complete counterfactual suffix, a unique kernel
+with the other. No bootstrap treats repetitions or conditions as                identification or a new independent task for each cap.
+additional independent inputs.
+   Tables S4 and S5 give all absolute medians and primary ra-                   S4.3. Fixed UB4 and width costs
+tios. The seven matched-request regressions are listed explicitly                  Holding mask 3 and UB4 fixed, k = 3, 5, 7 each qualifies
+beneath the latter. Four matched-request round geometric means                  56/56 requests on 28 exposed tasks in two repeats. The widest
+are retained; round 2 is 0.940220×. Task resampling cannot re-                  passing k = 7 is selected from qualification alone, followed
+move that observed reversal or estimate independent day/session                 by a separate capture-off cost arm with four conditions, four
+uncertainty.                                                                    repetitions, 448 requests and 16 excluded warmups. Table S6
+                                                                                retains pooled and saved MBPP/HumanEval partitions. The
+S4.2. Geometry failures and their natural-state check                           ordinary wider speculative condition fails qualification and has
+                                                                                no admissible speed result.
+   The wider-geometry boundary arm uses 11 exposed tasks,                          Formal draft/accepted counts are 3,528/2,772 at k = 3 and
+(k, UB) pairs (1, 2), (3, 4), (5, 6), (7, 8), caps 128/256/512, three           5,392/3,192 at k = 7. Separate captured qualification counts give
+modes and two repetitions: 792 formal requests and 24 excluded                  305/232/199 target caller calls for k = 3/5/7, but 305/463/397
+warmups. MBPP/229 fails at k = 5/UB6 and k = 7/UB8 across                       micrographs. They include their own warmups and witness syn-
+all caps and repeats, 12 failures. Ordinary and matched wider                   chronization and are not a kernel-launch profile or a denominator
+target-only controls pass this task. The earlier HumanEval/18                   for the formal timing. Long-cap fixed-UB checks remain qual-
+wide failure remains a separate boundary outside this panel.                    ified, with matched speed about 1.0001 × /0.9649× at cap256
+Maximum actual output length is 261, so cap512 is not evidence                  and 0.9715 × /0.9340× at cap512. The caps, timers and small
+of 512 generated positions on every task.                                       exposed task panels remain distinct from the expansion.
+   At a shared 47-ID prefix for MBPP/229, naturally formed
+ordinary and constrained donors are crossed with current UB6                    S4.4. Resident reset as a finite serial check
+layouts. Four own-path shams over two caps pass. The donor                         The resident D study contains 100 reset/capture requests in-
+state changes whether EOG is selected under both current lay-                   cluding four warmups, and a separate 96-request cost arm with
+outs; current geometry changes scores without independently                     four excluded warmups. Two task orders retain reference output
+flipping this observed decision. EOG-minus-alternative margins                  for the anchor recipe. Matched generation/request speed is ap-
+are [−0.09283, −0.62923] for one donor and [0.99707, 1.48868]                   proximately 1.1812 × /1.0385×. This serial resident-loop check
+for the other. They are selected-alternative margins, not true                  covers reset semantics, without establishing concurrent schedul-
+top-two margins. Maximum measured score differences are ap-                     ing, throughput, multi-slot behavior or resident qualification of
+proximately 0.44920 and 0.38070. This is a local same-prefix                    the widened draft.
+                                                                            5
+                        Table S4: RTX generation absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.
+                                  Task          R ms          M ms           C3 ms           R/C3          M/C3
+                                   439      590.217        553.925        516.623       1.142453       1.072203
+                                   415     2870.787       2805.883       2469.301       1.162591       1.136307
+                                   124      408.370        416.421        495.281       0.824523       0.840778
+                                   234      276.411        279.562        243.149       1.136797       1.149754
+                                   441      347.456        350.851        258.048       1.346478       1.359637
+                                   229     1106.948       1104.535        823.986       1.343408       1.340479
+                                    12      458.673        453.639        368.023       1.246319       1.232641
+                                   458      273.815        275.552        243.791       1.123157       1.130278
+                                   299      454.850        457.803        386.201       1.177755       1.185404
+                                   443     1084.726       1079.483        898.341       1.207477       1.201642
+                                    18      588.585        588.574        535.248       1.099649       1.099629
+                                    93      253.047        253.966        200.438       1.262473       1.267058
+                                   437      296.111        295.709        248.526       1.191467       1.189851
+                                   230      341.034        344.760        255.338       1.335622       1.350213
+                                   253      478.293        476.294        367.254       1.302351       1.296908
+                                   436      431.820        432.591        325.377       1.327139       1.329507
+                                   115      431.379        433.787        402.353       1.072139       1.078124
+                                   133      475.426        478.179        421.431       1.128124       1.134655
+                                   448     1609.686       1615.810       1311.434       1.227425       1.232094
+                                   274     1023.130       1019.728        895.225       1.142875       1.139076
+                                   454      274.751        273.346        246.048       1.116658       1.110950
+                                   393      386.363        387.622        395.548       0.976780       0.979963
+                                   242      229.418        233.043        192.592       1.191210       1.210035
+                                   397      478.100        476.432        415.627       1.150309       1.146296
+
+
+S5. B570 Repair, Missingness, Suffixes, and Paid Costs                       of failed tasks. The later phase-binding candidate is a distinct
+                                                                             implementation.
+S5.1. Earlier finite closeout: a positive local case and failures
+   The      earlier     B570     closeout’s     normative      au-
+dit establishes completion of 1,456 core records                             S5.2. Same-context phase binding
+(COMPLETE_FINITE_SCOPE_AUDITED). The completed audit
+supersedes historical report wording that normative closure was                 The B570 candidate preserves one live target context and sam-
+incomplete. The original findings remain finite: on the shared               pler. Ordinary-reference prefill uses UB128 with caller output
+24-task MBPP panel, the repaired old N1 qualifies but gives                  reservation 512/per-sequence reservation 1; the frontend sam-
+only 0.188525 × /0.179055× generation/request speed against                  ples the pending first token once, binds continuation UB1 and
+ordinary R, and 0.804023 × /0.693541× against matched target-                synchronizes/reserves the scheduler, and consumes and accepts
+only. The old N0/N1 comparison is 0.999522 × /1.247059×:                     that saved token once in the native loop. Native k = 2, draft-UB1
+request progress against N0 does not imply ordinary-reference                proposal, acceptance, bonus and rollback follow. The private
+benefit.                                                                     API patch changes phase parameters and reservation within the
+   On eight project-unused MBPP inputs, N1 and its matched                   context; it adds no model arithmetic, Vulkan shader or preci-
+path fail MBPP/72 in all four repeats. Five UB2 alternatives                 sion change. It has no task-ID routing, known reference token,
+retain failures involving HumanEval/42, /145 or /138 and receive             margin-based correction or extra reference forward.
+a NO-GO decision. The local k = 3/UB4/cap128 candidate                          Unlike old N1, it removes a second target context, state hand-
+on seven exposed longer probes is a positive finite case, with               off and three serialized witness readbacks. Capture-on checks
+1.345798× generation and 1.048339× request speed. It does                    compare KV before and after binding; capture-off avoids wit-
+not replace the failed expanded qualification. Long-cap anchor               ness readback. Those checks do not supply a separate profile
+qualification passes 84/84 at caps256/512, with longest actual               of the saved cost. The frontend still pays for synchronization,
+response 261 IDs. No natural state cross occurs in this earlier              phase reservation, draft work, target work and reconciliation.
+study; the crosses in Section S2 are later experiments.                      The author source package includes phase.h, target.cpp,
+   A wrongly placed UHD730 campaign of 190 requests is clas-                 native.cpp and the private-library delta with source bindings.
+sified as infrastructure evidence and excluded from scientific                  Figure S1 connects the phase-binding operations to the sep-
+B570 data. Its records and recovery remain preserved. Recovery               arate endpoint and paid-work contracts; it also shows why the
+does not authorize outcome-dependent retuning or replacement                 old-N1 comparison has one fewer complete task pair.
+                                                                         6
+                         Table S5: RTX request absolute task medians (ms) and ratios. MBPP task IDs follow the saved order.
+                                 Task           R ms          M ms           C3 ms          R/C3           M/C3
+                                  439      1337.685        804.939       825.507       1.620439       0.975084
+                                  415      3638.915       3056.087      2802.469       1.298468       1.090498
+                                  124      1087.418        650.070       779.296       1.395385       0.834176
+                                  234       971.130        521.843       519.011       1.871115       1.005455
+                                  441      1054.836        587.618       541.248       1.948898       1.085673
+                                  229      2389.621       1502.739      1305.581       1.830312       1.151012
+                                   12      1261.199        714.779       684.524       1.842448       1.044200
+                                  458       952.067        520.996       524.541       1.815049       0.993242
+                                  299      1190.416        693.830       659.236       1.805751       1.052475
+                                  443      1823.804       1324.677      1197.541       1.522958       1.106164
+                                   18      1392.036        851.751       824.704       1.687921       1.032796
+                                   93      1029.573        512.864       491.369       2.095314       1.043744
+                                  437       975.759        524.353       528.602       1.845923       0.991962
+                                  230      1254.875        639.720       590.859       2.123815       1.082695
+                                  253      1239.853        730.717       654.826       1.893408       1.115894
+                                  436      1132.163        660.519       597.764       1.893997       1.104983
+                                  115      1189.749        684.664       697.826       1.704936       0.981139
+                                  133      1270.639        732.764       714.316       1.778819       1.025826
+                                  448      2319.676       1846.448      1578.762       1.469300       1.169555
+                                  274      1876.304       1296.957      1220.322       1.537548       1.062799
+                                  454       953.416        509.887       523.471       1.821334       0.974050
+                                  393      1064.315        627.877       666.169       1.597667       0.942519
+                                  242       954.557        478.594       466.815       2.044832       1.025233
+                                  397      1163.200        708.823       701.044       1.659239       1.011096
+Matched-request regressions: MBPP/439, MBPP/124, MBPP/458, MBPP/437, MBPP/115, MBPP/454, MBPP/393. Round GMs:
+1.028699, 0.940220, 1.051749, 1.044236.
+
+
+S5.3. Qualification counts and unresolved raw comparisons                    and final synchronization. Whole-request time also includes
+   Table S7 reports endpoint and raw-array comparisons sepa-                 prefill/reset/cleanup, excluding subsequent disk file writes. Host
+rately. The 48 baseline-development rows have only 32 ordinary-              request time is separately measured by Windows QPC. Earlier
+reference-equal endpoints; they are not all qualified candidate              A/B stage GetTickCount’s 15.625-ms granularity is not substi-
+evidence. The 12 shams are separate from the 299 rows in the                 tuted for formal C/D/E QPC measurements. Model-load cost is
+qualification export. Stage D contains 56 exposed tasks eval-                outside these comparisons.
+uated twice. Stage E combines eight bridge records and 119
+                                                                                The main manuscript’s B570 paid-cost table reports all three
+formal records; their roles are not interchangeable.
+                                                                             formal timer aggregates. Table S8 provides all paired task gen-
+   The four-condition formal matrix is 119/120. The missing
+                                                                             eration and whole-request ratios. R/C and M/C are below one
+unit is E/FORMAL/1/old_N1/MBPP/400, with INFRASTRUC
+                                                                             on every complete task and round. Old-N1/C whole and host
+TURE_INTERRUPTION_NO_PAYLOAD. Its runtime cost and
+                                                                             request ratios reverse on MBPP/245 in round 2, approximately
+interrupted teardown time remain unknown. Each of ordinary
+                                                                             0.873582 and 0.873603; aggregate old-path improvement there-
+R, matched M and candidate C has 30 complete formal ob-
+                                                                             fore does not imply universal improvement.
+servations and 15 complete two-round task pairs. Old N1 has
+29 observations and only 14 complete task pairs. The avail-
+                                                                                Candidate formal endpoint IDs total 1,150 and raw IDs 1,176.
+able MBPP/400 old-N1 round is retained but cannot supply
+                                                                             All 26 suffix IDs are charged. Drafted/accepted IDs total
+its two-round median. There is no interpolation, zero-cost
+                                                                             888/702, and target/draft continuation caller tokens 1,332/1,362.
+assumption, silent task removal from other comparisons or
+                                                                             These denominators describe different runtime quantities and
+scientific rerun. The study’s administrative closeout remains
+                                                                             cannot be collapsed into one acceptance-adjusted cost. The
+PARTIAL_INFRASTRUCTURE_BUDGET_CLOSED.
+                                                                             narrowed target common-sampling measurement of 851.52 ms
+                                                                             omits other work; it is not a full component profile. The known
+S5.4. All measured timers and work                                           complete-campaign host subtotal is approximately 6,541.86 s,
+   Generation time is the frontend’s registered C++ interval, in-            excluding the unknown interruption/teardown. It is not the cost
+cluding pending-state initialization, sampler/batch operations,              of every planned request or a normalized per-task speed estima-
+phase binding within that interval, draft/verification, rollback             tor.
+                                                                         7
+            Table S6: Fixed-UB4 width costs: baseline/candidate. Anchor is k = 3, wide is k = 7, and matched has no draft. Partitions are descriptive.
+                                                 Panel            Ratio                  Generation         Request
+                                                 All (28)         Anchor/Wide              0.829442       0.889868
+                                                 All (28)         Matched/Wide             0.997404       0.950353
+                                                 All (28)         Matched/Anchor           1.202501       1.067970
+                                                 MBPP (24)        Anchor/Wide              0.805961       0.872693
+                                                 MBPP (24)        Matched/Wide             0.953392       0.918750
+                                                 HE (4)           Anchor/Wide              0.985408       1.000258
+                                                 HE (4)           Matched/Wide             1.307590       1.164148
+
+
+
+
+    (A) Bind phases without a second target context
+
+
+            Ordinary prefill
+                                                    Sample pending                         Bind same context                        Native k = 2 loop
+            UB128; reserve
+                                                    first token once                        UB128 to UB1                               Draft UB1
+                512 / 1
+
+                                     Retain target KV and the live sampler; consume / accept the saved token once.
+                                      Reservation values are total / per sequence. Capture-off omits witness readbacks.
+
+
+    (B) Qualify the endpoint; pay all raw work                                                   (C) Keep the missing unit visible
+                                                                                                              Formal matrix: 119 / 120 payloads
+                       Endpoint: first inclusive EOG or cap128                                       Path                    Rows                Task pairs
+                                                                                                 R: ordinary                  30                     15
+                                                                                                 M: matched                   30                     15
+                       1,150 endpoint IDs + 26 suffix IDs
+                              = 1,176 paid raw IDs                                               C: candidate                 30                     15
+                                                                                                 Old N1                       29                     14
+                    Aggregate over 30 formal candidate responses.                                           Old N1 / MBPP400 / round 1: unavailable
+
+
+Figure S1: B570 implementation and accounting boundaries. (A) Ordinary prefill, one pending sample, in-place phase binding and the native loop retain one target
+context and live sampler; this is a source-bound schematic, not a timing profile. Reservation values are total/per sequence. (B) The endpoint gate retains IDs through
+the first inclusive EOG or cap128, while all online suffix work remains paid. The counts aggregate 30 formal candidate responses. (C) Available payloads and
+complete two-round task pairs remain distinct; the missing old-N1 MBPP/400 round-1 payload is unavailable, not zero cost.
+
+
+S6. Historical Costs, Stops, Control, and Target-Work Bud-                            configuration. RTX historical CPU-to-GPU and same-GPU con-
+    gets                                                                              trols retain different integration costs. B570’s formal failure
+                                                                                      triggers its stop; a later six-prompt serial text probe passes 18/18,
+S6.1. Early four-system inventory and unchanged estimators                            whereas its full 30-prompt serial text comparison reaches only
+   The historical inventory uses MacBook Air M4/Metal                                 60/90. Remote-interaction-contaminated diagnostic observa-
+(llama.cpp b10809), Core Ultra 9 275HX plus RTX 5070 Ti                               tions are excluded from the final cells. Legacy “exact” labels do
+Laptop/CUDA (b10839), Core i5-13400 plus Arc B570/Vulkan0                             not upgrade the text contract.
+(b10839), and Core Ultra X7 358H plus Arc B390/Vulkan0                                   Historical M4 24Q takes a within-prompt GM of three paired
+with an OpenVINO draft. Qwen3-8B Q8_0 is the target. Draft                            ratios, then resamples prompts 10,000 times with Python Ran-
+is Qwen3-0.6B Q8_0 except the symmetric INT4 OpenVINO                                 dom seed 20260907 and sorted draw indices 249/9749. M4 Hu-
+adapter. Hardware, OS, backend, placement and frontend vary                           manEval uses the same within-prompt aggregation but 100,000
+jointly. The inventory is not a hardware-only comparison or a                         draws, seed 20260910 and indices 2500/97499. Historical RTX
+common energy/latency ranking.                                                        uses 10,000 draws, seed 20260910, indices 249/9749. B570 fall-
+   Table S9 reports the completed historical campaigns. M4’s                          back uses 10,000 draws, seed 20260910 and indices 250/9750
+representative 24Q and separately preregistered HumanEval30                           in archived insertion order. Sorting tasks changes its finite-seed
+have opposite measured outcomes in distinct sessions. This                            endpoints and is not substituted. 358H uses prompt medians
+does not identify a workload-only cause. Early MLX preci-                             of three paired ratios, 10,000 draws, NumPy default_rng seed
+sion/correctness failures are separate from the final Q8_0 Metal                      20260919 and .025/.975 quantiles. These policies are not re-
+                                                                                  8
+         Table S7: B570 candidate qualification stages and raw comparison limits. Equality is to the registered endpoint reference unless stated otherwise.
+                                              Candidate       Endpoint
+Stage                                          checks          equal          Raw reference comparison
+C development                                          12             12      Four equal, eight different
+D exposed bridge                                      112            112      MBPP: 16 equal/48 different; 48 HumanEval raw comparisons unknown
+E candidate formal                                     30             30      Included in the E total below; suffix cost retained
+E all available plus bridge                           127            127      80 equal, 47 different
+
+
+           Table S8: All B570 two-round task-median speed ratios. G/W denote generation/whole request; old N1 has no complete pair for MBPP/400.
+                                MBPP            R/C G           R/C W           M/C G       M/C W          N1/C G         N1/C W
+                                    125      0.320296        0.270051         0.319891     0.243047      2.437945        1.908679
+                                    130      0.299904        0.252594         0.304551     0.257891      2.269168        1.978931
+                                    132      0.264679        0.162455         0.271252     0.169635      8.515349        4.089033
+                                    245      0.298694        0.254655         0.298448     0.255268      1.541642        1.376354
+                                    278      0.270026        0.205714         0.271973     0.245382      3.078819        2.321202
+                                    312      0.257757        0.195314         0.259093     0.198785      4.282380        2.984986
+                                    400      0.265906        0.153521         0.269833     0.158972             –               –
+                                    429      0.276956        0.197973         0.281509     0.203527      3.441493        2.411608
+                                    435      0.260099        0.151096         0.266645     0.158111      6.873734        3.323427
+                                    446      0.305206        0.233673         0.306943     0.272100      2.479117        1.929448
+                                    451      0.273297        0.193117         0.276409     0.198226      4.774253        3.079460
+                                    470      0.281105        0.243139         0.284055     0.199636      4.389394        2.870175
+                                    475      0.276814        0.196772         0.278850     0.201003      5.011890        3.193580
+                                    479      0.310439        0.196746         0.312663     0.200719      5.061865        2.965935
+                                     69      0.286855        0.163151         0.292541     0.169808      8.776569        4.056630
+
+
+placed by late RTX’s ratio-of-medians estimator.                                       CPU package or wall power, and its output failure confines the
+                                                                                       result to diagnosis. 358H has no qualified end-to-end energy
+S6.2. Target-forward proxies and energy boundaries                                     boundary. No late runtime repair energy, common system-energy
+  The historical target-only proxy is                                                  ranking or concurrent-throughput result is inferred.
+
+        Vkmicro (n, e) = T target forward (k, n, e)/T target decode (1, n).            S6.3. Fresh direct-ID gates and independent latency arm
+It omits drafting and can omit correction/bonus, state work and                           Fresh RTX direct-ID v2 has 270 executions on 30 HumanEval
+complete target-round bookkeeping. Table S10 retains every                             tasks, three conditions and three repeats. Batched k = 2 reaches
+context cell. Their ranges span contexts rather than uncertainty                       75/90 (25/30 wholly equal prompts) and is blocked; serial-
+intervals. The historical RTX HumanEval/106 diagnostic repeats                         ized reaches 90/90 and qualifies. Mismatching first indices
+a same-position argmax change from 2790 to 2629 three times,                           are /64:114, /106:65, /119:17, /128:41 and /129:21, stable across
+with a separately instrumented same-commit margin moving                               repeats. All conditions repeat stably. The initial v1 transport
+from +0.080948 to −0.126457. It is shape-sensitive evidence in                         study retains 83 executions, 82 valid, and no qualification result:
+that configuration, not a unique kernel cause or a formal timing                       full-log UTF-8 decoding fails on a partial draft fragment after
+observation.                                                                           native exit zero. V2 changes observational byte transport and
+   M4 HumanEval energy measures the Silemetry                                          restarts the whole frozen schedule; it imports no v1 formal pairs.
+CPU+GPU+ANE package aggregate, excluding separate                                      The final report stored at the repository’s v1 path is a copy of
+DRAM. Fixed-k = 2 package efficiency is 1.013× with interval                           the completed v2 report; it does not document v1 completion.
+[0.990, 1.034], so improvement is not established. The regis-                             B570’s separate fresh direct-ID campaign also completes 270
+tered secondary pmin = 0.9 condition has 1.041× [1.018, 1.065],                        executions: fast reaches 60/90 (20/30 prompts), serialized 78/90
+without replacing the primary or establishing material added                           (26/30), and both are blocked. Historical fast 45/90 and se-
+speed. The corrected synthetic ceiling was registered but not                          rial 60/90 are unchanged text-path counts. An initial metadata
+executed; earlier synthetic diagnostics are not a substitute.                          decoding launch fails before inference with zero formal exe-
+   RTX board and CPU-package sensors are distinct domains,                             cutions; authorized direct execution of the unchanged frozen
+and follow-up process windows include loading; no formal serial                        runner produces the full campaign. No formal speed is inferred
+HumanEval energy comparison is claimed. B570 fallback mea-                             from operational elapsed fields. Neither new gate retroactively
+sures adapter-board efficiency 0.302× [0.285, 0.320], without                          qualifies old timings.
+                                                                                   9
+  Table S9: Historical latency outcomes under their original contracts. Intervals are descriptive and source-specific. Text agreement is not a direct-ID certificate.
+Campaign                                                                                                           Speed                     Interval     Agreement
+M4 representative 24Q                                                                                             0.842               [0.809,0.877]       72/72 text
+M4 HumanEval30                                                                                                     1.387              [1.351,1.422]       90/90 text
+RTX CPU draft, HumanEval30                                                                                        0.404               [0.390,0.418]       90/90 text
+RTX same-GPU draft, HumanEval30                                                                                   0.650               [0.629,0.673]       90/90 text
+B570 serialized fallback                                                                                         0.3087            [0.2927,0.3246]        60/90 text
+358H CPU stateful, HumanEval30                                                                                 0.733915       [0.692920,0.771090]         90/90 IDs
+358H NPU stateful, HumanEval30                                                                                 0.351663       [0.332595,0.368949]         90/90 IDs
+
+
+                                                                                         V4 fixes that observational endpoint handling under a new
+Table S10: Frozen target-forward proxy lookup. These are neither complete
+target-round cost nor integrated speed. Historical text agreement applies only        freeze, accepting the ordered complete EOS-at-cap case while re-
+under each original comparator.                                                       jecting contradictory, reversed, duplicate or missing markers. Its
+                 Path                  Context          V2micro                       19-task panel initially comprises the remaining project-unused
+                                                                                      HumanEval inputs; subsequent reuse is exposed. It retains 228
+                 M4 Metal                  512      1.022182
+                                                                                      pre-live predictor records and adds 57 native live and 171 fresh
+                 M4 Metal                 2048      1.076126
+                 M4 Metal                 8192      1.032264
+                                                                                      timing observations: 456 complete formal condition rows. Pre-
+                 RTX batched                 0      1.009030                          diction closure is described in Section S2. The cost arm uses one
+                 RTX batched               256      0.983148                          timer executable and balanced order, each condition appearing
+                 RTX serialized              0      2.430996                          in each order position 19 times. Batched qualification remains
+                 RTX serialized            256      2.137011                          51/57 and has no admissible speed/interval. Global serialization
+                 B570 fast                 512      1.242576                          qualifies 57/57 but yields 0.677351× [0.661653, 0.691812], zero
+                 B570 fast                2048      1.637295                          of 19 faster. Median task absolute times are 1.607 s target and
+                 B570 serialized           512      1.982668                          2.332 s serial; their ratio is not the paired GM. The interval uses
+                 B570 serialized          2048      1.991707                          10,000 paired-row draws, seed 2026100204 and linear quantiles.
+                                                                                         The V4 numerical sources and assets remain frozen, but a fan-
+                                                                                      curve change triggers the original strict host-hash stop before
+   The independent RTX matched-latency arm has 180 fresh                              live outcomes. Authorized continuation preserves the original
+timing observations and 90/90 fresh complete-ID agree-                                PROVENANCE_INVALID records, repeated predictor checks and
+ments on 30 tasks. Serialized speed is 0.645816×, inter-                              the amendment. Fan/lighting differences become permitted; non-
+val [0.629802, 0.659884], zero of 30 faster. Condition or-                            fan material settings remain strict. Predictor data are reused, not
+der uses seed 2026093001; the 10,000 prompt-bootstrap                                 relabeled as a fresh untouched cohort. Fan controls stay fixed
+draws use seed 2026093002 and linear percentiles. Native                              during the fresh timing arm, with snapshots retained, but can
+QPC timing starts after synchronized target/draft prefill and                         still affect latency. The campaign completed under the disclosed
+covers per-request sampler/state work, drafting, verification,                        amendment; the original no-deviation host policy did not pass.
+acceptance/correction/bonus, rollback, synchronization, log-                          Instrumented post-prefill-to-slot-release time is distinct from
+ging/response and slot release. Load and teardown are excluded.                       the later server generation field and cannot form a common
+Chrono shares the host oscillator; it is not an independent physi-                    optimization curve.
+cal clock. The empty-hook probe bounds clock-call overhead,
+not all logging overhead. The fresh frontend is compiled with                         S6.5. RTX efficiency screening
+Clang 21.1.0 over retained CUDA libraries; OS build 26300                                The early FA-on/UB512 four-probe pilot qualifies small-
+differs from the earlier direct-ID OS26200. These facts preclude                      model k = 2 and k = 4, with request/generation speeds
+synthetic pairing with prior qualification.                                           1.277×/1.324× and 1.492×/1.572×. Each FA/UB setting has its
+                                                                                      own ordinary reference; global UB changes several phases. Ex-
+S6.4. V3 stop, V4 recovery, and protocol amendment                                    pansion to HumanEval/0–7 preserves every failure: final small-
+                                                                                      model k = 2 qualifies 18/24, fragment drafting 21/24 and the
+   V3 plans 576 formal condition/repetition rows over 24 tasks.                       mixed strategy 15/24. A mixed result producing 18 rather than
+It delivers 126 valid prefix rows: 72 pre-live and 54 cost, with                      the reference 87 IDs is invalid as a speed claim. k = 2 repairs /5
+two failures and 448 unreached rows. Native HumanEval/59                              but introduces /2; /6 remains divergent. The campaign has 300
+emits 128 committed IDs ending at EOG and reports both limit                          formal requests and 48 excluded warmups. Synthetic favorable
+and EOS. The frozen parser accepts only one marker and stops.                         cases do not support the current headline.
+Exit zero is not sufficient to make capture valid. A-live receives
+zero formal runs; complete formal accuracy, speed and inter-                          S6.6. M4 formal control and oracle opportunity
+val are unavailable. Engineering qualification’s 400 runs and                           The M4 Guard measures cumulative charged generation time
+parser-negative fixtures do not repair the missing formal end-                        per committed ID, including seed/correction/bonus and exclud-
+point branch. Old failures remain sealed.                                             ing rejected proposals. It starts on Always speculation and
+                                                                                 10
+can fall back permanently after a completed round, reconcil-                able zero residual T x , fixed progress assumptions and seed
+ing invalid target/draft suffixes first. Calibration freezes tar-           20260919, 10,000 empirical draws. It predicts eligibility, not
+get cost per ID and selects E8_M000 from a nine-candidate                   achieved integrated speed. CPU central/optimistic speeds at con-
+grid with rounds {2, 4, 8} and margins {0, 0.05, 0.10}. Exact-              texts512/2048/8192 are 0.903680/1.355520, 0.884843/1.327264
+ness and calibration regret select the rule; ties use frozen over-          and 0.755946/1.133919. NPU values are 0.905553/1.358329,
+head/exploration/margin/ID rules. Disjoint calibration, qualifi-            0.903804/1.355706 and 0.839618/1.259427. The subsequent
+cation and held-out task IDs prevent held-out retuning. Online              actual stateful CPU/NPU speeds in Table S9 are lower and qual-
+decisions receive no future length, task family, request-specific           ified, with zero of 30 prompts faster on either path.
+target latency or oracle answer.                                               Table S12 retains measured progress, components and dis-
+   The registered post-prefill clock includes generation initializa-        tinct ceiling estimators. Both paths commit 11,520 IDs, over
+tion, seed sampling, draft/target work, synchronization, recon-             4,677 CPU and 4,686 NPU rounds. Arithmetic-total accounting
+ciliation, control and transition. Load, sampler/speculator setup,          gives normalized (D, R, X) = (0.4304, 2.9767, 0.00124) CPU
+initial prefill and the speculative begin hook precede it. This             and (4.1251, 2.9435, 0.00130) NPU. These values reproduce
+is not whole HTTP request latency. The formal campaign has                  total-time ratios, not prompt GMs. Target-only ceilings assume
+60 held-out tasks, 30 each HumanEval and Spec-Bench, three                  unchanged baseline, target work and progress with all other
+conditions and three repeats. Always and Guard each qualify                 nonnegative cost removed.
+180/180 IDs. Table S11 gives their original overall and family                 Let Bi j be matched target-only time and T i j measured com-
+estimates.                                                                  plete target work for prompt i and repetition j. If optimized
+   The primary 10,000-draw bootstrap uses Python Random                     speculative time retains this target work and only reduces the
+seed 20260924 in held-out order, with one continued stream                  other nonnegative costs, its speed S i′ j is at most Bi j /T i j . Mono-
+for target/Guard, target/Always and Guard/oracle. The paired                tonicity of the median and geometric mean then gives the bound
+Guard/Always secondary replay starts a fresh stream of the                  under the original prompt estimator:
+same seed and uses linear percentiles; it gives latency 1.027076
+[1.012956, 1.043559], with Guard faster on 24 and Always on                            GMi median j S i′ j ≤ GMi median j (Bi j /T i j ).     (S1)
+36 tasks. It is post-study, not the original preregistered endpoint.
+A separate family-stratified sensitivity uses seed 2026100101,              For a uniform fractional reduction δ in target work, the corre-
+10,000 draws and HumanEval-then-Spec-Bench order, giving                    sponding zero-other-work ceiling increases by 1/(1 − δ). If its
+[1.0135, 1.0423]; it leaves the original intervals unchanged.               original value is F < 1, parity therefore requires δ ≥ 1 − F. Ta-
+   The per-task two-fixed-mode oracle improves the measured                 ble S12 reports this necessary budget separately for the prompt
+interval by factor 1.0006919671 relative to Always. The im-                 and pooled-total estimators. It assumes fixed baseline and com-
+plied latency reduction is 1 − 1/1.0006919671 = 0.0006914886,               mitted progress; changing either requires fresh qualification and
+approximately 0.069149%. Only Spec-Bench/559 and /95 fa-                    measurement.
+vor target-only: target times are 11.9085 and 10.9203 s; Al-                   Figure S2 places the measured prompt-estimator speeds be-
+ways/target latencies 1.0270 and 1.0150; Guard/target 1.0215                side their conditional ceilings and the necessary target-work cuts.
+and 1.0029. This finite hindsight opportunity is not a bound on             The pooled-total estimator remains separate in Table S12.
+all intra-request policies.                                                    No prompt-median ceiling reaches parity; maximum prompt
+   A loop-variable shadowing defect records a build-manifest                ceilings are 0.9736196764 CPU and 0.9999089575 NPU. One
+digest in the intended calibration-freeze field. Recovery veri-             NPU repetition has B/T = 1.000163695, so not every individ-
+fies the actual freeze, source/model/calibration/policy hashes              ual run-level ceiling is below one. The budgets are necessary
+and formal-start links, retaining error markers and the original            arithmetic reductions under fixed progress, not achieved opti-
+pipeline STOPPED metadata. It does not retune the policy or mu-             mizations or proof against NPUs. A persistent-state/wider-target
+tate measurements. Recorded Git order is not a trusted external             candidate stops at qualification: CPU restore/reconcile correct-
+timestamp. The resolved metadata defect does not change the                 ness is unavailable under the tested representation, and the frozen
+formal experiment’s completion status.                                      dynamic-shape NPU IR lacks the required state-capable path.
+                                                                            Same-prefix target-only and proposal-replay diagnostics identify
+S6.7. 358H state interface, threshold gate, and conditional bud-            greedy divergence but not a unique rollback bug. No formal
+       gets                                                                 runtime performance or energy result exists for that failed can-
+   The 358H stateful runner is complete; the preceding pre-                 didate; the completed earlier Phase-3 costs remain valid under
+flight scaffold was empty and blocked. It keeps the target’s low-           their own contract.
+level context between rounds and charges validation, rejected-
+suffix rollback, correction/bonus and synchronization within                S7. CPU Reconstruction, Provenance, and Access Limits
+complete target work. Every OpenVINO proposal call receives
+the full committed prefix. The synchronous region combines                    The author source package contains editable LaTeX, vector
+replay/reconstruction and proposal, with no separate measure-               PDF/SVG figures, bibliography, Highlights, CPU verification
+ments of those terms.                                                       and build scripts, selected authenticated implementation/report
+   A prior proxy threshold study passes 18 direct-ID sanity                 records, the 26-claim evidence map and the 28-group exper-
+pairs and admits borderline context points, using a favor-                  iment ledger. Compile main.tex or supplement.tex with
+                                                                       11
+                  Table S11: M4 formal post-prefill baseline/candidate speeds from three-repeat condition medians. Family strata are descriptive.
+                                                  Panel            Tasks     Target/Always       Target/Guard
+                                                  Overall               60          1.346894          1.311387
+                                                  HumanEval             30          1.570011          1.554690
+                                                  Spec-Bench            30          1.155485          1.106160
+
+
+    (A) Compare measured speed with a conditional ceiling
+                                                                                                         (B) Budget target work
+                                                                                 Parity
+                                                          0.734                                               Fixed baseline and committed progress
+                                                                                                              All other work optimistically removed
+      CPU draft
+                                                                   0.837                                         F/(1 − δ) ≥ 1 ⇒ δ ≥ 1 − F
+                        0.352
+      NPU draft                                                                                                       CPU: at least 16.28%
+                                                                                                                      NPU: at least 15.52%
+                                                                    0.845
+                              0.4               0.6               0.8               1.0
+                                                                                                              Necessary budgets, not achieved savings.
+                                 Matched target-only / speculative time
+                           Measured; saved interval         Zero-other-work ceiling
+
+
+
+Figure S2: 358H measured speed and a conditional optimization budget. (A) Filled circles and bars show the saved speed estimates and descriptive prompt-bootstrap
+intervals; open diamonds show arithmetic ceilings if all other nonnegative work were removed while baseline, target work and committed progress stayed fixed.
+All points use the original geometric mean of 30 prompt medians of three paired ratios. Ceiling markers have no confidence intervals. (B) Reaching parity in
+that optimistic case requires a uniform target-work cut of at least 1 − F, where F is the original ceiling. These are necessary budgets, not achieved savings or an
+impossibility claim about NPUs. The 180-row original-host ceiling audit remains inherited.
+
+
+pdfLaTeX using the supplied assets. The build scripts recheck                       Reproducing a summary or task-ratio export is not a complete
+frozen exports. The figures express categorical relationships                       raw-data audit. The missing B570 payload, interruption cost and
+and consistent comparison roles while retaining the bound ob-                       unknown historical raw comparisons remain unresolved.
+servations, numerical values and intervals. Two supplementary                          Dataset and software descriptions are cited in the main
+figures explain the bound B570 source/exports and 358H saved                        manuscript [1, 2, 3, 4, 5]. Bibliographic versions and pending
+estimates/budgets. The double-column supplement includes ev-                        metadata checks are documented in the author records. Author-
+ery inherited table cell and result. Structured and flat source                     ship, affiliations, CRediT, funding, competing interests, permis-
+archives are separately rebuilt; compilation does not establish                     sions, permanent data/software access and the final AI-assistance
+live Overleaf or Editorial Manager acceptance.                                      statement require author confirmation. A second model family,
+                                                                                    same-contract external method comparisons, stochastic sampling
+   The verifiers authenticate the copied-source bindings and re-
+                                                                                    and concurrent throughput are outside the completed evidence
+construct the RTX 384-row matrix, response-ID digest joins,
+                                                                                    scope.
+qualification flags, absolute-time medians, all 12 cost compar-
+isons, descriptive intervals, task regressions, round reversal and
+ratio identities. They reconstruct B570’s 119 formal rows, 15
+versus 14 complete task pairs, three timers and paid suffix counts.
+Phase booleans, natural-cross matrices, fixed-UB task-ratio ag-
+gregates and M4 medians/oracle are also checked. Version-
+specific receipts identify the source, figure, PDF and archive
+hashes actually checked; earlier receipts retain their historical
+attribution.
+  These checks operate on included sources and compact ex-
+ports. The original runtime reports retain original-host audits,
+external-asset hashes and references to larger private archives.
+Those audits are inherited evidence: the current checks neither
+reopen every raw payload nor rehash omitted model/driver bi-
+naries, validate independent absolute timing or rerun inference.
+                                                                               12
+Table S12: 358H measured accounting and conditional zero-other-work ceilings. Percentages describe the saved synchronous regions; prompt and pooled estimators
+remain distinct.
+                                       Quantity                                                CPU draft       NPU draft
+                                       Committed IDs per round                                  2.463117         2.458387
+                                       Replay plus proposal share (%)                            12.6273          58.3474
+                                       Complete target-work share (%)                            87.3365          41.6342
+                                       Residual share (%)                                         0.0363           0.0184
+                                       Actual pooled-total speed                                   0.7227          0.3477
+                                       Pooled-total ceiling                                0.8274529834     0.8351858524
+                                       Prompt-estimator ceiling                            0.8372192092     0.8448401086
+                                       Necessary uniform target cut, prompt (%)                16.278079        15.515989
+                                       Necessary uniform target cut, pooled (%)                17.254702        16.481415
+
+
+References
+[1] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. Ponde de Oliveira Pinto, J. Ka-
+    plan, H. Edwards, Y. Burda, N. Joseph, G. Brockman, A. Ray, R. Puri,
+    G. Krueger, M. Petrov, H. Khlaaf, G. Sastry, P. Mishkin, B. Chan, S. Gray,
+    N. Ryder, M. Pavlov, A. Power, L. Kaiser, M. Bavarian, C. Winter, P. Tillet,
+    F. Petroski Such, D. Cummings, M. Plappert, F. Chantzis, E. Barnes,
+    A. Herbert-Voss, W. Hebgen Guss, A. Nichol, A. Paino, N. Tezak, J. Tang,
+    I. Babuschkin, S. Balaji, S. Jain, W. Saunders, C. Hesse, A. N. Carr, J. Leike,
+    J. Achiam, V. Misra, E. Morikawa, A. Radford, M. Knight, M. Brundage,
+    M. Murati, K. Mayer, P. Welinder, B. McGrew, D. Amodei, S. McCandlish,
+    I. Sutskever, W. Zaremba, Evaluating large language models trained on
+    code, arXiv preprint arXiv:2107.03374v2, accessed 9 October 2026 (2021).
+    doi:10.48550/arXiv.2107.03374.
+    URL https://arxiv.org/abs/2107.03374v2
+[2] J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
+    E. Jiang, C. Cai, M. Terry, Q. Le, C. Sutton, Program synthesis with large
+    language models, arXiv preprint arXiv:2108.07732v1, accessed 9 October
+    2026 (2021). doi:10.48550/arXiv.2108.07732.
+    URL https://arxiv.org/abs/2108.07732v1
+[3] H. Xia, Z. Yang, Q. Dong, P. Wang, Y. Li, T. Ge, T. Liu, W. Li,
+    Z. Sui, Unlocking efficiency in large language model inference: A com-
+    prehensive survey of speculative decoding, in: Findings of the Associ-
+    ation for Computational Linguistics: ACL 2024, Association for Com-
+    putational Linguistics, 2024, pp. 7655–7671, accessed 9 October 2026.
+    doi:10.18653/v1/2024.findings-acl.456.
+    URL https://aclanthology.org/2024.findings-acl.456/
+[4] ggml-org llama.cpp contributors, llama.cpp [software], Releases b10809
+    and b10839; private study patches included in the author source package,
+    b10809 released 4 September 2026; b10839 released 7 September 2026.
+    Accessed 9 October 2026 (2026).
+    URL https://github.com/ggml-org/llama.cpp/releases/tag/
+    b10839
+[5] A. Yang, et al., Qwen3 technical report, arXiv preprint arXiv:2505.09388v1,
+    accessed 9 October 2026 (2025). doi:10.48550/arXiv.2505.09388.
+    URL https://arxiv.org/abs/2505.09388v1
+
+
+
+
+                                                                                      13
+

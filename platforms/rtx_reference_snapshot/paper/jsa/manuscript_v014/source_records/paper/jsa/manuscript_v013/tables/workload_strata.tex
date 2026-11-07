@@ -1,0 +1,14 @@
+\begin{table}[t]\centering\footnotesize\setlength{\tabcolsep}{4pt}
+\caption{Saved workload partitions. Speed is named baseline/candidate. RTX uses generation and resident-request timers; M4 uses its post-prefill timer. Rows are not cross-platform comparisons or independent validation panels.}
+\label{tab:strata}
+\begin{tabular}{llrlcc}\toprule
+Study & Partition & Tasks & Comparison & Gen./post-prefill & Request\\\midrule
+RTX width & MBPP & 24 & Anchor / wide & 0.806 & 0.873\\
+RTX width & MBPP & 24 & Matched / wide & 0.953 & 0.919\\
+RTX width & HumanEval & 4 & Anchor / wide & 0.985 & 1.000\\
+RTX width & HumanEval & 4 & Matched / wide & 1.308 & 1.164\\
+M4 & HumanEval & 30 & Target / fixed & 1.570 & --\\
+M4 & HumanEval & 30 & Target / guard & 1.555 & --\\
+M4 & Spec-Bench & 30 & Target / fixed & 1.155 & --\\
+M4 & Spec-Bench & 30 & Target / guard & 1.106 & --\\
+\bottomrule\end{tabular}\end{table}

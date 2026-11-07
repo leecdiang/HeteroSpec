@@ -1,0 +1,5 @@
+# Pre-B helper preparation
+
+While the immutable StageA target/native executables run, the unused cross helper receives an observational extension: real effective sampler clones sample each returned score row without acceptance or KV operations. This adds no forward, and it does not change the StageA loaded programs or numerical libraries. The original StageA cross source/binary remains bound in its Git epoch 2469e42; the helper has not been executed yet. StageB must separately freeze its updated exact source and binary before any cross output.
+
+If A is interrupted, `python resume_A.py` checks every source and runtime/executable loaded by A against A_FREEZE and resumes only hashed completed units plus missing work. Only the unused cross.cpp/cross.exe are excluded, with this explicit reason. `resume.py` is the original immutable entry. No completed scientific mismatch is retried. An existing attempt without a complete receipt requires independent CPU recovery or a single explicit infrastructure amendment, never a silent replay.

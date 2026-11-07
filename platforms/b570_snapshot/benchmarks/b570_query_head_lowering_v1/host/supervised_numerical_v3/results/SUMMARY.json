@@ -1,0 +1,1157 @@
+{
+  "run_id": "b570-supervised-numerical-v3-20261015-01",
+  "approved_F0_sha256": "56f5787e41dcf8dcc4ecad83eb26bf406a483664e67a939dc66edf0af5015fdc",
+  "reviewed_commit": "8008be6ce831a86b3074e16f57a6746187775491",
+  "status": "STOPPED_INCOMPLETE_INITIAL_DIRECTORY_OBSERVATION",
+  "census": {
+    "planned": 1,
+    "started": 1,
+    "admitted": 1,
+    "failed": 0,
+    "unstarted": 0,
+    "support_graphs": 80,
+    "graph_calls": 0
+  },
+  "numerical": {
+    "planned": 160,
+    "started": 116,
+    "admitted": 115,
+    "failed_or_invalid": 1,
+    "unstarted": 44,
+    "graph_start": 115,
+    "graph_return": 115,
+    "graph_output": 115,
+    "no_graph_call_failed_host": 1
+  },
+  "control_workers": {
+    "total": 234,
+    "monitor": 117,
+    "auditor": 117,
+    "abnormal": [
+      {
+        "role": "audit",
+        "pid": 45192,
+        "returncode": 1
+      }
+    ],
+    "aggregate_CPU_kernel_user_seconds": 281.203125
+  },
+  "timings": {
+    "controller_engineering_through_closeout_seconds": 218.921,
+    "external_controller_wall_seconds": 219.1024221,
+    "observed_native_lifetimes_sum_seconds": 92.43900000000001,
+    "observed_native_lifetime_max_seconds": 1.5,
+    "successful_post_exit_audits": 116,
+    "post_exit_audits_sum_seconds": 118.951,
+    "post_exit_audit_max_seconds": 1.594,
+    "admitted_slot_engineering_sum_seconds": 216.435,
+    "admitted_slot_engineering_max_seconds": 2.734,
+    "failed_slot_receipt_engineering_seconds": 1.203,
+    "monitor_intervals": {
+      "resource": {
+        "valid_reads": 754,
+        "discarded_reads": 0,
+        "max_read_duration_ns": 16000000,
+        "max_initial_completion_ns": 234000000,
+        "max_inter_observation_ns": 110000000,
+        "max_terminal_gap_ns": 141000000
+      },
+      "directory": {
+        "valid_reads": 132,
+        "discarded_reads": 34,
+        "max_read_duration_ns": 844000000,
+        "max_initial_completion_ns": 985000000,
+        "max_inter_observation_ns": 844000000,
+        "max_terminal_gap_ns": 907000000
+      }
+    },
+    "stop_initial_directory_gap_ns": 1016000000,
+    "scope": "Native observation, post-audit and controller wall are different scopes; none is operator latency. Controller wall includes controls, preflight and cleanup."
+  },
+  "resources": {
+    "peak_native_RSS_bytes": 109367296,
+    "peak_control_RSS_bytes": 112263168,
+    "min_host_available_bytes": 19840438272,
+    "min_disk_free_bytes": 158430789632,
+    "GPU_checkpoint_count": 463,
+    "GPU_checkpoint_min_free_bytes": 9722339328,
+    "continuous_GPU_residency": false
+  },
+  "actual_alignment_bytes": [
+    64
+  ],
+  "q1_controls": 40,
+  "q1_all_four_stages_bitwise_equal": true,
+  "admitted_independent_repeat_pairs": 55,
+  "planned_independent_repeat_pairs": 80,
+  "pair_summary": {
+    "MQ/PQ": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 8,
+      "first_divergence": {
+        "NONE": 8,
+        "AV": 15
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": {
+        "input_id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+        "geometry": {
+          "d": 128,
+          "dv": 128,
+          "q": 2,
+          "n": 63,
+          "h": 8,
+          "hk": 8,
+          "storage": "permuted"
+        },
+        "repeat": 0,
+        "stage": "AV",
+        "index": 0,
+        "logical_query": 0,
+        "head": 0,
+        "element": 0,
+        "left": -0.00011706352233886719,
+        "right": -0.00012361817061901093,
+        "left_bits": "0080f5b8",
+        "right_bits": "809f01b9"
+      }
+    },
+    "MQ/QH_C": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 8,
+      "first_divergence": {
+        "NONE": 8,
+        "AV": 15
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": {
+        "input_id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+        "geometry": {
+          "d": 128,
+          "dv": 128,
+          "q": 2,
+          "n": 63,
+          "h": 8,
+          "hk": 8,
+          "storage": "permuted"
+        },
+        "repeat": 0,
+        "stage": "AV",
+        "index": 0,
+        "logical_query": 0,
+        "head": 0,
+        "element": 0,
+        "left": -0.00011706352233886719,
+        "right": -0.00012361817061901093,
+        "left_bits": "0080f5b8",
+        "right_bits": "809f01b9"
+      }
+    },
+    "MQ/QH_D": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 8,
+      "first_divergence": {
+        "NONE": 8,
+        "AV": 15
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": {
+        "input_id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+        "geometry": {
+          "d": 128,
+          "dv": 128,
+          "q": 2,
+          "n": 63,
+          "h": 8,
+          "hk": 8,
+          "storage": "permuted"
+        },
+        "repeat": 0,
+        "stage": "AV",
+        "index": 0,
+        "logical_query": 0,
+        "head": 0,
+        "element": 0,
+        "left": -0.00011706352233886719,
+        "right": -0.00012361817061901093,
+        "left_bits": "0080f5b8",
+        "right_bits": "809f01b9"
+      }
+    },
+    "MQ/REPEAT4": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 8,
+      "first_divergence": {
+        "NONE": 8,
+        "AV": 15
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 37876,
+          "max_abs": 3.858376294374466e-05,
+          "max_relative_defined": 1.858054226475279,
+          "max_ULP": 1824759808,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": {
+        "input_id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+        "geometry": {
+          "d": 128,
+          "dv": 128,
+          "q": 2,
+          "n": 63,
+          "h": 8,
+          "hk": 8,
+          "storage": "permuted"
+        },
+        "repeat": 0,
+        "stage": "AV",
+        "index": 0,
+        "logical_query": 0,
+        "head": 0,
+        "element": 0,
+        "left": -0.00011706352233886719,
+        "right": -0.00012361817061901093,
+        "left_bits": "0080f5b8",
+        "right_bits": "809f01b9"
+      }
+    },
+    "PQ/QH_C": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    },
+    "PQ/QH_D": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    },
+    "PQ/REPEAT4": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    },
+    "QH_C/QH_D": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    },
+    "QH_C/REPEAT4": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    },
+    "QH_D/REPEAT4": {
+      "available": 23,
+      "missing": 9,
+      "all_four_equal": 23,
+      "first_divergence": {
+        "NONE": 23
+      },
+      "stages": {
+        "QK": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "softmax": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "AV": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        },
+        "final": {
+          "bit_mismatches": 0,
+          "max_abs": 0.0,
+          "max_relative_defined": 0.0,
+          "max_ULP": 0,
+          "nonfinite": 0
+        }
+      },
+      "first_counterexample": null
+    }
+  },
+  "FP64_errors": {
+    "QK": {
+      "max_abs": 0.0,
+      "max_relative_defined": 0.0,
+      "max_ULP_against_F32_rounded_reference": 0,
+      "nonfinite_actual": 0
+    },
+    "softmax": {
+      "max_abs": 3.5764847299002422e-09,
+      "max_relative_defined": 2.1480298907265481e-07,
+      "max_ULP_against_F32_rounded_reference": 3,
+      "nonfinite_actual": 0
+    },
+    "AV": {
+      "max_abs": 3.8581274510109294e-05,
+      "max_relative_defined": 1.8514231259384153,
+      "max_ULP_against_F32_rounded_reference": 1824765211,
+      "nonfinite_actual": 0
+    },
+    "final": {
+      "max_abs": 3.8581274510109294e-05,
+      "max_relative_defined": 1.8514231259384153,
+      "max_ULP_against_F32_rounded_reference": 1824765211,
+      "nonfinite_actual": 0
+    }
+  },
+  "first_scalar_difference_stages": {
+    "softmax": 115
+  },
+  "PQ_costs": {
+    "PQ_extra_CPU_copy_bytes": 22516,
+    "PQ_extra_API_upload_bytes": 22516,
+    "PQ_extra_logical_storage_bytes": 22516,
+    "PQ_extra_allocator_rounded_bytes": 23616
+  },
+  "special_operator_logical_costs": {
+    "packed_Q_CONT_graphs": 30,
+    "packed_Q_CONT_logical_bytes": 303104,
+    "QH_D_mask_REPEAT_graphs": 15,
+    "QH_D_mask_REPEAT_logical_bytes": 180128,
+    "REPEAT4_graphs": 15,
+    "REPEAT4_KV_root_logical_bytes": 15594496
+  },
+  "logical_cost_scope": "Logical tensor allocation/operator-copy bytes and API upload amounts; not measured DRAM traffic or speed",
+  "failed_slots": [
+    {
+      "slot": {
+        "run_id": "b570-supervised-numerical-v3-20261015-01",
+        "index": 116,
+        "kind": "graph",
+        "input_id": "d3fbaa318caea0a8caf61111bd5221e03e601ed356072e4d24bba54723d5ab57",
+        "mode": "MQ",
+        "repeat": 1,
+        "q": 3,
+        "control": "q_gt1",
+        "id": "1bc547f9d4b5d289813e5f1eb71114c14ef3f902e6636b29da436f0ca4da173a"
+      },
+      "pid": 42788,
+      "stop_ns": 53682031000000,
+      "initial_directory_deadline_age_ns": 1016000000,
+      "directory_events": [
+        {
+          "event": "READ_BEGIN",
+          "stream": "directory",
+          "begin_ns": 53681156000000
+        },
+        {
+          "event": "READ_DISCARDED",
+          "stream": "directory",
+          "begin_ns": 53681156000000,
+          "end_ns": 53682046000000,
+          "reason": "exit during read; values not admitted"
+        }
+      ],
+      "gate_admitted": true,
+      "GO_sent": false,
+      "graph_calls": 0,
+      "output_present": false,
+      "post_audit_worker_events": [
+        {
+          "event": "POST_AUDIT_BEGIN",
+          "ns": 53682078000000
+        },
+        {
+          "event": "AUDIT_ERROR",
+          "ns": 53682078000000,
+          "error": "complete child close event"
+        }
+      ],
+      "note": "Initial directory completion was absent before the strict1s deadline; discarded read is not a sample. Auditor failure after target termination is retained, not a declared expected outcome."
+    }
+  ],
+  "unstarted_slots": [
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 117,
+      "kind": "graph",
+      "input_id": "d3fbaa318caea0a8caf61111bd5221e03e601ed356072e4d24bba54723d5ab57",
+      "mode": "PQ",
+      "repeat": 1,
+      "q": 3,
+      "control": "q_gt1",
+      "id": "ed9da581ee71cfbd0c93eb41e3acc66c26325e73795dc5e7c90cbf8064105dff"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 118,
+      "kind": "graph",
+      "input_id": "d3fbaa318caea0a8caf61111bd5221e03e601ed356072e4d24bba54723d5ab57",
+      "mode": "QH_C",
+      "repeat": 1,
+      "q": 3,
+      "control": "q_gt1",
+      "id": "ab613d942070df766b4bb4f89bf7f0fc1759f857cc79d91234c66251876f6dd0"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 119,
+      "kind": "graph",
+      "input_id": "d3fbaa318caea0a8caf61111bd5221e03e601ed356072e4d24bba54723d5ab57",
+      "mode": "QH_D",
+      "repeat": 1,
+      "q": 3,
+      "control": "q_gt1",
+      "id": "9b9b0e4efc25def7ac10419a914bc7cf126288dfa82247eb6cc3f2ce25f11da1"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 120,
+      "kind": "graph",
+      "input_id": "d3fbaa318caea0a8caf61111bd5221e03e601ed356072e4d24bba54723d5ab57",
+      "mode": "REPEAT4",
+      "repeat": 1,
+      "q": 3,
+      "control": "q_gt1",
+      "id": "765bfdb012b0af3ed516aab2fc806e87ae9aabd2c6f3eac3da20cf483ba1ef7e"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 121,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "MQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "dbe9961664d788aab9f5ae1b33f73e44e9030ed3f67413102f7b21a23bc5eee6"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 122,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "PQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "05debb14cdf38e03aa259cc170180be0f831f3e713ca7abfd365c1d84ca908f3"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 123,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "QH_C",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "5b7cc18415edfe01fd2b96e482ab20c55755ceba7472eb423de6d54304e3052d"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 124,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "QH_D",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "ed7cd442544ef146f98f24b13c2368e01f83b6f65fe67df87022fbe80b5bade5"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 125,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "REPEAT4",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "b4514a194e66de99e436bc4c36a8f5a28c86acaca512fbc6609a8ddd8cbac11e"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 126,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "MQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "7a6409968e969ae44d3e0e93476a7871bb0cd40abc22e2999b78f04b81c543cf"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 127,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "PQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "00fee93ce7fb87e9bcc8c5e21577cb9d78423802a699e52e7929809c4f0d1a3b"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 128,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "QH_C",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "a456fe7b796e84b08369646ab2ea7a5ef24d44b6c7c678a083b7fcd0892ce139"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 129,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "QH_D",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "cac7ffd54c5dc6a7852d61a070e5b1f102f4742aacf32161783dd6308ae22362"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 130,
+      "kind": "graph",
+      "input_id": "83264a672032bd72980723fed25f250987df00e5b3a11eb907709ba562d871d7",
+      "mode": "REPEAT4",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "0fd35ab30fa773552d226dc9800f6539a47ec4c140108d61b3878abc8e156613"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 131,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "MQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "4df05c88a8fab85c022b5b78a509ddc04216062956961d405ee2f25782194559"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 132,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "PQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "9185708d6b00e0e6ead8d3558e17be2b2086e901549d3ab46fff38699906738f"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 133,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "QH_C",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "ec62234b4aa142603ce1a1694ba00f699e27d218bc1ea43abfa9e0210b302bb2"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 134,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "QH_D",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "613e6a42ecc6a16cf0cad82794ebf2e466985be3375b8c94f13bef29511086c3"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 135,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "REPEAT4",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "877e1459fe1921b96f8e070e13208a4145ad04f41a8b8d5aa0f5d2864900d887"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 136,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "MQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "7eb6791ffb9c7f99e000566671013e309d7973d130c8fb37bf15243bbca6a558"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 137,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "PQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "0877b354f56fc637e78f1f478e8c4f98e14a033fb7575184771e378c7ffc622b"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 138,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "QH_C",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "e66eac8d6b44c875669c4e54ed34584dc78ba8ec90e172ad4c88613e0c2d0508"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 139,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "QH_D",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "a5da885ffb67a7f8874f50ab14b1d2811f1aad0abfd0bd9fd599d7699564f154"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 140,
+      "kind": "graph",
+      "input_id": "cc7e096d86863330a5512e415f8244ba7a4f916ecaf5bee88384fe4dbfb2aad3",
+      "mode": "REPEAT4",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "601eafc4e8332d584ca1bbaaf4a74b97c3b8a09d748ef598e9897f6b239d2b7b"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 141,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "MQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "918030023eb971a63488dc75b7ad1bdd77d72ceb667f56f7607f5bb80964bbd6"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 142,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "PQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "13a47eeca405f70d1affb0ec33381112338b2bef916e9eb55895f75f4f8396ba"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 143,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "QH_C",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "63053ed26e1768a76e93448c5141f8a2b8e01daec680f0f0c973463a36d54fdd"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 144,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "QH_D",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "d6db39956c342b91d55ffd211031006f38605099428492c03ad36ecdcd140032"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 145,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "REPEAT4",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "ce4eb8ce86b00f99020f8a7c659735cfe3c8b3ccfdd8bf33144064a02645ed2a"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 146,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "MQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "04c66637de1fb48beb3cb093baaf544cd09fecc06f75777e379e152a01055e5b"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 147,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "PQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "8f68f770d92694481c0df0fe1acd80754b663cc68423f59b2e8531a60d1c040e"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 148,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "QH_C",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "655dc8770f4b4bef582ca9c8a13b39c9c231888d157e282fbf2c1c2a7f98dd8e"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 149,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "QH_D",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "6db64379fe8911658fe0036d577e489a3c4fc89d0f4e61c09393b1a7d7cff748"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 150,
+      "kind": "graph",
+      "input_id": "76b9fcf450418837243df64bd6d4d3902f77d9854606cdce301f04e6b383fa86",
+      "mode": "REPEAT4",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "4e90f469fbf3029123446f6a710b76d6e4fe361ed460c58e9fe20eaf2020ccb5"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 151,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "MQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "01c16f03221c8699dbcdf4c3047c6fd659dc631c4a8d56059160597b6d95748f"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 152,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "PQ",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "c1408f6654214f04545d7ac4fa88b6740cd4e938703a0f596f9a08210fb31184"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 153,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "QH_C",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "2522531dca17d622897faca9641516d95f64d312c1a24c80d8bc00ad7c6628bd"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 154,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "QH_D",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "4d9eb1df8618223bee7203d5ccde32749f8e6f8430e257aa543a2913f8522c2d"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 155,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "REPEAT4",
+      "repeat": 0,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "903d588cc863499a387094706e42c50adb0be3d972d9626a522c1b91c05f95bd"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 156,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "MQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "254bf1545adddd0f49291cfea4596cb76a0530b3941ddc995208977f95b499d8"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 157,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "PQ",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "4e95676f033ebd5ca005bf34613e8721d3c9d8852b4da5c64168f4dd6bd905fe"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 158,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "QH_C",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "9457bced8eece4bcfcda6c093d0325b99b44cdbd25361db76c4fb05ab7a7f0c8"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 159,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "QH_D",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "fa85f5496dea9f72c34a7c6cb490d30f7b000020f211429a603284b6ed41f189"
+    },
+    {
+      "run_id": "b570-supervised-numerical-v3-20261015-01",
+      "index": 160,
+      "kind": "graph",
+      "input_id": "2662ce1dcb9fb46fddb5e6565e04df680bf0a7c4cb1b95635d6393a61736b7bc",
+      "mode": "REPEAT4",
+      "repeat": 1,
+      "q": 4,
+      "control": "q_gt1",
+      "id": "0a507cfcbce27f06f0196faf5f16ebc12a74c6f9e505872e78074467a0bb6aa9"
+    }
+  ],
+  "old_v2": "37 attempts/36 admitted/1invalid/124unstarted/36calls/41.327s unchanged",
+  "old_S1": "2/5.109s/159unstarted unchanged",
+  "diagnostics": "7/13.172s/5success/2declared negatives unchanged",
+  "old_samples_imported": 0,
+  "models": 0,
+  "extra_probes": 0,
+  "warmups": 0,
+  "retries": 0,
+  "GPU_tasks_after_stop": 0,
+  "S2_S3": "NOT_ADMITTED",
+  "actor_execution": false,
+  "performance_claim": null
+}

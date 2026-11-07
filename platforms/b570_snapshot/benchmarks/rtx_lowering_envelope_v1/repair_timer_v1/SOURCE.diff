@@ -1,0 +1,75 @@
+--- dbf86fd/native113.cpp
++++ repair_timer_v1/native_repair.cpp
+@@ -1,4 +1,5 @@
+ #include "hs113_graph.h"
++#include "core_gate.h"
+ #include "ggml-backend.h"
+ #include "nlohmann/json.hpp"
+ #include <algorithm>
+@@ -80,28 +81,40 @@
+ }
+ static int gpu_run(const J&job,const fs::path&out){
+     hs113::require(job.contains("approved_stage_F0"),"separate S1 approval binding missing");fs::path root=job.at("root").get<std::string>(),runtime=job.at("runtime_directory").get<std::string>();
++    hs113::require(job.at("run_id")=="pr113-timer-gpu-regression-v1","new independent regression run only");
+     hs113::require(!fs::exists(out),"immutable scientific output");fs::create_directories(out);J m=read(root/"snapshot.json");std::string kind=job.at("kind"),layout=job.at("layout");
+-    hs113::require(kind=="numeric"||kind=="clean"||kind=="trace","bounded host mode");SetDllDirectoryW(runtime.wstring().c_str());
+-    hs113::require(ggml_backend_load((runtime/"ggml-cuda.dll").string().c_str()),"CUDA plugin unavailable");auto backend=ggml_backend_init_by_name("CUDA0",nullptr);hs113::require(backend,"CUDA0 unavailable");
++    hs113::require(kind=="numeric","14-attempt engineering regression only; no timing/trace");
++    auto &core=repair113::process_core(runtime/"ggml-base.dll",job.at("core_sha256").get<std::string>());
++    auto host_binding=core.verify_shared_import("ggml_init");
++    auto registry_binding=repair113::verify_registry_import(runtime,job.at("registry_sha256"));
++    write(out/"CORE_ADMITTED_BEFORE_CUDA.json",{{"core",core.receipt()},{"host_import",host_binding},{"registry_import",registry_binding}});SetDllDirectoryW(runtime.wstring().c_str());
++    repair113::pin_numeric_file(runtime/"ggml-cuda.dll",job.at("cuda_plugin_sha256"));
++    hs113::require(ggml_backend_load((runtime/"ggml-cuda.dll").string().c_str()),"CUDA plugin unavailable");
++    write(out/"PLUGIN_CORE_IMPORTS.json",repair113::verify_plugin_core_imports(runtime/"ggml-cuda.dll",core.module()));
++    auto backend=ggml_backend_init_by_name("CUDA0",nullptr);hs113::require(backend,"CUDA0 unavailable");
+     auto cudart=GetModuleHandleW(L"cudart64_12.dll");hs113::require(cudart,"actual pinned cudart module absent");auto complete=(int(*)())GetProcAddress(cudart,"cudaDeviceSynchronize");hs113::require(complete,"device-wide completion unavailable");
+     Graph g(m,layout,kind=="numeric");auto support=g.registry(backend);for(const auto&n:support["nodes"])if(!n["metadata_only"].get<bool>())hs113::require(n["CUDA_support"]==true,"unsupported executable node; CPU fallback forbidden");
++    write(out/"RUNTIME_BEFORE_ALLOCATE.json",{{"pid",GetCurrentProcessId()},{"core",core.receipt()},{"modules",modules()},{"graph",support}});
+     auto buffer=ggml_backend_alloc_ctx_tensors(g.ctx,backend);hs113::require(buffer,"CUDA allocation failed");
+     for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);if(!metadata(t->op))hs113::require(t->buffer&&!ggml_backend_buffer_is_host(t->buffer)&&ggml_backend_buft_get_device(ggml_backend_buffer_get_type(t->buffer))==ggml_backend_get_device(backend),"actual allocation placement mismatch");}
+     const char*roles[]={"Q","K","V","mask"};std::vector<std::vector<unsigned char>>initial;
+     for(int i=0;i<4;i++){initial.push_back(bytes(root/m[roles[i]]["file"].get<std::string>()));hs113::require(initial.back().size()==ggml_nbytes(g.in[i]),"whole input span mismatch");ggml_backend_tensor_set(g.in[i],initial.back().data(),0,initial.back().size());}
++    auto placed=support;for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);placed["nodes"][i]["placement"]=t->buffer?J(ggml_backend_buffer_name(t->buffer)):J(nullptr);}placed["actual_placement"]="CUDA0 direct backend; no scheduler";
++    write(out/"PLACEMENT_BEFORE_COMPUTE.json",placed);
+     hs113::require(complete()==0,"setup completion failure");
+-    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input before-start readback differs");}
++    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input before-start readback differs");std::ofstream f(out/(std::string("input_")+roles[i]+".before.bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"input pre dump");}
+     int warmup=kind=="numeric"?0:1,count=kind=="clean"?8:1;J times=J::array(),intervals=J::array();std::vector<unsigned char>expected;int starts=0;
+     for(int i=-warmup;i<count;i++){
+         write(out/("GRAPH_STARTED_"+std::to_string(starts)+".json"),{{"index",starts},{"warmup",i<0}});starts++;
+-        auto begin=std::chrono::steady_clock::now();auto rc=ggml_backend_graph_compute(backend,g.g);hs113::require(rc==GGML_STATUS_SUCCESS&&complete()==0,"compute/completion failed");auto end=std::chrono::steady_clock::now();
++        auto begin=std::chrono::steady_clock::now();auto rc=ggml_backend_graph_compute(backend,g.g);write(out/"GRAPH_CALL_RETURNED.json",{{"status",int(rc)},{"pid",GetCurrentProcessId()}});
++        auto sync=complete();write(out/"SYNCHRONIZATION_RETURNED.json",{{"status",sync},{"pid",GetCurrentProcessId()}});hs113::require(rc==GGML_STATUS_SUCCESS&&sync==0,"compute/completion failed");auto end=std::chrono::steady_clock::now();
+         std::vector<unsigned char>b(ggml_nbytes(g.result.ordinary));ggml_backend_tensor_get(g.result.ordinary,b.data(),0,b.size());if(expected.empty())expected=b;else hs113::require(b==expected,"within-host output repeatability failed");
+         if(i>=0){times.push_back(std::chrono::duration<double,std::milli>(end-begin).count());intervals.push_back({{"begin_ns",std::chrono::duration_cast<std::chrono::nanoseconds>(begin.time_since_epoch()).count()},{"end_ns",std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count()}});}
+     }
+-    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input mutation");}
++    for(int i=0;i<4;i++){std::vector<unsigned char>b(initial[i].size());ggml_backend_tensor_get(g.in[i],b.data(),0,b.size());hs113::require(b==initial[i],"full input mutation");std::ofstream f(out/(std::string("input_")+roles[i]+".after.bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"input post dump");}
+     auto dump=[&](const char*name,ggml_tensor*t){std::vector<unsigned char>b(ggml_nbytes(t));ggml_backend_tensor_get(t,b.data(),0,b.size());std::ofstream f(out/(std::string(name)+".bin"),std::ios::binary);f.write((char*)b.data(),b.size());hs113::require(bool(f),"tensor write failed");};
+     if(kind=="numeric"){dump("QK",g.result.stage[0]);dump("softmax",g.result.stage[1]);dump("AV",g.result.stage[2]);}dump("ordinary",g.result.ordinary);
+-    write(out/"RECORD.json",{{"status","COMPLETED"},{"layout",layout},{"kind",kind},{"graph_computes",starts},{"warmups",warmup},{"completed_host_wall_ms",times},{"raw_completed_intervals",intervals},{"pid",GetCurrentProcessId()},{"synchronization","explicit cudaDeviceSynchronize, all device streams; inclusive host wall, not kernel time"},{"input_reset_and_postcheck",true},{"nodes",g.registry(backend)},{"modules",modules()},{"profile","PROFILE_UNAVAILABLE_PLACEMENT_ONLY"},{"kernel_names",nullptr},{"DRAM_bytes",nullptr}});
++    write(out/"RECORD.json",{{"status","COMPLETED"},{"layout",layout},{"kind",kind},{"graph_computes",starts},{"warmups",warmup},{"completed_host_wall_ms",times},{"raw_completed_intervals",intervals},{"pid",GetCurrentProcessId()},{"synchronization","explicit cudaDeviceSynchronize, all device streams; inclusive host wall, not kernel time"},{"input_reset_and_postcheck",true},{"nodes",placed},{"modules",modules()},{"profile","PROFILE_UNAVAILABLE_PLACEMENT_ONLY"},{"kernel_names",nullptr},{"DRAM_bytes",nullptr}});
+     ggml_backend_buffer_free(buffer);ggml_backend_free(backend);return 0;
+ }
+ int main(int argc,char**argv){try{
+@@ -112,8 +125,18 @@
+         hs113::require(rejected==5,"malformed descriptor accepted");write(argv[3],{{"CPU_negative_cases",rejected},{"status","PASS"},{"modules",modules()},{"GPU_calls",0}});return 0;
+     }
+     if(mode=="--cpu-addresses"){write(argv[3],address_tests(plan));return 0;}
++    if(mode=="--cpu-core-abi"){
++        repair113::no_gpu_modules();auto &core=repair113::process_core(fs::path(plan.at("runtime_directory").get<std::string>())/fs::path("ggml-base.dll"),plan.at("core_sha256"));
++        auto shared=core.verify_shared_import("ggml_init");auto registry=repair113::verify_registry_import(plan.at("runtime_directory"),plan.at("registry_sha256"));
++        auto size=(decltype(&ggml_nbytes))core.resolve("ggml_nbytes");auto elements=(decltype(&ggml_nelements))core.resolve("ggml_nelements");
++        auto count=(decltype(&ggml_graph_n_nodes))core.resolve("ggml_graph_n_nodes");auto node=(decltype(&ggml_graph_node))core.resolve("ggml_graph_node");
++        size_t checks=0,graphs=0;for(const auto&d:plan.at("descriptors"))for(const std::string name:{"MQ","PQ","QB","QH_C","QH_D"})for(bool stages:{false,true}){
++            Graph g(d.at("metadata"),name,stages);hs113::require(count(g.g)==ggml_graph_n_nodes(g.g),"DLL graph ABI count");
++            for(int i=0;i<count(g.g);i++){auto*t=node(g.g,i);hs113::require(t==ggml_graph_node(g.g,i)&&size(t)==ggml_nbytes(t)&&elements(t)==ggml_nelements(t),"DLL tensor ABI");checks++;}graphs++;
++        }repair113::no_gpu_modules();write(argv[3],{{"graphs",graphs},{"tensor_checks",checks},{"host_import",shared},{"registry_import",registry},{"core",core.receipt()},{"modules",modules()},{"graph_computes",0},{"GPU_queries",0}});return 0;
++    }
+     if(mode=="--gpu-run")return gpu_run(plan,argv[3]);
+-    bool gpu=mode=="--gpu-census";hs113::require(gpu||mode=="--cpu-registry","unknown mode");ggml_backend_t backend=nullptr;
++    hs113::require(mode!="--gpu-census","standalone extra support host not registered");bool gpu=false;hs113::require(gpu||mode=="--cpu-registry","unknown mode");ggml_backend_t backend=nullptr;
+     if(gpu){hs113::require(plan.contains("approved_stage_F0")&&plan["approved_stage_F0"].is_string(),"missing separately approved S1 F0 binding");
+         auto runtime=fs::path(plan.at("runtime_directory").get<std::string>());SetDllDirectoryW(runtime.wstring().c_str());auto path=runtime/"ggml-cuda.dll";hs113::require(ggml_backend_load(path.string().c_str()),"pinned CUDA plugin load failed");backend=ggml_backend_init_by_name("CUDA0",nullptr);hs113::require(backend,"CUDA0 unavailable");}
+     J records=J::array();int graphs=0;for(const auto&d:plan.at("descriptors"))for(const std::string name:{"MQ","PQ","QB","QH_C","QH_D"})for(bool stages:{false,true}){

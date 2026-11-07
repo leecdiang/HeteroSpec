@@ -1,0 +1,57 @@
+{
+  "schema": "heterospec.358h.preformal_dry_run.v1",
+  "formal_measurement": false,
+  "performance_claim_prohibited": true,
+  "started_and_completed_on_ac": true,
+  "completed_at": "2026-09-18T02:04:59.703+08:00",
+  "python": "3.11.9",
+  "openvino": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+  "checks": {
+    "preregistration_parses": true,
+    "phase0_gate_parses": true,
+    "ir_xml_hash": true,
+    "ir_bin_hash": true,
+    "external_power": true,
+    "balanced_scheme": true,
+    "cpu_available": true,
+    "cpu_binding_evidence": true,
+    "cpu_functional_smoke": true,
+    "npu_available": true,
+    "npu_binding_evidence": true,
+    "npu_functional_smoke": true,
+    "formal_runner_fail_closed_state": true,
+    "phase2_gate_positive_fixture": true,
+    "phase2_gate_negative_fixture": true
+  },
+  "qualification_pass": true,
+  "formal_runner_check": {
+    "expected": "no",
+    "returncode": 2,
+    "stdout": "{\n  \"ready\": false,\n  \"reason\": \"Phase-1 preregistration is not FROZEN/authorized; repository_commit is not frozen\"\n}",
+    "stderr": ""
+  },
+  "failure_recovery": "Incomplete session directories remain non-formal and immutable; restart with a new session ID after resolving the recorded failed check. Never append to or overwrite a completed formal session.",
+  "artifacts": [
+    {
+      "path": "runs\\358h\\dry_run\\pre_freeze_20260918_r3\\cpu-smoke.json",
+      "bytes": 436,
+      "sha256": "f6dd7a4ebac24053133e1d202f53fbfbe58c077d951eb62d03d86cbc819e40cb"
+    },
+    {
+      "path": "runs\\358h\\dry_run\\pre_freeze_20260918_r3\\npu-smoke.json",
+      "bytes": 446,
+      "sha256": "49ced9f39b53fc682fe3ef7a71153eb63a04f07d60010282edce813e17df0b3c"
+    },
+    {
+      "path": "benchmarks\\358h_threshold_validation\\preregistration_v1.json",
+      "bytes": 10822,
+      "sha256": "19584e5241c02ff8eccb5f8df51b1aea16220e41b4676bb2f3758c70711d3bb8"
+    },
+    {
+      "path": "runs\\358h\\qualification\\phase0_gate.json",
+      "bytes": 1197,
+      "sha256": "21602db388d5edace35f32674afbb77bf5f328b6e554375dc2ac0b69047f41e5"
+    }
+  ]
+}
+

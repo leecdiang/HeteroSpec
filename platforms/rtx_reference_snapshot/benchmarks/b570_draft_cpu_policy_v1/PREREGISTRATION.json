@@ -1,0 +1,71 @@
+{
+  "study": "B570_DRAFT_CPU_POLICY_V1",
+  "uuid": "8a7a338a-c431-42ae-9e1b-96f4bfa7e59e",
+  "parent": "51febaddcf49bb18565e568cf964a6e5c78876c9",
+  "authorization": "Continue software baseline investigation under user authorization; old balance not a blocking cap; no actor/RTL/CPU8",
+  "intervention": "Only draft context n_threads and n_threads_batch8 ->1. Target remains8; unchanged DLLs,GPU ops,prefill q1 submission,layout QB,k1,sampling,KV and state protocol. No permanent threadpool change.",
+  "source_hypothesis": "PR134 host passes8 to both contexts. CPU backend forwards n_threads into ggml_graph_plan/ggml_graph_compute. Build enables OpenMP; n_threads>1 enters omp parallel. A temporary ggml pool object does not prove OS threads recreated. Single-thread draft CPU policy tests overhead of small CPU subgraphs; GPU placement and physical bottleneck not inferred from flags.",
+  "inputs": "Exactly PR134 four input-ID sequences,64 cap/EOG; no new workload or prompt selection",
+  "reference": "All historical PR134 QB target/draft logits files (346) plus full endpoint/cycle traces remain byte-exact qualification reference; no reference replacement",
+  "qualification": {
+    "processes": 4,
+    "requests": 4,
+    "arm": "DRAFT1",
+    "stop": "First mismatch, support or process failure stops; preserve evidence; no timing of a failed candidate"
+  },
+  "timing": {
+    "processes": 4,
+    "warmup_requests": 16,
+    "measured_requests": 64,
+    "arms": [
+      "R",
+      "BASE_A",
+      "BASE_B",
+      "DRAFT1"
+    ],
+    "controls": "BASE_A and BASE_B identical PR134 QB threads8 implementation; R target-only8, draft weights resident",
+    "orders": [
+      [
+        "R",
+        "BASE_A",
+        "DRAFT1",
+        "BASE_B"
+      ],
+      [
+        "BASE_A",
+        "BASE_B",
+        "R",
+        "DRAFT1"
+      ],
+      [
+        "BASE_B",
+        "DRAFT1",
+        "BASE_A",
+        "R"
+      ],
+      [
+        "DRAFT1",
+        "R",
+        "BASE_B",
+        "BASE_A"
+      ]
+    ],
+    "input_order": "task=(session+j)%4; arm order row=(session+task)%4",
+    "warmup": "PR13316token reference, every arm once each process, separate charge and records",
+    "window": "Primary fresh-context service incl creation/prefill/generation/state/host/sync/destruction; excludes shared model load and postrequest comparison/disk. Secondary request-only and phases. No node observer during timing."
+  },
+  "analysis": {
+    "primary": "Equal-input geometric mean of DRAFT1 / mean(BASE_A,BASE_B) service, paired over4 sessions.",
+    "secondary": "DRAFT1/R service; draft_PREFILL and total draft decode duration; unchanged target phase as control.",
+    "screen": "All byte gates pass; reduction>max(2percent,largest per-input aggregate absolute BASE_A/BASE_B imbalance) and candidate lower than dualBASE in all4 session aggregates.",
+    "scope": "Fixed exposed four-input one-date panel; no population CI, no optimized ceiling claim. Do not equate backend OpenMP intervention with GPU kernel causality."
+  },
+  "execution": {
+    "new_cap_seconds": 3600,
+    "qual_deadline_seconds": 180,
+    "time_deadline_seconds": 600,
+    "cleanup_margin": 10,
+    "max_reserved": 3200,
+    "old_cumulative_seconds": 1817.8040152
+  }
+}

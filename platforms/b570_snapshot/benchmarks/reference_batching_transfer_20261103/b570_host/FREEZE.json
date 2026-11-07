@@ -1,0 +1,109 @@
+{
+  "utc": "2026-11-03T07:28:26.139337+00:00",
+  "source_commit": "9848cce08b5b1eb872449aa03440352bef50ab4e",
+  "proofs": [
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\retained-4-shared-01\\COMPARISON.json",
+      "sha256": "3820d2460fec1723d60017cdba7a0dcb8fbdc3b85ffc85583d60705954fa33de"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\original-original-final-4\\ORIGINAL_COMPARISON.json",
+      "sha256": "0c3b20998b7f570c8da295e4f117e1d7a659b582d4a8864cfc5307880f845b56"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\retained-6-shared-01\\COMPARISON.json",
+      "sha256": "422034f640fedeb253ac6c1875c0b35e4ee0250fe324de2f9898d052867320ee"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\original-original-final-6\\ORIGINAL_COMPARISON.json",
+      "sha256": "2e5f480de327d87e11fb8912dfdd8ea4248aba78349a748ee8b3bda255bfe30e"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\retained-2-shared-01\\COMPARISON.json",
+      "sha256": "24b4092d3e7f9d82a752b9767b8b132b47666464cc3c76131f915b5dc8cdef49"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\original-original-final-2\\ORIGINAL_COMPARISON.json",
+      "sha256": "b451b82257a1b0a7d212c008104b154b8e09681710421a433cb0019a3f71afe1"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\probe-shared-01\\PROBE_AUDIT.json",
+      "sha256": "34444bf359e9a15d7a9756d5488be6813bdd2021adb0c53bed7fa1204aa98349"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\precision-off-shared-01\\REVERSAL_AUDIT.json",
+      "sha256": "07a469823cba5b8c777d11abbb7066480c2f12395fb86b35a5087cc2980b8402"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\units\\llama-controls-01\\REGRESSION.json",
+      "sha256": "83f4dac4ef32c50c75c8fe97a365bd57254f5bc292aba4c89a3b44255c36fbba"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\original-final\\FILES.json",
+      "sha256": "6f70f722be27f7f32fb98fc32280479b93d45fe0cd325db5be77605823fabc60"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\shared-01\\FILES.json",
+      "sha256": "083bab6e590b06573bc7c4b75e03e7a2bce43c99d62aa2cc5bddd032c8e19df1"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\MODEL_PINS.json",
+      "sha256": "b502f28f1becb380dc980f2efe9b55f875c848fdd21a7fbbfa8b4162a51e7f88"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\SHARED_PLANNER_SOURCE.json",
+      "sha256": "005a3fd863689d75fd0305c5de1aa1a5701b9a847fd1d9a0e5f5b9257a432f76"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\ggml\\src\\ggml-vulkan\\ggml-vulkan.cpp",
+      "sha256": "ed2041ef667d094cc462d4b0b6241838bab5822ad2f2d580c3d312ca79db18fc"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\src\\llama-graph.cpp",
+      "sha256": "f9a09c3fcf7bb71c62a3ca7e663a56a32ca0aa8a0fb8616be042e4e60f55ef95"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\src\\llama-graph.h",
+      "sha256": "48f33c60170ac5d7cd2be666f86deaa5f4130c5559cdf98f9f5b60c77e21d094"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\src\\llama-kv-cache.cpp",
+      "sha256": "102e510228b89caae54d94691c09b838de189abfe28abc8773c9c5cc1c1e65ae"
+    },
+    {
+      "path": "I:\\HeteroSpec\\b570-qwen-transfer-20261103\\source-01\\src\\hs_reference_batching.hpp",
+      "sha256": "1d28cc9156d3b1ea64b5b095f362d14c969dce4ae4beee57dc2ad5a1d9c47c47"
+    }
+  ],
+  "controls": "All retained cases, precision reversal, observed prefix split/reuse, two Llama controls and original R adapter verified.",
+  "mapping": {
+    "producer": "uniform P4T for all integrated candidate arms",
+    "precision": true,
+    "prefix": true,
+    "target_gpu_layers": 999,
+    "draft_gpu_layers": 999,
+    "threads": 8,
+    "k": 1,
+    "cap": 128,
+    "R": "original PR152 scalar UB1, original numerical DLLs"
+  },
+  "cost": {
+    "sessions": 3,
+    "inputs": 8,
+    "arms": [
+      "R",
+      "M_PQ",
+      "M_QB",
+      "C_PQ",
+      "C_QB"
+    ],
+    "pairs": 120,
+    "no_extension": true
+  },
+  "selection": {
+    "near": "four natural prompts at244..255",
+    "ordinary": "two code and two math, next padding boundary at least64 positions away",
+    "reason": "pinned pool has37 near math and no near code; retain multi-domain ordinary coverage"
+  },
+  "no_unseen_outputs": true
+}

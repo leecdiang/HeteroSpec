@@ -1,0 +1,4 @@
+"""Supplement the initial engineering lock before any family/method forward."""
+from common import *
+assert not (LOCAL/'runs/new_core_bridge').exists() and not (LOCAL/'runs/F_graph_proof').exists()
+p=PUB/'F_E_ENGINEERING_F0.json';a=read(p);a['resolved_inputs']={name:sha(PUB/name) for name in ['F_DISCOVERY_INPUTS.json','F_CONFIRMATION_INPUTS.json','QWEN_CONFIRMATION_INPUTS.json','F_WARMUP.json','BRIDGE_INPUTS.json','S_INPUTS.json']};a['code_sha256']={f.name:sha(f) for f in Path(__file__).parent.glob('*') if f.suffix in ['.py','.cpp'] and f.name not in ['prepare_engineering.py','verify_s.py']};a['pre_forward_supplement_utc']=now();a['network_push_failure_before_first_family_forward']='initial local lock committed66fdd16; remote upload failed; no new family or E context created';save(p,a);print('ENGINEERING BYTE BINDINGS COMPLETE',flush=True)

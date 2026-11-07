@@ -1,0 +1,62 @@
+[
+  {
+    "file": "sections/09_conclusion.tex",
+    "before": "Speculation is nevertheless 41.8\\% faster than the frozen target-only policy in the RTX panel and 2.62 times as costly in the B570 panel.",
+    "after": "Speculative service time is nevertheless 41.8\\% lower than under the frozen target-only policy in the RTX panel and 2.62 times as high in the B570 panel."
+  },
+  {
+    "file": "sections/04_design.tex",
+    "before": "The practical ratio threshold is 1.02.",
+    "after": "The practical ratio threshold is 1.02: for PQ/QB, this corresponds to a QB latency reduction of $1-1/1.02\\approx1.96\\%$. The later service studies instead register a 2\\% reduction relative to their PQ control mean. We retain both original definitions."
+  },
+  {
+    "file": "sections/04_design.tex",
+    "before": "@{}p{2.1cm}p{5.0cm}Y@{}",
+    "after": "@{}>{\\raggedright\\arraybackslash}p{2.6cm}>{\\raggedright\\arraybackslash}p{5.2cm}Y@{}"
+  },
+  {
+    "file": "sections/01_introduction.tex",
+    "before": "The native speculative transaction remains unchanged.",
+    "after": "The native speculative transaction remains unchanged. QB is a graph-lowering choice, not a new attention kernel or acceptance algorithm: its contribution is the coupled query/mask mapping and its phase, cache and state obligations, evaluated against implementations that preserve the same reference."
+  },
+  {
+    "file": "sections/07_architecture.tex",
+    "before": "Several existing approaches also constrain numerical evaluation. Batch-invariant kernels constrain numerical evaluation~\\cite{thinkingmachines};",
+    "after": "Complementary designs operate at different levels. Batch-invariant kernels constrain numerical evaluation~\\cite{thinkingmachines};"
+  },
+  {
+    "file": "sections/08_related_limits.tex",
+    "before": "Larger context, concurrent requests, different precision and fused attention require new qualification.",
+    "after": "Larger context, concurrent requests, different precision and fused attention require new qualification. In particular, the measured 3--6\\% resident-request gains are not comparisons against an optimized fused-attention serving stack. A stronger software baseline must satisfy the same output contract before its speed can be compared; a differing endpoint cannot be accepted merely because the implementation is faster."
+  },
+  {
+    "file": "sections/08_request_service.tex",
+    "before": "However, dual-PQ/R is already 0.588633.",
+    "after": "However, dual-PQ/R is already 0.588633. Figure~\\ref{fig:servicepanels} therefore shows both speculative paths against R rather than only the QB path."
+  },
+  {
+    "file": "sections/08_request_service.tex",
+    "before": "\\caption{Separate finite-panel service comparisons. Every small point is one input/session block (16 per platform); diamonds are equal-weight geometric means. A: layout ratio to identical-PQ controls; B: A/A ratios; C: speculative service relative to target-only R. Dashed lines mark parity; dotted lines show the 2\\% practical scale in A/B. Scatter is the observed block distribution, not a confidence interval. RTX and B570 use different inputs and policies and are shown as separate cases.}",
+    "after": "\\caption{Separate finite-panel service comparisons. Small outlined points retain every input/session block (16 per platform and contrast); large markers are equal-weight geometric means. A: QB relative to identical-PQ controls; B: identical-PQ A/A ratios; C: both QB and dual-PQ relative to target-only R. Labels in B report the largest absolute input-aggregate A/A imbalance used by the screen, not a confidence bound. Dashed lines mark parity; dotted lines in A/B show the registered 2\\% scale. Vertical offsets only separate observations. Ratios below one favor the numerator. Platforms have different inputs and policies; their data are not pooled.}"
+  },
+  {
+    "file": "figures/sessions.tex",
+    "before": "xlabel={PQ / QB request-time ratio}",
+    "after": "xlabel={PQ / QB request-time ratio ($>1$: QB faster)}"
+  },
+  {
+    "file": "figures/sessions.tex",
+    "before": "mark size=1.25pt,color=aux!55",
+    "after": "mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux"
+  },
+  {
+    "file": "preamble.tex",
+    "before": "\\definecolor{draft}{HTML}{B07B43}",
+    "after": "\\definecolor{draft}{HTML}{936027}"
+  },
+  {
+    "file": "preamble.tex",
+    "before": "\\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,",
+    "after": "\\definecolor{linkblue}{HTML}{204D8B}\n\\hypersetup{colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue,"
+  }
+]

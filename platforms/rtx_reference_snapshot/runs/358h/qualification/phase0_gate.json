@@ -1,0 +1,28 @@
+{
+  "schema_version": 5,
+  "platform": "Intel Core Ultra X7 358H",
+  "scope": [
+    "CPU draft",
+    "NPU draft"
+  ],
+  "status": "PASS",
+  "qualification_pass": true,
+  "qualification_scope": "core latency and break-even study",
+  "energy_admissibility": {
+    "cpu_package": {
+      "admissible": true,
+      "boundary": "RAPL_Package0_PKG package power via Windows Energy Meter direct PDH API",
+      "claim_limit": "CPU package energy only; not wall/system energy and not an isolated CPU-core domain. If only the isolated representative gate passes, the energy-only workload must remain pinned to CPUs 0-11 and the collector to CPUs 12-15."
+    },
+    "npu": {
+      "admissible": false,
+      "reason": "The latest minimal SocWatch qualification failed the unchanged 1% overhead gate; package RAPL does not isolate NPU energy."
+    },
+    "symmetric_cpu_vs_npu_energy_comparison": false
+  },
+  "formal_measurement_authorized": true,
+  "authorization_basis": "Phase-0 PASS plus frozen preregistration content commit d17fd4392dec23a886c08c53cd62c401eace28ae; formal execution remains operator-triggered and was not started in this task.",
+  "replacement_manifest": "runs/358h/qualification_ac_20260918/phase0_ac_manifest.json",
+  "formal_data_collected": false
+}
+

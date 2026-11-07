@@ -1,0 +1,625 @@
+{
+  "status": "STOP_BEFORE_CONTROLLER_NO_RETRY",
+  "received_utc_first_observed": "2026-10-16T12:48:52+00:00",
+  "receipt_created_utc": "2026-10-16T12:50:27.876563+00:00",
+  "author_message": "对，现在 **RTX 这边已经把上一次 Block 0 的唯一工程性阻塞点闭环了**：Census 不再存在 LF/CRLF 语义替代，授权绑定的是执行入口实际消费的 **CRLF 原始字节**，CPU 126/126、远端 197 raw 成员也完成认证。因此下一步可以直接授权 **Block 0**，不需要再做 Census，也不要碰 Block 1/2。\n\n我建议直接把下面这段给 RTX agent：\n\n---\n\n### RTX S1B — Block 0 独立 GPU 执行授权\n\n现在授权执行 **PR118 `pr116-s1b-exact-r1` 的 Clean Block 0**。这是一次**独立且一次性的 GPU 授权**。\n\n**只允许执行 Block 0，禁止任何超范围 GPU 工作。**\n\n#### 1. 身份与冻结证据\n\n必须严格使用：\n\n- run_id：`pr116-s1b-exact-r1`\n- F0 SHA256：\\\n  `999fe0bda4e68b53b1f41a589623b5c1d00fb64cfee91fb9413c11c98a39fc32`\n- Execution-bound Census SHA256：\\\n  `d8c79ed1b4fc748ec8ce22a201137ef6fc201de79052fa7c6c4f7711806e8256`\n- Archive manifest：\\\n  `b9f4e80840820b37f1726eb1e35ca4dd637b4cb21116c9e0dc266574e53b542c`\n\n**授权绑定必须是 execution entry 实际读取的 Census 原始字节。禁止 LF/CRLF 归一化、重新序列化、语义等价替代或绕过 hash check。**\n\n如果 F0、Census、entry identity 或任何冻结资产不匹配：\n\n> **立即停止，0 GPU graph calls，不重试。**\n\n不要恢复旧 Block 0 run，也不要修改旧结果。\n\n#### 2. Block 0 唯一实验范围\n\n仅执行：\n\n- **72 个 clean coordinates**\n- PQ：24\n- QB：24\n- QH_C：24\n\n覆盖原固定 24 contexts，不增加任何新坐标。\n\n每个 clean host 严格执行冻结的：\n\n- **1 次 warmup**\n- **8 次正式 measurement**\n\n因此：\n\n- 72 个 host\n- 72 次 warmup\n- **576 次正式 measurement**\n- **648 次 graph calls 总计**\n\n严格按照 F0 中已经冻结的 host/context pairing 和执行顺序，不自行重排或删减。\n\n#### 3. 每个坐标必须记录\n\n完整保留并独立记录：\n\n- CUDA initialization / ownership\n- graph identity\n- input 前后字节完整性\n- allocation\n- packing\n- mask\n- input preparation / copy\n- upload\n- compute\n- synchronization\n- output readback\n- ordinary output correctness\n- resident execution cost\n- input-inclusive total cost\n\nQPC 正式 measurement 必须保存完整原始样本，并计算：\n\n- median\n- p95\n- max\n\n不要只保存汇总数字。\n\n**不要把没有样本记为 0 ms。**\n\n#### 4. 正确性 Gate\n\n正式 timing 结果必须建立在 ordinary correctness 合格基础上。\n\n继续使用已经冻结的独立 CPU/reference 判据，不改变：\n\n- tolerance\n- rounding interpretation\n- reference\n- 输入\n- 算术图\n- serializer\n- layout\n- DLL\n- CUDA/plugin identity\n\n如果出现：\n\n- 非有限输出\n- input mutation\n- graph/identity drift\n- CUDA launch/sync failure\n- ordinary correctness failure\n- 监测失败\n- 日志/容量失败\n- 生命周期违反冻结规则\n- 任何无法认证的结果\n\n**立即停止整个 Block 0，不重试该 slot，也不追加 GPU 实验。**\n\n失败输出和日志原样封存。\n\n#### 5. 资源监测\n\n启动前执行冻结的 GPU readiness gate。\n\nGPU utilization 若超过冻结的 **5%** 上限：\n\n> 不启动任何数值 host，直接停止。\n\n运行期继续使用已经修复的严格 **1,000,000,000 ns** 监测规则。\n\n不要因为退出后的 CPU audit、hash、archive 或日志处理耗时而误判 native runtime；退出时间、后置审计时间和交付成本继续分开记账。\n\n#### 6. 严禁事项\n\n本授权**不包括**：\n\n- Block 1\n- Block 2\n- trace\n- profiling\n- S2/S3\n- actor\n- decoder\n- KV/rollback\n- 模型请求\n- 额外 probe\n- warmup 之外的额外 GPU 查询\n- retry\n- 补跑失败坐标\n- 扩大 context\n- 新增布局\n- 修改 threshold\n- 修改 tolerance\n\n如果 Block 0 中途停止，**停在哪里就停在哪里，不自行续跑。**\n\n#### 7. 最终汇报要求\n\n完成或停止后，返回：\n\n1. 72 coordinates 的逐坐标状态；\n2. warmup / formal measurement 数量；\n3. CUDA graph call 数量；\n4. correctness qualification；\n5. PQ/QB/QH_C 的逐坐标对应关系；\n6. allocation / preparation / upload / compute / sync / readback 成本；\n7. resident 与 input-inclusive 两套成本；\n8. QPC median/p95/max；\n9. 完整资源与 owned accounting；\n10. 所有失败/停止原因；\n11. F0、Census、result archive 的实际 SHA256；\n12. fresh restore / independent audit 结果；\n13. **不要将单点 timing 或 >1.02 的结果直接表述为稳定加速，先保留原始分布。**\n\n如果全部 72 坐标完成，则**停止在 Block 0 完成节点，等待下一次单独授权**。\n\n---\n\n### 我现在的判断\n\n这次可以放行。关键是 **不要再让 agent 自己“顺便检查一下”**——我们现在已经从工程修复阶段进入真正的 **cost qualification** 了。\n\n而且 Block 0 的设计非常合适：**PQ / QB / QH_C × 24 contexts，648 次实际 graph calls**。如果这一块跑通，我们就第一次同时拿到：\n\n> **真实 CUDA ordinary correctness + 三布局 matched timing + allocation/transfer/compute/readback cost**\n\n这才是 RTX 这条线真正有论文价值的 S1B 数据。尤其 **QB 作为强基线、QH_C 作为主候选** 的比较，现在终于可以用真实硬件成本回答，而不是继续靠结构推断。",
+  "author_message_sha256": "e723b0d641cfd587911bb841d7ea5518bd347976b1d60a3099bd09f7d31ca663",
+  "F0_sha256": "999fe0bda4e68b53b1f41a589623b5c1d00fb64cfee91fb9413c11c98a39fc32",
+  "Census_sha256": "d8c79ed1b4fc748ec8ce22a201137ef6fc201de79052fa7c6c4f7711806e8256",
+  "archive_manifest_sha256": "b9f4e80840820b37f1726eb1e35ca4dd637b4cb21116c9e0dc266574e53b542c",
+  "stop_reasons": [
+    {
+      "kind": "identity_contract_mismatch",
+      "authorized_run_id": "pr116-s1b-exact-r1",
+      "frozen_run_id": "pr116-s1b-cost-v1",
+      "frozen_registration_id": "pr116-s1b-exact-r1",
+      "interpretation_not_silently_changed": true
+    },
+    {
+      "kind": "monitoring_contract_not_implemented_in_bound_source",
+      "required_ns": 1000000000,
+      "actual_frozen_monitoring": "Native/readiness Windows Job active2 and commit limits;requested25mscontroller/50mschild polling,not guaranteed maximum gaps. Immutable per-slot observations,CAS full-byte reads and occurrence records;append-only storage ledger,full reconciliation every18hosts.5sdurable stop reserve. No extra GPU polling.",
+      "actual_lifetime_record": "requested50ms, actual max sampling gaps not certified",
+      "strict_ns_enforcement_present": false
+    }
+  ],
+  "source_hashes": {
+    "run_s1b.py": "382e575a7e806091b485ac69e1bdc592512a7425b4834d053646bb9d6ab4b746",
+    "lifecycle.py": "f6d68ee2f9e6b015484afade0041f6be5a3e30d0c43d43794661d6a8878872f9",
+    "bounded.py": "e3d89ba90809284321908eded1e49d00a582f088dee4b62af042a0d7822f59c1"
+  },
+  "controller_starts": 0,
+  "readiness_queries": 0,
+  "native_starts": 0,
+  "graph_calls": 0,
+  "warmups": 0,
+  "formal_measurements": 0,
+  "GPU_owned_seconds": 0,
+  "CUDA_success_rate": null,
+  "ordinary_correctness": "NOT_OBSERVED",
+  "layout_numerical_relations": "NOT_OBSERVED",
+  "phase_costs": "NOT_OBSERVED",
+  "resident_cost": "NOT_OBSERVED",
+  "input_inclusive_cost": "NOT_OBSERVED",
+  "QPC_median_p95_max": "NOT_OBSERVED:0samples",
+  "Block1_2_admitted": false,
+  "coordinates": [
+    {
+      "index": 0,
+      "coordinate": "Qwen_l00_prefill_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 1,
+      "coordinate": "Qwen_l00_prefill_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 2,
+      "coordinate": "Qwen_l00_prefill_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 3,
+      "coordinate": "Qwen_l18_continuation_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 4,
+      "coordinate": "Qwen_l18_continuation_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 5,
+      "coordinate": "Qwen_l18_continuation_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 6,
+      "coordinate": "SmolLM2_l00_prefill_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 7,
+      "coordinate": "SmolLM2_l00_prefill_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 8,
+      "coordinate": "SmolLM2_l00_prefill_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 9,
+      "coordinate": "SmolLM2_l12_continuation_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 10,
+      "coordinate": "SmolLM2_l12_continuation_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 11,
+      "coordinate": "SmolLM2_l12_continuation_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 12,
+      "coordinate": "Llama_l00_prefill_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 13,
+      "coordinate": "Llama_l00_prefill_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 14,
+      "coordinate": "Llama_l00_prefill_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 15,
+      "coordinate": "Llama_l16_continuation_q1",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 16,
+      "coordinate": "Llama_l16_continuation_q1",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 17,
+      "coordinate": "Llama_l16_continuation_q1",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 18,
+      "coordinate": "Qwen_l00_prefill_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 19,
+      "coordinate": "Qwen_l00_prefill_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 20,
+      "coordinate": "Qwen_l00_prefill_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 21,
+      "coordinate": "Qwen_l00_continuation_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 22,
+      "coordinate": "Qwen_l00_continuation_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 23,
+      "coordinate": "Qwen_l00_continuation_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 24,
+      "coordinate": "Qwen_l18_prefill_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 25,
+      "coordinate": "Qwen_l18_prefill_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 26,
+      "coordinate": "Qwen_l18_prefill_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 27,
+      "coordinate": "Qwen_l18_continuation_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 28,
+      "coordinate": "Qwen_l18_continuation_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 29,
+      "coordinate": "Qwen_l18_continuation_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 30,
+      "coordinate": "Qwen_l35_prefill_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 31,
+      "coordinate": "Qwen_l35_prefill_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 32,
+      "coordinate": "Qwen_l35_prefill_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 33,
+      "coordinate": "Qwen_l35_continuation_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 34,
+      "coordinate": "Qwen_l35_continuation_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 35,
+      "coordinate": "Qwen_l35_continuation_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 36,
+      "coordinate": "SmolLM2_l00_prefill_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 37,
+      "coordinate": "SmolLM2_l00_prefill_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 38,
+      "coordinate": "SmolLM2_l00_prefill_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 39,
+      "coordinate": "SmolLM2_l00_continuation_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 40,
+      "coordinate": "SmolLM2_l00_continuation_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 41,
+      "coordinate": "SmolLM2_l00_continuation_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 42,
+      "coordinate": "SmolLM2_l12_prefill_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 43,
+      "coordinate": "SmolLM2_l12_prefill_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 44,
+      "coordinate": "SmolLM2_l12_prefill_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 45,
+      "coordinate": "SmolLM2_l12_continuation_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 46,
+      "coordinate": "SmolLM2_l12_continuation_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 47,
+      "coordinate": "SmolLM2_l12_continuation_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 48,
+      "coordinate": "SmolLM2_l23_prefill_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 49,
+      "coordinate": "SmolLM2_l23_prefill_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 50,
+      "coordinate": "SmolLM2_l23_prefill_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 51,
+      "coordinate": "SmolLM2_l23_continuation_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 52,
+      "coordinate": "SmolLM2_l23_continuation_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 53,
+      "coordinate": "SmolLM2_l23_continuation_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 54,
+      "coordinate": "Llama_l00_prefill_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 55,
+      "coordinate": "Llama_l00_prefill_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 56,
+      "coordinate": "Llama_l00_prefill_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 57,
+      "coordinate": "Llama_l00_continuation_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 58,
+      "coordinate": "Llama_l00_continuation_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 59,
+      "coordinate": "Llama_l00_continuation_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 60,
+      "coordinate": "Llama_l16_prefill_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 61,
+      "coordinate": "Llama_l16_prefill_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 62,
+      "coordinate": "Llama_l16_prefill_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 63,
+      "coordinate": "Llama_l16_continuation_q4",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 64,
+      "coordinate": "Llama_l16_continuation_q4",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 65,
+      "coordinate": "Llama_l16_continuation_q4",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 66,
+      "coordinate": "Llama_l31_prefill_q3",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 67,
+      "coordinate": "Llama_l31_prefill_q3",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 68,
+      "coordinate": "Llama_l31_prefill_q3",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 69,
+      "coordinate": "Llama_l31_continuation_q2",
+      "layout": "QH_C",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 70,
+      "coordinate": "Llama_l31_continuation_q2",
+      "layout": "PQ",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    },
+    {
+      "index": 71,
+      "coordinate": "Llama_l31_continuation_q2",
+      "layout": "QB",
+      "status": "NOT_STARTED_AUTHORIZATION_CONTRACT_MISMATCH",
+      "native_started": false,
+      "graph_calls": 0
+    }
+  ],
+  "no_freeze_or_source_changes": true
+}

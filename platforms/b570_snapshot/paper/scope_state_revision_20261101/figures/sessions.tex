@@ -1,0 +1,41 @@
+\begin{tikzpicture}[font=\footnotesize]
+\begin{axis}[name=sess,scale only axis,width=13.4cm,height=4.35cm,
+xmin=.998,xmax=1.078,xtick={1,1.02,1.04,1.06},xticklabels={1.00,1.02,1.04,1.06},
+ymin=.55,ymax=6.55,ytick={6,5,4,3,2,1},yticklabels={Qwen3 M,Qwen3 C,SmolLM2 M,SmolLM2 C,Llama M,Llama C},
+xlabel={PQ / QB request-time ratio ($>1$: QB faster)},xlabel style={font=\footnotesize},tick label style={font=\footnotesize},
+axis lines*=left,axis line style={aux},tick style={aux},grid=major,grid style={gray!13}]
+\draw[aux,dashed] (axis cs:1,.55)--(axis cs:1,6.55);
+\draw[draft,densely dashed] (axis cs:1.02,.55)--(axis cs:1.02,6.55);
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.022241155,6.2) (1.003825879,6.2) (1.024056173,6.2) (1.031462696,6.2) (1.020617513,6.2) (1.021379783,6.2)};
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.018417206,5.2) (1.034686907,5.2) (1.029528424,5.2) (1.027889260,5.2) (1.044209114,5.2) (1.035132037,5.2)};
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.021523343,4.2) (1.042811401,4.2) (1.026887696,4.2) (1.027267920,4.2) (1.014728654,4.2) (1.033614105,4.2)};
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.062659839,3.2) (1.069420131,3.2) (1.066117550,3.2) (1.070418529,3.2) (1.063618892,3.2) (1.062610884,3.2)};
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.011619881,2.2) (1.003629727,2.2) (1.026339325,2.2) (1.016926078,2.2) (1.023407939,2.2) (1.011808397,2.2)};
+\addplot[only marks,mark=*,mark size=1.45pt,mark options={draw=aux,fill=white,line width=.5pt},color=aux] coordinates {(1.013167868,1.2) (1.050133956,1.2) (1.021893776,1.2) (1.036275997,1.2) (1.032350688,1.2) (1.021280772,1.2)};
+% Asymmetric percentile intervals and point estimates are generated from the frozen table.
+\draw[target,line width=1pt] (axis cs:1.013022800003,6)--(axis cs:1.026553489035,6);
+\draw[target,line width=.65pt] (axis cs:1.013022800003,5.925)--(axis cs:1.013022800003,6.075);
+\draw[target,line width=.65pt] (axis cs:1.026553489035,5.925)--(axis cs:1.026553489035,6.075);
+\addplot[only marks,mark=o,mark size=2.4pt,target] coordinates {(1.020563161899,6)};
+\draw[qualified,line width=1pt] (axis cs:1.025392736138,5)--(axis cs:1.037925690306,5);
+\draw[qualified,line width=.65pt] (axis cs:1.025392736138,4.925)--(axis cs:1.025392736138,5.075);
+\draw[qualified,line width=.65pt] (axis cs:1.037925690306,4.925)--(axis cs:1.037925690306,5.075);
+\addplot[only marks,mark=square*,mark size=2.4pt,qualified] coordinates {(1.031613690048,5)};
+\draw[target,line width=1pt] (axis cs:1.021009792824,4)--(axis cs:1.035016679387,4);
+\draw[target,line width=.65pt] (axis cs:1.021009792824,3.925)--(axis cs:1.021009792824,4.075);
+\draw[target,line width=.65pt] (axis cs:1.035016679387,3.925)--(axis cs:1.035016679387,4.075);
+\addplot[only marks,mark=o,mark size=2.4pt,target] coordinates {(1.027767425686,4)};
+\draw[qualified,line width=1pt] (axis cs:1.063387048182,3)--(axis cs:1.068398798323,3);
+\draw[qualified,line width=.65pt] (axis cs:1.063387048182,2.925)--(axis cs:1.063387048182,3.075);
+\draw[qualified,line width=.65pt] (axis cs:1.068398798323,2.925)--(axis cs:1.068398798323,3.075);
+\addplot[only marks,mark=square*,mark size=2.4pt,qualified] coordinates {(1.065803002589,3)};
+\draw[target,line width=1pt] (axis cs:1.009627059351,2)--(axis cs:1.021621860041,2);
+\draw[target,line width=.65pt] (axis cs:1.009627059351,1.925)--(axis cs:1.009627059351,2.075);
+\draw[target,line width=.65pt] (axis cs:1.021621860041,1.925)--(axis cs:1.021621860041,2.075);
+\addplot[only marks,mark=o,mark size=2.4pt,target] coordinates {(1.015593036909,2)};
+\draw[qualified,line width=1pt] (axis cs:1.020125595877,1)--(axis cs:1.039148610748,1);
+\draw[qualified,line width=.65pt] (axis cs:1.020125595877,0.925)--(axis cs:1.020125595877,1.075);
+\draw[qualified,line width=.65pt] (axis cs:1.039148610748,0.925)--(axis cs:1.039148610748,1.075);
+\addplot[only marks,mark=square*,mark size=2.4pt,qualified] coordinates {(1.029113522487,1)};
+\end{axis}
+\end{tikzpicture}

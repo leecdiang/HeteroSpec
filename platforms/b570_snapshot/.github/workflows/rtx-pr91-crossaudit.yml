@@ -1,0 +1,39 @@
+name: RTX PR91 independent CPU cross-audit
+on:
+  push:
+    branches: [audit/rtx-pr91-crossaudit-20261012]
+    paths:
+      - scripts/audit/rtx_pr91_crossaudit.py
+      - scripts/audit/test_rtx_pr91_crossaudit.py
+      - .github/workflows/rtx-pr91-crossaudit.yml
+permissions:
+  contents: read
+concurrency:
+  group: rtx-pr91-independent-crossaudit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/audit/rtx_pr91_crossaudit.py
+            scripts/audit/test_rtx_pr91_crossaudit.py
+          sparse-checkout-cone-mode: false
+      - name: Check synthetic rejection cases
+        run: python3 -m unittest discover -s scripts/audit -p 'test_rtx_pr91_crossaudit.py'
+      - name: Verify sealed bytes, native results, work and request costs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -B scripts/audit/rtx_pr91_crossaudit.py --output audit-output
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rtx-pr91-crossaudit-${{ github.run_id }}
+          path: audit-output/
+          if-no-files-found: warn
+          retention-days: 30

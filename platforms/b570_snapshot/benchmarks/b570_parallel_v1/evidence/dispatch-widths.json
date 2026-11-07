@@ -1,0 +1,292 @@
+[
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2032-q32-d0p0.json",
+    "arm": "QB",
+    "calls": [
+      {
+        "head": 2032,
+        "reuse_delta": 0,
+        "width": 32
+      }
+    ],
+    "dispatches": 1048,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 4 1": 108,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 4 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 4 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 4 64": 1
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=32 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=32 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=32 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=32 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2032 rows=32 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=1 extents=2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,"
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2032-q32-d0p0.json",
+    "arm": "WB",
+    "calls": [
+      {
+        "head": 2032,
+        "reuse_delta": 0,
+        "width": 16
+      },
+      {
+        "head": 2048,
+        "reuse_delta": 0,
+        "width": 16
+      }
+    ],
+    "dispatches": 1520,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 2 1": 216,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 2 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 2 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 2 64": 2
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=16 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=16 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=16 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=16 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2032 rows=16 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents=",
+      "HS_ATTENTION pos=2048 rows=16 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents="
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2044-q8-d0p0.json",
+    "arm": "QB",
+    "calls": [
+      {
+        "head": 2044,
+        "reuse_delta": 0,
+        "width": 8
+      }
+    ],
+    "dispatches": 1048,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 108,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 1
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=8 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=8 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=8 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=8 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2044 rows=8 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=1 extents=2048,2048,2048,2048,2304,2304,2304,2304,"
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2044-q8-d0p0.json",
+    "arm": "WB",
+    "calls": [
+      {
+        "head": 2044,
+        "reuse_delta": 0,
+        "width": 4
+      },
+      {
+        "head": 2048,
+        "reuse_delta": 0,
+        "width": 4
+      }
+    ],
+    "dispatches": 1520,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 216,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 2
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2044 rows=4 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents=",
+      "HS_ATTENTION pos=2048 rows=4 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents="
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2046-q4-d0p0.json",
+    "arm": "QB",
+    "calls": [
+      {
+        "head": 2046,
+        "reuse_delta": 0,
+        "width": 4
+      }
+    ],
+    "dispatches": 1048,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 108,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 1
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=4 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2046 rows=4 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=1 extents=2048,2048,2304,2304,"
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2046-q4-d0p0.json",
+    "arm": "WB",
+    "calls": [
+      {
+        "head": 2046,
+        "reuse_delta": 0,
+        "width": 2
+      },
+      {
+        "head": 2048,
+        "reuse_delta": 0,
+        "width": 2
+      }
+    ],
+    "dispatches": 1520,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 216,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 2
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2046 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents=",
+      "HS_ATTENTION pos=2048 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=0 extents="
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2047-q2-d0p0.json",
+    "arm": "QB",
+    "calls": [
+      {
+        "head": 2047,
+        "reuse_delta": 0,
+        "width": 2
+      }
+    ],
+    "dispatches": 868,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 108,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 72,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 1
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=4096 m=4096 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=4096 m=1024 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=4096 m=1024 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=4096 m=4096 rows=2 nb0=4 nb1=16384 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2047 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=1249115259147401819 grouped=1 extents=2048,2304,"
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-qwen_target-4096-h2047-q2-d0p0.json",
+    "arm": "WB",
+    "calls": [
+      {
+        "head": 2047,
+        "reuse_delta": 0,
+        "width": 1
+      },
+      {
+        "head": 2048,
+        "reuse_delta": 0,
+        "width": 1
+      }
+    ],
+    "dispatches": 1234,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 2048 1 1": 216,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 512 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 6144 1 1": 144,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1187 1 64": 2
+    },
+    "projection": [],
+    "attention": []
+  },
+  {
+    "trace": "DIAG-candidate-D-smol-4096-h2032-q32-d0p0.json",
+    "arm": "QB",
+    "calls": [
+      {
+        "head": 2032,
+        "reuse_delta": 0,
+        "width": 32
+      }
+    ],
+    "dispatches": 604,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1024 4 1": 120,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 4096 4 1": 48,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 24576 4 1": 1
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=2048 m=2048 rows=32 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=2048 m=2048 rows=32 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=2048 m=2048 rows=32 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=2048 m=2048 rows=32 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2032 rows=32 heads=32 kvheads=32 dim=64 layout=2 arith=2220748758512663449 dispatch=3729236552830722779 grouped=1 extents=2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2048,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,2304,"
+    ]
+  },
+  {
+    "trace": "DIAG-candidate-D-smol-4096-h2032-q32-d0p0.json",
+    "arm": "WB",
+    "calls": [
+      {
+        "head": 2032,
+        "reuse_delta": 0,
+        "width": 16
+      },
+      {
+        "head": 2048,
+        "reuse_delta": 0,
+        "width": 16
+      }
+    ],
+    "dispatches": 920,
+    "q8_dispatch": {
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 1024 2 1": 240,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 4096 2 1": 96,
+      "TP_DISPATCH mul_mat_vec_q8_0_f32_f32 24576 2 1": 2
+    },
+    "projection": [
+      "HS_PROJECTION op=blk.0.attn_q.weight wtype=8 xtype=0 k=2048 m=2048 rows=16 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_v.weight wtype=8 xtype=0 k=2048 m=2048 rows=16 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_k.weight wtype=8 xtype=0 k=2048 m=2048 rows=16 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32",
+      "HS_PROJECTION op=blk.0.attn_output.weight wtype=8 xtype=0 k=2048 m=2048 rows=16 nb0=4 nb1=8192 scalar_quant=0 batch_quant=1 retain_f32=1 selected_quant=0 pipeline=mul_mat_vec_q8_0_f32_f32"
+    ],
+    "attention": [
+      "HS_ATTENTION pos=2032 rows=16 heads=32 kvheads=32 dim=64 layout=2 arith=2220748758512663449 dispatch=3729236552830722779 grouped=0 extents=",
+      "HS_ATTENTION pos=2048 rows=16 heads=32 kvheads=32 dim=64 layout=2 arith=2220748758512663449 dispatch=3729236552830722779 grouped=0 extents="
+    ]
+  }
+]

@@ -1,0 +1,130 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_EXECUTABLE_NOT_AUTHORIZED",
+  "run_id_suggestion": "b570-av-only-counterfactual-proposal-20261016-01",
+  "original_input": {
+    "id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+    "cell": {
+      "geometry": {
+        "d": 128,
+        "dv": 128,
+        "q": 2,
+        "n": 63,
+        "h": 8,
+        "hk": 8,
+        "storage": "permuted"
+      },
+      "mask": "causal",
+      "pattern": "dyadic"
+    },
+    "path": "C:\\hs\\b570-query-head-lowering\\benchmarks\\b570_query_head_lowering_v1\\host_outputs\\S1_inputs\\cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401.input",
+    "sha256": "299f75d4ac30bc9b9f0f58896bd6119d851f715ba450e96e21bb26cd7e4be223",
+    "bytes": 274332
+  },
+  "source_v3_slot": {
+    "run_id": "b570-supervised-numerical-v3-20261015-01",
+    "index": 42,
+    "kind": "graph",
+    "input_id": "cb16a8cae5599391f227d978080feb5218fb1686a54c6170fdea99c85257b401",
+    "mode": "PQ",
+    "repeat": 0,
+    "q": 2,
+    "control": "q_gt1",
+    "id": "fcd87ad95f53fb7617d0ad85fcf33913a58d080b7e09945fc45ac90c845287c9"
+  },
+  "inputs": [
+    {
+      "path": "C:\\hs\\b570-query-head-lowering\\benchmarks\\b570_query_head_lowering_v1\\host\\supervised_numerical_v4\\av_proposal_inputs\\V.f16",
+      "bytes": 129024,
+      "sha256": "65a46509b4f5abae8d6b21375a68a9bb25ece0482ae77092907d8c232ec9ce9b"
+    },
+    {
+      "path": "C:\\hs\\b570-query-head-lowering\\benchmarks\\b570_query_head_lowering_v1\\host\\supervised_numerical_v4\\av_proposal_inputs\\probability.f32",
+      "bytes": 4032,
+      "sha256": "07970b09ea06c9ddbed50f5a29182044c8016511d861ef01a04ac8cd87fecdad"
+    },
+    {
+      "path": "C:\\hs\\b570-query-head-lowering\\benchmarks\\b570_query_head_lowering_v1\\host\\supervised_numerical_v4\\av_proposal_inputs\\probability_F16_rounded_back_F32.f32",
+      "bytes": 4032,
+      "sha256": "cb91f14896449a0ec8588d73065e83a7b56da69ac8dfe4419caad238ddd02595"
+    }
+  ],
+  "source_review_sha256": "5434b493324397841fc1106e1a12f87dace7f3c6a0f54bf5239b7fd8b12894ec",
+  "census_hosts": 1,
+  "census_descriptions": 3,
+  "numerical_hosts": 6,
+  "graph_calls": 6,
+  "independent_repeats": 2,
+  "conditions": [
+    {
+      "id": "A",
+      "AV_shape": [
+        128,
+        2,
+        8,
+        1
+      ],
+      "src1_shape": [
+        63,
+        2,
+        8,
+        1
+      ],
+      "probability": "original F32",
+      "V": "shared original F16",
+      "precision": "inherited default"
+    },
+    {
+      "id": "B",
+      "AV_shape": [
+        128,
+        1,
+        16,
+        1
+      ],
+      "src1_shape": [
+        63,
+        1,
+        16,
+        1
+      ],
+      "probability": "same F32 bytes logically permuted into r=h*2+j; CPU materialization charged",
+      "V": "shared original F16",
+      "precision": "inherited default"
+    },
+    {
+      "id": "C",
+      "AV_shape": [
+        128,
+        1,
+        16,
+        1
+      ],
+      "src1_shape": [
+        63,
+        1,
+        16,
+        1
+      ],
+      "probability": "F32 value first rounded to F16 then exactly stored back to F32, then same folded mapping as B",
+      "V": "shared original F16",
+      "precision": "inherited default"
+    }
+  ],
+  "question": "B versus C isolates probability operand rounding at the same matvec geometry. A versus B combines source-selected matmat/matvec and reduction effects. A versus C tests whether operand rounding alone suffices; mismatch does not identify an accumulator or hardware tree.",
+  "output": "Complete logical AV output only. QK and softmax are frozen input evidence, not executed. Two new processes per condition, no retry/warmup/model/probe.",
+  "proposed_engineering_seconds": 180,
+  "proposed_per_host_seconds": 60,
+  "proposed_artifact_bytes": 268435456,
+  "executable": null,
+  "executable_sha256": null,
+  "entry": null,
+  "prerequisites": [
+    "Separate CPU-only AV host implementation/serializer/input ownership and complete vector tests",
+    "Complete source/binary/driver/supervisor binding and exact executable F0",
+    "Separate author GPU approval; not included in v4 69 hosts"
+  ],
+  "shader_changes": false,
+  "new_GPU_hosts": 0,
+  "device_queries": 0,
+  "graph_computes": 0
+}

@@ -1,0 +1,35 @@
+\section{Larger three-family confirmation}
+\label{supp:confirmation}
+The confirmation campaign contains 3,600 required complete requests: three families, five arms, 24 tasks, two adjacent sessions and five repetitions. There are 150 excluded warmups. Its output test and formal counts-channel timer are distinct from heavy profiling. The 12-task implementation panel reported in the main paper does not replace this larger test or become a fresh-input panel through reuse~\cite{rtxconfirm}.
+
+\subsection{Qualified request comparisons}
+Table~\ref{tab:confirmationratios} retains each reported comparison at six-decimal precision. A dash denotes a comparison that cannot be called a qualified same-reference speedup; it is not an unmeasured zero. SmolLM2 and Llama ordinary-production paths failed the fixed-reference requirement. The observed diagnostic costs remain in the source report and are listed below without promotion.
+
+\begin{table}[t]\centering\small
+\caption{Larger confirmation ratios. Numerator time / denominator time. Dashes preserve failed qualification.}
+\label{tab:confirmationratios}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Comparison&Qwen3&SmolLM2&Llama\\\midrule
+$R_{\rm prod}/C_3$&1.569566&---&---\\
+$M_3/C_3$&1.134924&0.607389&1.072227\\
+$R/C_3$&1.569977&0.877174&1.609468\\
+$M_0/M_3$&---&---&---\\
+$R/M_0$&---&---&---\\
+$R/M_3$&1.383332&1.444173&1.501051\\
+$R_{\rm prod}/M_3$&1.382970&---&---\\\bottomrule
+\end{tabular}
+\end{table}
+
+For Qwen3, $M_0$ differs on five distinct GSM8K tasks (141,443,562,660,722), repeated 10 times each. For SmolLM2 it differs on 14 tasks; for Llama on 9. $M_3$ and $C_3$ each match all 240 required endpoints in every family. The ordinary-production path matches all 240 for Qwen3 but fails 140 SmolLM2 and 80 Llama requests. Identical failure counts between $M_0$ and $R_{\rm prod}$ in SmolLM2 do not mean that the affected tasks or execution paths coincide.
+
+The failed $M_0/M_3$ comparisons have diagnostic ratios 0.968456, 0.948603 and 0.936943 for Qwen3, SmolLM2 and Llama. Failed SmolLM2 and Llama $R_{\rm prod}/C_3$ diagnostics are 0.512333 and 0.842790. They may describe measured work but cannot establish a reference-preserving deployment gain, because the measured trajectories differ from the registered reference.
+
+\subsection{Task failures and repeated observations}
+The $M_3/C_3$ aggregate has 0/24 regressed tasks for Qwen3, 24/24 for SmolLM2 and 4/24 for Llama. Llama's slower tasks are MBPP418,476,79 and 99. This task-level pattern should not be replaced by a claim that every configuration benefits from speculative execution. Repeats improve precision for the selected tasks and expose instability, but do not produce 240 independent examples of cross-family transfer.
+
+The source's input eligibility audit concerns accessible project history, not training data. The confirmation uses a frozen recipe; the ordinary baseline was selected only on prior exposed engineering inputs. New confirmation failures therefore constrain that selection rather than justify another round of post-outcome tuning. The paper reports the unchanged selection and failed qualification.
+
+\subsection{Timers, observation and interpretation}
+A separate set of 72 lite observations retained enqueue and natural sampling-ready markers, but did not establish the proposed mutually exclusive completed wall-time partition. The original result therefore preserves \kw{MODEL\_TIMING\_UNAVAILABLE}. This is a limitation of that component model and those observations, not evidence that all models of asynchronous execution are impossible. A future model could explicitly account for overlap or predict marginal request cost, but would require independent validation not supplied here.
+
+The larger confirmation, preceding three-family study and current repair comparison have different panels or objectives. Their similar qualitative results can support a pattern, but numerical differences among their speed ratios are not a paired release-to-release improvement. No aggregate combines their raw times.

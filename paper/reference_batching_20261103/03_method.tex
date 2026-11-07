@@ -1,0 +1,65 @@
+\section{Reference-preserving query batching}
+\label{sec:method}
+\subsection{Extracting scalar physical extents}
+For the supported dense single-stream cache, let $H$ be the first slot of the current contiguous append, $q$ the number of appended rows, $N$ the allocated cache capacity and $P$ the runtime padding unit. The frozen implementation uses $P=\max(n_{\mathrm{pad}},256)$. Query $i$ requires scalar physical extent
+\begin{equation}
+e_i=\min\!\left(N,\max\!\left(P,P\left\lceil
+\frac{H+i+1}{P}\right\rceil\right)\right),\quad 0\leq i<q.
+\label{eq:extent}
+\end{equation}
+The extractor reads actual slot placement and occupancy. It requires dense occupancy ending at $H+q$, one contiguous stream and ordered causal positions; it does not infer $H$ from a prompt's nominal length. Cache holes, sliding-window storage, unrelated streams or noncontiguous insertion do not satisfy this extractor's premises.
+
+The physical extent differs from the number of unmasked logical keys. It controls tensor descriptors and backend dispatch even when the added probabilities are zero. Consequently, clipping the mask alone is insufficient: K, V and the probability operand must represent the corresponding physical prefix.
+
+\subsection{Partitioning compatible queries}
+In the evaluated implementations, arithmetic policy is fixed for each plan, so compatible rows share the required physical extent. The planner scans rows in logical order and emits maximal adjacent equal-extent groups. A varying per-row arithmetic policy would additionally require cuts where that policy changes. In the observed four-row example, the result is $(3,768)$ followed by $(1,1024)$. Most batches that stay within one padding interval remain one group.
+
+\begin{proposition}[Minimum contiguous partition]
+For $q>0$ rows with compatibility keys $\sigma_0,\ldots,\sigma_{q-1}$, the minimum number of contiguous groups whose keys are constant is
+\begin{equation}
+G_{\min}=1+\sum_{i=1}^{q-1}\mathbf{1}[\sigma_i\ne\sigma_{i-1}].
+\label{eq:groups}
+\end{equation}
+Maximal adjacent equal-key groups attain this count.
+\end{proposition}
+\begin{proof}
+Every adjacent key change requires a cut. Cutting exactly at those changes yields constant-key groups and introduces no other cut.
+\end{proof}
+For contiguous append, fixed arithmetic policy and $q\leq P$, Equation~\eqref{eq:extent} crosses at most one padding boundary, so at most two groups are needed. This is a property of the partition constraint. Numerical correspondence additionally depends on the lowering and arithmetic paths described below.
+
+\subsection{Lowering a group through paired views}
+Within a group, PQ constructs separate one-query attention subgraphs. QB expresses those query instances through a batch coordinate. After the native attention permutation, it views Q from $(d,q,h_Q,1)$ as $(d,1,h_Q,q)$ and transforms the mask from $(e,q,1,1)$ to $(e,1,1,q)$. If Q has base $b_Q$ and original strides $s_0,s_1,s_2,s_3$, then
+\begin{align}
+\operatorname{addr}_{\MQ}(v,i,a,0)&=b_Q+v s_0+i s_1+a s_2,\\
+\operatorname{addr}_{\QB}(v,0,a,i)&=b_Q+v s_0+a s_2+i s_1.
+\end{align}
+The two descriptors select the same scalar. The mask retains the corresponding query stride and causal values. K and V share one sequence's storage across the new query coordinate; the original grouped-query head mapping is retained. Ordered output recombination restores the query/head arrangement expected by the output projection.
+
+For a shortened group, the native graph creates Q, K, V and mask views with the group's extent. A strided shortened mask is materialized contiguously when the backend requires it. V's actual transposed or nontransposed representation determines which dimension is shortened. Output groups are concatenated in query order. Projection and feed-forward computation remain batched; grouping is local to attention.
+
+In exact arithmetic, the address and head mappings compute the same attention values. In finite precision, the purpose of the one-query organization and extent constraint is to preserve the reference-sensitive backend path. The native comparisons test this requirement directly. Equal extents alone do not prove that an arbitrary batched operator is numerically equivalent.
+
+\begin{table}[t]
+\caption{Planner and lowering operations. The input contains graph/cache metadata and the selected reference policy, not an input ID or answer.}
+\label{tab:algorithm}
+\begin{tabularx}{\columnwidth}{@{}rY@{}}\toprule
+1 & Read actual stream, cache occupancy, append slots, positions and padding.\\
+2 & Derive the scalar extent of each row using Equation~\eqref{eq:extent}.\\
+3 & Obtain the required activation and placement policies for the affected operator classes.\\
+4 & Scan adjacent compatible rows and emit $(\mathrm{begin},\mathrm{width},\mathrm{extent})$ groups.\\
+5 & Lower each group with native head mapping, paired Q/mask views and shared K/V.\\
+6 & Restore query order and execute the unchanged commit/reconciliation transaction.\\
+7 & Reuse a graph only when its geometry and active numerical policies match.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Arithmetic policy and graph identity}
+The frozen CUDA and Vulkan implementations realize the same extent rule and partition independently. Their backend adaptations preserve the arithmetic paths required by the original reference. Vulkan marks the affected Q8 projections to retain F32 activations and preserves the noncontiguous AV evaluation path where required. CUDA's Qwen adaptation retains the scalar-path placement preference at the identified head-normalization boundary. The original reference and inactive draft path retain their own declared recipes.
+
+The repair is phase scoped. Target prefill and target verification can contain multiple rows; the native target/draft ownership, pending-token handling, acceptance, correction and rollback remain unchanged. The selected phase is established before both observed and ordinary decoding paths. A diagnostic callback does not control whether repair executes.
+
+Graph identity includes every policy that can change the generated graph: layout, physical-prefix vector and affected arithmetic/placement choices. Nominal tensor shapes alone are insufficient. The frozen native prefix implementations bind the extent vector to reuse and keep the other policies fixed within their contexts. The accompanying shared implementation factors out extent extraction and partitioning and adds an explicit policy key to graph reuse; its CPU and source-integration checks are reported in \ref{app:shared}.
+
+\subsection{Implementation domain}
+\label{sec:domain}
+The measured prefix repair covers dense causal, single-sequence, non-flash attention with F16 KV, compatible Q/mask types, integral head mapping and up to four occupied query rows. Unsupported attention sinks, bias paths and MLA require their own lowering. The Vulkan port currently admits the tested 128-channel, 32-query-head/8-KV-head geometry; its source still contains these explicit guards. The shared planner removes duplication in extent extraction and grouping, but broader graph admission and automatic cross-family policy selection remain separate integration work. Table~\ref{tab:coverage} states which rules were actually exercised.

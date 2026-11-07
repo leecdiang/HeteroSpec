@@ -1,0 +1,59 @@
+\section{State formation and transfer boundaries}
+\label{sec:state}
+\begin{figure*}[t]\centering
+\resizebox{\textwidth}{!}{\input{figures/composition}}
+\caption{State composition at two levels. A: layer-0 endpoint classes; rec. retains the recipient, don. reproduces a distinguishable donor and new is a third trajectory. Each cell has two agreeing process repeats. B: full-logit comparison for /1248, B$\to$A, at output 47 after a common consumed prefix. The hollow diamond is the additive prediction, not a fifth execution.}
+\label{fig:composition}
+\end{figure*}
+
+\subsection{The input to a local repair matters}
+The B570 studies test a different link in reference preservation: whether prefill organization can alter the state consumed by otherwise single-query continuation. With target context UB512 and output capacity one, arm A submits the whole prompt, while B externally splits it into 128 tokens and a remainder. Arm C uses UB128 and lets the runtime partition internally. All arms request logits only at the final prompt position and continue naturally.
+
+For the two exposed divergent inputs, with 161 and 133 prompt tokens, B reproduces C's complete endpoint, initial FP32 logits and sequence-KV bytes. A differs at generated indices 47 and 81. The two longer stable controls have different A/B numerical states but equal endpoints. A subsequent partition sweep produces several equivalence classes, including a third trajectory for the 133-token input split as $132+1$. Smaller chunks are not monotonically closer to the reference (\sref{supp:b570}).
+
+Source-aligned observations locate differences before attention: first-layer K/V projections differ for the 161-token input, and Q/K/V differ for the 133-token input. Fixed-operand replay qualifies 32 of 40 operator calls and reproduces the admitted projection sensitivity. Eight scale/MUL calls fail native correspondence because an in-place consumer had overwritten the captured operand; they are excluded. The later partition sweep also retains a driver-body preregistration gap. These limits apply to those observations, not to the separately admitted state crosses.
+
+A clean common UB512 receiver establishes the state link. It imports sequence KV and positions, consumes the selected complete initial logits using the native greedy sampler, and restores the required pending-token semantics. Sixteen own-path shams reproduce natural endpoints before 40 crosses vary KV and logit sources. For the two affected tasks,
+\begin{align}
+Y(KV_A,L_A)=Y(KV_A,L_B)&=Y_A,\\
+Y(KV_B,L_A)=Y(KV_B,L_B)&=Y_B.
+\label{eq:cross}
+\end{align}
+All initial vectors choose token 1271, so the logit swap is a first-decision negative control. The suffix follows the KV source under this validated receiver. The stable controls retain their endpoint despite unequal KV. This directly demonstrates why correspondence of a local consumer on one input state does not establish correspondence on every state produced upstream.
+
+\subsection{Endpoint agreement and state substitution}
+\label{sec:composition}
+The subset study fixes ten selectors, four exposed inputs and both donor directions. After 32 EMPTY/ALL controls, it executes 160 interventions over 80 coordinates, each in two independent processes. Both repeats agree at every coordinate. Thirty requests reproduce a distinguishable donor endpoint, 54 produce a third trajectory and 76 retain the recipient endpoint even though bytes change. \sref{supp:composition} gives the complete matrix.
+
+A small subset can be sufficient: layer-0 K alone or V alone selects $1/64$ of total K/V value storage and reproduces a donor endpoint in some coordinates. Sufficiency is not monotone. For /1248 in direction B$\to$A, V-only layer~0 reproduces the donor, whereas adding K removes that effect. In the other direction, V-only layer~0 works while replacing V at every layer does not. Thus enlarging a replacement is not guaranteed to preserve its outcome.
+
+The stable inputs distinguish state equality from endpoint equality. Natural A/B states for /1011 and /1249 have the same complete endpoint but unequal KV. On /1011, 16 of 20 distinct subset/direction coordinates produce a third trajectory; all 20 remain endpoint-invariant on /1249. Complete-output agreement therefore cannot certify arbitrary component interchangeability. The interventions establish finite counterexamples, not natural reachability of the mixed states or a globally minimal repair.
+
+
+
+Endpoint nonmonotonicity can arise even from additive score changes crossing an argmax threshold. We therefore compare archived full FP32 logits at the first position where four trajectories cease to agree, while their consumed prefix is still identical. For fixed tokens $(r,u)$, write $d_S=z_S(u)-z_S(r)$ and
+\begin{equation}
+I_{KV}=d_{KV}-d_K-d_V+d_\emptyset.
+\label{eq:interaction}
+\end{equation}
+For /1248 B$\to$A at output 47, $(r,u)=(220,832)$. The EMPTY/K/V/KV scores are $-0.066515$, $-0.006771$, $+0.021633$ and $-0.054487$. The additive joint prediction is $+0.081377$, whereas the actual joint score is negative; $I_{KV}=-0.135864$. The full-vocabulary argmax is 220/220/832/220. This four-cell pattern exhibits net score nonadditivity through subsequent computation.
+
+Only 44 of 112 planned repeat-level contrasts have all required historical vectors. The missing frontier data remain missing. Direction-dependent token coordinates are canonicalized before signs are compared, and later natural prefixes are not substituted for a missing common-prefix comparison. \sref{supp:composition} retains those definitions and all available contrasts.
+
+\subsection{A legal view can fail backend admission}
+\label{sec:backend}
+The original natural-execution pilot combines reference-like or bulk prefill with MQ, PQ or QB continuation. Its reference monitoring cannot meet the declared sampling schedule, leaving candidate diagnostics incomplete after 49 attempts: 48 complete requests, one interrupted and 31 unstarted coordinates. The speculative QB path also changes the /831 and /1011 outputs. This pilot supplies endpoint counterexamples but no qualified speedup; \sref{supp:pilot} retains its full matrix and execution record.
+
+A CPU/source follow-up identifies a separate admission barrier. Independent address and scalar oracles test 432 synthetic fixtures over 72 geometries without a mapping or structured-expectation failure. The original $q=2$ QB graph nevertheless violates a necessary condition of the frozen Vulkan matrix-multiplication backend:
+\begin{equation}
+b_3(\mathrm{src}_0)=b_3(\mathrm{src}_1),
+\label{eq:backend}
+\end{equation}
+where $b_3$ is the fourth tensor extent. QK combines K with extent 1 and the lifted Q with extent 2; AV combines V with extent 1 and probabilities with extent 2. Both are rejected. MQ and each PQ slice have $(1,1)$ at this axis, satisfying this condition alone.
+
+The archived source and DLL establish a version-specific admission boundary. Actual placement and fallback transfers in the pilot remain unobserved, so that pilot cannot qualify an all-Vulkan numerical comparison. The source checker records the proven violation as false and other cases as unknown; successful admission additionally requires the remaining backend checks.
+
+\subsection{Preserving the AV path in a scoped GQA port}
+A scoped port admits F16/F32, $d=128$, 32-query-head/8-KV-head layouts at physical key extents 256/512 and $q=2,4$. Its decisive comparison is the AV evaluation path. The packed route agrees with PQ at QK and softmax but differs in 7,160 of 8,192 AV values at key512/$q=2$, with maximum absolute difference $1.22236\times10^{-9}$. It fails the exact reference and receives no performance qualification~\cite{b570gqarecords}.
+
+The AV-preserving route instead reuses the existing noncontiguous shader with zero V batch stride, real probability/output strides and independent query workgroups. All six key256/512 by $q=1,2,4$ coordinates agree byte-for-byte at QK, softmax, AV and final output; all 20 earlier PQ stage files remain unchanged. Per-output evaluation is retained while the dispatch exposes work across queries. Section~\ref{sec:service} separately qualifies this fixed-layout port in real requests. The earlier Llama Q6\_K pilot retains its original failed status.

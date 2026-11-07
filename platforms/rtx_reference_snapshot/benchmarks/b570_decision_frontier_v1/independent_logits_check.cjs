@@ -1,0 +1,17 @@
+// Post-stop CPU-only independent JavaScript Float64 check of actual FP32 raw quartets.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const [auditPath,analysisPath,freshPath,outPath]=process.argv.slice(2);
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const assert=(v,m)=>{if(!v)throw Error(m)};
+const audit=read(auditPath),analysis=read(analysisPath),fresh=path.resolve(freshPath),origin=audit.resolver_original_prefix.replaceAll('\\','/').toLowerCase()+'/';
+const resolve=logical=>{let s=logical.replaceAll('\\','/');if(/^[a-z]:\//i.test(s)||s.startsWith('/')){assert(s.toLowerCase().startsWith(origin),'foreign absolute evidence');s=s.slice(origin.length)}const p=path.resolve(fresh,s);assert(p.startsWith(fresh+path.sep),'path escape');return p};
+let checks=[];
+for(const row of analysis.rows){
+ const vectors=[],proofs=[];
+ for(const arm of row.arms){
+  const ref=audit.rows.find(r=>r.task===row.task&&r.recipient===row.recipient&&r.selector===arm.state&&r.repeat===row.repeat);assert(ref,'missing coordinate');let rb=fs.readFileSync(resolve(ref.raw_path));assert(sha(rb)===ref.raw_sha256,'raw pin');let raw=JSON.parse(rb);let spec=raw.partition98.full_payloads[String(row.t)].logits;assert(spec,'no full payload');let b=fs.readFileSync(resolve(spec.path));assert(b.length===128256*4&&b.length===spec.bytes&&sha(b)===spec.sha256&&sha(b)===arm.FP32_sha256,'full vector pin');let snapshot=raw.phase96.boundaries.filter(p=>p.output_index_zero_based===row.t);assert(snapshot.length===1,'snapshot count');assert(JSON.stringify(snapshot[0].naturally_committed_prefix_ids)===JSON.stringify(row.prefix_ids)&&JSON.stringify(raw.ids.slice(0,row.t))===JSON.stringify(row.prefix_ids),'different prefix');assert(snapshot[0].last_consumed_position===raw.prompt_ids.length+row.t-1,'logical position');let best=0,second=1;if(b.readFloatLE(4)>b.readFloatLE(0)){best=1;second=0}for(let j=2;j<128256;j++){let v=b.readFloatLE(j*4);assert(Number.isFinite(v),'nonfinite');if(v>b.readFloatLE(best*4)){second=best;best=j}else if(v>b.readFloatLE(second*4)){second=j}}assert(best===raw.ids[row.t]&&best===arm.true_argmax&&second===arm.true_top2,'actual argmax/top2');vectors.push(b);proofs.push({state:arm.state,sha256:sha(b),raw_sha256:ref.raw_sha256});
+ }
+ const d=vectors.map(b=>b.readFloatLE(row.u*4)-b.readFloatLE(row.r*4)),delta1=d[1]-d[0],delta2=d[2]-d[0],I=d[3]-d[1]-d[2]+d[0];assert(delta1===row.delta_first&&delta2===row.delta_second&&I===row.I,'independent Float64 contrast mismatch');let linf=0,nz=0;for(let j=0;j<128256;j++){const val=vectors[3].readFloatLE(j*4)-vectors[1].readFloatLE(j*4)-vectors[2].readFloatLE(j*4)+vectors[0].readFloatLE(j*4);linf=Math.max(linf,Math.abs(val));if(val!==0)nz++}assert(linf===row.vector_I_Linf&&nz===row.vector_I_exact_nonzero_elements,'full vector residual mismatch');checks.push({task:row.task,direction:row.direction,panel:row.panel,t:row.t,repeat:row.repeat,same_prefix_verified:true,d,delta1,delta2,I,vector_I_Linf:linf,vector_I_nonzero_elements:nz,proofs});
+}
+fs.writeFileSync(outPath,JSON.stringify({status:'PASS_INDEPENDENT_JAVASCRIPT_FLOAT64_RAW_RECOMPUTATION',CPU_only:true,comparisons:checks.length,actual_fresh_root:fresh,checks},null,2)+'\n');console.log('PASS_INDEPENDENT_JAVASCRIPT_FLOAT64_RAW_RECOMPUTATION',checks.length);

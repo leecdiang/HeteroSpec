@@ -1,0 +1,31 @@
+{
+  "predictions": {
+    "Qwen": {
+      "prompt_tokens": 99,
+      "layers": 36,
+      "outer_prefill_widths": [
+        32,
+        32,
+        32,
+        3
+      ],
+      "wide_projection_nodes_per_block": 249,
+      "expected_SIMPLE_minus_LOCAL_MMVQ_launches": 5229,
+      "expected_SIMPLE_minus_LOCAL_quantization_launches": 0
+    },
+    "Smol": {
+      "prompt_tokens": 77,
+      "layers": 24,
+      "outer_prefill_widths": [
+        32,
+        32,
+        13
+      ],
+      "wide_projection_nodes_per_block": 165,
+      "expected_SIMPLE_minus_LOCAL_MMVQ_launches": 2640,
+      "expected_SIMPLE_minus_LOCAL_quantization_launches": -165
+    }
+  },
+  "basis": "Actual model metadata and original requested-output mask; dense decoder graph has seven projections per layer and last-layer FFN is restricted to requested rows. SIMPLE backend loop4 quantizes once then ceil(q/4) MMVQ; LOCAL packs complete4-column groups when q>=8 and separately lowers the tail. Compare actual activities; do not infer device time from launch count.",
+  "Smol_trace_not_yet_executed": true
+}

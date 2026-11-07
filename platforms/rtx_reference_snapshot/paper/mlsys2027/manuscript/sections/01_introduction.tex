@@ -1,0 +1,13 @@
+\section{Introduction}
+\label{sec:intro}
+Speculative decoding amortizes target computation with cheaper proposals \citep{leviathan2023}. In a numerical stack, output reproduction, reference compatibility, restoration and cost benefit require different evidence. Prior work establishes batch-shape sensitivity, deterministic verification and heterogeneous performance limits \citep{numerics,llm42,lossless,illusion}. We examine their interaction through controlled consumer-system studies.
+
+A program can reproduce native outputs without being a necessary or cheaper predictor. An intervention can repair one task and break another while aggregate agreement stays unchanged. A qualified path can lose to ordinary target-only execution. We test these possibilities with explicit output contracts, paired outcomes, simple baselines and separate cost measurements.
+
+On B570/Vulkan, a draft-free program predicts a prefill intervention that restores four known deviations and retains 20 matching controls. On RTX/CUDA, proposal/target programs predict a continuation intervention on 19 exposed HumanEval and 24 exposure-audited MBPP tasks. It restores one task and introduces another deviation: prediction succeeds while the restoration objective fails.
+
+A subsequent matched RTX study changes the interpretation. Ordinary draft-free target-only UB2 reproduces every intervention output on the 19-task cohort, including both changed tasks. The simpler baseline limits the demonstrated need for the complex predictor, without establishing general equivalence. An offline feasibility study finds no supported automatic selector: state differences supply no repair direction, and screening adds work to the sole successful B570 candidate.
+
+Separate cost studies show qualified RTX serialization slower than target-only; conditional 358H overhead-removal ceilings below parity; and a prospective M4 guard slower than fixed speculation. These configuration-specific results retain different timing boundaries and do not rank devices.
+
+The contribution is a bounded empirical record: complete-output intervention tests with restoration/regression accounting; a fresh simple-baseline comparison and negative selection analysis; and qualified cost comparisons with explicit conditional budgets. We introduce no new decoding algorithm or general repair method. The studies show how strong baselines and complete cost accounting constrain the utility assigned to successful prediction and control.

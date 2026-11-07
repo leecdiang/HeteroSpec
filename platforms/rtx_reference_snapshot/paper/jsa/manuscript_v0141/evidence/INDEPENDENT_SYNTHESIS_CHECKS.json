@@ -1,0 +1,166 @@
+{
+  "m4": {
+    "always_over_request_oracle_gm": 1.0006919671212657,
+    "target_faster_tasks": [
+      "Spec-Bench/559",
+      "Spec-Bench/95"
+    ],
+    "target_over_always_recomputed": 1.3468940491822108,
+    "guard_over_always_recomputed": 1.0270760219826773
+  },
+  "rtx_c4": {
+    "calls_change_percent": -34.75409836065574,
+    "micrographs_change_percent": 30.16393442622951,
+    "draft_tokens_change_percent": 52.83446712018141,
+    "accepted_drafts_change_percent": 15.15151515151516,
+    "acceptance_k3": 0.7857142857142857,
+    "acceptance_k7": 0.5919881305637982,
+    "generation_latency_change_percent": 20.563050360132372,
+    "request_latency_change_percent": 12.376156263164795
+  },
+  "rtx_gm_checks": [
+    {
+      "source": "B_RESULTS",
+      "candidate": "target_scopes",
+      "baseline": "matched_target",
+      "metric": "generation",
+      "n_tasks": 24,
+      "gm": 1.1692379705484377,
+      "qualified": true
+    },
+    {
+      "source": "B_RESULTS",
+      "candidate": "target_scopes",
+      "baseline": "matched_target",
+      "metric": "wall",
+      "n_tasks": 24,
+      "gm": 1.035071366196948,
+      "qualified": true
+    },
+    {
+      "source": "B_RESULTS",
+      "candidate": "all_scopes",
+      "baseline": "matched_target",
+      "metric": "generation",
+      "n_tasks": 24,
+      "gm": 1.151475376798248,
+      "qualified": true
+    },
+    {
+      "source": "B_RESULTS",
+      "candidate": "all_scopes",
+      "baseline": "matched_target",
+      "metric": "wall",
+      "n_tasks": 24,
+      "gm": 1.0045419184258753,
+      "qualified": true
+    },
+    {
+      "source": "B_RESULTS",
+      "candidate": "target_scopes",
+      "baseline": "all_scopes",
+      "metric": "generation",
+      "n_tasks": 24,
+      "gm": 1.0154259431926191,
+      "qualified": true
+    },
+    {
+      "source": "B_RESULTS",
+      "candidate": "target_scopes",
+      "baseline": "all_scopes",
+      "metric": "wall",
+      "n_tasks": 24,
+      "gm": 1.0303914124548554,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "anchor_speculation",
+      "metric": "generation",
+      "n_tasks": 28,
+      "gm": 0.8294415221022631,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "anchor_speculation",
+      "metric": "wall",
+      "n_tasks": 28,
+      "gm": 0.8898684856760711,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "matched_target",
+      "metric": "generation",
+      "n_tasks": 28,
+      "gm": 0.9974044625828382,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "matched_target",
+      "metric": "wall",
+      "n_tasks": 28,
+      "gm": 0.9503526957879704,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "anchor_speculation",
+      "baseline": "matched_target",
+      "metric": "generation",
+      "n_tasks": 28,
+      "gm": 1.2025012445179548,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "anchor_speculation",
+      "baseline": "matched_target",
+      "metric": "wall",
+      "n_tasks": 28,
+      "gm": 1.0679698304698888,
+      "qualified": true
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "ordinary_wider",
+      "metric": "generation",
+      "n_tasks": 28,
+      "gm": 0.9833467061823755,
+      "qualified": false
+    },
+    {
+      "source": "C4_RESULTS",
+      "candidate": "wider_speculation",
+      "baseline": "ordinary_wider",
+      "metric": "wall",
+      "n_tasks": 28,
+      "gm": 0.9577052703840163,
+      "qualified": false
+    }
+  ],
+  "rtx_scope": {
+    "passing_masks": [
+      3,
+      7,
+      11,
+      15
+    ],
+    "inclusion_minima": [
+      3
+    ]
+  },
+  "limits": [
+    "Derived public summaries only; no new GPU measurements or private-archive restore.",
+    "M4 oracle chooses one complete-request action between two observed modes; not an upper bound on intra-request or other-policy improvements.",
+    "C4 work traces include warmup and differ from capture-off timing runs; no causal attribution of all latency to graph count.",
+    "RTX B public cost summaries omit direct scalar-reference timing comparison, although scalar references were executed."
+  ]
+}

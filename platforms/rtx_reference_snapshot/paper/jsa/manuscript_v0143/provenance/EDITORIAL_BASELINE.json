@@ -1,0 +1,2299 @@
+{
+  "head": {
+    "url": "https://github.com/leecdiang/HeteroSpec/pull/73",
+    "number": 73,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "## Purpose\n\nThe existing JSA argument needed figures that explain the implementation, diagnostic distinctions, finite qualification boundary and paid comparisons at normal double-column reading size. This revision uses the author's ASV reference for restrained serif typography, fine lines and evidence-led panels.\n\nStacked on **#72**, head `a686af6b4fb537b84a5e52a3736633d21c752801`. New version is isolated in `paper/jsa/manuscript_v0142/`; earlier manuscripts and evidence are preserved.\n\n## Changes\n\n- Redraw all five figures as editable PDF/SVG assets: implementation and query view; five categorical crosses plus continuation result; complete 16-mask matrix plus wider geometry; R/M/C comparator construction with saved cost intervals; all 24 tasks and four request rounds.\n- Preserve failures and scope: geometry breakdown, seven request regressions, round 2 reversal, same-family limitation and B570 strong-baseline results.\n- Update captions/panel references and clarify that B570 downstream changes arise under the sustained alternate continuation policy, not an isolated-block-aftereffect claim.\n- Display main cost-table ratios to three decimals, leaving underlying precision and six other generated tables unchanged.\n- Provide a Chinese change record and a ready-to-use **6.1sol prose-editing prompt**.\n\n## Deliverables\n\n[Manuscript entry](https://github.com/leecdiang/HeteroSpec/blob/codex/jsa-v0142-asv-visual-20261010/paper/jsa/manuscript_v0142/README.md)\n\n- Main PDF: **13 pages**, normal Elsevier 5p double-column.\n- Independent supplement: **27 pages**.\n- Full Overleaf author-source ZIP; separate flat main/supplement source ZIPs.\n- Drawing code, bound data, claim/experiment ledgers and current validation receipts.\n- `VISUAL_HANDOFF_TO_SOL.md` for the next language-editing round.\n\n## Validation\n\n- All **5,970 baseline files** retain their Git blob hashes; all 282 added file hashes verified against the remote tree.\n- Original 26 evidence exports, 16 historical copies and 133 bound source copies unchanged; numerical `compute()` AST and six supplementary tables unchanged.\n- Full CPU numerical and independent standard-library checks pass. Additional drawing check verifies 48 task points, six saved ratio intervals and four rounds; vector figure text remains within canvas with no Type 3 fonts or raster chart images.\n- Main and supplement compile without overfull boxes, undefined/duplicate references or missing glyphs; all fonts embedded.\n- All 40 pages inspected in rendered contact sheets, all five figures inspected independently, changed supplement pages reinspected.\n- Final 255-file structured ZIP fully rebuilt from an empty directory: both PDF bytes/text, all 18 generated figure/table assets and numeric QA match.\n- Flat source packages separately compile with equal page counts/text; flat main PDF bytes differ and are explicitly recorded as different, without assuming the reason.\n\nNo model experiment, private raw-archive re-audit, merge, submission or public data release. Author identity/declarations, final bibliography confirmation and single-model-family scope remain unresolved author/scientific items. Full prose editing is deferred to the supplied next-round prompt.",
+    "title": "JSA v0.14.2: ASV-inspired figure reconstruction and prose handoff",
+    "base": "codex/jsa-v0141-double-column-20261009",
+    "base_sha": "a686af6b4fb537b84a5e52a3736633d21c752801",
+    "head": "codex/jsa-v0142-asv-visual-20261010",
+    "head_sha": "f7d2a863265e6d619d3582d702e57cec1cfa9be2",
+    "head_repo_id": 1359354843,
+    "head_repo_full_name": "leecdiang/HeteroSpec",
+    "merge_commit_sha": "e74731e85d41b83aba529947df8b1eb702f96fe1",
+    "user": {
+      "login": "YinnHuu",
+      "name": "YinnHuu",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/234454605?v=4",
+      "id": 234454605
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-09T16:15:03Z",
+    "updated_at": "2026-10-09T16:15:42Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 1,
+    "changed_files": 282,
+    "additions": 49033,
+    "deletions": 0,
+    "display_url": "https://github.com/leecdiang/HeteroSpec/pull/73",
+    "display_title": "JSA v0.14.2: ASV-inspired figure reconstruction and prose handoff"
+  },
+  "tree_sha": "d926374a193f6c4584a389a9e41d8ce794c876c6",
+  "files": [
+    {
+      "path": "paper/jsa/manuscript_v0142/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "347bdec8c61778b2c97c98f4a2fcecfb935d181f",
+      "size": 58,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/347bdec8c61778b2c97c98f4a2fcecfb935d181f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/AUTHOR_TODO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f30a52a31c2b5e2fc23b305d876e04b8acd8f3f",
+      "size": 4808,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/4f30a52a31c2b5e2fc23b305d876e04b8acd8f3f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/CLAIM_EVIDENCE.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb6baae27f8dbf26e6a2a96f01473032e8de76ae",
+      "size": 9103,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/fb6baae27f8dbf26e6a2a96f01473032e8de76ae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/CLAIM_EVIDENCE.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92947c09809ead9d201fb681c2942368cf23fa21",
+      "size": 10577,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/92947c09809ead9d201fb681c2942368cf23fa21"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/EXPERIMENT_DESTINATIONS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91378461cca3f353504e89c12a2181939d5eb5a7",
+      "size": 23467,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/91378461cca3f353504e89c12a2181939d5eb5a7"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/EXPERIMENT_DESTINATIONS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9e764b4d2afd49cc87c15f5eaaccdc1efc4a6a4",
+      "size": 7070,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f9e764b4d2afd49cc87c15f5eaaccdc1efc4a6a4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/FIGURE_LAYOUT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f8545c1487d10b10af07c3129ebe231af43b0cb",
+      "size": 3204,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2f8545c1487d10b10af07c3129ebe231af43b0cb"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/Highlights.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "231718743ba29d88e31a97a3a19e7039d304c91c",
+      "size": 371,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/231718743ba29d88e31a97a3a19e7039d304c91c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/JSA_REQUIREMENTS_RECHECK.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "093e1db003ad1e2c63f5a5eea2f5691588c2efa2",
+      "size": 2824,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/093e1db003ad1e2c63f5a5eea2f5691588c2efa2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23fe0974cdb10c7fee41efda9006addff671232b",
+      "size": 3533,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/23fe0974cdb10c7fee41efda9006addff671232b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/RECONSTRUCTION_ZH.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec97ccb3df7eac8f3c4824f478b5a6715f946841",
+      "size": 1954,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ec97ccb3df7eac8f3c4824f478b5a6715f946841"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/REFERENCE_AUDIT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6735a9a69c680955b3fa0b5555302c3e40ca508b",
+      "size": 538,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6735a9a69c680955b3fa0b5555302c3e40ca508b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/SCIENTIFIC_AUDIT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad438a8d00026898d2fb30afe774dbd731d078e5",
+      "size": 2087,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ad438a8d00026898d2fb30afe774dbd731d078e5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/VALIDATION_LOG.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b13b6fde1bf8347f0c4327b3544c77f18493f172",
+      "size": 2118,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b13b6fde1bf8347f0c4327b3544c77f18493f172"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/VISUAL_HANDOFF_TO_SOL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6fa1131b23f9dd5112fb1fcbb565270930768183",
+      "size": 4912,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6fa1131b23f9dd5112fb1fcbb565270930768183"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/build.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "117894921cd55187de413892dc53ec0d31a5ca61",
+      "size": 5207,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/117894921cd55187de413892dc53ec0d31a5ca61"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/declarations.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8324b16ca0eb2b1865b05e475d4742ad45700962",
+      "size": 1723,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8324b16ca0eb2b1865b05e475d4742ad45700962"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/elsarticle-num.bst",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e1d553e2cb9b192fa8243da15d195c1b959647e",
+      "size": 30859,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8e1d553e2cb9b192fa8243da15d195c1b959647e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/elsarticle.cls",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf20bdff618262d43f67b260f04454a17e40dcb8",
+      "size": 44541,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cf20bdff618262d43f67b260f04454a17e40dcb8"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/INDEPENDENT_DERIVED_REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "18d09e4a8e105d9e148aeecb3e6560a03ead2b50",
+      "size": 1334,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/18d09e4a8e105d9e148aeecb3e6560a03ead2b50"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/INDEPENDENT_PUBLIC_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53b3a158b5aa3034f2a7771a59b1953efc38d582",
+      "size": 3472,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/53b3a158b5aa3034f2a7771a59b1953efc38d582"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/INDEPENDENT_SYNTHESIS_CHECKS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5b15d09dbc572336f1fab3a2c99fad6c5fc82f4",
+      "size": 4452,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c5b15d09dbc572336f1fab3a2c99fad6c5fc82f4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/M4_FORMAL_ANALYSIS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "608eb7cc4893910c85026a91c8461bfc3ab4efb5",
+      "size": 28529,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/608eb7cc4893910c85026a91c8461bfc3ab4efb5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/MERGE_VERIFICATION.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f54f42b599b5efd96a22f8cbb86f9dae8e0196d",
+      "size": 3453,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2f54f42b599b5efd96a22f8cbb86f9dae8e0196d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/PR66_INDEPENDENT_PUBLIC_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a55843969867fef90ff61cc375ed82c7e317a2b2",
+      "size": 4565,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a55843969867fef90ff61cc375ed82c7e317a2b2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/RTX_FIXED_UB_RESULTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8867cafa4cf86bcd57db6bdf1f5506a212081ade",
+      "size": 43525,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8867cafa4cf86bcd57db6bdf1f5506a212081ade"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/RTX_NATURAL_CROSSES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "152aac4c1ae60330b9c230e94f4d09608de2eae3",
+      "size": 33894,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/152aac4c1ae60330b9c230e94f4d09608de2eae3"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/RTX_PHASE_FACTORIAL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "940745d6d0bad0860435f98a48b52cb349782a88",
+      "size": 522,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/940745d6d0bad0860435f98a48b52cb349782a88"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/SOURCE_BINDINGS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52f786ef013ac854c110f13e46853ddd362983d2",
+      "size": 5861,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/52f786ef013ac854c110f13e46853ddd362983d2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/TEXT_OVERLAP_CHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97fac382fe45678471cd3757f83413c30429a4df",
+      "size": 3713,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/97fac382fe45678471cd3757f83413c30429a4df"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/CAUSAL_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cdf29d18f4bc890b526becad5c6ea455adecff2",
+      "size": 21699,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6cdf29d18f4bc890b526becad5c6ea455adecff2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/COSTS_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0653740e305f4db08190117731e3bed8e0aac05",
+      "size": 16705,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a0653740e305f4db08190117731e3bed8e0aac05"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/COST_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bfaab73dcc57f9a06885e2bd03d1e585a480d8d",
+      "size": 6312,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1bfaab73dcc57f9a06885e2bd03d1e585a480d8d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/COST_TASK_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72e6a2bfeab761b3a56abf8fcac45d9a9311c00a",
+      "size": 13715,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/72e6a2bfeab761b3a56abf8fcac45d9a9311c00a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/COUNTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e825ccc604b1a8891b09b3994c04047b07d6b80",
+      "size": 868,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2e825ccc604b1a8891b09b3994c04047b07d6b80"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/QUALIFICATION_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c41db370b23cf7cd5f02f98d459f82b29495982",
+      "size": 40772,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6c41db370b23cf7cd5f02f98d459f82b29495982"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/b57065/WORK_BREAKDOWN.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20fdccae8620b97f46a86540b85f1950b4e3e444",
+      "size": 8249,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/20fdccae8620b97f46a86540b85f1950b4e3e444"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/COST_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b84594a99110f4c645971b6ca2d45bbf315f531e",
+      "size": 18732,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b84594a99110f4c645971b6ca2d45bbf315f531e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/COUNTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6aff1f271ddf0bb474d192405533166b7b90062",
+      "size": 782,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c6aff1f271ddf0bb474d192405533166b7b90062"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/PROTOCOL_AMENDMENT_01.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42987c6933ec182069c29116c18c414654728cba",
+      "size": 755,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/42987c6933ec182069c29116c18c414654728cba"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/QUALIFICATION_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49da81461ac7cc2215ec67ee83247d0d676ab23b",
+      "size": 48172,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/49da81461ac7cc2215ec67ee83247d0d676ab23b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/RAW_COSTS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4f98b9a38148f59c9957da44fff99f85cf04ad5",
+      "size": 123320,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c4f98b9a38148f59c9957da44fff99f85cf04ad5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/ROUND_COST_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb4fdd58209dcfff3f33b11cbd004d587719a414",
+      "size": 114027,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/bb4fdd58209dcfff3f33b11cbd004d587719a414"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/SOURCE_TIMER_AUDIT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d240fce27e8fa9b327b345439a031589460fef4",
+      "size": 5644,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0d240fce27e8fa9b327b345439a031589460fef4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/evidence/rtx66/TASK_COST_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0578e76c06eac5f93680df286194f65c4228e310",
+      "size": 30564,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0578e76c06eac5f93680df286194f65c4228e310"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_1_architecture.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f56c30a4fa6be7ad49d59777122429aa0f8dcd3e",
+      "size": 23349,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f56c30a4fa6be7ad49d59777122429aa0f8dcd3e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_1_architecture.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84356a9391864ebc92d11dba3b7b884929dd6651",
+      "size": 27057,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/84356a9391864ebc92d11dba3b7b884929dd6651"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_2_natural_crosses.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc61c6366c88cccca7a560552ca10d78585021b7",
+      "size": 18179,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cc61c6366c88cccca7a560552ca10d78585021b7"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_2_natural_crosses.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "722529628ef62263ada8f08ff5d2c290fa3b6a8d",
+      "size": 24584,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/722529628ef62263ada8f08ff5d2c290fa3b6a8d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_3_phase_matrix.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f68f5290fab602c58ba4d2fa7a0a12d69236c574",
+      "size": 27089,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f68f5290fab602c58ba4d2fa7a0a12d69236c574"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_3_phase_matrix.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75bb84bbf2e745a4a03977fd2066128d89cb4142",
+      "size": 45794,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/75bb84bbf2e745a4a03977fd2066128d89cb4142"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_4_paid_cost.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c9d82552f0575216249af65c6761a5e56cb4677",
+      "size": 17405,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/4c9d82552f0575216249af65c6761a5e56cb4677"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_4_paid_cost.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ef5c0022e4658b46ae178954513b8506eab5665",
+      "size": 30592,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/9ef5c0022e4658b46ae178954513b8506eab5665"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_5_task_variation.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bae6614d8ae373f81828b37d83f6672d91c366e",
+      "size": 22228,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1bae6614d8ae373f81828b37d83f6672d91c366e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/figures/figure_5_task_variation.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a400b0c2899b6dcabce5cfeb5c7e20af09603f1d",
+      "size": 37000,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a400b0c2899b6dcabce5cfeb5c7e20af09603f1d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/frozen_verifier.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbe54ea9bbdfe5471143b9620c2e47e78955e75f",
+      "size": 11099,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cbe54ea9bbdfe5471143b9620c2e47e78955e75f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/appendix.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3de517f3c91ca60498f68e55595c391c96fba00a",
+      "size": 13859,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3de517f3c91ca60498f68e55595c391c96fba00a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/build.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbe54ea9bbdfe5471143b9620c2e47e78955e75f",
+      "size": 11099,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cbe54ea9bbdfe5471143b9620c2e47e78955e75f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/main.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7ff56b03e173b4133ac3602db76e9426d4f1efd",
+      "size": 29375,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c7ff56b03e173b4133ac3602db76e9426d4f1efd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/sections/03_methodology.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8b6dbadd12fb36721f4f4da132831182d132ee5",
+      "size": 3321,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b8b6dbadd12fb36721f4f4da132831182d132ee5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/sections/04_outcomes.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02a591fd33638623cdd13a0ebf0ac4a0e17a409b",
+      "size": 4109,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/02a591fd33638623cdd13a0ebf0ac4a0e17a409b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/sections/05_bridge_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4f0833a059bf44ef29f4c9e9c009115be77d5ae",
+      "size": 3267,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e4f0833a059bf44ef29f4c9e9c009115be77d5ae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/sections/05_diagnoses.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5c9c86b43db07ec59d4e52afda65188849cfc1a",
+      "size": 5026,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e5c9c86b43db07ec59d4e52afda65188849cfc1a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/sections/06_selection_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ab356ef6684c70cfdb110b8db35f258fec6dc29",
+      "size": 2783,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0ab356ef6684c70cfdb110b8db35f258fec6dc29"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/01_platforms_v05.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28458bbd5a16896513531ee86aec295b8a52a59a",
+      "size": 1317,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/28458bbd5a16896513531ee86aec295b8a52a59a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/acceptance_values_v090.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b365f1bc6cfd17a944258df9581907150efca023",
+      "size": 320,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b365f1bc6cfd17a944258df9581907150efca023"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/derived_values_v086.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "916f6ee356258c3d832806ee4c56502b847b7e2b",
+      "size": 441,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/916f6ee356258c3d832806ee4c56502b847b7e2b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/direct_id_values.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb8f1ecb64381bfcbf16b49efdbdd80ceff1779c",
+      "size": 544,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cb8f1ecb64381bfcbf16b49efdbdd80ceff1779c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/followup_values_v085.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bc82bdfbc0fd02ce571fea5548a235587cac34b",
+      "size": 313,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6bc82bdfbc0fd02ce571fea5548a235587cac34b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/rtx_v4_values_v087.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ae99a54552cdefcf0ef0a0de33b0549ee7e5da0",
+      "size": 170,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6ae99a54552cdefcf0ef0a0de33b0549ee7e5da0"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/selection_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "caa71f672297e65ef26e8f49437b07c0d3fb759e",
+      "size": 517,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/caa71f672297e65ef26e8f49437b07c0d3fb759e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/historical_sources/tables/values.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8454c8bf1cee5b42e40d1384c7f129de526be6f",
+      "size": 1808,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e8454c8bf1cee5b42e40d1384c7f129de526be6f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/main.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59a93ca4165604b7185737bcd69ddf1b07a27c21",
+      "size": 3079,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/59a93ca4165604b7185737bcd69ddf1b07a27c21"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/BUILD_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91874b6a1963cb3f5402be7aa4e8a00f75dc8f4b",
+      "size": 1240,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/91874b6a1963cb3f5402be7aa4e8a00f75dc8f4b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/FIGURE_INPUTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f85a9d4cf389422dca1d38c41afab2899e796673",
+      "size": 14642,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f85a9d4cf389422dca1d38c41afab2899e796673"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/FLAT_SOURCE_REBUILD_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4d2eb96654c1fa309803d6c820c44f85f926f21",
+      "size": 3887,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e4d2eb96654c1fa309803d6c820c44f85f926f21"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/INHERITANCE_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b6191a95a138741dea62ece2c7a4a134f833bbf",
+      "size": 312,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/5b6191a95a138741dea62ece2c7a4a134f833bbf"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/NUMERICAL_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0070c4e4e8bc63c7e6be2fa6f6d3352a17db1a88",
+      "size": 5018,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0070c4e4e8bc63c7e6be2fa6f6d3352a17db1a88"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/SCIENTIFIC_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fa304cf7681c36842217598aa3e0b8283e7bbd8",
+      "size": 13109,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3fa304cf7681c36842217598aa3e0b8283e7bbd8"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/SHA256SUMS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "355fd6784e7fda09d16b8f84f643e76b79acd69e",
+      "size": 652,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/355fd6784e7fda09d16b8f84f643e76b79acd69e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/SOURCE_PACKAGE_REBUILD_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "312404f4cb6f7832283a1df407afe1ca65f6e759",
+      "size": 1820,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/312404f4cb6f7832283a1df407afe1ca65f6e759"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/VISUAL_DATA_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93e3b965dce200ce122aaf6dcff4d69d32bfa465",
+      "size": 1747,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/93e3b965dce200ce122aaf6dcff4d69d32bfa465"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/VISUAL_REVIEW_QA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "daf29b3c304e763663aa01b3ffa2248b490d2b77",
+      "size": 730,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/daf29b3c304e763663aa01b3ffa2248b490d2b77"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/editorial-manager-main-flat-source-v0.14.2.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79a44fd0b82e018b4a94ec38fcf2feed2cdc5983",
+      "size": 144459,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/79a44fd0b82e018b4a94ec38fcf2feed2cdc5983"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/editorial-manager-supplement-flat-source-v0.14.2.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb35bae869129f3d0f47970a1185a949bd6cbb71",
+      "size": 50452,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cb35bae869129f3d0f47970a1185a949bd6cbb71"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/flat-main-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0b7df0a47f888e4cb8b576d4ccc744fa507f2c4",
+      "size": 35501,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b0b7df0a47f888e4cb8b576d4ccc744fa507f2c4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/flat-main-rebuilt.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91a5eba79187c0915ceee69392fd420bdf515077",
+      "size": 286221,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/91a5eba79187c0915ceee69392fd420bdf515077"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/flat-supplement-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40031c9d36be4b0da422b0679e467e8a18c162ca",
+      "size": 31829,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/40031c9d36be4b0da422b0679e467e8a18c162ca"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/jsa-manuscript-v0.14.2.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da86746c08cfe06d1fe3c0f748d138e4b4f77e2a",
+      "size": 286221,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/da86746c08cfe06d1fe3c0f748d138e4b4f77e2a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/jsa-supplement-v0.14.2.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eea623de631cfdf171cf3bda050318a7a570646d",
+      "size": 343537,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eea623de631cfdf171cf3bda050318a7a570646d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/main-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b98367ed9aa32768509976e22c1d7e817b9d83c",
+      "size": 191,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2b98367ed9aa32768509976e22c1d7e817b9d83c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/main-fonts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "326e99e88e6f56e6848d52d0c55b012316d74702",
+      "size": 2162,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/326e99e88e6f56e6848d52d0c55b012316d74702"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/main.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "61ce2f3c54758f4a2f02ff5b91b670da9ef7d313",
+      "size": 91263,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/61ce2f3c54758f4a2f02ff5b91b670da9ef7d313"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/overleaf-author-source-v0.14.2.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d40e39f33de85c6eee4a7e85dbde0ee03abcf4b9",
+      "size": 917267,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d40e39f33de85c6eee4a7e85dbde0ee03abcf4b9"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/reconstruction-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89f59694277fa0efa63cc0864f1d94a506a7c92a",
+      "size": 586,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/89f59694277fa0efa63cc0864f1d94a506a7c92a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/scientific-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8014fcfc815aee5b192337bd8c5b2e741b595706",
+      "size": 329,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8014fcfc815aee5b192337bd8c5b2e741b595706"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/source-package-rebuild-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "226bb21716c4f6968129dc6ee225a601b67887c2",
+      "size": 1039,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/226bb21716c4f6968129dc6ee225a601b67887c2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/supplement-console.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d63fde2ee1c91b6be7c33fa02f758e7c8c1fccde",
+      "size": 203,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d63fde2ee1c91b6be7c33fa02f758e7c8c1fccde"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/supplement-fonts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "540e33587324262c39896b3b6f48e6e71972d97d",
+      "size": 1598,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/540e33587324262c39896b3b6f48e6e71972d97d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/output/supplement.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab2fc30ef180a19374d6fdc9d84addef035b2067",
+      "size": 65881,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ab2fc30ef180a19374d6fdc9d84addef035b2067"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/ADDITIONAL_SOURCE_INDEX.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa3d2d43bbbc3ec6a83385acb335cf19b5cafa95",
+      "size": 4633,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/fa3d2d43bbbc3ec6a83385acb335cf19b5cafa95"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/BASELINE_INHERITANCE.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "548f4d1f4c500b18d3c65b6030ab74f986471d78",
+      "size": 883,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/548f4d1f4c500b18d3c65b6030ab74f986471d78"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/INHERITED_V014_AUTHOR_QA_SNAPSHOT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0c4f14bedfcf4ffa4bfd682ad3374f7b1099218",
+      "size": 7620,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e0c4f14bedfcf4ffa4bfd682ad3374f7b1099218"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/INHERITED_V014_BASELINE_INHERITANCE.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eef966f41ab72f6983e2f4bd5b8e9d6c514c5fe4",
+      "size": 1259,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eef966f41ab72f6983e2f4bd5b8e9d6c514c5fe4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/INHERITED_V014_JSA_REQUIREMENTS_RECHECK.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55df8fe85ce512c4692eacb6904d54b243b2f075",
+      "size": 3613,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/55df8fe85ce512c4692eacb6904d54b243b2f075"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/INHERITED_V014_REFERENCE_AUDIT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d9b4425089938f53da34205b80bfe513f193093",
+      "size": 8871,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0d9b4425089938f53da34205b80bfe513f193093"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/PLANNING_EVIDENCE_LEDGER.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c167cd2ba24a0faca040a0da4ec949cb0bfaff24",
+      "size": 9457,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c167cd2ba24a0faca040a0da4ec949cb0bfaff24"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/READ_SOURCE_INDEX.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c94b692e5eec4ba37280add4268a45665458efe",
+      "size": 30503,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6c94b692e5eec4ba37280add4268a45665458efe"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/provenance/UPSTREAM_IMPLEMENTATION_REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c2dee5e0cdf8045a8374ed0609fca7d2a85b01d",
+      "size": 1020,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/4c2dee5e0cdf8045a8374ed0609fca7d2a85b01d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/references.bib",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "950e48c764d9b901312678e8888157c8f9d82099",
+      "size": 8385,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/950e48c764d9b901312678e8888157c8f9d82099"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "076f0128e7036cfb3169fc04f733cc2425e1503b",
+      "size": 171,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/076f0128e7036cfb3169fc04f733cc2425e1503b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/audit_v0141.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd2b8ad49d31b3c7cd3e59f1f961a34c2896cc56",
+      "size": 13330,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cd2b8ad49d31b3c7cd3e59f1f961a34c2896cc56"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/build_ledgers.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eef7ef97a9dacd95090e4adb6045c2ab93c3d5dd",
+      "size": 8446,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eef7ef97a9dacd95090e4adb6045c2ab93c3d5dd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/check_package.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aff1baf7fc94c83a0f45bf009ac10e3e02c3c662",
+      "size": 4748,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/aff1baf7fc94c83a0f45bf009ac10e3e02c3c662"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/check_visuals.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "21f426b6fef13badfe8ca7530e32d0a848078fae",
+      "size": 3108,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/21f426b6fef13badfe8ca7530e32d0a848078fae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/flat_sources.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ebb1ca76d7aaa0437bbddf624cca00d727f26aae",
+      "size": 5656,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ebb1ca76d7aaa0437bbddf624cca00d727f26aae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/reconstruct.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24a4eb58dec2def4f14a689b4a1a9a6d17153ca3",
+      "size": 18737,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/24a4eb58dec2def4f14a689b4a1a9a6d17153ca3"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/render_qa.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94970b31003cad09ff2586421652874d46437197",
+      "size": 1503,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/94970b31003cad09ff2586421652874d46437197"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/scripts/visual_figures.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04330f2c6dcde15f6381e3e48a8c69cc181291c9",
+      "size": 17633,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/04330f2c6dcde15f6381e3e48a8c69cc181291c9"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/01_introduction.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1196777abc06c3bf0a51f7701fcfca3ea380cdbe",
+      "size": 4966,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1196777abc06c3bf0a51f7701fcfca3ea380cdbe"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/02_runtime.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95fde65bdcb157ed7c160e47213a3c696f50f88e",
+      "size": 6926,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/95fde65bdcb157ed7c160e47213a3c696f50f88e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/03_methods.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb71cf56eef3bc0fd03202f79fd42afcc37d353e",
+      "size": 8506,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/bb71cf56eef3bc0fd03202f79fd42afcc37d353e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/04_diagnosis.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "26fc97b836a74e9522e86ce297c49793c154ac40",
+      "size": 8149,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/26fc97b836a74e9522e86ce297c49793c154ac40"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/05_repair.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d9619bf715f1aa05c14eb13c7232725d8c0299a9",
+      "size": 8559,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d9619bf715f1aa05c14eb13c7232725d8c0299a9"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/06_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "984af3fa42c3c3303257af206207d4bb3450be9d",
+      "size": 10925,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/984af3fa42c3c3303257af206207d4bb3450be9d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/07_implications.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c42fdd027b4ef1ef319d459cccde0f50ee0438e",
+      "size": 3110,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1c42fdd027b4ef1ef319d459cccde0f50ee0438e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/sections/08_conclusion.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d1c7020c841c8017617199a19201b94b49e0813",
+      "size": 958,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/4d1c7020c841c8017617199a19201b94b49e0813"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/analysis/358h_draft_device_summary.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2339a4b4351b9aac4b1b89ddcde36fb51f205858",
+      "size": 13663,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2339a4b4351b9aac4b1b89ddcde36fb51f205858"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/analysis/358h_phase3_summary.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "34176a76cad4c53df8f208fb358fb03e7160d404",
+      "size": 4928,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/34176a76cad4c53df8f208fb358fb03e7160d404"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/analysis/358h_threshold_summary.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7788ac8db4e1a85eb2986c14adcd5a99b50f9a00",
+      "size": 5442,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/7788ac8db4e1a85eb2986c14adcd5a99b50f9a00"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_closeout_overnight_v1/REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d55f28051aaf8374b38a342aae44ef96df947663",
+      "size": 19635,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d55f28051aaf8374b38a342aae44ef96df947663"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_closeout_overnight_v1/normative_audit_20261007/REVIEW_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60895a59913754a9a4902cac9de0b8a055f9ea76",
+      "size": 11026,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/60895a59913754a9a4902cac9de0b8a055f9ea76"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_direct_id_v1/FORMAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "296f186c8101323b07a2f32cb1cfefde2ff9b684",
+      "size": 3145,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/296f186c8101323b07a2f32cb1cfefde2ff9b684"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_mechanism_pilot_v1/C_PRIVATE_LIBRARY.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48fc8205c8c7aaed822640aa33ff915d72236a2e",
+      "size": 1140,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/48fc8205c8c7aaed822640aa33ff915d72236a2e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_mechanism_pilot_v1/REPORT.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e5ae849d61d83fb22312bc4c5332e6e6a91005f",
+      "size": 12096,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8e5ae849d61d83fb22312bc4c5332e6e6a91005f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_mechanism_pilot_v1/code/candidate-front/native.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c770e4c0b08ac8beb1c9429029ac4419b9a5e74e",
+      "size": 32250,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c770e4c0b08ac8beb1c9429029ac4419b9a5e74e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_mechanism_pilot_v1/code/candidate-front/phase.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3dad23573fd236a45cfb7d6ba832ca02d0cab46",
+      "size": 1082,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d3dad23573fd236a45cfb7d6ba832ca02d0cab46"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_mechanism_pilot_v1/code/candidate-front/target.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fed1e4c1b8d2ad192b56070faf2ed568362497d8",
+      "size": 7528,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/fed1e4c1b8d2ad192b56070faf2ed568362497d8"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_partition_intervention_v1/DELIVERY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7aa037b6bfa958a23139812259b1352e3a8117e1",
+      "size": 3081,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/7aa037b6bfa958a23139812259b1352e3a8117e1"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_partition_intervention_v1/STUDY_PROTOCOL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "554176ca4f685f45cc2ab6bc9e19ef6313e6ffd4",
+      "size": 6393,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/554176ca4f685f45cc2ab6bc9e19ef6313e6ffd4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_pr64_cpu_closeout_v2/REPORT.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be4cf5328431c6bfc34af53e0a56e8292c974049",
+      "size": 7228,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/be4cf5328431c6bfc34af53e0a56e8292c974049"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/b570_prefill_diagnostic_v1/STUDY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d472cb4560877c468bf43774785d0c8d5d74b1af",
+      "size": 3408,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d472cb4560877c468bf43774785d0c8d5d74b1af"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/diagnostic_selection_feasibility_v1/FEASIBILITY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f8e9b75fa1f1e9dc33ceba1f3d6e3e04fa091b8",
+      "size": 7396,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2f8e9b75fa1f1e9dc33ceba1f3d6e3e04fa091b8"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/m4_runtime/FORMAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a14a3d6f9fc0910358cca39a035a4054d66b5f4",
+      "size": 2235,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6a14a3d6f9fc0910358cca39a035a4054d66b5f4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/m4_runtime/GUARD_ALWAYS_SECONDARY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37ed67de33f741a5013852d0bf51e6ccade7255a",
+      "size": 2119,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/37ed67de33f741a5013852d0bf51e6ccade7255a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_closeout_bcd/REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6f79b6f0942b6758d46cbf3aefc18c929bcd6bd",
+      "size": 16387,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d6f79b6f0942b6758d46cbf3aefc18c929bcd6bd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_closeout_bcd/results/C_BOUNDARY_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e1071ae81e83b2476b22f84e108b5da29e13de4",
+      "size": 4372,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3e1071ae81e83b2476b22f84e108b5da29e13de4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_closeout_bcd/results/D_PUBLIC_RESULTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8b1a6394893cdde0596d62e6a65756758da1c55",
+      "size": 8657,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c8b1a6394893cdde0596d62e6a65756758da1c55"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_closeout_bcd/results/NATIVE_PATCH_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f72ce41bae7e637048f79e3d0be477ff2391fa62",
+      "size": 533,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f72ce41bae7e637048f79e3d0be477ff2391fa62"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_contract_v1/REPORT_ZH.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd0db968ea0dff261d1e3e9d94b5901c702f6e71",
+      "size": 9575,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/dd0db968ea0dff261d1e3e9d94b5901c702f6e71"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_contract_v1/attention_patch.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "beec7de758db709956c969f0807a455ade98a749",
+      "size": 2319,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/beec7de758db709956c969f0807a455ade98a749"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_contract_v1/disable_observer_patch.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce22ad784357a2e9ded3410bd03a91ac307d8567",
+      "size": 1023,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ce22ad784357a2e9ded3410bd03a91ac307d8567"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_contract_v1/query_batch_patch.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b00e5d0ba67a8685404b0ba6ac099ff6ffac1736",
+      "size": 1625,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b00e5d0ba67a8685404b0ba6ac099ff6ffac1736"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_phase2/RESULTS.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93be8d5d4ca7d4e80a2f2dbeef9068f3a215faed",
+      "size": 7459,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/93be8d5d4ca7d4e80a2f2dbeef9068f3a215faed"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_phase2/native_scope_delta.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a0bcc060bbb5d5651a58dfa358579400542ac77",
+      "size": 5528,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0a0bcc060bbb5d5651a58dfa358579400542ac77"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_phase2/results/A1_RESULTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab39bd3c77107b0a5de166810180acc06edd850e",
+      "size": 5654,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ab39bd3c77107b0a5de166810180acc06edd850e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_phase2/results/A3_RESULTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc9d24717d22cc81f89b84193ca28c9887cf7a3d",
+      "size": 17335,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/fc9d24717d22cc81f89b84193ca28c9887cf7a3d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_consistency_phase2/scope_patch.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b4ee4bc3a3dc42a8f14e55a4815f4580decaff4",
+      "size": 4377,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2b4ee4bc3a3dc42a8f14e55a4815f4580decaff4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_direct_id_v1/FORMAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b931c1aa060684223b18759400334a76762d6798",
+      "size": 6705,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b931c1aa060684223b18759400334a76762d6798"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_direct_id_v2/FORMAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b931c1aa060684223b18759400334a76762d6798",
+      "size": 6705,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b931c1aa060684223b18759400334a76762d6798"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_efficiency_pilot_v1/REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2773c5a3ad5b2848095ca3688e21e673645362c",
+      "size": 6522,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e2773c5a3ad5b2848095ca3688e21e673645362c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_independent_proposal_replay_v2/FORMAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13b253e88a52766accad7423f9ff7a3eda77d443",
+      "size": 1481,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/13b253e88a52766accad7423f9ff7a3eda77d443"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_pr62_cpu_reference_closeout_v1/REPORT.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0dbcd3126f1f5cd2d58a2b3b5e34f2b3c14e399c",
+      "size": 7394,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0dbcd3126f1f5cd2d58a2b3b5e34f2b3c14e399c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_target_only_bridge_v1/STUDY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4461a1be904c8b068f7454639ef849c809b35ae",
+      "size": 7912,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d4461a1be904c8b068f7454639ef849c809b35ae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_target_verification_intervention_v1/STUDY_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38d0bc9b5c7a0a219cfe1dd8aa06aba4108077b4",
+      "size": 8744,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/38d0bc9b5c7a0a219cfe1dd8aa06aba4108077b4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_trajectory_cost_v3/FINAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1693c26aa7ad9c049aa801a7e5632bcda7a3bae5",
+      "size": 6007,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1693c26aa7ad9c049aa801a7e5632bcda7a3bae5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_trajectory_cost_v4/FINAL_REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0abffc612269ef64596c06f3f6d57fbbea525c0",
+      "size": 5942,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c0abffc612269ef64596c06f3f6d57fbbea525c0"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_trajectory_cost_v4/HOST_POLICY_AUDIT_APPENDIX.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32f5401f05b0d488e6ca514a2c64380e201c173d",
+      "size": 1346,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/32f5401f05b0d488e6ca514a2c64380e201c173d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_transfer_latency_v1/latency/REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c3b51e0cb4abe26e91a0f3647feb1e9957ccfa1",
+      "size": 6029,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/9c3b51e0cb4abe26e91a0f3647feb1e9957ccfa1"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/benchmarks/rtx_transfer_latency_v1/prediction/REPORT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79f8c82cfa3e2c2e4fbb61ae0e0f71e66056223a",
+      "size": 4087,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/79f8c82cfa3e2c2e4fbb61ae0e0f71e66056223a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/JSA_REQUIREMENTS_AUDIT_20261009.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eede84260f832556c328769192d2093e5e3f4886",
+      "size": 9495,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eede84260f832556c328769192d2093e5e3f4886"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/JSA_REQUIREMENTS_VERIFIED_20261009.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f60519146d1ef1b46443fe78501742ecc21f211",
+      "size": 8199,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2f60519146d1ef1b46443fe78501742ecc21f211"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "839d198c26e5134b09a3331fd1ec4dae04220f1f",
+      "size": 1013,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/839d198c26e5134b09a3331fd1ec4dae04220f1f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/CLAIM_EVIDENCE_MAP.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8abda49ff0fe8f9ebc9894a09e14188d58d34e1e",
+      "size": 5347,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8abda49ff0fe8f9ebc9894a09e14188d58d34e1e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/HIGHLIGHTS.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7eb95badd0df5b5dc42334b80cce1dcc66d449f1",
+      "size": 366,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/7eb95badd0df5b5dc42334b80cce1dcc66d449f1"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/JSA_RECONSTRUCTION_REVIEW.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad3a6c922839adca56c9945e55e89f5214fe0d58",
+      "size": 6452,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/ad3a6c922839adca56c9945e55e89f5214fe0d58"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/JSA_REQUIREMENTS_AND_DEPENDENCIES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "208164e2a15bb8cad8799491583ca974107eee68",
+      "size": 2121,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/208164e2a15bb8cad8799491583ca974107eee68"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e40af5fa845ad8ab40da965a1ae25dfdd62d9ddd",
+      "size": 4405,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e40af5fa845ad8ab40da965a1ae25dfdd62d9ddd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/RECONSTRUCTION_BINDINGS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25a9fcc4b47d036bd427046a880b85db235532d5",
+      "size": 3697,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/25a9fcc4b47d036bd427046a880b85db235532d5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/REFERENCE_URLS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92e8d7c777f527e1c2621e54aa81d4ce4121ac0b",
+      "size": 1024,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/92e8d7c777f527e1c2621e54aa81d4ce4121ac0b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/appendix.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af62d56e7bdbe25572c698505986801aaa910d0a",
+      "size": 4620,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/af62d56e7bdbe25572c698505986801aaa910d0a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/build.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a02c54412ce09ee4d134cd72df1f0245df4d31e",
+      "size": 8540,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1a02c54412ce09ee4d134cd72df1f0245df4d31e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/elsarticle-num.bst",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e1d553e2cb9b192fa8243da15d195c1b959647e",
+      "size": 30859,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8e1d553e2cb9b192fa8243da15d195c1b959647e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/elsarticle.cls",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf20bdff618262d43f67b260f04454a17e40dcb8",
+      "size": 44541,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cf20bdff618262d43f67b260f04454a17e40dcb8"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/INDEPENDENT_DERIVED_REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "18d09e4a8e105d9e148aeecb3e6560a03ead2b50",
+      "size": 1334,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/18d09e4a8e105d9e148aeecb3e6560a03ead2b50"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/INDEPENDENT_PUBLIC_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53b3a158b5aa3034f2a7771a59b1953efc38d582",
+      "size": 3472,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/53b3a158b5aa3034f2a7771a59b1953efc38d582"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/INDEPENDENT_SYNTHESIS_CHECKS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5b15d09dbc572336f1fab3a2c99fad6c5fc82f4",
+      "size": 4452,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c5b15d09dbc572336f1fab3a2c99fad6c5fc82f4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/M4_FORMAL_ANALYSIS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "608eb7cc4893910c85026a91c8461bfc3ab4efb5",
+      "size": 28529,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/608eb7cc4893910c85026a91c8461bfc3ab4efb5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/MERGE_VERIFICATION.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f54f42b599b5efd96a22f8cbb86f9dae8e0196d",
+      "size": 3453,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2f54f42b599b5efd96a22f8cbb86f9dae8e0196d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/PR66_INDEPENDENT_PUBLIC_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a55843969867fef90ff61cc375ed82c7e317a2b2",
+      "size": 4565,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a55843969867fef90ff61cc375ed82c7e317a2b2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/RTX_FIXED_UB_RESULTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8867cafa4cf86bcd57db6bdf1f5506a212081ade",
+      "size": 43525,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8867cafa4cf86bcd57db6bdf1f5506a212081ade"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/RTX_NATURAL_CROSSES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "152aac4c1ae60330b9c230e94f4d09608de2eae3",
+      "size": 33894,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/152aac4c1ae60330b9c230e94f4d09608de2eae3"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/RTX_PHASE_FACTORIAL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "940745d6d0bad0860435f98a48b52cb349782a88",
+      "size": 522,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/940745d6d0bad0860435f98a48b52cb349782a88"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/SOURCE_BINDINGS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52f786ef013ac854c110f13e46853ddd362983d2",
+      "size": 5861,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/52f786ef013ac854c110f13e46853ddd362983d2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/TEXT_OVERLAP_CHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97fac382fe45678471cd3757f83413c30429a4df",
+      "size": 3713,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/97fac382fe45678471cd3757f83413c30429a4df"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/CAUSAL_RECHECK.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cdf29d18f4bc890b526becad5c6ea455adecff2",
+      "size": 21699,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6cdf29d18f4bc890b526becad5c6ea455adecff2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/COSTS_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0653740e305f4db08190117731e3bed8e0aac05",
+      "size": 16705,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a0653740e305f4db08190117731e3bed8e0aac05"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/COST_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bfaab73dcc57f9a06885e2bd03d1e585a480d8d",
+      "size": 6312,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1bfaab73dcc57f9a06885e2bd03d1e585a480d8d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/COST_TASK_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72e6a2bfeab761b3a56abf8fcac45d9a9311c00a",
+      "size": 13715,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/72e6a2bfeab761b3a56abf8fcac45d9a9311c00a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/COUNTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e825ccc604b1a8891b09b3994c04047b07d6b80",
+      "size": 868,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/2e825ccc604b1a8891b09b3994c04047b07d6b80"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/QUALIFICATION_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c41db370b23cf7cd5f02f98d459f82b29495982",
+      "size": 40772,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6c41db370b23cf7cd5f02f98d459f82b29495982"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/b57065/WORK_BREAKDOWN.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20fdccae8620b97f46a86540b85f1950b4e3e444",
+      "size": 8249,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/20fdccae8620b97f46a86540b85f1950b4e3e444"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/COST_SUMMARY.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b84594a99110f4c645971b6ca2d45bbf315f531e",
+      "size": 18732,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b84594a99110f4c645971b6ca2d45bbf315f531e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/COUNTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6aff1f271ddf0bb474d192405533166b7b90062",
+      "size": 782,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c6aff1f271ddf0bb474d192405533166b7b90062"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/PROTOCOL_AMENDMENT_01.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42987c6933ec182069c29116c18c414654728cba",
+      "size": 755,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/42987c6933ec182069c29116c18c414654728cba"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/QUALIFICATION_RECOMPUTED.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49da81461ac7cc2215ec67ee83247d0d676ab23b",
+      "size": 48172,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/49da81461ac7cc2215ec67ee83247d0d676ab23b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/RAW_COSTS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4f98b9a38148f59c9957da44fff99f85cf04ad5",
+      "size": 123320,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c4f98b9a38148f59c9957da44fff99f85cf04ad5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/ROUND_COST_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb4fdd58209dcfff3f33b11cbd004d587719a414",
+      "size": 114027,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/bb4fdd58209dcfff3f33b11cbd004d587719a414"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/SOURCE_TIMER_AUDIT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d240fce27e8fa9b327b345439a031589460fef4",
+      "size": 5644,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0d240fce27e8fa9b327b345439a031589460fef4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/evidence/rtx66/TASK_COST_PAIRS.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0578e76c06eac5f93680df286194f65c4228e310",
+      "size": 30564,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0578e76c06eac5f93680df286194f65c4228e310"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/frozen_verifier.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbe54ea9bbdfe5471143b9620c2e47e78955e75f",
+      "size": 11099,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cbe54ea9bbdfe5471143b9620c2e47e78955e75f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/appendix.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3de517f3c91ca60498f68e55595c391c96fba00a",
+      "size": 13859,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3de517f3c91ca60498f68e55595c391c96fba00a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/build.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbe54ea9bbdfe5471143b9620c2e47e78955e75f",
+      "size": 11099,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cbe54ea9bbdfe5471143b9620c2e47e78955e75f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/main.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7ff56b03e173b4133ac3602db76e9426d4f1efd",
+      "size": 29375,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c7ff56b03e173b4133ac3602db76e9426d4f1efd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/sections/03_methodology.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8b6dbadd12fb36721f4f4da132831182d132ee5",
+      "size": 3321,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b8b6dbadd12fb36721f4f4da132831182d132ee5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/sections/04_outcomes.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02a591fd33638623cdd13a0ebf0ac4a0e17a409b",
+      "size": 4109,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/02a591fd33638623cdd13a0ebf0ac4a0e17a409b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/sections/05_bridge_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4f0833a059bf44ef29f4c9e9c009115be77d5ae",
+      "size": 3267,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e4f0833a059bf44ef29f4c9e9c009115be77d5ae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/sections/05_diagnoses.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5c9c86b43db07ec59d4e52afda65188849cfc1a",
+      "size": 5026,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e5c9c86b43db07ec59d4e52afda65188849cfc1a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/sections/06_selection_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ab356ef6684c70cfdb110b8db35f258fec6dc29",
+      "size": 2783,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0ab356ef6684c70cfdb110b8db35f258fec6dc29"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/01_platforms_v05.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28458bbd5a16896513531ee86aec295b8a52a59a",
+      "size": 1317,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/28458bbd5a16896513531ee86aec295b8a52a59a"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/acceptance_values_v090.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b365f1bc6cfd17a944258df9581907150efca023",
+      "size": 320,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b365f1bc6cfd17a944258df9581907150efca023"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/derived_values_v086.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "916f6ee356258c3d832806ee4c56502b847b7e2b",
+      "size": 441,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/916f6ee356258c3d832806ee4c56502b847b7e2b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/direct_id_values.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb8f1ecb64381bfcbf16b49efdbdd80ceff1779c",
+      "size": 544,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/cb8f1ecb64381bfcbf16b49efdbdd80ceff1779c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/followup_values_v085.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bc82bdfbc0fd02ce571fea5548a235587cac34b",
+      "size": 313,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6bc82bdfbc0fd02ce571fea5548a235587cac34b"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/rtx_v4_values_v087.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ae99a54552cdefcf0ef0a0de33b0549ee7e5da0",
+      "size": 170,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6ae99a54552cdefcf0ef0a0de33b0549ee7e5da0"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/selection_v011.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "caa71f672297e65ef26e8f49437b07c0d3fb759e",
+      "size": 517,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/caa71f672297e65ef26e8f49437b07c0d3fb759e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/historical_sources/tables/values.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8454c8bf1cee5b42e40d1384c7f129de526be6f",
+      "size": 1808,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e8454c8bf1cee5b42e40d1384c7f129de526be6f"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/main.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "488bfed0e73affa595b6640ed7631779e5d3a8b2",
+      "size": 2679,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/488bfed0e73affa595b6640ed7631779e5d3a8b2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/references.bib",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f589bb0bed8a926394967cc83a2ce1bb18dec024",
+      "size": 6457,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f589bb0bed8a926394967cc83a2ce1bb18dec024"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "def132cbbdc1f2b65bc65dddf97bcff597a78faf",
+      "size": 32,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/def132cbbdc1f2b65bc65dddf97bcff597a78faf"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/01_introduction.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f346aea22623fdd5a3d785d4078f368e53882ce",
+      "size": 4569,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3f346aea22623fdd5a3d785d4078f368e53882ce"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/02_background.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7f14a2d438ad3da5deda75cf3a66db820df5060",
+      "size": 3242,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e7f14a2d438ad3da5deda75cf3a66db820df5060"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/03_design.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13d9603cd50d39b7be89b34fe8b88eafa10c0cf4",
+      "size": 4937,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/13d9603cd50d39b7be89b34fe8b88eafa10c0cf4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/04_studies.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eca6a78aea279bc1d1657a9128963419d4bba293",
+      "size": 3904,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eca6a78aea279bc1d1657a9128963419d4bba293"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/05_diagnosis.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e4d711e4eb7d38287e6e87be9cd025ecc252897",
+      "size": 7888,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/1e4d711e4eb7d38287e6e87be9cd025ecc252897"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/06_repair.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1673c6c98bd90fb11e1b051d4a6bd71c78357fb",
+      "size": 2369,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a1673c6c98bd90fb11e1b051d4a6bd71c78357fb"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/07_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c5bbd8f12c30d79ef73f20dbf2e6a3508640643",
+      "size": 12945,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0c5bbd8f12c30d79ef73f20dbf2e6a3508640643"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/08_discussion.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "593d7eed4d7243f33780eea95ea586d5c7376b70",
+      "size": 3045,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/593d7eed4d7243f33780eea95ea586d5c7376b70"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/sections/09_limits.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58a88cd5be654106812b91474cacbe59e60c7de7",
+      "size": 3609,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/58a88cd5be654106812b91474cacbe59e60c7de7"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/supplement_inherited.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c416a34a16c9cd61f130b458848135627ba076cd",
+      "size": 12474,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c416a34a16c9cd61f130b458848135627ba076cd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/manuscript_v013/tables/workload_strata.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f9e728c85b98ecb0d8a77dcf85da8c5b54dfe07",
+      "size": 904,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/8f9e728c85b98ecb0d8a77dcf85da8c5b54dfe07"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/01_JSA_REQUIREMENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03207f58d9288b11e4c883b43361ce802f6654fd",
+      "size": 5370,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/03207f58d9288b11e4c883b43361ce802f6654fd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/02_CROSS_REVIEW.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7cba46869103e53894f4d7eca7ab51cb8f7af0e",
+      "size": 7203,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e7cba46869103e53894f4d7eca7ab51cb8f7af0e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/03_STORYLINE.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e2102e631f86a4a7f37851b93e68eba8ee330aa",
+      "size": 7821,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/4e2102e631f86a4a7f37851b93e68eba8ee330aa"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/04_EVIDENCE_LEDGER.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c167cd2ba24a0faca040a0da4ec949cb0bfaff24",
+      "size": 9457,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c167cd2ba24a0faca040a0da4ec949cb0bfaff24"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/05_MODEL_FAMILY_GATE.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eea9e11980d9898dddc24e1feb358463b360abd6",
+      "size": 5374,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eea9e11980d9898dddc24e1feb358463b360abd6"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/06_SOL_REWRITE_PROMPT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be2b6d84a12ad65be5122d37cceec018645bbca6",
+      "size": 7320,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/be2b6d84a12ad65be5122d37cceec018645bbca6"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "667f6f5696c26624f86397ebbb28ac7c8d9af0ae",
+      "size": 3517,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/667f6f5696c26624f86397ebbb28ac7c8d9af0ae"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/SOURCE_INDEX.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53f2f9d95acb5536da58515298c9eeffd278ff73",
+      "size": 24441,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/53f2f9d95acb5536da58515298c9eeffd278ff73"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/jsa/reconstruction_plan_20261009/VALIDATION.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8beeeedb66705578140e2daa61ed93ca0e1642e",
+      "size": 5767,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f8beeeedb66705578140e2daa61ed93ca0e1642e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/HANDOVER_CURRENT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe841eecd68d026e803afcc6968e68fc256c0140",
+      "size": 32316,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/fe841eecd68d026e803afcc6968e68fc256c0140"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/baseline_v0121/main.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7ff56b03e173b4133ac3602db76e9426d4f1efd",
+      "size": 29375,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c7ff56b03e173b4133ac3602db76e9426d4f1efd"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/appendix.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e40fa23f6e2ab1e2aeb2ffae5669d52f8219374c",
+      "size": 24432,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e40fa23f6e2ab1e2aeb2ffae5669d52f8219374c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/sections/appendix_derived_v090.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6fef3bb75a27f1342db3619f845d71e8606c6584",
+      "size": 11807,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/6fef3bb75a27f1342db3619f845d71e8606c6584"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/sections/appendix_prediction_history_v010.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "204b24cf7bc74258bf05b8c32a9ee44ee0445e66",
+      "size": 5917,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/204b24cf7bc74258bf05b8c32a9ee44ee0445e66"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/sections/appendix_runtime_methods_v010.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3a6d6f457172a284e9b394493cdc9b55f7baa29",
+      "size": 2135,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/f3a6d6f457172a284e9b394493cdc9b55f7baa29"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/tables/02_headlines_v088.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c626e8514bca90966cabff62b6b5a8cb1cd5745",
+      "size": 972,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/7c626e8514bca90966cabff62b6b5a8cb1cd5745"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/tables/04_energy_v05.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d837a1bd538f35c7d3f085568cbb2f1f69847376",
+      "size": 1071,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d837a1bd538f35c7d3f085568cbb2f1f69847376"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/tables/06_verification_lookup_v05.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c173d47de68be49f36b0f4ca7a1f99fcd56c515e",
+      "size": 1513,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c173d47de68be49f36b0f4ca7a1f99fcd56c515e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/source_records/paper/mlsys2027/manuscript/tables/rtx_v4_cost_v088.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8e3b1cd3d8f1034b119478bfb4125b90e5d6a70",
+      "size": 616,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d8e3b1cd3d8f1034b119478bfb4125b90e5d6a70"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3643c81a9eeffd116f38c76b4ba60780c4818943",
+      "size": 2148,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/3643c81a9eeffd116f38c76b4ba60780c4818943"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/01_scope.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58183f38394b29132572a20c4b9c1dad75ef1492",
+      "size": 5058,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/58183f38394b29132572a20c4b9c1dad75ef1492"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/02_diagnosis.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "daeab389b554245e60e8aea8736f329e10aa50b3",
+      "size": 7516,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/daeab389b554245e60e8aea8736f329e10aa50b3"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/03_implementation.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b005badf48a2c300795310479496806dc5c14512",
+      "size": 5752,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/b005badf48a2c300795310479496806dc5c14512"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/04_rtx_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7582acb5e2e8caa4bb292f9462669415f507f550",
+      "size": 5900,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/7582acb5e2e8caa4bb292f9462669415f507f550"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/05_b570.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e641dc2b7008f4ef1146230cc63df81800e79607",
+      "size": 6764,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e641dc2b7008f4ef1146230cc63df81800e79607"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/06_history.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83676c0dbff45520fe736f3499a8757a4ae273a9",
+      "size": 18037,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/83676c0dbff45520fe736f3499a8757a4ae273a9"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/supplement/07_reproducibility.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eddacd9e01394d2eacd57eda62ef160ef78f361d",
+      "size": 3386,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/eddacd9e01394d2eacd57eda62ef160ef78f361d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/b570_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d01d60217c608e43553e8e699fc1c9456b85ade6",
+      "size": 722,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/d01d60217c608e43553e8e699fc1c9456b85ade6"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/b570_task_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c28eb9c1b0af38e92cff5e4bc21051adf8c6f8aa",
+      "size": 1648,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c28eb9c1b0af38e92cff5e4bc21051adf8c6f8aa"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/fixed_ub.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02ff3d53da09d6b2431f017d9b348c9e1812cfc5",
+      "size": 706,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/02ff3d53da09d6b2431f017d9b348c9e1812cfc5"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/m4_strata.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a65b5c4bec389fa104d6b3de7c2c8c129cfb587c",
+      "size": 486,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/a65b5c4bec389fa104d6b3de7c2c8c129cfb587c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/rtx_all_comparisons.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0445025ca6b93c8d7f192bd6a5cc7fa34ca7c1a2",
+      "size": 1298,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0445025ca6b93c8d7f192bd6a5cc7fa34ca7c1a2"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/rtx_cost.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "102f0a432f365f733c11e5b602adb98951f8f36c",
+      "size": 725,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/102f0a432f365f733c11e5b602adb98951f8f36c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/rtx_task_generation.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd2d24e0c2899c187a74b2bc843ba714d863b28c",
+      "size": 1928,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/bd2d24e0c2899c187a74b2bc843ba714d863b28c"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/tables/rtx_task_request.tex",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c491e2706ed5ad357a88985ce730e8373d13d94",
+      "size": 2088,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/0c491e2706ed5ad357a88985ce730e8373d13d94"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/CONTENT_UNCHANGED_LAYOUT.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5f0d44f4b697d070138b472b2b90a8969d6eb180",
+      "size": 15563,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/5f0d44f4b697d070138b472b2b90a8969d6eb180"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/INHERITED_V0141_FIGURE_LAYOUT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84bbc3e18b44fc59e27a8ddfcf1fed54db44df06",
+      "size": 4183,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/84bbc3e18b44fc59e27a8ddfcf1fed54db44df06"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/INHERITED_V0141_README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b7cc0e03fa7867c26891628a8cea671a3ca1d4",
+      "size": 5550,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/89b7cc0e03fa7867c26891628a8cea671a3ca1d4"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/INHERITED_V0141_RECONSTRUCTION_ZH.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7a92a4cc3fcc4e61fed2000d8d869caa80b183e",
+      "size": 6023,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/c7a92a4cc3fcc4e61fed2000d8d869caa80b183e"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/INHERITED_V0141_SCIENTIFIC_AUDIT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3da9a1ec08cc040d0d3e2a2adf38b2cacc46b0d",
+      "size": 6152,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/e3da9a1ec08cc040d0d3e2a2adf38b2cacc46b0d"
+    },
+    {
+      "path": "paper/jsa/manuscript_v0142/validation/INHERITED_V0141_VALIDATION_LOG.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be7e2df30ef774932b3af587ef12da366b7738fc",
+      "size": 3074,
+      "url": "https://api.github.com/repos/leecdiang/HeteroSpec/git/blobs/be7e2df30ef774932b3af587ef12da366b7738fc"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "heterospec.358h.phase3_campaign_driver_freeze.v1",
+  "status": "FROZEN_BEFORE_FORMAL_DATA",
+  "formal_phase3_data_seen_before_freeze": false,
+  "qualified_runner_sha256": "1d11e42d008f981ee6a91ac7bfeb478f11c060d51e79b9e060fe04ece70153e8",
+  "campaign_driver": "scripts/platform/358h/run_phase3_campaign.py",
+  "campaign_driver_sha256": "1948e2ecde23b056a0c925952f9e0c8ff1d3055d57af0629be4ed501346ade12",
+  "instrumentation_decision": "No runner amendment. End-to-end timing is authoritative. The existing single synchronous OpenVINO LLMPipeline call combines full-prefix replay and proposal; replay-only and proposal-only timing are unavailable without changing inference.",
+  "formal_stages": {
+    "small": {"tasks": [3,10,19,20,106,129], "repetitions": 3, "conditions": ["TARGET_BASELINE","CPU_DRAFT_K2","NPU_DRAFT_K2"], "seed": 20260912},
+    "full": {"tasks": [3,10,19,20,28,32,44,47,48,50,54,57,62,64,68,70,89,90,101,104,105,106,107,111,119,123,126,128,129,162], "repetitions": 3, "conditions": ["TARGET_BASELINE","CPU_DRAFT_K2","NPU_DRAFT_K2"], "seed": 20260909}
+  },
+  "output_cap": 128,
+  "k": 2,
+  "decode_seed": 123,
+  "dry_run": {"status": "PASS", "cpu_exact": true, "npu_exact": true, "formal": false}
+}

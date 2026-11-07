@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+\begin{axis}[at={(0.6cm,0cm)},anchor=south west,scale only axis,
+width=6.8cm,height=3.2cm,xmin=.935,xmax=1.005,ymin=.2,ymax=7.2,
+ytick={1,2,3,4,5,6},yticklabels={1,2,3,4,5,6},
+xtick={.94,.96,.98,1},xlabel={$C_{\QB}/\overline{C_{\PQ}}$},ylabel={Session},
+title={\textbf{A}\quad CUDA / RTX},title style={font=\small},tick label style={font=\footnotesize},
+label style={font=\footnotesize},grid=major,grid style={gray!13},
+axis lines*=left,axis line style={aux},clip=false]
+\addplot[aux,densely dotted,forget plot] coordinates {(1,.2)(1,7.2)};
+\addplot[target,dashed,forget plot] coordinates {(0.970168433252,.2)(0.970168433252,7.2)};
+\addplot[only marks,mark=*,mark size=2pt,target] coordinates {(0.973614560955,1) (0.961260204728,2) (0.977617954201,3) (0.981693410244,4) (0.978961967148,5) (0.980182883671,6)};
+\addplot[only marks,mark=diamond*,mark size=3pt,target] coordinates {(0.975530832969,6.8)};
+\node[font=\scriptsize,anchor=west,text=target] at (axis cs:0.976530832969,6.8) {0.9755};
+\end{axis}
+\begin{axis}[at={(8.9cm,0cm)},anchor=south west,scale only axis,
+width=6.8cm,height=3.2cm,xmin=.935,xmax=1.005,ymin=.2,ymax=7.2,
+ytick={1,2,3,4,5,6},yticklabels={1,2,3,4,5,6},
+xtick={.94,.96,.98,1},xlabel={$C_{\QB}/\overline{C_{\PQ}}$},ylabel={Session},
+title={\textbf{B}\quad Vulkan / B570},title style={font=\small},tick label style={font=\footnotesize},
+label style={font=\footnotesize},grid=major,grid style={gray!13},
+axis lines*=left,axis line style={aux},clip=false]
+\addplot[aux,densely dotted,forget plot] coordinates {(1,.2)(1,7.2)};
+\addplot[qualified,dashed,forget plot] coordinates {(0.970581674995,.2)(0.970581674995,7.2)};
+\addplot[only marks,mark=*,mark size=2pt,qualified] coordinates {(0.946005141202,1) (0.951493999596,2) (0.949342846100,3) (0.952645421505,4) (0.948029478726,5) (0.955806566990,6)};
+\addplot[only marks,mark=diamond*,mark size=3pt,qualified] coordinates {(0.950548530600,6.8)};
+\node[font=\scriptsize,anchor=west,text=qualified] at (axis cs:0.951548530600,6.8) {0.9505};
+\end{axis}
+\end{tikzpicture}

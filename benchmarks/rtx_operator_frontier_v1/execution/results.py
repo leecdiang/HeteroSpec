@@ -1,0 +1,134 @@
+"""Offline reconstruction of the operator, coordinate and natural evidence."""
+import gzip,json,statistics,math,hashlib,base64
+from pathlib import Path
+HERE=Path(__file__).resolve().parent
+E=HERE/"evidence"
+def read(name):
+    data=(E/name).read_bytes()
+    return json.loads(gzip.decompress(data) if name.endswith(".gz") else data)
+def gm(xs):return statistics.geometric_mean(xs)
+def audit():
+    ops=read("operands.json.gz");assert len(ops)==16
+    for op in ops:
+        routes={(r["q"],r["route"]):r for r in op["routes"]}
+        for (n,path),r in routes.items():
+            assert (r["sha"]==routes[n,"scalar"]["sha"])==r["scalar_equal"]
+            assert r["scalar_equal"]==(path!="wide" or n<=4)
+        assert op["inputs"]["output"]==routes[32,"wide"]["sha"]
+    sample=read("operand-sample.json.gz")
+    for op in ops:
+        name=op["descriptor"]["weight"]["name"]
+        if op["model"]=="8B" and name in sample:
+            hashes={k:hashlib.sha256(base64.b64decode(v)).hexdigest() for k,v in sample[name].items()}
+            routes={(r["q"],r["route"]):r["sha"] for r in op["routes"]}
+            assert hashes["input"]==op["inputs"]["input"] and hashes["live32"]==routes[32,"wide"] and hashes["scalar32"]==hashes["packed32"]==routes[32,"scalar"] and hashes["native8"]==routes[8,"wide"]
+    matrix=read("matrix-vectors.json.gz");assert len(matrix)==840 and all(r["actual"]==r["oracle"] for r in matrix)
+    geom=read("coordinates.json");assert len(geom)==40 and all(r["actual_calls"]==r["predicted_calls"] for r in geom)
+    observed=read("graph-observations.json.gz");activities=read("append-activities.json.gz")
+    for r in geom:
+        key=f"c{r['cell']}-{r['arm']}"
+        nodes=observed[key]["nodes"]
+        assert [x["tensor"]["ne"] for x in nodes if x["tensor"]["name"]=="kq-0"]==r["qk"]
+        assert [x["tensor"]["ne"] for x in nodes if x["tensor"]["name"]=="kqv-0"]==r["av"]
+        assert sum(e["kind"]=="kernel" for e in activities[key])==r["kernels"]
+        row=0
+        for qk,av in zip(r["qk"],r["av"]):
+            assert qk[0]==256*((r["head"]+row)//256+1) and qk[3]==av[3]
+            row+=qk[3]
+        assert row==r["width"]
+    costs=read("append-cost.json.gz");plan=read("matrix-plan.json")["plan"]
+    assert len(plan)==len(costs)==120
+    for p,c in zip(plan,costs):
+        assert all(c[k]==v for k,v in p.items())
+        assert all(c[s]["unit"]["mode"]=="cost" and not c[s]["nodes"] and c[s]["calls"]==next(x["actual_calls"] for x in geom if x["cell"]==c["cell"] and x["arm"]==c["arm"]) for s in ("measured","warm"))
+    proof=read("natural-qualification.json.gz");cap=read("natural-transactions.json.gz")
+    for r in proof:
+        i=r["i"];a=r["arm"];folder="reference" if a=="S1" else "historical" if a=="oldQB" else "changed"
+        c=cap[f"{folder}/i{i}/{a}/capture"]
+        assert c["endpoint"]==cap[f"reference/i{i}/R/capture"]["endpoint"]
+        assert c["cycles"]==cap[f"reference/i{i}/S1/capture"]["cycles"]
+        assert r["oracle"]==r["vectors"] and r["branch"]==r["scalar_branch"]
+    service=read("service-cost.json.gz")
+    plan=[r for session in read("natural-freeze.json")["order"] for r in session]
+    assert len(plan)==len(service)==36
+    for r,p in zip(service,plan):
+        assert all(r[k]==v for k,v in p.items())
+        for role in ("warm","measured"):
+            assert not r[role]["capture"] and r[role]["endpoint"]==cap[f"reference/i{r['index']}/R/capture"]["endpoint"] and r[role]["cycles"]==cap[f"reference/i{r['index']}/S1/capture"]["cycles"]
+    return ops,geom,costs,proof,service
+def main():
+    ops,geo,cost,proof,service=audit()
+    text=["# RTX operator frontier","",
+        "Sixteen captured model/operator pairs passed own-path replay. On identical weight and F32 activation bytes, all eight Q8 operator classes in both models matched scalar outputs at native widths 2 and 4 and diverged at 8, 16 and 32. A single broadcast matmul over independent four-column groups matched the scalar output at 8, 16 and 32 for every captured descriptor. These are finite observations on this CUDA cohort.","",
+        "## Operator evidence","",
+        "The first graph-ordered relevant operation was the layer-zero Q projection. For each model the live scalar input columns concatenated byte-for-byte to the live native-wide input, the weights were identical, and scalar operator replay reproduced the live scalar outputs. Direct width-eight Q reproduced its corresponding replay. All eight rows in the retained 0.6B scoped wide-projection witness differ from its scalar oracle. In the new C1536 observer run only two of eight final rows equaled the earlier C1024 unscoped native witness. Operator conclusions use own-path replay within each run.","",
+        "CUPTI recorded the same row-Q8_1 activation quantizer at native widths four and eight. The MMVQ launch block changed from 32 × 4 threads to 32 × 2. The CUDA source uses four reduction warps through width four and two at width eight. At 16 and 32 the trace switched to MMQ quantization, matrix multiplication and stream-K fixup. These observations localize width-eight divergence without assuming a change from F32 to Q8 activation arithmetic. Internal temporary quantized bytes were not separately captured.","",
+        "The candidate represents complete groups as [K,4,g], broadcasts the original Q8 weight, and reshapes the result as a view. A remainder uses the existing bounded tile and one join. The activation must be contiguous, with a dense, unbatched weight and at least eight columns. The runtime study admits fully GPU-offloaded Qwen3-8B on this RTX backend. CPU and hybrid execution of this candidate are unqualified. Both local and whole-graph cuts use the same linked operator core.","",
+        "Isolated Qwen8B width-32 replay below uses the same observed CUDA0 operands. Times are median synchronized graph execution over the three post-warm repeats in the unprofiled replay. GPU kernel sums come from a separate CUPTI pass. The tile concatenation bytes count logical output writes.","",
+        "| Class | Descriptor K × output | Tile / pack kernels | Tile / pack execution µs | Tile / pack GPU kernel µs | Tile concat MiB |",
+        "|---|---:|---:|---:|---:|---:|"]
+    for op in ops:
+        if op["model"]!="8B":continue
+        desc=op["descriptor"]["weight"];routes={r["route"]:r for r in op["routes"] if r["q"]==32}
+        a,b=routes["tile"],routes["packed"]
+        def wall(r):return statistics.median([1e6*(x+y) for x,y in zip(r["submit_s"][1:],r["sync_s"][1:])])
+        text.append(f"| {desc['name']} | {desc['ne'][0]} × {desc['ne'][1]} | {a['activity']['kernels']} / {b['activity']['kernels']} | {wall(a):.1f} / {wall(b):.1f} | {1000*a['activity']['kernel_ms']:.1f} / {1000*b['activity']['kernel_ms']:.1f} | {a['concat_output_bytes']/2**20:.2f} |")
+    text+=["","At q32 the old Q projection issued eight four-column matmuls with seven joins. The packed projection issued one four-column, eight-group matmul. Trace records include kernel names, launch grids, block dimensions and durations. The profiler and clean measurements used separate binaries. CPU graph-definition time, submission and synchronization wait are separate fields in the replay receipts. GPU kernel times can overlap CPU submission and must not be added to the wall interval.","",
+       "## Active KV boundaries","",
+       "Each cell restores a scalar R prefix from the same serialized state. P was measured as 256. Five paths matched all 800 appended vocabulary vectors and 40 subsequent continuation vectors. The append clock includes splitting, graph work, materialization, compute and synchronization. All 120 measured appends have an immediate same-arm warmup from identical state. The table gives geometric means in milliseconds over three paired blocks.","",
+       "| Boundary | Head | q | Cross | S1 | QB4 | WB4 | New QB | New WB | New WB / QB |","|---:|---:|---:|:---:|---:|---:|---:|---:|---:|---:|"]
+    where=text.index("## Active KV boundaries")
+    attribution=["### Diagnostic attribution at 32 columns","","All entries are microseconds. CPU definition includes creating the graph arena and nodes. Submit/wait are medians after the initial run, without CUPTI. The kernel sum is from the separate trace and excludes transfer activities.","",
+        "| Operator | Implementation | CPU graph definition | Host submit | Synchronization wait | GPU kernel sum |","|---|---|---:|---:|---:|---:|"]
+    for op in ops:
+        name=op["descriptor"]["weight"]["name"]
+        if op["model"]=="8B" and name in ("blk.0.attn_q.weight","blk.0.ffn_down.weight","output.weight"):
+            for r in op["routes"]:
+                if r["q"]==32 and r["route"] in ("tile","packed"):
+                    attribution.append(f"| {name} | {r['route']} | {1e6*r['plan_s']:.1f} | {1e6*statistics.median(r['submit_s'][1:]):.1f} | {1e6*statistics.median(r['sync_s'][1:]):.1f} | {1000*r['activity']['kernel_ms']:.1f} |")
+    text[where:where]=attribution+[""]
+    blocks={(r["cell"],r["block"],r["arm"]):r["measured"]["append_s"] for r in cost}
+    arms=["S1","QB4","WB4","newQB","newWB"]
+    ratios={}
+    for i,(b,q,h,cross) in enumerate(read("matrix-plan.json")["cells"]):
+        v={a:gm([blocks[i,s,a] for s in range(3)]) for a in arms}
+        ratios[i]=v["newWB"]/v["newQB"]
+        text.append(f"| {b} | {h} | {q} | {'yes' if cross else 'no'} | "+" | ".join(f"{1000*v[a]:.2f}" for a in arms)+f" | {ratios[i]:.3f} |")
+    text+=["",f"New WB time / new QB time is {gm([ratios[i] for i in (0,2,4,6)]):.3f}× for noncrossing cells and {gm([ratios[i] for i in (1,3,5,7)]):.3f}× for crossing cells. When q8 crosses, WB splits into three and five rows, so neither subgraph can use an eight-column packed operator. When q32 crosses, its 29-row second graph still packs 28 columns. The coordinates have deliberately balanced cut density. Their average has no deployment-frequency interpretation.","",
+       "Every QK and AV row group agreed with the registered geometry. At B1024/H1021, q32 uses extents 1024 then 1280 with QK/AV groups 3+4+4+4+4+4+4+4+1. Local submits [32], whereas WB submits [3,29]. Local Q projection uses one [output,4,8] matmul. WB restarts at the boundary and uses three columns in the first graph, then seven four-column groups and a one-column tail. Counts, bytes and physical graph-build/reuse observations for every cell are in coordinates.json.","",
+       "## Unseen natural confirmation and service cost","",
+       f"The fixed panel used four fresh inputs, C1536, k3 and cap128. Old QB4, new QB and new WB matched {sum(len(r['vectors']) for r in proof if r['arm']!='S1')} committed-vector comparisons against immutable R and {sum(len(r['branch']) for r in proof if r['arm']!='S1')} branch-vector comparisons against scalar k3, including uncommitted positions. The sets overlap. Endpoints and complete cycle transactions matched. Timed R was not an arm in this panel.","",
+       "| Arm | Complete service s | Prefill wall s | Target verify s | Continuation wall s |","|---|---:|---:|---:|---:|"]
+    times={}
+    for a in ["oldQB","newQB","newWB"]:
+        rows=[r["measured"] for r in service if r["arm"]==a];cols=[gm([r[k] for r in rows]) for k in ("service_seconds","prefill_wall_seconds","continuation_wall_seconds")]
+        times[a]=cols[0];ver=gm([r["target_phases"]["VERIFY"] for r in rows]);text.append(f"| {a} | {cols[0]:.4f} | {cols[1]:.4f} | {ver:.4f} | {cols[2]:.4f} |")
+    insert_at=text.index("## Unseen natural confirmation and service cost")
+    profile_lines=["### Prediction and profiler check","","QK and AV groups matched in every cell. Counts are CUDA kernels in a separate append trace. Concat MiB are logical writes to concat outputs seen by the scheduler. They differ from CUPTI memcpy bytes.","",
+        "| H / q | QB predicted → observed calls | WB predicted → observed calls | Actual QK/AV rows | Old QB / new QB kernels | Old WB / new WB kernels | QB concat MiB old / new |",
+        "|---|---|---|---|---:|---:|---:|"]
+    for cell in range(8):
+        rows={r["arm"]:r for r in geo if r["cell"]==cell}
+        old,new,wb,oldwb=[rows[a] for a in ("QB4","newQB","newWB","WB4")]
+        profile_lines.append(f"| {new['head']} / {new['width']} | {new['predicted_calls']} → {new['actual_calls']} | {wb['predicted_calls']} → {wb['actual_calls']} | {new['attention']} | {old['kernels']} / {new['kernels']} | {oldwb['kernels']} / {wb['kernels']} | {old['logical_output_bytes'].get('CONCAT',0)/2**20:.1f} / {new['logical_output_bytes'].get('CONCAT',0)/2**20:.1f} |")
+    load=sum(x["model_load"] for x in cost)
+    restore=sum(x[role]["restore_s"] for x in cost for role in ("warm","measured"))
+    prefix=sum(x["scalar_prefix_s"] for x in read("prefixes.json"))
+    profile_lines+=["",f"The six distinct scalar prefixes took {prefix:.1f} s to generate. The 120 append-pair processes spent {load:.1f} s loading the model and {restore:.1f} s reading and restoring prefix state across both roles. Context initialization and all three of those costs are outside the append interval. Per-pair process wall time remains in the evidence.",""]
+    text[insert_at:insert_at]=profile_lines
+    phase=times["oldQB"]/times["newQB"];cut=times["newWB"]/times["newQB"]
+    pairs={(x["session"],x["index"],x["arm"]):x["measured"]["service_seconds"] for x in service}
+    text+=["",f"Old QB / new QB was **{phase:.4f}×**. New WB / new QB was **{cut:.4f}×**. The first ratio isolates the operator change with local grouping fixed. The second compares group organization with identical operator lowering. Per-session WB/QB ratios were "+", ".join(f"{gm([pairs[s,i,'newWB']/pairs[s,i,'newQB'] for i in range(4)]):.4f}" for s in range(3))+".","",
+       f"The 36 service measurements and 36 immediate warmups used {sum(r['measured']['service_seconds'] for r in service):.1f} and {sum(r['warm']['service_seconds'] for r in service):.1f} service seconds. Model loading, pool provisioning and process wall are recorded separately in the raw receipts. Resident service includes reset, target and draft prefill, the inherited verify/rollback/sampling loop and synchronization.","",
+       "## Contribution boundary","",
+       "The supported mechanism is parallel execution of independent compatible reductions using an existing CUDA dispatch. It removes repeated launch and concat work without relaxing the original numerical reference. The operator benefit applies to WB and QB alike. Local grouping and operator packing are separate contributions. Their estimates must stay separate. The aligned PR168 pilot and its mixed session directions remain historical evidence. Four natural inputs on one RTX system do not establish population speedup. This result is ready for comparison with the independent B570 work."]
+    text[2:2]=[f"Packing independent four-column reductions cut geometric mean complete service time from {times['oldQB']:.4f} s to {times['newQB']:.4f} s on the four frozen natural inputs. Equally optimized WB took {times['newWB']:.4f} s. The local-cut advantage appeared in deliberately boundary-active appends, while WB was slightly faster in the natural panel.",""]
+    i=text.index("## Contribution boundary")
+    speed=[gm([pairs[s,j,"oldQB"]/pairs[s,j,"newQB"] for j in range(4)]) for s in range(3)]
+    wins=sum(pairs[s,j,"oldQB"]>pairs[s,j,"newQB"] for s in range(3) for j in range(4))
+    text[i:i]=[f"The old/new QB session ratios were "+", ".join(f"{r:.4f}" for r in speed)+f". Packed QB won {wins}/12 matched blocks. Prefill accounts for most of the change. The k3 verification call stays at four rows and cannot enter the new packing path. The small verification-time difference is descriptive.","",
+                f"The 36 matched service processes spent {sum(r['process_wall'] for r in service):.1f} s wall time, including {sum(r['warm']['model_load_seconds'] for r in service):.1f} s of model loading and {sum(r['warm']['pool_setup_seconds'] for r in service):.1f} s of pool setup.",""]
+    (HERE/"RESULTS.md").write_text("\n".join(text)+"\n",encoding="utf8")
+    print(f"16 replay descriptors, {len(geo)} coordinate receipts, 840 vector checks, {len(cost)} append and {len(service)} service pairs")
+if __name__=="__main__":main()
+

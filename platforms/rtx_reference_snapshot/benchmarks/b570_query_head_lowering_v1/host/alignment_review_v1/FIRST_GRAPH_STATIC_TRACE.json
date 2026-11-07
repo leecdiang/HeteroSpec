@@ -1,0 +1,140 @@
+{
+  "first_executable": {
+    "op": "MUL_MAT",
+    "type": "f32",
+    "ne": [
+      63,
+      1,
+      8,
+      1
+    ],
+    "nb": [
+      4,
+      252,
+      252,
+      2016
+    ],
+    "view_offset": 0,
+    "op_parameters": [
+      10,
+      0
+    ],
+    "bytes": 2016,
+    "ctx_id": 5,
+    "view_root": -1,
+    "src": [
+      2,
+      1
+    ]
+  },
+  "Q": {
+    "op": "VIEW",
+    "type": "f32",
+    "ne": [
+      128,
+      1,
+      8,
+      1
+    ],
+    "nb": [
+      4,
+      4096,
+      512,
+      4096
+    ],
+    "view_offset": 32,
+    "op_parameters": [
+      32,
+      0
+    ],
+    "bytes": 4096,
+    "ctx_id": 1,
+    "view_root": 0,
+    "src": [
+      0
+    ]
+  },
+  "K": {
+    "op": "NONE",
+    "type": "f16",
+    "ne": [
+      128,
+      63,
+      8,
+      1
+    ],
+    "nb": [
+      2,
+      256,
+      16128,
+      129024
+    ],
+    "view_offset": 0,
+    "op_parameters": [
+      0,
+      0
+    ],
+    "bytes": 129024,
+    "ctx_id": 2,
+    "view_root": -1,
+    "src": []
+  },
+  "V": {
+    "op": "NONE",
+    "type": "f16",
+    "ne": [
+      63,
+      128,
+      8,
+      1
+    ],
+    "nb": [
+      2,
+      126,
+      16128,
+      129024
+    ],
+    "view_offset": 0,
+    "op_parameters": [
+      0,
+      0
+    ],
+    "bytes": 129024,
+    "ctx_id": 3,
+    "view_root": -1,
+    "src": []
+  },
+  "mask": {
+    "op": "NONE",
+    "type": "f32",
+    "ne": [
+      63,
+      32,
+      1,
+      1
+    ],
+    "nb": [
+      4,
+      252,
+      8064,
+      8064
+    ],
+    "view_offset": 0,
+    "op_parameters": [
+      0,
+      0
+    ],
+    "bytes": 8064,
+    "ctx_id": 4,
+    "view_root": -1,
+    "src": []
+  },
+  "graph_order": [
+    "MUL_MAT",
+    "SOFT_MAX",
+    "MUL_MAT",
+    "CONT"
+  ],
+  "source_route": "general matvec: K contiguous, no Hadamard hint, dst.ne1=1; 9833 src1=Q",
+  "dynamic_trace_confirmed": false
+}

@@ -1,0 +1,11 @@
+# Pre-start authenticated transport recovery
+
+On 2026-10-14 at 18:27:30 China time, the original E2 supervisor stopped because session 4's authenticated GitHub readback returned network EOF. The error occurred inside `verify_freeze`, before `SESSION-4.json`, the execution lock, any native worker or any scientific session-4 slot existed. Sessions 0–3 had completed with 1,080 request starts. Their results do not determine this recovery.
+
+The original supervisor failure, session-4 launch/stdout/stderr/exit files and stop analysis remain immutable. All native processes and the original supervisor were confirmed exited before recovery. This is a network/control failure, not a scientific request failure or a mismatch of remote registration bytes.
+
+The new separately registered supervisor may recover only untouched sessions 4 and 5. It invokes the identical frozen `run_session` with the same E2 freeze commit `49b992b2ed1cabd05fad6e234cad2d3418c2b65a`, tasks, arms, seed, order, models, binaries, DLLs, limits and estimator. Both authenticated remote freezes must match exact committed bytes. No guard is disabled or monkey-patched. Session spacing remains at least one hour after prior completion, and the final session cannot start before 24 hours after the first. Delayed pre-start recovery does not alter these minimum-time rules.
+
+Only a `gh api` transport process error, with no scientific session receipt, lock, native load or slot for that session, permits a bounded retry of the transport operation. Every attempt is retained. Wrong remote bytes, changed frozen files, an existing scientific session receipt, or any error after scientific starts is terminal for this controller. Each control retry checks untouched status again; no request or native process may be retried.
+
+The supplemental schema binds this recovery driver's complete source, this amendment, the immutable original control failure files, and the unchanged scientific freeze SHA-256. It is committed, pushed and authenticated before invoking either untouched session. The scientific request budget remains 1,620 and native owned-time limit remains 43,200 seconds. No experiment design or historical result is changed. E1 remains gated on complete E2.

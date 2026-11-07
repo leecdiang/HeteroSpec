@@ -1,0 +1,19 @@
+\section{A Matched Simple-Baseline Test}
+\label{sec:bridge}
+\subsection{Retrospective lead and fresh comparison}
+A post-study comparison linked historical target-only UB2 outputs to the RTX intervention: $U_2=N_1$ in 57/57 arrays, while $U_2=N_0$ in 51/57. Prompt hashes matched, but historical native commands selected 12 threads and the intervention used 24. We therefore froze a new matched study on the same 19 exposed HumanEval tasks. It is a fresh confirmation of an exposed-cohort hypothesis, not a new discovery set.
+
+The study executes three fresh-process repetitions of $N_0,N_1,U_2$: 171 runs. It fixes target/draft assets, b10839 runtime, the qualified native frontend and relevant numerical threads at 24, rotates condition order, and uses one GPU queue without process/KV reuse. Twelve engineering checks precede formal runs; there are no failed attempts or retries. Prior instrumentation qualification is reused.
+
+$U_2$ uses the released CLI with its own prefill and single-token continuation, without draft, state transplant or supplied output. Caller grouping is observed, not modified. Formal outputs are newly generated; historical arrays are comparison evidence.
+\input{tables/bridge_v011.tex}
+
+\subsection{Simple reproduction and mixed restoration}
+$U_2=N_1$ on all 19 tasks and all 57 complete arrays and stop boundaries (Table~\ref{tab:bridge}). Each condition is repeat-stable on every task. Both changed tasks agree with $U_2$: /15 changes from 25 to 28 IDs and restores reference; /25 retains 75 IDs but changes index 4 and becomes divergent. /18 retains the same 69-ID divergent output. Thus ordinary target-only execution captures the nontrivial changes as well as the 17 no-ops. Predicting $N_1=N_0$ matches 17/19 tasks; $U_2$ matches 19/19.
+
+The frozen endpoint field stores EOS/limit reason. A supplementary stop boundary adds committed length and terminal ID. Reason agreement is 57/57 for every pair, but full-boundary agreement for $N_0/N_1$ and $U_2/N_0$ is 54/57 because /15's lengths differ. Array-plus-boundary agreement is unchanged. All 60 recorded uncommitted target samples remain outside committed-output equality and inspectable separately.
+
+Fresh $N_0,N_1$ each match their historical counterpart 57/57; fresh 24-thread $U_2$ matches historical 12-thread $U_2$ 57/57. This removes unmatched thread settings from the fresh comparison but is not a thread-causality experiment. The simpler path suffices for $N_1$ on this cohort; it does not establish general equivalence or an advantage for the complex predictor. Reference agreement remains 17/19 in every condition, with different failing task identities.
+
+\subsection{What the traces explain}
+On /15, /25, /18 and /31, native initial source KV and pending logits match between $N_0,N_1$. At the two first divergences, target candidate ranks flip. Native continuation observes occupied-token counts 1/2 for $N_0$ and 1 for $N_1$; ordinary $U_2$ continuation batch dumps contain one token despite UB2 capacity. Its graph tensors and live KV/logits are unobserved. These witnesses are consistent with shape-sensitive numerical execution, without proving identical later state or a unique operation. The separate supplement retains the scores, boundaries and capture limits.

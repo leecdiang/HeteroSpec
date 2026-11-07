@@ -1,0 +1,10 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+\node[anchor=west,font=\bfseries\small] at (0,2.65) {Bitwise-equal contexts / 24};
+\foreach \x/\t in {3.30/QK,4.95/Softmax,6.60/AV}\node at (\x,2.15) {\t};
+\foreach \y/\t in {1.55/MQ vs PQ,.85/MQ vs QB,.15/PQ vs QB}\node[anchor=west] at (0,\y) {\t};
+\foreach \y in {1.55,.85}{\foreach \x in {3.30,4.95,6.60}{
+ \draw[draft,line width=.65pt] (\x-.64,\y-.25) rectangle (\x+.64,\y+.25);
+ \node[text=draft] at (\x,\y) {0 / 24};}}
+\foreach \x in {3.30,4.95,6.60}{\draw[qualified,line width=.65pt,fill=qualified!8] (\x-.64,-.10) rectangle (\x+.64,.40);\node[text=qualified] at (\x,.15) {24 / 24};}
+\node[anchor=west,text=aux,font=\scriptsize] at (0,-.55) {Same operands, dtypes, masks, positions and logical indexing};
+\end{tikzpicture}

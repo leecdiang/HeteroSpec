@@ -1,0 +1,107 @@
+{
+  "study": "RTX_PLATFORM_CLOSURE_V1",
+  "status": "TEMPLATE_NOT_EXECUTABLE",
+  "created_date": "2026-10-20",
+  "clock_deadline": null,
+  "repository": "leecdiang/HeteroSpec",
+  "base_main_sha": "ec6b97518a2f230330d79f1b0ba2ca97bc70cd6a",
+  "hypotheses": {
+    "H1": "R, PQ and QB preserve registered native endpoint and speculative state protocol on fixed panel",
+    "H2": "QB has practical complete-service advantage over dual identical PQ controls",
+    "H3": "QB speculative service does or does not repay draft cost relative to target-only R",
+    "H4": "Actual q>1 target-verification geometry is observed and reported"
+  },
+  "platform": {
+    "gpu_model": null,
+    "driver": null,
+    "runtime_executable_sha256": null,
+    "runtime_dll_sha256": {},
+    "build_manifest_sha256": null,
+    "target_model_sha256": null,
+    "draft_model_sha256": null,
+    "tokenizer_sha256": null,
+    "kv_type": null,
+    "ubatch_and_context_settings": null,
+    "graph_mode": null,
+    "environment_manifest_sha256": null
+  },
+  "reference": {
+    "historical_reference_id": null,
+    "historical_reference_binding_verified": false,
+    "new_reference_required": null,
+    "new_reference_id": null,
+    "output_cap": null,
+    "sampler_and_eog_policy": null
+  },
+  "inputs": {
+    "count": 4,
+    "selection_rule": "Previously exposed RTX inputs frozen before new timing; spread prompt length and historical outcomes",
+    "immutable_manifest_sha256": null,
+    "task_ids": [],
+    "input_token_counts": [],
+    "exposure_status": []
+  },
+  "arms": [
+    "R",
+    "PQ_A",
+    "PQ_B",
+    "QB"
+  ],
+  "primary_window": "Fresh-context service from before context/graph creation through output/state handling, synchronization and context teardown; shared model load separate",
+  "secondary_windows": [
+    "request_only",
+    "host_phase_intervals",
+    "model_load",
+    "native_process_lifetime",
+    "gpu_active_time_if_measured"
+  ],
+  "speculative_policy": {
+    "proposals_per_cycle_k": 1,
+    "actual_q_is_measured_not_assumed": true
+  },
+  "panel": {
+    "process_sessions": 4,
+    "measured_requests": 64,
+    "warmup_requests": 64,
+    "full_logit_qualification": true,
+    "balanced_order_schedule_sha256": null
+  },
+  "analysis": {
+    "primary_ratio": "QB_service / mean(PQ_A_service, PQ_B_service)",
+    "secondary_ratio": "QB_service / R_service",
+    "practical_reduction_threshold": 0.02,
+    "candidate_must_be_faster_in_every_session": true,
+    "no_outlier_removal": true,
+    "population_inference": false,
+    "equivalence_claim": false
+  },
+  "budget": {
+    "rtx_existing_ledger_sha256": null,
+    "new_study_uuid": null,
+    "reserved_native_processes": null,
+    "reserved_request_slots": null,
+    "reserved_owned_process_seconds": null
+  },
+  "stop_rules": [
+    "No automatic retries",
+    "First mismatch stops candidate qualification",
+    "No reference/tolerance changes after observing results",
+    "No clock deadline"
+  ],
+  "not_authorized": [
+    "actor",
+    "RTL",
+    "PPA",
+    "new accelerator",
+    "QH",
+    "padding",
+    "selector",
+    "broad counter sweep",
+    "B570 patch"
+  ],
+  "signoff": {
+    "design_sha256": null,
+    "freeze_commit": null,
+    "first_native_start_receipt": null
+  }
+}

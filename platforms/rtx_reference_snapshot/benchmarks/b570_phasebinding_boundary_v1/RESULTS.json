@@ -1,0 +1,1607 @@
+{
+  "schema": "heterospec.b570.phasebinding.result.v1",
+  "design_head": "50047214d4e3f97c992c3f07454e29c13449c95b",
+  "source_commit": "f0d4df7aa98b342ccecc5c7b60f14799be085af2",
+  "parents": {
+    "PR92": "82946adf946491e6cf7fef761bcc1ec0772e914e",
+    "PR93": "57da177c3b63a714d6e6b5e5d7a7dc1f1393e662"
+  },
+  "questions": {
+    "prefill_recipe_causality": {
+      "status": "UNRESOLVED",
+      "reason": "UNRESOLVED: occupied target-only continuation is width1 for every arm; capacity, synchronization and scheduler reservation are coupled"
+    },
+    "state_continuation_interaction": {
+      "status": "UNRESOLVED",
+      "reason": "Actual state_write_data serializes model architecture plus memory module, sequence state serializes memory only. Logits are separately hash-captured; dynamic output/logit buffers, frontend pending, sampler ownership and scheduler/reservation are not restored by these APIs. Current actor lacks a validated full retained-state fork."
+    },
+    "physical_geometry_explanation": {
+      "status": "SUPPORTED",
+      "scope": "C512 native verify caller2 decomposes into two successful occupied width1 graphs; plus separately counted draft proposal/catchup. Does not quantify fraction of request cost."
+    },
+    "same_output_negative_request_cost": {
+      "status": "SUPPORTED",
+      "scope": "PR92/93 full same-output R_prod/M_match/C_k1, 240 pair requests and 24 tasks; original R_stock failures remain."
+    }
+  },
+  "execution": {
+    "requests_started": 108,
+    "requests_completed": 107,
+    "requests_failed": 1,
+    "P1": 72,
+    "P2": 35,
+    "P2_planned": 36,
+    "failed_slots": [
+      "P2/s0/C512|GSM8K/test/1248"
+    ],
+    "unexecuted_slots": [],
+    "zero_forward_load_probes": 2,
+    "charged_units": 110,
+    "retries": 0,
+    "warmups": 0,
+    "donor_forks": 0,
+    "owned_native_workers": 21,
+    "owned_gpu_seconds": 1871.999999999999,
+    "minimum_sampled_owned_dedicated_headroom_bytes": 1412370432,
+    "api_dump_budget": "FAILED_SAMPLED_STOP_THRESHOLD_WITH_OVERSHOOT",
+    "api_dump_final_bytes": 171281419,
+    "api_dump_threshold_bytes": 134217728,
+    "sampling_scope": "native checkpoints plus engineering periodic/per-decode samples; not continuous residence"
+  },
+  "original_R_stock_qualified_ratio": null,
+  "physical_residency": "UNKNOWN",
+  "model_status": "MODEL_TIMING_UNAVAILABLE",
+  "new_formal_cost_ratios": null,
+  "paid_posthoc_pairs": [
+    {
+      "pair": "R_prod/M_match",
+      "complete_pairwise_equal": true,
+      "matched_requests": 240,
+      "tasks": 24,
+      "left_fee_over_right_fee": 0.9880990257400051,
+      "right_cost_increase_pct": 1.204431332282918,
+      "negative_tasks": 24,
+      "domain_ratios": {
+        "MBPP": 0.9806653275436976,
+        "GSM8K": 0.9955890733017095
+      },
+      "task_effects": [
+        {
+          "task": "GSM8K/test/1011",
+          "ratio": 0.9945414407465598,
+          "session_ratios": [
+            0.9969481880998283,
+            0.9921405035576424
+          ]
+        },
+        {
+          "task": "GSM8K/test/1076",
+          "ratio": 0.9978617440345258,
+          "session_ratios": [
+            0.9957808580048453,
+            0.9999469784975324
+          ]
+        },
+        {
+          "task": "GSM8K/test/1248",
+          "ratio": 0.9955909419823851,
+          "session_ratios": [
+            0.995944045458115,
+            0.9952379636964839
+          ]
+        },
+        {
+          "task": "GSM8K/test/1249",
+          "ratio": 0.995534242539145,
+          "session_ratios": [
+            0.9958757553698127,
+            0.9951928468224978
+          ]
+        },
+        {
+          "task": "GSM8K/test/196",
+          "ratio": 0.9950370704595329,
+          "session_ratios": [
+            0.9956963513470892,
+            0.9943782261019368
+          ]
+        },
+        {
+          "task": "GSM8K/test/435",
+          "ratio": 0.9958934778141756,
+          "session_ratios": [
+            0.9962151744722428,
+            0.995571885038023
+          ]
+        },
+        {
+          "task": "GSM8K/test/500",
+          "ratio": 0.9946961462056919,
+          "session_ratios": [
+            0.9956911711531413,
+            0.993702115617412
+          ]
+        },
+        {
+          "task": "GSM8K/test/651",
+          "ratio": 0.995845223845744,
+          "session_ratios": [
+            0.9967757096979669,
+            0.9949156065980755
+          ]
+        },
+        {
+          "task": "GSM8K/test/831",
+          "ratio": 0.9949701388378703,
+          "session_ratios": [
+            0.9955771298091158,
+            0.994363517941457
+          ]
+        },
+        {
+          "task": "GSM8K/test/897",
+          "ratio": 0.9963791687937167,
+          "session_ratios": [
+            0.9970430417729291,
+            0.995715737848914
+          ]
+        },
+        {
+          "task": "GSM8K/test/972",
+          "ratio": 0.9949484221060134,
+          "session_ratios": [
+            0.9955285356378345,
+            0.9943686466174506
+          ]
+        },
+        {
+          "task": "GSM8K/test/980",
+          "ratio": 0.9957753680457281,
+          "session_ratios": [
+            0.9958271078571183,
+            0.9957236309225638
+          ]
+        },
+        {
+          "task": "MBPP/3",
+          "ratio": 0.9895924785926358,
+          "session_ratios": [
+            0.9904448310200756,
+            0.9887408596787021
+          ]
+        },
+        {
+          "task": "MBPP/558",
+          "ratio": 0.9824033766971945,
+          "session_ratios": [
+            0.9831338072730701,
+            0.9816734888031208
+          ]
+        },
+        {
+          "task": "MBPP/569",
+          "ratio": 0.9926790821543711,
+          "session_ratios": [
+            0.9928219637115354,
+            0.9925362211599461
+          ]
+        },
+        {
+          "task": "MBPP/577",
+          "ratio": 0.9921549290878849,
+          "session_ratios": [
+            0.9936309854431777,
+            0.9906810654403437
+          ]
+        },
+        {
+          "task": "MBPP/610",
+          "ratio": 0.9715824947292099,
+          "session_ratios": [
+            0.9724523218290431,
+            0.9707134456615399
+          ]
+        },
+        {
+          "task": "MBPP/639",
+          "ratio": 0.9728403781592911,
+          "session_ratios": [
+            0.9733339026387305,
+            0.9723471039191695
+          ]
+        },
+        {
+          "task": "MBPP/746",
+          "ratio": 0.9885385191024544,
+          "session_ratios": [
+            0.9898512451610244,
+            0.9872275339617378
+          ]
+        },
+        {
+          "task": "MBPP/759",
+          "ratio": 0.9815142324888965,
+          "session_ratios": [
+            0.98427422647628,
+            0.9787619777743756
+          ]
+        },
+        {
+          "task": "MBPP/764",
+          "ratio": 0.9605623132213528,
+          "session_ratios": [
+            0.9617976031543738,
+            0.9593286098396121
+          ]
+        },
+        {
+          "task": "MBPP/775",
+          "ratio": 0.9804348080439346,
+          "session_ratios": [
+            0.9810776267155403,
+            0.979792410558006
+          ]
+        },
+        {
+          "task": "MBPP/786",
+          "ratio": 0.9947760903204576,
+          "session_ratios": [
+            0.9955080174917869,
+            0.994044701283804
+          ]
+        },
+        {
+          "task": "MBPP/8",
+          "ratio": 0.9616879621118526,
+          "session_ratios": [
+            0.9655247994132353,
+            0.95786637177304
+          ]
+        }
+      ],
+      "scope": "immutable PR92 counts whole requests, audited posthoc; not requalified against R_stock"
+    },
+    {
+      "pair": "R_prod/C_k1",
+      "complete_pairwise_equal": true,
+      "matched_requests": 240,
+      "tasks": 24,
+      "left_fee_over_right_fee": 0.7192637597463166,
+      "right_cost_increase_pct": 39.03105591649698,
+      "negative_tasks": 24,
+      "domain_ratios": {
+        "MBPP": 0.695351476865828,
+        "GSM8K": 0.7439983566529922
+      },
+      "task_effects": [
+        {
+          "task": "GSM8K/test/1011",
+          "ratio": 0.7213509776328673,
+          "session_ratios": [
+            0.7214882428791847,
+            0.7212137385016639
+          ]
+        },
+        {
+          "task": "GSM8K/test/1076",
+          "ratio": 0.7844428300948629,
+          "session_ratios": [
+            0.7834658478979338,
+            0.7854210305889464
+          ]
+        },
+        {
+          "task": "GSM8K/test/1248",
+          "ratio": 0.7193104150397786,
+          "session_ratios": [
+            0.7190983792972444,
+            0.7195225133038777
+          ]
+        },
+        {
+          "task": "GSM8K/test/1249",
+          "ratio": 0.7103198977262878,
+          "session_ratios": [
+            0.7107378387781701,
+            0.7099022024397402
+          ]
+        },
+        {
+          "task": "GSM8K/test/196",
+          "ratio": 0.7761001067042986,
+          "session_ratios": [
+            0.775626315608193,
+            0.7765741872155495
+          ]
+        },
+        {
+          "task": "GSM8K/test/435",
+          "ratio": 0.7649858295709174,
+          "session_ratios": [
+            0.7649631793065323,
+            0.765008480505968
+          ]
+        },
+        {
+          "task": "GSM8K/test/500",
+          "ratio": 0.7464471525630493,
+          "session_ratios": [
+            0.7466839137405076,
+            0.7462104664586628
+          ]
+        },
+        {
+          "task": "GSM8K/test/651",
+          "ratio": 0.7201145014039146,
+          "session_ratios": [
+            0.7197795883954659,
+            0.7204495702471843
+          ]
+        },
+        {
+          "task": "GSM8K/test/831",
+          "ratio": 0.7165561913168503,
+          "session_ratios": [
+            0.716231670783405,
+            0.7168808588887206
+          ]
+        },
+        {
+          "task": "GSM8K/test/897",
+          "ratio": 0.7549616720316894,
+          "session_ratios": [
+            0.7550534074232235,
+            0.7548699477855683
+          ]
+        },
+        {
+          "task": "GSM8K/test/972",
+          "ratio": 0.7422157518901655,
+          "session_ratios": [
+            0.7431156000889088,
+            0.7413169933291325
+          ]
+        },
+        {
+          "task": "GSM8K/test/980",
+          "ratio": 0.7764408636050921,
+          "session_ratios": [
+            0.7759043839540908,
+            0.7769777141915101
+          ]
+        },
+        {
+          "task": "MBPP/3",
+          "ratio": 0.7586335161252429,
+          "session_ratios": [
+            0.758331967468783,
+            0.7589351846917106
+          ]
+        },
+        {
+          "task": "MBPP/558",
+          "ratio": 0.6630278372386493,
+          "session_ratios": [
+            0.6640623150461752,
+            0.6619949709430403
+          ]
+        },
+        {
+          "task": "MBPP/569",
+          "ratio": 0.7699297214524667,
+          "session_ratios": [
+            0.7694211820305837,
+            0.7704385969871963
+          ]
+        },
+        {
+          "task": "MBPP/577",
+          "ratio": 0.7623262118454627,
+          "session_ratios": [
+            0.7629125630794265,
+            0.761740311263102
+          ]
+        },
+        {
+          "task": "MBPP/610",
+          "ratio": 0.640670353958843,
+          "session_ratios": [
+            0.6403033348325051,
+            0.6410375834589706
+          ]
+        },
+        {
+          "task": "MBPP/639",
+          "ratio": 0.6374318876419792,
+          "session_ratios": [
+            0.6373029442305159,
+            0.6375608571421395
+          ]
+        },
+        {
+          "task": "MBPP/746",
+          "ratio": 0.7235930025067665,
+          "session_ratios": [
+            0.723384014818796,
+            0.7238020505718712
+          ]
+        },
+        {
+          "task": "MBPP/759",
+          "ratio": 0.6647860376018356,
+          "session_ratios": [
+            0.6646162317340718,
+            0.6649558868540842
+          ]
+        },
+        {
+          "task": "MBPP/764",
+          "ratio": 0.6141867243979401,
+          "session_ratios": [
+            0.6147025490723828,
+            0.6136713325752811
+          ]
+        },
+        {
+          "task": "MBPP/775",
+          "ratio": 0.7075962750180056,
+          "session_ratios": [
+            0.708285364831323,
+            0.7069078556191771
+          ]
+        },
+        {
+          "task": "MBPP/786",
+          "ratio": 0.7874469253384532,
+          "session_ratios": [
+            0.7870463307364743,
+            0.7878477238369866
+          ]
+        },
+        {
+          "task": "MBPP/8",
+          "ratio": 0.6437910498324235,
+          "session_ratios": [
+            0.6459013385259379,
+            0.6416876558736069
+          ]
+        }
+      ],
+      "scope": "immutable PR92 counts whole requests, audited posthoc; not requalified against R_stock"
+    },
+    {
+      "pair": "M_match/C_k1",
+      "complete_pairwise_equal": true,
+      "matched_requests": 240,
+      "tasks": 24,
+      "left_fee_over_right_fee": 0.7279267978304574,
+      "right_cost_increase_pct": 37.376450898694834,
+      "negative_tasks": 24,
+      "domain_ratios": {
+        "MBPP": 0.7090609378507304,
+        "GSM8K": 0.7472946184369444
+      },
+      "task_effects": [
+        {
+          "task": "GSM8K/test/1011",
+          "ratio": 0.7253101259323893,
+          "session_ratios": [
+            0.7236968294754945,
+            0.7269270188199327
+          ]
+        },
+        {
+          "task": "GSM8K/test/1076",
+          "ratio": 0.7861237639226716,
+          "session_ratios": [
+            0.7867854072508408,
+            0.7854626770002132
+          ]
+        },
+        {
+          "task": "GSM8K/test/1248",
+          "ratio": 0.722495941563624,
+          "session_ratios": [
+            0.7220268875310892,
+            0.7229653003101371
+          ]
+        },
+        {
+          "task": "GSM8K/test/1249",
+          "ratio": 0.7135062435568182,
+          "session_ratios": [
+            0.7136812347783702,
+            0.713331295242276
+          ]
+        },
+        {
+          "task": "GSM8K/test/196",
+          "ratio": 0.7799710480594217,
+          "session_ratios": [
+            0.7789787665274046,
+            0.7809645935830664
+          ]
+        },
+        {
+          "task": "GSM8K/test/435",
+          "ratio": 0.768140214403188,
+          "session_ratios": [
+            0.7678694311314631,
+            0.7684110931645591
+          ]
+        },
+        {
+          "task": "GSM8K/test/500",
+          "ratio": 0.750427309294805,
+          "session_ratios": [
+            0.7499151698570847,
+            0.7509397984878231
+          ]
+        },
+        {
+          "task": "GSM8K/test/651",
+          "ratio": 0.7231188985603451,
+          "session_ratios": [
+            0.7221078738100132,
+            0.7241313388485526
+          ]
+        },
+        {
+          "task": "GSM8K/test/831",
+          "ratio": 0.7201785896346511,
+          "session_ratios": [
+            0.719413543499869,
+            0.7209444493426466
+          ]
+        },
+        {
+          "task": "GSM8K/test/897",
+          "ratio": 0.7577051946456251,
+          "session_ratios": [
+            0.7572926902740298,
+            0.7581179237121882
+          ]
+        },
+        {
+          "task": "GSM8K/test/972",
+          "ratio": 0.7459841489261453,
+          "session_ratios": [
+            0.7464533395949269,
+            0.7455152531718238
+          ]
+        },
+        {
+          "task": "GSM8K/test/980",
+          "ratio": 0.7797349568195346,
+          "session_ratios": [
+            0.7791557167224834,
+            0.7803146275353735
+          ]
+        },
+        {
+          "task": "MBPP/3",
+          "ratio": 0.7666120474199087,
+          "session_ratios": [
+            0.7656478621709442,
+            0.7675774468735231
+          ]
+        },
+        {
+          "task": "MBPP/558",
+          "ratio": 0.6749038663402457,
+          "session_ratios": [
+            0.6754546635804263,
+            0.6743535182458273
+          ]
+        },
+        {
+          "task": "MBPP/569",
+          "ratio": 0.775607883044659,
+          "session_ratios": [
+            0.7749840456331194,
+            0.7762322226253958
+          ]
+        },
+        {
+          "task": "MBPP/577",
+          "ratio": 0.7683540034884371,
+          "session_ratios": [
+            0.7678027097143649,
+            0.7689056930996447
+          ]
+        },
+        {
+          "task": "MBPP/610",
+          "ratio": 0.6594091159880402,
+          "session_ratios": [
+            0.6584418798324083,
+            0.6603777729916003
+          ]
+        },
+        {
+          "task": "MBPP/639",
+          "ratio": 0.6552276220771824,
+          "session_ratios": [
+            0.654762915894302,
+            0.6556926580769037
+          ]
+        },
+        {
+          "task": "MBPP/746",
+          "ratio": 0.7319826071762527,
+          "session_ratios": [
+            0.7308007322869198,
+            0.7331663934323814
+          ]
+        },
+        {
+          "task": "MBPP/759",
+          "ratio": 0.6773065693770836,
+          "session_ratios": [
+            0.6752348216141046,
+            0.6793846736528726
+          ]
+        },
+        {
+          "task": "MBPP/764",
+          "ratio": 0.6394033119394372,
+          "session_ratios": [
+            0.6391184039722748,
+            0.63968834691366
+          ]
+        },
+        {
+          "task": "MBPP/775",
+          "ratio": 0.7217168028027594,
+          "session_ratios": [
+            0.7219463022539067,
+            0.7214873763071739
+          ]
+        },
+        {
+          "task": "MBPP/786",
+          "ratio": 0.7915820786211144,
+          "session_ratios": [
+            0.7905976816936763,
+            0.7925677012507437
+          ]
+        },
+        {
+          "task": "MBPP/8",
+          "ratio": 0.6694386071118826,
+          "session_ratios": [
+            0.6689640068473252,
+            0.6699135440842582
+          ]
+        }
+      ],
+      "scope": "immutable PR92 counts whole requests, audited posthoc; not requalified against R_stock"
+    }
+  ],
+  "inherited_paid_work": [
+    {
+      "domain": "MBPP",
+      "arm": "R_stock",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 6340,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 6220,
+        "target_micrographs": 6340,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 10,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "R_prod",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 6340,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 6220,
+        "target_micrographs": 6340,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 10,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "M_match",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 6340,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 6220,
+        "target_micrographs": 6340,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 10,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "N_k1",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 5610,
+        "proposal_verified": 2940,
+        "accepted_committed": 2600,
+        "draft_continuation_rows": 5880,
+        "target_verification_rows": 5880,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 3060,
+        "verify_cycles": 2940
+      },
+      "acceptance": 0.8843537414965986,
+      "cap_requests": 10,
+      "physical_continuation_widths": [
+        2
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "C_k1",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 6340,
+        "proposal_verified": 3310,
+        "accepted_committed": 2940,
+        "draft_continuation_rows": 6620,
+        "target_verification_rows": 6620,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 6740,
+        "verify_cycles": 3310
+      },
+      "acceptance": 0.8882175226586103,
+      "cap_requests": 10,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "R_stock",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 15360,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 15240,
+        "target_micrographs": 15400,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 120,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "R_prod",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 15360,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 15240,
+        "target_micrographs": 15360,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 120,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "M_match",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 15360,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 15240,
+        "target_micrographs": 15360,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "cap_requests": 120,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "N_k1",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 15360,
+        "proposal_verified": 8170,
+        "accepted_committed": 7130,
+        "draft_continuation_rows": 16340,
+        "target_verification_rows": 16340,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 8290,
+        "verify_cycles": 8170
+      },
+      "acceptance": 0.8727050183598531,
+      "cap_requests": 120,
+      "physical_continuation_widths": [
+        2
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "C_k1",
+      "requests": 120,
+      "totals": {
+        "output_ids_count": 15360,
+        "proposal_verified": 8150,
+        "accepted_committed": 7130,
+        "draft_continuation_rows": 16300,
+        "target_verification_rows": 16300,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 16420,
+        "verify_cycles": 8150
+      },
+      "acceptance": 0.8748466257668711,
+      "cap_requests": 120,
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "full output IDs including EOG; all CAP cases retained"
+    }
+  ],
+  "new_physical_work": [
+    {
+      "domain": "GSM8K",
+      "arm": "O512",
+      "requests": 8,
+      "totals": {
+        "output_ids_count": 1024,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "draft_proposal_rows": 0,
+        "draft_catchup_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 1016,
+        "target_micrographs": 1024,
+        "target_micrograph_rows": 1968,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "per_output": {
+        "proposal_verified": 0.0,
+        "accepted_committed": 0.0,
+        "draft_continuation_rows": 0.0,
+        "draft_proposal_rows": 0.0,
+        "draft_catchup_rows": 0.0,
+        "target_verification_rows": 0.0,
+        "target_ordinary_rows": 0.9921875,
+        "target_micrographs": 1.0,
+        "target_micrograph_rows": 1.921875,
+        "verify_cycles": 0.0
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "B512",
+      "requests": 8,
+      "totals": {
+        "output_ids_count": 1024,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "draft_proposal_rows": 0,
+        "draft_catchup_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 1016,
+        "target_micrographs": 1024,
+        "target_micrograph_rows": 1968,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "per_output": {
+        "proposal_verified": 0.0,
+        "accepted_committed": 0.0,
+        "draft_continuation_rows": 0.0,
+        "draft_proposal_rows": 0.0,
+        "draft_catchup_rows": 0.0,
+        "target_verification_rows": 0.0,
+        "target_ordinary_rows": 0.9921875,
+        "target_micrographs": 1.0,
+        "target_micrograph_rows": 1.921875,
+        "verify_cycles": 0.0
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    },
+    {
+      "domain": "GSM8K",
+      "arm": "C512",
+      "requests": 7,
+      "totals": {
+        "output_ids_count": 896,
+        "proposal_verified": 477,
+        "accepted_committed": 414,
+        "draft_continuation_rows": 954,
+        "draft_proposal_rows": 477,
+        "draft_catchup_rows": 477,
+        "target_verification_rows": 954,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 961,
+        "target_micrograph_rows": 1745,
+        "verify_cycles": 477
+      },
+      "acceptance": 0.8679245283018868,
+      "per_output": {
+        "proposal_verified": 0.5323660714285714,
+        "accepted_committed": 0.46205357142857145,
+        "draft_continuation_rows": 1.0647321428571428,
+        "draft_proposal_rows": 0.5323660714285714,
+        "draft_catchup_rows": 0.5323660714285714,
+        "target_verification_rows": 1.0647321428571428,
+        "target_ordinary_rows": 0.0,
+        "target_micrographs": 1.0725446428571428,
+        "target_micrograph_rows": 1.9475446428571428,
+        "verify_cycles": 0.5323660714285714
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "O512",
+      "requests": 4,
+      "totals": {
+        "output_ids_count": 168,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "draft_proposal_rows": 0,
+        "draft_catchup_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 164,
+        "target_micrographs": 168,
+        "target_micrograph_rows": 428,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "per_output": {
+        "proposal_verified": 0.0,
+        "accepted_committed": 0.0,
+        "draft_continuation_rows": 0.0,
+        "draft_proposal_rows": 0.0,
+        "draft_catchup_rows": 0.0,
+        "target_verification_rows": 0.0,
+        "target_ordinary_rows": 0.9761904761904762,
+        "target_micrographs": 1.0,
+        "target_micrograph_rows": 2.5476190476190474,
+        "verify_cycles": 0.0
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "B512",
+      "requests": 4,
+      "totals": {
+        "output_ids_count": 168,
+        "proposal_verified": 0,
+        "accepted_committed": 0,
+        "draft_continuation_rows": 0,
+        "draft_proposal_rows": 0,
+        "draft_catchup_rows": 0,
+        "target_verification_rows": 0,
+        "target_ordinary_rows": 164,
+        "target_micrographs": 168,
+        "target_micrograph_rows": 428,
+        "verify_cycles": 0
+      },
+      "acceptance": null,
+      "per_output": {
+        "proposal_verified": 0.0,
+        "accepted_committed": 0.0,
+        "draft_continuation_rows": 0.0,
+        "draft_proposal_rows": 0.0,
+        "draft_catchup_rows": 0.0,
+        "target_verification_rows": 0.0,
+        "target_ordinary_rows": 0.9761904761904762,
+        "target_micrographs": 1.0,
+        "target_micrograph_rows": 2.5476190476190474,
+        "verify_cycles": 0.0
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    },
+    {
+      "domain": "MBPP",
+      "arm": "C512",
+      "requests": 4,
+      "totals": {
+        "output_ids_count": 168,
+        "proposal_verified": 86,
+        "accepted_committed": 78,
+        "draft_continuation_rows": 172,
+        "draft_proposal_rows": 86,
+        "draft_catchup_rows": 86,
+        "target_verification_rows": 172,
+        "target_ordinary_rows": 0,
+        "target_micrographs": 176,
+        "target_micrograph_rows": 436,
+        "verify_cycles": 86
+      },
+      "acceptance": 0.9069767441860465,
+      "per_output": {
+        "proposal_verified": 0.5119047619047619,
+        "accepted_committed": 0.4642857142857143,
+        "draft_continuation_rows": 1.0238095238095237,
+        "draft_proposal_rows": 0.5119047619047619,
+        "draft_catchup_rows": 0.5119047619047619,
+        "target_verification_rows": 1.0238095238095237,
+        "target_ordinary_rows": 0.0,
+        "target_micrographs": 1.0476190476190477,
+        "target_micrograph_rows": 2.5952380952380953,
+        "verify_cycles": 0.5119047619047619
+      },
+      "physical_continuation_widths": [
+        1
+      ],
+      "denominator": "complete native output IDs including EOG and CAP"
+    }
+  ],
+  "recipe_comparisons": [
+    {
+      "task": "GSM8K/test/1248",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 47,
+        "left_id": 832,
+        "right_id": 220
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 47,
+        "left_id": 832,
+        "right_id": 220
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 47,
+        "left_id": 220,
+        "right_id": 832
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 47,
+        "left_id": 832,
+        "right_id": 220
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 81,
+        "left_id": 1855,
+        "right_id": 1521
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 81,
+        "left_id": 1855,
+        "right_id": 1521
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 81,
+        "left_id": 1521,
+        "right_id": 1855
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/831",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": false,
+      "first_difference": {
+        "index": 81,
+        "left_id": 1855,
+        "right_id": 1521
+      },
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/196",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "GSM8K/test/435",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/3",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "O128",
+      "right": "O512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "O128",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "O128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "O512",
+      "right": "B128",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "O512",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    },
+    {
+      "task": "MBPP/8",
+      "left": "B128",
+      "right": "B512",
+      "complete_output_equal": true,
+      "first_difference": null,
+      "causal_scope": "whole frozen recipe comparison; not isolated prefill/continuation UB causality"
+    }
+  ],
+  "observer_guards": [
+    {
+      "task": "GSM8K/test/1248",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/1248",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/831",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/831",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/831",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/831",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/196",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/196",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/196",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/196",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/435",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/435",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/435",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "GSM8K/test/435",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/3",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/3",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/3",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/3",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/8",
+      "arm": "O128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/8",
+      "arm": "O512",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/8",
+      "arm": "B128",
+      "capture_off_on_and_own_binding_equal": true
+    },
+    {
+      "task": "MBPP/8",
+      "arm": "B512",
+      "capture_off_on_and_own_binding_equal": true
+    }
+  ],
+  "dispatch": {
+    "status": "PARTIAL_FAILED_OBSERVER_SCOPE",
+    "failed_slot": "P2/s0/C512|GSM8K/test/1248",
+    "no_complete_native_endpoint": true,
+    "stop_threshold_bytes": 134217728,
+    "watchdog_sampled_bytes": 171123559,
+    "overshoot_scope": "0.5s sampled watcher stop threshold, not a hard byte-size cap",
+    "path": "raw/p2_s0_p2_C512_dispatch/vulkan-api.txt",
+    "sha256": "fa873dbc4a22a1b2fda9bbd3450736880e16bdae9ed139160b971c7d06e23352",
+    "bytes": 171281419,
+    "vkCmdDispatch_calls": 28247,
+    "group_count_metadata_values": 84741,
+    "completed_GPU_stage_wall": null,
+    "scope": "native vkCmdDispatch API recording metadata only, not physical completed kernel timing or GPU residency proof"
+  },
+  "state_logits_evidence_limit": "native finite top2 values and full vector/serialization SHA256 witnesses, source/binary pinned; raw state and FP32 vectors absent, no independent offline tensor rehash",
+  "failed_requests": [
+    {
+      "slot": "P2/s0/C512|GSM8K/test/1248",
+      "phase": "P2",
+      "arm": "C512",
+      "repeat": 0,
+      "task": "GSM8K/test/1248",
+      "source_commit": "f0d4df7aa98b342ccecc5c7b60f14799be085af2",
+      "status": "FAILED",
+      "owned_pid": 24252,
+      "reason": "OWNED_API_DUMP_SAMPLED_STOP_THRESHOLD",
+      "paid_formal_latency": false,
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "actual_recipe": {
+        "mode": "vulkan_batched_repair",
+        "ub": 512,
+        "spec": true,
+        "capacity": 4,
+        "continuation_ub": 1,
+        "source_role": "C_k1-original work witness"
+      },
+      "raw_failure_path": "raw/p2_s0_p2_C512_dispatch/5328019d53e43157a4e12cb022eec5d9.FAILED.json",
+      "output_ids": null,
+      "whole_request_endpoint": null,
+      "completed_native_counters": null,
+      "watchdog_path": "raw/p2_s0_p2_C512_dispatch/WATCHDOG_STOP.json",
+      "api_actual_final_bytes": 171281419,
+      "api_threshold_bytes": 134217728,
+      "sampling_interval_seconds": 0.5,
+      "scope": "Partial CPU Vulkan API metadata retained; no complete output/cost/work endpoint inferred."
+    }
+  ],
+  "failure_preservation": {
+    "api_dump_failed_threshold": true,
+    "api_trace_complete": false,
+    "api_sampled_threshold_overshoot_preserved": true,
+    "failed_forward_not_replayed": true,
+    "pre_forward_log_error": true,
+    "completed_O128_probe_not_replayed": true,
+    "failed_builds_preserved": true
+  }
+}

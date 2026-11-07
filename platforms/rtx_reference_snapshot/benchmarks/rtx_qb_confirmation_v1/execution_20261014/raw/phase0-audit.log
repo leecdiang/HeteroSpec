@@ -1,0 +1,19 @@
+{
+  "status": "STOPPED_INCONSISTENCY",
+  "mismatches": [
+    {
+      "label": "INHERITED_ARM_RUNTIME_ROUTING",
+      "status": "MISMATCH",
+      "affected": [
+        "SmolLM2/M_PQ",
+        "SmolLM2/C_PQ",
+        "Llama/M_PQ",
+        "Llama/C_PQ"
+      ],
+      "reason": "PR104 prepare copies only NATIVE_BUILD.json/original executable; run_session uses unmodified native.Resident. PR98 CorrectedWorker selects NATIVE_BUILD_V02 and metadata4 executable for SmolLM2/Llama PQ."
+    }
+  ],
+  "checks": 58,
+  "native_processes_started": 0,
+  "requests_started": 0
+}

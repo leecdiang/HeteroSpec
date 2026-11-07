@@ -1,0 +1,14 @@
+{
+  "add_special": false,
+  "eog": [
+    0,
+    2,
+    4
+  ],
+  "forward_calls": 0,
+  "items": 76,
+  "parse_special": true,
+  "template": "{% for message in messages %}{% if loop.first and messages[0]['role'] != 'system' %}{{ '<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n' }}{% endif %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}",
+  "vocab_only": true,
+  "vocabulary_tokens": 49152
+}

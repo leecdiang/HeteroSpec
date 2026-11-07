@@ -1,0 +1,38 @@
+--- PR134/request-prefix
++++ candidate/request-prefix
+@@ -16,12 +16,15 @@
+ void need(bool b,const char*m){if(!b)throw std::runtime_error(m);}
+ double seconds(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
+ void dump(fs::path p,const json&j){std::ofstream f(p);f<<j.dump(2)<<"\n";need(bool(f),"write JSON");}
++bool bulk_prefill=false;
+ Clock::time_point whole;double deadline=230;void cutoff(){need(seconds(whole)<deadline,"internal deadline");}
+ struct Obs{
++ int prefill_q_max=0,prefill_q_nodes=0;
+  std::string phase="setup";bool bad=false;int requests=0;std::map<std::string,json>seen;
+  static json tensor(ggml_tensor*t){return{{"name",t->name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"type",ggml_type_name(t->type)}};}
+  static bool cb(ggml_tensor*t,bool ask,void*u){
+   auto&o=*static_cast<Obs*>(u);if(!ask){o.bad=true;return true;}
++  if(o.phase=="PREFILL"&&std::string(t->name).rfind("Qcur-",0)==0){o.prefill_q_max=std::max(o.prefill_q_max,int(t->ne[2]));o.prefill_q_nodes++;}
+   if(o.phase!="VERIFY")return false;
+   std::string name=t->name;if(name.rfind("hs_",0)!=0&&name.rfind("kq",0)!=0)return false;
+   auto j=tensor(t);j["op"]=ggml_op_name(t->op);j["sources"]=json::array();
+@@ -65,7 +68,7 @@
+  std::unique_ptr<Context>draft;if(arm!="R")draft=std::make_unique<Context>(d,1,dir/"draft",capture);
+  Output o;o.record={{"arm",arm},{"capture",capture},{"cycles",json::array()}};
+  const auto*v=llama_model_get_vocab(t);auto start=Clock::now();
+- target.prefill(prompt);if(draft)draft->prefill(prompt);
++ target.prefill(prompt);if(draft){if(bulk_prefill)draft->decode(prompt,0,false,"PREFILL");else draft->prefill(prompt);}
+  int next=target.sample(-1,"initial"),base=int(prompt.size()),cycle=0;
+  auto commit=[&](int id){o.ids.push_back(id);o.eog.push_back(llama_vocab_is_eog(v,id));return o.eog.back()||o.ids.size()==size_t(cap);};
+  bool done=commit(next);
+@@ -102,6 +105,9 @@
+   need(found,"requested layout not integrated");
+  }
+  o.record["target_decode_seconds"]=target.decode_seconds;o.record["draft_decode_seconds"]=draft?json(draft->decode_seconds):json::object();
+- o.record["target_calls"]=target.calls;o.record["draft_calls"]=draft?draft->calls:0;
++ if(capture&&draft)need(draft->obs.prefill_q_max==1&&draft->obs.prefill_q_nodes>0,"draft prefill physical q admission");
++ o.record["draft_prefill_q_observed"]=draft?draft->obs.prefill_q_max:0;
++ o.record["draft_prefill_q_node_observations"]=draft?draft->obs.prefill_q_nodes:0;
++ o.record["draft_prefill_api_calls"]=draft?(bulk_prefill?1:int(prompt.size())):0;o.record["draft_microbatch_limit"]=1;o.record["target_calls"]=target.calls;o.record["draft_calls"]=draft?draft->calls:0;
+  return o;
+ }

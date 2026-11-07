@@ -1,0 +1,52 @@
+{
+  "findings": [
+    {
+      "title": "[P2] Reconcile development reservations with actual case attempts",
+      "body": "The budget gate sums declared `case_attempts` without checking them against the cases actually launched. The development supervisor always launches three cases, even when its registration reserves only one, and historical verification counts actor identities without reconciling case attempts to reservations. Seven development runs reserving one attempt each can therefore execute 21 cases while the verifier sees only seven reserved attempts and can ultimately return endurance PASS. Enforce each run's reservation before case admission and reconcile it against raw case attempts during verification, including failed attempts.",
+      "priority": "P2",
+      "confidence": 0.98,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_capability_repair_v2/runtime/guards.py",
+        "line": 84
+      },
+      "source_attribution": null
+    }
+  ],
+  "overall_correctness": "patch is incorrect",
+  "overall_explanation": "The freeze pinning and watchdog progress checks address the stated replacement and stale-progress scenarios, but development case reservations are not enforced against actual execution, allowing a budget overrun to pass verification. Reviewed the full supplied change statically; project code was not executed and native Windows behavior remains unverified. The documented finite delivery frontier and excluded lifetime accounting were respected.",
+  "overall_confidence": 0.94,
+  "provider_report": {
+    "findings": [
+      {
+        "title": "[P2] Reconcile development reservations with actual case attempts",
+        "body": "The budget gate sums declared `case_attempts` without checking them against the cases actually launched. The development supervisor always launches three cases, even when its registration reserves only one, and historical verification counts actor identities without reconciling case attempts to reservations. Seven development runs reserving one attempt each can therefore execute 21 cases while the verifier sees only seven reserved attempts and can ultimately return endurance PASS. Enforce each run's reservation before case admission and reconcile it against raw case attempts during verification, including failed attempts.",
+        "priority": "P2",
+        "confidence": 0.98,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_capability_repair_v2/runtime/guards.py",
+          "line": 84
+        },
+        "source_attribution": null
+      }
+    ],
+    "overall_correctness": "patch is incorrect",
+    "overall_explanation": "The freeze pinning and watchdog progress checks address the stated replacement and stale-progress scenarios, but development case reservations are not enforced against actual execution, allowing a budget overrun to pass verification. Reviewed the full supplied change statically; project code was not executed and native Windows behavior remains unverified. The documented finite delivery frontier and excluded lifetime accounting were respected.",
+    "overall_confidence": 0.94
+  },
+  "usage": {
+    "attempts": 1,
+    "reported_attempts": 1,
+    "unknown_attempts": 0,
+    "partial_attempts": 0,
+    "complete": true,
+    "tokens": {
+      "input_tokens": 82788,
+      "cached_input_tokens": 40448,
+      "output_tokens": 1396,
+      "reasoning_output_tokens": 1034
+    }
+  },
+  "review_status": "findings"
+}

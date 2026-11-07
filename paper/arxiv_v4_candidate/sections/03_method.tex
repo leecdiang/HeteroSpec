@@ -9,7 +9,7 @@ Figure~\ref{fig:design} contrasts the three repair organizations. GS processes t
 \label{fig:design}
 \end{figure*}
 
-The intervention point follows the native Q/K/V permutations in the non-flash attention builder. Let $d$ be the query/key channel dimension, $q$ the number of occupied queries, $h_Q$ the query-head count, and $n$ the key extent. Using the runtime's axis order, the input query has shape $(d,q,h_Q, 1)$. QB creates a four-dimensional view with shape $(d, 1,h_Q,q)$ and preserves the original query-column stride as the new fourth-axis stride. This is a view of the same input values, not a different projection or a re-encoding of the tokens.
+We label the ordinary graph with multiple query positions MQ; this denotes execution geometry, not the multi-query attention (MQA) architecture with one shared K/V head. The intervention point follows the native Q/K/V permutations in the non-flash attention builder. Let $d$ be the query/key channel dimension, $q$ the number of occupied queries, $h_Q$ the query-head count, and $n$ the key extent. Using the runtime's axis order, the input query has shape $(d,q,h_Q, 1)$. QB creates a four-dimensional view with shape $(d, 1,h_Q,q)$ and preserves the original query-column stride as the new fourth-axis stride. This is a view of the same input values, not a different projection or a re-encoding of the tokens.
 
 \subsection{Address, mask and head semantics}
 Write the original byte strides as $s_0,s_1,s_2,s_3$ and the base pointer as $b_Q$. For channel $i$, head $a$ and logical query $j$, the original address is
@@ -51,7 +51,7 @@ These conditions preserve distinct meanings for sequence ownership, query indexi
 \subsection{Phase binding and graph-cache consistency}
 The transformation is selected by a process-fixed four-bit mask: target prefill, target continuation, draft prefill and draft continuation have bits 1, 2, 4 and 8. Mask 3 enables the two target phases. A scoped guard derives the active flag from the current role and phase, places that flag in graph parameters, and restores its prior value on exit. New requests reset the phase to prefill. Crucially, this guard executes before the observation-disabled fast path returns to native decoding; turning off a diagnostic callback must not disable the repair.
 
-Graph caching creates a second obligation. Two calls can share nominal capacity and tensor extents yet require different attention layouts. The active-layout flag therefore participates in the reuse check. A mismatch rejects reuse and requires an appropriate graph. The implementation choice (QB, PQ or GS) is fixed within each process, so it cannot silently change under an already cached graph. Table~\ref{alg:scope} summarizes the dispatch and reuse checks.
+Graph caching creates a second obligation. Two calls can share nominal capacity and tensor extents yet require different attention layouts. The active-layout flag therefore participates in the reuse check. A mismatch rejects reuse and requires an appropriate graph. The original campaigns fix the implementation choice (QB, PQ or GS) within each process. The later matched native bridge uses separate contexts for each layout within a process (Section~\ref{sec:matchedbridge}). Both keep the implementation fixed within a context; they do not validate dynamic PQ/QB switching under one cached graph. Table~\ref{alg:scope} summarizes the dispatch and reuse checks.
 
 \begin{table}[t]
 \caption{Phase-scoped dispatch and reuse obligations.}

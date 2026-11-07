@@ -1,0 +1,103 @@
+{
+  "status": "PASS_WITH_DECLARED_LIMITATIONS",
+  "reviewed_head": "60b7d6a9301557c9a26c7d89acbe1b9d122bb53d",
+  "read_only_inputs": true,
+  "sealed_payload_files": 100,
+  "reviewed_git_blobs": 102,
+  "frozen_files_rechecked": 1044,
+  "original_reference_vectors": 914,
+  "original_model_files_rechecked": 2,
+  "original_numerical_dlls_rechecked": 5,
+  "original_bridge_vectors": 78,
+  "prior_attempt2_vectors": 346,
+  "new_raw_vectors_rechecked": {
+    "E0": 62,
+    "E1": 914
+  },
+  "raw_archive_sha256": "e9e511751bd18832ca58cec5dfef00915758131f54b3cf9ccb0f1a582a2c1dcd",
+  "native_requests": 156,
+  "native_worker_receipts": 9,
+  "warmups": 64,
+  "measurements": 64,
+  "reconstructed": {
+    "candidate_over_dual_control": 0.9991613016897527,
+    "candidate_over_R": 1.2036779934566173,
+    "dual_control_over_R": 1.2046883635515024,
+    "aa_max_input": 0.003688690361986824,
+    "session_ratios": [
+      1.0005918808834429,
+      0.9988269373238996,
+      0.9994477598680488,
+      0.997780703564486
+    ],
+    "practical_screen_pass": false
+  },
+  "worker_envelopes": [
+    {
+      "worker": "E0-0",
+      "service_sum": 24.871636600000002,
+      "model_load_seconds": 5.1863342,
+      "supervised_charge": 32.53099999999904
+    },
+    {
+      "worker": "E1-0",
+      "service_sum": 44.0200563,
+      "model_load_seconds": 5.1646951,
+      "supervised_charge": 53.0619999999999
+    },
+    {
+      "worker": "E1-1",
+      "service_sum": 29.189404699999997,
+      "model_load_seconds": 5.0606365,
+      "supervised_charge": 37.54700000000048
+    },
+    {
+      "worker": "E1-2",
+      "service_sum": 73.8159758,
+      "model_load_seconds": 5.0986424,
+      "supervised_charge": 82.07799999999952
+    },
+    {
+      "worker": "E1-3",
+      "service_sum": 63.062587199999996,
+      "model_load_seconds": 4.9574959,
+      "supervised_charge": 71.57799999999952
+    },
+    {
+      "worker": "E2-0",
+      "service_sum": 271.7311983,
+      "model_load_seconds": 5.1118163,
+      "supervised_charge": 278.2649999999994
+    },
+    {
+      "worker": "E2-1",
+      "service_sum": 271.4308424,
+      "model_load_seconds": 4.9960392,
+      "supervised_charge": 278.28100000000086
+    },
+    {
+      "worker": "E2-2",
+      "service_sum": 271.7051778,
+      "model_load_seconds": 5.0071481,
+      "supervised_charge": 278.2659999999996
+    },
+    {
+      "worker": "E2-3",
+      "service_sum": 271.5318119,
+      "model_load_seconds": 5.2224728,
+      "supervised_charge": 278.2659999999996
+    }
+  ],
+  "whole_worker_charge_seconds": 1389.873999999998,
+  "primary_timer_source_review": "Outer C++ request call includes fresh context construction and destructors before return; model load, reference comparisons and result writes are outside.",
+  "secondary_timer_limit": "Per-decode synchronized sums exclude batch construction/loop overhead and cannot replace complete service or establish GPU time.",
+  "supervised_worker_charge_limit": "Wrapper stopwatch includes process start, up-to-0.5s exit polling, result parsing and job cleanup; it is not an exact OS-process lifetime or active CPU/GPU time.",
+  "auxiliary_process_limit": "128 is a prospective reservation, not an observed count; helper descendants were neither completely metered nor capped by this wrapper. Full process-budget compliance cannot be certified retrospectively.",
+  "fully_protocol_resource_compliant": false,
+  "merge_recommendation": "MERGE_AS_LIMITED_NEGATIVE_CLOSEOUT; not full resource-budget compliance or a new optimized baseline",
+  "reproduction_limit": "Original audit.py regenerates outputs; verify_delivery.py writes/copies DELIVERY_CHECK.json. Use this separate read-only audit for review, leaving original receipts and archives intact.",
+  "raw_access_limit": "Original bytes were locally authenticated against committed references; a remote reviewer needs the author-supplied raw archive. No third-party certification.",
+  "review_duration_seconds": 25.472638499999448,
+  "finished_utc": "2026-10-26T08:09:59.001496+00:00",
+  "auditor_sha256": "0844004d5a37a94cb2bb31b9be4458d43278ed982371585bea6a60641d2be596"
+}

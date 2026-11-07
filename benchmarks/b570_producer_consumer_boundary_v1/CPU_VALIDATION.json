@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "CPU_VALIDATION_PASS",
+  "created_utc": "2026-10-27T03:03:44.474859+00:00",
+  "native_gpu_requests_started": 0,
+  "native_compilations": 0,
+  "remote_writes": 0,
+  "plan_status": "DRAFT_UNBOUND",
+  "primary_slots": 152,
+  "stage_counts": {
+    "B0": 32,
+    "B1": 120
+  },
+  "tests": {
+    "command": "python -m unittest discover -s benchmarks/b570_producer_consumer_boundary_v1 -p test_work_package.py -v",
+    "passed": 19,
+    "failed": 0,
+    "fixture_scope": "synthetic CPU contract data only; no inference results"
+  },
+  "source_check": {
+    "command": "work_package.py verify-source --checkout <read-only PR150 source snapshots>",
+    "passed_files": 8,
+    "scope": "exact selected Git-backed file bytes, not a new build or full upstream source audit"
+  },
+  "plan_generation": {
+    "command": "work_package.py make-plan --out plan.json",
+    "status": "DRAFT_UNBOUND; 0 native executions"
+  },
+  "code_sha256": "0e81ae537b18f88c423708f6e087b96e99315590353d9f5650a80e8bc3762684",
+  "test_code_sha256": "3ab503834af9964208ad10d3d66a56a56acd1783a9f530b9d561d6a274e2675c",
+  "plan_sha256": "9c4fc67d3e7416a08e47f994e3a38a93e5ccad616cb768813d7907eb44b557a4",
+  "remaining_native_work": "NOT_IMPLEMENTED_NOT_COMPILED_NOT_QUALIFIED",
+  "scientific_results": null,
+  "publication_gate_fixes": {
+    "restore": "Requires actual restored_boundary KV/initial payloads and positions; rehashes donor and receiver bytes; compares signatures and actual consumed heavy initial vector. Missing payload/path or metadata-only evidence cannot open B0.",
+    "k1_transaction": "Reconstructs mandatory nonterminal bonus; permits true cap/EOG tail omission; checks both native KV maxima against keep-1 and rejects cycles after termination.",
+    "mutation_controls": [
+      "16 resumed records with no restored boundary rejected",
+      "metadata-only restore gate rejected",
+      "missing donor KV/initial paths rejected",
+      "valid-hash changed readback bytes rejected against donor",
+      "consumed-initial-vector mismatch rejected",
+      "nonterminal accepted bonus omission rejected",
+      "real terminal cap/EOG bonus omission retained as valid",
+      "wrong post-trim KV maxima and post-terminal cycles rejected"
+    ],
+    "scope": "CPU gate/record-contract correction only; no new experiment budget or native capability"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "heterospec.b570.formal-preflight.v2",
+  "run_id": "formal-v2-20260912-122930",
+  "created_at": "2026-09-12T12:29:30.3570621+08:00",
+  "classification": "PENDING_FORMAL_EXECUTION",
+  "git": {
+    "branch": "windows/b570-backend-control",
+    "head": "c7ab0862e8878ea7ba38397baad6707b5fadfd77",
+    "clean": true
+  },
+  "preregistration": {
+    "path": "benchmarks/b570_backend_control/preregistration_v2.json",
+    "sha256": "16e7d7555c04ffd7f3c9bbfeede3e759d80d7b83e0c31622dad7787cf7341558",
+    "modified": false
+  },
+  "runtime": {
+    "build": "b10839",
+    "commit": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "backend": "Vulkan0 / Intel Arc B570"
+  },
+  "models": {
+    "target_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "draft_sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031"
+  },
+  "gates": {
+    "NO_PENDING_REBOOT": "PASS",
+    "TASK_SCHEDULER_DETACH": "PASS",
+    "PRESENTMON_DETACH": "PASS"
+  },
+  "reboot_evidence": {
+    "CBS_RebootPending": false,
+    "WindowsUpdate_RebootRequired": false,
+    "PendingFileRenameOperations": [
+      "*1\\??\\C:\\ProgramData\\ZulerCoreTools\\GlobalCfg\\{4A234956-2B7D-4221-BADF-12593BD342A8}\\_THIS_TIME_EXEC_",
+      ""
+    ],
+    "interpretation": "Sole persistent marker is ToDesk-installed ZulerCoreTools watchdog self-maintenance, not Windows servicing; no system modification performed."
+  },
+  "scheduler": {
+    "ownership": "Windows Task Scheduler",
+    "logon_type": "InteractiveToken",
+    "run_level": "Limited",
+    "survives_terminal_codex_todesk_disconnect": true,
+    "does_not_survive_user_logoff": true,
+    "grace_seconds": 120,
+    "settling_seconds": 60
+  },
+  "formal_scope": "Six-prompt correctness; V2 only after exact PASS; HumanEval30 and formal power/energy excluded."
+}

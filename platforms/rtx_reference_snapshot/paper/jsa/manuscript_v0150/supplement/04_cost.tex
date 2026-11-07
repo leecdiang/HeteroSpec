@@ -1,0 +1,68 @@
+\section{Complete repair-cost comparisons}
+\label{supp:cost}
+The implementation comparison uses 12 exposed tasks, two adjacent sessions and four repetitions in every one of seven arms and three families: 2,016 formal requests. Each arm/family has 96 complete qualified endpoints. Its panel contains MBPP123,140,255,401,413,418 and GSM8K111,120,1308,141,322,443. The formal timer includes complete nonstreaming request handling, not heavy numerical readback~\cite{rtxrepair}. Table~\ref{tab:allrepair} gives all qualified comparisons.
+
+\begin{table*}[t]\centering\small
+\caption{All 21 qualified implementation comparisons at reported six-decimal precision. Regressions count tasks on which the denominator is slower, out of 12.}\label{tab:allrepair}
+\begin{tabular}{@{}lrrrrrr@{}}\toprule
+&\multicolumn{2}{c}{Qwen3}&\multicolumn{2}{c}{SmolLM2}&\multicolumn{2}{c}{Llama}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
+Comparison&Ratio&Regressions&Ratio&Regressions&Ratio&Regressions\\\midrule
+$M_{\PQ}/M_{\QB}$ & 1.026676 & 2/12 & 1.038478 & 0/12 & 1.013407 & 1/12\\
+$C_{\PQ}/C_{\QB}$ & 1.043676 & 0/12 & 1.068111 & 0/12 & 1.021848 & 2/12\\
+$M_{\GS}/M_{\QB}$ & 1.330106 & 0/12 & 1.366008 & 0/12 & 1.411508 & 0/12\\
+$C_{\GS}/C_{\QB}$ & 2.143525 & 0/12 & 1.462530 & 0/12 & 2.175941 & 0/12\\
+$M_{\QB}/C_{\QB}$ & 1.143749 & 1/12 & 0.633948 & 12/12 & 1.116620 & 1/12\\
+$R/M_{\QB}$ & 1.334051 & 0/12 & 1.369890 & 0/12 & 1.426161 & 0/12\\
+$R/C_{\QB}$ & 1.525820 & 0/12 & 0.868439 & 10/12 & 1.592480 & 0/12\\
+\bottomrule\end{tabular}
+\end{table*}
+
+Qwen3's two $M_{\PQ}/M_{\QB}$ regressions are GSM8K141 and 322. Its $C_{\PQ}/C_{\QB}$ comparison has none. Llama has one target-only local-repair regression (MBPP418) and two speculative local-repair regressions (GSM8K120,141). Both SmolLM2 local-repair comparisons favor QB on every task. All GS/QB comparisons favor QB on all 12 tasks in every family.
+
+For the draft increment, Qwen3's slower task is \textbf{MBPP413}; Llama's is \textbf{MBPP418}. SmolLM2 regresses on all 12 tasks. Its ordinary-to-candidate comparison regresses on 10/12, while ordinary-to-matched target-only improves on all 12. These distinctions are why the article separates a cheaper repair from a profitable draft protocol.
+
+Figure~\ref{fig:taskcost} shows both decisions for every family--task pair. In SmolLM2, all 12 tasks favor QB over PQ with a draft, yet all 12 favor the QB target-only path over adding a draft. The two ratios share a denominator; placing them on the same task row supports a direct cost comparison, not an inference about a causal or statistical association.
+
+\begin{figure*}[t]
+\centering\input{figures/task_cost.tex}
+\caption{Qualified request costs for the same 12 exposed tasks in each family. Green circles compare local repairs with a draft ($C_{\PQ}/C_{\QB}$); ochre triangles compare adding a draft to repaired target-only execution ($M_{\QB}/C_{\QB}$). Each point is the geometric mean of two session ratios, each formed from four-repeat arm medians. The shared horizontal axis is logarithmic; values above one favor QB for circles and adding a draft for triangles. Vertical offsets separate the two comparisons on each row. The dagger marks Llama GSM8K141's repair ratio of 0.999919, a small regression that would round to 1.000 at three decimals. These are 36 family--task pairs, not 36 independent tasks.}
+\label{fig:taskcost}
+\end{figure*}
+
+\subsection{Session sensitivity}
+Table~\ref{tab:sessions} reports the two session estimates separately. Each is the geometric mean of the 12 task ratios, using four-repeat arm medians within that session. The overall estimate is the geometric mean of the two session estimates. Target-only Qwen3 and Llama change direction across sessions, so their aggregate QB advantages do not establish a stable preference in each session. With a draft, all three family aggregates favor QB in both sessions; this does not eliminate the task-level exceptions above.
+
+\begin{table}[t]\centering\small
+\caption{PQ/QB request ratios by session. Ratios above one favor QB. The sessions are adjacent measurements, not independent-day replicates.}
+\label{tab:sessions}
+\begin{tabular}{@{}llrr@{}}\toprule
+Family & Comparison & First & Second\\\midrule
+Qwen3 & $M_{\PQ}/M_{\QB}$ & 0.971380 & 1.085118 \\
+Qwen3 & $C_{\PQ}/C_{\QB}$ & 1.041728 & 1.045626 \\\addlinespace[2pt]
+SmolLM2 & $M_{\PQ}/M_{\QB}$ & 1.040019 & 1.036939 \\
+SmolLM2 & $C_{\PQ}/C_{\QB}$ & 1.066179 & 1.070046 \\\addlinespace[2pt]
+Llama & $M_{\PQ}/M_{\QB}$ & 0.994477 & 1.032698 \\
+Llama & $C_{\PQ}/C_{\QB}$ & 1.016460 & 1.027264 \\
+\bottomrule\end{tabular}
+\end{table}
+
+Figure~\ref{fig:sessiontasks} resolves the session change by task. In target-only execution, 11/12 Qwen3 tasks and 5/12 Llama tasks move from a PQ advantage in the first session to a QB advantage in the second. With a draft, all Qwen3 and SmolLM2 tasks favor QB in both sessions. Llama has eight tasks that favor QB in both sessions, two that cross toward QB and two that cross toward PQ. Its positive family aggregates therefore coexist with task-level reversals. The measurements do not isolate temperature, clock, process or ordering effects.
+
+\begin{figure*}[t]
+\centering\input{figures/session_tasks.tex}
+\caption{Task-level PQ/QB request ratios for the CUDA implementation panel (Section~\ref{supp:cost}) in two adjacent sessions. Columns identify families; the upper and lower rows show target-only and speculative execution. An open circle and a filled square give the first and second session ratios of four-repeat arm medians; each gray segment connects the same task. Markers are vertically offset only to prevent overlap. All six panels use the same linear axis and the same task order; values above one favor QB. The 72 paired segments are descriptive session comparisons, not independent-day replicates, confidence intervals or a measured temporal trend.}
+\label{fig:sessiontasks}
+\end{figure*}
+
+\subsection{A fair comparison is not a component profile}
+PQ constructs separate attention subgraphs and concatenates their results; QB batches one-column attention instances; GS physically serializes active target rows across the network. The speculative arms retain the same draft protocol and reconciliation obligations. All three repairs satisfy the full output requirement in this panel, making their total request costs comparable. The table does not measure the isolated cost of attention or quantify how much of the advantage comes from graph construction, projection, FFN or synchronization.
+
+For a ratio $r=T_a/T_b$, the corresponding denominator latency reduction relative to the numerator is $1-1/r$, not $r-1$. For example, a 2.144 ratio is not a 114.4\% reduction in latency. The main paper intentionally reports time ratios to avoid that ambiguity. The point estimates also have no fabricated error bars: the present reconstruction did not derive new date-level uncertainty from unavailable independent-day measurements.
+
+\subsection{Implementation corrections and the final evidence scope}
+Four PQ engineering warm requests on SmolLM2/Llama failed and remained charged. A resource correction increased host graph metadata capacity by a factor bounded by the predeclared maximum query count. Numerical backend libraries and operators were unchanged; the model, precision, mask, draft width and panel were unchanged. Previously started Qwen rows were retained, and affected unstarted arms were requalified. This is a disclosed amendment rather than a claim that no implementation issue occurred.
+
+A QB eligibility check was corrected to accept the actually compiled final tensor alias when its geometry and existing full-output checks established the intended layout. The correction did not rerun GPU science or consult timings to select a faster condition. Packaging corrections and original failed packaging logs are documented in the companion artifact record.
+
+The original host reports independent standard-library recomputation, 14 synthetic rejection tests, and local/authenticated remote restoration. The finalization check independently recomputed all 21 aggregate and 42 session ratios from the pinned report's task/session median times and checked denominators, qualifications and table rounding; it did \emph{not} rerun the full native/raw scientific archive. That division of responsibility is explicit in the reconstruction QA record.

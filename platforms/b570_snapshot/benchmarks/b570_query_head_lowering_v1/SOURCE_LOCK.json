@@ -1,0 +1,67 @@
+{
+  "study": "b570-query-head-lowering-v1",
+  "base_main": "f5b7b8e9a6d02b228cb0e7b7b3932e89327cfb63",
+  "project_sources": [
+    {
+      "pr": 111,
+      "commit": "9fafc4ba49119f1c52e1606d295bd0b9a55a06d1",
+      "files_read": [
+        "RESULT.md",
+        "native/cpu.cpp",
+        "conditions.py",
+        "SOURCE_BINDINGS.json"
+      ],
+      "scope": "Existing CPU/source results and frozen support limitation, not a resumed study"
+    },
+    {
+      "pr": 109,
+      "commit": "039a24bf61374042e0dc9f3a3619ea40b218a5ad",
+      "path": "benchmarks/b570_geometry_state_codesign_v1/native/local_attention.h",
+      "blob_sha": "00a96b36c41af2f3ad5ac40e42c8f9481da18537",
+      "scope": "Original q2 PQ/QB graph construction; not an unchanged native executable for the new candidate"
+    },
+    {
+      "pr": 110,
+      "commit": "324dbb7ccd07d5a5fc787fc56cc6f07ff18725f9",
+      "scope": "Separate architecture work; no changes or duplicated simulator"
+    }
+  ],
+  "backend_binding": {
+    "source_sha256": "04615c97998a76d2d0b15d2ebb93bf381eb3fb565492d7714d3fc9d1c333b98d",
+    "dll_sha256": "a9bcbe815d0fc1b9a7914fceb55b7275750169ec58dc8c4a09691ea0ea12f92c",
+    "predicate": "MUL_MAT source ne[3] equality is necessary, not sufficient"
+  },
+  "public_api_reference": {
+    "repo": "ggml-org/llama.cpp",
+    "ref": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "path": "ggml/include/ggml.h",
+    "blob_sha": "b88b7e54a5ea627f4a7a2a10b66b19ebe2070f9a",
+    "lines": [
+      970,
+      1110
+    ],
+    "scope": "repeat_4d API reference; does not replace recovered B570 headers/source qualification"
+  },
+  "near_neighbors": [
+    {
+      "url": "https://mlir.llvm.org/docs/DialectConversion/",
+      "scope": "official dynamic legality/conversion documentation"
+    },
+    {
+      "url": "https://github.com/Dao-AILab/flash-attention/blob/main/flash_attn/cute/pack_gqa.py",
+      "blob_sha": "22410d31209dcd5118fdf4a3408240000d904b97",
+      "lines": [
+        1,
+        62
+      ],
+      "scope": "head grouping folded into seqlen; not a full same-contract comparator reproduction"
+    },
+    {
+      "url": "https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/",
+      "scope": "primary engineering report; batch invariance is prior art"
+    }
+  ],
+  "novelty_scope": "Targeted distinction and falsifiable candidate, not exhaustive priority clearance",
+  "current_native_outputs": 0,
+  "old_experiments_unchanged": true
+}

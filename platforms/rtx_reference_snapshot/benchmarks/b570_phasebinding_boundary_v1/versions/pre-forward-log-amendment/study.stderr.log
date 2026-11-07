@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\Users\DIANG\Documents\ChatGPT\HeteroSpec\work\b570-phasebinding-boundary-v1\code\controller96.py", line 161, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\DIANG\Documents\ChatGPT\HeteroSpec\work\b570-phasebinding-boundary-v1\code\controller96.py", line 149, in main
+    with Worker(probe,True) as w:w.finish_probe()
+                                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\DIANG\Documents\ChatGPT\HeteroSpec\work\b570-phasebinding-boundary-v1\code\controller96.py", line 128, in finish_probe
+    save(self.dir/'PROBE_COMPLETE.json',x);event(event='PROBE_COMPLETED',slot=self.name,pid=self.p.pid);self.close()
+                                                                                                        ^^^^^^^^^^^^
+  File "C:\Users\DIANG\Documents\ChatGPT\HeteroSpec\work\b570-phasebinding-boundary-v1\code\controller96.py", line 139, in close
+    save(self.dir/'LIFECYCLE.json',life);event(event='WORKER_CLOSED',block=self.name,**life)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DIANG\Documents\ChatGPT\HeteroSpec\work\b570-phasebinding-boundary-v1\code\common96.py", line 23, in event
+    f.write(json.dumps(dict(utc=now(),**x))+'\n');f.flush();os.fsync(f.fileno())
+                       ^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'utc'

@@ -1,0 +1,72 @@
+{
+  "study": "B570_DRAFT_PREFILL_SUBMISSION_V1",
+  "uuid": "e1225a47-6e66-4460-965f-2b705268c3a1",
+  "reference_parent": "PR134/51febaddcf49bb18565e568cf964a6e5c78876c9",
+  "intervention": "Draft prefill: one llama_decode API batch for prompt instead of one API call per token; n_ubatch remains1, n_batch512, threads8, last-prompt output flag only. Target/verification/proposal/state/DLLs unchanged. This is not multiquery arithmetic or the threads1 candidate.",
+  "source_basis": "llama_kv_cache::init_batch splits into ubatches at configured1; prepare simulates then restores cell metadata; each process_ubatch applies current token and recomputes physical key extent. Backend retains ordered execution/dependencies. Mandatory byte gate verifies this reasoning rather than assuming it.",
+  "qualification": {
+    "inputs": "All four PR134 inputs,64 cap/EOG",
+    "requests": 4,
+    "reference": "346 original target/draft raw logits byte exact plus full endpoint/state",
+    "geometry": "Draft PREFILL kq MUL_MAT observed query axis1 must remain1, with persisted shape metadata. No readback; observer absent from timing."
+  },
+  "cost": {
+    "inputs": [
+      "HumanEval/38",
+      "HumanEval/115"
+    ],
+    "selection": "Fixed short CAP and long EOG representatives before candidate execution; no claim four-input performance confirmation",
+    "processes": 3,
+    "arms": [
+      "BASE_A",
+      "BASE_B",
+      "BULK1"
+    ],
+    "warmup_requests": 9,
+    "measured_requests": 18,
+    "orders": [
+      [
+        "BASE_A",
+        "BASE_B",
+        "BULK1"
+      ],
+      [
+        "BASE_B",
+        "BULK1",
+        "BASE_A"
+      ],
+      [
+        "BULK1",
+        "BASE_A",
+        "BASE_B"
+      ]
+    ],
+    "input_order": "Two inputs swap by session parity; each input sees each arm order once",
+    "window": "Full fresh-context service incl both prefills, generation, host work, state/sync/teardown; excludes shared model load and postrequest comparisons/disk",
+    "controls": "BASE_A/B identical original QB threads8. Candidate also threads8. No new R arm; no new draft-vs-target-only claim."
+  },
+  "analysis": {
+    "primary": "Equal-input geometric mean of paired BULK1 / mean(BASE_A,BASE_B) service ratios, over3 sessions",
+    "screen": "All historical bytes pass; reduction>max(2percent,largest per-input aggregate absolute A/A imbalance), candidate lower in all3 session aggregates",
+    "scope": "Two exposed inputs,one machine/date,bounded software screen; no CI, no outlier deletion, no generality claim"
+  },
+  "stop": "First native/support/reference failure stops this candidate; no timing of failed candidate. Preserve raw and failure.",
+  "execution": {
+    "new_cap_seconds": 1771.3370073,
+    "old_cumulative_seconds": 3162.4996451,
+    "qualification_deadline": 180,
+    "timing_deadline": 300,
+    "reserved_max": 1690,
+    "no_actor_RTL_CPU8": true,
+    "original_study_cap_seconds": 1800
+  },
+  "attempt": 2,
+  "previous_attempt": {
+    "root": "C:\\hs\\b570-draft-prefill-submit-20261020",
+    "commit": "d1e52cf07cddd31e5f06e5d09f77c63ee63988be",
+    "status": "STOPPED_FIRST_FAILURE",
+    "charged_seconds": 28.6629927,
+    "qualification_not_transferred": true
+  },
+  "repair": "Observer-only: read query axis1 of consumed kq MUL_MAT tensor; persist Qcur/kq shapes before assertion. Original Qcur axis2 gate failed without diagnostics;97 prior vectors matched in postfailure diagnostic, not qualification. Numerical candidate unchanged."
+}

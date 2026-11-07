@@ -72,7 +72,7 @@ def outputs():
 \begin{tabular}{@{}rrrr@{}}\toprule
 Physical extent & Qualification & Kernels & Cost / native A\\\midrule
 1023 (native) & 4/4 pass & 8 & 1.000000\\
-1024 (padded) & \textcolor{draft}{0/4 fail} & 3$^\ast$ & ---\\
+1024 (padded) & \textcolor{draft}{4/4 fail} & 3$^\ast$ & ---\\
 1025 (padded) & \textcolor{qualified}{4/4 pass} & 8 & 1.014783\\\bottomrule
 \end{tabular}\par\vspace{5pt}
 $^\ast$First-call trace only; the failed path has no qualified clean cost. Logical inputs and original mask columns are unchanged.

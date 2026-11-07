@@ -1,0 +1,74 @@
+{
+  "platform": "B570",
+  "study": "B570_PREFILL_CLOSEOUT_V1",
+  "status": "FROZEN_FOR_HOST_REVIEW",
+  "base_main": "2e29f2470d8fa917f16184935cc0ade3ccbc1763",
+  "clock_deadline": null,
+  "study_uuid": "87f1b888-efb4-4723-86f2-453333ebd9f5",
+  "source_commit": "93ab8d62c24ed7bf60333b8ee196893d1991d868",
+  "runtime_manifest_sha256": "06b2cebd3ab62d9eb5d5612dc9de20bc8fdab436745b88f0d7711192ae73d803",
+  "model_manifest_sha256": "e67f12b570c49c173deccd7ea1bf139524e47c6d5356570625269549edca0baf",
+  "reference_manifest_sha256": "5c53a6b19468392b2f68ef1d35ec350de17269ee639fcdc096c1349b0d341770",
+  "input_manifest_sha256": "b46ae4a6eb536d56da4c1c3ac6d30f5850eb8c852c9142715c443e8608fac9d5",
+  "order_sha256": "d6fff86b94d43700dc7ce2891ee807fe96f257d8803051d3140a8e3b5f3c020c",
+  "old_ledger_sha256": "7382c04a78d197b78a43bdaa47e14efd3c0905af23061254fdbba879837f7cf1",
+  "authorization_receipt_sha256": "bdbe47cdd0999c156e74c05f2779b601a29f1c3856eae37eed854b9c9aa28e18",
+  "freeze_commit": "93ab8d62c24ed7bf60333b8ee196893d1991d868",
+  "budget": {
+    "model_requests": 156,
+    "model_workers": 9,
+    "other_processes": 128,
+    "owned_seconds": 10800,
+    "storage_bytes": 6442450944,
+    "memory_bytes": 17179869184,
+    "cleanup_seconds": 300,
+    "per_worker_timeout_seconds": 1200
+  },
+  "primary_timer": "fresh-context complete service",
+  "ceiling": {
+    "model_requests": 156,
+    "model_workers": 9
+  },
+  "qualification_required_before_timing": true,
+  "historical_reference_mutation_allowed": false,
+  "automatic_retry": false,
+  "raw_to_normalized_auditor_sha256": "9bb8b2d6e191a9b99d6777c9b9584d3d06b39902159b17911f35058c10e1413e",
+  "scientific_output_contract": [
+    "all token IDs",
+    "all EOG flags",
+    "length",
+    "terminal token",
+    "stop reason",
+    "matched speculative traces",
+    "matched decision logits"
+  ],
+  "unstarted_and_failure_slots_retained": true,
+  "worktree": "C:\\Users\\DIANG\\.codex\\worktrees\\b570-prefill-closeout\\HeteroSpec",
+  "result_path": "benchmarks/b570_prefill_closeout_v1",
+  "owned_start_utc": "2026-10-21T10:45:26.0062489+00:00",
+  "frozen_files_sha256": "a3caee3e28b4acc12e8bf483d78f5f698ac303ec4541968c53683ca854652ebb",
+  "minimum_free_host_memory_bytes": 1073741824,
+  "minimum_free_storage_bytes": 8589934592,
+  "worker_timeouts_seconds": {
+    "E0": 180,
+    "E1": 600,
+    "E2": 1200
+  },
+  "host": {
+    "cpu": "13th Gen Intel Core i5-13400, 10 cores /16 logical",
+    "gpu": "Intel Arc B570",
+    "driver": "32.0.101.9034",
+    "host_memory_kib": 33254420,
+    "native_concurrency": 1,
+    "host_writer_concurrency": 1
+  },
+  "safety_derivation": {
+    "prior_qualification_max_seconds": 34.174184,
+    "prior_complete_timing_process_seconds": 163.5546413,
+    "prior_complete_timing_requests": 9,
+    "explanation": "E0:4 short requests,180s cap; E1:6 capture/count requests/input,600s cap; E2:32 requests/process,1200s cap. These fixed upper bounds include model startup/cleanup and exceed the observed old request costs. 7380s summed native caps plus300s cleanup are within10800s owned envelope. No time-of-day finish deadline."
+  },
+  "registration_commit_binding": "Each process receipt binds the final registration-containing Git commit via --freeze. source_commit/freeze_commit identify the preceding committed source+manifest checkpoint.",
+  "historical_accounting": "3435.1001972s receipt-backed cumulative; an additional historical time-1 process has unknown parent wall/exit/cleanup. Its observed service lower bound is81.3101785s. Preserve uncertainty; no new run fills this old UUID.",
+  "native_starts_at_registration": 0
+}

@@ -1,0 +1,54 @@
+\section{B570 Repair, Missingness, Suffixes, and Paid Costs}
+\label{supp:b570}
+\subsection{Earlier finite closeout: a positive local case and failures}
+\label{supp:b570_old_closeout}
+The earlier B570 closeout's normative audit establishes completion of 1,456 core records (\texttt{COMPLETE\_FINITE\_SCOPE\_AUDITED}). The completed audit supersedes historical report wording that normative closure was incomplete. The original findings remain finite: on the shared 24-task MBPP panel, the repaired old N1 qualifies but gives only $0.188525\times/0.179055\times$ generation/request speed against ordinary $R$, and $0.804023\times/0.693541\times$ against matched target-only. The old N0/N1 comparison is $0.999522\times/1.247059\times$: request progress against N0 does not imply ordinary-reference benefit.
+
+On eight project-unused MBPP inputs, N1 and its matched path fail MBPP/72 in all four repeats. Five UB2 alternatives retain failures involving HumanEval/42, /145 or /138 and receive a NO-GO decision. The local $k=3$/UB4/cap128 candidate on seven exposed longer probes is a positive finite case, with $1.345798\times$ generation and $1.048339\times$ request speed. It does not replace the failed expanded qualification. Long-cap anchor qualification passes 84/84 at caps256/512, with longest actual response 261 IDs. No natural state cross occurs in this earlier study; the crosses in Section~\ref{supp:diagnosis} are later experiments.
+
+A wrongly placed UHD730 campaign of 190 requests is classified as infrastructure evidence and excluded from scientific B570 data. Its records and recovery remain preserved. Recovery does not authorize outcome-dependent retuning or replacement of failed tasks. The later phase-binding candidate is a distinct implementation.
+
+\subsection{Same-context phase binding}
+\label{supp:b570_phase_binding}
+The B570 candidate preserves one live target context and sampler. Ordinary-reference prefill uses UB128 with caller output reservation 512/per-sequence reservation 1; the frontend samples the pending first token once, binds continuation UB1 and synchronizes/reserves the scheduler, and consumes and accepts that saved token once in the native loop. Native $k=2$, draft-UB1 proposal, acceptance, bonus and rollback follow. The private API patch changes phase parameters and reservation within the context; it adds no model arithmetic, Vulkan shader or precision change. It has no task-ID routing, known reference token, margin-based correction or extra reference forward.
+
+Unlike old N1, it removes a second target context, state handoff and three serialized witness readbacks. Capture-on checks compare KV before and after binding; capture-off avoids witness readback. Those checks do not supply a separate profile of the saved cost. The frontend still pays for synchronization, phase reservation, draft work, target work and reconciliation. The author source package includes \texttt{phase.h}, \texttt{target.cpp}, \texttt{native.cpp} and the private-library delta with source bindings.
+
+% REVISION_ADDITION_BEGIN: B570 source-bound visual explanation
+Figure~\ref{fig:b570_contract} connects the phase-binding operations to the separate endpoint and paid-work contracts; it also shows why the old-N1 comparison has one fewer complete task pair.
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\linewidth]{figures/figure_S1_b570_contract.pdf}
+\caption{B570 implementation and accounting boundaries. (A) Ordinary prefill, one pending sample, in-place phase binding and the native loop retain one target context and live sampler; this is a source-bound schematic, not a timing profile. Reservation values are total/per sequence. (B) The endpoint gate retains IDs through the first inclusive EOG or cap128, while all online suffix work remains paid. The counts aggregate 30 formal candidate responses. (C) Available payloads and complete two-round task pairs remain distinct; the missing old-N1 MBPP/400 round-1 payload is unavailable, not zero cost.}
+\label{fig:b570_contract}
+\end{figure*}
+% REVISION_ADDITION_END
+
+\subsection{Qualification counts and unresolved raw comparisons}
+\label{supp:b570_missingness}
+Table~\ref{tab:b570_qualification} reports endpoint and raw-array comparisons separately. The 48 baseline-development rows have only 32 ordinary-reference-equal endpoints; they are not all qualified candidate evidence. The 12 shams are separate from the 299 rows in the qualification export. Stage D contains 56 exposed tasks evaluated twice. Stage E combines eight bridge records and 119 formal records; their roles are not interchangeable.
+
+\begin{table*}[t]\centering\small
+\caption{B570 candidate qualification stages and raw comparison limits. Equality is to the registered endpoint reference unless stated otherwise.}
+\label{tab:b570_qualification}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{.25\linewidth}rr>{\raggedright\arraybackslash}X@{}}\toprule
+Stage & \shortstack{Candidate\\checks} & \shortstack{Endpoint\\equal} & Raw reference comparison\\\midrule
+C development & 12 & 12 & Four equal, eight different\\
+D exposed bridge & 112 & 112 & MBPP: 16 equal/48 different; 48 HumanEval raw comparisons unknown\\
+E candidate formal & 30 & 30 & Included in the E total below; suffix cost retained\\
+E all available plus bridge & 127 & 127 & 80 equal, 47 different\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+The four-condition formal matrix is 119/120. The missing unit is \nolinkurl{E/FORMAL/1/old_N1/MBPP/400}, with \nolinkurl{INFRASTRUCTURE_INTERRUPTION_NO_PAYLOAD}. Its runtime cost and interrupted teardown time remain unknown. Each of ordinary $R$, matched $M$ and candidate $C$ has 30 complete formal observations and 15 complete two-round task pairs. Old N1 has 29 observations and only 14 complete task pairs. The available MBPP/400 old-N1 round is retained but cannot supply its two-round median. There is no interpolation, zero-cost assumption, silent task removal from other comparisons or scientific rerun. The study's administrative closeout remains \nolinkurl{PARTIAL_INFRASTRUCTURE_BUDGET_CLOSED}.
+
+\subsection{All measured timers and work}
+\label{supp:b570_costs}
+Generation time is the frontend's registered C++ interval, including pending-state initialization, sampler/batch operations, phase binding within that interval, draft/verification, rollback and final synchronization. Whole-request time also includes prefill/reset/cleanup, excluding subsequent disk file writes. Host request time is separately measured by Windows QPC. Earlier A/B stage GetTickCount's 15.625-ms granularity is not substituted for formal C/D/E QPC measurements. Model-load cost is outside these comparisons.
+
+The main manuscript's B570 paid-cost table reports all three formal timer aggregates. Table~\ref{tab:b570_task_cost} provides all paired task generation and whole-request ratios. R/C and M/C are below one on every complete task and round. Old-N1/C whole and host request ratios reverse on MBPP/245 in round 2, approximately 0.873582 and 0.873603; aggregate old-path improvement therefore does not imply universal improvement.
+
+\input{tables/b570_task_cost}
+
+Candidate formal endpoint IDs total 1,150 and raw IDs 1,176. All 26 suffix IDs are charged. Drafted/accepted IDs total 888/702, and target/draft continuation caller tokens 1,332/1,362. These denominators describe different runtime quantities and cannot be collapsed into one acceptance-adjusted cost. The narrowed target common-sampling measurement of 851.52 ms omits other work; it is not a full component profile. The known complete-campaign host subtotal is approximately 6,541.86 s, excluding the unknown interruption/teardown. It is not the cost of every planned request or a normalized per-task speed estimator.
+

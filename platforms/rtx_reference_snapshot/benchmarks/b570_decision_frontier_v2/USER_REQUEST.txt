@@ -1,0 +1,133 @@
+HeteroSpec PR105：零 GPU 修复、实际请求准入与规范化四格审查
+
+【本轮授权边界】
+本 prompt 只授权 CPU 审查、实现与测试、创建本地证据子包，以及向 PR105 独立新增修订文件并保持 Draft。
+不启动 native worker、probe、warmup、模型 forward 或投影注入；不创建后台执行任务。
+结束时交付 READY_FOR_REVIEW 或 BLOCKED，不因为所有 CPU tests 通过而自动进入 GPU 采集。
+下一轮新采集需要作者另行确认新预算和 F0。
+
+【固定基线与旧失败】
+先 fetch 并记录远端 PR105 当前 head；本次核查基准为：
+PR105: 52bcee8493c12414fadeeea8aeb3852517682c5e
+PR105 旧 F0: 644aa5c14686d88c913bce32f291c8c2ac6a0be5
+PR103: b46415f2725d7c06e093a6cd2b2d261b61925dc6
+PR103 registration: dd33b24abebc335d39f3b63b4e7beff86bdcf934
+PR101: 26706c9fb4818ec3465e45acea029c4ab88a390f
+若远端已有后续修订，先审查差异，不覆盖他人的工作、不创建重复修复。
+保留旧 frozen code、错误 DONORS、F0、失败 REQUEST/RESULT、receipt、ledger、归档及167个未启动slots；不能改写、补写或重标为成功。
+旧版本已有1次 process/request，127次 target decode，12.438秒 owned time。不得清零，不得把实际错误输入恰好复现历史 full-cross 当作合格 ALL 或 EMPTY 科学样本。
+
+一、复现并闭合 registry 故障，不只修一个字典键
+
+从实际 PR105 PLAN、DONORS、首个失败 REQUEST/RESULT 独立复核：
+- PLAN 应有56个逻辑 cell = 4 tasks × 2 recipients × 7 states。
+- 原 task|state registry 丢失 recipient，28个 recipient A cells 与计划不符；这些不是只有一个 EMPTY 条目。
+- SLOT 内 mixture_spec 被预检，实际发送的 KV 却通过 controller100.Worker.request 对 DONORS 再次查找。两条输入路径必须交叉核对。
+- 请提交真正用于生成 registry 的完整、可运行纯函数，不能依靠未归档的临时 shell/Python 片段。
+
+修订使用独立新增目录，例如：
+benchmarks/b570_decision_frontier_v2/
+不得覆盖已冻结的 v1 文件；所有新 import 应绑定准确源码身份，不隐式 import 随 head 漂移的副本。
+registry 逻辑主键至少包含 (task, recipient, state)；明确 donor = other(recipient)。
+例如 legacy lookup label 可用 state+'@'+recipient，使 task|EMPTY@A 与 task|EMPTY@B 不冲突；实际形式可以不同，但整条构造/序列化/校验链必须一致。
+recipient initial logits 单独绑定 (task, recipient)，同一 recipient 的七种状态使用相同完整 logits bytes。
+CAS 的相同 payload 可以去重，但相同物理 bytes 不能作为删除逻辑 cell 的理由。
+重复插入同一逻辑键一律报错；禁止以最后写入者覆盖前项。
+
+实现 validate_registry_against_plan，遍历完整56 cells和168 requests：
+1. task/recipient/donor/state、方向、slot id、mode/repeat/stage 都匹配；
+2. 实际解析后的 KV path/bytes/SHA256 与该 slot 的 mixture_spec 一致；
+3. 实际解析后的 initial-logits spec 与该 recipient 的 initial_logits_spec 一致；
+4. EMPTY 的 state bytes 等于 recipient 自身；ALL 等于 donor 全 KV，同时仍保留 recipient logits；
+5. 五种子集与固定 PR103 的对应 mixture bytes 相同；不得新采 donor；
+6. 没有 missing、extra、duplicate、last-write-wins；相同 SHA 允许不同逻辑标签，但来源关系仍分别记录；
+7. 序列化写盘后重新读取 registry 和请求，再执行同一检查；使用拒绝重复 JSON keys 的加载器审计输入。
+
+更重要的是新增实际 request admission：
+使用原 controller100.Worker.request 的真实请求构造路径做无 GPU dry-run，通过假的 worker/sender截获它准备发送的 CHECK和完整请求对象。
+测试必须走实际 registry lookup 和 restore100 构造，不能只用另外手写的“期望请求构造函数”自证。
+确保 fake Worker 不调用原构造器启动进程；测试时任何 subprocess.Popen/native launch 都直接失败。
+记录全部168份规范化请求的摘要，并与 plan、registry 做三方核对。
+在真实执行器中，同一个已经核验的请求对象直接传入发送器；预检后不得再次解析另一套 registry 生成请求。
+发送前再次核验目标完整 restore100、prompt_ids、cuts、mode、runtime identity；必须在第一条新 native forward之前拒绝错误输入。
+保留现有 native import+reserialization 的独立事后校验，不因前置校验而删除它。
+
+二、CPU 回归测试与测试范围
+
+至少包括：
+- 原始有冲突的 registry：必须在 native launch 前拒绝，精确报告28个逻辑 cell；
+- A后B、B后A及至少20组固定随机遍历顺序：正确 registry 的规范化结果相同；
+- 相同 task/state 的两个 recipient 不覆盖；
+- EMPTY/ALL 两方向身份与 recipient logits 正确；
+- 文件自身 hash 完全正确、但属于另一个完整合法 cell：必须拒绝；
+- 交换 recipient logits、missing/extra/duplicate key、错误方向、stale registry、payload篡改；
+- 全168个真实请求序列化 round trip；counts 的 memory.json 与 heavy 的 trace.json分别验证；
+- request预检通过后不会再进行可能分歧的二次 registry lookup；
+- 错误输入用假 sender计数证明未发送completion/未启动native；
+- frozen actor、model、worker、DLL、driver identity仍与预定基线一致；
+- 原同前缀/数值/残差测试继续通过。
+
+单测数量不是准入结论。交付显式覆盖矩阵：plan → registry → actual serialized request → expected import → native result gate。
+
+三、审查 POSITION 双方向的坐标等价，避免把换符号当新机制
+
+已提交 FRONTIER_ANALYSIS 中 /1248 t=47：
+B->A: (r,u)=(220,832), I=-0.09655952453613281
+A->B: (r,u)=(832,220), I=+0.09655952453613281
+两方向 full-vocabulary residual 文件声明相同 SHA256：
+b14c62a171fe89118c85ba7d07bbb1a1672442b9ea338f9dc627a688dc5d9c98
+这是要从实际 bytes 复核的等价性线索，不是授权假设所有观察必然相同。
+
+prefix和tail是全部KV数值位置的互补划分。写成 A=(A_P,A_T), B=(B_P,B_T)：
+recipient A 的 EMPTY/P/T/ALL 为 AA、BA、AB、BB；
+recipient B 的 EMPTY/P/T/ALL 为 BB、AB、BA、AA。
+在相同 token 前缀、数值执行条件以及相同四个实际状态行为下，完整向量四格残差对这个换位不变；若 (r,u) 互换，标量 I 会变号。
+
+新增零 GPU 的 canonical-position audit：
+- 对全部已采 POSITION 比较，读取实际 mixture、FP32 arm vectors、共同前缀、第一token、sampler契约和残差文件；核对源哈希，不只读报告数值；
+- 验证 EMPTY↔ALL、prefix↔tail 的反向映射；不同初始logits必须保留，不能只凭相同KV假定所有上下文均等；说明本契约中初始logits是否仅用于同一个t0 greedy选择；
+- 对每一组可比较的两方向固定同一 token pair，例如将既有无序pair按token id升序规范化，不重新挑选效果较大的token；
+- 保留原始relative donor指标，另外报告规范坐标结果、字节等价组和共享数据依赖；
+- 标明什么是实际独立进程重复、什么是同一四格的另一种坐标表达；两者都不增加独立输入数；
+- 对不同前缀、不同token pair或源状态不对应的坐标，标为NOT_COMPARABLE，不能强行去重。
+这不是删除原始双方向观测，也不否定L0的背景依赖。L0之外的其余层仍可能随recipient改变，不能把POSITION恒等关系无条件套到L0。
+不要把(+I,-I)自动描述成“协同机制与拮抗机制在反向互换”。
+
+四、补充已有数据的决策解释，不新增拟合或假设选择
+
+独立重算 /1248 B->A L0 t47：
+d_EMPTY=-0.06651496887207031
+d_K=-0.006771087646484375
+d_V=+0.021633148193359375
+d_KV=-0.05448722839355469
+可加模型预测 d_K+d_V-d_EMPTY=+0.08137702941894531，实际joint为负，I=-0.1358642578125。
+用实际完整词表argmax 220/220/832/220核对，不将两个竞争token的d误当全词表决策。
+同前缀证据支持此有限四格净分数非加性，不能定位唯一非线性算子、projection kernel或完全中介。
+
+审查 t46/t47：前者已存在相近量级的I而输出尚未分歧；报告真实EMPTY top1/top2和margin，不将前沿固定的r/u在较早位置自动当真实top2。
+跨t比较是不同前缀/不同预测位置的描述，不是又一个same-input因果对照。
+/1011 t1的非零扰动+margin充分条件不能外推t10；/1249的cap128稳定不是无限稳定。
+
+确保无分歧面板的token-pair规则与实际原USER_REQUEST一致：每个观测时刻取EMPTY该时刻top1/top2，并在该时刻四格与两个重复间固定；不得未经说明改成跨所有t永久使用t1 pair。
+区别历史44个repeat-level比较、22个可用repeat pairs、新v1合格比较0；缺口仍为完整112矩阵的一部分，不能声称全覆盖或总体成功率。
+
+五、下一次GPU采集的准备而非本轮执行
+
+不得接着旧F0继续167个slots。旧registry整体错误，应该使用新的attempt/run目录、修订代码和新F0。
+科学设计、四任务/两recipient/七状态、参考端点、原cuts和全部时间/量化/runtime契约保持不变。
+候选v2完整采集为168个新starts，分16 anchor counts /32 anchor heavy /40 subset counts /80 subset heavy；0额外probe/warmup/retry。
+旧v1已经发生的1次另外保留，v1+v2最多169次，不得声称总共168。新v2最多21600秒owned time；连同旧v1实际12.438秒另外明确汇总，不能隐藏累计成本。
+这是新的预算申请，不是自动刷新旧授权；本轮仅输出该预算与F0待审核。
+真正运行前还应核对新模型/worker身份、driver、offload、内存、only-owned watchdog、磁盘和实际发送请求准入。
+新F0远端回读必须覆盖修复代码、registry生成器、真实序列化测试、全计划、实际请求摘要、全部source/payload/runtime bindings；哈希冻结不代替语义正确性检查。
+最终交付READY_FOR_REVIEW后等待作者明确批准新v2采集，禁止自动启动。
+优先补齐 /1011 t9/10、/831 recipient A的L0 t39/40、/1249预定后续位置，但不得通过删矩阵坐标或跳过预定stage改变原完整设计。
+
+六、证据可获取性与提交
+
+在原机创建小型、去重、私有CPU复核子包：44个历史比较引用的完整FP32 logits、必要REQUEST/RESULT/trace、对应原始注册/manifest/源码引用、实际残差、规范化脚本与哈希。
+必须说明它是选定数值证据的复核子集，不是完整PR103/PR105归档替代物；不带GGUF、访问令牌或无关文件。
+不自动恢复Zenodo/arXiv/public release，不改变权限或发布自动化。原始数据尚未获准传输时只准备本地包并明确REMOTE_PENDING。
+在PR105仅新增v2修订文件和必要的当前状态入口；不改写旧v1源码、F0、raw、报告、失败，不改main、PR102/104、模型、数值DLL。
+不merge。对话直接输出：故障复现、56/168三方一致性、负控制结果、POSITION规范化结论、剩余日志缺口、待批准的新预算和真实提交SHA。
+只保留必要的代码、测试、amendment、admission/canonical audit机器可读回执，不生成重复的长报告。

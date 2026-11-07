@@ -1,0 +1,30 @@
+\section{Design implications}
+\label{sec:decisionrule}
+Repair scope, local representation and draft policy determine the cost of a reference-qualified combination. For a fixed experimental panel $X$, let $\mathcal A_\rho(X)$ contain the tested combinations that pass its complete-reference checks. A candidate with the lowest observed cost in that set is
+\begin{equation}
+a^\star=\arg\min_{a\in\mathcal A_\rho(X)} \widehat T_a(X),
+\label{eq:policyselection}
+\end{equation}
+where $\widehat T_a$ uses the same service window and weights for every candidate. The objective compares the measured candidates. It supplies neither a classifier for new requests nor an online policy evaluated here. Qualification and deployment have the distinct roles defined in Section~\ref{sec:qualificationuse}.
+
+\begin{table*}[t]\centering\small
+\caption{Comparisons among tested execution combinations under one declared reference and service contract. The rows define evidence and estimands, not an online selection algorithm.}
+\label{tab:deploymentrule}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.6cm}YY@{}}\toprule
+Comparison & Evidence required & Interpretation\\\midrule
+Reference eligibility & Supported layout, actual producer state and complete-output checks against $R$ & Identify the passing input/configuration pairs; source admission alone is insufficient.\\
+Draft on or off & Target-only and speculative requests with the same repair, reference and timer & Measure the draft increment. Both local repairs make Qwen3 drafting profitable in the three-date panel; SmolLM2 favors target-only execution.\\
+PQ or QB & Paired complete-request costs with the registered A/A and session controls & Measure the local representation increment. Matched Qwen3 $k=3$ passes under both lifecycles; $k=1$ remains unresolved.\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+\paragraph{Keep the three baselines distinct}
+$R$ defines the behavior to preserve, same-layout $M_L$ measures the opportunity cost of enabling draft, and PQ isolates QB's representation increment. On the three-date SmolLM2 panel, $C_{\QB}$ costs 0.694295 of $R$, yet 1.242426 of $M_{\QB}$. A path can improve on the serial reference while remaining the more expensive draft decision. Table~\ref{tab:normalizedcosts} reports the common-panel ratios; its lowest point estimate is not a future-request policy.
+
+\paragraph{Validate the producer--consumer relation}
+Paired Q/mask views preserve query and head semantics; phase and layout flags preserve them during graph reuse. The Vulkan port retains the AV evaluation path while exposing independent query workgroups~\cite{b570gqarecords}. Its two fixed-$R$ cases show why a producer and a consumer passing separate tests does not qualify their combination. Validation must cover the state relation at their interface. Earlier component interventions further show that endpoint-equivalent states need not have interchangeable parts.
+
+\paragraph{Charge the intended service transaction}
+Matched Qwen3 $k=3$ requests retain practical QB benefits under resident and fresh contexts~\cite{rtxnativebridge}. The original $k=1$ panels, compact-QH transactions and B570 prefill-submission study retain distinct negative or unresolved outcomes. Their service windows include preparation and state costs omitted by local kernel or API-count comparisons.
+
+These interfaces complement batch-invariant kernels~\cite{thinkingmachines}, reproducible accumulation~\cite{reproblas} and phase-aware tiled execution~\cite{spectra}. A hardware extension would preserve the declared per-query evaluation, including matrix-instruction behavior beyond dtype~\cite{ptx}, while sharing resources across queries. Establishing its benefit would require an equal-resource comparison on the request-critical path; the archived AV model supplies a same-policy parity control~\cite{studyrecords}.

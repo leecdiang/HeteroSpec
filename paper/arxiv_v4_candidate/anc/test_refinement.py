@@ -33,9 +33,9 @@ class RefinementChecks(unittest.TestCase):
         self.assertIn('1.96',text)
         self.assertIn('2\\%',text)
     def test_service_reduction_wording(self):
-        text=(ROOT/'sections/09_conclusion.tex').read_text()
+        text=(ROOT/'sections/08_request_service.tex').read_text()
         self.assertNotIn('41.8\\% faster',text)
-        self.assertIn('41.8\\% lower',text)
+        self.assertIn('41.8\\% service-time reduction',text)
     def test_small_text_palette_contrast(self):
         text=(ROOT/'preamble.tex').read_text()
         colors=dict(re.findall(r'\\definecolor\{([^}]+)\}\{HTML\}\{([A-Fa-f0-9]+)\}',text))

@@ -1,0 +1,14 @@
+{
+  "utc": "2026-11-02T13:49:02.459512+00:00",
+  "failed_epoch": "combined-epoch-01",
+  "candidate": "candidate-combined-00",
+  "evidence": {
+    "path": "I:\\HeteroSpec\\b570-llama-20261102\\combined-epoch-01\\units\\baseline-candidate\\SUPERVISOR.stderr.log",
+    "sha256": "4291f7d630d71d7dfe74b5d4a92b9857ade4fe4e68368959d001163df0cd644b"
+  },
+  "finding": "The first C_PQ request exhausted the host graph metadata arena at 997072 required / 996704 available bytes after 6 candidate requests completed; Job cleanup verified. Original 6 oracle requests completed. No successful-subset baseline qualification.",
+  "repair": "Reserve bounded extra graph-node and tensor metadata for q2..q4 structural prefix grouping, 64*layers*ubatch nodes. Same arithmetic, unchanged scalar capacity, unchanged KV and external RAM/VRAM reserve. Fresh numerical build and both-role zero-forward admission before a full 36-request retry.",
+  "retained": true,
+  "all_reserved_slots_exposed": true,
+  "next_build": "candidate-combined-01"
+}

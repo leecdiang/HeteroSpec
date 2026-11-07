@@ -1,0 +1,204 @@
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -25,6 +25,8 @@
+ #include <filesystem>
+ #include <random>
+ #include <utility>
++#include <chrono>
++#include <cstdio>
+ #include <fstream>
+ 
+ // fix problem with std::min and std::max
+@@ -354,6 +356,27 @@
+     std::vector<float> inp_embd;
+ 
+     server_slot_stats stats;
++    int64_t hs_qpc_start = 0;
++    int64_t hs_steady_start = 0;
++    bool hs_timing = false;
++    void hs_start() {
++        LARGE_INTEGER q; QueryPerformanceCounter(&q);
++        hs_qpc_start = q.QuadPart;
++        hs_steady_start = std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now().time_since_epoch()).count();
++        hs_timing = true;
++    }
++    void hs_finish(int count, int terminal_id) {
++        LARGE_INTEGER q, f; QueryPerformanceCounter(&q); QueryPerformanceFrequency(&f);
++        const int64_t ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now().time_since_epoch()).count();
++        GGML_ASSERT(hs_timing && count > 0 && count <= 128);
++        // Write both endpoint pairs only AFTER the measured end.
++        fprintf(stderr, "HS_TIMER start_qpc=%lld end_qpc=%lld frequency=%lld start_steady_ns=%lld end_steady_ns=%lld count=%d terminal_id=%d\n",
++            (long long)hs_qpc_start, (long long)q.QuadPart, (long long)f.QuadPart,
++            (long long)hs_steady_start, (long long)ns, count, terminal_id);
++        hs_timing = false;
++    }
+ 
+     // accepted tokens per draft position
+     // not in server_slot_stats to avoid copying to every task result
+@@ -1777,43 +1800,9 @@
+ 
+         SLT_DBG(slot, "launching slot : %s\n", safe_json_to_str(slot.to_json()).c_str());
+ 
+-        // initialize samplers
+-        if (task.need_sampling()) {
+-            try {
+-                slot.smpl.reset(common_sampler_init(model_tgt, task.params.sampling));
+-            } catch (std::exception & e) {
+-                std::string err_msg = std::string("Failed to initialize samplers: ") + e.what();
+-                send_error(task, err_msg, ERROR_TYPE_INVALID_REQUEST);
+-                return false;
+-            }
+-
+-            const bool need_pre_sample_logits = task.params.sampling.n_probs > 0 && !task.params.post_sampling_probs;
+-
+-            bool use_backend_sampling = task.params.sampling.backend_sampling;
+-
+-            // TODO: getting pre sampling logits is not yet supported with backend sampling
+-            use_backend_sampling &= !need_pre_sample_logits;
+-
+-            // TODO: tmp until backend sampling is fully implemented
+-            if (use_backend_sampling) {
+-                llama_set_sampler(ctx_tgt, slot.id, common_sampler_get(slot.smpl.get()));
+-            } else {
+-                llama_set_sampler(ctx_tgt, slot.id, nullptr);
+-            }
+-
+-            SLT_TRC(slot, "sampler chain: %s\n", common_sampler_print(slot.smpl.get()).c_str());
+-            SLT_TRC(slot, "sampler params: \n%s\n", task.params.sampling.print().c_str());
+-
+-            if (spec && !common_speculative_get_synth_probs(spec.get()).empty()) {
+-                const uint32_t seed = task.params.sampling.seed == LLAMA_DEFAULT_SEED
+-                    ? std::random_device{}()
+-                    : task.params.sampling.seed;
+-                slot.spec_synth_rng.seed(seed);
+-            }
+-        } else {
+-            slot.smpl.reset();
+-        }
+-
++        // Per-request sampler creation/seed is deferred until synchronized prefill.
++        // This campaign uses fresh contexts, greedy sampling, no backend sampler,
++        // no grammar, no parent tasks, and no synthetic probabilities.
+         // the per-request limit takes priority over the global one
+         slot.n_predict_max = task.params.n_predict != -1 ? task.params.n_predict : params_base.n_predict;
+ 
+@@ -3584,7 +3573,7 @@
+                         slot.stats.n_gen = 0;
+                         slot.i_batch     = batch.size() - 1;
+ 
+-                        slot.init_sampler();
++                        // sampler setup is charged after synchronized prefill
+                     } else {
+                         // skip ordinary mid-prompt checkpoints, unless the batch starts a user
+                         // message or we are near the end of the prompt
+@@ -3817,6 +3806,49 @@
+ 
+                 GGML_ASSERT(slot.task->need_sampling());
+ 
++                // Both target and draft initial prompt prefill have completed.
++                llama_synchronize(ctx_tgt);
++                if (ctx_dft) llama_synchronize(ctx_dft);
++                slot.hs_start();
++        // initialize samplers
++        if (slot.task->need_sampling()) {
++            try {
++                auto hs_sampling = slot.task->params.sampling;
++                slot.smpl.reset(common_sampler_init(model_tgt, hs_sampling));
++            } catch (std::exception & e) {
++                std::string err_msg = std::string("Failed to initialize samplers: ") + e.what();
++                send_error(slot, err_msg, ERROR_TYPE_INVALID_REQUEST);
++                throw;
++            }
++
++            const bool need_pre_sample_logits = slot.task->params.sampling.n_probs > 0 && !slot.task->params.post_sampling_probs;
++
++            bool use_backend_sampling = slot.task->params.sampling.backend_sampling;
++
++            // TODO: getting pre sampling logits is not yet supported with backend sampling
++            use_backend_sampling &= !need_pre_sample_logits;
++
++            // TODO: tmp until backend sampling is fully implemented
++            if (use_backend_sampling) {
++                llama_set_sampler(ctx_tgt, slot.id, common_sampler_get(slot.smpl.get()));
++            } else {
++                llama_set_sampler(ctx_tgt, slot.id, nullptr);
++            }
++
++            SLT_TRC(slot, "sampler chain: %s\n", common_sampler_print(slot.smpl.get()).c_str());
++            SLT_TRC(slot, "sampler params: \n%s\n", slot.task->params.sampling.print().c_str());
++
++            if (spec && !common_speculative_get_synth_probs(spec.get()).empty()) {
++                const uint32_t seed = slot.task->params.sampling.seed == LLAMA_DEFAULT_SEED
++                    ? std::random_device{}()
++                    : slot.task->params.sampling.seed;
++                slot.spec_synth_rng.seed(seed);
++            }
++        } else {
++            slot.smpl.reset();
++        }
++
++                slot.init_sampler();
+                 // prompt evaluated for next-token prediction
+                 slot.state = SLOT_STATE_GENERATING;
+ 
+@@ -3868,9 +3900,14 @@
+ 
+             if (!process_token(result, slot)) {
+                 // release slot because of stop condition
++                const int hs_count = slot.stats.n_gen;
++                const int hs_terminal = result.tok;
++                llama_synchronize(ctx_tgt);
++                if (ctx_dft) llama_synchronize(ctx_dft);
+                 slot.print_timings();
+                 send_final_response(slot);
+                 slot.release();
++                slot.hs_finish(hs_count, hs_terminal);
+ 
+                 return;
+             }
+@@ -3993,9 +4030,14 @@
+                 slot.stats.n_gen += 1;
+ 
+                 if (!process_token(result, slot)) {
++                    const int hs_count = slot.stats.n_gen;
++                    const int hs_terminal = result.tok;
++                    llama_synchronize(ctx_tgt);
++                    if (ctx_dft) llama_synchronize(ctx_dft);
+                     slot.print_timings();
+                     send_final_response(slot);
+                     slot.release();
++                    slot.hs_finish(hs_count, hs_terminal);
+ 
+                     return;
+                 }
+--- a/tools/cli/cli.cpp
++++ b/tools/cli/cli.cpp
+@@ -55,6 +55,15 @@
+     SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(console_ctrl_handler), true);
+ #endif
+ 
++    // The in-process frontend must initialize its static host clock/backend
++    // before calling the parameter-overload server entry point. Frozen external
++    // CUDA backend DLLs have their own ggml-base clock state; initialize it too.
++    llama_backend_init();
++    HMODULE hs_base = LoadLibraryW(L"ggml-base.dll");
++    if (!hs_base) return 4;
++    auto hs_init_clock = (void (*)()) GetProcAddress(hs_base, "ggml_time_init");
++    if (!hs_init_clock) return 5;
++    hs_init_clock();
+     cli_context ctx_cli(params);
+ 
+     if (!ctx_cli.init()) {
+--- a/ggml/src/CMakeLists.txt
++++ b/ggml/src/CMakeLists.txt
+@@ -186,7 +186,7 @@
+ # ggml
+ 
+ if (GGML_BACKEND_DL AND NOT BUILD_SHARED_LIBS)
+-    message(FATAL_ERROR "GGML_BACKEND_DL requires BUILD_SHARED_LIBS")
++    message(WARNING "HeteroSpec isolated timer: static frontend loads frozen external backend")
+ endif()
+ 
+ add_library(ggml-base

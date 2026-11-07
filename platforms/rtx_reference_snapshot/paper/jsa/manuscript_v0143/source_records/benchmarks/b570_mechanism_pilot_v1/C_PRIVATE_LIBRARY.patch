@@ -1,0 +1,32 @@
+--- pinned/src/llama-context.h
++++ private/src/llama-context.h
+@@ -54,6 +54,7 @@
+     //   - changing attention type
+     //   - etc.
+     void sched_reserve();
++    void b570_pilot_bind_phase_ubatch(uint32_t ub);
+ 
+     void synchronize();
+ 
+--- pinned/src/llama-context.cpp
++++ private/src/llama-context.cpp
+@@ -4328,3 +4328,19 @@
+ llama_context * llama_get_ctx_other(struct llama_context * ctx) {
+     return ctx->get_cparams().ctx_other;
+ }
++
++// Isolated research phase binding. No model arithmetic or KV reconstruction.
++void llama_context::b570_pilot_bind_phase_ubatch(uint32_t ub) {
++    if ((ub != 1 && ub != 128) || cparams.n_ctx != 1024 || cparams.n_batch != 512 || cparams.n_seq_max != 1) {
++        throw std::runtime_error("Frozen B570 phase-binding contract violated");
++    }
++    synchronize();
++    if (cparams.n_ubatch != ub) {
++        cparams.n_ubatch = ub;
++        sched_need_reserve = true;
++        sched_reserve();
++    }
++}
++extern "C" __declspec(dllexport) void llama_b570_pilot_bind_phase_ubatch(llama_context * ctx, uint32_t ub) {
++    ctx->b570_pilot_bind_phase_ubatch(ub);
++}

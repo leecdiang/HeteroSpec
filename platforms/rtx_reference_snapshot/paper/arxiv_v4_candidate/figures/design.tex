@@ -1,0 +1,44 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small,
+box/.append style={minimum height=.68cm,line width=.55pt},
+flow/.append style={line width=.65pt}]
+\node[anchor=west,font=\bfseries\small] at (0,4.05) {A\quad Attention organization versus target-wide batching};
+\foreach \y/\lab in {3.35/GS,2.25/PQ,1.10/QB} {\node[anchor=east,font=\bfseries] at (1.05,\y) {\lab};}
+\node[box,draw=target,text width=3cm] (g1) at (3.05,3.35) {Projection: one token};
+\node[box,draw=target,text width=4.15cm] (g2) at (7.70,3.35) {Attention: one query};
+\node[box,draw=target,text width=3.55cm] (g3) at (12.65,3.35) {Output / FFN: one token};
+\node[box,draw=target,text width=3cm] (p1) at (3.05,2.25) {Projection:\\batched tokens};
+\node[box,draw=qualified,text width=4.15cm] (p2) at (7.70,2.25) {$q$ attention subgraphs + concat};
+\node[box,draw=target,text width=3.55cm] (p3) at (12.65,2.25) {Output / FFN:\\batched tokens};
+\node[box,draw=target,fill=target!4,text width=3cm] (b1) at (3.05,1.10) {Projection:\\batched tokens};
+\node[box,draw=qualified,fill=qualified!7,line width=.9pt,text width=4.15cm] (b2) at (7.70,1.10) {Query view\\$(d,q,h,1)\to(d,1,h,q)$};
+\node[box,draw=target,fill=target!4,text width=3.55cm] (b3) at (12.65,1.10) {Output / FFN:\\batched tokens};
+\foreach \a/\b in {g1/g2,g2/g3,p1/p2,p2/p3,b1/b2,b2/b3}\draw[flow] (\a)--(\b);
+\node[anchor=west,font=\bfseries\small] at (0,.33) {B\quad The same query and mask columns, viewed along a new axis};
+\node[anchor=west,font=\footnotesize,text=aux] at (.1,-.15) {One head / sequence; four queries shown schematically};
+\foreach \j in {1,2,3,4} {
+ \pgfmathsetmacro{\xx}{1.25+.52*\j}
+ \draw[target,fill=target!7,line width=.55pt] (\xx,-1.16) rectangle ++(.43,.64);
+ \node[font=\footnotesize,text=target] at (\xx+.215,-.84) {$\j$};
+ \draw[draft,fill=draft!7,line width=.55pt] (\xx,-1.85) rectangle ++(.43,.36);
+ \node[font=\scriptsize,text=draft] at (\xx+.215,-1.67) {$\j$};
+ \pgfmathsetmacro{\bx}{6.05+.62*\j}\pgfmathsetmacro{\by}{-.98+.12*\j}
+ \draw[qualified,fill=qualified!7,line width=.55pt] (\bx,\by-.32) rectangle ++(.43,.64);
+ \node[font=\footnotesize,text=qualified] at (\bx+.215,\by) {$\j$};
+ \draw[draft,fill=draft!7,line width=.55pt] (\bx,\by-1.01) rectangle ++(.43,.36);
+ \node[font=\scriptsize,text=draft] at (\bx+.215,\by-.83) {$\j$};
+}
+\node[anchor=east,font=\footnotesize] at (1.45,-.84) {Q};
+\node[anchor=east,font=\footnotesize] at (1.45,-1.67) {Mask};
+\draw[flow] (4.05,-.84)--node[above,font=\footnotesize]{view} (6.3,-.84);
+\draw[flow,draft] (4.05,-1.67)--node[below,font=\footnotesize]{same $j$} (6.3,-1.67);
+\node[align=center,font=\footnotesize] at (2.70,-2.33) {$Q:(d,q,h_Q,1)$\\$M:(n,q,1,1)$};
+\node[align=center,font=\footnotesize] at (7.72,-2.33) {$Q:(d,1,h_Q,q)$\\$M:(n,1,1,q)$};
+\node[box,draw=qualified,text width=4.1cm,font=\footnotesize,minimum height=1.2cm] (sem) at (12.60,-.95) {Shared single-stream K/V\\broadcast across query instances\\Native head mapping retained};
+\node[align=center,font=\footnotesize,text=aux] at (12.60,-2.13) {QK $\to$ softmax $\to$ AV\\Restore query order before batched output};
+\draw[flow,qualified] (9.12,-.84)--(sem.west);
+\node[anchor=west,font=\bfseries\small] at (0,-3.05) {C\quad Phase and reuse contract};
+\node[box,draw=qualified,text width=3cm,font=\footnotesize,minimum height=1.3cm] (phase) at (3.05,-3.94) {Role + phase\\(mask3: target P/C)};
+\node[box,draw=qualified,text width=4.15cm,font=\footnotesize,minimum height=1.3cm] (cache) at (7.7,-3.94) {Layout flag in graph key\\Mismatch: reject cached topology};
+\node[box,draw=aux,text width=3.55cm,font=\footnotesize,minimum height=1.3cm] (native) at (12.65,-3.94) {Native transaction unchanged\\No extra consistency-recovery replay};
+\draw[flow] (phase)--(cache);\draw[flow] (cache)--(native);
+\end{tikzpicture}

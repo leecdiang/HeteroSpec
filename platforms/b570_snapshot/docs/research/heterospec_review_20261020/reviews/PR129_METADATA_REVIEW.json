@@ -1,0 +1,55 @@
+{
+  "reviewed_head": "c541241ad62213a8d31006e539e4ce0623793040",
+  "status": "SCOPED_METADATA_SOURCE_REVIEW_PASS",
+  "remote_archive_files_hash_checked": 122,
+  "archive_files": 122,
+  "manifest_entries": 695,
+  "receipt_count": 12,
+  "successful_processes": 11,
+  "requests": 33,
+  "logits_metadata_records": 528,
+  "actual_raw_tensor_files_available": 0,
+  "raw_tensor_independent_validation": false,
+  "budget_final_seconds": 246.8043431,
+  "budget_remaining_seconds": 53.19565689999999,
+  "final_profile": {
+    "total_us": 3490070.0,
+    "counts": {
+      "SOFT_MAX": 5004,
+      "MUL_MAT_VEC f16 m=256 n=1 k=128 batch=32": 5004,
+      "MUL_MAT_VEC f16 m=128 n=1 k=256 batch=32": 5004,
+      "MUL_MAT_VEC q8_0 m=151936 n=1 k=4096": 16,
+      "CONT": 5004
+    },
+    "fractions": {
+      "attention_core_pure": 0.02800459589635738,
+      "attention_core_mixed": 2.1055738137057425e-05,
+      "quantized_matvec_groups": 0.9251523522450839,
+      "recombine_cont": 0.0043762159498233555,
+      "other": 0.04244515840656491
+    }
+  },
+  "portable_patch_check": "PASS after text newline normalization; normalized output equals final snapshot",
+  "python_ast_files": 2,
+  "native_execution": false,
+  "blocking_findings": [],
+  "review_provenance": {
+    "review_date": "2026-10-20",
+    "reviewer_role": "parallel assistant in the same user-authorized conversation",
+    "meaning_of_independent": "separate source reading and CPU reconstruction within this conversation; not an external review service",
+    "external_independent_certification": false,
+    "formal_pr127_137_item_review": false,
+    "github_review_head": "c541241ad62213a8d31006e539e4ce0623793040",
+    "read_only_evidence_access": "GitHub plugin",
+    "mutation_by_this_reviewer": false,
+    "scope": "source snapshots, exact compact-file hashing, receipt arithmetic, recorded output metadata, profiler-table reconstruction and textual patch application",
+    "not_performed": [
+      "GPU execution",
+      "native model execution",
+      "re-reading unavailable raw logits",
+      "rebuilding Windows DLLs or shader objects",
+      "CPU8/F0 admission",
+      "paper modification"
+    ]
+  }
+}

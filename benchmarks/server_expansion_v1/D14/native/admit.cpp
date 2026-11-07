@@ -32,10 +32,11 @@ static std::string text_hash(const char*s){Hash h;if(s)h.add(s,std::strlen(s));r
 static ggml_tensor* storage(ggml_tensor*t){while(!t->buffer&&t->view_src)t=t->view_src;return t;}
 static json tensor(ggml_tensor*t,ggml_backend_dev_t gpu){
     auto*base=storage(t);need(base->buffer,"actual allocated tensor buffer required");
+    need(!ggml_backend_buffer_is_host(base->buffer),"host-backed tensor buffers disallowed");
     auto*dev=ggml_backend_buft_get_device(ggml_backend_buffer_get_type(base->buffer));
     need(dev==gpu&&ggml_backend_dev_type(dev)==GGML_BACKEND_DEVICE_TYPE_GPU,"CPU/other-device tensor placement disallowed");
     return {{"name",t->name},{"type",ggml_type_name(t->type)},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},
-        {"logical_bytes",ggml_nbytes(t)},{"device",ggml_backend_dev_description(dev)},{"buffer_type",ggml_backend_buft_name(ggml_backend_buffer_get_type(base->buffer))}};
+        {"logical_bytes",ggml_nbytes(t)},{"host_backed",false},{"device",ggml_backend_dev_description(dev)},{"buffer_type",ggml_backend_buft_name(ggml_backend_buffer_get_type(base->buffer))}};
 }
 static json model(llama_model*m,ggml_backend_dev_t gpu){
     json a=json::array();for(const auto&item:m->tensors_by_name){auto row=tensor(item.second,gpu);row["model_name"]=item.first;a.push_back(row);}

@@ -16,7 +16,7 @@ def main():
     parser.add_argument('--root',type=Path,required=True);parser.add_argument('--audit',type=Path,required=True)
     parser.add_argument('--exporter',type=Path,required=True);parser.add_argument('--include-failed-primary',action='store_true')
     a=parser.parse_args();r=a.root.resolve();audit=a.audit.resolve();audit.mkdir(exist_ok=False)
-    primary=r/'primary-evaluation-01';terminal=primary/'STATUS.json';started=time.monotonic()
+    primary=r/'primary-evaluation-02';terminal=primary/'STATUS.json';started=time.monotonic()
     save(audit/'START.json',dict(status='WAIT_PRIMARY_TERMINAL_SCOPE',exporter_sha256=sha(a.exporter),
         own_source_sha256=sha(Path(__file__)),new_model_forwards=0,public_upload='NOT_RUN'))
     try:
@@ -31,8 +31,8 @@ def main():
         outcomes={}
         for lane in ('F','D14'):
             work=r/('f-run-01' if lane=='F' else 'd14-run-01')
-            q=work/('qualification-complete-03' if lane=='F' else 'qualification-03')
-            native_status=r/('f-marker-completion-03/STATUS.json' if lane=='F' else 'd14-run-01/CONTINUATION-03-STATUS.json')
+            q=work/('qualification-registry-04' if lane=='F' else 'qualification-03')
+            native_status=r/('f-registry-completion-04/STATUS.json' if lane=='F' else 'd14-run-01/CONTINUATION-03-STATUS.json')
             native=read(native_status);neg=read(work/'capability-negatives-01/CHECKED.json')
             qualified=bool(native and native['status']=='QUALIFIED_FORMAL_NOT_RUN' and neg and neg['passed'] and (q/'REGISTRY.json').exists())
             ledger=[json.loads(x) for x in (work/'ledger.jsonl').read_text().splitlines()]
@@ -62,7 +62,7 @@ def main():
             for name in names:add('original-coordinator/'+name,old/name)
             for name in ('USER_PRIORITY.json','HANDOFF.json','IDLE_COORDINATOR_BOUNDARY.json'):
                 add('priority/'+name,r/'mainline-priority-01'/name)
-            for directory in ('mainline-native-queue-01','mainline-native-queue-02','primary-evaluation-01'):
+            for directory in ('mainline-native-queue-01','mainline-native-queue-02','mainline-native-queue-03','primary-evaluation-01','primary-evaluation-02'):
                 for path in sorted((r/directory).glob('*')):
                     if path.is_file() and path.suffix in ('.json','.log'):
                         add('primary/'+directory+'/'+path.name,path)
@@ -72,7 +72,7 @@ def main():
             if lane=='F':
                 for name in ('assets-START.json','assets-COMPLETE.json','assets.stdout.log','assets.stderr.log'):
                     add('original-coordinator/'+name,old/name)
-                for directory in ('f-eog-completion-02','f-retained-audit-01','f-retained-audit-03','f-retained-audit-04','f-marker-completion-03'):
+                for directory in ('f-eog-completion-02','f-retained-audit-01','f-retained-audit-03','f-retained-audit-04','f-marker-completion-03','f-registry-completion-04'):
                     for name in ('SOURCE_FREEZE.private.json','STATUS.json'):add(directory+'/'+name,r/directory/name,required=False)
                     add(directory+'/coordinator.log',r/(directory+'.log'),required=False)
                 add('assets/CHECKED.json',r/'f-assets-checked-01/CHECKED.json')

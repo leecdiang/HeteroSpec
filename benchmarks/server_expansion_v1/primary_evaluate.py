@@ -39,7 +39,7 @@ def main():
         save(audit/(label+'-EXIT.json'),dict(returncode=result.returncode,elapsed_s=time.monotonic()-started))
         return result.returncode
     try:
-        pair=r/'mainline-native-queue-02/STATUS.json'
+        pair=r/'mainline-native-queue-03/STATUS.json'
         while not pair.exists():
             if time.monotonic()-started>12*3600:raise RuntimeError('Primary qualification pair has no terminal receipt after12h')
             time.sleep(3)
@@ -49,7 +49,7 @@ def main():
             fcntl.flock(lock,fcntl.LOCK_EX)
             assert (r/'q32-download-audit-01/PAUSE_DOWNLOAD').exists(),'Q32 download must continue yielding to mainline'
             lanes={
-                'F':dict(source=r/'f-source-05/F',runtime=r/'f-runtime-01',work=r/'f-run-01',builds=r/'f-deployment-build-01',qualification=r/'f-run-01/qualification-complete-03'),
+                'F':dict(source=r/'f-source-06/F',runtime=r/'f-runtime-01',work=r/'f-run-01',builds=r/'f-deployment-build-01',qualification=r/'f-run-01/qualification-registry-04'),
                 'D14':dict(source=r/'d14-source-07/D14',runtime=r/'d14-runtime-02',work=r/'d14-run-01',builds=r/'d14-deployment-build-02',qualification=r/'d14-run-01/qualification-03')}
             for lane,paths in lanes.items():
                 paths['repo']=r/'repository-01';paths['out']=paths['work']/'qualification-pilot-clean-01'

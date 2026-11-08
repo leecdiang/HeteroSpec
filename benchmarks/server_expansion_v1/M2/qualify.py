@@ -98,9 +98,13 @@ def qualification(s):
 def geometry(s,root):
     read,save,sha,need=h.read,h.save,h.sha,h.need
     free=s.retained('Qwen-free-independent-R')/'native/dev-0';ep=read(free/'receipt.json');owned=root['prompt_ids']+ep['ids'];cases=[]
+    long_root=read(s.baseline/'inputs-01/Qwen-DEVELOPMENT.json')['inputs'][3]
+    long_free=s.retained('Qwen-free-independent-R')/'native/dev-3';s.verify(long_free/'receipt.json')
+    long_owned=long_root['prompt_ids']+read(long_free/'receipt.json')['ids']
     for width in (4,8):
-        for p in (31,32,99,127,128):
-            cases.append(dict(name=f'p{p}-q{width}',forced=[dict(ids=owned[:p],phase='PREFILL',all=False),dict(ids=owned[p:p+width],phase='VERIFY',all=True)],
+        for p in (31,32,99,127,128,255,256,767,768):
+            tape=owned if p<=128 else long_owned;need(len(tape)>=p+width,'Owned real-prefix geometry operands')
+            cases.append(dict(name=f'p{p}-q{width}',forced=[dict(ids=tape[:p],phase='PREFILL',all=False),dict(ids=tape[p:p+width],phase='VERIFY',all=True)],
                 observe_positions=[p]+list(range(p+1,p+width+1)),state_positions=[p,p+width]))
     ref=s.execute('geometry-R','Qwen',dict(cases=cases));reports=[]
     for arm,(core,cut,k) in h.ARMS.items():
@@ -119,19 +123,28 @@ def geometry(s,root):
             packed=[x for x in graph if x['name'].startswith('frontier_packed_')];loop=[x for x in graph if x['name'].startswith('hs_backend_loop4_')]
             if k==3:need(not packed,'q4 wide-packing negative control')
             if cut=='LOCAL':need(len(verify)==1 and verify[0]['width']==k+1,'LOCAL actual q8 must not be split')
-            if k==7 and core=='packed' and (cut=='LOCAL' or c['name'].startswith(('p32-','p128-'))):need(packed,'Actual eligible q8 packing dispatch')
+            if cut=='SIMPLE' and c['name'].startswith(('p255-','p767-')):need([e['width']for e in verify]==[1,k],'Actual256-padded KV boundary must split SIMPLE only')
+            if k==7 and core=='packed' and (cut=='LOCAL' or c['name'].startswith(('p32-','p128-','p256-','p768-'))):need(packed,'Actual eligible q8 packing dispatch')
             if packed:need(all(z['ne'][1]==4 and z['ne'][2]==2 and z['sources'][0]['type']=='q8_0' and z['sources'][1]['type']=='f32' for z in packed),'Actual two independent four-column packed groups')
             packed_count+=len(packed);loop_count+=len(loop)
             rows.append(dict(case=c['name'],full_vectors=vectors,active_states=states,actual_verify_executions=verify,packed_nodes=len(packed),loop4_nodes=len(loop),packed_samples=packed[:2]))
         reports.append(dict(arm=arm,rows=rows,packed_nodes=packed_count,marked_loop4_nodes=loop_count,native_result_sha256=sha(actual/'native/result.json')))
         print('M2_GEOMETRY_PASS',arm,flush=True)
-    save(s.out/'GEOMETRY-CHECKED.json',dict(passed=True,owned_operands_source_R_receipt_sha256=sha(free/'receipt.json'),arms=reports,
+    save(s.out/'GEOMETRY-CHECKED.json',dict(passed=True,owned_operands_source_R_receipt_sha256=sha(free/'receipt.json'),owned_long_R_receipt_sha256=sha(long_free/'receipt.json'),
+        actual_KV_extent_padding=256,cache_binding_source_sha256=sha(s.baseline/'stage-04/sources/loop4/src/llama-kv-cache.cpp'),arms=reports,
         dispatch_scope='Actual scheduled GPU graph descriptors/device buffers and original physical width counters, not CUDA kernel-symbol timing'))
 
 def negatives(s):
     read,save,sha,need=h.read,h.save,h.sha,h.need
     rows=[];models=s.models['Qwen'];structure=s.structures['Qwen']
-    for name,patch in [('unsupported-k',dict(k=5)),('insufficient-reserve',dict(target_output_reserve=4)),('unknown-option',dict(unregistered_m2_field=True))]:
+    original=read(s.baseline/'inputs-01/Qwen-DEVELOPMENT.json')['inputs'][0]
+    bad_input={**original,'prompt_ids':(original['prompt_ids']*10)[:893],'cap':128}
+    cases=[('unsupported-k',dict(k=5),'M2 explicit k3/7 reserve8 D4 contract'),
+        ('insufficient-reserve',dict(target_output_reserve=4),'M2 explicit k3/7 reserve8 D4 contract'),
+        ('unknown-option',dict(unregistered_m2_field=True),'Unknown M1 native job field'),
+        ('ignored-context',dict(n_ctx=2048),'Ignored context request'),
+        ('transient-over-capacity',dict(inputs=[dict(name='bad-capacity',input=bad_input,capture=False)]),'transient position capacity')]
+    for name,patch,expected_error in cases:
         job={**models,'draft':True,'draft_width':4,'lowering':'LOCAL','residency':'matched','profile':False,'k':7,'target_output_reserve':8,'proposal_mode':'live','inputs':[],
             'capability_request':h.capability(models,structure,'packed','LOCAL',7,'live'),**patch}
         path=s.out/'jobs'/('negative-'+name+'.json');save(path,job);dest=s.out/'runs'/('negative-'+name)
@@ -139,5 +152,6 @@ def negatives(s):
         try:h.host.run(s.cfg,s.builds/'packed/BUILD.json',path,dest,'development')
         except RuntimeError as e:error=str(e)
         need(error is not None and read(dest/'HOST.json')['status']=='FAILED' and (dest/'native/failure.json').exists(),'Actual native negative gate did not reject')
+        need(expected_error in read(dest/'native/failure.json')['error'],'Native rejected for an unrelated reason; no negative-gate pass')
         rows.append(dict(case=name,host_sha256=sha(dest/'HOST.json'),native_failure=read(dest/'native/failure.json'),native_failure_sha256=sha(dest/'native/failure.json'),retained=True))
     save(s.out/'NATIVE_NEGATIVES-CHECKED.json',dict(passed=True,cases=rows,expected_failures_charged_without_refund=True))

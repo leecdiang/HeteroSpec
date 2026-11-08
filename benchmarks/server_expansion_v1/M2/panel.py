@@ -88,6 +88,9 @@ def prepare(s):
         confirmation576='PROHIBITED_NOT_QUEUED',original_k3_reserve4_baseline='UNCHANGED_SEPARATE_CONFIGURATION')
     need(len(workers)==24,'Original exact24-slot supervisor guard retained');save(out/'PLAN.json',plan)
     registry=read(s.out/'REGISTRY.json');registry['checks']['owned_proposal_tape_replay']=dict(passed=True,evidence=str(s.out/'OWNED-TAPE-REPLAY-CHECKED.json'))
+    for summary in (s.out/'NATIVE_CHECKS_COMPLETE.json',s.out/'OWNED-TAPE-REPLAY-CHECKED.json'):
+        for row in read(summary)['proofs']:need(sha(row['path'])==row['sha256'] and read(row['path'])['passed'],'Immutable qualified proof changed before freeze')
+    for name,digest in read(s.w/'SOURCE_FREEZE.json')['driver_sources'].items():need(sha(name)==digest,'Qualified driver source bytes changed')
     save(out/'REGISTRY-COMPLETE.json',registry)
     h.freeze.confirmation(s.baseline/'reference-01/REFERENCE_FREEZE.json',out/'REGISTRY-COMPLETE.json',out/'PLAN.json',out/'FREEZE.json')
     cfg=read(s.cfg);cfg.update(freeze=str(out/'FREEZE.json'),freeze_sha256=sha(out/'FREEZE.json'));save(out/'config.private.json',cfg)

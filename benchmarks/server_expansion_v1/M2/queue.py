@@ -5,7 +5,7 @@ import harness as h
 import qualify,panel
 
 def main():
-    root=Path(sys.argv[1]).resolve();builds=root/'m2-build-01';work=root/'m2-run-02';runtime=root/'m2-runtime-02';audit=root/'m2-audit-02'
+    root=Path(sys.argv[1]).resolve();builds=root/'m2-build-01';work=root/'m2-run-03';runtime=root/'m2-runtime-03';audit=root/'m2-audit-03'
     audit.mkdir();os.sched_setaffinity(0,{34,35});os.nice(5);started=time.monotonic();phase='prepare_runtime'
     sys.path.insert(0,str(root/'m1-runtime-01'))
     from common import need,read,save,sha
@@ -21,10 +21,13 @@ def main():
         for name,digest in pin['predecessor_public_indices'].items():need(sha(root/'public-export-final-01'/name)==digest,'Original reference index changed')
         need(sha(root/'run-01/reference-01/REFERENCE_FREEZE.json')==pin['reference_freeze_raw_sha256'],'Independent R freeze changed')
         h.prepare_work(root,work,runtime,builds)
-        prior_manifest=root/'m2-run-01-completed-snapshot.json';need(prior_manifest.exists(),'Hash-locked predecessor snapshot required')
-        save(work/'PREDECESSOR_BINDING.json',dict(manifest=str(prior_manifest),sha256=sha(prior_manifest),reason='q4 dispatch reviewer wrongly required >4-column loop4 marker; complete native job reused, no numerical binary change'))
+        snapshots=[]
+        for name in ('m2-run-01','m2-run-02'):
+            manifest=root/(name+'-completed-snapshot.json');need(manifest.exists(),'Hash-locked predecessor snapshot required')
+            snapshots.append(dict(work=str(root/name),manifest=str(manifest),sha256=sha(manifest)))
+        save(work/'PREDECESSOR_BINDING.json',dict(snapshots=snapshots,reason='Add actual256-padded KV crossing probes before timing; source02 yielded only between completed native jobs. Completed native runs reused, numerical binaries/reference unchanged'))
         s=h.Study(root,work,builds,root/'repository-01');panel.selection(s)
-        save(audit/'SOURCE_BINDING.json',dict(driver_source_commit=sys.argv[2],driver_tar_sha256=sha(root/'m2-driver-source-02.tar.gz'),
+        save(audit/'SOURCE_BINDING.json',dict(driver_source_commit=sys.argv[2],driver_tar_sha256=sha(root/'m2-driver-source-03.tar.gz'),
             build_source_commit='61bcce0552b1a80e9345fa199238ebb7bc63e6ff',baseline_head='55f501e9a93013a4b4d82cc4967e82b8d9054a81',
             cumulative_budget=read(work/'INHERITED_ACCOUNTING.json'),main205206208='Already complete, public full-byte readback/statistics PASS; preserved unchanged',
             study='M2 actual target physical width, not weight quantization',full_confirmation576='NOT_PERMITTED'))

@@ -62,6 +62,7 @@ def physical(r,x,draft=True):
         need(r['draft_ubatch']==4 and dr==len(x['prompt_ids'])+(k+1)*len(r['cycles']),'Actual D4 live draft rows; k independent of UB')
         need(dh.get('4',0)>=len(x['prompt_ids'])//4,'Actual draft prefill UB4')
     else:need(mode=='replay' and dr==0 and not dh and r['draft_calls']==0 and r['draft_final_kv']=={'min':-1,'max':-1},'Target replay must execute zero draft calls and retain empty draft KV')
+    if not r['capture'] and len(r['cycles'])>=2:need(r['graphs_reused']>0,'Original clean graph-reuse guard')
     return dict(target_histogram=hist,draft_histogram=dh,verify_width_histogram=dict(verify_hist),target_rows=total,draft_rows=dr,
         graphs_built=r['graphs_built'],graphs_reused=r['graphs_reused'],k=k,reserve=8,proposal_mode=mode)
 
@@ -75,10 +76,13 @@ class Study:
         old=root/'public-export-final-01'
         self.text={x['path']:x['raw_sha256']for x in read(old/'TEXT_INDEX.json')['files']}
         self.binary={x['path']:x['sha256']for x in read(old/'BINARY_CAPTURE_INDEX.json')['files']};self.verified=set();self.modules={};self.reports=[];self.banks={};self.counter=0;self.new_native_jobs=0;self.reuses=[];self.custom_reference={}
-        self.prior=root/'m2-run-01';self.prior_manifest=None
+        self.prior=root/'m2-run-01';self.prior_manifest=None;self.priors=[]
         if (work/'PREDECESSOR_BINDING.json').exists():
-            binding=read(work/'PREDECESSOR_BINDING.json');need(sha(binding['manifest'])==binding['sha256'],'Prior completed-native manifest changed')
-            self.prior_manifest={x['path']:x for x in read(binding['manifest'])['files']}
+            binding=read(work/'PREDECESSOR_BINDING.json');self.prior_manifest={}
+            for item in binding['snapshots']:
+                need(sha(item['manifest'])==item['sha256'],'Prior completed-native manifest changed')
+                parent=Path(item['work']);self.priors.append(parent)
+                for x in read(item['manifest'])['files']:self.prior_manifest[str(parent/x['path'])]=x
         self.verify(self.baseline/'reference-01/REFERENCE_FREEZE.json');need(read(read(self.cfg)['reference_freeze'])['status']=='REFERENCE_FROZEN','Original R remains frozen')
         for name in ('vector_pair','state_pair'):
             original=getattr(native,name)
@@ -113,8 +117,8 @@ class Study:
             original_reference_fill_sha256=hashlib.sha256(fill_original.encode()).hexdigest(),adapted_reference_fill_sha256=hashlib.sha256(fill_src.encode()).hexdigest()))
     def verify(self,p):
         if str(p) in self.verified:return
-        if self.prior_manifest is not None and p.is_relative_to(self.prior):
-            key=str(p.relative_to(self.prior));need(key in self.prior_manifest and sha(p)==self.prior_manifest[key]['sha256'],'Prior epoch operand changed '+key)
+        if self.prior_manifest is not None and any(p.is_relative_to(parent)for parent in self.priors):
+            key=str(p);need(key in self.prior_manifest and sha(p)==self.prior_manifest[key]['sha256'],'Prior epoch operand changed '+key)
             self.verified.add(str(p));return
         if not p.is_relative_to(self.baseline) or str(p) in self.verified:return
         key=str(p.relative_to(self.baseline));need(key in self.text or key in self.binary,'Uncommitted historical operand '+key)
@@ -136,8 +140,11 @@ class Study:
             base.update(draft=True,draft_width=4,residency='matched',profile=False,k=k,target_output_reserve=8,proposal_mode=mode)
             base['capability_request']=capability(self.models[family],self.structures[family],core,base['lowering'],k,mode);build=self.builds/core/'BUILD.json'
         path=self.out/'jobs'/(label+'.json');save(path,base);dest=self.out/'runs'/label
-        retained=self.prior/'qualification-01/runs'/label;retained_job=self.prior/'qualification-01/jobs'/(label+'.json')
-        if self.prior_manifest is not None and retained.exists():
+        retained=retained_job=None
+        for parent in reversed(self.priors):
+            candidate=parent/'qualification-01/runs'/label
+            if candidate.exists():retained=candidate;retained_job=parent/'qualification-01/jobs'/(label+'.json');break
+        if retained is not None:
             for p in (retained_job,retained/'HOST.json',retained/'launch.json',retained/'native/result.json',retained/'LOADED_MODULES.json'):self.verify(p)
             need(read(retained_job)==base and read(retained/'HOST.json')['status']=='COMPLETE','Never reuse a failed/incomplete native job or changed payload')
             launch=read(retained/'launch.json');need(launch['job_sha256']==sha(retained_job) and launch['build_sha256']==sha(build),'Retained job/build launch identity')
@@ -172,7 +179,8 @@ class Study:
     def check_pair(self,family,index,x,actual,heavy,clean):
         meta=read(actual/'native/result.json');need(meta['total_observed_API_calls']['context_creates']==2,'Matched resident model/context pair')
         bank=self.bank(family,index,x);proof=self.bank_check(bank,actual/'native'/heavy,actual/'native'/clean,meta,True)
-        need(proof['passed'],'Full vectors, active KV or frontier differs from independent R')
+        save(self.out/'numeric-details'/(actual.name+'--'+heavy+'.json'),proof)
+        need(proof['passed'],'Full vectors, active KV or frontier differs from independent R; complete numerical details retained')
         for (f,i,c),other in self.banks.items():
             if f==family and i==index:other.entries.update(bank.entries)
         h=read(actual/'native'/heavy/'receipt.json');c=read(actual/'native'/clean/'receipt.json')
@@ -200,7 +208,7 @@ def prepare_work(root,work,runtime,builds):
     need(not work.exists(),'Fresh independent M2 work root');work.mkdir()
     cfg=read(root/'run-01/config-reference-frozen-01.json');cfg.update(work_root=str(work),freeze=None,freeze_sha256=None);save(work/'config.json',cfg)
     ledgers=[];requests=rows=0
-    for name in ('run-01','m1-run-01','m2-run-01'):
+    for name in ('run-01','m1-run-01','m2-run-01','m2-run-02'):
         p=root/name/'ledger.jsonl';xs=[json.loads(z)for z in p.read_text().splitlines()if json.loads(z)['event']=='RESERVE']
         requests+=sum(z['requests']for z in xs);rows+=sum(z['rows']for z in xs);ledgers.append(dict(path=str(p),sha256=sha(p)))
     save(work/'INHERITED_ACCOUNTING.json',dict(ledgers=ledgers,requests=requests,rows=rows,ceiling_requests=2048,ceiling_rows=8000000,

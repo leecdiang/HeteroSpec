@@ -101,7 +101,7 @@ def study(a):
     from qualify_partitioned import PartitionedStudy
     class D14Study(PartitionedStudy):
         def __init__(self):
-            self.w=a.work;self.repo=a.repo;self.out=a.work/'qualification-01';need(not self.out.exists(),'Retain all qualification epochs');self.out.mkdir()
+            self.w=a.work;self.repo=a.repo;self.out=a.work/'qualification-02';need(not self.out.exists(),'Retain all qualification epochs');self.out.mkdir()
             self.cfg=self.w/'config-reference-frozen-01.json';rf=read(self.cfg)['reference_freeze'];need(read(rf)['status']=='REFERENCE_FROZEN','New14B R frozen first')
             self.models=read(self.w/'inputs-01/MODELS.json');self.trace,self.parse=checks.legacy_readers(self.repo);self.modules={};self.reports=[]
             self.structures={FAMILY:read(self.w/'MODEL_STRUCTURES.json')['target']};self.ref_build=a.builds/'reference/BUILD.json'
@@ -165,8 +165,9 @@ def qualify(a):
     registry['checks']['source_freeze']['evidence']=str(s.out/'SOURCE_REVIEW.json');save(s.out/'REGISTRY.json',registry);print('D14_FINITE_NATIVE_QUALIFICATION_COMPLETE',flush=True)
 
 def negatives(a):
-    w=a.work;need(read(w/'qualification-01/NATIVE_CHECKS_COMPLETE.json')['passed'],'All finite gates before native negatives')
-    base=read(w/'qualification-01/jobs'/(FAMILY+'-natural-W_L4_D4.json'));base['inputs']=[x for x in base['inputs'] if x['name']=='cap1-clean']
+    w=a.work;need(read(w/'qualification-02/NATIVE_CHECKS_COMPLETE.json')['passed'],'All finite gates before native negatives')
+    candidates=[read(x) for x in sorted((w/'qualification-02/jobs').glob(FAMILY+'-natural-W_L4_D4-group*.json'))]
+    base=next(x for x in candidates if any(y['name']=='cap1-clean' for y in x['inputs']));base['inputs']=[x for x in base['inputs'] if x['name']=='cap1-clean']
     need(len(base['inputs'])==1,'One bounded negative request');rows=[]
     for name,error in [('unknown-field','Unknown D14 native job field'),('ignored-output-capacity','Native D14 capability differs from complete requested contract')]:
         job=copy.deepcopy(base)

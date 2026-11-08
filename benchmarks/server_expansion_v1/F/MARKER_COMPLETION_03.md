@@ -33,3 +33,10 @@ new native eligibility. Completed EOG evidence is rechecked separately, without
 replaying those native requests. Both earlier gate failures remain distinct
 from completed byte comparisons. Only the actual observer/formal bridge and
 remaining native negative gates can complete the new qualification epoch.
+
+The first new offline audit retained a path-adapter failure: it assumed every
+ledger job still belonged to qualification-01, while completed EOG jobs now live
+in qualification-complete-02. `validate_prior_v2.py` uses the actual owned native
+epoch, permits only the two recorded predecessor directories, and checks every
+real job/build/launch binding. The failed audit remains; no native request was
+executed or replayed by that error or its repair.

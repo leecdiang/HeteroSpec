@@ -1,4 +1,4 @@
-"""Retain the900s failure; requalify natural requests in bounded native groups.
+"""Resume exact complete jobs after an explicit mainline-priority handoff.
 
 Only development orchestration changes. Frozen R, numerical binaries, exact
 comparisons, inputs and formal slots remain unchanged. Partial failed native
@@ -11,21 +11,25 @@ import integrate as d
 def main():
     p=argparse.ArgumentParser()
     for key in ('work','baseline','runtime','builds','repo','admission','target','draft'):p.add_argument('--'+key,type=Path,required=True)
-    p.add_argument('--source-commit',required=True);p.add_argument('--run-panel',action='store_true')
-    a=p.parse_args()
+    p.add_argument('--source-commit',required=True)
+    for key in ('previous-qualification','f-completion','handoff'):p.add_argument('--'+key,type=Path,required=True)
+    a=p.parse_args();a.run_panel=False
     for key,value in vars(a).items():
         if isinstance(value,Path):setattr(a,key,value.resolve())
     d.load(a.runtime);need,read,save,sha=d.need,d.read,d.save,d.sha
     need(sha(a.work/'termination-fixture-01/FIXTURE.json')==sha(Path(__file__).parent/'EOG_FIXTURE_V1.json'),'Published fixed diagnostic identity')
     source={str(x.resolve()):sha(x) for x in Path(__file__).parent.rglob('*') if x.is_file() and x.suffix in ('.py','.cpp','.hpp','.json')}
-    save(a.work/'CONTINUATION-02-SOURCE_FREEZE.private.json',dict(source_commit=a.source_commit,files=source,
+    save(a.work/'CONTINUATION-03-SOURCE_FREEZE.private.json',dict(source_commit=a.source_commit,files=source,
         independent_R_sha256=sha(a.work/'reference-01/REFERENCE_FREEZE.json'),
         fixture_sha256=sha(a.work/'termination-fixture-01/FIXTURE.json'),formal_panel_permitted_only_after_all_native_gates=a.run_panel))
+    need(read(a.handoff)['status']=='NATIVE_BOUNDARY_HANDOFF_COMPLETE','Explicit completed-worker priority handoff required')
+    need(read(a.f_completion)['status']=='QUALIFIED_FORMAL_NOT_RUN','Finish PR205 actual EOG/remaining native gates first')
     lock=(a.baseline.parent/'STUDY_SCHEDULING.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX)
     for path,h in source.items():need(sha(path)==h,'Continuation source changed while waiting')
     old=a.work/'qualification-01';failed=old/'runs'/(d.FAMILY+'-natural-W_L4_M')
     need(read(failed/'HOST.json')['status']=='FAILED' and read(failed/'HOST.json')['worker_wall_s']>=900,'Retained original timeout required')
-    need(not (a.work/'qualification-02').exists(),'Fresh explicit continuation epoch')
+    need(not (a.work/'qualification-03').exists(),'Fresh explicit continuation epoch')
+    need(a.previous_qualification==a.work/'qualification-02','Reuse only the recorded predecessor epoch')
     original_factory=d.study;reuse=[];original_bank=d.native.Bank
 
     def verify_run(out,job,build):
@@ -35,18 +39,28 @@ def main():
         for name,row in read(out/'LOADED_MODULES.json').items():
             if row['kind']=='ELF_file':need(sha(name)==row['sha256'],'Actual reused module changed')
         need(read(out/'native/CAPABILITY.json')==read(job)['capability_request'],'Reused native capability mismatch')
-        reuse.append(dict(job_sha256=sha(job),launch_sha256=sha(out/'launch.json'),native_result_sha256=sha(out/'native/result.json'),native_replayed=False))
+        reuse.append(dict(job_sha256=sha(job),launch_sha256=sha(out/'launch.json'),native_result_sha256=sha(out/'native/result.json'),native_replayed=False,actual_run=str(out),actual_job=str(job)))
 
     def factory(args):
         s=original_factory(args);base_execute=s.execute
         def execute(self,label,family,job,core='reference'):
-            if core=='reference':
-                prior_job=old/'jobs'/(label+'.json');prior=old/'runs'/label
-                if prior_job.exists():
-                    base=copy.deepcopy(self.models[family]);base.update(job);base.pop('draft_model',None);base.pop('draft_sha256',None);base.update(residency='target_only',draft=False)
-                    base['capability_request']=d.capability(self.models[family],read(self.w/'MODEL_STRUCTURES.json'),'reference',base.get('lowering','WHOLE_UB1'))
-                    need(read(prior_job)==base,'Retained R job differs; do not guess reuse')
-                    verify_run(prior,prior_job,self.ref_build);self.modules.setdefault((core,family),prior/'LOADED_MODULES.json');return prior
+            payload=copy.deepcopy(self.models[family]);payload.update(job)
+            draft=bool(payload.get('draft',False)) and core!='reference'
+            if core=='reference' or payload.get('residency')=='target_only':
+                payload.pop('draft_model',None);payload.pop('draft_sha256',None)
+                payload.update(residency='target_only',draft=False);draft=False
+            else:payload['residency']='matched'
+            payload['capability_request']=d.capability(self.models[family],read(self.w/'MODEL_STRUCTURES.json'),core,payload.get('lowering','WHOLE_UB1'),draft)
+            for previous in (a.previous_qualification,old):
+                prior_job=previous/'jobs'/(label+'.json');prior=previous/'runs'/label
+                if not prior_job.exists() or not (prior/'HOST.json').exists():continue
+                if read(prior/'HOST.json')['status']!='COMPLETE':continue
+                need(read(prior_job)==payload,'Retained complete job differs; no guessed reuse')
+                build=self.ref_build if core=='reference' else a.builds/core/'BUILD.json'
+                verify_run(prior,prior_job,build)
+                key=(core,family);self.modules.setdefault(key,prior/'LOADED_MODULES.json')
+                need(read(self.modules[key])==read(prior/'LOADED_MODULES.json'),'Actual reused modules differ')
+                return prior
             return base_execute(label,family,job,core)
         s.execute=types.MethodType(execute,s)
         def matrix(self,family):
@@ -140,9 +154,9 @@ def main():
             import run_panel
             run_panel.execute(a)
     except BaseException as e:
-        save(a.work/'CONTINUATION-02-STATUS.json',dict(status='FAILED_RETAINED',error=str(e),formal_performance='NOT_RUN'));raise
-    save(a.work/'CONTINUATION-02-STATUS.json',dict(status='COMPLETE' if a.run_panel else 'QUALIFIED_FORMAL_NOT_RUN',
-        qualification_sha256=sha(a.work/'qualification-02/NATIVE_CHECKS_COMPLETE.json'),original_timeout_preserved=True,
+        save(a.work/'CONTINUATION-03-STATUS.json',dict(status='FAILED_RETAINED',error=str(e),formal_performance='NOT_RUN'));raise
+    save(a.work/'CONTINUATION-03-STATUS.json',dict(status='COMPLETE' if a.run_panel else 'QUALIFIED_FORMAL_NOT_RUN',
+        qualification_sha256=sha(a.work/'qualification-03/NATIVE_CHECKS_COMPLETE.json'),original_timeout_preserved=True,
         results_sha256=sha(a.work/'panel-01/RESULTS.json') if a.run_panel else None))
 
 if __name__=='__main__':main()

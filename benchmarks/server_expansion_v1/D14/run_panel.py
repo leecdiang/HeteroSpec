@@ -11,7 +11,7 @@ def execute(a):
         check_quiet(a.baseline.parent)
         return original_resources(config,group)
     d.host.check_resources=guarded_resources
-    w=a.work;dest=w/'panel-01';plan=read(dest/'PLAN.json');q=w/'qualification-02'
+    w=a.work;dest=w/'panel-01';plan=read(dest/'PLAN.json');q=w/'qualification-03'
     complete=read(q/'NATIVE_CHECKS_COMPLETE.json');need(complete['passed'] and complete['all_six_arms'],'All six actual native controls first')
     need(read(q/'PROJECTION_DISPATCH.json')['passed'],'Actual14B projection descriptors required')
     need(read(w/'capability-negatives-01/CHECKED.json')['passed'],'Native unknown/ignored-field gates required')

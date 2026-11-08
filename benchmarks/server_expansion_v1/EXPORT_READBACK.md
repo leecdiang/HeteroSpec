@@ -62,3 +62,20 @@ separate claims and must be reported separately.
 the exact exporter bytes: bundle roundtrip, complete failed-partial binary
 readback, UUID/path sanitization, inventory exclusion, and rejection of a test
 credential pattern. It is an exporter check, never model qualification.
+
+The current primary queue uses `export_transfer_v2.py` and
+`primary_postprocess.py`. V2 adds explicit qualification-03/formal-stage records.
+Its `--allow-retained-failure` option archives an explicitly labelled retained
+failed/partial scope; without that option the failure scope is rejected. The
+export records finite qualification and actual formal status separately and
+never grants a numerical or performance pass. `EXPORT_TRANSFER_V2_CHECKED.json`
+binds a zero-forward integration check of this failure-labelled full-byte path.
+
+Primary postprocessing waits until the current qualification/pilot/admitted
+formal sequence is terminal. By default it defers all heavy archive work when a
+primary repair is required, keeping priority with the native task. Successful
+terminal scopes include all earlier failed evidence and the bounded pilots.
+An explicit failed-scope archive is available when reporting a retained final
+failure is appropriate. Every archive/hash/private readback keeps the same GPU
+scheduling mutex. Q32 download resumes only after successful primary archiving;
+this does not authorize Q32 GPU inference or M2.

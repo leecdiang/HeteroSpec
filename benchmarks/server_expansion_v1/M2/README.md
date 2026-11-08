@@ -1,5 +1,7 @@
 # M2: actual native verification width, common reserve8
 
+Native qualification and the64-live/32-replay descriptive studies completed; see [complete results](results_pilot_20261108/README.md). k7 is slower than k3 on all four fixed cut/projection comparisons in this finite pilot. Original source epochs and baselines remain unchanged.
+
 This independent successor starts from actual qualified M1 head55f501e9a93013a4b4d82cc4967e82b8d9054a81. Original R, k3/reserve4, numerical archives, inputs, ledgers and main results205/206/208 remain unchanged. q8 denotes the target's physical verification width, not weight quantization. Both current models remain the exact original Qwen3-8B/0.6B Q8_0; KV stays F16/C1024/noFA, draft prefill UB4, two CPU threads and one separately approved GPU UUID.
 
 Native changes parameterize k3/7, allocate real target output reserve8, retain requested row ownership, record actual target/draft physical rows, and support a separate position-indexed owned proposal tape. LOCAL retains a single actual q8; SIMPLE keeps its registered extent-based grouping and may legitimately split at attention boundaries. There is no global q4 decomposition. Complete GPU projection descriptors and physical row counters witness dispatch; this is not CUDA kernel-symbol profiling.

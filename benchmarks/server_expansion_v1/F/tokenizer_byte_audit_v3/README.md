@@ -1,0 +1,1 @@
+Vocabulary-only byte observer. Uses pinned llama_token_to_piece with lstrip=0 and special=true, retains ordinary cleaned display. No contexts, forwards, R or numerical-library changes. Prior failed C01 display gate remains retained.

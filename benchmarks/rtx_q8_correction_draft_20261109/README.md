@@ -8,4 +8,6 @@ Native R00 completed4 cases before a module-inventory schema reader error. Origi
 
 Latest RTX accounting is in `results/CUMULATIVE_LEDGER.json`, including the new C-drive ledger and both old immutable ledgers. Never use the pre-supplement2679-request total as the latest budget after this run.
 
+The new ledger intentionally retains R00's original supervisor `FAILED` status despite native exit0 and verified recovery. Charge all reservations, including that row; do not filter by COMPLETE or refund its4 requests. The recovery proof distinguishes native completion from the later reader error.
+
 All new elapsed clocks are heavy qualification costs, not formal clean performance measurements. Old1024 measurements and statistics stay fixed. Capture/byte archive and its numerical offline replay are handled by `close_results.py`; model weights remain excluded.

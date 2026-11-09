@@ -1,0 +1,46 @@
+{
+  "as_of_utc": "2026-11-09T06:28:16.300782+00:00",
+  "observations": [
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-gpu=name,uuid,memory.total,memory.used,memory.free,driver_version,temperature.gpu,power.draw,power.limit,utilization.gpu",
+        "--format=csv"
+      ],
+      "code": 0,
+      "seconds": 2.3590000001713634,
+      "stdout": "name, uuid, memory.total [MiB], memory.used [MiB], memory.free [MiB], driver_version, temperature.gpu, power.draw [W], power.limit [W], utilization.gpu [%]\r\nNVIDIA GeForce RTX 5070 Ti Laptop GPU, GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd, 12227 MiB, 0 MiB, 11944 MiB, 616.92, 40, 19.79 W, [N/A], 0 %\r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-compute-apps=pid,process_name,used_memory",
+        "--format=csv"
+      ],
+      "code": 0,
+      "seconds": 0.04699999978765845,
+      "stdout": "pid, process_name, used_gpu_memory [MiB]\r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "powercfg",
+        "/getactivescheme"
+      ],
+      "code": 0,
+      "seconds": 0.01500000013038516,
+      "stdout": "电源方案 GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (平衡)",
+      "stderr": ""
+    }
+  ],
+  "authorized_end_time": null,
+  "reserve_floors": {
+    "output_disk_bytes": 21474836480,
+    "system_disk_bytes": 10737418240,
+    "ram_bytes": 4294967296,
+    "gpu_bytes": 134217728
+  },
+  "source_protocol": "ad9fb6846dd979c3a76d3c415c74fa9f86565f7d",
+  "model_forward_requests": 0
+}

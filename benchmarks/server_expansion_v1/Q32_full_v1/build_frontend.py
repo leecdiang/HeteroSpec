@@ -10,9 +10,9 @@ from build import read,sha,save,command
 def main():
  p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--builds',type=Path,required=True);a=p.parse_args();r,b=a.root,a.builds
  assert read(b/'CORES_COMPLETE.json')['passed'];f=b/'frontend';shutil.copytree(r/'m2-build-01/frontend',f)
- path=f/'entry.cpp';s=path.read_text();old='need(phase_target_reserve==8&&(m2_k==3||m2_k==7)&&job.at("draft")==true&&job.at("draft_width")==4,"M2 explicit k3/7 reserve8 D4 contract");'
+ path=f/'entry.cpp';s='#include <cstdlib>\n'+path.read_text();old='need(phase_target_reserve==8&&(m2_k==3||m2_k==7)&&job.at("draft")==true&&job.at("draft_width")==4,"M2 explicit k3/7 reserve8 D4 contract");'
  assert s.count(old)==1
- s=s.replace(old,'need(phase_target_reserve==32&&m2_k==3&&((job.at("draft")==true&&job.at("draft_width")==4)||(job.at("draft")==false&&job.at("draft_width")==1)),"Q32 explicit k3 reserve32 M/D4 contract");');path.write_text(s)
+ s=s.replace(old,'need(phase_target_reserve==32&&m2_k==3&&((job.at("draft")==true&&job.at("draft_width")==4)||(job.at("draft")==false&&job.at("draft_width")==1)),"Q32 explicit k3 reserve32 M/D4 contract");');s=s.replace('        ggml_time_init();','        need(job.at("cuda_graphs")==false,"Explicit common32B CUDA graphs disabled");need(::setenv("GGML_CUDA_DISABLE_GRAPHS","1",1)==0,"Set original CUDA graph switch");\n        ggml_time_init();',1);path.write_text(s)
  path=f/'m1_capability.hpp';s=path.read_text();start=s.index('    need(d && pool.draft');end=s.index('    need(!job.value("profile"',start)
  s=s[:start]+'''    const bool drafting=job.at("draft");
     need(spec.k==3 && phase_target_reserve==32,"Q32 k3/reserve32");
@@ -24,6 +24,9 @@ def main():
  s=s.replace('heterospec.m2.native-capability.v1','heterospec.q32.ref1.native-capability.v1').replace('{"draft_sha256",draft_hash}','{"draft_sha256",drafting?json(draft_hash):json(nullptr)}')
  for key,expr in [('draft_structure','m1_structure(d)'),('draft_context','m1_context(*pool.draft)'),('draft_placement','m1_placement(d)')]:s=s.replace('{"'+key+'",'+expr+'}','{"'+key+'",drafting?'+expr+':json(nullptr)}')
  s=s.replace('{"proposal_mode",phase_proposal_mode}', '{"typed_recipes",{{"Q4_K","original scalar vec_dot_q4_K_q8_1"},{"Q6_K","original scalar vec_dot_q6_K_q8_1"}}},{"atomic_columns",1},{"residency",drafting?"matched":"target_only"},{"proposal_mode",phase_proposal_mode}')
+ s=s.replace('"proposal_tape_requests"};','"proposal_tape_requests","cuda_graphs"};',1)
+ s=s.replace('    need(!job.value("profile",false)', '    need(job.at("cuda_graphs")==false && std::getenv("GGML_CUDA_DISABLE_GRAPHS")!=nullptr,"Common explicit CUDA graph policy");\n    need(!job.value("profile",false)',1)
+ s=s.replace('{"threads",phase_threads}', '{"cuda_graphs",false},{"threads",phase_threads}',1)
  path.write_text(s)
  # Exact structural dedup avoids repeated JSON allocation for identical nodes.
  shutil.copy2(Path(__file__).parent/'geometry_observer.hpp',f/'geometry_observer.hpp')

@@ -15,10 +15,11 @@ contract; the pristine32B scalar R uses UB1/reserve1 and remains independent.
 In a fresh installation with the same recorded root layout:
 
 ```sh
+python -B prepare_host.py --work "$HS_ROOT/q32-q4-full-20261109-01"
 python -B build.py --root "$HS_ROOT" --out "$HS_ROOT/q32-q4-full-build-01"
-python -B seed_epoch.py --from-build "$HS_ROOT/q32-q4-full-build-01" --out "$HS_ROOT/q32-q4-full-build-03"
-python -B build_frontend.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-03"
-python -B build_operands.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-03" --out "$HS_ROOT/q32-q4-full-operands-build-03"
+python -B seed_epoch.py --from-build "$HS_ROOT/q32-q4-full-build-01" --out "$HS_ROOT/q32-q4-full-build-04"
+python -B build_frontend.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-04"
+python -B build_operands.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-04" --out "$HS_ROOT/q32-q4-full-operands-build-04"
 ```
 
 `build.py` actually compiles the modified graph translation unit and proves all
@@ -47,3 +48,11 @@ actual width/packing, capacity and native invalid-contract rejection. Only a
 complete eligible144-request descriptive panel is analyzed. Never automatically
 launch a larger confirmation panel, merge, Release, modify a manuscript or delete
 raw artifacts. Public text replay is distinct from private numerical comparison.
+
+Source04 applies the same explicit `cuda_graphs:false` to every new32B arm,
+using the fixed backend original `GGML_CUDA_DISABLE_GRAPHS` switch before backend
+initialization. Kernel fusion and numerical CUDA objects stay unchanged. The
+scalar R and earlier completed deployments retain their original configuration.
+Two graph-enabled long-loop qualification attempts timed out; both remain charged
+and retained. This switch is a candidate policy to requalify, not an attributed
+optimization or a performance result.

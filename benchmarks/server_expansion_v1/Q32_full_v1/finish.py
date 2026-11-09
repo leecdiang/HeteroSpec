@@ -14,21 +14,23 @@ def extra(s,label,job,build,negative=None):
  s.admission(job);p=s.out/'jobs'/(label+'.json');save(p,job);dest=s.out/'runs'/label
  save(s.out/'admissions'/(label+'.json'),dict(job_sha256=sha(p),build_sha256=sha(build),requests=s.host.reservation(job)[0],rows=s.host.reservation(job)[1],expected_native_failure=negative))
  error=None
+ began=time.monotonic()
  try:s.host.run(s.cfg,build,p,dest,'development')
  except RuntimeError as e:error=str(e)
+ finally:save(s.out/'caller-costs'/(label+'.json'),dict(caller_inclusive_wall_s=time.monotonic()-began,native_admitted=dest.exists(),expected_native_failure=negative))
  if negative:
   assert error and read(dest/'HOST.json')['status']=='FAILED';fail=read(dest/'native/failure.json');assert negative in fail['error'],fail
   save(s.out/'negative-checks'/(label+'.json'),dict(passed=True,expected_native_failure=negative,actual_failure=fail,host_sha256=sha(dest/'HOST.json'),failure_charged=True));return dest
  assert error is None,error;return dest
 def negatives(s,q):
- models=copy.deepcopy(s.models);base={**models,'draft':True,'draft_width':4,'lowering':'LOCAL','residency':'matched','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','inputs':[],'capability_request':q.capability(models,s.structures['target'],s.structures['draft'],'packed','LOCAL',True,'live')}
+ models=copy.deepcopy(s.models);base={**models,'cuda_graphs':False,'draft':True,'draft_width':4,'lowering':'LOCAL','residency':'matched','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','inputs':[],'capability_request':q.capability(models,s.structures['target'],s.structures['draft'],'packed','LOCAL',True,'live')}
  inp={**s.roots[0],'prompt_ids':(s.roots[0]['prompt_ids']*20)[:893],'cap':128}
  cases=[('unsupported-k',dict(k=7),'Q32 explicit k3 reserve32 M/D4 contract'),('insufficient-reserve',dict(target_output_reserve=4),'Q32 explicit k3 reserve32 M/D4 contract'),('unknown-field',dict(unregistered_q32_option=True),'Unknown M1 native job field'),('ignored-context',dict(n_ctx=2048),'Ignored context request'),('transient-capacity',dict(inputs=[dict(name='bad',input=inp,capture=False)]),'transient position capacity')]
  for name,patch,error in cases:extra(s,'negative-'+name,{**base,**patch},s.builds/'packed/BUILD.json',error)
  save(s.out/'NATIVE_NEGATIVES_COMPLETE.json',dict(passed=True,cases=[x[0]for x in cases],all_native_expected_failures=True,charged_without_refund=True))
 def operands(s,q,a):
- original=read(a.work/'qualification-02/GEOMETRY_REGISTERED.json')['cases'][0];case=copy.deepcopy(original);job={**s.models,'draft':False,'draft_width':1,'lowering':'LOCAL','residency':'target_only','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','cases':[case],'capture_real_operands':True,'capability_request':q.capability(s.models,s.structures['target'],s.structures['draft'],'packed','LOCAL',False,'live')};job.pop('draft_model');job.pop('draft_sha256')
- out=extra(s,'real-operand-observer',job,a.operand_builds/'observer/BUILD.json');meta=read(out/'native/result.json');reuse=a.work/'qualification-02/reuse/geometry-R-0.json';reference_run=Path(read(reuse)['prior'])if reuse.exists()else a.work/'qualification-02/runs/geometry-R-0';r=reference_run/'native'/case['name'];proof=[]
+ original=read(a.work/'qualification-03/GEOMETRY_REGISTERED.json')['cases'][0];case=copy.deepcopy(original);job={**s.models,'cuda_graphs':False,'draft':False,'draft_width':1,'lowering':'LOCAL','residency':'target_only','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','cases':[case],'capture_real_operands':True,'capability_request':q.capability(s.models,s.structures['target'],s.structures['draft'],'packed','LOCAL',False,'live')};job.pop('draft_model');job.pop('draft_sha256')
+ out=extra(s,'real-operand-observer',job,a.operand_builds/'observer/BUILD.json');meta=read(out/'native/result.json');reuse=a.work/'qualification-03/reuse/geometry-R-0.json';reference_run=Path(read(reuse)['prior'])if reuse.exists()else a.work/'qualification-03/runs/geometry-R-0';r=reference_run/'native'/case['name'];proof=[]
  for n in case['observe_positions']:
   aa=out/'native'/case['name']/'captures'/str(n);bb=r/'captures'/str(n);pair=dict(position=n,vector=s.checks.vector_pair(aa/'frontier.f32',bb/'frontier.f32',meta['vocab']))
   if n in case['state_positions']:pair['state']=s.checks.state_pair(aa/'sequence.bin',bb/'sequence.bin',n,s.parse,s.profiles['Qwen32B'])
@@ -87,7 +89,7 @@ def final_boundaries(s,q):
   out=s.execute('capacity-pending-'+arm,'Qwen32B',dict(inputs=[dict(name='heavy',input=x,capture=True),dict(name='clean',input=x,capture=False)],lowering=cut),core,True);proof=s.pair(index,x,out,'heavy','clean',True);save(s.out/'capacity-checks'/(arm+'-pending.json'),dict(passed=True,proof=proof))
  s.roots.pop();s.free.pop();s.banks={k:b for k,b in s.banks.items()if k[0]!=index}
  # Actual termination fixture was independently produced and qualified above.
- eog=read(a.work/'qualification-02/EOG-INPUT_REGISTERED.json')['input'];free=a.work/'qualification-02/runs/extra-free-R-EOG/native/EOG';endpoint=read(free/'receipt.json');assert endpoint['terminal_kind']=='EOG';index=len(s.roots);s.roots.append(eog);s.free.append(free);length=len(endpoint['ids']);assert length>1
+ eog=read(a.work/'qualification-03/EOG-INPUT_REGISTERED.json')['input'];free=a.work/'qualification-03/runs/extra-free-R-EOG/native/EOG';endpoint=read(free/'receipt.json');assert endpoint['terminal_kind']=='EOG';index=len(s.roots);s.roots.append(eog);s.free.append(free);length=len(endpoint['ids']);assert length>1
  for arm,(core,cut,draft)in q.ARMS.items():
   inputs=[]
   for cap in(length-1,length):inputs +=[dict(name=f'cap{cap}-'+kind,input={**eog,'cap':cap},capture=kind=='heavy')for kind in('heavy','clean')]
@@ -96,8 +98,8 @@ def final_boundaries(s,q):
   # actual vector/state byte committed here before the comparison.
   for cap in(length-1,length):
    x={**eog,'cap':cap};bank=s.bank(index,x);bindings=[]
-   for job in sorted((a.work/'qualification-02/jobs').glob('Qwen32B-root5-R-branches-*.json')):
-    prior=a.work/'qualification-02/runs'/job.stem;launch=read(prior/'launch.json');assert read(prior/'HOST.json')['status']=='COMPLETE'and launch['job_sha256']==sha(job)and launch['build_sha256']==sha(s.ref_build)
+   for job in sorted((a.work/'qualification-03/jobs').glob('Qwen32B-root5-R-branches-*.json')):
+    prior=a.work/'qualification-03/runs'/job.stem;launch=read(prior/'launch.json');assert read(prior/'HOST.json')['status']=='COMPLETE'and launch['job_sha256']==sha(job)and launch['build_sha256']==sha(s.ref_build)
     cases=read(job)['cases']
     for case in cases:
      for n in case['observe_positions']:
@@ -107,31 +109,35 @@ def final_boundaries(s,q):
    save(s.out/'reused-EOG-R'/(arm+'-cap'+str(cap)+'.json'),dict(complete_actual_operands=bindings,no_native_replay=True));proof=s.pair(index,x,out,f'cap{cap}-heavy',f'cap{cap}-clean',draft);save(s.out/'EOG-cap-checks'/(arm+'-'+str(cap)+'.json'),dict(passed=True,proof=proof,expected_stop='CAP'if cap<length else'EOG'))
  s.roots.pop();s.free.pop();save(s.out/'CAPACITY_EOG_BOUNDARIES_COMPLETE.json',dict(passed=True,exact_C1024_active_forward=True,transient_equal_capacity_pending_cap1=True,EOG_at_length_cap_and_one_before=True,scope='Finite synthetic capacity and actual autonomous EOG boundaries; all exact vector/KV gates retained'))
 def panel(s,q,entries,primer_endpoints):
+ assert not(a.work/'PANEL_NOT_ADMITTED_QUOTA.json').exists(),'Full eligibility used provisional panel quota; no partial panel'
  assert now()<ADMIT,'Whole-panel admission after03:00 denied'
  # Overestimate based on the worst complete qualification worker plus its full
  # request count, then include complete six-request worker startup for every slot.
- costs=[]
- for p in(a.work/'qualification-02/runs').glob('natural-*/HOST.json'):
-  j=read(a.work/'qualification-02/jobs'/(p.parent.name+'.json'));h=read(p);costs.append((h,len(j['inputs'])))
- def wall(h):
-  for key in('caller_inclusive_wall_s','caller_wall_s','wrapper_wall_s','wall_s'):
-   if key in h:return float(h[key])
-  raise RuntimeError('Unknown HOST cost schema; refuse guessed whole-panel budget')
- estimate=max(wall(h)/n for h,n in costs)*6*24*1.5+24*60
+ estimates={}
+ for arm in q.ARMS:
+  costs=[];root_service=[]
+  for index in range(4):
+   label='natural-'+arm+'-'+str(index);run=a.work/'qualification-03/runs'/label;job=read(a.work/'qualification-03/jobs'/(label+'.json'));caller=read(a.work/'qualification-03/caller-costs'/(label+'.json'))['caller_inclusive_wall_s'];receipts=[read(run/'native'/x['name']/'receipt.json')for x in job['inputs']]
+   overhead=max(0,caller-sum(float(r['service_seconds'])for r in receipts));clean=receipts[1];cap=job['inputs'][1]['input']['cap'];root_service.append(float(clean['service_seconds'])*128/cap);costs.append(overhead)
+  # Includes actual model/dependency hashing, native SHA/load/setup, output
+  # serialization and exit overhead; scale short qualification caps conservatively.
+  # Two unseen primers use1.5x slowest scaled clean root, plus60s per worker.
+  estimates[arm]=dict(max_observed_full_caller_nonservice_s=max(costs),scaled_root_service_s=root_service,two_primers_s=3*max(root_service),per_worker_extra_s=60)
+ estimate=sum((z['max_observed_full_caller_nonservice_s']+sum(z['scaled_root_service_s'])+z['two_primers_s']+60)*4*1.25 for z in estimates.values())
  assert (STOP-now()).total_seconds()>estimate+900,'Insufficient whole-panel conservative runtime'
  out=a.work/'panel-01';out.mkdir();names=list(q.ARMS);base=[0,1,5,2,4,3];other=[(x+2)%6 for x in base];orders=[base,base[::-1],other,other[::-1]];workers=[];expected={}
  for i,root in enumerate(s.roots):expected[root['id']]=s.native.endpoint(read(s.free[i]/'receipt.json'))
  for rnd,order in enumerate(orders):
   for position,idx in enumerate(order):
    arm=names[idx];core,cut,draft=q.ARMS[arm];tests=[dict(name='root-'+str(i),input=x,capture=False)for i,x in enumerate(s.roots)];tests=tests if rnd%2==0 else tests[::-1]
-   job={**s.models,'draft':draft,'draft_width':4 if draft else 1,'lowering':cut,'residency':'matched'if draft else'target_only','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','inputs':copy.deepcopy(entries)+tests,'capability_request':q.capability(s.models,s.structures['target'],s.structures['draft'],core,cut,draft,'live')}
+   job={**s.models,'cuda_graphs':False,'draft':draft,'draft_width':4 if draft else 1,'lowering':cut,'residency':'matched'if draft else'target_only','profile':False,'k':3,'target_output_reserve':8,'proposal_mode':'live','inputs':copy.deepcopy(entries)+tests,'capability_request':q.capability(s.models,s.structures['target'],s.structures['draft'],core,cut,draft,'live')}
    if not draft:job.pop('draft_model');job.pop('draft_sha256')
    wid=f'r{rnd}-p{position}-{arm}';path=out/'jobs'/(wid+'.json');save(path,job);workers.append(dict(id=wid,round=rnd,position=position,arm=arm,core=core,job='jobs/'+path.name,job_sha256=sha(path)))
- plan=out/'PLAN.json';save(plan,dict(schema='heterospec.q32.descriptive-six-arm.v1',workers=workers,orders=[[names[i]for i in z]for z in orders],roots=[x['id']for x in s.roots],measured=96,primers=48,balance='Four complementary rows; partial six-arm position/precedence balance, no full Williams claim',admitted_utc=now().isoformat(),conservative_whole_panel_seconds=estimate,analysis='Descriptive paired roots/rounds only; original exposed roots; size and precision/recipe changed together',expected_endpoints=expected,primer_endpoints=primer_endpoints))
+ plan=out/'PLAN.json';save(plan,dict(schema='heterospec.q32.descriptive-six-arm.v1',workers=workers,orders=[[names[i]for i in z]for z in orders],roots=[x['id']for x in s.roots],measured=96,primers=48,balance='Four complementary rows; partial six-arm position/precedence balance, no full Williams claim',admitted_utc=now().isoformat(),conservative_whole_panel_seconds=estimate,runtime_admission_components=estimates,analysis='Descriptive paired roots/rounds only; original exposed roots; size and precision/recipe/common graph policy changed together',expected_endpoints=expected,primer_endpoints=primer_endpoints))
  executables={}
  for core in('loop4','packed'):
-  path=s.builds/core/'BUILD.json';b=read(path);module=next((a.work/'qualification-02/runs').glob('natural-'+('W_REF1L_M'if core=='loop4'else'W_REF1G_M')+'-0/LOADED_MODULES.json'));executables[b['executable_sha256']]=dict(build=dict(path=str(path),sha256=sha(path)),loaded_modules=read(module))
- gates=[a.work/'qualification-02/CORE_GATES_COMPLETE.json',s.out/'NATIVE_NEGATIVES_COMPLETE.json',s.out/'REAL_OPERAND_RECIPES_COMPLETE.json',s.out/'CAPACITY_EOG_BOUNDARIES_COMPLETE.json',s.out/'TOKENIZER_TEMPLATE_LICENSE_CHECKED.json',s.out/'QUALIFICATION_COMPLETE.json']
+  path=s.builds/core/'BUILD.json';b=read(path);module=next((a.work/'qualification-03/runs').glob('natural-'+('W_REF1L_M'if core=='loop4'else'W_REF1G_M')+'-0/LOADED_MODULES.json'));executables[b['executable_sha256']]=dict(build=dict(path=str(path),sha256=sha(path)),loaded_modules=read(module))
+ gates=[a.work/'qualification-03/CORE_GATES_COMPLETE.json',s.out/'NATIVE_NEGATIVES_COMPLETE.json',s.out/'REAL_OPERAND_RECIPES_COMPLETE.json',s.out/'CAPACITY_EOG_BOUNDARIES_COMPLETE.json',s.out/'TOKENIZER_TEMPLATE_LICENSE_CHECKED.json',s.out/'QUALIFICATION_COMPLETE.json']
  freeze=out/'FROZEN.json';save(freeze,dict(status='QUALIFIED_AND_FROZEN',plan=dict(path=str(plan),sha256=sha(plan)),executables=executables,job_sha256=[w['job_sha256']for w in workers],proofs=[dict(path=str(p),sha256=sha(p))for p in gates],descriptive_only=True))
  cfg=read(s.cfg);cfg.update(freeze=str(freeze),freeze_sha256=sha(freeze));config=out/'config.private.json';save(config,cfg);records=[]
  for w in workers:
@@ -147,20 +153,20 @@ def panel(s,q,entries,primer_endpoints):
 def main():
  global a
  p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--builds',type=Path,required=True);p.add_argument('--operand-builds',type=Path,required=True);a=p.parse_args();w=a.work
- while not(w/'qualification-02/CORE_GATES_COMPLETE.json').exists():
-  for failure in(w/'reference/FAILURE.json',w/'qualification-02/FAILURE.json'):
-   if failure.exists():save(w/'FINISH_NOT_ADMITTED-02.json',dict(reason='Prior required gate failed',failure=str(failure),sha256=sha(failure),timing_admitted=False));return
+ while not(w/'qualification-03/CORE_GATES_COMPLETE.json').exists():
+  for failure in(w/'reference/FAILURE.json',w/'qualification-03/FAILURE.json'):
+   if failure.exists():save(w/'FINISH_NOT_ADMITTED-03.json',dict(reason='Prior required gate failed',failure=str(failure),sha256=sha(failure),timing_admitted=False));return
   assert (STOP-now()).total_seconds()>=960;time.sleep(10)
- while not(w/'qualification-02/control/GUARD_STOPPED.private.json').exists():time.sleep(1)
- src=Path(__file__).parent/'qualification.py';original=src.read_text();assert original.count("self.w/'qualification-02'")==1;adapted=original.replace("self.w/'qualification-02'","self.w/'closure-02'",1)
- q=types.ModuleType('_q32_closure_adapter');q.__file__=str(src);exec(compile(adapted,str(src), 'exec'),q.__dict__);s=q.Study(a);save(s.out/'CONTROLLER_ADAPTER.json',dict(original_source_sha256=sha(src),adapted_source_sha256=hashlib.sha256(adapted.encode()).hexdigest(),only_change='New output closure-02; reuse exact request/native capability/admission/comparison functions',native_results_replayed=False));s.guard.mkdir();save(s.guard/'config.private.json',read(w/'config.private.json'))
+ while not(w/'qualification-03/control/GUARD_STOPPED.private.json').exists():time.sleep(1)
+ src=Path(__file__).parent/'qualification.py';original=src.read_text();assert original.count("self.w/'qualification-03'")==1;adapted=original.replace("self.w/'qualification-03'","self.w/'closure-03'",1)
+ q=types.ModuleType('_q32_closure_adapter');q.__file__=str(src);exec(compile(adapted,str(src), 'exec'),q.__dict__);s=q.Study(a);save(s.out/'CONTROLLER_ADAPTER.json',dict(original_source_sha256=sha(src),adapted_source_sha256=hashlib.sha256(adapted.encode()).hexdigest(),only_change='New output closure-03; reuse exact request/native capability/admission/comparison functions',native_results_replayed=False));s.guard.mkdir();save(s.guard/'config.private.json',read(w/'config.private.json'))
  with(s.guard/'stdout.log').open('xb')as so,(s.guard/'stderr.log').open('xb')as se:guard=subprocess.Popen(['taskset','-c','36',sys.executable,'-B',str(Path(__file__).parent/'resource_guard.py'),'--work',str(s.guard)],stdin=subprocess.DEVNULL,stdout=so,stderr=se,start_new_session=True)
  try:
   for _ in range(30):
    if(s.guard/'RESOURCE_GUARD_LATEST.private.json').exists():break
    assert guard.poll()is None;time.sleep(.5)
   with(a.root/'STUDY_SCHEDULING.lock').open('a+')as lock:
-   fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);metadata(s);negatives(s,q);operands(s,q,a);final_boundaries(s,q);entries,eps=primers(s);save(s.out/'QUALIFICATION_COMPLETE.json',dict(passed=True,core_gates_sha256=sha(w/'qualification-02/CORE_GATES_COMPLETE.json'),native_negatives=True,real_operand_recipe_and_observer_bridge=True,capacity_EOG_sha256=sha(s.out/'CAPACITY_EOG_BOUNDARIES_COMPLETE.json'),primer_own_R_endpoints=True,tokenizer_template_license_sha256=sha(s.out/'TOKENIZER_TEMPLATE_LICENSE_CHECKED.json'),finite_only=True));panel(s,q,entries,eps)
+   fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);metadata(s);negatives(s,q);operands(s,q,a);final_boundaries(s,q);entries,eps=primers(s);save(s.out/'QUALIFICATION_COMPLETE.json',dict(passed=True,core_gates_sha256=sha(w/'qualification-03/CORE_GATES_COMPLETE.json'),native_negatives=True,real_operand_recipe_and_observer_bridge=True,capacity_EOG_sha256=sha(s.out/'CAPACITY_EOG_BOUNDARIES_COMPLETE.json'),primer_own_R_endpoints=True,tokenizer_template_license_sha256=sha(s.out/'TOKENIZER_TEMPLATE_LICENSE_CHECKED.json'),finite_only=True));panel(s,q,entries,eps)
  except BaseException as e:save(s.out/'FAILURE.json',dict(error=str(e),traceback=traceback.format_exc(),utc=now().isoformat(),automatic_native_retry=False));raise
  finally:
   (s.guard/'GUARD_DONE').touch(exist_ok=False)

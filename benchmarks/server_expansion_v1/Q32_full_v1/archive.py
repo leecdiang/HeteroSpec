@@ -23,7 +23,8 @@ def analysis(w):
    r=read(run/'native'/x['name']/'receipt.json')
    # Native worker's original request cost includes setup+service, with exact
    # stored phases retained separately. Unknown schema must fail explicitly.
-   if 'request_wall_s'in r:service=float(r['request_wall_s'])
+   if 'service_seconds'in r:service=float(r['service_seconds'])
+   elif 'request_wall_s'in r:service=float(r['request_wall_s'])
    elif 'request_s'in r:service=float(r['request_s'])
    elif 'service_s'in r:service=float(r['service_s'])
    elif 'wall_s'in r:service=float(r['wall_s'])
@@ -34,9 +35,10 @@ def analysis(w):
  return dict(complete=True,descriptive_only=True,rows=rows,total_service_s=dict(totals),scope='Exposed4 roots x4 rounds, partial balanced six-arm deployment; model size/precision/recipe all changed; no population confirmation or size-only attribution')
 def main():
  p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);a=p.parse_args();w,r=a.work,a.root
- while not(w/'PIPELINE_LAUNCH_02.private.json').exists():time.sleep(2)
- launched=read(w/'PIPELINE_LAUNCH_02.private.json')['processes']
- while any(alive(launched[n])for n in('qualification-02','finish-02')):time.sleep(10)
+ while not(w/'PIPELINE_LAUNCH_03.private.json').exists():time.sleep(2)
+ launched=read(w/'PIPELINE_LAUNCH_03.private.json')['processes']
+ while any(alive(launched[n])for n in('qualification-03','finish-03')):time.sleep(10)
+ while not(w/'PIPELINE_COORDINATOR_CLOSED03.private.json').exists():time.sleep(1)
  # Native host workers have their own process group. Wait for every owned
  # allocated-GPU process to leave before reading or hashing the terminal data.
  import subprocess
@@ -51,11 +53,11 @@ def main():
    active=active or own
   if not active:break
   time.sleep(5)
- for phase in('qualification-02','closure-02'):
+ for phase in('qualification-03','closure-03'):
   d=w/phase/'control'
   if d.exists():
    while not(d/'GUARD_STOPPED.private.json').exists()and not(d/'PAUSE.json').exists():time.sleep(1)
- out=w/'export-02';out.mkdir();started=time.monotonic();texts=[];binary=[];other=[];resources=[]
+ out=w/'export-03';out.mkdir();started=time.monotonic();texts=[];binary=[];other=[];resources=[]
  def sanitize(s):
   s=s.replace(str(r),'$HS_ROOT').replace(str(Path.home()),'$HOME');s=re.sub(r'GPU-[0-9a-fA-F-]{36}','<allocated-or-redacted-GPU>',s);s=re.sub(r'\b(?:10|192\.168)\.\d+(?:\.\d+){1,2}\b','<private-network>',s);assert not re.search(r'/home/[a-z]|GPU-[a-fA-F0-9]{8}|192\.168\.\d',s);return s
  groups=[('work',w)]+[(p.name,p)for p in sorted(r.glob('q32-q4-full-*'))if p.is_dir()and p!=w]

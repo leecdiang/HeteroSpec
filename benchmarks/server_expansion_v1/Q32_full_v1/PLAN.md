@@ -101,3 +101,22 @@ observer is a separate ELF with an explicit full-model bridge; it is never timed
 Add finite synthetic capacity stress (real input token IDs repeated, explicitly
 not natural/performance inputs) at C1024, plus actual autonomous EOG one-before /
 at-length cap checks. These gates are charged before the descriptive panel.
+
+Source04 prepares a common CUDA-graphs-disabled candidate configuration for all
+six32B arms, using the fixed backend's original documented-in-source switch.
+Source03's record adapter alone did not establish that long-loop qualification
+could fit its900s worker window. This is an explicit new candidate policy before
+any timing freeze, not a change to R or the completed graph-enabled8B results.
+Kernel fusion is left unchanged; every numerical/lifecycle gate must be repeated
+for this exact policy. Retain graph-enabled failures and both costs; do not claim
+the timeout alone identifies the cause, or that this deployment measures only
+model scale. The private host adapter charges each actual empty-input native
+invalid-contract probe as one logical request, with zero forward rows.
+
+Before any formal freeze, clarify the provisional panel quota: if exact necessary
+qualification/teacher-branch enumeration exceeds the352-request admission line,
+write `PANEL_NOT_ADMITTED_QUOTA.json`, cancel the entire144-request panel, and
+continue complete gates within496 requests, keeping16 for failure/closure. The
+512/2M total ceilings and all inherited/failed counters remain unchanged. No
+partial panel substitutes for the full design. Without this explicit marker,
+require144 remaining panel requests plus16 failure slots at panel admission.

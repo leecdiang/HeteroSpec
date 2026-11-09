@@ -7,7 +7,7 @@ def main():
  f=o/'frontend';shutil.copytree(b/'frontend',f);shutil.copy2(src/'operand_observer.hpp',f/'operand_observer.hpp');shutil.copy2(src/'operand_verify.cpp',o/'operand_verify.cpp')
  path=f/'worker.cpp';s=path.read_text();anchor='#include "geometry_observer.hpp"';assert s.count(anchor)==1;s=s.replace(anchor,'#define Q32_OFFLINE_OPERANDS 1\n'+anchor,1);path.write_text(s)
  path=f/'entry.cpp';s=path.read_text();anchor='fs::create_directories(root);';assert s.count(anchor)==1;s=s.replace(anchor,anchor+'if(job.value("capture_real_operands",false))q32_operand_dir=root/"operands";',1);path.write_text(s)
- path=f/'m1_capability.hpp';s=path.read_text();s=s.replace('"proposal_tape_requests"};','"proposal_tape_requests","capture_real_operands"};',1);path.write_text(s)
+ path=f/'m1_capability.hpp';s=path.read_text();anchor='"proposal_tape_requests","cuda_graphs"};';assert s.count(anchor)==1;s=s.replace(anchor,'"proposal_tape_requests","cuda_graphs","capture_real_operands"};',1);path.write_text(s)
  old=b/'packed';native=r/'run-01/build-packed-01/native'
  for role in('observer','verifier'):
   dest=o/role;dest.mkdir();args=read(old/'compile-frontend/command.json')['argv'];args=[s.replace(str(b/'frontend'),str(f))for s in args];args[args.index('-o')+1]=str(dest/'frontend.o');args[args.index('-MF')+1]=str(dest/'frontend.d')

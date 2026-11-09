@@ -13,11 +13,11 @@ def capability(m,ts,ds,core,cut,draft,mode):
  topology=lambda s:{k:s[k]for k in('layers','query_heads','kv_heads','head_k','head_v','K_elements','V_elements')}
  ctx=lambda ub,n:dict(n_ctx=1024,n_batch=1024,n_ubatch=ub,outputs_max=n,outputs_per_seq=n,flash_attention=False,type_k='f16',type_v='f16')
  place=lambda s:dict(layers=['NVIDIA RTX A5000']*s['layers'],output='NVIDIA RTX A5000')
- return dict(schema='heterospec.q32.ref1.native-capability.v1',target_sha256=m['target_sha256'],draft_sha256=m['draft_sha256']if draft else None,target_structure=topology(ts),draft_structure=topology(ds)if draft else None,target_context=ctx(32,32),draft_context=ctx(4,1)if draft else None,target_placement=place(ts),draft_placement=place(ds)if draft else None,k=3,draft_width=4 if draft else 1,cut=cut,projection='REF1-group'if core=='packed'else'REF1-loop',typed_recipes={'Q4_K':'original scalar vec_dot_q4_K_q8_1','Q6_K':'original scalar vec_dot_q6_K_q8_1'},atomic_columns=1,residency='matched'if draft else'target_only',proposal_mode=mode,target_output_reserve=32,threads=2,greedy=True,target_output_policy='PREFILL:last;VERIFY:all_original_rows',draft_output_policy='last',physical_rows_evidence='per-request executions and native physical width histograms')
+ return dict(schema='heterospec.q32.ref1.native-capability.v1',target_sha256=m['target_sha256'],draft_sha256=m['draft_sha256']if draft else None,target_structure=topology(ts),draft_structure=topology(ds)if draft else None,target_context=ctx(32,32),draft_context=ctx(4,1)if draft else None,target_placement=place(ts),draft_placement=place(ds)if draft else None,k=3,draft_width=4 if draft else 1,cut=cut,projection='REF1-group'if core=='packed'else'REF1-loop',typed_recipes={'Q4_K':'original scalar vec_dot_q4_K_q8_1','Q6_K':'original scalar vec_dot_q6_K_q8_1'},atomic_columns=1,residency='matched'if draft else'target_only',proposal_mode=mode,target_output_reserve=32,threads=2,greedy=True,cuda_graphs=False,target_output_policy='PREFILL:last;VERIFY:all_original_rows',draft_output_policy='last',physical_rows_evidence='per-request executions and native physical width histograms')
 class Study:
  def __init__(self,a):
-  self.root,self.w,self.builds=a.root,a.work,a.builds;self.out=self.w/'qualification-02';self.out.mkdir();self.cfg=self.w/'config-reference-frozen.private.json';self.ref_build=self.root/'run-01/build-R-01/BUILD.json';self.guard=self.out/'control'
-  sys.path.insert(0,str(self.w/'runtime'));import host,native_checks,qualify_native
+  self.root,self.w,self.builds=a.root,a.work,a.builds;self.out=self.w/'qualification-03';self.out.mkdir();self.cfg=self.w/'config-reference-frozen.private.json';self.ref_build=self.root/'run-01/build-R-01/BUILD.json';self.guard=self.out/'control'
+  sys.path.insert(0,str(self.w/'runtime-04'));import host,native_checks,qualify_native
   self.host,self.checks,self.native=host,native_checks,qualify_native;self.trace,self.parse=native_checks.legacy_readers(self.root/'repository-01');self.physical=qualify_native.Study.physical
   job=read(self.w/'REFERENCE_PLAN.private.json')['jobs'][0]['job'];base=read(job);self.models={k:base[k]for k in('family','target_model','target_sha256','n_ctx','threads')};self.models.update(draft_model=str(self.root/'models-final/Qwen3-0.6B-Q8_0.gguf'),draft_sha256='9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031')
   self.structures={k:native_checks.gguf_structure(self.models[k+'_model'])for k in('target','draft')};self.profiles={'Qwen32B':read(self.w/'STATE_PROFILE.json')};self.roots=[x['input']for x in base['inputs']];self.free=[self.w/'reference/runs/R-repeat-0/native'/x['name']for x in base['inputs']];self.modules={};self.banks={};self.counter=0
@@ -36,14 +36,17 @@ class Study:
   assert not(self.guard/'PAUSE.json').exists();g=read(self.guard/'RESOURCE_GUARD_LATEST.private.json');assert not g['events']and time.time()-g['epoch']<20
   assert (datetime.datetime(2026,11,9,21,tzinfo=datetime.timezone.utc)-datetime.datetime.now(datetime.timezone.utc)).total_seconds()>=960,'New worker cutoff'
   inherited=read(self.w/'INHERITED_ACCOUNTING.json');xs=[json.loads(x)for x in(self.w/'ledger.jsonl').read_text().splitlines()if json.loads(x)['event']=='RESERVE'];n,rows=self.host.reservation(job)
-  assert inherited['requests']+sum(x['requests']for x in xs)+n<=352,'Preserve144 panel slots and16 failure/closure slots; stop qualification without omission'
+  total=inherited['requests']+sum(x['requests']for x in xs)+n
+  if total>352 and not(self.w/'PANEL_NOT_ADMITTED_QUOTA.json').exists():
+   save(self.w/'PANEL_NOT_ADMITTED_QUOTA.json',dict(reason='Exact complete-gate/teacher-branch enumeration requires the provisional panel quota; complete eligibility first within unchanged512 ceiling, skip entire144-request panel',required_next_cumulative_requests=total,next_requests=n,remaining_failure_reserve=16,measurement_requests_started=0))
+  assert total<=496,'Preserve16 failure/closure slots within unchanged512 Q32 ceiling'
   assert inherited['rows']+sum(x['rows']for x in xs)+rows<=2000000,'Q32 conservative row ceiling'
  def execute(self,label,family,job,core='reference',draft=False,mode='live'):
   self.counter+=1;m=copy.deepcopy(self.models);m.update(job)
   if core=='reference':
    m.pop('draft_model',None);m.pop('draft_sha256',None);m.update(draft=False,residency='target_only');b=self.ref_build
   else:
-   m.update(draft=draft,draft_width=4 if draft else 1,residency='matched'if draft else'target_only',profile=False,k=3,target_output_reserve=32,proposal_mode=mode)
+   m.update(cuda_graphs=False,draft=draft,draft_width=4 if draft else 1,residency='matched'if draft else'target_only',profile=False,k=3,target_output_reserve=32,proposal_mode=mode)
    if not draft:m.pop('draft_model',None);m.pop('draft_sha256',None)
    m['capability_request']=capability(self.models,self.structures['target'],self.structures['draft'],core,m['lowering'],draft,mode);b=self.builds/core/'BUILD.json'
   self.admission(m);path=self.out/'jobs'/(label+'.json');save(path,m);dest=self.out/'runs'/label
@@ -57,7 +60,10 @@ class Study:
     committed=[dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p))for p in sorted((prior/'native').rglob('*'))if p.is_file()]
     save(self.out/'reuse'/(label+'.json'),dict(prior=str(prior),job_sha256=sha(prior_job),build_sha256=sha(b),files=committed,new_native_requests=0));self.modules.setdefault(core,modules);assert self.modules[core]==modules;print('Q32_EXACT_REFERENCE_REUSED',label,flush=True);return prior
   save(self.out/'admissions'/(label+'.json'),dict(job_sha256=sha(path),build_sha256=sha(b),requests=self.host.reservation(m)[0],conservative_rows=self.host.reservation(m)[1],enumerated_before_execution=True))
-  self.host.run(self.cfg,b,path,dest,'reference'if core=='reference'else'development')
+  began=time.monotonic()
+  try:self.host.run(self.cfg,b,path,dest,'reference'if core=='reference'else'development')
+  finally:
+   save(self.out/'caller-costs'/(label+'.json'),dict(caller_inclusive_wall_s=time.monotonic()-began,native_admitted=dest.exists(),boundary='Before full host dependency/model SHA admission through native exit/module hashing; excludes earlier source/build preparation'))
   modules=read(dest/'LOADED_MODULES.json');prior=self.modules.setdefault(core,modules);assert modules==prior
   if core!='reference':assert read(dest/'native/CAPABILITY.json')==m['capability_request']
   print('Q32_NATIVE_COMPLETE',label,flush=True);return dest

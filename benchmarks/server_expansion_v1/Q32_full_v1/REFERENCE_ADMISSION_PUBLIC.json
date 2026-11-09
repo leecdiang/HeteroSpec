@@ -1,0 +1,63 @@
+{
+  "schema": "heterospec.q32.full-reference-admission.v1",
+  "prepared_utc": "2026-11-09T13:22:44.258144+00:00",
+  "scope": "Explicit user full32B continuation; independent Q32 ledger, not a PR197 budget reset",
+  "inherited_requests": 2,
+  "inherited_reserved_rows": 128,
+  "request_ceiling": 512,
+  "row_ceiling": 2000000,
+  "reference_jobs": [
+    {
+      "name": "R-repeat-0",
+      "job": "R-repeat-0.json",
+      "job_sha256": "83512feb906b878667e4eee64f2ddc73f6144fd774279b613ef31acd79682bcc",
+      "requests": 4,
+      "rows": 8908
+    },
+    {
+      "name": "R-repeat-1",
+      "job": "R-repeat-1.json",
+      "job_sha256": "83512feb906b878667e4eee64f2ddc73f6144fd774279b613ef31acd79682bcc",
+      "requests": 4,
+      "rows": 8908
+    }
+  ],
+  "source_build_sha256": "3794b19d5d8b620293e66eab0dfe2ea6181da7396dd3fc00a76e83934d166e21",
+  "reference_executable_sha256": "5c23a74ffaeec433f9dbc37ce1e014f374839b84da0eb19e4cd36146cc7d5199",
+  "reference_kind": "Pristine fixed Linux CUDA UB1/reserve1, C1024,F16,noFA,threads2",
+  "target_sha256": "efd971561896866f0e910cce52761ca77b1b138090c7f15fe284676d57d1f689",
+  "target_bytes": 19762149024,
+  "roots": [
+    "MATH/geometry/train/333",
+    "MATH/algebra/train/313",
+    "MATH/intermediate_algebra/train/315",
+    "MATH/geometry/train/654"
+  ],
+  "structure": {
+    "architecture": "qwen3",
+    "layers": 64,
+    "query_heads": 64,
+    "kv_heads": 8,
+    "head_k": 128,
+    "head_v": 128,
+    "K_elements": 1024,
+    "V_elements": 1024,
+    "vocab": 151936,
+    "tensor_count": 707,
+    "declared_stop_ids": {
+      "tokenizer.ggml.eos_token_id": 151645
+    }
+  },
+  "profile_sha256": "6e09accbda4fb7df281604f4a58ead62ca0d1e7ebcda89bb82c868f79e370aec",
+  "minimum_GPU_reserve_bytes": 1073741824,
+  "disk_reserve_bytes": 107374182400,
+  "GPU": "Previously assigned GPU1 UUID private; GPU0 protected",
+  "CPU_native": [
+    32,
+    33
+  ],
+  "worker_timeout_s": 900,
+  "ordering": "No candidate forward before own reference freeze; CPU builds may precede qualification. Old8B oracles never used as32B outputs.",
+  "candidate_status": "NOT_QUALIFIED",
+  "timing": "Not admitted before full numerical/lifecycle/physical gates; new starts stop05:00 and archive by08:00 Asia/Shanghai2026-11-10"
+}

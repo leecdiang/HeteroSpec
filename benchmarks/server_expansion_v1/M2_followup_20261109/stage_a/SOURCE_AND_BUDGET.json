@@ -1,0 +1,137 @@
+{
+  "utc": "2026-11-09T06:59:10.103220+00:00",
+  "roles": {
+    "loop4": {
+      "vector_tcc_sha256": "532ca7b973e3a4dd66af1345c01727dad5ae3d6f8a830aa845ca9f6b8d8da3ee",
+      "vector_header_matches_compiled_dependency": true,
+      "llama_context_cpp_sha256": "f3a5234e8d11f18473d2358295d830983d3f5d4c2670273178b022d7b6512165",
+      "context_source_matches_frozen_tree": true,
+      "compile_flags": [
+        "/usr/bin/c++",
+        "-DGGML_USE_CPU",
+        "-DGGML_USE_CUDA",
+        "-DHS_SOURCE_VARIANT=\"original\"",
+        "-DPHASE_CANDIDATE=1",
+        "-I$WORKSPACE/m2-build-01/frontend",
+        "-I$WORKSPACE/run-01/build-loop4-01/native/llama/src",
+        "-I$WORKSPACE/repository-01/benchmarks/linux_transfer_v1/native",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/include",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/src",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/ggml/include",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/vendor",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/common",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/src/../include",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/ggml/src/../include",
+        "-I$WORKSPACE/run-01/stage-04/sources/loop4/vendor/hash/..",
+        "-O3",
+        "-DNDEBUG",
+        "-fPIE",
+        "-o",
+        "$WORKSPACE/m2-build-01/loop4/frontend.o",
+        "-c",
+        "$WORKSPACE/m2-build-01/frontend/entry.cpp",
+        "-MMD",
+        "-MF",
+        "$WORKSPACE/m2-build-01/loop4/frontend.d",
+        "-DM1_PROJECTION=\"loop4\""
+      ]
+    },
+    "packed": {
+      "vector_tcc_sha256": "532ca7b973e3a4dd66af1345c01727dad5ae3d6f8a830aa845ca9f6b8d8da3ee",
+      "vector_header_matches_compiled_dependency": true,
+      "llama_context_cpp_sha256": "f3a5234e8d11f18473d2358295d830983d3f5d4c2670273178b022d7b6512165",
+      "context_source_matches_frozen_tree": true,
+      "compile_flags": [
+        "/usr/bin/c++",
+        "-DGGML_USE_CPU",
+        "-DGGML_USE_CUDA",
+        "-DHS_SOURCE_VARIANT=\"original\"",
+        "-DPHASE_CANDIDATE=1",
+        "-I$WORKSPACE/m2-build-01/frontend",
+        "-I$WORKSPACE/run-01/build-packed-01/native/llama/src",
+        "-I$WORKSPACE/repository-01/benchmarks/linux_transfer_v1/native",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/include",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/src",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/ggml/include",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/vendor",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/common",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/src/../include",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/ggml/src/../include",
+        "-I$WORKSPACE/run-01/stage-04/sources/packed/vendor/hash/..",
+        "-O3",
+        "-DNDEBUG",
+        "-fPIE",
+        "-o",
+        "$WORKSPACE/m2-build-01/packed/frontend.o",
+        "-c",
+        "$WORKSPACE/m2-build-01/frontend/entry.cpp",
+        "-MMD",
+        "-MF",
+        "$WORKSPACE/m2-build-01/packed/frontend.d",
+        "-DM1_PROJECTION=\"packed\""
+      ]
+    }
+  },
+  "library_source_sites": {
+    "vector_copy_assignment": "vector.tcc:199-250",
+    "outer_fill_assign": "vector.tcc:258-276",
+    "range_assign_capacity_branch": "vector.tcc:301-330",
+    "logits_getter_sync": "llama-context.cpp:3870-3881"
+  },
+  "driver_versions": [
+    "595.84"
+  ],
+  "ledgers": [
+    {
+      "work": "run-01",
+      "sha256": "d6c84ad2490864f0f7fc9fa9408e133d8542f84de7fc1e85bd5d945e7282849d",
+      "unchanged": true,
+      "requests": 857,
+      "reserved_rows": 1552339
+    },
+    {
+      "work": "m1-run-01",
+      "sha256": "236bfbaefc5178122dff44b21e84dd85195380daf1232ea08f9f336f3c1dc42d",
+      "unchanged": true,
+      "requests": 382,
+      "reserved_rows": 889908
+    },
+    {
+      "work": "m2-run-01",
+      "sha256": "a90c36fec11df6aa548b0ea0cb7d56e9f33d6f73c613f41026139d93a85ff944",
+      "unchanged": true,
+      "requests": 5,
+      "reserved_rows": 7008
+    },
+    {
+      "work": "m2-run-02",
+      "sha256": "c174b1e71999ffff6d16775b12c54e51bc4d4c2f2aa98b3830121b47da74c43b",
+      "unchanged": true,
+      "requests": 79,
+      "reserved_rows": 87003
+    },
+    {
+      "work": "m2-run-03",
+      "sha256": "b72d37ee138f93d7d7b54fdc3733c3e25b3bdce25b2845934e8b076d19ee9afe",
+      "unchanged": true,
+      "requests": 503,
+      "reserved_rows": 484873
+    }
+  ],
+  "cumulative_requests": 1826,
+  "cumulative_reserved_rows": 3021131,
+  "immediate_ledger_names": [
+    "d14-admission-01",
+    "d14-attribution-run-01",
+    "d14-run-01",
+    "f-run-01",
+    "m1-run-01",
+    "m2-run-01",
+    "m2-run-02",
+    "m2-run-03",
+    "q32-diagnostic-run-01",
+    "run-01"
+  ],
+  "new_native_requests": 0,
+  "CUDA_initialized": false
+}

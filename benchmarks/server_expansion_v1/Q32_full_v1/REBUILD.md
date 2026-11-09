@@ -86,3 +86,19 @@ proven a descendant of the own profiler launcher; all other GPU processes still
 fail the original conflict check. `sample_own_cpu.c` collects only this process's
 signal-context instruction pointer, without stack unwinding or external attach.
 No diagnostic profiler/sampler is present in qualification or clean timing.
+
+`prepare_batched_geometry.py` generates the later untimed batching controller
+from the cached recording epoch. The exact generated sources are in
+`epochs/batched_geometry_v1/`. Its compiled ELF and all original checks/inputs
+remain unchanged; at most three independently reset new geometry cases share
+a model-loaded worker. `batched_geometry_coordinator.py` finishes the active
+request before handoff, rechecks complete identical predecessors, and detaches
+the full all-six qualification, remaining gates, panel and terminal exporter.
+
+After terminal export, `postprocess_delivery.py` runs `delivery_audit.py` without
+starting any native request. It inventories all preserved errors and costs,
+recomputes the192-request panel from original receipts, checks each exact-root
+warmup/measurement pair and compares its96 measured rows with the independent
+archive analysis. Caller/native totals include startup and ALL warmups; resident
+service comparisons remain separate. Full sanitized public byte readback must
+follow upload and is not inferred from local export or numerical qualification.

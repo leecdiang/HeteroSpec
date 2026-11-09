@@ -153,3 +153,22 @@ exact-root warmups above. Do not interpret warm-root receipts as measurements
 or use the old two-primer burst clock formula. Record complete caller SHA/load,
 startup, all warmups, service, serialization and exit costs. Keep the unchanged
 512/2M ceiling and all predecessors/failures; no silent budget expansion.
+
+The corrected p764 loop worker also completed in49.298s, with approximately
+1.12--1.22s per32-row PREFILL group and0.160s for VERIFY4. This is a heavy
+qualification-recording improvement; clean production timing is a separate
+measurement. The short-case bridge preserves every byte of the complete
+PREFILL journals (19,431 loop /4,225 group descriptors) and all captured vectors
+and states on all four M paths.
+
+To avoid spending the remaining window repeatedly loading the same model,
+the next qualification controller groups at most three independently reset
+geometry cases per new worker. It retains all15 registered cases x4 M paths,
+every scalar R oracle, every requested vector/state and every physical check.
+The observed49.298s long worker gives substantial room under the unchanged900s
+bound. Previously complete identical jobs are reused only after exact payload,
+build, ELF/module and every output-file commitment checks; ALL numerical and
+physical comparisons run again. Their old reservations remain charged. The
+first four cases retain their original grouping; only later untimed geometry
+workers are combined. Formal worker/process/warmup grouping is unchanged.
+Exact controller snapshots appear in `epochs/batched_geometry_v1/`.

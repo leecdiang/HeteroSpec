@@ -205,3 +205,32 @@ this registration was made. Public full-byte readback of the remaining sources
 and budget binding is required before the first formal warmup/measurement.
 The exact latest sources and host adapter are in `epochs/remaining_v2/` and
 `epochs/runtime_budget_v2/`. Core qualification continues unchanged in epoch08.
+
+## Prospective runtime-accounting correction V3
+
+Before any formal request, review found that the remaining-stage admission
+model still added60s per worker for the old two unseen primers after all96
+full exact-root warmups had already replaced them and were fully counted in
+matched_warmup_s. V3 removes only this additive legacy allowance. It retains
+the worst observed complete caller nonservice cost, all actual scaled roots,
+all96 warmups, the1.25 factor,900s closure margin,03:30 latest whole admission,
+05:00 worker boundary and08:00 delivery. The observed conservative whole
+estimate changes from6764.31s to4964.31s; this is a prospective cost-model
+assumption correction, not an observed formal speedup. The qualified numerical
+ELFs, reference, gates,192 panel requests, budgets and statistical design remain
+unchanged. Both versions and the original refusal remain in the archive.
+
+The new continuation waits for the original remaining gate controller to close,
+requires its complete qualification certificate, and accepts only the specific
+old conservative-runtime refusal. Any numerical/capacity/physical failure
+prevents timing. Public byte readback binds the V3 continuation before execution.
+
+The data-only exporter had retained stale old-stage process names and raised a
+KeyError before exporting. Retain that error and the original source. The fresh
+export waits for both the old controller and V3 panel continuation, all native
+workers and resource guards to stop. It writes export13 and a new data-only
+statistical audit; it neither retries nor interrupts any native measurement.
+
+V3 exact code and registration: epochs/panel_cost_v3/. The optional B supplement
+is preregistered separately under ../B2_controlled_v1/ and remains inactive until
+complete32B public byte replay and independent statistical replay both pass.

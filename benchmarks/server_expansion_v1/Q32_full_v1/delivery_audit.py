@@ -14,7 +14,7 @@ def sha(p):
   for b in iter(lambda:f.read(8*1024*1024),b''):h.update(b)
  return h.hexdigest()
 def main():
- p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--export',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--epoch',choices=['07','08'],required=True);a=p.parse_args();r,w=a.root,a.work
+ p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--export',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--epoch',choices=['07','08','09'],required=True);p.add_argument('--qualification-epoch');p.add_argument('--closure-epoch');p.add_argument('--request-ceiling',type=int,choices=[512,640],default=512);a=p.parse_args();r,w=a.root,a.work
  assert read(w/f'PIPELINE_COORDINATOR_CLOSED{a.epoch}.private.json')['no_more_native_admissions']
  assert read(a.export/'EXPORT_COMPLETE.json')['passed']and read(a.export/'LOCAL_READBACK.json')['passed']
  before=sha(w/'ledger.jsonl');a.out.mkdir();began=time.monotonic()
@@ -24,8 +24,18 @@ def main():
   assert not re.search(r'/home/[a-z]|GPU-[a-fA-F0-9]{8}|192\.168\.\d',s)
   return json.loads(s)
  def save(name,x):(a.out/name).write_text(json.dumps(public(x),indent=2,ensure_ascii=False)+'\n')
+ frozen=read(w/'reference/REFERENCE_FREEZE.json');assert frozen['status']=='REFERENCE_FROZEN';assert sha(frozen['repeat_evidence']['path'])==frozen['repeat_evidence']['sha256'];assert sha(frozen['build']['path'])==frozen['build']['sha256'];assert sha(read(frozen['build']['path'])['executable'])==frozen['oracle_executable']
+ repeat=read(frozen['repeat_evidence']['path']);assert repeat['passed'];verified={};kinds=Counter()
+ for pair in repeat['pairs']:
+  assert pair['equal'];kinds[pair['kind']]+=1
+  for role in ('reference','candidate'):
+   p=pair[role]
+   if p not in verified:verified[p]=sha(p)
+   assert verified[p]==pair[role+'_sha256']
+ save('FROZEN_REFERENCE_READBACK.json',dict(passed=True,freeze_sha256=sha(w/'reference/REFERENCE_FREEZE.json'),repeat_evidence_sha256=sha(frozen['repeat_evidence']['path']),comparison_kinds=dict(kinds),raw_files_rehashed=len(verified),scope='Fresh full-byte integrity check against hashes recorded before candidate forwards; original numerical/state qualification remains separately scoped'))
  ledger=[json.loads(s)for s in(w/'ledger.jsonl').read_text().splitlines()];reserved=[x for x in ledger if x['event']=='RESERVE'];inherited=read(w/'INHERITED_ACCOUNTING.json')
- counters=dict(requests=inherited['requests']+sum(x['requests']for x in reserved),reserved_rows=inherited['rows']+sum(x['rows']for x in reserved));assert counters['requests']<=512 and counters['reserved_rows']<=2000000
+ counters=dict(requests=inherited['requests']+sum(x['requests']for x in reserved),reserved_rows=inherited['rows']+sum(x['rows']for x in reserved));assert counters['requests']<=a.request_ceiling and counters['reserved_rows']<=2000000
+ if a.request_ceiling==640:assert read(w/'BUDGET_REGISTRATION_V2.json')['new_request_ceiling']==640 and read(w/'BUDGET_REGISTRATION_V2.json')['R_freeze_sha256']==sha(w/'reference/REFERENCE_FREEZE.json')
  costs=[];by_epoch=defaultdict(lambda:dict(requests=0,reserved_rows=0,complete=0,failed_or_incomplete=0,known_native_worker_wall_s=0.0,known_host_wrapper_wall_s=0.0))
  for x in reserved:
   out=Path(x['out']);epoch=str(out.relative_to(w)).split('/')[0];entry=by_epoch[epoch];entry['requests']+=x['requests'];entry['reserved_rows']+=x['rows'];host=read(out/'HOST.json')if(out/'HOST.json').exists()else{}
@@ -48,14 +58,14 @@ def main():
   if not d.is_dir():continue
   for q in d.rglob('command.json'):
    x=read(q);commands.append(dict(path=str(q.relative_to(r)),sha256=sha(q),record=x))
- save('FULL_COSTS.json',dict(cumulative=counters,request_ceiling=512,row_ceiling=2000000,inherited=inherited,by_epoch=dict(by_epoch),worker_records=costs,build_command_records=commands,build_cost_note='Command walls may overlap across the two allowed build tasks; not CPU core-seconds or GPU kernel time',sampling_note='Native worker wall includes native SHA/load/context, warmups, requests, serialization and exit; host wrapper starts after host SHA admission. Caller-cost records in the full text archive include earlier host SHA. Two-second samples cannot exclude all brief interference.',known_cooperative_GPU_lock_wrapper_wall_s=sum(x['host'].get('wrapper_wall_s')or 0 for x in costs),known_native_worker_wall_s=sum(x['host'].get('worker_wall_s')or 0 for x in costs),not_measured=['GPU kernel/energy grand total','CPU core-seconds','missing or pre-inheritance wall times'],no_refunds=True,prior_8B_ledger_unchanged=True))
+ save('FULL_COSTS.json',dict(cumulative=counters,request_ceiling=a.request_ceiling,row_ceiling=2000000,inherited=inherited,by_epoch=dict(by_epoch),worker_records=costs,build_command_records=commands,build_cost_note='Command walls may overlap across the two allowed build tasks; not CPU core-seconds or GPU kernel time',sampling_note='Native worker wall includes native SHA/load/context, warmups, requests, serialization and exit; host wrapper starts after host SHA admission. Caller-cost records in the full text archive include earlier host SHA. Two-second samples cannot exclude all brief interference.',known_cooperative_GPU_lock_wrapper_wall_s=sum(x['host'].get('wrapper_wall_s')or 0 for x in costs),known_native_worker_wall_s=sum(x['host'].get('worker_wall_s')or 0 for x in costs),not_measured=['GPU kernel/energy grand total','CPU core-seconds','missing or pre-inheritance wall times'],no_refunds=True,prior_8B_ledger_unchanged=True))
  failures=[]
  for q in sorted(p for p in w.rglob('*.json')if 'failure'in p.name.lower()):
   if any(z.startswith(('export-','delivery-'))for z in q.relative_to(w).parts):continue
   control=w/q.relative_to(w).parts[0]/'control/PAUSE.json';status=read(control).get('status','')if control.exists()else'';failures.append(dict(path=str(q.relative_to(w)),sha256=sha(q),classification='CONTROLLED_HANDOFF'if status.startswith('CONTROLLED_HANDOFF')else'RETAINED_FAILURE_OR_EXPECTED_NATIVE_REJECTION',record=read(q)))
  save('FAILURE_INVENTORY.json',dict(records=failures,expected_negative_native_probes_are_separately_retained=True,no_selective_deletion=True))
  checks=[]
- for epoch in ('qualification-'+a.epoch,'closure-'+a.epoch):
+ for epoch in ('qualification-'+(a.qualification_epoch or a.epoch),'closure-'+(a.closure_epoch or a.epoch)):
   for directory in ('comparisons','geometry-checks'):
    for q in sorted((w/epoch/directory).glob('*.json')):
     x=read(q);assert x['passed'];checks.append(dict(path=str(q.relative_to(w)),sha256=sha(q),passed=True))

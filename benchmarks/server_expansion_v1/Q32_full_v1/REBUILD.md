@@ -102,3 +102,28 @@ warmup/measurement pair and compares its96 measured rows with the independent
 archive analysis. Caller/native totals include startup and ALL warmups; resident
 service comparisons remain separate. Full sanitized public byte readback must
 follow upload and is not inferred from local export or numerical qualification.
+
+The latest remaining-gate continuation is preserved in `epochs/remaining_v2/`.
+It consumes the same passed epoch08 core gates and main build10 ELFs, and uses
+fresh offline operand build12. `build_operands.py` explicitly fixes only that
+offline observer's post-compute callback to return true after copying; the
+scheduler otherwise stops the graph split. Full-model R/vector/KV bridge and
+entire real Q4_K/Q6_K operand-output comparisons remain mandatory.
+
+`BUDGET_REGISTRATION_V2.json` binds the prospective640-request independent32B
+envelope to the original ledger prefix and unchanged R. `runtime_budget_v2/`
+preserves the exact host adapter with that bound; old host adapters remain in
+their original epochs. `SCHEDULE_REGISTRATION_V2.json` registers03:30 as the
+latest whole-panel admission, with observed complete runtime+900s still fitting
+before05:00 and08:00 delivery unchanged. The public source/budget readback
+binding must exist before any formal warmup or measurement is admitted.
+
+`b2_controlled.py` prepares the optional controlled B supplement using the exact
+closed B ELF and unchanged state/output contract. Its CPU-only preparation
+rehashes the public-committed32 qualification captures and independent oracles.
+`b2_await_delivery.py` starts nothing until complete32B public/statistical
+readback AND the separate B2 public plan/source binding pass; it skips the whole
+supplement if its complete runtime+900s margin no longer fits. `b2_export.py`
+independently recalculates all64 measured operations and retains64 warmups,
+all complete costs and failures. This is physical q8 width, not a weight format,
+and it is never an automatic D/E or576-request confirmation launch.

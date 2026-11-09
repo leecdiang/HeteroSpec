@@ -8,11 +8,14 @@ precision study, not a rewrite or extension of the closed8B measurements.
 Inherit the existing Q32 diagnostic ledger:2 requests/128 conservative rows,
 including its completed allocation and limited short-forward history. Never
 refund or reset those counts. The8B PR197 ledger stays1909/2048 requests and
-3053954/8000000 rows. New Q32 cumulative ceilings are512 logical requests and
-2000000 conservative rows, including prior diagnostics, references, primers,
+3053954/8000000 rows. The prospectively revised Q32 cumulative ceilings are640
+logical requests and2000000 conservative rows, including prior diagnostics, references, primers,
 all failures and native negative cases. These ceilings are not claims that
 qualification will fit, and no correctness gate may be omitted to fit them.
 Track the studies separately and report both counters, not a disguised reset.
+The original512-request registration and every earlier failure remain retained.
+`BUDGET_REGISTRATION_V2.json` registers the revised ceiling before any formal
+measurement, with an immutable original-ledger prefix and unchanged own R.
 
 Use only the previously assigned single GPU1 UUID (private), protect GPU0,
 retain the existing minimum GPU/RAM reserves and raise disk reserve to100GiB.
@@ -73,7 +76,7 @@ quota, stop panel admission and expose the exact shortfall; never shrink gates
 or selectively retry. Before each native job bind its exact payload/build /
 logical count/conservative row reservation. Prior2 diagnostics remain charged.
 
-Whole-panel admission no later than03:00 Asia/Shanghai on2026-11-10, also
+Whole-panel admission no later than03:30 Asia/Shanghai on2026-11-10, also
 requiring conservative observed runtime for the entire panel. Each new worker
 requires at least960s before05:00 (900s original worker timeout plus margin).
 End new measurement starts at05:00, then archive/readback/statistic checks and
@@ -118,11 +121,12 @@ the timeout alone identifies the cause, or that this deployment measures only
 model scale. The private host adapter charges each actual empty-input native
 invalid-contract probe as one logical request, with zero forward rows.
 
-Before any formal freeze, clarify the provisional panel quota: if exact necessary
+Under the original512-request registration, the provisional panel quota rule was:
+if exact necessary
 qualification/teacher-branch enumeration exceeds the304-request admission line,
 write `PANEL_NOT_ADMITTED_QUOTA.json`, cancel the entire192-request panel, and
 continue complete gates within496 requests, keeping16 for failure/closure. The
-512/2M total ceilings and all inherited/failed counters remain unchanged. No
+512/2M original ceilings and all inherited/failed counters remained unchanged. No
 partial panel substitutes for the full design. Without this explicit marker,
 require192 remaining panel requests plus16 failure slots at panel admission.
 
@@ -152,7 +156,8 @@ The original provisional48-primer plan is superseded BEFORE timing by the96
 exact-root warmups above. Do not interpret warm-root receipts as measurements
 or use the old two-primer burst clock formula. Record complete caller SHA/load,
 startup, all warmups, service, serialization and exit costs. Keep the unchanged
-512/2M ceiling and all predecessors/failures; no silent budget expansion.
+2000000-row ceiling and all predecessors/failures. The later explicit640-request
+registration below supersedes the original512 before timing; there is no reset.
 
 The corrected p764 loop worker also completed in49.298s, with approximately
 1.12--1.22s per32-row PREFILL group and0.160s for VERIFY4. This is a heavy
@@ -172,3 +177,31 @@ physical comparisons run again. Their old reservations remain charged. The
 first four cases retain their original grouping; only later untimed geometry
 workers are combined. Formal worker/process/warmup grouping is unchanged.
 Exact controller snapshots appear in `epochs/batched_geometry_v1/`.
+
+## Remaining-gate correction and prospective registration V2
+
+Static review found that the still-unexecuted offline operand observer returned
+false after its requested tensor copy. The fixed scheduler interprets this as
+stop computing the current graph split. A fresh offline-only build returns true
+after copying, then must pass the complete model vector/KV bridge to R. The
+qualified clean/timing ELF and all numerical archives remain unchanged. The
+unused older offline build and all coordinator/preparation errors are retained.
+
+The full32B user request, retained earlier attempts and96 exact-root warmups are
+registered under a640-request independent envelope before any performance
+measurement. `BUDGET_REGISTRATION_V2.json` binds the original ledger prefix,
+original512 registration and unchanged R. All actual requests keep accumulating
+in the same ledger. The8B2048/8M envelope stays separate and unchanged. Complete
+eligibility may use624 slots while preserving16 failure/closure slots; formal
+admission requires all192 panel requests plus16 remaining slots within640.
+An old provisional-quota marker is retained as history; the new complete-panel
+admission recomputes the exact current total against the explicit V2 ceiling.
+
+`SCHEDULE_REGISTRATION_V2.json` prospectively moves the whole-panel latest
+admission from03:00 to03:30. The complete panel's conservative observed runtime
+PLUS900s must still fit before05:00, each new worker still requires960s before
+05:00, and delivery remains08:00. No formal effect estimates were observed when
+this registration was made. Public full-byte readback of the remaining sources
+and budget binding is required before the first formal warmup/measurement.
+The exact latest sources and host adapter are in `epochs/remaining_v2/` and
+`epochs/runtime_budget_v2/`. Core qualification continues unchanged in epoch08.

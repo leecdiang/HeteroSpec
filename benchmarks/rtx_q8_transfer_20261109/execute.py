@@ -103,6 +103,8 @@ def execute(spec,manifest_name='JOB_MANIFEST_GEOMETRY.json'):
         assert code==0,('Native failure retained',code)
         native=json.loads((folder/'native/result.json').read_bytes());assert native['status']=='COMPLETE'
         assert native['trajectories']==spec['requests'] and native['token_rows']<=spec['rows']
+        if 'capability_request' in spec['job'] and 'inputs' in spec['job']:
+            assert [m['name'] for m in markers]==[e['name'] for e in spec['job']['inputs']],'Complete native completion marker capture required'
         modules={}
         for key in ('modules_before','modules_after'):
             modules[key]=[]

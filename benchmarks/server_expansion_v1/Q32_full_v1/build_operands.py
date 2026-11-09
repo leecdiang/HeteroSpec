@@ -10,9 +10,9 @@ def main():
  path=f/'m1_capability.hpp';s=path.read_text();anchor='"proposal_tape_requests","cuda_graphs"};';assert s.count(anchor)==1;s=s.replace(anchor,'"proposal_tape_requests","cuda_graphs","capture_real_operands"};',1);path.write_text(s)
  old=b/'packed';native=r/'run-01/build-packed-01/native'
  for role in('observer','verifier'):
-  dest=o/role;dest.mkdir();args=read(old/'compile-frontend/command.json')['argv'];args=[s.replace(str(b/'frontend'),str(f))for s in args];args[args.index('-o')+1]=str(dest/'frontend.o');args[args.index('-MF')+1]=str(dest/'frontend.d')
+  dest=o/role;dest.mkdir();compile_record=old/'compile-frontend/command.json';compile_record=compile_record if compile_record.exists()else old/'compile/command.json';args=read(compile_record)['argv'];args=[s.replace(str(b/'frontend'),str(f))for s in args];args[args.index('-o')+1]=str(dest/'frontend.o');args[args.index('-MF')+1]=str(dest/'frontend.d')
   if role=='verifier':args[args.index('-c')+1]=str(o/'operand_verify.cpp')
-  command(args,native,dest/'compile');args=read(old/'link-frontend/command.json')['argv'];args=[s.replace(str(old/'frontend.o'),str(dest/'frontend.o')).replace(str(old/'transfer-worker'),str(dest/'transfer-worker'))for s in args];command(args,native,dest/'link')
+  command(args,native,dest/'compile');link_record=old/'link-frontend/command.json';link_record=link_record if link_record.exists()else old/'link/command.json';args=read(link_record)['argv'];args=[s.replace(str(old/'frontend.o'),str(dest/'frontend.o')).replace(str(old/'transfer-worker'),str(dest/'transfer-worker'))for s in args];command(args,native,dest/'link')
   deps=read(old/'DEPENDENCIES.json');names=dict(deps['files'])
   for s in(dest/'frontend.d').read_text().replace('\\\n',' ').split(':',1)[1].split():
    p=Path(s);p=p if p.is_absolute()else native/p;names[str(p.resolve())]=sha(p)

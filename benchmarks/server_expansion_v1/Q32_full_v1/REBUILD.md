@@ -45,7 +45,7 @@ schedule/allocation, and may not copy this study's reference outputs as its orac
 Remaining gates include all full vectors,64-layer active KV/frontier, clean/heavy
 bridge, all six controls, real typed operands, native EOG/cap, pending/rollback,
 actual width/packing, capacity and native invalid-contract rejection. Only a
-complete eligible144-request descriptive panel is analyzed. Never automatically
+complete eligible192-request descriptive panel is analyzed. Never automatically
 launch a larger confirmation panel, merge, Release, modify a manuscript or delete
 raw artifacts. Public text replay is distinct from private numerical comparison.
 
@@ -56,3 +56,33 @@ scalar R and earlier completed deployments retain their original configuration.
 Two graph-enabled long-loop qualification attempts timed out; both remain charged
 and retained. This switch is a candidate policy to requalify, not an attributed
 optimization or a performance result.
+
+The actual latest controller sources are preserved verbatim in
+`epochs/cached_recording_v1/`. Before any timing, the common frontend successor
+adds complete binary PREFILL descriptors, the same full native SHA through the
+pinned system libcrypto DSO, and the per-request immutable device-type cache.
+`build_recording_successor.py --root "$HS_ROOT" --original
+"$HS_ROOT/q32-q4-full-build-04" --out "$HS_ROOT/q32-q4-full-build-10"`
+compiles both new frontends against the exact unchanged numerical archives.
+Use the updated `build_operands.py` for its separate offline observer/verifier.
+Record all commands, compiler, original/current archive members, full dependencies,
+actual modules and ELF SHA. A rebuild never authorizes reuse of numerical results.
+
+`prepare_recording_epoch.py` preserves all six original checks and reconstructs
+complete binary descriptors offline. `prepare_cached_epoch.py` then generates
+the latest common cache-policy capability, corrects every remaining direct
+reserve8 constructor, and specializes the host clock records for interleaved
+exact-root warmups. It copies the existing host adapter into a fresh runtime;
+old host adapters, compiled baselines and result directories remain unchanged.
+Review generated scripts and `ADAPTER_BINDING.json` before launching the detached
+`cached_coordinator.py`. These dated controllers intentionally fail closed after
+their registered deadline; a later reproduction needs a new prospective plan.
+
+The two profiled diagnostics use unchanged native numerical ELFs and retain
+complete model/dependency SHA, allocation/lock/budget checks. The first attempt
+failed because Nsight starts its application in a new process group; it remains
+charged. The successor admits only the exact expected native argv/UID/ELF when
+proven a descendant of the own profiler launcher; all other GPU processes still
+fail the original conflict check. `sample_own_cpu.c` collects only this process's
+signal-context instruction pointer, without stack unwinding or external attach.
+No diagnostic profiler/sampler is present in qualification or clean timing.

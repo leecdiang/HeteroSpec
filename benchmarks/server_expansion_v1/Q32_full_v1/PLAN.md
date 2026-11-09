@@ -54,15 +54,20 @@ F32 tensors. Inventory or old UB32/reserve4 smoke is not numerical eligibility.
    only with full commitments. Preserve all failed source epochs and counters.
 5. Only after all gates pass, freeze a six-arm descriptive deployment panel:
    W_REF1L_M,W_REF1G_M,L_REF1L_M,L_REF1G_M,W_REF1L_D4,L_REF1G_D4.
-   Four original exposed roots x6 arms x4 rounds =96 measurements, plus two
-   distinct original primers/arm/round =48 primers;144 panel requests total.
-   Use predeclared complementary arm rows and reverse root order. This is
+   Four original exposed roots x6 arms x4 rounds =96 measurements. Before EACH
+   measurement, run one full identical root/cap/live path as an untimed warmup
+   in the same native process, with the same reset policy. Thus96 full warmups
+   plus96 measurements cost192 requests. Every arm/round worker is fresh and
+   receives four warm/measurement pairs. Use the predeclared complementary arm
+   rows and four-round Williams root rows (0,1,3,2), (1,2,0,3), (2,3,1,0),
+   (3,0,2,1). Each root occupies every within-worker position once and each
+   directed root adjacency occurs once. The six-arm schedule itself has
    partial balance, not a fully balanced6-round Williams design. Retain all
    strong controls, full service/startup/hash/load/request/memory costs. It
    changes model size AND weight precision/recipe; no size-only inference,
    new blind sample or population-confirmation claim.
 
-Keep144 panel slots and at least16 failure/closure requests unavailable for
+Keep192 panel slots and at least16 failure/closure requests unavailable for
 qualification admission. If complete eligibility needs the reserved panel
 quota, stop panel admission and expose the exact shortfall; never shrink gates
 or selectively retry. Before each native job bind its exact payload/build /
@@ -114,9 +119,37 @@ model scale. The private host adapter charges each actual empty-input native
 invalid-contract probe as one logical request, with zero forward rows.
 
 Before any formal freeze, clarify the provisional panel quota: if exact necessary
-qualification/teacher-branch enumeration exceeds the352-request admission line,
-write `PANEL_NOT_ADMITTED_QUOTA.json`, cancel the entire144-request panel, and
+qualification/teacher-branch enumeration exceeds the304-request admission line,
+write `PANEL_NOT_ADMITTED_QUOTA.json`, cancel the entire192-request panel, and
 continue complete gates within496 requests, keeping16 for failure/closure. The
 512/2M total ceilings and all inherited/failed counters remain unchanged. No
 partial panel substitutes for the full design. Without this explicit marker,
-require144 remaining panel requests plus16 failure slots at panel admission.
+require192 remaining panel requests plus16 failure slots at panel admission.
+
+## Observer correction and timing review before any formal freeze
+
+The all-six recording successor completed the short p31, p32 and p33/q4 full
+vector/state checks, plus the original p764/q4 W-loop and W-group checks. The
+long W-loop job completed in863.15s; its success means that the previous900s
+timeouts cannot establish hardware incapability. Preserve all prior attempts.
+
+A separate own-process CUDA/SIGPROF diagnostic ran identical p31/cap1 work in
+H,C,C,H order. Heavy service times were38.039/38.359s and clean times1.103/1.102s.
+These profiled, tiny diagnostic samples are not a performance panel or an8B/q8
+finding. Source inspection identified repeated per-node device-type queries;
+this backend implements that query with cudaGetDeviceProperties. The common
+successor queries immutable type once per distinct device PER REQUEST, while
+looking up and checking each tensor's actual buffer device on every callback.
+No tensor descriptors, placement checks, full vectors, KV checks, output masks,
+callback decisions, arithmetic archives or independent R are removed/changed.
+The new frontend and actual dispatch must pass all six-arm gates again.
+
+Review also found three direct finisher job constructors still writing the old
+reserve8 despite the reserve32 contract. Correct all three before native gates
+or formal timing; no formal request had started. Native failures remain charged.
+
+The original provisional48-primer plan is superseded BEFORE timing by the96
+exact-root warmups above. Do not interpret warm-root receipts as measurements
+or use the old two-primer burst clock formula. Record complete caller SHA/load,
+startup, all warmups, service, serialization and exit costs. Keep the unchanged
+512/2M ceiling and all predecessors/failures; no silent budget expansion.

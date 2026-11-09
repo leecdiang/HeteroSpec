@@ -1,0 +1,23 @@
+"""Separate offline operand-observer ELF and original typed-recipe verifier."""
+from pathlib import Path
+import argparse,shutil
+from build import read,sha,save,command
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--builds',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir();r,b,o=a.root,a.builds,a.out;src=Path(__file__).parent
+ f=o/'frontend';shutil.copytree(b/'frontend',f);shutil.copy2(src/'operand_observer.hpp',f/'operand_observer.hpp');shutil.copy2(src/'operand_verify.cpp',o/'operand_verify.cpp')
+ path=f/'worker.cpp';s=path.read_text();anchor='#include "geometry_observer.hpp"';assert s.count(anchor)==1;s=s.replace(anchor,'#define Q32_OFFLINE_OPERANDS 1\n'+anchor,1);path.write_text(s)
+ path=f/'entry.cpp';s=path.read_text();anchor='fs::create_directories(root);';assert s.count(anchor)==1;s=s.replace(anchor,anchor+'if(job.value("capture_real_operands",false))q32_operand_dir=root/"operands";',1);path.write_text(s)
+ path=f/'m1_capability.hpp';s=path.read_text();s=s.replace('"proposal_tape_requests"};','"proposal_tape_requests","capture_real_operands"};',1);path.write_text(s)
+ old=b/'packed';native=r/'run-01/build-packed-01/native'
+ for role in('observer','verifier'):
+  dest=o/role;dest.mkdir();args=read(old/'compile-frontend/command.json')['argv'];args=[s.replace(str(b/'frontend'),str(f))for s in args];args[args.index('-o')+1]=str(dest/'frontend.o');args[args.index('-MF')+1]=str(dest/'frontend.d')
+  if role=='verifier':args[args.index('-c')+1]=str(o/'operand_verify.cpp')
+  command(args,native,dest/'compile');args=read(old/'link-frontend/command.json')['argv'];args=[s.replace(str(old/'frontend.o'),str(dest/'frontend.o')).replace(str(old/'transfer-worker'),str(dest/'transfer-worker'))for s in args];command(args,native,dest/'link')
+  deps=read(old/'DEPENDENCIES.json');names=dict(deps['files'])
+  for s in(dest/'frontend.d').read_text().replace('\\\n',' ').split(':',1)[1].split():
+   p=Path(s);p=p if p.is_absolute()else native/p;names[str(p.resolve())]=sha(p)
+  for p in [dest/'frontend.o',dest/'transfer-worker.map',*f.rglob('*'),o/'operand_verify.cpp',dest/'compile/command.json',dest/'link/command.json']:
+   if p.is_file():names[str(p.resolve())]=sha(p)
+  save(dest/'DEPENDENCIES.json',{**deps,'files':names});base=read(old/'BUILD.json');exe=dest/'transfer-worker';save(dest/'BUILD.json',{**base,'role':'packed','executable':str(exe),'executable_sha256':sha(exe),'dependency_closure_sha256':sha(dest/'DEPENDENCIES.json'),'status':'Q32_OFFLINE_REAL_OPERAND_'+role.upper()+'_NOT_QUALIFIED','clean_timing_eligible':False,'original_clean_BUILD_sha256':sha(old/'BUILD.json')});print('Q32_OPERAND_ELF_BUILT',role,sha(exe),flush=True)
+ save(o/'COMPLETE.json',dict(passed=True,clean_timing_eligible=False,full_model_qualification=False,originals_modified=False))
+if __name__=='__main__':main()

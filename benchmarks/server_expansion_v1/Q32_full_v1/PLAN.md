@@ -80,3 +80,24 @@ Keep completed B/C and earlier PR205/206/208/209 results immutable. No automatic
 merge, Release, manuscript edit, rental or data deletion. Public output omits
 credentials, allocation UUID and unrelated company information. Archive byte
 replay is distinct from numerical qualification.
+
+## Pre-panel source epochs
+
+The first unqualified frontend inherited reserve8. Before a timing freeze, review
+identified that the registered width32/all-output geometry requires32 output
+slots. All six new32B arms therefore use common reserve32 in the successor;
+the scalar R remains reserve1. Source/build epochs01 (reserve8),02 (reserve32
+without the later observer adaptation),03 (reserve32, structural observer dedup)
+are retained. No previously qualified8B/14B/Llama baseline is changed.
+
+The separate observer adaptation compares exact tensor descriptors before JSON
+allocation, rather than repeatedly constructing/dumping identical JSON during
+every long prefill. Device placement is still checked on every invocation;
+all unique type/shape/stride/device descriptors and occurrence counts remain,
+as does every physical position/width/request-mask execution. No vector, KV,
+frontier, transaction or numerical equality check is removed. An offline operand
+observer is a separate ELF with an explicit full-model bridge; it is never timed.
+
+Add finite synthetic capacity stress (real input token IDs repeated, explicitly
+not natural/performance inputs) at C1024, plus actual autonomous EOG one-before /
+at-length cap checks. These gates are charged before the descriptive panel.

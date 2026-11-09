@@ -127,3 +127,64 @@ supplement if its complete runtime+900s margin no longer fits. `b2_export.py`
 independently recalculates all64 measured operations and retains64 warmups,
 all complete costs and failures. This is physical q8 width, not a weight format,
 and it is never an automatic D/E or576-request confirmation launch.
+
+## Final admitted continuation and public-data replay
+
+The admitted panel uses main build10, core qualification epoch08, remaining
+qualification closure09 and offline observer/verifier build12. The pristine
+scalar R remains the original independent reference. Exact V3 timing-admission
+and terminal-only recovery sources are in epochs/panel_cost_v3/. They accept
+only the complete qualification certificate and the preserved old cost-model
+refusal; they do not bypass numerical/capacity/physical failures. The new
+continuation was admitted at2026-11-09T19:13:12Z with all192 requests intact.
+Its resource guard is separate from the closed qualification guard.
+
+Archive13 waits for BOTH the original remaining controller and the V3 panel
+continuation, all native workers and all resource guards. Delivery04 rehashes
+the frozen reference and independently recalculates the resident-service and
+complete caller/worker totals. stage_public.py adds a terminal-only privacy
+check/transform and retains source/public byte commitments. No model weights
+or private vector/KV/operand payloads are distributed. Their hashes do not
+constitute an independent public numerical rerun.
+
+For the published result packet, reconstruct the compressed text stream by
+concatenating archive/BUNDLE.json ordered_parts in exactly that order. Individual
+parts are chunks of one XZ stream, not separately decompressible archives. Every
+text record has a path, full text and original/public hash commitments in
+archive/TEXT_INDEX.json. FILES.json inventories the standalone packet files.
+The data-only command below verifies every packet file and full text record,
+all96 measured and96 warmup requests, exact endpoint and physical-row counts,
+all retained reservations, and independently recomputes the reported contrasts:
+
+```sh
+python3 -B replay_public.py --directory results_20261109 --out PUBLIC_REPLAY.json
+```
+
+Extract records only into a fresh directory, reject absolute or parent-traversal
+paths, and substitute your own authorized root/allocation in operational job
+files. Redacted operational paths necessarily have new public hashes. Preserve
+the original commitments; record new payload/build hashes for a new run. A new
+platform must rebuild the fixed source and create/qualify its own independent R;
+it may not import this host's numerical outputs or assume cross-host ELF/state
+identity. The dated controllers are execution records, not authorization to
+reuse this study's allocation, elapsed deadlines, or result directories.
+
+The final post-export cost-reader adapter is epochs/delivery_adapter_v4/. The
+original delivery03 stopped on a scalar-reference receipt that records heavy
+and service_s rather than candidate capture and service_seconds. Preserve its
+partial reference-integrity proof and both error logs. Delivery04 maps only
+these recorded fields, keeps absent reference physical histograms null rather
+than inventing zero, and performs a fresh full reference hash check. Its
+statistical formulas,192 native requests and all native binaries remain
+unchanged. The final packet includes the post-export failure/recovery evidence.
+The original root stage_public.py remains a historical prepared version; the
+final data-only packaging source is the V4 epoch copy.
+
+The final public packaging source is epochs/public_source_identity_v5/. A
+prepublication identity match collided with a legitimate SIMD local variable
+in the fixed vendor/stb/stb_image.h. Preserve only that exact canonical source
+SHA1f8c1b6b408f26e3b20cbfbbd4758afb3dc9b837ff1e17c258928f406148a87c;
+all other privacy rules stay intact. The invalid partial package is retained
+privately and never published. This is a public-source preservation correction,
+not a numerical or statistical change. Full source/public commitments and
+post-export failure/recovery logs are included in the final packet.

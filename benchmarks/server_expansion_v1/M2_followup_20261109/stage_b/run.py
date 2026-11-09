@@ -22,12 +22,18 @@ def prepare(a):
  hp=runtime/'host.py';text=hp.read_text();anchor='def reservation(job):';assert text.count(anchor)==1
  text=text.replace(anchor,anchor+"\n    if 'diagnostics' in job:\n        xs=job['diagnostics'];return len(xs),sum(x['position']+len(x['ids']) for x in xs)",1)
  anchor="        inherited=read(work/'INHERITED_ACCOUNTING.json')";assert text.count(anchor)==1
- text=text.replace(anchor,"        need(sum(r['requests'] for r in reserved)+req<=80,'Stage B ceiling, no stage transfer')\n"+anchor,1);hp.write_text(text)
+ text=text.replace(anchor,"        need(sum(r['requests'] for r in reserved)+req<="+str(79 if a.prior else 80)+",'Stage B ceiling, no stage transfer')\n"+anchor,1);hp.write_text(text)
  ledgers=[];requests=rows=0
  for name in ('run-01','m1-run-01','m2-run-01','m2-run-02','m2-run-03'):
   p=r/name/'ledger.jsonl';xs=[json.loads(s)for s in p.read_text().splitlines()];res=[x for x in xs if x['event']=='RESERVE']
   requests+=sum(x['requests']for x in res);rows+=sum(x['rows']for x in res);ledgers.append(dict(path=str(p),sha256=sha(p)))
  assert (requests,rows)==(1826,3021131),'Cumulative snapshot changed; do not assume remaining budget'
+ if a.prior:
+  prior=a.prior/'ledger.jsonl';res=[json.loads(s)for s in prior.read_text().splitlines()if json.loads(s)['event']=='RESERVE']
+  assert len(res)==1 and res[0]['requests']==1 and res[0]['rows']==1404
+  requests+=1;rows+=1404;ledgers.append(dict(path=str(prior),sha256=sha(prior)))
+  out=a.prior/'runs/R-extension-0';assert read(out/'HOST.json')['status']=='COMPLETE'
+  save(w/'REUSE_R0.private.json',dict(path=str(out),files=[dict(path=str(p),sha256=sha(p))for p in out.rglob('*')if p.is_file()],job=str(a.prior/'jobs/R-extension-0.json'),job_sha256=sha(a.prior/'jobs/R-extension-0.json')))
  save(w/'INHERITED_ACCOUNTING.json',dict(ledgers=ledgers,requests=requests,rows=rows))
  cfg=read(r/'m2-run-03/config.json');cfg.update(work_root=str(w),allocation_id='explicit-user-resumption-20261109-stage-B',freeze=None,freeze_sha256=None)
  assert cfg['worker_timeout_s']==900 and cfg['protected_gpu_indices']==[0]
@@ -52,12 +58,14 @@ def prepare(a):
    extensions.append(dict(origin=i,root=key,job=str(p),job_sha256=sha(p),prompt_tokens=len(prompt),cap=cap,rows_bound=bound,
       bridge_position=len(prompt),old_receipt_sha256=old['sha256'],old_pending_id=ep['ids'][-1]))
  assert len(extensions)==3
- # Four forced scalar trunks (one per original root) cover both geometries.
- maxrows+=4*260+32*260+24*260
+ # Four full autonomous replays restore missing historical state evidence;
+ # all work is charged inside the original 24-request oracle/bridge reserve.
+ maxrows+=sum(2*len(selection['inputs'][k]['prompt_ids'])+16*128 for k in selection['roots'])
+ maxrows+=sum(max(260,len(selection['inputs'][k]['prompt_ids'])+127)for k in selection['roots'])+32*260+24*260
  manifest=dict(schema='heterospec.pr210.stage-B.admission.v1',prepared_utc=stamp(),protocol_head='3268a63dcbde99d5d9f8dd461f34d56e9840d3a0',
     Stage_A_head='398e79a177bc71d83db4d58cf78672554f552586',original_reference_unchanged=True,reference_freeze_sha256=cfg['reference_freeze_sha256'],
-    amendment='Explicitly register three same-R continuation extensions; exact old pending/frontier/active-KV bridge required. Original 128-token records and root order remain fixed.',
-    origins=selection['roots'],extension_jobs=extensions,job_counts=dict(extension=3,forced_scalar_oracle=4,candidate_qualification=32,primer=8,timed=16,total_planned=63,stage_B_ceiling=80,unspent_failure_oracle_reservation=17),
+    amendment='Register three same-R extensions plus four full autonomous R replays, because historical formal receipts did not retain intermediate vectors/state. Replayed128-token endpoints must equal old frozen receipts; extension initial full-vector/KV must equal the replayed old terminal. One already complete extension is reused only after exact job/build/module/payload checks. Old baseline and root order unchanged.',
+    origins=selection['roots'],extension_jobs=extensions,job_counts=dict(extension=3,autonomous_R_replay=4,forced_scalar_oracle=4,candidate_qualification=32,primer=8,timed=16,total_planned=67,already_charged=1 if a.prior else 0,stage_B_ceiling=80,unspent_failure_oracle_reservation=13),
     inherited=dict(requests=requests,rows=rows,request_ceiling=2048,row_ceiling=8000000),planned_rows_conservative_bound=maxrows,
     accounting='Each extension input, forced oracle case, or eight-output diagnostic operation is one logical request. q4pair is one request/two calls/eight physical rows. Restored prefix length is conservatively reserved again although not forwarded.',
     geometry=dict(within=248,crossing=252,append_tokens=8,observed_extent=256),target=dict(C=1024,KV='F16',FA=False,UB=32,reserve=8,cut='LOCAL',threads=2),
@@ -71,7 +79,7 @@ def prepare(a):
  for e in public['extension_jobs']:e['job']=Path(e['job']).name
  save(w/'ADMISSION_PUBLIC.json',public)
  save(w/'SOURCE_AT_PREPARE.json',{p.name:sha(p)for p in Path(__file__).parent.iterdir()if p.is_file()})
- print(json.dumps(dict(prepared=True,planned_requests=63,rows_bound=maxrows)),flush=True)
+ print(json.dumps(dict(prepared=True,planned_requests=67,rows_bound=maxrows)),flush=True)
 
 class Runner:
  def __init__(self,a):
@@ -91,6 +99,14 @@ class Runner:
   if p.exists():assert read(p)==job
   else:save(p,job)
   build=self.r/'run-01/build-R-01/BUILD.json' if core=='reference' else self.a.builds/core/'BUILD.json'
+  if name=='R-extension-0'and(self.w/'REUSE_R0.private.json').exists():
+   prior=read(self.w/'REUSE_R0.private.json');out=Path(prior['path']);assert sha(p)==prior['job_sha256']and read(p)==read(prior['job'])
+   for f in prior['files']:assert sha(f['path'])==f['sha256']
+   launch=read(out/'launch.json');assert launch['build_sha256']==sha(build)and launch['job_sha256']==sha(p)
+   assert read(out/'HOST.json')['status']=='COMPLETE'
+   for path,m in read(out/'LOADED_MODULES.json').items():
+    if m['kind']=='ELF_file':assert sha(path)==m['sha256']
+   save(self.w/'R0_REUSE_CHECKED.json',dict(passed=True,prior_manifest_sha256=sha(self.w/'REUSE_R0.private.json'),native_repeated=False,prior_request_charge_retained=True));return out/'native'
   out=self.w/'runs'/name;t=time.monotonic();self.host.run(self.w/'config.private.json',build,p,out,'reference' if core=='reference' else 'development')
   self.workers.append(dict(name=name,core=core,wall_s=time.monotonic()-t,host_sha256=sha(out/'HOST.json'),module_map_sha256=sha(out/'LOADED_MODULES.json')))
   save(self.w/'worker-records'/(name+'.json'),self.workers[-1]);return out/'native'
@@ -98,8 +114,15 @@ class Runner:
  def vector(self,actual,expected):return self.checks.vector_pair(actual,expected,151936)
  def references(self):
   self.streams={};self.free={}
+  historical_free={}
   for i,key in enumerate(self.selection['roots']):
-   x=self.selection['inputs'][key];old=self.selection['expected'][key];assert sha(old['path'])==old['sha256'];oldfree=Path(old['path']).parent;ep=old['receipt'];stream=x['prompt_ids']+ep['ids'];free=oldfree
+   x=self.selection['inputs'][key];old=self.selection['expected'][key];assert sha(old['path'])==old['sha256']
+   entry=dict(name='historical-replay',input=x,capture=True,state_positions=list(range(248,261)))
+   free=self.run(f'R-historical-replay-{i}',dict(self.base,inputs=[entry]))/'historical-replay';ep=read(free/'receipt.json')
+   assert ep['ids']==old['receipt']['ids']and ep['eog']==old['receipt']['eog']and ep['terminal_kind']==old['receipt']['terminal_kind'],'Post-reboot R128 endpoint differs'
+   historical_free[i]=free;save(self.w/'reference-bridges'/f'historical-replay-{i}.json',dict(passed=True,historical_receipt_sha256=old['sha256'],new_receipt_sha256=sha(free/'receipt.json'),endpoint128_equal=True,historical_intermediate_payload='Not retained; new independent scalar payloads are used explicitly'))
+  for i,key in enumerate(self.selection['roots']):
+   x=self.selection['inputs'][key];old=self.selection['expected'][key];assert sha(old['path'])==old['sha256'];oldfree=historical_free[i];ep=old['receipt'];stream=x['prompt_ids']+ep['ids'];free=oldfree
    if len(stream)<260:
     e=next(e for e in self.plan['extension_jobs']if e['origin']==i);job=read(e['job']);free=self.run(f'R-extension-{i}',job)/'extension';new=read(free/'receipt.json');prefix=job['inputs'][0]['input']['prompt_ids'];n=len(prefix)
     bridge=dict(origin=i,first_pending_equal=new['ids'][0]==ep['ids'][-1],frontier=self.vector(free/'captures'/str(n)/'frontier.f32',oldfree/'captures'/str(n)/'frontier.f32'),active_KV=self.state(free/'captures'/str(n)/'sequence.bin',oldfree/'captures'/str(n)/'sequence.bin',n),new_terminal=new['terminal_kind'])
@@ -111,14 +134,17 @@ class Runner:
   self.oracles={}
   for i,key in enumerate(self.selection['roots']):
    prompt=self.selection['inputs'][key]['prompt_ids'];stream=self.streams[i]
-   bridge_position=len(prompt)+127 if len(prompt)+127<=260 else len(prompt)
-   positions=sorted(set(range(248,261))|{bridge_position})
-   case=dict(name='trunk',forced=[dict(ids=prompt,phase='PREFILL'),dict(ids=stream[len(prompt):260],phase='FORCED')],observe_positions=positions,state_positions=positions)
+   bridge_position=len(prompt)+127;end=max(260,bridge_position)
+   positions=sorted(set(range(len(prompt),len(prompt)+128))|set(range(248,261)))
+   states=sorted(set(range(248,261))|{bridge_position})
+   case=dict(name='trunk',forced=[dict(ids=prompt,phase='PREFILL'),dict(ids=stream[len(prompt):end],phase='FORCED')],observe_positions=positions,state_positions=states)
    out=self.run(f'R-trunk-{i}',dict(self.base,cases=[case]));oracle=out/'trunk/captures';checks=[]
    for n in range(248,261):
     p=self.free[i]/'captures'/str(n)/'frontier.f32';assert p.exists(),'Independent autonomous frontier missing'
     v=self.vector(oracle/str(n)/'frontier.f32',p);checks.append(dict(position=n,vector=v));assert v['equal'],'Free/forced scalar disagreement'
-   oldfree=Path(self.selection['expected'][key]['path']).parent;n=bridge_position
+   for j in range(128):
+    n=len(prompt)+j;v=self.vector(oracle/str(n)/'frontier.f32',historical_free[i]/'captures'/str(n)/'frontier.f32');assert v['equal'],'Forced/full autonomous R128 frontier differs'
+   oldfree=historical_free[i];n=bridge_position
    b=self.state(oracle/str(n)/'sequence.bin',oldfree/'captures'/str(n)/'sequence.bin',n);assert b['equal'],'Forced trunk changed original reference state'
    save(self.w/'reference-bridges'/f'trunk-{i}.json',dict(passed=True,free_forced=checks,old_terminal_state=b));self.oracles[i]=oracle
   save(self.w/'REFERENCE_DERIVED_FREEZE.json',dict(status='DERIVED_ORACLES_FROZEN',old_R_unchanged=True,streams={str(i):ids[:260]for i,ids in self.streams.items()},files=[dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p))for o in self.oracles.values()for p in o.rglob('*')if p.is_file()]))
@@ -189,10 +215,11 @@ class Runner:
    fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
    self.references();self.qualify();self.timing()
   ledger=[json.loads(x)for x in (self.w/'ledger.jsonl').read_text().splitlines()];reserved=[x for x in ledger if x['event']=='RESERVE']
-  assert sum(x['requests']for x in reserved)==63
-  save(self.w/'COMPLETE.json',dict(passed=True,utc=stamp(),stage='B_ONLY',new_requests=63,conservative_rows_reserved=sum(x['rows']for x in reserved),workers=self.workers,candidate_optimization=False,next='No automatic C/D/E or 32B'))
+  expected=66 if(self.w/'REUSE_R0.private.json').exists()else 67
+  assert sum(x['requests']for x in reserved)==expected
+  save(self.w/'COMPLETE.json',dict(passed=True,utc=stamp(),stage='B_ONLY',new_requests=expected,total_Stage_B_requests=67,conservative_rows_reserved=sum(x['rows']for x in reserved),workers=self.workers,candidate_optimization=False,next='No automatic C/D/E or 32B'))
 def main():
- p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--builds',type=Path);p.add_argument('--repo',type=Path);p.add_argument('--prepare',action='store_true');p.add_argument('--cutoff',default='2026-11-09T20:30:00+08:00');p.add_argument('--closure',default='2026-11-09T21:00:00+08:00');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--prior',type=Path);p.add_argument('--builds',type=Path);p.add_argument('--repo',type=Path);p.add_argument('--prepare',action='store_true');p.add_argument('--cutoff',default='2026-11-09T20:30:00+08:00');p.add_argument('--closure',default='2026-11-09T21:00:00+08:00');a=p.parse_args()
  if a.prepare:prepare(a)
  else:
   try:Runner(a).execute()

@@ -1,5 +1,15 @@
 # Stage B admission — built, not yet GPU qualified
 
+Driver05 admission supersedes the original request estimate below: 4 full
+autonomous R128 replays, 3 same-R extensions, 4 forced scalar trunks, 32 candidate
+qualifications and 24 primer/timing requests = 67. The 11 scalar requests fit the
+original 24-request oracle/bridge reservation. Formal historical receipts had
+no intermediate captures: compare their128-token endpoints to new full scalar
+replays, then bridge extensions against those new independent scalar payloads.
+An initial extension completed, but its post-check stopped at the missing old
+capture; preserve the failure and charge, and reuse that complete request only
+after exact job/build/module/full-payload commitments pass. Do not repeat it.
+
 The initial draft below is retained as history. The user subsequently revised
 the pause rule: only assigned-GPU conflicts, resource shortage or observable
 interference pause admission. Other-device jobs alone do not pause. The new

@@ -1,11 +1,11 @@
 {
   "schema": "heterospec.pr210.stage-B.admission.v1",
-  "prepared_utc": "2026-11-09T10:06:36.230007+00:00",
+  "prepared_utc": "2026-11-09T10:11:17.741551+00:00",
   "protocol_head": "3268a63dcbde99d5d9f8dd461f34d56e9840d3a0",
   "Stage_A_head": "398e79a177bc71d83db4d58cf78672554f552586",
   "original_reference_unchanged": true,
   "reference_freeze_sha256": "fa8ceec6d54f98730d63880436a6bf088c119232c0f091406725e724a4665731",
-  "amendment": "Explicitly register three same-R continuation extensions; exact old pending/frontier/active-KV bridge required. Original 128-token records and root order remain fixed.",
+  "amendment": "Register three same-R extensions plus four full autonomous R replays, because historical formal receipts did not retain intermediate vectors/state. Replayed128-token endpoints must equal old frozen receipts; extension initial full-vector/KV must equal the replayed old terminal. One already complete extension is reused only after exact job/build/module/payload checks. Old baseline and root order unchanged.",
   "origins": [
     "MATH/geometry/train/333",
     "MATH/algebra/train/313",
@@ -52,21 +52,23 @@
   ],
   "job_counts": {
     "extension": 3,
+    "autonomous_R_replay": 4,
     "forced_scalar_oracle": 4,
     "candidate_qualification": 32,
     "primer": 8,
     "timed": 16,
-    "total_planned": 63,
+    "total_planned": 67,
+    "already_charged": 1,
     "stage_B_ceiling": 80,
-    "unspent_failure_oracle_reservation": 17
+    "unspent_failure_oracle_reservation": 13
   },
   "inherited": {
-    "requests": 1826,
-    "rows": 3021131,
+    "requests": 1827,
+    "rows": 3022535,
     "request_ceiling": 2048,
     "row_ceiling": 8000000
   },
-  "planned_rows_conservative_bound": 19882,
+  "planned_rows_conservative_bound": 28807,
   "accounting": "Each extension input, forced oracle case, or eight-output diagnostic operation is one logical request. q4pair is one request/two calls/eight physical rows. Restored prefix length is conservatively reserved again although not forwarded.",
   "geometry": {
     "within": 248,

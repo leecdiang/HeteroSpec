@@ -1,4 +1,9 @@
-# Registered Stage C: first-use and follow-up host-phase diagnostic
+# Completed Stage C: first-use and follow-up host-phase diagnostic
+
+All16 operations and automatic local archive completed on2026-11-09 at20:40.
+See [results and decision](../results_stage_c_20261109/README.md). No optimization,
+D/E or new32B GPU work was admitted. The original registration follows below;
+its source/operand/budget commitments and completed B data remain preserved.
 
 After Stage B public delivery, the user extended the server window. Use exactly
 the16 Stage C requests reserved in PR210, with no transfer from unused B quota.

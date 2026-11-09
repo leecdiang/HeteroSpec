@@ -1,4 +1,10 @@
-# Stage B admission — built, not yet GPU qualified
+# Stage B: completed diagnostic and retained admission history
+
+All32 qualification cells and16 measurements/8 primers completed on2026-11-09.
+See [results and limitations](../results_stage_b_20261109/README.md). Startup state
+and order remain aliased; the pooled result is not a steady-state width claim.
+The historical admission/source states below remain retained. They do not
+override the final native receipts, archive checks or source epoch bindings.
 
 Driver05 admission supersedes the original request estimate below: 4 full
 autonomous R128 replays, 3 same-R extensions, 4 forced scalar trunks, 32 candidate

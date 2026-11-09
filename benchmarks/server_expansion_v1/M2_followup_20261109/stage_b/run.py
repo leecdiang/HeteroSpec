@@ -43,7 +43,10 @@ def prepare(a):
   prompt=x['prompt_ids']+ep['ids'][:-1]
   if len(x['prompt_ids'])+len(ep['ids'])<260:
    cap=261-len(prompt);assert 0<cap<=128
-   item=dict(name='extension',input=dict(x,prompt_ids=prompt,cap=cap),capture=True,state_positions=list(range(248,261)))
+   old_prompt_hash=hashlib.sha256(json.dumps(x['prompt_ids'],separators=(',',':')).encode()).hexdigest()
+   if 'prompt_ids_sha256' in x:assert x['prompt_ids_sha256']==old_prompt_hash
+   derived=dict(x,prompt_ids=prompt,prompt_ids_sha256=hashlib.sha256(json.dumps(prompt,separators=(',',':')).encode()).hexdigest(),prompt_tokens=len(prompt),cap=cap,original_prompt_ids_sha256=old_prompt_hash)
+   item=dict(name='extension',input=derived,capture=True,state_positions=list(range(248,261)))
    job=dict(base,inputs=[item]);p=w/'jobs'/f'R-extension-{i}.json';save(p,job)
    bound=2*len(prompt)+16*cap;maxrows+=bound
    extensions.append(dict(origin=i,root=key,job=str(p),job_sha256=sha(p),prompt_tokens=len(prompt),cap=cap,rows_bound=bound,

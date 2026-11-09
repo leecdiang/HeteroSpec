@@ -1,4 +1,23 @@
-# Stage B implementation draft — not built or admitted
+# Stage B admission — built, not yet GPU qualified
+
+The initial draft below is retained as history. The user subsequently revised
+the pause rule: only assigned-GPU conflicts, resource shortage or observable
+interference pause admission. Other-device jobs alone do not pause. The new
+resource observer records CPU interference on assigned cores and GPU conflicts;
+it never signals foreign processes. The diagnostic binaries have now compiled
+against the exact M2 numerical archives. No GPU qualification or timing has yet
+run. Derived continuation prompt length/hash fields are recomputed, with the
+original prompt commitment retained. This correction changes metadata, not the
+compiled operation. See ADMISSION_PUBLIC.json and BUILD_PUBLIC.json for the
+current admission and byte bindings; they supersede the initial draft's status.
+
+Timing restarts processes at block boundaries, retaining graph build/reuse
+counts and round-specific costs. Each cell has one primer before its first
+timed round; the second round does not share the first round's resident graph
+cache. Do not claim both rounds are equally warmed or infer a population effect.
+Resource sampling cannot exclude every short event or shared-interconnect cost.
+
+## Historical draft, before revised user policy
 
 Prepared after explicit server-use authorization on 2026-11-09. Before any
 native work, the existing new-task guard detected newly started GPU jobs on

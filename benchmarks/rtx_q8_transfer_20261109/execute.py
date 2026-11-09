@@ -27,9 +27,10 @@ def resources(s):
     assert s['ac']==1,'AC power lost'
     assert s['gpu_free']>=128*1024**2 and s['ram_free']>=4*1024**3 and s['output_free']>=20*1024**3 and s['system_free']>=10*1024**3,'Resource reserve violation'
 
-def execute(spec):
+def execute(spec,manifest_name='JOB_MANIFEST_GEOMETRY.json'):
     stage=spec['stage'];assert stage in CEILINGS
-    manifest=json.loads((ROOT/'JOB_MANIFEST_GEOMETRY.json').read_bytes())
+    manifest_path=(ROOT/manifest_name).resolve();assert manifest_path.is_relative_to(ROOT.resolve())
+    manifest=json.loads(manifest_path.read_bytes())
     assert spec in manifest['jobs'],'Job not frozen in admitted manifest'
     assert json.loads((ROOT/'WINDOWS_CLOSURE_AUDIT.json').read_bytes())['passed']
     inherited=json.loads((ROOT/'CUMULATIVE_LEDGER_INITIAL.json').read_bytes())
@@ -50,9 +51,10 @@ def execute(spec):
         build=json.loads(Path(spec['build']).read_bytes());exe=Path(spec['exe'])
         assert sha(exe)==build['exe']==spec['exe_sha256']
         for name,digest in build['modules'].items():assert sha(exe.parent/name)==digest
-        assert sha(WORK/'SOURCE.json')==manifest['source_sha256']
-        sources=json.loads((WORK/'SOURCE.json').read_bytes())['frontend']
-        for name,digest in sources.items():assert sha(WORK/'frontend'/name)==digest
+        source=Path(manifest.get('source_binding',WORK/'SOURCE.json'));front=Path(manifest.get('frontend_root',WORK/'frontend'))
+        assert sha(source)==manifest['source_sha256']
+        sources=json.loads(source.read_bytes())['frontend']
+        for name,digest in sources.items():assert sha(front/name)==digest
         for role in ('target','draft'):assert sha(spec['job'][role+'_model'])==spec['job'][role+'_sha256']
         resources(sample())
         competing=subprocess.check_output(['nvidia-smi','--query-compute-apps=pid,process_name','--format=csv,noheader'],text=True,timeout=10).strip()
@@ -67,6 +69,12 @@ def execute(spec):
                 assert time.monotonic()-started<900,'Worker timeout900s'
                 s=sample();telemetry.write(json.dumps(s)+'\n');telemetry.flush();resources(s);time.sleep(2)
             code=proc.returncode
+        if 'expect_error' in spec:
+            failure=json.loads((folder/'native/failure.json').read_bytes())
+            assert code!=0 and spec['expect_error'] in failure['error'],('Expected native rejection failed',code,failure)
+            put(folder/'EXPECTED_REJECT.json',dict(error=failure,expected=spec['expect_error'],logical_request_charged=True))
+            status='EXPECTED_REJECT'
+            return folder/'native'
         assert code==0,('Native failure retained',code)
         native=json.loads((folder/'native/result.json').read_bytes());assert native['status']=='COMPLETE'
         assert native['trajectories']==spec['requests'] and native['token_rows']<=spec['rows']

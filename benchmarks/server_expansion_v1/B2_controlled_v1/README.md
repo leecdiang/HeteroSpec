@@ -29,3 +29,8 @@ Only exposed root0, four processes/cell, descriptive mechanism timing. All
 operand disk/SHA/restore, complete output/SHA/serialization, warmup, model/process
 startup and caller costs are retained separately. No live drafting or universal
 steady-state/population speedup is inferred. Preparation is not performance data.
+
+Execution outcome: skipped before GPU because full32B public delivery did not
+complete before the registered whole-panel admission line. See
+EXECUTION_STATUS.json and SKIPPED_BEFORE_GPU.json. Preparation and old
+qualification reuse are preserved; no new timing data or q8 conclusion exists.

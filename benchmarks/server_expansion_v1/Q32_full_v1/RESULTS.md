@@ -2,9 +2,12 @@
 
 The complete six-arm panel finished at2026-11-09T19:56:42Z (03:56 BJT).
 All24 workers,96 measured requests and96 identical-root complete warmups passed
-the endpoint, physical execution and strong-control checks. Public byte and
-independent statistical readback are recorded separately when completed; native
-completion alone does not establish public delivery.
+the endpoint, physical execution and strong-control checks. Anonymous byte readback of all170 source/result files at immutable commit
+6b58f0573b88239f90f7f170088afe90830c1e25 PASSED. Independent replay using
+only those downloaded public bytes also PASSED all96 measured and96 warmup
+records, physical counts, totals, contrasts and cumulative accounting. See
+PUBLIC_ANONYMOUS_READBACK.json, PUBLIC_STATISTICAL_REPLAY.json and FINAL_STATUS.json.
+Public replay is not a new GPU numerical qualification.
 
 Each arm below contains the same16 measured resident requests (four exposed
 roots x four rounds, cap128). Complete caller and native-worker columns include
@@ -86,3 +89,22 @@ results_20261109 packet. Original full vectors/KV and captured model operands
 stay private with complete commitments. Public byte replay is not an independent
 GPU numerical rerun. The optional matched-history B supplement is a separate
 8B physical-width study and cannot replace this32B panel.
+
+Final cost/closure: known cumulative native worker wall is16756.608s, including
+native SHA/load, heavy qualification and failed attempts; it is not GPU kernel
+time. Formal native workers total2106.932s; complete formal caller time totals
+2610.153612s including ALL warmups and startup. Nine FAILED ledger events
+include five expected negative probes; no formal worker failed. Additional
+data-only adapter failures are retained separately and start no native work.
+Raw private captures total159615548758 bytes in8728 files. The8.850224MB XZ
+text stream expands to1221898994 public text bytes across14866 records; JSON
+indices and costs add packet size. Model weights remain separate and private.
+
+The optional controlled B supplement was NOT run. Complete32B public delivery
+was not ready before its registered04:19:17 BJT whole-panel admission line
+(observed25m43s whole estimate plus900s closure margin before05:00). Preserve
+the prepared matched-history/Williams design, old32 qualification reuse proof
+and SKIPPED_BEFORE_GPU/EXECUTION_STATUS evidence. Old8B accounting stays
+1909/2048 requests and3053954/8000000 rows. No new B timing conclusion or
+claim about physical q8 performance is made. The original confounded B timing
+remains uncorrected by new timing data. No pending native experiment remains.

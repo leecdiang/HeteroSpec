@@ -7,11 +7,16 @@ from execute import WORK,BASE
 DEST=REPO.parent/'q8rtx211-evidence-20261109'
 
 def main():
-    started=time.monotonic();DEST.mkdir(exist_ok=False);files={}
+    started=time.monotonic()
+    if DEST.exists():assert not any(DEST.iterdir()),'Existing nonempty archive directory must be preserved'
+    else:DEST.mkdir()
+    files={}
     def add(name,p):
         p=Path(p).resolve();assert p.is_file() and not p.is_symlink()
         assert p.suffix.lower() not in ('.gguf','.key','.pem') and p.name.lower() not in ('.env','credentials')
-        if name in files:assert files[name]==p
+        if name in files:
+            assert files[name].stat().st_size==p.stat().st_size and sha(files[name])==sha(p),'Conflicting logical archive path'
+            return
         files[name]=p
     for p in WORK.rglob('*'):
         if p.is_file() and not any(x in p.relative_to(WORK).parts for x in ('compiler-cache','temp')):add('work/'+p.relative_to(WORK).as_posix(),p)
@@ -21,6 +26,11 @@ def main():
         if p.is_file():add('scripts/'+p.name,p)
     for p in (BASE/'R-Qwen').rglob('*'):
         if p.is_file():add('original-R/'+p.relative_to(BASE/'R-Qwen').as_posix(),p)
+    inherited=json.loads((ROOT/'CUMULATIVE_LEDGER_INITIAL.json').read_bytes())
+    assert sha(BASE/'ledger.sqlite')==inherited['sha256']
+    add('legacy/ledger.sqlite',BASE/'ledger.sqlite')
+    for core in ('loop4','packed'):
+        add('legacy/parent-closure-'+core+'.json',BASE/'freezes'/core/'BUILD_FREEZE.json')
     for i in range(4):add(f'legacy/original-R-free-r{i}.json',Path('D:/rtx188/runs/Qwen-old-free/native')/f'r{i}-heavy/receipt.json')
     closure=json.loads((ROOT/'SOURCE_BINDINGS.json').read_bytes());aliases={}
     for name,item in closure['files'].items():
@@ -39,7 +49,8 @@ def main():
                 else:assert blobs[digest]['bytes']==size
                 index.append(dict(path=name,sha256=digest,bytes=size,blob=blob))
                 # No weights, credentials or unrelated host files are selected.
-                if size<=128*1024**2 and p.suffix.lower() not in ('.exe','.dll','.obj','.lib','.a','.sqlite','.f32','.bin','.gz','.zip','.bundle','.npy'):
+                excluded_public=name in ('records/cohort/rendered.jsonl','records/cohort/tokens.jsonl')
+                if not excluded_public and (size<=128*1024**2 or p.name in ('LIVE_RECORDS.json','SAME_WORK_CLEAN_RECORDS.json')) and p.suffix.lower() not in ('.exe','.dll','.obj','.lib','.a','.sqlite','.f32','.bin','.gz','.zip','.bundle','.npy'):
                     try:data=p.read_bytes();text=data.decode('utf8')
                     except UnicodeDecodeError:continue
                     if '\x00' in text:continue
@@ -64,8 +75,8 @@ def main():
                     h.update(data);count+=len(data);target.write(data)
             assert h.hexdigest()==digest and count==meta['bytes'];seen.add(digest)
     for item in index:
-        p=restore/item['path'];p.parent.mkdir(parents=True,exist_ok=True);os.link(blobroot/item['sha256'],p)
-        assert p.stat().st_size==item['bytes']
+        p=restore/item['path'];assert p.resolve().is_relative_to(restore.resolve());p.parent.mkdir(parents=True,exist_ok=True);os.link(blobroot/item['sha256'],p)
+        assert p.stat().st_size==item['bytes'] and os.path.samefile(blobroot/item['sha256'],p)
     assert len(seen)==len(blobs)
     put(ROOT/'ARCHIVE_READBACK.json',dict(passed=True,archive=str(archive),archive_sha256=manifest['archive_sha256'],index=str(DEST/'ARCHIVE_INDEX.json'),index_sha256=sha(DEST/'ARCHIVE_INDEX.json'),
         restored_root=str(restore),logical_files=len(index),logical_bytes=manifest['logical_bytes'],unique_blobs=len(blobs),all_blob_bytes_reread=True,all_logical_paths_restored=True,
@@ -77,7 +88,8 @@ def main():
             p=packet/f'scientific-records.json.gz.part-{number:04d}';p.write_bytes(data);parts.append(dict(name=p.name,bytes=len(data),sha256=sha(p)));number+=1
     put(packet/'PARTS.json',dict(joined_sha256=sha(textpath),joined_bytes=textpath.stat().st_size,parts=parts))
     put(packet/'TEXT_INDEX.json',dict(files=public,weights_included=False,raw_binary_scope='Private complete CAS archive retained and fully restored; public text/byte commitments do not independently requalify private numerical payloads.'))
-    put(packet/'BINARY_INDEX.json',dict(files=[x for x in index if x['path'] not in {v['path'] for v in public}],archive_index_sha256=sha(DEST/'ARCHIVE_INDEX.json')))
+    public_paths={v['path'] for v in public}
+    put(packet/'BINARY_INDEX.json',dict(files=[x for x in index if x['path'] not in public_paths],archive_index_sha256=sha(DEST/'ARCHIVE_INDEX.json')))
     print(json.dumps(dict(archive=str(archive),archive_GiB=archive.stat().st_size/1024**3,logical_files=len(index),unique_blobs=len(blobs),text_parts=len(parts),wall_seconds=time.monotonic()-started)),flush=True)
 
 if __name__=='__main__':main()

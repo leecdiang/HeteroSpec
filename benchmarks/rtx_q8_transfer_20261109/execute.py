@@ -112,6 +112,10 @@ def execute(spec,manifest_name='JOB_MANIFEST_GEOMETRY.json'):
                 p=Path(value['path'] if isinstance(value,dict) else value);h=sha(p);modules[key].append(dict(path=str(p),sha256=h))
                 if p.name in build['modules']:assert h==build['modules'][p.name]
                 elif p.name.lower().startswith(('ggml','cublas','cudart')):raise RuntimeError('Unbound numerical module '+str(p))
+                driver_pin=ROOT/'DRIVER_MODULE_PINS.json'
+                if driver_pin.exists():
+                    pins=json.loads(driver_pin.read_bytes())['pins']
+                    if p.name.lower() in pins:assert h==pins[p.name.lower()]['sha256'],'Loaded NVIDIA driver module changed'
         put(folder/'ACTUAL_MODULES.json',modules)
         put(folder/'COMPLETE.json',dict(actual_requests=native['trajectories'],actual_rows=native['token_rows'],qualified=False))
         status='COMPLETE'

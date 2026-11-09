@@ -88,14 +88,28 @@ def diagnostic():
     assert sum(x['probe']['kind']=='measurement' for x in records)==128 and len(records)==160
     put(ROOT/'SAME_WORK_CLEAN_RECORDS.json',dict(records=records,qualified=True,not_live_speedup=True))
 
-def live():
+def live(resume=False,verify_only=False):
     prerequisites();assert read(ROOT/'SAME_WORK_CLEAN_RECORDS.json')['qualified']
     manifest=read(ROOT/'JOB_MANIFEST_LIVE.json');oracle=WORK/'runs/extra-v2-formal-independent-R/native';expected={}
     roots=read(ROOT/'cohort/COHORT_FREEZE.json')['inputs']
     for i,x in enumerate(roots):expected[x['id']]=read(oracle/f'formal-{i}/receipt.json')['endpoint']
+    for i,x in enumerate(read(ROOT/'QUALIFICATION_TASKS.json')['roots'][:2]):
+        old=read(Path('D:/rtx188/runs/Qwen-old-free/native')/f'r{i}-heavy/receipt.json')
+        ids=old['ids'][:96];eog=old['eog'][:len(ids)]
+        expected[x['id']]=dict(ids=ids,eog=eog,length=len(ids),terminal_id=ids[-1],stop_reason='EOG' if eog[-1] else 'CAP')
     records=[]
     for job in manifest['jobs']:
-        native=execute(job,'JOB_MANIFEST_LIVE.json');meta=read(native/'result.json');assert meta['total_observed_API_calls']['context_creates']==2
+        reusable=read(ROOT/'READER_REPAIR_ADMISSION.json')['reusable_completed_jobs'] if resume else {}
+        if job['id'] in reusable:
+            saved=reusable[job['id']];folder=Path(saved['folder'])
+            for name,digest in saved['files'].items():assert sha(folder/name)==digest,'Completed native payload changed'
+            assert read(folder/'HOST.json')['status']=='COMPLETE' and read(folder/'COMPLETE.json')['actual_requests']==18
+            assert read(folder/'JOB.json')==job and read(folder/'JOB_NATIVE.json')==job['job']
+            assert sha(Path(job['exe']))==job['exe_sha256']
+            native=folder/'native'
+        elif verify_only:break
+        else:native=execute(job,'JOB_MANIFEST_LIVE.json')
+        meta=read(native/'result.json');assert meta['total_observed_API_calls']['context_creates']==2
         for item in job['job']['inputs']:
             r=read(native/item['name']/'receipt.json');assert all(v==0 for v in r['observed_API_calls_within_service'].values())
             assert not r['capture'] and r['k']==job['job']['k'] and r['draft_ubatch']==4 and r['target_output_reserve']==8 and r['proposal_mode']=='live'
@@ -113,18 +127,29 @@ def live():
                 consumed=0;wanted=[];groups=[]
                 while consumed<k+1:
                     e=verify[offset];offset+=1;assert e['position']==cycle['base']+consumed
-                    wanted += [consumed+i for i in e['requested_rows']];groups.append(e);consumed+=e['width']
+                    # Native requested_rows already use caller-global indices.
+                    wanted += e['requested_rows'];groups.append(e);consumed+=e['width']
                 assert consumed==k+1 and sorted(wanted)==list(range(k+1))
                 if job['job']['lowering']=='LOCAL':assert len(groups)==1 and groups[0]['width']==k+1
             assert offset==len(verify)
             if len(r['cycles'])>=2:assert r['graphs_reused']>0
-            if item['name'].startswith('test-'):assert r['endpoint']==expected[item['input']['id']]
+            assert r['endpoint']==expected[item['input']['id']]
             records.append(dict(worker=job['id'],session=job['session'],position=job['position'],arm=job['arm'],arm_label=job['arm_label'],root=item['input']['id'],domain=item['input'].get('domain','exposed_primer'),
                 kind='measurement' if item['name'].startswith('test-') else 'primer',receipt=r,receipt_sha256=sha(native/item['name']/'receipt.json')))
-        put(ROOT/'live_completed'/(job['id']+'.json'),dict(passed=True,requests=18,all_test_endpoints_equal=True))
+        completion=ROOT/'live_completed'/(job['id']+'.json');value=dict(passed=True,requests=18,all_test_endpoints_equal=True)
+        if completion.exists():assert read(completion)==value
+        else:put(completion,value)
         print('LIVE_WORKERS_COMPLETE',len(records)//18,'/64',flush=True)
+    if verify_only:
+        assert len(records)==18
+        verification=ROOT/('READER_REPAIR_VERIFIED-'+sha(Path(__file__))[:12]+'.json')
+        value=dict(passed=True,completed_requests_rechecked=18,native_reruns=0,inputs_or_source_changed=False,
+            checker_sha256=sha(Path(__file__)),all_test_endpoints_equal=True,scope='Offline metadata interpretation repair only; exact original native/source/data/clock bytes retained.')
+        if verification.exists():assert read(verification)==value
+        else:put(verification,value)
+        return
     assert len(records)==1152 and sum(x['kind']=='measurement' for x in records)==1024
     put(ROOT/'LIVE_RECORDS.json',dict(passed=True,records=records,complete_workers=64,complete_measurements=1024,primers=128))
 
 if __name__=='__main__':
-    {'freeze':freeze,'diagnostic':diagnostic,'live':live}[sys.argv[1]]()
+    {'freeze':freeze,'diagnostic':diagnostic,'live':live,'verify-completed':lambda:live(True,True),'live-resume':lambda:live(True)}[sys.argv[1]]()

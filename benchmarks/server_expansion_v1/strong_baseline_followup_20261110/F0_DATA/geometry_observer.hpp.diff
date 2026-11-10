@@ -1,0 +1,22 @@
+--- 
++++ 
+@@ -14,7 +14,7 @@
+     std::map<ggml_backend_dev_t,bool> gpu_devices;
+     static ggml_backend_dev_t device(ggml_tensor*t){return t->buffer?ggml_backend_buft_get_device(ggml_backend_buffer_get_type(t->buffer)):nullptr;}
+     bool gpu(ggml_tensor*t){auto*d=device(t);if(!d)return false;auto it=gpu_devices.find(d);if(it==gpu_devices.end())it=gpu_devices.emplace(d,ggml_backend_dev_type(d)==GGML_BACKEND_DEVICE_TYPE_GPU).first;return it->second;}
+-    static json meta(ggml_tensor*t){auto*d=device(t);return {{"name",t->name},{"type",ggml_type_name(t->type)},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"device",d?ggml_backend_dev_description(d):"UNALLOCATED"}};}
++    static json meta(ggml_tensor*t){auto*d=device(t);return {{"name",t->name},{"strong_backend_loop_marker",t->op==GGML_OP_MUL_MAT&&t->op_params[15]==0x48534231},{"type",ggml_type_name(t->type)},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"device",d?ggml_backend_dev_description(d):"UNALLOCATED"}};}
+     template<class T>static void field(std::string&out,const T&x){out.append(reinterpret_cast<const char*>(&x),sizeof(x));}
+     static void text(std::string&out,const char*x){const uint32_t n=uint32_t(std::strlen(x));field(out,n);out.append(x,n);}
+     static void tensor_key(std::string&out,ggml_tensor*t){text(out,t->name);field(out,t->type);out.append(reinterpret_cast<const char*>(t->ne),sizeof(t->ne));out.append(reinterpret_cast<const char*>(t->nb),sizeof(t->nb));auto*d=device(t);field(out,d);}
+@@ -32,8 +32,8 @@
+         return {{"schema","heterospec.actual-prefill-operators.v1"},{"path",journal_path.string()},{"records",journal_records},{"bytes",fs::file_size(journal_path)},{"sha256",hash_file(journal_path)},{"fields","base:i32,caller:i32,op:utf8,tensor,source_count:u32,sources; tensor=name,type,ne[4]:i64,nb[4]:u64,device:utf8; little endian"}};
+     }
+     static bool callback(ggml_tensor*t,bool ask,void*opaque){
+-        auto&o=*static_cast<Observer*>(opaque);if(!phase_observe)return false;
+-        if(!ask){if(q32_operand_wanted(t,o.phase)){q32_operand_copy(t);return false;}o.bad=true;return false;}
++        auto&o=*static_cast<Observer*>(opaque);if(!phase_observe)return false;sb217_operand_set_call(o.caller,o.base);
++        if(!ask){if(q32_operand_wanted(t,o.phase)){q32_operand_copy(t);return true;}o.bad=true;return false;}
+         if(o.phase!="VERIFY"&&o.phase!="PREFILL"&&o.phase!="ORDINARY")return false;
+         const std::string name=t->name;if(name.rfind("kq",0)!=0&&name.rfind("hs_",0)!=0&&t->op!=GGML_OP_MUL_MAT)return false;
+         // Device type is immutable for a device identity during this request.

@@ -1,0 +1,29 @@
+--- pinned/ggml-cuda.cu
++++ strong/ggml-cuda.cu
+@@ -1,3 +1,4 @@
++#include "hs_strong_ref1.hpp"
+ #include "../hs_loop4_tensor.hpp"
+ #include "ggml-cuda.h"
+ #include "ggml-impl.h"
+@@ -1817,6 +1818,21 @@
+ }
+ 
+ static void ggml_cuda_mul_mat(ggml_backend_cuda_context & ctx, const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
++    if (hs_strong_marked(dst)) {
++        hs_strong_require(src0, src1, dst);
++        for (const auto * t : {src0, src1, static_cast<const ggml_tensor *>(dst)}) {
++            if (!t->data || !t->buffer || t->buffer->buft != ggml_backend_cuda_buffer_type(ctx.device)) {
++                throw std::runtime_error("strong REF1 requires same-device CUDA storage");
++            }
++        }
++        if (ggml_cuda_info().devices[ctx.device].warp_size != 32) {
++            throw std::runtime_error("strong REF1 requires warp32");
++        }
++        hs_work_backend();
++        ggml_cuda_mul_mat_vec_q(ctx, src0, src1, nullptr, dst);
++        return;
++    }
++
+     if (hs_loop4::marked(dst)) {
+         hs_loop4::require(src0,src1,dst);
+ #if defined(GGML_USE_HIP) || defined(GGML_USE_MUSA)

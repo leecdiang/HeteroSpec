@@ -1,0 +1,203 @@
+{
+  "GPU_admitted": false,
+  "auto_GPU_transition": false,
+  "caller_s": 134.9035500730024,
+  "native_model_requests": 0,
+  "status": "CPU_IMPLEMENTATIONS_BUILT_F0_S1_NOT_ADMITTED",
+  "steps": [
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "-c",
+        "import ast,pathlib;[(ast.parse(p.read_text(),filename=str(p)))for p in pathlib.Path('${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source').rglob(\"*.py\")]"
+      ],
+      "caller_s": 0.1644441340031335,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "python-syntax"
+    },
+    {
+      "argv": [
+        "/usr/bin/cc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-D_GNU_SOURCE",
+        "-MD",
+        "-MF",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/parent-guard.d",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/parent_guard.c",
+        "-o",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/parent-guard"
+      ],
+      "caller_s": 0.1143546180028352,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "parent-guard-build"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/build_backend.py",
+        "--root",
+        "${HS_ROOT}",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/backend"
+      ],
+      "caller_s": 60.85350345600091,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "backend-build"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/build_gold.py",
+        "--root",
+        "${HS_ROOT}",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/gold"
+      ],
+      "caller_s": 16.486893315999623,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "pristine-gold-build"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/build_model.py",
+        "--root",
+        "${HS_ROOT}",
+        "--backend",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/backend",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/model"
+      ],
+      "caller_s": 24.848767160001444,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "model-build"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/prepare.py",
+        "--root",
+        "${HS_ROOT}",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/prospective"
+      ],
+      "caller_s": 20.090066467000725,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "prospective-manifest"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/closure.py",
+        "--root",
+        "${HS_ROOT}",
+        "--work",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/COMPILED_CLOSURE.private.json"
+      ],
+      "caller_s": 8.324993125999754,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "compiled-closure"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_design_checks.py"
+      ],
+      "caller_s": 0.1643983309986652,
+      "returncode": 0,
+      "stderr_sha256": "e708464a6f707a9382e04bb2d286abd6e301c63a848264a6cee771b5dd2dcd28",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "design-normal"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/test_execution.py"
+      ],
+      "caller_s": 1.1154111649993865,
+      "returncode": 0,
+      "stderr_sha256": "8d677d432fc9d01b4cb057acc61c23ef22e98308bacb22738cd709994d50217f",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "execution-normal"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-O",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_design_checks.py"
+      ],
+      "caller_s": 0.1641603079988272,
+      "returncode": 0,
+      "stderr_sha256": "bb8588fe277f5b30be0e276604d912bf83bb7ed030dc39746a15345fca24285a",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "design-optimized"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-O",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/test_execution.py"
+      ],
+      "caller_s": 1.1654729139991105,
+      "returncode": 0,
+      "stderr_sha256": "5a6371233340a22becea5f65461d931b7a1783effcd5cfee19a5d1d93d587a6f",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "execution-optimized"
+    },
+    {
+      "argv": [
+        "${HS_ROOT}/venv-03/bin/python",
+        "-B",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/source/execution_v1/fixture_replay.py",
+        "--state",
+        "${HS_ROOT}/q32-q4-full-20261109-01/reference/runs/R-repeat-0/native/root-0/captures/87/sequence.bin",
+        "--frontier",
+        "${HS_ROOT}/q32-q4-full-20261109-01/reference/runs/R-repeat-0/native/root-0/captures/87/frontier.f32",
+        "--profile",
+        "${HS_ROOT}/q32-q4-full-20261109-01/STATE_PROFILE.json",
+        "--out",
+        "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T145646Z-07/cpu/HISTORICAL_READER_FIXTURE.json"
+      ],
+      "caller_s": 0.364404308002122,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "historical-real-reader"
+    }
+  ]
+}

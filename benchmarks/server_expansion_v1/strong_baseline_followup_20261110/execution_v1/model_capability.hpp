@@ -23,7 +23,10 @@ static void m1_capability(const json& job,Pair& pool,llama_model* target,llama_m
     need(target->tok_embd&&target->tok_embd->buffer,"Actual embedding buffer");
     const auto embedding_type=ggml_backend_buffer_get_type(target->tok_embd->buffer);
     auto* embedding=ggml_backend_buft_get_device(embedding_type);
-    need(embedding,"Actual embedding device");
+    // CPU_Mapped is a host buffer with no owning backend device in the pinned
+    // ggml ABI. A null device is valid only when the actual buffer is host.
+    const bool embedding_host=ggml_backend_buft_is_host(embedding_type);
+    need(embedding||embedding_host,"Actual embedding device or explicit host buffer");
     const int selected=hs_strong_selected_arm();need(selected>=1&&selected<=3,"Actual selected implementation");
     const auto model_hash=hash_file(job.at("target_model").get<std::string>());
     need(model_hash==job.at("target_sha256"),"Actual model SHA-256");
@@ -35,7 +38,7 @@ static void m1_capability(const json& job,Pair& pool,llama_model* target,llama_m
         {"vocab",151936},{"layers",target->hparams.n_layer()},{"query_heads",target->hparams.n_head()},
         {"kv_heads",target->hparams.n_head_kv()},{"head_k",target->hparams.n_embd_head_k()},
         {"head_v",target->hparams.n_embd_head_v()},{"GPU_layers",gpu_layers},{"GPU_output",true},
-        {"embedding_device_type",ggml_backend_dev_type(embedding)==GGML_BACKEND_DEVICE_TYPE_CPU?"CPU":"GPU"},
+        {"embedding_device_type",(!embedding&&embedding_host)||(embedding&&ggml_backend_dev_type(embedding)==GGML_BACKEND_DEVICE_TYPE_CPU)?"CPU":"GPU"},
         {"target_sha256",model_hash},{"draft",false},{"k",0},{"threads",phase_threads},
         {"lowering","WHOLE"},{"native_planner",phase_lowering},{"cuda_graphs",false},{"greedy",true},{"requested_output_policy","PREFILL:last;VERIFY:all_original_rows"}};
     dump(root/"CAPABILITY.json",echo);

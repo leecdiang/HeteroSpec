@@ -39,7 +39,7 @@ def geometry(tokens):
                 input_scope='synthetic repeated exposed token stream, correctness only')
 
 
-def prepare(root,out):
+def prepare(root,out,resume_configuration=None):
     out.mkdir();old=root/'q32-q4-full-20261109-01';model=root/'q32-models-01/Qwen3-32B-Q4_K_M.gguf'
     need(model.stat().st_size==19762149024 and sha(model)==TARGET_SHA,'Exact target model')
     inv=inventory(model);need(len(inv['classes'])==8,'Frozen eight type/shape classes')
@@ -154,13 +154,19 @@ def prepare(root,out):
          stop_policy='Stop at first unexpected qualification/resource/budget/source error; no automatic native retry',
          CPU_only=True,native_model_requests_started=0)
     need(plan['budget']['cumulative_reserved_rows']<=2000000,'Cumulative row budget')
+    journal=root/'strong-baseline-followup-20261110/PR217_GLOBAL_LEDGER.jsonl'
+    if resume_configuration:
+        from resume import register_reference_reuse
+        register_reference_reuse(plan,resume_configuration,journal)
+    else:need(not journal.exists()or journal.stat().st_size==0,'Existing global journal requires explicit audited continuation')
     fresh(out/'MANIFEST.json',plan);fresh(out/'DESCRIPTOR_INVENTORY.json',inv)
     fresh(out/'BUDGET_SUMMARY.json',dict(plan['budget'],workers=len(workers),operation_kinds=dict(Counter(op['kind']for op in ops))))
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    a=p.parse_args();need(not a.out.exists(),'Fresh prospective registration');prepare(a.root,a.out)
+    p.add_argument('--resume-configuration',type=Path)
+    a=p.parse_args();need(not a.out.exists(),'Fresh prospective registration');prepare(a.root,a.out,a.resume_configuration)
 
 
 if __name__=='__main__':main()

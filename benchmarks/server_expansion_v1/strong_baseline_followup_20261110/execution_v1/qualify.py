@@ -181,7 +181,11 @@ def run(configuration):
                 if kind=='S2-fixed-diagnostic':continue
                 write(h.root/'STATE.json',dict(status='S1_RUNNING',worker=name,utc=utc(),completed_workers=len(reports)))
                 if kind.startswith('pristine-model-'):
-                    output=h.run(worker,model_job(manifest,worker,h.c['model']['path']),'R');native=output/'native'
+                    if name in manifest.get('reference_reuse',{}):
+                        from resume import reuse_reference
+                        output=reuse_reference(h,worker,model_job(manifest,worker,h.c['model']['path']))
+                    else:output=h.run(worker,model_job(manifest,worker,h.c['model']['path']),'R')
+                    native=output/'native'
                     (reference_geometry if kind.endswith('geometry')else reference_services)[name]=native
                     proof=dict(reference_only=True)
                 elif kind=='candidate-model-geometry':

@@ -56,10 +56,11 @@ def prepare(root,source,cpu,out):
                                transform='exact private path prefixes only'if value!=text else'none'))
     fresh(out/'F0_DATA/TRANSFORM_COMMITMENTS.json',transforms)
     fresh(out/'F0_DATA/REGISTRATION.json',dict(schema='hs.strong.F0.v1',registered_utc=utc(),
-          scope='S1 and fixed 72-operation S2; no GPU output exists for this epoch',
+          scope='S1 and fixed 72-operation S2; no new-epoch GPU output exists; any declared prior R reuse and failures remain retained',
           S3='User conditionally authorized; requires its own complete new-input/source/budget freeze before any S3 output',
           B2='User authorized as second priority; separate 8B ledger and complete admission required',
           model_native_requests_started=0,numeric_GPU_qualification='NOT_RUN',
+          previous_epoch_requests=read(cpu/'prospective/MANIFEST.json')['budget'].get('prior_epoch_consumed_requests',0),
           historical_reader_fixture='CPU saved-byte parser test only, not current numerical qualification',
           raw_numeric_payloads='Retained privately; public hashes do not enable independent numeric replay'))
     files=[dict(path=p.relative_to(out).as_posix(),sha256=sha(p),bytes=p.stat().st_size)

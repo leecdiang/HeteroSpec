@@ -12,7 +12,7 @@ from support import fresh,need,write,sha
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True)
-    p.add_argument('--work',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--work',type=Path,required=True);p.add_argument('--resume-configuration',type=Path);a=p.parse_args()
     here=Path(__file__).parent;work=a.work
     work.mkdir();start=time.monotonic();steps=[]
     namespace=a.root/'strong-baseline-followup-20261110'
@@ -38,7 +38,8 @@ def main():
         step('pristine-gold-build',[sys.executable,'-B',str(here/'build_gold.py'),'--root',str(a.root),'--out',str(work/'gold')])
         step('model-build',[sys.executable,'-B',str(here/'build_model.py'),'--root',str(a.root),
                             '--backend',str(work/'backend'),'--out',str(work/'model')])
-        step('prospective-manifest',[sys.executable,'-B',str(here/'prepare.py'),'--root',str(a.root),'--out',str(work/'prospective')])
+        step('prospective-manifest',[sys.executable,'-B',str(here/'prepare.py'),'--root',str(a.root),'--out',str(work/'prospective')]+
+             (['--resume-configuration',str(a.resume_configuration)]if a.resume_configuration else[]))
         step('compiled-closure',[sys.executable,'-B',str(here/'closure.py'),'--root',str(a.root),'--work',str(work),'--out',str(work/'COMPILED_CLOSURE.private.json')])
         for mode,flags in [('normal',[]),('optimized',['-O'])]:
             step('design-'+mode,[sys.executable,*flags,'-B','-m','unittest','-v','test_design_checks.py'])

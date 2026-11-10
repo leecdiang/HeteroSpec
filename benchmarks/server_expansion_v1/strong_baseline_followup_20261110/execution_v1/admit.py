@@ -18,7 +18,9 @@ def admit(root,source,cpu,public,proof_path,authority_path,out):
     for p,digest in source_files.items():
         relative=Path(p).relative_to(source);need(sha(public/relative)==digest,'Executed source differs from publicly frozen bytes')
     manifest=cpu/'prospective/MANIFEST.json';m=read(manifest);budget=m['budget']
-    need(sha(public/'F0_DATA/MANIFEST.json')==sha(manifest),'Frozen complete manifest differs')
+    from freeze_cpu import public_text
+    need((public/'F0_DATA/MANIFEST.json').read_text()==public_text(manifest.read_text(),root),
+         'Frozen complete manifest differs from the declared exact path-prefix transform')
     old=root/'q32-q4-full-20261109-01';ledger=old/'ledger.jsonl'
     need(sha(ledger)==budget['inherited_ledger_sha256'],'Live inherited consumption changed')
     executables={}
@@ -38,7 +40,9 @@ def admit(root,source,cpu,public,proof_path,authority_path,out):
     indices=[int(line.split(',')[0])for line in device_lines if line.split(',')[1].strip()==authority['gpu_uuid']]
     need(len(indices)==1 and indices[0]!=0,'Assigned UUID missing or now on protected GPU0')
     global_ledger=namespace/'PR217_GLOBAL_LEDGER.jsonl'
-    need(not global_ledger.exists()or global_ledger.stat().st_size==0,'Existing PR217 journal: audit before admitting another S1')
+    if m.get('reference_reuse'):
+        need(sha(global_ledger)==m['continuation']['global_journal_sha256'],'Global consumption changed after continuation registration')
+    else:need(not global_ledger.exists()or global_ledger.stat().st_size==0,'Existing PR217 journal: audit before admitting another S1')
     configuration=dict(schema='hs.strong.host-admission.v1',execution_phase='S1',GPU_authorized=True,
           authority_file_sha256=sha(authority_path),gpu_uuid=authority['gpu_uuid'],
           gpu_index=indices[0],parent_environment=relevant_environment(),

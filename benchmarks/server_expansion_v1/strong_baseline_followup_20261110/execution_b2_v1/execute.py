@@ -166,6 +166,10 @@ def run(configuration):
                 output=w/'runs'/worker['id'];start=time.monotonic()
                 host.run(Path(c['allocation_file']),Path(build['path']),path,output,'development')
                 caller=time.monotonic()-start
+                need(guard.poll() is None and not(w/'PAUSE.json').exists() and not(w/'STOP_REQUESTED').exists(),
+                     'Resource/stop event during completed worker; retain data without complete-panel inference')
+                observed=read(w/'RESOURCE_GUARD_LATEST.private.json')
+                need(time.time()-observed['epoch']<20 and not observed['events'],'Missing/conflicting terminal resource observation')
                 need(read(output/'LOADED_MODULES.json')==build['loaded_modules'],'Actual B2 modules differ from original qualification')
                 native=read(output/'native/result.json')
                 need(native['context']==build['context'] and native['draft_calls']==0,'Actual original context/residency')

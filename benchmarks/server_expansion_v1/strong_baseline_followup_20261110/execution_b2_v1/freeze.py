@@ -50,6 +50,8 @@ def prepare(root,work,source,main_proof,main_download,archive_source,out):
         work_root=str(work),study_root=str(root),boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
         source_files=files,frozen_files=frozen,main_delivery_proof=str(main_proof),main_delivery_proof_sha256=sha(main_proof),
         runtime=str(work/'runtime-exec-01'),guard_script=str(work/'resource_guard.py'),
+        execution_source=str(source),archive_source=str(archive_source),
+        local_export=str(out.parent/'B2_RESULT_TEXT'),
         native_parent_guard=read(work/'CURRENT_ALLOCATION_V2.private.json')['native_parent_guard'],
         allocation_file=str(work/'CURRENT_ALLOCATION_V2.private.json'),
         allocation_start_utc=now.isoformat(),allocation_end_utc=end.isoformat(),

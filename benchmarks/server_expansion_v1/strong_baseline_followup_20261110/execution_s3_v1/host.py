@@ -30,13 +30,14 @@ def relevant_environment():
 def resource(config,own_pid=None):
     """Read-only NVML/OS inventory; never initializes a CUDA context."""
     uuid=config['gpu_uuid']
-    fields='uuid,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.sm,power.draw'
+    fields='uuid,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.sm,power.draw,memory.free'
     p=subprocess.run(['nvidia-smi','--query-gpu='+fields,'--format=csv,noheader,nounits'],
                      capture_output=True,text=True,timeout=20,check=True)
     lines=[line.split(',')for line in p.stdout.splitlines()]
     selected=[row for row in lines if row[0].strip()==uuid];need(len(selected)==1,'Allocated physical GPU missing')
     g=[x.strip()for x in selected[0]];total,used=int(g[1])*1024**2,int(g[2])*1024**2
-    need(total-used>=config['gpu_reserve_bytes'],'GPU safety reserve exhausted')
+    actual_free=int(g[7])*1024**2
+    need(actual_free>=config['gpu_reserve_bytes'],'Actual NVML free-memory safety reserve exhausted')
     if own_pid is None:need(used<=config.get('max_idle_gpu_memory_bytes',128*1024**2),'Assigned GPU has pre-existing resident storage/service')
     p=subprocess.run(['nvidia-smi','--query-compute-apps=gpu_uuid,pid','--format=csv,noheader,nounits'],
                      capture_output=True,text=True,timeout=20,check=True)
@@ -53,7 +54,7 @@ def resource(config,own_pid=None):
     need(load_fraction<=config.get('max_host_load_fraction',.8),'Host load can interfere; stop own work at safe checkpoint')
     other_busy=sum(row[0].strip()!=uuid and row[3].strip().isdigit()and int(row[3])>0 for row in lines)
     return dict(utc=utc(),monotonic_ns=time.monotonic_ns(),selected_gpu=g,selected_processes=users,
-                mem_available_bytes=memory['MemAvailable'],disk_free_bytes=free,host_load_fraction=load_fraction,
+                gpu_free_bytes=actual_free,mem_available_bytes=memory['MemAvailable'],disk_free_bytes=free,host_load_fraction=load_fraction,
                 other_GPU_busy_count=other_busy,other_GPU_activity_alone_is_not_a_stop=True)
 
 

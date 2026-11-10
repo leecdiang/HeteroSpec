@@ -27,12 +27,16 @@ def admit(root,source,cpu,public,proof_path,authority_path,out):
     for role,folder,filename in [('operand','backend','operand-worker'),('gold','gold','gold-worker'),('model','model','model-worker')]:
         build=read(cpu/folder/'BUILD.json');path=cpu/folder/filename
         need(sha(path)==build['executable_sha256'],'Compiled artifact identity')
+        if (cpu/'COMPILED_ARTIFACT_REUSE.private.json').is_file():
+            reuse=read(cpu/'COMPILED_ARTIFACT_REUSE.private.json');path=Path(reuse['executables'][role]['path'])
+            need(sha(path)==build['executable_sha256'],'Unchanged original native artifact identity')
         executables[role]=dict(path=str(path),sha256=sha(path))
     reference=read(root/'run-01/build-R-01/BUILD.json')
     need(reference['reference_source_is_pristine']is True and sha(reference['executable'])==reference['executable_sha256'],'Unchanged pristine R')
     executables['R']=dict(path=reference['executable'],sha256=reference['executable_sha256'])
     need(read(cpu/'PARENT_GUARD_ZERO_GPU_PROOF.json')['status']=='PASSED','Supervisor-loss zero-GPU heartbeat gate')
     executables['guard']=dict(path=str(cpu/'parent-guard'),sha256=sha(cpu/'parent-guard'))
+    if (cpu/'COMPILED_ARTIFACT_REUSE.private.json').is_file():executables['guard']=read(cpu/'COMPILED_ARTIFACT_REUSE.private.json')['executables']['guard']
     out.mkdir(parents=True,exist_ok=True)
     start=dt.datetime.now(dt.timezone.utc);end=start+dt.timedelta(days=7)
     namespace=root/'strong-baseline-followup-20261110'
@@ -40,7 +44,7 @@ def admit(root,source,cpu,public,proof_path,authority_path,out):
     indices=[int(line.split(',')[0])for line in device_lines if line.split(',')[1].strip()==authority['gpu_uuid']]
     need(len(indices)==1 and indices[0]!=0,'Assigned UUID missing or now on protected GPU0')
     global_ledger=namespace/'PR217_GLOBAL_LEDGER.jsonl'
-    if m.get('reference_reuse'):
+    if m.get('reference_reuse')or m.get('completed_worker_reuse'):
         need(sha(global_ledger)==m['continuation']['global_journal_sha256'],'Global consumption changed after continuation registration')
     else:need(not global_ledger.exists()or global_ledger.stat().st_size==0,'Existing PR217 journal: audit before admitting another S1')
     configuration=dict(schema='hs.strong.host-admission.v1',execution_phase='S1',GPU_authorized=True,

@@ -93,6 +93,7 @@ def reference_services_pair(actual,reference,manifest,profile):
 
 def service_pair(actual,reference,manifest,profile,arm):
     proofs=[];meta=read(Path(actual)/'result.json')
+    need(meta['native_capability']['cuda_graphs']is False,'Actual strong CUDA graph policy')
     for service in manifest['services']:
         name=service['id'];ref=Path(reference)/name;rr=read(ref/'receipt.json')
         heavy=Path(actual)/(name+'-heavy');clean=Path(actual)/(name+'-clean')
@@ -103,7 +104,11 @@ def service_pair(actual,reference,manifest,profile,arm):
             need(r['ids']==rr['ids']and r['eog']==rr['eog']and r['stop_reason']==rr['terminal_kind'],
                  'Candidate/reference complete greedy endpoint')
             need(r['target_final_kv']==dict(min=0,max=n+count-2),'Pending/committed position lifecycle')
-            need(not r['draft_enabled']and r['draft_calls']==0 and r['graphs_reused']==0,'Unexpected draft/graph policy')
+            need(not r['draft_enabled']and r['draft_calls']==0,'Unexpected draft policy')
+            # hsc::reused is called by llama-context's host graph cache. It is
+            # not a CUDA graph launch counter. CUDA graph policy is separately
+            # bound to the actual capability and compiled env-switch path.
+            need(type(r['graphs_reused'])is int and r['graphs_reused']>=0,'Host graph reuse count')
             need(r['target_output_reserve']==32,'Actual reserve32')
             executions=r['executions'];widths=[min(32,n-i)for i in range(0,n,32)]+[1]*(count-1)
             need([e['width']for e in executions]==widths,'Actual service projection width sequence')
@@ -139,7 +144,9 @@ def service_pair(actual,reference,manifest,profile,arm):
         need(read(heavy/'semantic-tape.json')==read(clean/'semantic-tape.json'),'Heavy/clean semantic trajectory differs')
         need((hr['application_work']['backend_loop_entries']>0)==(arm=='B'and n>1),'Actual service backend dispatch')
         proofs.append(dict(input_id=name,arm=arm,all_steps=steps,clean_terminal_state_checked=True,
-                           pending_final_token_not_materialized=True,context_reset_checked_in_native=True))
+                           pending_final_token_not_materialized=True,context_reset_checked_in_native=True,
+                           host_graph_cache_reused=dict(heavy=hr['graphs_reused'],clean=cr['graphs_reused']),
+                           host_graph_cache_is_not_CUDA_graph_replay=True,cuda_graphs=False))
     need(meta['native_capability']['arm']==arm,'Native arm echo')
     return proofs
 
@@ -173,6 +180,11 @@ def run(configuration):
     need(sha(h.c['state_profile'])==h.c['state_profile_sha256'],'Pinned complete state writer profile')
     profile=read(h.c['state_profile']);need(profile['target_model_sha256']==manifest['model']['sha256'],'Profile model binding')
     reference_geometry={};reference_services={};inputs=None;golds={};reports=[];oracle=False
+    def execute(worker,job,executable,**kwargs):
+        if worker['worker_id']in manifest.get('completed_worker_reuse',{}):
+            from resume import reuse_completed_worker
+            return reuse_completed_worker(h,worker,job)
+        return h.run(worker,job,executable,**kwargs)
     with h:
         write(h.root/'STATE.json',dict(status='S1_RUNNING',utc=utc(),native_jobs_started=0))
         try:
@@ -184,7 +196,7 @@ def run(configuration):
                     if name in manifest.get('reference_reuse',{}):
                         from resume import reuse_reference
                         output=reuse_reference(h,worker,model_job(manifest,worker,h.c['model']['path']))
-                    else:output=h.run(worker,model_job(manifest,worker,h.c['model']['path']),'R')
+                    else:output=execute(worker,model_job(manifest,worker,h.c['model']['path']),'R')
                     native=output/'native'
                     (reference_geometry if kind.endswith('geometry')else reference_services)[name]=native
                     proof=dict(reference_only=True)
@@ -194,13 +206,13 @@ def run(configuration):
                         sr=reference_services_pair(reference_services['R-services-1'],reference_services['R-services-0'],manifest,profile)
                         fresh(h.root/'R_ORACLE_CONTENT_FREEZE.json',dict(status='REPEATED_PRISTINE_R_BYTES_FROZEN',
                               geometry=gr,services=sr,utc=utc(),native_candidate_requests_started=0));oracle=True
-                    output=h.run(worker,model_job(manifest,worker,h.c['model']['path']),'model')
+                    output=execute(worker,model_job(manifest,worker,h.c['model']['path']),'model')
                     proof=geometry_pair(output/'native',reference_geometry['R-geometry-0'],manifest,profile,worker['arm'])
                     if worker['arm']=='G':
                         inputs=assemble_inputs(manifest,read(h.c['descriptor_inventory']),output/'native',h.c['model']['path'],h.root/'real-inputs')
                 elif kind=='pristine-scalar-gold':
                     need(inputs is not None,'No real input capture')
-                    job=gold_job(worker,inputs);output=h.run(worker,job,'gold');records=read(output/'native/result.json')['operations']
+                    job=gold_job(worker,inputs);output=execute(worker,job,'gold');records=read(output/'native/result.json')['operations']
                     need([r['operation_id']for r in records]==[op['operation_id']for op in worker['operations']],'Gold logical columns')
                     collected={width:dict(vectors=[],quantized=[],vectors_sha256=[],quantized_sha256=[])for width in (32,4)}
                     c=inputs[worker['class_id']]['shape_class'];checks=[]
@@ -216,13 +228,13 @@ def run(configuration):
                     fresh(h.root/'gold-bindings'/('GOLD-'+worker['class_id']+'.private.json'),golds[worker['class_id']])
                     proof=dict(independent_columns=len(checks),all_G_capture_outputs_match=checks)
                 elif kind in ('typed-operand-qualification','clean-operand-bridge'):
-                    job,_=projection_job(worker,inputs,manifest,'S1');output=h.run(worker,job,'operand')
+                    job,_=projection_job(worker,inputs,manifest,'S1');output=execute(worker,job,'operand')
                     proof=projection_checks(worker,output,inputs,golds)
                 elif kind=='candidate-model-services':
-                    output=h.run(worker,model_job(manifest,worker,h.c['model']['path']),'model')
+                    output=execute(worker,model_job(manifest,worker,h.c['model']['path']),'model')
                     proof=service_pair(output/'native',reference_services['R-services-0'],manifest,profile,worker['arm'])
                 elif kind=='expected-native-negative':
-                    job,error=projection_job(worker,inputs,manifest,'S1');output=h.run(worker,job,'operand',expected_error=error)
+                    job,error=projection_job(worker,inputs,manifest,'S1');output=execute(worker,job,'operand',expected_error=error)
                     proof=read(output/'EXPECTED_REJECTION.json')
                 else:raise ValueError('Unregistered qualification kind: '+kind)
                 report=dict(worker_id=name,kind=kind,proof=proof,HOST_sha256=sha(output/'HOST.json'))

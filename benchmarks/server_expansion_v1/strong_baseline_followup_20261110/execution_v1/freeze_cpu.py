@@ -49,6 +49,8 @@ def prepare(root,source,cpu,out):
         for stream in ('stdout','stderr'):artifacts['F0_DATA/'+label+'.'+stream+'.log']=cpu/(label+'.'+stream+'.log')
     for name in ('mmvq.cu.diff','ggml-cuda.cu.diff'):artifacts['F0_DATA/'+name]=cpu/'backend'/name
     for name in ('llama-graph.cpp.diff','entry.cpp.diff','geometry_observer.hpp.diff','worker.cpp.diff'):artifacts['F0_DATA/'+name]=cpu/'model'/name
+    for name in ('COMPILED_ARTIFACT_REUSE.private.json','GRAPH_POLICY_READER_CORRECTION.json','FRESH_REUSED_NATIVE_ECHO.json'):
+        if (cpu/name).is_file():artifacts['F0_DATA/'+name.replace('.private','.public')]=cpu/name
     transforms=[]
     for rel,p in artifacts.items():
         text=p.read_text();value=public_text(text,root);q=out/rel;q.parent.mkdir(parents=True,exist_ok=True);q.write_text(value)

@@ -6,9 +6,16 @@
   "limitations": [
     "Only within-block adjacency is checked; cross-block carryover is not balanced",
     "Root ordinals rotate but do not cover all twelve positions",
-    "Symbolic slots do not bind actual inputs or admit execution"
+    "Symbolic slots do not bind actual inputs or admit execution",
+    "Graph probe counts exclude its R/gold/full qualification costs",
+    "Second-device panel needs at least 30 more R/bridge operations plus all other gates",
+    "Second-device roots repeat primary roots and cannot increase independent N"
   ],
   "numeric_qualification": "NOT_RUN",
+  "optional_status": {
+    "graph_probe": "NOT_ACTIVATED_NOT_AUTHORIZED",
+    "second_device": "DEFER_NOT_AUTHORIZED"
+  },
   "passed": true,
   "q32_diagnostic_balance": {
     "permutations": {
@@ -382,8 +389,179 @@
       }
     }
   },
+  "q32_replica_balance": {
+    "permutations": {
+      "BCG": 3,
+      "BGC": 3,
+      "CBG": 3,
+      "CGB": 3,
+      "GBC": 3,
+      "GCB": 3
+    },
+    "positions": {
+      "B@0": 6,
+      "B@1": 6,
+      "B@2": 6,
+      "C@0": 6,
+      "C@1": 6,
+      "C@2": 6,
+      "G@0": 6,
+      "G@1": 6,
+      "G@2": 6
+    },
+    "within_block_directed_adjacency": {
+      "B>C": 6,
+      "B>G": 6,
+      "C>B": 6,
+      "C>G": 6,
+      "G>B": 6,
+      "G>C": 6
+    }
+  },
+  "q32_replica_per_root_balance": {
+    "0": {
+      "permutations": {
+        "BCG": 1,
+        "CGB": 1,
+        "GBC": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>C": 2,
+        "C>G": 2,
+        "G>B": 2
+      }
+    },
+    "1": {
+      "permutations": {
+        "BCG": 1,
+        "CGB": 1,
+        "GBC": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>C": 2,
+        "C>G": 2,
+        "G>B": 2
+      }
+    },
+    "2": {
+      "permutations": {
+        "BCG": 1,
+        "CGB": 1,
+        "GBC": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>C": 2,
+        "C>G": 2,
+        "G>B": 2
+      }
+    },
+    "3": {
+      "permutations": {
+        "BGC": 1,
+        "CBG": 1,
+        "GCB": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>G": 2,
+        "C>B": 2,
+        "G>C": 2
+      }
+    },
+    "4": {
+      "permutations": {
+        "BGC": 1,
+        "CBG": 1,
+        "GCB": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>G": 2,
+        "C>B": 2,
+        "G>C": 2
+      }
+    },
+    "5": {
+      "permutations": {
+        "BGC": 1,
+        "CBG": 1,
+        "GCB": 1
+      },
+      "positions": {
+        "B@0": 1,
+        "B@1": 1,
+        "B@2": 1,
+        "C@0": 1,
+        "C@1": 1,
+        "C@2": 1,
+        "G@0": 1,
+        "G@1": 1,
+        "G@2": 1
+      },
+      "within_block_directed_adjacency": {
+        "B>G": 2,
+        "C>B": 2,
+        "G>C": 2
+      }
+    }
+  },
   "request_counts": {
     "b2": 128,
+    "optional_graph_candidates_only": 18,
+    "optional_second_device_panel": 108,
     "q32_diagnostic": 72,
     "q32_panel": 288
   }

@@ -22,6 +22,7 @@ PANEL_ORDERS = (
     ("BGC", "GCB", "CBG", "CGB"),
 )
 CELL_ROWS = ((0, 1, 3, 2), (1, 2, 0, 3), (2, 3, 1, 0), (3, 0, 2, 1))
+REPLICA_ROOTS = (0, 1, 2, 6, 7, 8)
 
 
 def need(condition, message):
@@ -56,6 +57,23 @@ def plan():
                 w = paired_worker(f"panel-root{root:02d}-r{rnd}-{arm}", arm, root, rnd)
                 w["domain"] = "code" if root < 6 else "math"
                 panel.append(w)
+    replica = []
+    for rnd in range(3):
+        root_order = list(range(6))
+        root_order = root_order[2 * rnd:] + root_order[:2 * rnd]
+        for slot in root_order:
+            for arm in PANEL_ORDERS[slot][rnd]:
+                w = paired_worker(f"replica-root{slot:02d}-r{rnd}-{arm}", arm, slot, rnd)
+                w["primary_root_slot"] = REPLICA_ROOTS[slot]
+                w["domain"] = "code" if slot < 3 else "math"
+                replica.append(w)
+    graph_probe = []
+    for fixture in ("q1_decode", "q32_prefill"):
+        for arm in ARMS:
+            worker_id = f"graph-{fixture}-{arm}"
+            graph_probe.append({"id": worker_id, "arm": arm, "fixture": fixture,
+                                "operations": [{"id": f"{worker_id}:{kind}", "kind": kind}
+                                               for kind in ("capture", "replay", "changed_signature")]})
     b2 = []
     cells = [(core, pos) for core in ("loop4", "packed") for pos in (248, 252)]
     for rnd, row in enumerate(CELL_ROWS):
@@ -73,7 +91,9 @@ def plan():
             b2.append({"id": worker_id, "cell": cell, "core": core,
                        "position": pos, "round": rnd, "operations": ops})
     return {"status": "SYMBOLIC_DESIGN_ONLY_NOT_NATIVE_JOBS", "q32_diagnostic": diagnostic,
-            "q32_panel": panel, "b2": b2}
+            "q32_panel": panel, "b2": b2, "q32_replica": replica, "graph_probe": graph_probe,
+            "optional_status": {"second_device": "DEFER_NOT_AUTHORIZED",
+                                "graph_probe": "NOT_ACTIVATED_NOT_AUTHORIZED"}}
 
 
 def matrices(workers):
@@ -94,7 +114,8 @@ def matrices(workers):
 def validate(p):
     ids = []
     for field, expected_workers, expected_requests in (
-        ("q32_diagnostic", 36, 72), ("q32_panel", 144, 288), ("b2", 16, 128)
+        ("q32_diagnostic", 36, 72), ("q32_panel", 144, 288), ("b2", 16, 128),
+        ("q32_replica", 54, 108)
     ):
         workers = p[field]
         need(len(workers) == expected_workers, field + " worker count")
@@ -109,7 +130,20 @@ def validate(p):
                 need([o["role"] for o in w["operations"]] == ["warm", "measured"], "Warm adjacency")
                 need(all(o["slot"] == w["slot"] and o["arm"] == w["arm"]
                          for o in w["operations"]), "Warm and measured inputs differ")
+    need(len(p["graph_probe"]) == 6, "Graph probe worker count")
+    graph_cells = Counter()
+    for w in p["graph_probe"]:
+        graph_cells[(w["fixture"], w["arm"])] += 1
+        need([o["kind"] for o in w["operations"]] == ["capture", "replay", "changed_signature"],
+             "Graph capture/replay/invalidation sequence")
+        ids.append(w["id"])
+        ids.extend(o["id"] for o in w["operations"])
+    need(graph_cells == Counter({(f, a): 1 for f in ("q1_decode", "q32_prefill") for a in ARMS}),
+         "All graph probe arms and fixtures required")
     need(len(ids) == len(set(ids)), "Duplicate slot ID")
+    need(p["optional_status"] == {"second_device": "DEFER_NOT_AUTHORIZED",
+                                  "graph_probe": "NOT_ACTIVATED_NOT_AUTHORIZED"},
+         "Symbolic optional designs never activate experiments")
     diag = matrices(p["q32_diagnostic"])
     need(set(diag["positions"].values()) == {4}, "Diagnostic position balance")
     need(len(diag["within_block_directed_adjacency"]) == 6 and
@@ -133,6 +167,21 @@ def validate(p):
         m = matrices([w for w in p["q32_panel"] if w["domain"] == domain])
         need(set(m["permutations"].values()) == {4}, "Domain permutations")
         need(set(m["positions"].values()) == {8}, "Domain positions")
+    replica = matrices(p["q32_replica"])
+    need(len(replica["permutations"]) == 6 and set(replica["permutations"].values()) == {3},
+         "Replica permutations")
+    need(len(replica["positions"]) == 9 and set(replica["positions"].values()) == {6}, "Replica positions")
+    need(len(replica["within_block_directed_adjacency"]) == 6 and
+         set(replica["within_block_directed_adjacency"].values()) == {6}, "Replica adjacency")
+    replica_per_root = {}
+    for slot in range(6):
+        ww = [w for w in p["q32_replica"] if w["slot"] == slot]
+        need(len(ww) == 9 and all(w["primary_root_slot"] == REPLICA_ROOTS[slot] for w in ww),
+             "Replica fixed main-root subset")
+        need(all(w["domain"] == ("code" if slot < 3 else "math") for w in ww), "Replica domain")
+        m = matrices(ww)
+        need(len(m["positions"]) == 9 and set(m["positions"].values()) == {1}, "Replica root positions")
+        replica_per_root[str(slot)] = m
     for cell in range(4):
         ww = [w for w in p["b2"] if w["cell"] == cell]
         need(len(ww) == 4, "B2 cell process count")
@@ -161,13 +210,21 @@ def validate(p):
     need(3053954 + rows == 3086978, "B2 row arithmetic")
     need(640 - 514 == 126 and 288 > 126, "Old Q32 envelope cannot fit new panel")
     need(256 - 72 - 16 == 168 and 384 - 288 - 60 - 16 == 20, "Proposed phase reserves")
+    need(108 + 12 + 18 == 138 and 192 - 108 - 12 - 18 - 16 == 38, "Replica qualification is extra")
+    need(514 + 256 + 384 + 192 == 1346, "No second-device historical reset")
     return {"passed": True, "gpu_execution": "NOT_RUN", "numeric_qualification": "NOT_RUN",
-            "request_counts": {"q32_diagnostic": 72, "q32_panel": 288, "b2": 128},
+            "request_counts": {"q32_diagnostic": 72, "q32_panel": 288, "b2": 128,
+                               "optional_graph_candidates_only": 18, "optional_second_device_panel": 108},
             "q32_diagnostic_balance": diag, "q32_panel_balance": panel,
             "q32_per_root_balance": per_root,
+            "q32_replica_balance": replica, "q32_replica_per_root_balance": replica_per_root,
+            "optional_status": p["optional_status"],
             "limitations": ["Only within-block adjacency is checked; cross-block carryover is not balanced",
                             "Root ordinals rotate but do not cover all twelve positions",
-                            "Symbolic slots do not bind actual inputs or admit execution"],
+                            "Symbolic slots do not bind actual inputs or admit execution",
+                            "Graph probe counts exclude its R/gold/full qualification costs",
+                            "Second-device panel needs at least 30 more R/bridge operations plus all other gates",
+                            "Second-device roots repeat primary roots and cannot increase independent N"],
             "b2_reserved_rows": rows, "b2_post_requests": 2037, "b2_post_rows": 3086978}
 
 
@@ -190,14 +247,15 @@ def check_admission(data):
     need(dates[0] < dates[1] < dates[2], "Invalid date order")
     need(all(data[k] is True for k in ("guards_passed", "qualification_passed",
                                       "resource_and_whole_panel_cost_passed")), "Unpassed gates")
-    need(data["phase"] in ("Q32_S2", "Q32_S3", "B2"), "Structural checker only covers post-qualification timing")
+    need(data["phase"] in ("Q32_S2", "Q32_S3", "B2", "Q32_REPLICA"),
+         "Structural checker only covers post-qualification timing")
     history = data["historical_8b" if data["phase"] == "B2" else "historical_q32"]
     need(isinstance(history["ledger_prefix_sha256"], str) and
          bool(re.fullmatch(r"[0-9a-f]{64}", history["ledger_prefix_sha256"])), "Missing ledger binding")
     for k in ("prospective_request_ceiling", "prospective_row_ceiling", "exact_incremental_requests",
               "exact_incremental_reserved_rows", "failure_closure_reserve_requests"):
         need(type(data[k]) is int and data[k] >= 0, "Missing integer " + k)
-    minimum = {"Q32_S2": 72, "Q32_S3": 288, "B2": 128}[data["phase"]]
+    minimum = {"Q32_S2": 72, "Q32_S3": 288, "B2": 128, "Q32_REPLICA": 108}[data["phase"]]
     need(data["exact_incremental_requests"] >= minimum, "Incomplete panel reservation")
     min_reserve = 8 if data["phase"] == "B2" else 16
     need(data["failure_closure_reserve_requests"] >= min_reserve, "Failure reserve")
@@ -209,6 +267,21 @@ def check_admission(data):
         need(data["prospective_request_ceiling"] == 2048 and data["prospective_row_ceiling"] == 8000000,
              "B2 may not silently raise old envelope")
         need(data["exact_incremental_reserved_rows"] >= 33024, "B2 row undercount")
+    else:
+        need(data["graph_assessment_mode"] in ("off_only", "assess_common_on"), "Graph mode")
+        need(data["selected_graph_policy"] in ("off", "on"), "Common graph policy required")
+        need(isinstance(data["graph_policy_decision_sha256"], str) and
+             bool(re.fullmatch(r"[0-9a-f]{64}", data["graph_policy_decision_sha256"])), "Graph decision binding")
+        need(data["graph_assessment_mode"] != "off_only" or data["selected_graph_policy"] == "off",
+             "Off-only registration cannot silently enable graphs")
+    if data["phase"] == "Q32_REPLICA":
+        need(all(data[k] is True for k in ("second_device_separately_authorized",
+                                          "replica_frozen_before_primary_results", "quiet_windows_nonoverlapping")),
+             "Second-device separate activation/freeze/quiet windows missing")
+        for field in ("own_device_R_sha256", "primary_device_binding_sha256", "replica_device_binding_sha256"):
+            need(isinstance(data[field], str) and bool(re.fullmatch(r"[0-9a-f]{64}", data[field])), field)
+        need(data["primary_device_binding_sha256"] != data["replica_device_binding_sha256"],
+             "Second physical device must be distinct")
     return {"structural_checks_passed": True, "execution_admitted_by_this_script": False,
             "requires": "Independent verification of authority, current time, files, actual ledger, jobs and qualification"}
 

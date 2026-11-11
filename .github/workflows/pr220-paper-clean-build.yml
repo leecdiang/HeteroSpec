@@ -1,3 +1,4 @@
+
 name: PR220 clean remote manuscript build
 
 on:
@@ -20,16 +21,16 @@ jobs:
       - name: Checkout the exact remote commit
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Record the checked-out revision and preserve committed PDF baselines
         shell: bash
         run: |
           set -euo pipefail
-          echo "GITHUB_SHA=\${GITHUB_SHA}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "HEAD=$(git rev-parse HEAD)"
-          echo "BRANCH=\${GITHUB_REF_NAME}"
+          echo "BRANCH=${GITHUB_REF_NAME}"
           mkdir -p papers/reference_compatible/20261111_final/ci-results/baseline
           cp papers/reference_compatible/20261111_final/paper/main.pdf papers/reference_compatible/20261111_final/ci-results/baseline/main.pdf
           cp papers/reference_compatible/20261111_final/paper/journal.pdf papers/reference_compatible/20261111_final/ci-results/baseline/journal.pdf
@@ -73,7 +74,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: pr220-remote-build-\${{ github.run_id }}
+          name: pr220-remote-build-${{ github.run_id }}
           path: |
             papers/reference_compatible/20261111_final/ci-results/**
             papers/reference_compatible/20261111_final/paper/validation_logs/**

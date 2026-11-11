@@ -1,0 +1,24 @@
+\section{Introduction}
+\label{sec:intro}
+Quantized language-model runtimes expose parallel work whenever the next inputs are already known. Prompt processing supplies a sequence of queries; speculative decoding supplies proposed continuations for batched target verification~\cite{leviathan2023,chen2023}. The execution can use this parallelism without changing the mathematical model, yet produce different floating-point outputs. Batch width can change activation quantization, reduction organization or the physical range consumed by attention. A causal mask fixes which keys are logically visible, but does not fix those numerical operations.
+
+An established deployment needs more than repeatable output: it needs compatibility with the execution already used by regression tests and stateful continuations. That execution includes the prompt producer, incoming KV state and requested output rows, as well as weights and numerical libraries. The optimization problem is to retain their numerical behavior across prefill, continuation, verification and commit while reorganizing known-query work.
+
+There are several ways to control numerical execution. Batch-invariant operators fix reduction choices~\cite{thinkingmachines}; arithmetic reconstruction and compiler enforcement can preserve existing library behavior~\cite{taming}; deterministic engines can relate state invariants to kernel contracts~\cite{vosti}. Fixed-shape schedules and verified speculation provide other system designs~\cite{corun,llm42}. We study compatibility with a quantized deployment fixed before optimization. Parallelism comes from reorganizing independent work around its reference arithmetic.
+
+\begin{figure*}[t]
+\centering
+\input{figures/overview}
+\caption{Reference-derived phase execution for one measured append. (a) Positions 765--768 require extents 768, 768, 768 and 1024. Blue and ochre track the two groups. (b) Whole lowering splits the graph; local lowering confines the split to attention and retains wider outer work. (c) Both preserve logical outputs and the frontier on one resident state. Arrows denote dependencies, not measured durations.}
+\label{fig:overview}
+\end{figure*}
+
+A \emph{reference-derived phase plan} connects these requirements (Fig.~\ref{fig:overview}). Source analysis and native tests establish an arithmetic recipe; the runtime reads cache occupancy, head and padding to assign each query its physical range. In the illustrated append, the first three queries require extent 768 and the fourth requires 1024. The plan executes these compatible groups while keeping the target and KV resident. Requested vectors remain associated with their logical rows, preserving the frontier needed after a commit or trim.
+
+Two lowerings implement these requirements. Whole-graph lowering places cuts around an entire graph and can realign subsequent groups after a physical boundary. Local-attention lowering applies the cuts within attention, retaining broader projection and feed-forward work. Projection organization is a separate choice. A backend loop reuses a reference-compatible small-column arithmetic path; independent-channel packing executes several such groups together. For the affected CUDA Q8 path, the preserved group has four columns. The mixed Q4\_K/Q6\_K extension retains scalar-column arithmetic and parallelizes the independent columns. The arithmetic group is type- and backend-specific; the physical-prefix and state interface is shared.
+
+The evaluation covers three model families and both backends. A Linux/Ampere deployment rebuilds the numerical modules and establishes its own reference. Frozen CUDA rules transfer between grouped-query and multi-head attention structures; a typed recipe extension supports a 32B mixed-quantization model. Comparisons stay within each deployment's numerical contract.
+
+On Linux/A5000, compatible speculative applications reduce resident service by 17.21\%, 25.54\% and 11.52\% relative to the fastest measured fixed target-only control for Qwen3-8B, Qwen3-14B and Llama-8B. These are application gains. Balanced factorial experiments isolate packing's 0.80\%--1.64\% increment and the smaller, geometry-dependent contribution of local cuts. In a 32B target-only deployment, channel grouping saves 5.61\% relative to graph-level scalar-column execution.
+
+The contributions are a phase-plan interface that composes producer, physical-prefix, arithmetic and state requirements; whole and local implementations with reference-compatible Q8 and mixed-Q4 groups; and an evaluation that separates structural transfer, implementation increments and complete-service value. Ordinary generation and speculative verification use the same interface, with strong simple controls and full request costs determining the useful configuration.

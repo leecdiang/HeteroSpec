@@ -1,0 +1,21 @@
+% Author-preprint typography for reference-compatible parallel execution, 2026-11-10.
+% NOT an official IEEE/TPDS stylesheet. main.tex without arxivReadable
+% retains the Computer Society journal typography and affiliation footnote.
+% No change to IEEEtran.cls, page dimensions, column widths or body leading.
+\usepackage{mathpazo}
+\renewcommand{\sfdefault}{ppl}
+\urlstyle{same}
+\makeatletter
+% Match abstract and headings to the body family. Keep the label bold,
+% the abstract itself regular; increase the front-matter text modestly.
+\renewcommand{\@IEEEabskeysecsize}{\fontsize{9}{11}\selectfont}
+% Reader-preprint title-to-body separation; keep body leading untouched.
+\def\@IEEENORMtitlevspace{1.5\baselineskip}
+\def\@IEEEMINtitlevspace{1\baselineskip}
+\makeatother
+% A quiet separator replaces the Computer Society ornamental diamond only
+% in this reader-oriented preprint. The strict journal build is unchanged.
+\renewcommand{\IEEEcompsocdiamondline}{\rule{0.45\textwidth}{0.35pt}}
+
+% The reading edition uses a plain initial; the journal edition keeps the class drop cap.
+\renewcommand{\IEEEPARstart}[2]{#1#2}

@@ -1,0 +1,35 @@
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+\input{preamble}
+\input{generated/table_macros}
+\input{generated/ampere_pilot_macro}
+\ifdefined\arxivReadable\input{preprint-style}\fi
+\begin{document}
+\ifdefined\arxivReadable
+\title{Reference-Compatible Parallel Execution\\for Quantized LLM Inference}
+\author{Chengzhan Li\\[3pt]\small University of Electronic Science and Technology of China\\Chengdu, China\\\href{mailto:chengzhan.li@std.uestc.edu.cn}{chengzhan.li@std.uestc.edu.cn}}
+\else
+\title{Reference-Compatible Parallel Execution for Quantized LLM Inference}
+\author{Chengzhan Li\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem C. Li is with the University of Electronic Science and Technology of China, Chengdu, China. E-mail: chengzhan.li@std.uestc.edu.cn.}}
+\fi
+\markboth{REFERENCE-COMPATIBLE PARALLEL EXECUTION}{}
+\IEEEtitleabstractindextext{\begin{abstract}\input{abstract}\end{abstract}
+\begin{IEEEkeywords}Parallel inference, quantized language models, numerical compatibility, execution planning, speculative decoding.\end{IEEEkeywords}}
+\maketitle
+\IEEEdisplaynontitleabstractindextext
+\input{sections/01_introduction}
+\input{sections/02_reference}
+\input{sections/03_method}
+\input{sections/04_evaluation}
+\input{sections/05_results}
+\input{sections/06_related}
+\input{sections/07_conclusion}
+\section*{Acknowledgments}
+OpenAI ChatGPT and Codex assisted with implementation, experiment and analysis tools, manuscript editing and figure code. The author is responsible for scientific interpretation and final approval.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\label{lastmainpage}
+\ifdefined\includeSupplement
+\clearpage
+\input{supplement_body}
+\fi
+\end{document}

@@ -1,0 +1,42 @@
+% Dependency/operation organization only: vertical spacing is not elapsed time.
+\begin{tikzpicture}[x=1cm,y=1cm,font=\fontsize{8.2}{9.6}\selectfont,>=Latex,
+ flow/.style={->,draw=ASVgray,line width=.65pt},
+ inner/.style={draw=ASVblue,fill=ASVblue!5,line width=.65pt,align=center,inner sep=3pt},
+ scalar/.style={draw=ASVgreen,fill=ASVgreen!5,line width=.65pt,align=center,inner sep=2pt},
+ head/.style={anchor=west,font=\fontsize{8.8}{10.2}\selectfont\bfseries}]
+\path[use as bounding box] (0,0) rectangle (17.8,4.90);
+\draw[ASVrule] (8.88,.20)--(8.88,4.74);
+\node[head] at (.08,4.66) {(a) Q8: preserve each four-column reduction};
+\node[head] at (9.14,4.66) {(b) Q4\_K / Q6\_K: preserve each scalar-column dot};
+\node[anchor=west,text=ASVgray] at (.12,4.13) {Same weights and eight input columns};
+\node[anchor=west,text=ASVgray] at (9.18,4.13) {Same per-type quantizer, dot and accumulation};
+\node[anchor=west,font=\bfseries] at (.30,3.61) {Backend loop4};
+\node[anchor=center,font=\bfseries] at (6.49,3.61) {Group packing};
+\node[inner,minimum width=3.28cm,minimum height=.63cm] (g1) at (2.02,2.99) {Original 4-column MMVQ\\$x_1\;x_2\;x_3\;x_4$};
+\node[inner,minimum width=3.28cm,minimum height=.63cm] (g2) at (2.02,1.81) {Original 4-column MMVQ\\$x_5\;x_6\;x_7\;x_8$};
+\draw[flow] (g1.south)--(g2.north) node[midway,right,text=ASVgray] {next call};
+\node[draw=ASVrule,line width=.65pt,minimum width=3.78cm,minimum height=2.10cm] (pack) at (6.49,2.39) {};
+\node[inner,minimum width=3.18cm,minimum height=.63cm] (p1) at (6.49,2.99) {Same 4-column MMVQ\\$x_1\;x_2\;x_3\;x_4$};
+\node[inner,minimum width=3.18cm,minimum height=.63cm] (p2) at (6.49,1.81) {Same 4-column MMVQ\\$x_5\;x_6\;x_7\;x_8$};
+\node[text=ASVblue,font=\fontsize{7.7}{9}\selectfont] at (6.49,2.39) {independent group index};
+\draw[ASVrule,densely dashed] (3.72,2.99)--(4.78,2.99);
+\draw[ASVrule,densely dashed] (3.72,1.81)--(4.78,1.81);
+\node[anchor=west,text=ASVgray] at (.30,.98) {Two original calls, in sequence};
+\node[anchor=center,text=ASVgray] at (6.49,.98) {One batched operation};
+\node[anchor=west] at (.30,.43) {$[K,8]\ \longrightarrow\ [K,4,2]$: the inner group stays four columns.};
+% Mixed Q4: same visual distinction, but the indivisible recipe is scalar.
+\node[anchor=west,font=\bfseries] at (9.34,3.61) {Graph-level column loop};
+\node[anchor=west,font=\bfseries] at (13.62,3.61) {Independent channels};
+\node[scalar,minimum width=2.60cm,minimum height=.40cm] (s1) at (10.83,3.00) {scalar dot $x_1$};
+\node[scalar,minimum width=2.60cm,minimum height=.40cm] (s2) at (10.83,2.30) {scalar dot $x_2$};
+\node[scalar,minimum width=2.60cm,minimum height=.40cm] (s8) at (10.83,1.55) {$\cdots$ scalar dot $x_8$};
+\draw[flow] (s1.south)--(s2.north);\draw[flow] (s2.south)--(s8.north);
+\node[draw=ASVrule,line width=.65pt,minimum width=3.74cm,minimum height=2.10cm] at (15.55,2.39) {};
+\foreach \i/\x/\y in {1/14.28/2.90,2/15.12/2.90,3/15.96/2.90,4/16.80/2.90,5/14.28/1.86,6/15.12/1.86,7/15.96/1.86,8/16.80/1.86}{
+ \node[scalar,minimum width=.66cm,minimum height=.68cm] at (\x,\y) {$x_{\i}$\\dot};
+}
+\node[text=ASVgreen,font=\fontsize{7.7}{9}\selectfont] at (15.55,2.38) {independent channel index};
+\node[anchor=center,text=ASVgray] at (10.83,.98) {Calls, then concatenate};
+\node[anchor=center,text=ASVgray] at (15.55,.98) {Group, then reshape};
+\node[anchor=west] at (9.34,.43) {$[K,8]\ \longrightarrow\ [K,1,8]$: the inner group stays one column.};
+\end{tikzpicture}

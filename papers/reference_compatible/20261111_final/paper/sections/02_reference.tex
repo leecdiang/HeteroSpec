@@ -1,0 +1,42 @@
+\section{Reference Semantics and Physical Execution}
+\label{sec:reference}
+\subsection{The fixed reference is a deployment execution}
+Let $R_d$ denote the execution fixed for deployment $d$ before candidate optimization. Its identity includes model and tokenizer bytes, prompt formatting, numerical modules, device placement, KV type and capacity, producer calls, requested outputs, sampling and stopping semantics. A candidate $F_d$ may change how known queries are scheduled while preserving the observations required by $R_d$.
+
+For a materialized token prefix $x$, write $\ell^R(x)$ for its full binary32 target vocabulary vector and $K^R(x)$ for its active KV state in canonical logical order. The numerical target at a declared observation boundary is
+\begin{equation}
+ \ell^F(x)\bit\ell^R(x),\qquad K^F(x)\bit K^R(x),
+ \label{eq:contract}
+\end{equation}
+with matching logical positions, frontier and termination behavior. Equality is checked on complete values, without a tolerance. Active state excludes unused storage, whose bytes need not describe a logical token. 
+
+The producer is phase-specific. The CUDA references use a whole-prompt caller with physical microbatch one and last-only prompt output. The Vulkan reference retains its original physical microbatch 128 producer, with the declared outer prompt chunks, then scalar continuation. Replacing that producer with scalar prefill would change the numerical reference. Likewise, a context's output reservation is a capacity declaration, not the number of occupied query rows in a call.
+
+Speculative execution evaluates prefixes that may later be rejected. Each requested target vector is compared with an independent reference forced through the same prefix after the original producer. An autonomous reference, receiving only the original prompt, supplies the emitted-token and stopping oracle. This separates numerical correspondence on a candidate branch from the free-generation endpoint. Draft logits and proposals can change; the target must satisfy the reference contract on the prefixes it actually evaluates.
+
+\subsection{The physical range participates in numerical execution}
+A measured Llama example illustrates why logical equivalence alone is insufficient. Four queries at positions 765--768 required extents $[768,768,768,1024]$ under the single-query reference. An unsplit batch used 1024 for every row. Captured visible Q, K, V, QK and effective probability prefixes were identical, but the AV outputs differed. Cropped-range and padded-range replays reproduced the respective reference and batched results~\cite{records}. The earliest saved full-vector difference preceded the first emitted-token difference, at positions 29 and 81 respectively.
+
+The intervention identifies a physical execution requirement. On Vulkan, extent changes continuity and dispatch as well, so the intervention identifies their combined physical effect. A second mechanism concerns activation arithmetic: affected Q8-weight projections use F32 activations on the scalar path, but a wider path can introduce Q8\_1 activation quantization. Retaining the F32 path restores the corresponding arithmetic condition. In a Llama control, that repair alone matched emitted tokens while 99 committed full vectors still differed; the physical-prefix repair removed the remaining discrepancies. The mechanisms are separable and have different backend implementations.
+
+The planner derives cuts from live state. At physical head 767, a Qwen witness requires extents $[768,1024,1024,1024]$; the resulting whole-graph $1+3$ plan and local-attention counterpart both preserve the independent reference. The same extent rule handles this witness and the $3+1$ example in Fig.~\ref{fig:overview}.
+
+\subsection{State and requested outputs connect the phases}
+The state at a commit contains more than a token list. It includes the materialized prefix, its active KV, the logical frontier vector and any emitted token that has not yet been materialized. A cap or end-of-generation stop can leave the last emitted token pending. Verification can instead append several proposals and then trim rejected state.
+
+Consequently, the last physical output buffer is not always the frontier of the retained logical prefix. The executor must associate requested vectors with their logical rows and preserve the required one before another native call overwrites scratch storage. It must also materialize a pending correction or bonus token exactly when the next phase requires it. These ownership rules make a compatible operator usable in a complete inference transaction.
+
+\begin{table}[t]
+\centering\footnotesize\tighttable
+\caption{Information bound by a phase plan. Source qualification establishes the arithmetic recipe; live extraction supplies the current geometry and ownership.}
+\label{tab:requirements}
+\begin{tabularx}{\columnwidth}{@{}L{1.70cm}Y@{}}\toprule
+Requirement & Effect on execution\\\midrule
+Producer and phase & Retain the original incoming state and phase-specific numerical behavior.\\
+Physical prefix & Read occupied slots, head and padding; bind each row's reference extent.\\
+Typed arithmetic & Match activation, dot/reduction, stride, placement and dispatch requirements.\\
+Requested rows & Preserve the original mask and own outputs by logical position.\\
+Commit state & Maintain active KV, trim frontier, pending token and native stopping.\\
+Reuse identity & Include effective geometry and phase policy in graph-reuse checks.\\\bottomrule
+\end{tabularx}
+\end{table}

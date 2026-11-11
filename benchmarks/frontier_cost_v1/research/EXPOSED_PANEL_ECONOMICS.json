@@ -1,0 +1,187 @@
+{
+  "schema": "heterospec.research.historical-economics.v1",
+  "status": "RECOMPUTED_HISTORICAL_DESCRIPTIVE_DATA",
+  "sources": {
+    "live": {
+      "sha256": "d827073f6b24848428a8e73b12ca4012df33f2da67ed612a18713bee49b52a2b",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/ba5b4c8e01d50d4bfaab1ac3908f798347be063a/benchmarks/rtx_q8_transfer_20261109/results_20261109/LIVE_RESULTS.json"
+    },
+    "b2": {
+      "sha256": "2944749ca52692b19cf90827d1f0ad0367328afb9a6604182e061aa6c8207b10",
+      "url": "https://github.com/leecdiang/HeteroSpec/blob/4fe337a8ff349d547023f9dd60b8e114e5323207/benchmarks/server_expansion_v1/strong_baseline_followup_20261110/RESULTS_B2_20261110/INDEPENDENT_PUBLIC_STATS_01.json"
+    }
+  },
+  "rtx": {
+    "fixed_control": "LOCAL-loop4-k3",
+    "service_total_s": 183.03557699999993,
+    "root_clusters": 16,
+    "paired_order_blocks": 8,
+    "phases": [
+      {
+        "field": "target_prefill_s",
+        "seconds": 65.1487578,
+        "service_fraction": 0.3559349437295462,
+        "required_fractional_phase_reduction_for_5pct_service": 0.14047510895134824
+      },
+      {
+        "field": "target_verify_s",
+        "seconds": 72.1597334,
+        "service_fraction": 0.3942388391520192,
+        "required_fractional_phase_reduction_for_5pct_service": 0.1268266721451052
+      },
+      {
+        "field": "draft_prefill_s",
+        "seconds": 8.748020000000004,
+        "service_fraction": 0.04779409633570859,
+        "required_fractional_phase_reduction_for_5pct_service": 1.0461543126330293
+      },
+      {
+        "field": "draft_propose_s",
+        "seconds": 25.201981200000002,
+        "service_fraction": 0.1376889761710097,
+        "required_fractional_phase_reduction_for_5pct_service": 0.36313727787401084
+      },
+      {
+        "field": "draft_sync_s",
+        "seconds": 8.966255599999991,
+        "service_fraction": 0.04898640880073274,
+        "required_fractional_phase_reduction_for_5pct_service": 1.0206912738468001
+      }
+    ]
+  },
+  "B2": {
+    "measured_operations": 64,
+    "warmups_excluded": 64,
+    "cells": [
+      {
+        "core": "loop4",
+        "boundary": 248,
+        "processes": 4,
+        "ratio_q8_over_q4pair": 0.9904445372731789,
+        "local_operation_reduction_fraction": 0.009555462726821062,
+        "minimum_process_ratio": 0.9414492734041041,
+        "maximum_process_ratio": 1.0426534263843414,
+        "hypothetical_service_coverage_needed_for_5pct": 5.2326089724211755,
+        "same_ratio_and_same_operation_count_assumption": true,
+        "per_process": [
+          {
+            "worker": "r0-p0-loop4-248",
+            "ratio_q8_over_q4pair": 1.0426534263843414
+          },
+          {
+            "worker": "r1-p2-loop4-248",
+            "ratio_q8_over_q4pair": 0.9414492734041041
+          },
+          {
+            "worker": "r2-p3-loop4-248",
+            "ratio_q8_over_q4pair": 1.0011897641395608
+          },
+          {
+            "worker": "r3-p1-loop4-248",
+            "ratio_q8_over_q4pair": 0.9791908438499349
+          }
+        ]
+      },
+      {
+        "core": "loop4",
+        "boundary": 252,
+        "processes": 4,
+        "ratio_q8_over_q4pair": 0.978065078348427,
+        "local_operation_reduction_fraction": 0.02193492165157296,
+        "minimum_process_ratio": 0.9521206935753128,
+        "maximum_process_ratio": 1.0230506371560766,
+        "hypothetical_service_coverage_needed_for_5pct": 2.279470188871839,
+        "same_ratio_and_same_operation_count_assumption": true,
+        "per_process": [
+          {
+            "worker": "r0-p1-loop4-252",
+            "ratio_q8_over_q4pair": 0.9522379294217845
+          },
+          {
+            "worker": "r1-p0-loop4-252",
+            "ratio_q8_over_q4pair": 0.9521206935753128
+          },
+          {
+            "worker": "r2-p2-loop4-252",
+            "ratio_q8_over_q4pair": 0.9865892984433793
+          },
+          {
+            "worker": "r3-p3-loop4-252",
+            "ratio_q8_over_q4pair": 1.0230506371560766
+          }
+        ]
+      },
+      {
+        "core": "packed",
+        "boundary": 248,
+        "processes": 4,
+        "ratio_q8_over_q4pair": 0.9369889121771803,
+        "local_operation_reduction_fraction": 0.06301108782281972,
+        "minimum_process_ratio": 0.891884090291209,
+        "maximum_process_ratio": 1.001187354693348,
+        "hypothetical_service_coverage_needed_for_5pct": 0.7935111379221785,
+        "same_ratio_and_same_operation_count_assumption": true,
+        "per_process": [
+          {
+            "worker": "r0-p3-packed-248",
+            "ratio_q8_over_q4pair": 1.001187354693348
+          },
+          {
+            "worker": "r1-p1-packed-248",
+            "ratio_q8_over_q4pair": 0.891884090291209
+          },
+          {
+            "worker": "r2-p0-packed-248",
+            "ratio_q8_over_q4pair": 0.9398714375578332
+          },
+          {
+            "worker": "r3-p2-packed-248",
+            "ratio_q8_over_q4pair": 0.9184289875683336
+          }
+        ]
+      },
+      {
+        "core": "packed",
+        "boundary": 252,
+        "processes": 4,
+        "ratio_q8_over_q4pair": 0.9475656348625566,
+        "local_operation_reduction_fraction": 0.05243436513744337,
+        "minimum_process_ratio": 0.9254603098822999,
+        "maximum_process_ratio": 0.9777128704924594,
+        "hypothetical_service_coverage_needed_for_5pct": 0.953573097889861,
+        "same_ratio_and_same_operation_count_assumption": true,
+        "per_process": [
+          {
+            "worker": "r0-p2-packed-252",
+            "ratio_q8_over_q4pair": 0.9777128704924594
+          },
+          {
+            "worker": "r1-p3-packed-252",
+            "ratio_q8_over_q4pair": 0.9346443205126551
+          },
+          {
+            "worker": "r2-p1-packed-252",
+            "ratio_q8_over_q4pair": 0.9254603098822999
+          },
+          {
+            "worker": "r3-p0-packed-252",
+            "ratio_q8_over_q4pair": 0.9532826879035788
+          }
+        ]
+      }
+    ],
+    "process_ratio_definition": "mean(q8 times) / mean(q4pair times) within one worker; geometric mean of four process ratios"
+  },
+  "limits": [
+    "Existing exposed data, not a new GPU run, confirmation population or native numerical requalification.",
+    "The RTX service fractions and B2 operation ratios are different deployment populations; never multiply them together.",
+    "Coverage arithmetic assumes the observed local ratio applies to every replaced operation, with fixed operation count, all other costs unchanged, and no new overhead.",
+    "The coverage calculation is a conditional break-even illustration, not a measured service bound or a forecast.",
+    "Four processes in B2 are not four independent input roots; min/max are descriptive, not confidence intervals.",
+    "Historical operation summaries are not admitted into the current controller cost catalog."
+  ],
+  "new_model_requests": 0,
+  "new_GPU_operations": 0,
+  "new_method_service_performance_claim": false,
+  "analyzer_sha256": "6704194ecc9a838d9fe09df956f1d24f6c6791ddb4c9b87ede7b096d423206e0"
+}

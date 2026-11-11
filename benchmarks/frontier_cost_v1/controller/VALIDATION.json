@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "tests": 15,
+  "failures": 0,
+  "errors": 0,
+  "scope": "Synthetic model properties and runtime abstention only. No native/model/GPU execution.",
+  "source_sha256": {
+    "causal_policy.py": "8882bae0389009f24c5490e9acf34d3723361195c9ebe93410132096a5953c52",
+    "cost_admission_v2.py": "469735678f4b00274e8c59d42532fe03845f2ea2cc153bcdb95aae2fe28cdaf9",
+    "test_causal_policy.py": "5a36cb6b27c2d258efe15150d7e39759247e2c86938c8d28a0c59c19fdc1dd1c",
+    "run_checks.py": "c094fd065ec56ca4f8aab418704db4404811db8624da401c61d75996c411a186"
+  },
+  "model_requests": 0,
+  "GPU_requests": 0,
+  "new_stage_costs": 0,
+  "controller_overhead": {
+    "model_recursion": {
+      "calls": 200,
+      "mean_nanoseconds": 294404.12,
+      "median_nanoseconds": 257337.5,
+      "p95_nanoseconds": 448400,
+      "maximum_nanoseconds": 1613210
+    },
+    "runtime_abstention": {
+      "calls": 200,
+      "mean_nanoseconds": 767.97,
+      "median_nanoseconds": 711.0,
+      "p95_nanoseconds": 873,
+      "maximum_nanoseconds": 5000
+    }
+  },
+  "overhead_scope": "External CPU Python call boundary INCLUDING final policy accounting/return; same-process repeats, first call retained; excludes feature/state construction, receipt admission, GPU synchronization and runtime adapter. Internal watchdog spans are not total controller cost.",
+  "overhead_may_not_be_used_as_GPU_cost": true,
+  "cost_admission": {
+    "baseline_exact_run_validated": true,
+    "baseline_cost_eligible": false,
+    "baseline_run_sha256": "135e1901e8c2715492f512c54dc949d21b363b9dddf9a7d01f7c9a4a16a4324f",
+    "pin_source": "Immutable prior PR221 SOURCE_SNAPSHOTS.json, cpu_protocol_final entry",
+    "redteam_checks": [
+      {
+        "mutation": "changed_same_length_history",
+        "status": "REJECTED",
+        "reason": "BINDING_MISMATCH",
+        "repin_scope": "REDTEAM_STRUCTURAL_TEST_ONLY"
+      },
+      {
+        "mutation": "failed_run_status",
+        "status": "REJECTED",
+        "reason": "RUN_NOT_SUCCESSFUL",
+        "repin_scope": "REDTEAM_STRUCTURAL_TEST_ONLY"
+      },
+      {
+        "mutation": "changed_model_identity",
+        "status": "REJECTED",
+        "reason": "BINDING_MISMATCH",
+        "repin_scope": "REDTEAM_STRUCTURAL_TEST_ONLY"
+      },
+      {
+        "mutation": "missing_repeat_panel",
+        "status": "REJECTED",
+        "reason": "RUN_WORK_BINDING",
+        "repin_scope": "REDTEAM_STRUCTURAL_TEST_ONLY"
+      },
+      {
+        "mutation": "empty_actual_module_inventory",
+        "status": "REJECTED",
+        "reason": "INCOMPLETE_ACTUAL_MODULES",
+        "repin_scope": "REDTEAM_STRUCTURAL_TEST_ONLY"
+      }
+    ],
+    "new_model_requests": 0,
+    "new_GPU_requests": 0,
+    "actual_resident_stage_costs": 0
+  },
+  "timing_span_correction": {
+    "initial_receipt": "checks_01/SUMMARY.json",
+    "superseded_by": "checks_02/SUMMARY.json",
+    "reason": "Initial measurement used internal span and excluded final ledger; final report externally times complete Python call. Prior receipt and exact source snapshot are retained."
+  },
+  "limitations": [
+    "No native/model/GPU requests",
+    "No clean resident stage costs admitted",
+    "No historical R qualification",
+    "Synthetic at-only recurrence assumes common cost-relevant successor state; postcondition labels do not authenticate it",
+    "No whole-request optimality or speedup claim"
+  ]
+}

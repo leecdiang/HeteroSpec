@@ -1,0 +1,192 @@
+{
+  "schema": "heterospec.production-pair-plan.v1",
+  "purpose": "Original-entry preparation and instrumented diagnostic qualification only",
+  "public_dependency_commit": "d6053addcd973e503ebeaae495b3326d6bf99bd4",
+  "inputs_sha256": "83ece672eb2cd73eadbdff4c4895bf6a4f7d2f7178fb246d9922848860d8bcfc",
+  "jobs": [
+    {
+      "name": "capture-eager",
+      "deferred": 0,
+      "capture": true,
+      "binary": "capture_0",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    },
+    {
+      "name": "capture-deferred",
+      "deferred": 1,
+      "capture": true,
+      "binary": "capture_1",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    },
+    {
+      "name": "clean-r0-eager",
+      "deferred": 0,
+      "capture": false,
+      "binary": "clean_0",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    },
+    {
+      "name": "clean-r0-deferred",
+      "deferred": 1,
+      "capture": false,
+      "binary": "clean_1",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    },
+    {
+      "name": "clean-r1-deferred",
+      "deferred": 1,
+      "capture": false,
+      "binary": "clean_1",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    },
+    {
+      "name": "clean-r1-eager",
+      "deferred": 0,
+      "capture": false,
+      "binary": "clean_0",
+      "request_names": [
+        "diagnostic-0",
+        "diagnostic-1"
+      ],
+      "context_creation_ceiling": 2,
+      "model_load_ceiling": 2,
+      "work_ceiling": {
+        "requests": 2,
+        "cycles": 30,
+        "target_decode_calls": 39,
+        "draft_decode_calls": 242,
+        "target_physical_microbatches": 39,
+        "draft_physical_microbatches": 308,
+        "target_rows": 508,
+        "draft_rows": 508
+      }
+    }
+  ],
+  "processes": 6,
+  "request_ceiling": 12,
+  "context_creation_ceiling": 12,
+  "model_load_ceiling": 12,
+  "work_ceiling": {
+    "requests": 12,
+    "cycles": 180,
+    "target_decode_calls": 234,
+    "draft_decode_calls": 1452,
+    "target_physical_microbatches": 234,
+    "draft_physical_microbatches": 1848,
+    "target_rows": 3048,
+    "draft_rows": 3048
+  },
+  "process_seconds": 1800,
+  "capture_storage_ceiling": {
+    "sidecar_bytes_per_process": 2088173568,
+    "all_capture_bytes_per_process": 3244876800,
+    "minimum_free_disk_bytes": 6758189056,
+    "metadata_allowance_bytes_per_state": 1048576,
+    "model_structure_binding": {
+      "target": {
+        "layers": 36,
+        "K_elements": 1024,
+        "V_elements": 1024
+      },
+      "draft": {
+        "layers": 28,
+        "K_elements": 1024,
+        "V_elements": 1024
+      }
+    },
+    "requests": [
+      {
+        "name": "diagnostic-0",
+        "maximum_active_rows": 175,
+        "target_state_bytes_ceiling": 26853376,
+        "draft_state_bytes_ceiling": 21118976
+      },
+      {
+        "name": "diagnostic-1",
+        "maximum_active_rows": 141,
+        "target_state_bytes_ceiling": 21839872,
+        "draft_state_bytes_ceiling": 17219584
+      }
+    ]
+  },
+  "historical_R_bridge": "OPEN_NOT_PROVIDED",
+  "clean_full_vector_state_bridge": "OPEN_NOT_OBSERVABLE_AT_THIS_ENTRY",
+  "performance_admitted": false,
+  "service_scope": "Original worker service_seconds; excludes model/pool load, result-file I/O, text tokenization, networking and queueing.",
+  "early_stop": "Any malformed, incomplete, unexpected, over-budget or unequal capture result stops later jobs. No retries or replacement roots."
+}

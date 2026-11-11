@@ -1,0 +1,235 @@
+{
+  "schema": "heterospec.v1-admission-redteam.v1",
+  "scope": "Offline negative fixtures from an existing q1 CPU run. Not observations or new model runs.",
+  "native_model_executions": 0,
+  "CUDA_driver_calls": 0,
+  "new_measurements": 0,
+  "baseline_source": {
+    "verify_run.py": {
+      "bytes": 5012,
+      "sha256": "7749726db762f007a7aebce359ee958ee942aa46ca06cca938c153f3f7f2be0f"
+    },
+    "summarize_cost.py": {
+      "bytes": 3031,
+      "sha256": "9f9c6a5e43755274a03c0a40d1f7d3468016ecf1a13a547912697c5e1fe1bd2e"
+    }
+  },
+  "baseline_original_records": {
+    "RUN.json": {
+      "bytes": 13243,
+      "sha256": "135e1901e8c2715492f512c54dc949d21b363b9dddf9a7d01f7c9a4a16a4324f"
+    },
+    "JOB.json": {
+      "bytes": 7376,
+      "sha256": "7cd1668e9f2ae5e9a55cb599ad3424529f99a71b925f732b3534b24231cc3c0f"
+    },
+    "PLAN.json": {
+      "bytes": 780,
+      "sha256": "63e78e7c7730223dd715e6cd8aca247fde356998898bde1fce97383af933f2cd"
+    },
+    "native/RESULT.json": {
+      "bytes": 36269,
+      "sha256": "285739a70ae3392cc30d9d2ff95ae413e9d1e2f306abf4aa52f1159d634acfe8"
+    },
+    "native/blobs/583ab8c1e94c80e8fcb0bf167144b2e7f38e7203f6e2c4ce2ea168dae41c0399.bin": {
+      "bytes": 515072,
+      "sha256": "583ab8c1e94c80e8fcb0bf167144b2e7f38e7203f6e2c4ce2ea168dae41c0399"
+    },
+    "native/blobs/588118e2a3264e2361306b37778c3610e54e094ee8f9af64cbde767cc4c6792e.bin": {
+      "bytes": 510952,
+      "sha256": "588118e2a3264e2361306b37778c3610e54e094ee8f9af64cbde767cc4c6792e"
+    },
+    "native/blobs/5e8a48b9bb863ff3a0b0c309929687e6d7c89ae10838645c993f699482f83984.bin": {
+      "bytes": 512,
+      "sha256": "5e8a48b9bb863ff3a0b0c309929687e6d7c89ae10838645c993f699482f83984"
+    },
+    "native/blobs/6a2462d4814bfafd7dcedafd15c9c86dfc376fb6f05d3d7d1d0b1a647537239d.bin": {
+      "bytes": 513012,
+      "sha256": "6a2462d4814bfafd7dcedafd15c9c86dfc376fb6f05d3d7d1d0b1a647537239d"
+    },
+    "native/blobs/74a1c5573f6ffb7ee582b41666765fb3eb19378e9155535b768d0e9edbc82ea0.bin": {
+      "bytes": 512,
+      "sha256": "74a1c5573f6ffb7ee582b41666765fb3eb19378e9155535b768d0e9edbc82ea0"
+    },
+    "native/blobs/7528723595d9148cd763f52e5ca4e67aeec03b36cc2ac84ee4250b114d871f66.bin": {
+      "bytes": 521252,
+      "sha256": "7528723595d9148cd763f52e5ca4e67aeec03b36cc2ac84ee4250b114d871f66"
+    },
+    "native/blobs/7ecf87ac7828764f7368ea3966060cf94c3577699fe300dc01a1ef49fac01690.bin": {
+      "bytes": 519192,
+      "sha256": "7ecf87ac7828764f7368ea3966060cf94c3577699fe300dc01a1ef49fac01690"
+    },
+    "native/blobs/8c7b7c2d62afca7bd879b95f9dce9d0da3839478b40be837403ffac5aca972bd.bin": {
+      "bytes": 512,
+      "sha256": "8c7b7c2d62afca7bd879b95f9dce9d0da3839478b40be837403ffac5aca972bd"
+    },
+    "native/blobs/a5b7345c9d1b7f2914876dc954c2c9722f5c22d73fe781c87a23d07fc4ca5990.bin": {
+      "bytes": 512,
+      "sha256": "a5b7345c9d1b7f2914876dc954c2c9722f5c22d73fe781c87a23d07fc4ca5990"
+    },
+    "native/blobs/b421d2296b158614ae7d4f505cc76fd3eb335c50ec949bb9cfaed6d80f260760.bin": {
+      "bytes": 523312,
+      "sha256": "b421d2296b158614ae7d4f505cc76fd3eb335c50ec949bb9cfaed6d80f260760"
+    }
+  },
+  "cases": [
+    {
+      "name": "baseline_copy",
+      "kind": "UNMODIFIED_COPY",
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 40,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 10,
+          "native_calls": 136,
+          "target_rows": 3524
+        },
+        "measurement_records": 8,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_CPU_FIXTURE"
+    },
+    {
+      "name": "changed_same_length_history",
+      "kind": "REDTEAM_ONLY_MUTATED_COPY",
+      "change": "Only JOB's first history token changed, same length; RUN's job hash remains original.",
+      "original_job_sha256": "7cd1668e9f2ae5e9a55cb599ad3424529f99a71b925f732b3534b24231cc3c0f",
+      "mutated_job_sha256": "65a8f8663fbc8a4bee426424736f2048a000562c38e8536f67335bda41e8c65d",
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 40,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 10,
+          "native_calls": 136,
+          "target_rows": 3524
+        },
+        "measurement_records": 8,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_MUTATED_OR_INCOMPLETE_ARTIFACT"
+    },
+    {
+      "name": "failed_run_status",
+      "kind": "REDTEAM_ONLY_MUTATED_COPY",
+      "change": "Only RUN execution status/returncode changed to timeout; complete saved RESULT bytes untouched.",
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 40,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 10,
+          "native_calls": 136,
+          "target_rows": 3524
+        },
+        "measurement_records": 8,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_MUTATED_OR_INCOMPLETE_ARTIFACT"
+    },
+    {
+      "name": "changed_model_identity",
+      "kind": "REDTEAM_ONLY_MUTATED_COPY",
+      "change": "Only RUN's model digest changed; saved RESULT and blobs untouched.",
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 40,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 10,
+          "native_calls": 136,
+          "target_rows": 3524
+        },
+        "measurement_records": 8,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_MUTATED_OR_INCOMPLETE_ARTIFACT"
+    },
+    {
+      "name": "missing_repeat_panel",
+      "kind": "REDTEAM_ONLY_MUTATED_COPY",
+      "change": "Only existing repeat-0 observations retained, result work recomputed; declared repeats=2, PLAN and RUN work remain complete-panel values.",
+      "retained_measurements": 4,
+      "declared_repeats": 2,
+      "intentional_structural_fixture_result_digest_updated": true,
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 20,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 6,
+          "native_calls": 78,
+          "target_rows": 2014
+        },
+        "measurement_records": 4,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_MUTATED_OR_INCOMPLETE_ARTIFACT"
+    },
+    {
+      "name": "empty_actual_module_inventory",
+      "kind": "REDTEAM_ONLY_MUTATED_COPY",
+      "change": "Saved actual-module inventories removed; RUN's four bound numerical libraries remain.",
+      "expected_bound_libraries": 4,
+      "intentional_structural_fixture_result_digest_updated": true,
+      "legacy_replay_accepted": true,
+      "replay": {
+        "status": "PASS_RECORDED_RESULT_AND_RAW_REPLAY",
+        "native_result_status": "PASS",
+        "comparison_blob_pairs": 40,
+        "unique_verified_blobs": 10,
+        "verified_raw_bytes": 3104840,
+        "independent_work": {
+          "contexts": 10,
+          "native_calls": 136,
+          "target_rows": 3524
+        },
+        "measurement_records": 8,
+        "GPU_qualification": "NOT_RUN",
+        "historical_GPU_reference_qualification": "NOT_ESTABLISHED",
+        "performance_claim": false
+      },
+      "cost_summary_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+      "emitted_cost_pairs": 0,
+      "controller_admission_expected": "REJECT_MUTATED_OR_INCOMPLETE_ARTIFACT"
+    }
+  ],
+  "baseline_unchanged": true,
+  "conclusion": "Legacy PASS means consistency of selected saved records, not controller cost admission. No cost pairs or new observations were generated."
+}

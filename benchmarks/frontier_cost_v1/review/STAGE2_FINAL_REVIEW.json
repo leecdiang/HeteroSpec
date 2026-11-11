@@ -1,0 +1,276 @@
+{
+  "schema": "heterospec.stage2.independent-review.v1",
+  "status": "PASS_DRAFT_RESEARCH_PUBLICATION_ONLY",
+  "reviewer_scope": "Independent read-only source review, host tests, historical arithmetic, original diagnostic replay and labeled negative fixtures.",
+  "reviewer_new_model_executions": 0,
+  "reviewer_native_executable_runs": 0,
+  "reviewer_CUDA_driver_calls": 0,
+  "reviewer_compile_invocations": 0,
+  "performance_admitted": false,
+  "real_stage_costs_admitted": 0,
+  "historical_R_bridge": "OPEN",
+  "clean_vector_state_bridge": "OPEN",
+  "production_GPU_qualification": "NOT_RUN",
+  "independent_checks": {
+    "v1_baseline_and_negative_replays": 6,
+    "v2_admission_checks": 12,
+    "new_component_host_checks": 12,
+    "author_policy_tests_independently_executed": 15,
+    "author_protocol_tests_independently_executed": 10,
+    "forecast_rows_independently_recomputed": 287,
+    "B2_cells_independently_recomputed": 4,
+    "RTX_phases_independently_recomputed": 5
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "status": "LEGACY_SCOPE_FAIL_V2_SPECIFIC_FIXES_PASS",
+      "claim": "Old replay PASS is not controller admission."
+    },
+    {
+      "id": "R2",
+      "status": "PASS_BOUNDED",
+      "claim": "Genuine old CPU replay remains valid and imports zero production costs."
+    },
+    {
+      "id": "R3",
+      "status": "PASS_SYNTHETIC_ONLY",
+      "claim": "Causal model edges and runtime abstention checked; frontier-state equivalence is assumed only in the surrogate."
+    },
+    {
+      "id": "R4",
+      "status": "CORRECTED_AND_HOST_CHECKED",
+      "claim": "Original terminal checkpoint has two files; initial/commit metadata remains required."
+    },
+    {
+      "id": "R5",
+      "status": "CORRECTED_AND_HOST_CHECKED",
+      "claim": "Complete status/count/attempt pairing and cross-run early rejection checked."
+    },
+    {
+      "id": "R6",
+      "status": "PASS_PLAN_ONLY",
+      "claim": "12 requests ceiling, 1686 decode APIs, 2082 physical microbatches, 6096 total rows."
+    },
+    {
+      "id": "R7",
+      "status": "PASS_READONLY_BUILD_BINDINGS",
+      "claim": "Four CPU-linked outputs verified; clean arms equal prior guarded entry bytes."
+    },
+    {
+      "id": "R8",
+      "status": "PASS_CONDITIONAL_ARITHMETIC",
+      "claim": "Historical B2/RTX arithmetic and prequential forecast replay independently match; no speedup inferred."
+    },
+    {
+      "id": "R9",
+      "status": "OPEN",
+      "claim": "No demonstrated new 5% method, production stage costs, GPU qualification or generality."
+    }
+  ],
+  "reviewed_sources": {
+    "controller/cost_admission_v2.py": {
+      "bytes": 16524,
+      "sha256": "469735678f4b00274e8c59d42532fe03845f2ea2cc153bcdb95aae2fe28cdaf9"
+    },
+    "controller/causal_policy.py": {
+      "bytes": 13721,
+      "sha256": "8882bae0389009f24c5490e9acf34d3723361195c9ebe93410132096a5953c52"
+    },
+    "controller/trace_diagnostic.py": {
+      "bytes": 4332,
+      "sha256": "16b926c7c8a6ca5f6d26de18293a05e6520015603b4e771b24e738f19cb0aa96"
+    },
+    "controller/test_causal_policy.py": {
+      "bytes": 9699,
+      "sha256": "5a36cb6b27c2d258efe15150d7e39759247e2c86938c8d28a0c59c19fdc1dd1c"
+    },
+    "production_compare/protocol.py": {
+      "bytes": 9373,
+      "sha256": "c1920719a8992fb155525b9595c22cca324e0a02ae2f3239ab310b27ac5b777b"
+    },
+    "production_compare/request_audit.cpp": {
+      "bytes": 9684,
+      "sha256": "3f0bb2914ce23c5974e660f205f8b2a62dc667fca79784a60eec4bb29619a109"
+    },
+    "production_compare/build_production.py": {
+      "bytes": 6336,
+      "sha256": "92ee51618ad2b631c926ec4e7598a2fe774da90bd256e385395d96263a2d61cb"
+    },
+    "production_compare/run_production.py": {
+      "bytes": 13122,
+      "sha256": "b1621bea4f2cbd9383f9d57bd0b9487ff5899b88ad7e84a90d2cf6cd241cdd05"
+    },
+    "production_compare/verify_production.py": {
+      "bytes": 17363,
+      "sha256": "b39d2820853fcec8902da0fbad3f3d2392fa22bb6e0e3d77817ef9e630716f0d"
+    },
+    "production_compare/test_protocol.py": {
+      "bytes": 6459,
+      "sha256": "a6789169749f19e4486694115b30aeb98132e6c82ef931b9e561870e78ba46e8"
+    },
+    "controller/README.md": {
+      "bytes": 9800,
+      "sha256": "36ba6756036fd74bc8c7de4fb5079ae1e0a603c0b1955d457abaaed81cfc0c3e"
+    },
+    "controller/DESIGN.md": {
+      "bytes": 13765,
+      "sha256": "44c09a44c7f1a1588aa2dac1e054fb3992c486e4c3940a25a545adc145b462dd"
+    },
+    "controller/run_checks.py": {
+      "bytes": 3692,
+      "sha256": "c094fd065ec56ca4f8aab418704db4404811db8624da401c61d75996c411a186"
+    },
+    "production_compare/README.md": {
+      "bytes": 10930,
+      "sha256": "3e5dc37610ff4572d852e1676acdcb3d1be863dc281972ae1fab3c73a59ba98a"
+    }
+  },
+  "root_documents": {
+    "NEXT_STAGE.md": {
+      "bytes": 8397,
+      "sha256": "3830eb92b2a030939a1cfc3c9d1d4f5a5272dd1de0976db2af7c65b8a31c6d4e"
+    },
+    "RESEARCH_FINDINGS.md": {
+      "bytes": 18850,
+      "sha256": "0bc208ebe99f2c749dd8609372bf23d9bab692bea87b394a1cb681826ca88bf0"
+    },
+    "STUDY_DESIGN.md": {
+      "bytes": 9734,
+      "sha256": "61c8fd4afedbcbc95b153802cbe7626cbc7145c5badebcf4cb85eb45b4239b32"
+    },
+    "TPDS_FOLLOWUP.md": {
+      "bytes": 10500,
+      "sha256": "ee1a53b8b55fac2d7236df7be1d8df79f3fab6092e3cbc83390d4a3c02966d2f"
+    }
+  },
+  "local_links_checked": [
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "RESEARCH_FINDINGS.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "STUDY_DESIGN.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "TPDS_FOLLOWUP.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "controller/DESIGN.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "production_compare/README.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "review/RESEARCH_VERDICT.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "review/STAGE2_FINAL_REVIEW.md"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "research/economic_review.py"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "research/EXPOSED_PANEL_ECONOMICS.json"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "review/ECONOMICS_AUDIT.json"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "controller/cost_admission_v2.py"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "controller/causal_policy.py"
+    },
+    {
+      "document": "NEXT_STAGE.md",
+      "target": "controller/README.md"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "research/EXPOSED_PANEL_ECONOMICS.json"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "research/economic_review.py"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "controller/trace_diagnostic.py"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "controller/README.md"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "STUDY_DESIGN.md"
+    },
+    {
+      "document": "RESEARCH_FINDINGS.md",
+      "target": "TPDS_FOLLOWUP.md"
+    },
+    {
+      "document": "STUDY_DESIGN.md",
+      "target": "TPDS_FOLLOWUP.md"
+    }
+  ],
+  "compact_receipts": {
+    "v1_repro_01/REPRODUCTION.json": {
+      "bytes": 9423,
+      "sha256": "ad9067191a0ac43d54dd678e5e395518aa5abdea257a932dac6123980b26cfaa"
+    },
+    "v2_audit_01/AUDIT.json": {
+      "bytes": 3497,
+      "sha256": "8b8c01e09e49b9450fd7a58594bc9322e71c0dbe21687af58913e49e79658a7a"
+    },
+    "components_audit_04/AUDIT.json": {
+      "bytes": 3342,
+      "sha256": "11694d004f5d6d31f76e9c31da1ab46f30907676490787d84c04b1a4c2410101"
+    },
+    "HOST_CHECKS_FINAL.json": {
+      "bytes": 1714,
+      "sha256": "10af152e365b877022a3a416b06c201bc1f1c18ad583048cb25d1d73893bd2c1"
+    },
+    "ECONOMICS_AUDIT.json": {
+      "bytes": 2507,
+      "sha256": "34603b13d2a5071dbdd08ee58fea9a169980187983475eeb44a07a2b358581f6"
+    },
+    "TRACE_FORECAST_AUDIT.json": {
+      "bytes": 1859,
+      "sha256": "3dd9d9b885330ef15724ebbb2a133681ba0c383e0a89624bb1f350af793ca31e"
+    },
+    "PRODUCTION_BUILD_AUDIT.json": {
+      "bytes": 1187,
+      "sha256": "c17360bfb0fe49ef5bc6f2e63ebf045be7d08310f1bc6b9320424d51b8bf5c8d"
+    }
+  },
+  "notes": [
+    "Earlier reviewer host fixture omitted initial position metadata and was rejected; retained separately, not a product observation.",
+    "Internal watchdog measures a decision span; full controller-call overhead requires an outer timer including ledger/return work.",
+    "Neither nonempty postcondition strings nor equal logical frontier establish physical graph/cache state equivalence.",
+    "All copied raw variants and manually generated vectors/states are explicitly negative or HOST_ONLY fixtures."
+  ],
+  "review_report": {
+    "bytes": 14524,
+    "sha256": "6b746f40c22ad4a0578718cd093d099ec31f5b8eb61e6e3cb70af16a83b42535"
+  },
+  "scope_extension": {
+    "latest_manuscript_anchor_reported_by_parent": "e8a4981ef7db8f05cff7144fd4edc6e5a4109343",
+    "TPDS_followup_design_review": "PASS_DESIGN_ONLY",
+    "new_long_prefix_execution_authorized_by_profile": false,
+    "PDF_visual_review": "NOT_PERFORMED",
+    "live_PR_and_Actions_retrieval": "Owned by parent; not independently repeated by this reviewer"
+  }
+}

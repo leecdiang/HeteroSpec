@@ -1,0 +1,58 @@
+--- a/formal.cpp
++++ b/formal.cpp
+@@ -17,11 +17,12 @@
+ double seconds(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
+ void dump(fs::path p,const json&j){std::ofstream f(p);f<<j.dump(2)<<"\n";need(bool(f),"write JSON");}
+ Clock::time_point whole;double deadline=230;void cutoff(){need(seconds(whole)<deadline,"internal deadline");}
++#include "raw_capture.h"
+ struct Obs{
+  std::string phase="setup";bool bad=false;int requests=0;std::map<std::string,json>seen;
+  static json tensor(ggml_tensor*t){return{{"name",t->name},{"ne",{t->ne[0],t->ne[1],t->ne[2],t->ne[3]}},{"nb",{t->nb[0],t->nb[1],t->nb[2],t->nb[3]}},{"type",ggml_type_name(t->type)}};}
+  static bool cb(ggml_tensor*t,bool ask,void*u){
+-  auto&o=*static_cast<Obs*>(u);if(!ask){o.bad=true;return true;}
++  auto&o=*static_cast<Obs*>(u);if(!ask){return raw_stage_capture(t,false,o.phase);}
+   if(o.phase!="VERIFY")return false;
+   std::string name=t->name;if(name.rfind("hs_",0)!=0&&name.rfind("kq",0)!=0)return false;
+   auto j=tensor(t);j["op"]=ggml_op_name(t->op);j["sources"]=json::array();
+@@ -29,7 +30,7 @@
+   auto*d=t->buffer?ggml_backend_buft_get_device(ggml_backend_buffer_get_type(t->buffer)):nullptr;
+   j["device"]=d?ggml_backend_dev_description(d):"UNKNOWN";
+   if(!d||std::string(ggml_backend_dev_description(d)).find("B570")==std::string::npos)o.bad=true;
+-  auto key=j.dump();o.seen[key]=j;o.requests++;return false;
++  auto key=j.dump();o.seen[key]=j;o.requests++;return raw_stage_capture(t,true,o.phase);
+  }
+ };
+ struct Context{
+@@ -117,7 +118,7 @@
+   need(argc==8,"formal OUTPUT TARGET DRAFT PANEL MODE INDEX STUDY_ROOT");
+   root=argv[1];need(!fs::exists(root),"fresh output");fs::create_directories(root);
+   std::ifstream fi(argv[4]);json panel;fi>>panel;std::string mode=argv[5];int index=std::stoi(argv[6]);fs::path study=argv[7];
+-  need((mode=="qual"||mode=="time")&&index>=0&&index<4,"mode/index");deadline=mode=="qual"?230:590;
++  need((mode=="qual")&&index>=0&&index<4,"mode/index");deadline=mode=="qual"?230:590;
+   result["mode"]=mode;result["index"]=index;dump(root/"result.json",result);
+   llama_backend_init();initialized=true;ggml_backend_dev_t gpu=nullptr;
+   for(size_t i=0;i<ggml_backend_dev_count();i++){auto*x=ggml_backend_dev_get(i);if(std::string(ggml_backend_dev_description(x)).find("B570")!=std::string::npos){need(!gpu,"ambiguous");gpu=x;}}
+@@ -152,23 +153,6 @@
+    int qb_files=0;for(auto&e:fs::recursive_directory_iterator(root/"qual-2"))if(e.is_regular_file()&&e.path().extension()==".f32")qb_files++;
+    need(matches==qb_files&&matches>0,"raw inventory mismatch");
+    result["full_logit_pairs"]=matches;result["status"]="QUALIFICATION_PASS";
+-  }else{
+-   std::vector<std::vector<std::string>> orders={{"R","PQ_A","QB","PQ_B"},{"PQ_A","PQ_B","R","QB"},{"PQ_B","QB","PQ_A","R"},{"QB","R","PQ_B","PQ_A"}};
+-   std::ifstream wref("C:/hs/b570-spec-bridge-20261020200000/results/result.json");json wr;wref>>wr;
+-   for(auto label:orders[index]){
+-    auto x=run(panel["warmup"],label,false,"warmup");
+-    endpoint(wr["requests"][label=="R"?0:1],x,label!="R");
+-   }
+-   for(int j=0;j<4;j++){
+-    int task=(j+index)%4;std::ifstream rf(study/("qual-"+std::to_string(task))/"result.json");json ref;rf>>ref;
+-    need(ref["status"]=="QUALIFICATION_PASS","qualification not passed");
+-    auto order=orders[(index+task)%4];
+-    for(auto label:order){
+-     auto x=run(panel["inputs"][task],label,false,"steady");
+-     endpoint(ref["requests"][label=="R"?0:1],x,label!="R");
+-    }
+-   }
+-   result["status"]="TIMING_PASS";
+   }
+   cleanup();result["normal_cleanup_returned"]=true;dump(root/"result.json",result);return 0;
+  }catch(const std::exception&e){

@@ -1,0 +1,18 @@
+diff --git a/ggml/src/ggml-vulkan/ggml-vulkan.cpp b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+index 62f90847..da6be4c4 100644
+--- a/ggml/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -18973,7 +18973,12 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+                     a = op->src[2];
+                     b = op->src[1];
+                 }
+-                if (a->ne[3] != b->ne[3]) {
++                // The mat-vec shader already broadcasts batch 3; keep this allowance scoped to QB.
++                const bool qb_batch_broadcast = op->op == GGML_OP_MUL_MAT &&
++                    a->type == GGML_TYPE_F16 && b->type == GGML_TYPE_F32 &&
++                    a->ne[3] == 1 && (b->ne[3] == 2 || b->ne[3] == 4) &&
++                    b->ne[1] == 1 && a->ne[2] == b->ne[2] && ggml_is_contiguous(a);
++                if (a->ne[3] != b->ne[3] && !qb_batch_broadcast) {
+                     return false;
+                 }
+                 if (!(ggml_vk_dim01_contiguous(op->src[0]) || op->src[0]->type == GGML_TYPE_F32 || op->src[0]->type == GGML_TYPE_F16 || op->src[0]->type == GGML_TYPE_BF16) ||

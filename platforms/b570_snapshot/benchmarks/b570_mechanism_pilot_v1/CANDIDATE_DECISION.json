@@ -1,0 +1,137 @@
+{
+  "utc": "2026-10-07T10:43:04.481268+00:00",
+  "decision": "IMPLEMENT_ONE_FIXED_FAMILY",
+  "mechanism_result_sha256": "0908ec4e3010862037025d1fb5f91b6d570894f2c3352561fce86537a2167eaa",
+  "mechanism": [
+    {
+      "task": "HumanEval/145",
+      "round": 1,
+      "classification": "INTERACTION",
+      "table": [
+        [
+          71465,
+          279
+        ],
+        [
+          279,
+          279
+        ]
+      ]
+    },
+    {
+      "task": "HumanEval/145",
+      "round": 2,
+      "classification": "INTERACTION",
+      "table": [
+        [
+          71465,
+          279
+        ],
+        [
+          279,
+          279
+        ]
+      ]
+    },
+    {
+      "task": "HumanEval/42",
+      "round": 1,
+      "classification": "INTERACTION",
+      "table": [
+        [
+          432,
+          1817
+        ],
+        [
+          1817,
+          1817
+        ]
+      ]
+    },
+    {
+      "task": "HumanEval/42",
+      "round": 2,
+      "classification": "INTERACTION",
+      "table": [
+        [
+          432,
+          1817
+        ],
+        [
+          1817,
+          1817
+        ]
+      ]
+    },
+    {
+      "task": "MBPP/72",
+      "round": 1,
+      "classification": "STATE_EFFECT",
+      "table": [
+        [
+          320,
+          320
+        ],
+        [
+          308,
+          308
+        ]
+      ]
+    },
+    {
+      "task": "MBPP/72",
+      "round": 2,
+      "classification": "STATE_EFFECT",
+      "table": [
+        [
+          320,
+          320
+        ],
+        [
+          308,
+          308
+        ]
+      ]
+    }
+  ],
+  "family": "CANONICAL_PREFILL_INPLACE_PHASE_BINDING",
+  "config": {
+    "k": 2,
+    "target_prefill_ub": 128,
+    "target_continuation_ub": 1,
+    "draft_ub": 1,
+    "target_output_reservation": 512,
+    "target_output_reservation_per_sequence": 1,
+    "cap": 128,
+    "ctx": 1024,
+    "threads": 10,
+    "batch_threads": 10
+  },
+  "implementation": "Ordinary target caller constructs prompt state in one context using the ordinary reservation and prompt sampler acceptance; sample initial pending once before privately supported in-place UB phase binding; retain the existing speculation accept/bonus/rollback loop. Rebuild private scheduling reservation without KV transfer or second target context.",
+  "past_evidence": "MBPP72 valid state-only contrast under identical current recipes; inherited state must be covered. HumanEval42 and145 each show conditional interaction: neither good past nor good current recipe alone suffices.",
+  "prospective_prediction": "Ordinary R prompt construction plus scalar target verification may repair72 and preserve all five exposed HumanEval recoveries. This composition is untested, not already proved by the local crosses.",
+  "cost_hypothesis": "Remove three serialized witness readbacks, target-context creation and host/device state handoff from each online request. Private phase scheduler reservation, synchronization, draft, rollback and reset remain charged. No measured operator attribution and no presumed victory over ordinary R.",
+  "numeric_scope": "Frontend state construction and current whole execution recipe; no shader, precision, weight or attention-kernel modification; not pure UB causality.",
+  "candidate_count": 1,
+  "search_allowed": false,
+  "online_routing": "No task ID, reference, divergence, margin, future proposal or alternate model forward routing.",
+  "gate": {
+    "max_nonwarm": 12,
+    "tasks": [
+      "HumanEval/42",
+      "HumanEval/145",
+      "HumanEval/138",
+      "HumanEval/134",
+      "HumanEval/58",
+      "MBPP/72"
+    ],
+    "rounds": [
+      "capture_on",
+      "capture_off"
+    ],
+    "reference": "immutable old R arrays offline only",
+    "stop": "First complete-output or endpoint mismatch stops candidate and gates D/E. No numerical repair or second family after outcome."
+  },
+  "library_isolation": "New private llama-b570-pilot DLL and new candidate executable names; old runtime, A/B controls and historical binaries remain untouched.",
+  "negative_outcome_valid": true
+}

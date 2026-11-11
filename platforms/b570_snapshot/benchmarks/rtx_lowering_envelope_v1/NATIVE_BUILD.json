@@ -1,0 +1,59 @@
+{
+  "status": "BUILT_NOT_GPU_QUERIED",
+  "server_sha256": "abf3b86ff10e001b1052aca7a7f2ff6c2f73448e976346fba646d7d1eb0c3eea",
+  "operator_sha256": "4ed174a1b8473e70433e674f5975c1f55d1becaac4d7d368c8ee13aa1f230a3d",
+  "cmake_sha256": "ab8247ca4554871e5d75c0ee118ee8663727bd6fdf37ad76b17e9cc8d5f286a8",
+  "compiler_sha256": "086ce9d47ba42f33a514e1a6e04eb1d4a8fa1d75e0868e0213caad447c91e864",
+  "commands": [
+    [
+      "configure",
+      [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\cmake\\data\\bin\\cmake.exe",
+        "-S",
+        "D:\\hs113\\benchmarks\\rtx_lowering_envelope_v1\\native\\source",
+        "-B",
+        "D:\\hs113\\benchmarks\\rtx_lowering_envelope_v1\\native\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_MAKE_PROGRAM=D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\ninja.exe",
+        "-DCMAKE_C_COMPILER=D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "-DCMAKE_C_COMPILER_ARG1=cc",
+        "-DCMAKE_CXX_COMPILER=D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\ziglang\\zig.exe",
+        "-DCMAKE_CXX_COMPILER_ARG1=c++",
+        "-DCMAKE_AR=D:\\HeteroSpec-PC\\scripts\\debug\\cuda_divergence\\zig-ar.cmd",
+        "-DCMAKE_RANLIB=D:\\HeteroSpec-PC\\scripts\\debug\\cuda_divergence\\zig-ranlib.cmd",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_SHARED_LIBS=OFF",
+        "-DGGML_BACKEND_DL=ON",
+        "-DGGML_CPU=OFF",
+        "-DGGML_CUDA=OFF",
+        "-DLLAMA_SUBPROCESS=OFF",
+        "-DLLAMA_BUILD_APP=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_MTMD=OFF",
+        "-DLLAMA_OPENSSL=OFF",
+        "-DLLAMA_BUILD_UI=OFF",
+        "-DLLAMA_USE_PREBUILT_UI=OFF",
+        "-DLLAMA_BUILD_NUMBER=10839",
+        "-DLLAMA_BUILD_COMMIT=0cae43063",
+        "-DCMAKE_EXE_LINKER_FLAGS=-lpsapi",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+      ]
+    ],
+    [
+      "build",
+      [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Lib\\site-packages\\cmake\\data\\bin\\cmake.exe",
+        "--build",
+        "D:\\hs113\\benchmarks\\rtx_lowering_envelope_v1\\native\\build",
+        "--target",
+        "lowering113",
+        "llama-server",
+        "-j",
+        "2"
+      ]
+    ]
+  ],
+  "new_GPU_model_device_query_starts": 0
+}

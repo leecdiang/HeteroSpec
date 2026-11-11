@@ -1,0 +1,40 @@
+# Caption handoff — no manuscript edits
+
+Existing checkpoint captions are retained below, with context moved out of artwork appended. Figure numbers/float placement remain an integration decision. LaTeX references point to the existing manuscript labels.
+
+## figure1A
+
+```latex
+\textbf{Favorable local signals, divergent realized outcomes}. Near-one-step target batching and favorable isolated drafting do not consistently translate into qualified end-to-end gains in the tested cases. The same tested M4 Metal stack exhibits a profitable HumanEval regime and a negative representative-24Q regime in separate frozen studies. RTX batched verification is physically cheap but fails correctness qualification. The 358H NPU has higher isolated median throughput at 8,192 tokens yet reaches only 0.352$\times$ realized speedup. Rows are heterogeneous case summaries, not a hardware ranking or common quantitative axis. M4 micro values describe the shared path in a separate micro study, not independent measurements in each workload. The 8,192-token NPU example is contextualized by all three contexts in Figure~\ref{fig:state}. Headline speedups cover post-prefill decode; Figures~\ref{fig:m4}, \ref{fig:verification}, and~\ref{fig:state} give conditions, uncertainty, and the two measured diagnoses.
+```
+
+## figure1B_table
+
+```latex
+\textbf{Favorable local signals, divergent realized outcomes}. Near-one-step target batching and favorable isolated drafting do not consistently translate into qualified end-to-end gains in the tested cases. The same tested M4 Metal stack exhibits a profitable HumanEval regime and a negative representative-24Q regime in separate frozen studies. RTX batched verification is physically cheap but fails correctness qualification. The 358H NPU has higher isolated median throughput at 8,192 tokens yet reaches only 0.352$\times$ realized speedup. Rows are heterogeneous case summaries, not a hardware ranking or common quantitative axis. M4 micro values describe the shared path in a separate micro study, not independent measurements in each workload. The 8,192-token NPU example is contextualized by all three contexts in Figure~\ref{fig:state}. Headline speedups cover post-prefill decode; Figures~\ref{fig:m4}, \ref{fig:verification}, and~\ref{fig:state} give conditions, uncertainty, and the two measured diagnoses.
+```
+
+## verification
+
+```latex
+\textbf{Correctness qualification changes which verification path is usable}. Each mark is one measured context cell; range segments span those cells, not confidence intervals. Filled markers indicate qualified tested paths; open markers indicate blocked or diagnostic paths. Serialization yields an exact secondary RTX control, but the B570 serialized diagnostic remains globally inadmissible despite improving observed exactness from 45/90 to 60/90 pairs. Contexts and runtime stacks are not fully matched. The target-forward proxy $V_2^{\mathrm{micro}}$ is not complete realized target-side cost $R_{\mathrm{target}}$ or an end-to-end speedup. Qualification is scoped to the frozen workload and execution path, not a device family. M4 contexts are 512/2,048/8,192 tokens, RTX depths 0/256, and B570 contexts 512/2,048; nearby cells may overlap. Circles denote batched/fast paths and squares serialized paths. Ranges are not CIs; $V_2^{\mathrm{micro}}\ne R_{\mathrm{target}}$.
+```
+
+## m4
+
+```latex
+\textbf{Opposite profitability regimes on the same tested M4 stack}. Representative 24Q yields 0.842$\times$ [0.809, 0.877], while the separately preregistered HumanEval30 fixed-$k=2$ study yields 1.387$\times$ [1.351, 1.422]. Points are campaign prompt geometric means of paired decode speedups; intervals are campaign-specific 95\% prompt-bootstrap intervals. The dashed line marks parity. Both paths satisfy token equality (72/72 and 90/90 pairs), which is not functional HumanEval pass@$k$. These are separate studies, not a paired between-workload comparison; differing workloads and session conditions do not isolate workload-only causality.
+```
+
+## state
+
+```latex
+\textbf{Isolated draft advantage does not survive the measured stateful integration}. (A) Phase-1 median steady-state draft throughput and 95\% repetition-bootstrap intervals, five repetitions per cell; the NPU median advantage grows across the tested contexts. (B) Phase-3 arithmetic mean post-prefill seconds per request over 90 observations per path, all exact. CPU and NPU totals are 13.25 s and 27.54 s against a 9.58 s mean baseline. The CPU path is target-side dominated (87.34\%); the NPU path spends 58.35\% in the measured replay-plus-proposal call. The 0.734$\times$ and 0.352$\times$ headlines use the separate prompt-GM estimator and are not ratios of the arithmetic mean bars. Replay and proposal share one timed OpenVINO call; replay-only time is not measured. Initial prompt prefill is excluded. This diagnoses the tested runtime interface, not intrinsic NPU capability or a measured benefit from a state-persistent intervention. Together with Figure~\ref{fig:verification}, it identifies two measured reasons local opportunity need not become realized gain; the M4 contrast remains a separate empirical observation. CPU replay plus proposal is 12.63\%; NPU complete target work is 41.63\%. Residuals are 4.81 ms (0.04\%) and 5.06 ms (0.02\%). Prompt-GM speedup 95\% CIs are [0.693, 0.771] and [0.333, 0.369], respectively. The vertical dashed line is the shared arithmetic-mean baseline. Isolated throughput excludes the full-prefix state cost; its device marks are horizontally offset for readability.
+```
+
+## appendix_table
+
+```latex
+\textbf{Evidence inventory across tested regimes}. Categorical columns distinguish globally blocked paths from exact negative and profitable regimes. Rows annotate observed constraints rather than define an exhaustive taxonomy. Both B570 paths remain diagnostic and globally inadmissible. RTX serialized controls are secondary evidence; 358H outcome and decomposition support primary and mechanism claims, respectively. Empty cells indicate no displayed case, not impossibility. No hardware ordering or continuous correctness metric is implied. P: primary; S: secondary; M: mechanism; D: diagnostic. RTX serialized groups CPU-to-RTX and RTX-to-RTX controls, 90/90 exact pairs each. Fractions denote generated-token equality, not functional correctness.
+```
+

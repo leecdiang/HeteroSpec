@@ -1,0 +1,65 @@
+{
+  "boundaries": [
+    {
+      "input": "APPS/test/858",
+      "cycle": 5,
+      "head": 254,
+      "extents": [
+        256,
+        256,
+        512,
+        512
+      ]
+    },
+    {
+      "input": "MBPP/123",
+      "cycle": 0,
+      "head": 47,
+      "extents": [
+        256,
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "input": "GSM8K/test/111",
+      "cycle": 0,
+      "head": 92,
+      "extents": [
+        256,
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "input": "GSM8K/test/120",
+      "cycle": 0,
+      "head": 63,
+      "extents": [
+        256,
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "input": "APPS/test/858",
+      "cycle": 6,
+      "head": 258,
+      "extents": [
+        512,
+        512,
+        512,
+        512
+      ]
+    }
+  ],
+  "ordinary_input": "MBPP/123",
+  "normalization": {
+    "source": "Pinned CUDA MUL offload uses ggml_nrows >= 32; supervisor clears GGML environment overrides.",
+    "prediction": "On a host-resident layer, K has 8 heads: 8 scalar rows <32, 8*4 batch rows >=32, select scalar false. Q has 40 heads: 40 and 160 both >=32, select true.",
+    "target_gpu_layers": 24
+  }
+}

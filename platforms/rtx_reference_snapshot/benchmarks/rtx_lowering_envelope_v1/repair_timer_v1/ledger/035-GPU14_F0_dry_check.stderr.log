@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\repair_timer_v1\run_gpu_regression.py", line 103, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\repair_timer_v1\run_gpu_regression.py", line 24, in main
+    begin=time.perf_counter();f0=load(R/'GPU14_F0.json');check(f0)
+                                                         ^^^^^^^^^
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\repair_timer_v1\run_gpu_regression.py", line 20, in check
+    for p in f0['files']:assert sha(p['path'])==p['sha256'],p['path']
+                                ^^^^^^^^^^^^^^
+  File "D:\hs113\benchmarks\rtx_lowering_envelope_v1\repair_timer_v1\audit_regression.py", line 8, in sha
+    def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1020, in read_bytes
+    return f.read()
+           ^^^^^^^^
+MemoryError

@@ -1,0 +1,23 @@
+# Two bounded candidate policies — development specification
+
+Source dependency: a3bf06ccaba6e4d7563b5bf5cb318b246727281c. These are exposed-data feasibility checks, never held-out validation. Initial versions only; zero outcome-driven revisions are planned. Primary objective is one configuration-level action restoring every declared baseline deviation on a whole workload without creating a new token/endpoint deviation. Partial improvement is reported but does not pass this gate.
+
+## P1: stage/state fingerprint selection — not implemented
+
+Proposed rule: acquire a baseline trace; compare its meaningfully aligned live prefill/continuation state with a fixed reference witness; choose a qualified action affecting the earliest observed differing stage, otherwise abstain. Costs would include baseline/reference execution, full-state acquisition/alignment and final full-workload candidate verification. A mismatch localizes neither a unique origin nor the direction of repair. Missing live reference/U2 internals and later decision KV prevent executing this rule on the supplied evidence. Even an observed difference would not establish which action restores the reference. The /15 repair and /25 regression share the same prescribed N0/N1 stage/shape change. No stage classifier, fitted threshold, hardware-to-remedy map or fake selector is built. P1 has no passed policy leakage test.
+
+## P2: charged proxy screening with native verification — exploratory replay
+
+This is a generic screening baseline, not a proposed distinct research method. Its deterministic specification is recorded before implementation. It sees only ordered opaque action handles, whether a retained qualified proxy exists, and replies from a charged query interface. No task IDs, platform names, reference token arrays, future native labels or top-candidate outcomes are policy inputs.
+
+1. Acquire fixed reference and baseline workload records through the query API; charge both equally to every comparison. Existing stored answers cost CPU reads in this phase; the ledger separately records the historical model-record equivalents a prospective acquisition would require.
+2. Visit actually supported actions in a fixed structural order: qualified native intervention first, ordinary alternative second where supported. This order is not optimized after looking at outcomes.
+3. If an action has a qualified proxy, request its whole-workload result. Charge before revealing anything. UNKNOWN marks that action unassessable. FAIL screens it out and retains its native result as unqueried; this is a potentially false rejection on future configurations, not a universal certificate. No native output is inferred as measured from this screening decision.
+4. For an unscreened action, request its full actual workload result and charge it. Select only if all declared reference arrays and full contract boundaries agree, repeats are stable and coverage is complete. This actual candidate result plus independent CPU comparison is final verification; no second uncounted generation is assumed.
+5. Stop at the first verified success. If all evaluable actions fail/screen out, ABSTAIN. If any action is UNKNOWN and none succeeds, ABSTAIN_UNKNOWN. The user may then choose ordinary reference fallback; it is reported separately, never relabelled as an intervention success.
+
+Replay contexts: RTX exposed HumanEval 19 (native N1 with H1 proxy; ordinary U2 without a cheaper proxy), B570 exposed HumanEval 24 (native N1 with T1 proxy). A supplementary already-exposed RTX MBPP 24 context includes an explicit UNKNOWN U2 cell and is not pooled with the main contexts. Current proxy bindings rely on retained qualification and finite prediction closure; no costless extrapolation is licensed. The RTX H1 proxy retains draft and shared target verification work.
+
+Comparators use identical common reference/baseline acquisition and the same workload success contract: reference fallback; no change; ordinary U2; fixed-order enumeration of actual eligible actions (both RTX orders; the single B570 order); P2. An unavailable U2 is UNKNOWN across the entire workload, not excluded. Enumeration requests the actual action result directly and stops on verified success. Repetitions are charged observations/stability checks, not independent diagnosis cases.
+
+Validation will check duplicate/missing keys, malformed endpoint contracts, missing-counterfactual propagation, charging before outcome access, identifier invariance, and unchanged decisions when hidden unqueried native outcomes change. P2's screening may abstain when an unqueried action would have succeeded; that limitation is retained rather than silently giving it oracle access.

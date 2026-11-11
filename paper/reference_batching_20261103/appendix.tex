@@ -1,0 +1,63 @@
+\section{Numerical and transactional conditions}
+\label{app:conditions}
+The runtime preserves the reference through both computation and state ownership. Each target cycle consumes the pending token exactly once, verifies the supplied draft rows, commits accepted tokens and a correction or bonus as appropriate, and removes rejected KV positions before continuing. A reference-preserving attention call cannot compensate for a different state supplied upstream. The observed producer effects and the Vulkan activation intervention motivate checking that state as well as local operators.
+
+QB preserves the native head map $\kappa(a)$ and query order. For query $i$ and head $a$, QK selects the same Q and K entries, softmax uses the corresponding causal mask, and AV reads the same visible V values. Physical-prefix grouping additionally preserves the descriptor extent used for the scalar query. The backend adapter must retain the applicable arithmetic path. This decomposition explains which observations support which part of the implementation: address checks establish indexing, native stage comparisons establish the captured numerical behavior, and complete requests test their stateful composition.
+
+The source guards are executable conditions, not a classifier predicting arbitrary future input behavior. No online execution of $R$ is charged or used to select a path in the reported timings. The method's finite confirmation applies to its frozen configuration and output window. The existing diagnostic fallback for unsupported graph features is not relabeled as a universal reference guarantee.
+
+\section{Evidence and model-transfer details}
+\label{app:transfer}
+The original CUDA Llama diagnostic contains 54 requests and 5,916 complete vectors. Its natural failure is at output 81; mapping saved vectors reveals the earlier common-prefix discrepancy at output 29. The causal study uses same-state consumers and crossed physical extents. Late-cycle consumers can already agree on a wrong original-reference decision because earlier state differences have propagated.
+
+Vulkan recovers that diagnostic before its independent development. Its projection-only candidate passes development endpoints but retains 99 committed vector differences. The combined development matrix contains 36 requests, 3,152 saved vectors and 1,920 committed candidate vectors. Disabling prefix grouping restores the projection-only matrix; disabling Q8 precision control restores endpoint failures. The stock reference remains unchanged. These factor reversals support the two-mechanism interpretation.
+
+The CUDA Qwen3-14B placement repair has a separate twelve-input unseen confirmation. In the later combined-build regressions, Qwen3-8B uses twelve exposed inputs and Qwen3-14B uses sixteen, with 144/192 candidate requests and 24/32 original-reference requests. Both placement and prefix code are loaded. The summaries do not independently count actual prefix-split events, so these results establish combined-build compatibility.
+
+Vulkan's historical Qwen adapter sets the layout but leaves the new precision and prefix switches off. Its twelve-request regression and 914 saved vectors/descriptors establish compatibility of the prior path. The two original P1 consumer failures on MATH-500 prealgebra/1865 and /1804 therefore remain active transfer targets. Their P4T consumer paths already pass, so switching the producer to P4T would not demonstrate that the new rule repairs P1. GSM8K/train/1184 additionally changes the natural serial endpoint under P4T and tests the producer side.
+
+RTX's extra non-reference committed-vector comparison is a descriptive reconstruction beyond its registered endpoint/observer gates; it is not a newly imposed prospective gate. Both platforms' saved comparisons include candidate-R controls. No model forward was run for this manuscript revision.
+
+The CUDA confirmation audit reconstructs 23,080 saved vectors; its 120 committed-vector comparison items contain no differences from the original reference. Vulkan reconstructs 23,718 saved vectors and compares 14,555 committed candidate vectors exactly with the original scalar vectors. These totals describe saved checks; the experimental unit remains the input.
+
+\section{Complete-cost reconstruction}
+\label{app:cost}
+The source package retains all 144 blocks per platform, each with six measured service times. The reconstruction uses the stored values directly; it recomputes arithmetic PQ controls, session means, equal-weight log aggregates, A/A screens and slower-block counts. All 1,728 measured times are included. Warmup completion and native endpoint checks remain in the source-host audit.
+
+On CUDA, 38 of 144 speculative QB blocks are slower than the PQ control mean; on Vulkan, two are slower. For target-only QB/PQ, the counts are 73 and zero. Thus a favorable session aggregate is not equivalent to every individual request improving. The target-only ratio is a post-hoc paired description.
+
+The observed six-session speculative ratios are
+\[
+\begin{array}{ll}
+\text{CUDA:}&.97361,\ .96126,\ .97762,\\
+           &.98169,\ .97896,\ .98018;\\[2pt]
+\text{Vulkan:}&.94601,\ .95149,\ .94934,\\
+             &.95265,\ .94803,\ .95581.
+\end{array}
+\]
+The screening thresholds are computed from the original input-aggregate symmetric A/A definition. The practical screen is not an interval estimate of a population effect. No pooling combines the two devices or the earlier twelve-input studies.
+
+The target-only loop still decodes one pending token per iteration. Its UB4 capacity permits multirow prefill. Consequently, $M_{\QB}/R$ combines prefill geometry, scoped arithmetic and complete-path costs. The present time window supports the total comparison; a dedicated stage diagnostic is needed to assign a contribution to prefill. All arms load their declared model resources outside the service window, while target-only generation creates no draft context and performs no draft computation.
+
+Earlier experiments retain useful independent roles: the three-family E1/E2 study tests local PQ/QB correspondence and representation cost; the matched Qwen3 lifecycle study tests $k$ and context lifetime; the three-date GS/PQ/QB study tests scope and draft value; the Vulkan state study supplies producer-dependent counterexamples. Their complete records remain in the earlier source package~\cite{paperbaseline}. They are not converted into new Llama replicates.
+
+\section{Shared source implementation}
+\label{app:shared}
+The shared C++17 planner accepts actual cache occupancy, append slots, capacity and padding. It returns scalar extents and a maximal adjacent partition, using wide intermediate arithmetic for padding. The native integration script replaces the duplicate extractor and grouping code in recovered CUDA/Vulkan source trees and includes explicit policy identity in the graph reuse predicate. It writes a separate candidate tree and preserves the source guards.
+
+CPU validation compares extents with an independently implemented scalar-allocation loop, covers padding boundaries and capacity limits, checks rejected sparse/noncontiguous states, and compares small partitions with exhaustive contiguous alternatives. Integration checks compile the generated cache method and reject source drift. The policy-key checks distinguish same-shaped graphs with different layout, precision, prefix and head-normalization choices.
+
+This revision's native integration uses the shared prefix planner. The arithmetic/dispatch requirement interface is not yet connected to an automatic backend extractor. GPU results remain attributed to the frozen native implementations, not the refactored candidate.
+
+\section{Artifact entrypoints and access}
+\label{app:artifacts}
+The manuscript uses the following fixed evidence snapshots:
+\begin{itemize}[itemsep=2pt]
+\item CUDA Llama: PR162, \texttt{e11d2b75}, with scientific execution snapshot \texttt{70086c63}; \path{benchmarks/rtx_llama_repair_v1/host_execution/}.
+\item Vulkan Llama: PR163, \texttt{10a70566}; \path{benchmarks/b570_llama_companion_v1/host_execution/}.
+\item CUDA Qwen3-14B repair: PR159, \texttt{38b3d3d3}; its result and addendum preserve the original PR156 reference.
+\item Prior manuscript and analyses: PR154, \texttt{07bee1c5}, including the PR151 scope results and PR152 producer-state results.
+\end{itemize}
+Exact paths and Git blob identities for the files read during this revision accompany the source index. The paper's timing table and figure are generated by \texttt{scripts/reconstruct.py}; the inputs are \texttt{data/rtx\_cost.json} and \texttt{data/b570\_cost.json}. This is reconstruction from saved reports, not re-execution of raw model requests.
+
+At the inspected heads, Vulkan's remote readback and restored scientific reconstruction are complete. CUDA's scientific execution and local reconstruction are complete, while its final remote delivery receipt remains in progress. Same-host reconstruction is distinct from independent-laboratory reproduction. Model weights remain externally acquired, pinned inputs. The repository and bulk artifacts require authorized access; publication access must be arranged before external review.

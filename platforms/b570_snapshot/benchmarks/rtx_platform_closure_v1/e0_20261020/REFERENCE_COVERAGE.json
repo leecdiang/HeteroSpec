@@ -1,0 +1,146 @@
+{
+  "complete_reference_binding_verified": false,
+  "conclusion": "MISSING_FULL_REQUEST_LOGITS_REFERENCE",
+  "coverage": [
+    {
+      "binary_tensor_basenames": [
+        "AV.bin",
+        "K.bin",
+        "Q.bin",
+        "QK.bin",
+        "V.bin",
+        "mask.bin",
+        "native_AV.bin",
+        "native_QK.bin",
+        "native_softmax.bin",
+        "softmax.bin"
+      ],
+      "event_counts": {
+        "decode": 13452,
+        "draft_proposal": 2880,
+        "first_pending": 72,
+        "sample": 14460,
+        "verify_decision": 2880,
+        "verify_result": 2880,
+        "verify_rollback": 2880
+      },
+      "event_field_names": {
+        "decode": [
+          "after",
+          "before",
+          "caller_batch",
+          "event",
+          "graphs",
+          "logits_mask",
+          "phase",
+          "positions",
+          "returncode",
+          "role",
+          "scope_active",
+          "scope_mask",
+          "sequence",
+          "sequence_ids",
+          "tokens",
+          "ub_capacity"
+        ],
+        "draft_proposal": [
+          "event",
+          "ids",
+          "n_past",
+          "pending",
+          "sequence",
+          "slot"
+        ],
+        "first_pending": [
+          "event",
+          "logits_index",
+          "modules",
+          "pending_id",
+          "sequence"
+        ],
+        "sample": [
+          "event",
+          "logits_index",
+          "phase",
+          "positions",
+          "role",
+          "selected_id",
+          "selected_score",
+          "sequence",
+          "top1",
+          "top1_score",
+          "top2",
+          "top2_score"
+        ],
+        "verify_decision": [
+          "event",
+          "logits_indices",
+          "proposal_ids",
+          "sampled_ids",
+          "sequence"
+        ],
+        "verify_result": [
+          "accepted_plus_last",
+          "event",
+          "proposed_ids",
+          "query_indices",
+          "replay",
+          "rollback_count",
+          "sequence",
+          "slot"
+        ],
+        "verify_rollback": [
+          "accepted_ids",
+          "actual_positions",
+          "event",
+          "kept_position_next",
+          "sequence",
+          "slot"
+        ]
+      },
+      "f32_files": [],
+      "full_vocab_logits_events": 0,
+      "part": "E1",
+      "qwen_condition_counts": {
+        "E1_NATIVE_MQ": 72
+      },
+      "qwen_records": 72,
+      "records": 216,
+      "sample_events": 14460,
+      "trace_files": 72,
+      "zero_trace_ranges": 72
+    },
+    {
+      "binary_tensor_basenames": [],
+      "event_counts": {},
+      "event_field_names": {},
+      "f32_files": [],
+      "full_vocab_logits_events": 0,
+      "part": "E2",
+      "qwen_condition_counts": {
+        "C_PQ": 96,
+        "C_QB": 96,
+        "M_PQ": 96,
+        "M_QB": 96,
+        "R": 156
+      },
+      "qwen_records": 540,
+      "records": 1620,
+      "sample_events": 0,
+      "trace_files": 0,
+      "zero_trace_ranges": 1620
+    }
+  ],
+  "exact_limit": "PR104 E1 retains operator tensors and heavy traces with selected/top1/top2 scores, not every raw target/draft vocabulary vector including rejected verification rows. E2 retains counts and endpoints without full cycle traces.",
+  "historical_policy": {
+    "C_maximum_k": 3,
+    "C_target_ub": 4,
+    "R_target_ub": 1,
+    "cap": 128
+  },
+  "k1_historical_full_reference": "NOT_BOUND; k1 cannot inherit k3 complete workload/cycle reference by name",
+  "proposed_policy": {
+    "cap": "must remain 128",
+    "maximum_k": 1
+  }
+}

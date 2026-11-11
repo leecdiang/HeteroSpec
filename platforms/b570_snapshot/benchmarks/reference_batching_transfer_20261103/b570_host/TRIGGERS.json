@@ -1,0 +1,384 @@
+{
+  "native_projection": [
+    {
+      "unit": "retained-4-shared-01",
+      "native_samples": [
+        {
+          "call": {
+            "role": "target",
+            "phase": "VERIFY",
+            "pos": "265",
+            "width": "2"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "2",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "1",
+            "selected_quant": "0",
+            "pipeline": "mul_mat_vec_q8_0_f32_f32"
+          }
+        }
+      ]
+    },
+    {
+      "unit": "retained-6-shared-01",
+      "native_samples": [
+        {
+          "call": {
+            "role": "target",
+            "phase": "VERIFY",
+            "pos": "343",
+            "width": "2"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "2",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "1",
+            "selected_quant": "0",
+            "pipeline": "mul_mat_vec_q8_0_f32_f32"
+          }
+        }
+      ]
+    },
+    {
+      "unit": "retained-2-shared-01",
+      "native_samples": [
+        {
+          "call": {
+            "role": "target",
+            "phase": "VERIFY",
+            "pos": "118",
+            "width": "2"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "2",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "1",
+            "selected_quant": "0",
+            "pipeline": "mul_mat_vec_q8_0_f32_f32"
+          }
+        },
+        {
+          "call": {
+            "role": "target",
+            "phase": "PREFILL",
+            "pos": "0",
+            "width": "4"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "4",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "1",
+            "selected_quant": "0",
+            "pipeline": "mul_mat_vec_q8_0_f32_f32"
+          }
+        },
+        {
+          "call": {
+            "role": "target",
+            "phase": "PREFILL",
+            "pos": "116",
+            "width": "2"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "2",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "1",
+            "selected_quant": "0",
+            "pipeline": "mul_mat_vec_q8_0_f32_f32"
+          }
+        }
+      ]
+    },
+    {
+      "unit": "precision-off-shared-01",
+      "native_samples": [
+        {
+          "call": {
+            "role": "target",
+            "phase": "VERIFY",
+            "pos": "265",
+            "width": "2"
+          },
+          "selected_projection": {
+            "op": "blk.0.attn_q.weight",
+            "wtype": "8",
+            "xtype": "0",
+            "k": "4096",
+            "m": "4096",
+            "rows": "2",
+            "nb0": "4",
+            "nb1": "16384",
+            "scalar_quant": "0",
+            "batch_quant": "1",
+            "retain_f32": "0",
+            "selected_quant": "1",
+            "pipeline": "mul_mat_vec_q8_0_q8_1_f32"
+          }
+        }
+      ]
+    }
+  ],
+  "physical_prefix_and_reuse": {
+    "status": "PHYSICAL_BOUNDARY_AND_POLICY_REUSE_PASS",
+    "rows": [
+      {
+        "prefix": 254,
+        "base": 254,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=254 rows=2 used=256 occupied_end=256 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=254 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=256,256,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 254,
+        "base": 256,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=256 rows=2 used=258 occupied_end=258 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=256 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=512,512,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 254,
+        "base": 258,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=258 rows=2 used=260 occupied_end=260 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      },
+      {
+        "prefix": 254,
+        "base": 260,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=260 rows=2 used=262 occupied_end=262 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      },
+      {
+        "prefix": 254,
+        "base": 262,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=262 rows=2 used=264 occupied_end=264 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      },
+      {
+        "prefix": 254,
+        "base": 264,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=264 rows=2 used=266 occupied_end=266 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 253,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=253 rows=2 used=255 occupied_end=255 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=253 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=256,256,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 255,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=255 rows=2 used=257 occupied_end=257 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=255 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=1 extents=256,512,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 257,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=257 rows=2 used=259 occupied_end=259 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=257 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=512,512,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 259,
+        "equal_to_scalar": [
+          true,
+          true
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=259 rows=2 used=261 occupied_end=261 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 261,
+        "equal_to_scalar": [
+          false,
+          false
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=261 rows=2 used=263 occupied_end=263 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=261 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=512,512,"
+        ],
+        "precision": false
+      },
+      {
+        "prefix": 253,
+        "base": 263,
+        "equal_to_scalar": [
+          false,
+          false
+        ],
+        "reuse_delta": 0,
+        "cache": [
+          "HS_CACHE head=263 rows=2 used=265 occupied_end=265 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [
+          "HS_ATTENTION pos=263 rows=2 heads=32 kvheads=8 dim=128 layout=2 arith=5273881447882123857 dispatch=683913753937850971 grouped=0 extents=512,512,"
+        ],
+        "precision": true
+      },
+      {
+        "prefix": 253,
+        "base": 265,
+        "equal_to_scalar": [
+          false,
+          false
+        ],
+        "reuse_delta": 1,
+        "cache": [
+          "HS_CACHE head=265 rows=2 used=267 occupied_end=267 capacity=1024 padding=256 streams=1 dense=1 status=0"
+        ],
+        "attention": [],
+        "precision": true
+      }
+    ]
+  },
+  "llama": {
+    "status": "TWO_LLAMA_CONTROLS_PASS",
+    "cells": [
+      {
+        "id": "CodeContests/valid/108",
+        "saved_vectors": 246,
+        "cycles": 35,
+        "all_equal_PR163": true,
+        "grouped_bases": [
+          765
+        ]
+      },
+      {
+        "id": "GSM8K/test/496",
+        "saved_vectors": 302,
+        "cycles": 43,
+        "all_equal_PR163": true,
+        "grouped_bases": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "status": "findings",
+  "scope": "Completed review 2: complete candidate/source, candidate/src/rev2, legacy host/dependencies/acceptance, C# launcher, bound protocols, and targeted native/D0 evidence. Traced all four review-1 corrections, including cpu8_monitor.py and tool_binding.py. All 952 manifest members matched their recorded hashes and sizes.",
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "Delivery verification accepts an incomplete evidence manifest",
+      "file": "candidate/source/verify_cpu8.py",
+      "line": 18,
+      "trigger": "Supply a nonempty manifest that omits retained evidence or consumed outer-monitor/tool files while keeping every listed member valid.",
+      "effect": "The verifier checks only listed members; it never reconciles the manifest against the evidence inventory or consumed inputs. It can report restoration_verified=true and CPU8_INTEGRATION_PASS without authenticating the complete delivered evidence. Omitted failed-attempt diagnostics can disappear without rejection.",
+      "recommendation": "Require unique canonical members, exact inventory coverage with explicit delivery-tail exclusions, and coverage of consumed inputs. The existing src/rev2/verify.py inventory checks provide the relevant pattern."
+    },
+    {
+      "priority": "P2",
+      "title": "Unreconciled watchdog receipt can bypass the delivery deadline",
+      "file": "candidate/source/verify_cpu8.py",
+      "line": 47,
+      "trigger": "Advance standalone WATCHDOG_RECEIPT.json.end_ns while leaving WATCHDOG_END.receipt and its raw terminal timestamp unchanged.",
+      "effect": "Neither verify_cpu8.py, cpu8_monitor.py nor tool_binding.py compares the two receipts. wall_budget therefore accepts the altered closure frontier: advancing it two minutes can make an actual 31-minute delivery appear to take 29 minutes and pass the 1,800-second limit.",
+      "recommendation": "Require equality with WATCHDOG_END.receipt and reconcile its identity, OS-exit fields and closure interval against the raw lifecycle before calculating budgets."
+    }
+  ],
+  "candidate_manifest_sha256": "3251aaa6a7b0bd10f153441d01ae229878f7df3f9d1bba42d6d3a6d072eb478c",
+  "limitations": [
+    "Read-only static review; no project code, tests, scripts or native libraries executed, no delegation, and no files changed. DLL bytes were hashed only.",
+    "Counterexamples are established from source, not executed. Supplied native evidence was inspected selectively.",
+    "This verdict does not certify formal eight-case execution, future data-only bindings, restoration, or complete-task OS accounting. Historical approvals remain historical."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "date": "2026-11-05",
+  "status": "CPU_TOOLING_AND_SOURCE_DERIVATIVES_TESTED",
+  "python": {
+    "test_methods": 74,
+    "normal": "PASS",
+    "optimized_O": "PASS",
+    "independent_scenarios_not_sum": true
+  },
+  "cpp": {
+    "standalone_schedule_replay_checks": 8199,
+    "ubsan": "PASS",
+    "warnings_as_errors": "PASS",
+    "observer_header": "API_STUB_ONLY",
+    "api_stub_behavior_checks": 2
+  },
+  "commands": [
+    "python -B -m unittest discover -s tests -v",
+    "python -B -O -m unittest discover -s tests -v",
+    "g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -fsanitize=undefined tests/test_native_helpers.cpp -o <fresh>/helper_test",
+    "<fresh>/helper_test",
+    "g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -fsanitize=undefined -Itests/api_stub tests/test_capture_header.cpp -o <fresh>/capture_header_test",
+    "<fresh>/capture_header_test <fresh>/capture-output"
+  ],
+  "logs": {
+    "cpp_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cpp_api_stub.log": "c5913d666a3854ec1698fd712d6eccb93f85512aa8853e9a47a240366b532ed6",
+    "python_tests.log": "8e6162f6ab20c6a64f7e21ca5bc286586854f50123b22dce86c52339ca24116c",
+    "cpp_helpers.log": "1d0051f03675817bf2fc7a28349d879684ec544a8b877ea71729cfeb3c01cff8",
+    "python_O_tests.log": "dd52e571bdc38fe73d773c5562158a8f2cf5d4237417a6ac7c8afbc57b14a839"
+  },
+  "not_run": [
+    "original Windows worker compilation",
+    "real llama library compilation",
+    "trained-model active-KV profile validation",
+    "actual old-R observer bridge",
+    "CUDA/Vulkan execution",
+    "full native source staging against host source kit",
+    "GPU timing",
+    "remote PR creation"
+  ],
+  "new_gpu_requests": 0,
+  "new_model_requests": 0,
+  "publication": "NOT_CREATED_READ_ONLY_CONNECTOR",
+  "scope": "Tests validate synthetic fixtures, standalone helpers and byte/protocol checks. They do not establish numerical eligibility, full hidden-state closure, native performance or a production runtime."
+}

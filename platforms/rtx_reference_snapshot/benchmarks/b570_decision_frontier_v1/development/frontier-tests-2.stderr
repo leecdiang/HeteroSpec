@@ -1,0 +1,43 @@
+test_absolute_donor_path_in_unchanged_adapter (__main__.FrontierTests.test_absolute_donor_path_in_unchanged_adapter) ... ok
+test_additive_margin_nonmonotone_endpoint (__main__.FrontierTests.test_additive_margin_nonmonotone_endpoint) ... ok
+test_censored_cap (__main__.FrontierTests.test_censored_cap) ... ok
+test_certificate_converse_false (__main__.FrontierTests.test_certificate_converse_false) ... ok
+test_complete_plan_and_direction_and_duplicate_and_missing (__main__.FrontierTests.test_complete_plan_and_direction_and_duplicate_and_missing) ... ok
+test_different_prefix (__main__.FrontierTests.test_different_prefix) ... ok
+test_eog_not_reached (__main__.FrontierTests.test_eog_not_reached) ... ok
+test_frontier_panel_priority (__main__.FrontierTests.test_frontier_panel_priority) ... ok
+test_full_capture_sha_prefix_and_position (__main__.FrontierTests.test_full_capture_sha_prefix_and_position) ... ERROR
+test_full_logits_t0_and_missing_t1 (__main__.FrontierTests.test_full_logits_t0_and_missing_t1) ... ok
+test_known_residual (__main__.FrontierTests.test_known_residual) ... ok
+test_length_endpoint_only (__main__.FrontierTests.test_length_endpoint_only) ... ok
+test_metadata_pin (__main__.FrontierTests.test_metadata_pin) ... ok
+test_nonfinite (__main__.FrontierTests.test_nonfinite) ... ok
+test_numeric_distance_not_integer_bits (__main__.FrontierTests.test_numeric_distance_not_integer_bits) ... ok
+test_old_matrix_missing_duplicate_reverse (__main__.FrontierTests.test_old_matrix_missing_duplicate_reverse) ... ok
+test_pair_rule_frozen (__main__.FrontierTests.test_pair_rule_frozen) ... ok
+test_position_complement (__main__.FrontierTests.test_position_complement) ... ok
+test_runtime_and_channels (__main__.FrontierTests.test_runtime_and_channels) ... ok
+test_tampered_raw_and_resolver_no_fallback (__main__.FrontierTests.test_tampered_raw_and_resolver_no_fallback) ... ok
+test_third_candidate_and_tie_rank (__main__.FrontierTests.test_third_candidate_and_tie_rank) ... ok
+test_token_zero_stop (__main__.FrontierTests.test_token_zero_stop) ... ok
+test_transposed_address (__main__.FrontierTests.test_transposed_address) ... ok
+test_zero_norm_and_signed_zero (__main__.FrontierTests.test_zero_norm_and_signed_zero) ... ok
+
+======================================================================
+ERROR: test_full_capture_sha_prefix_and_position (__main__.FrontierTests.test_full_capture_sha_prefix_and_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\test_frontier.py", line 70, in test_full_capture_sha_prefix_and_position
+    root=Path(d);z=zpair(-1);f=root/'full.logits.f32';f.write_bytes(z.tobytes());spec={'path':str(f),'bytes':V*4,'sha256':sha(f)};boundary={'output_index_zero_based':1,'naturally_committed_prefix_ids':[0],'sampled_top1_id':0,'top2_id':1,'full_logits_sha256':sha(f),'last_consumed_input_ids':[0],'last_consumed_position':2,'top1_logit':0.,'top2_logit':-1.};x={'ids':[0,0],'prompt_ids':[99,99,99],'partition98':{'full_payloads':{'1':{'logits':spec}}},'phase96':{'boundaries':[boundary]}};res=Resolver(root,root);self.assertEqual(logits_at(x,1,res,spec)[1]['position'],2)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\contracts.py", line 94, in logits_at
+    require(s['last_consumed_input_ids']==[x['ids'][t-1]] and s['last_consumed_position']==len(x['prompt_ids'])+t-1,'snapshot position mismatch')
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\contracts.py", line 14, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: snapshot position mismatch
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.181s
+
+FAILED (errors=1)

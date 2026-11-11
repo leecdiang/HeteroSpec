@@ -1,0 +1,40 @@
+{
+  "study": "B570_SPECULATIVE_REQUEST_COST",
+  "uuid": "c88ca86b-6581-4dc4-8ccb-5882092df22d",
+  "authorization": "User explicitly instructed continuation beyond previous remaining-budget barrier after bridge; new prospective bounded accounting, no old reset",
+  "old_budget": {
+    "cap": 300,
+    "cumulative": 285.6803089,
+    "unused": 14.3196911,
+    "status": "PRESERVED_NOT_RESTARTED"
+  },
+  "new_study_budget_seconds": 180,
+  "native_processes": 3,
+  "per_process_deadline": 50,
+  "per_process_cleanup_capture_margin": 10,
+  "internal_cutoff": 45,
+  "requests_per_process": 3,
+  "orders": [
+    [
+      "PQ_A",
+      "PQ_B",
+      "QB"
+    ],
+    [
+      "PQ_B",
+      "QB",
+      "PQ_A"
+    ],
+    [
+      "QB",
+      "PQ_A",
+      "PQ_B"
+    ]
+  ],
+  "reference": "Successful real q2 bridge: complete16token IDs/EOG/length/terminal/stop and full cycle trace. Full-logit PQ/QB qualification precedes timing and is preserved separately.",
+  "input": "Same exposed HumanEval/42,124IDs,16cap,k1,one model pair,no workload-generalization claim",
+  "window": "Fresh contexts excluded; target+draft prefill, native proposal/verify/accept/bonus/correction/trim, host sampling and cycle metadata, completion sync included. No observer or raw-file I/O in timed window; comparisons/writeout after.",
+  "interpretation": "One Latin rotation across3 independent processes, not all6 permutations; one input/date. Descriptive pilot, no population CI.",
+  "benefit_screen": "QB faster than each PQ control in all3 sessions and equal-weight mean reduction greater than max(2percent of dualPQ,largest absolute within-session PQ_A-PQ_B difference). Otherwise no established practical gain.",
+  "stop": "First native/reference/capture failure; no automatic retries. No actor/RTL/CPU8. Existing old failures unchanged."
+}

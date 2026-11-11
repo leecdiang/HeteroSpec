@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\run_frontier.py", line 99, in <module>
+    ap=argparse.ArgumentParser();ap.add_argument('--run',type=Path,required=True);ap.add_argument('--repo',type=Path,required=True);ap.add_argument('--f0-commit',required=True);ap.add_argument('--stage',choices=('anchor_counts','anchor_heavy','subset_counts','subset_heavy'),required=True);a=ap.parse_args();execute(a.run,a.repo,a.f0_commit,a.stage)
+                                                                                                                                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\run_frontier.py", line 76, in execute
+    require(rec['evidence_path'].endswith('.trace.json' if s['mode']=='heavy' else '.memory.json'),'counts/heavy evidence path');channel=validate_channel(evidence,x,s['prompt_ids'],rec['owned_pid'],s['mode']);p=x['restore100'];require(p['post_restore_KV_sha256']==s['mixture_spec']['sha256'] and p['post_restore_logits_sha256']==s['initial_logits_spec']['sha256'],'native restore differs')
+                                                                                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hs\b570-decision-frontier-worktree\benchmarks\b570_decision_frontier_v1\contracts.py", line 14, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: native restore differs

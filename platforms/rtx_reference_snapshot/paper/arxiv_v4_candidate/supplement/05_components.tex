@@ -1,0 +1,71 @@
+\section{State components and decision frontiers}
+\label{supp:composition}\label{supp:subsets}
+\subsection{Selectors and complete endpoint matrix}
+A denotes the historical whole-prefill state and B the partitioned state. Each intervention preserves recipient initial logits, natural pending-token consumption and the common receiver. Thirty-two EMPTY/ALL controls pass before the 160 subset requests. Table~\ref{tab:subsetmatrix} retains all 80 task/selector/direction coordinates; both process repeats agree. When donor and recipient natural endpoints coincide, a match is D rather than attributed to a distinguishable donor.
+\begin{table*}[t]
+\centering\small
+\caption{All 80 distinct subset/direction coordinates. Both process repeats agree in every cell. Within each task the columns are A$\to$B and B$\to$A. B, C and D denote endpoint classes, not task-answer quality.}
+\label{tab:subsetmatrix}
+\begin{tabular}{@{}l*{8}{c}@{}}\toprule
+ & \multicolumn{2}{c}{/1248} & \multicolumn{2}{c}{/831} & \multicolumn{2}{c}{/1011} & \multicolumn{2}{c}{/1249}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(l){8-9}
+Selector & A$\to$B & B$\to$A & A$\to$B & B$\to$A & A$\to$B & B$\to$A & A$\to$B & B$\to$A\\\midrule
+$K_0$       & B&D&C&C&C&C&D&D\\
+$V_0$       & B&B&B&C&C&D&D&D\\
+$K_0+V_0$   & B&D&B&C&C&D&D&D\\
+All K       & D&B&C&C&C&C&D&D\\
+All V       & D&B&C&C&C&C&D&D\\
+Early KV    & D&D&B&C&C&D&D&D\\
+Middle KV   & D&D&B&D&D&C&D&D\\
+Late KV     & C&B&D&C&C&C&D&D\\
+Prefix KV   & D&B&B&D&C&C&D&D\\
+Tail KV     & D&B&B&D&C&C&D&D\\\bottomrule
+\end{tabular}
+\end{table*}
+All 76 D requests change actual bytes. K-only or V-only layer0 selects $1/64$ of K/V value storage, excluding metadata. Early, middle and late groups contain 8, 16 and 8 layers. Prefix is $[0,128)$; tail is its complement, with five positions for /831. K is token-major and non-flash V feature-major, so each selector uses the actual storage strides. The source records separately retain selected bytes, changed bytes and numerical distances.
+
+\subsection{Magnitude and common-prefix selection}
+Table~\ref{tab:statenorm} reports differences computed from stored F16 values using the actual A-state norm. No increasing one-threshold rule perfectly separates these four endpoint labels: a smaller overall perturbation can accompany divergence while a larger one does not. This is a finite counterexample to a magnitude-only explanation, not an alternative predictor.
+\begin{table}[t]\centering\small
+\caption{Full-KV differences, B relative to A, computed from stored F16 values. Endpoint labels refer to natural A/B continuations on four exposed inputs.}
+\label{tab:statenorm}
+\begin{tabular}{@{}lrrl@{}}\toprule
+Task & Relative $L_2$ & Max. absolute & A/B endpoint\\\midrule
+/1248 &0.006488689&0.255859375&Different\\
+/1249 &0.006748138&0.246093750&Same\\
+/1011 &0.006887112&0.265625000&Same\\
+/831  &0.010452955&1.332580566&Different\\\bottomrule
+\end{tabular}
+\end{table}
+For each task, recipient and panel, the frontier $t^*$ is the first output at which the four natural trajectories cease to agree. Their consumed prefix is identical at that point. L0 and POSITION have separate frontiers; /831 recipient A reaches them at 40 and 81 respectively. Later vectors cannot fill an earlier missing comparison.
+
+Archived captures support 44 of 112 planned repeat-level contrasts, with 22 agreeing pairs. The 68 incomplete comparisons contain 272 missing panel entries or 240 distinct arm/repeat/position vectors, because some arms are shared. A vector hash or top-two scores do not replace full logits. Output zero uses the frozen initial logits and needs no additional forward. Table~\ref{tab:frontier} retains every available frontier contrast.
+\begin{table*}[t]\centering\small
+\caption{All available frontier contrasts. L0 components are K/V; POSITION components are prefix/tail. Both historical repeats agree. Values are rounded to six decimals. Token pairs are fixed within each panel; direction-dependent coordinates must be canonicalized before comparing signs.}
+\label{tab:frontier}
+\begin{tabular}{@{}lllr rrrr@{}}\toprule
+Task&Direction&Panel&$t^*$&$\Delta_1$&$\Delta_2$&$I$&EMPTY margin\\\midrule
+1248&B$\to$A&L0&47& .059744& .088148&-.135864&.066515\\
+1248&A$\to$B&L0&47& .025909& .033445&-.019032&.010706\\
+1248&B$\to$A&POSITION&47& .078003& .095778&-.096560&.066515\\
+1248&A$\to$B&POSITION&47&-.018557&-.000782& .096560&.010706\\
+831&B$\to$A&POSITION&81&-.095177&-.062551& .238718&.013084\\
+831&A$\to$B&L0&81& .118263& .172575&-.049446&.067905\\
+831&A$\to$B&POSITION&81& .143541& .176167&-.238718&.067905\\\bottomrule
+\end{tabular}
+\end{table*}
+For /1248 B$\to$A L0 at 47, the additive joint prediction is $0.08137702941894531$, the actual joint is $-0.05448722839355469$ and $I_{KV}=-0.1358642578125$. Full-vocabulary argmax is 220/220/832/220. At output46, the same fixed-pair residual is $-0.13482666015625$, but the actual top two are 11/220 with margin $8.017614364624023$; the frontier pair 220/832 is not that position's top two. Cross-position comparison is descriptive.
+
+At output1 of /1011, EMPTY margins are $0.561777115/0.549312592$, maximum observed $\epsilon_\infty=0.207827211$, and every arm satisfies $m>2\epsilon_\infty$ and selects 11886. The mixed trajectories later diverge at 10, whose adjacent full vectors are missing. For /1249 the corresponding margins are $0.959617615/0.936807632$, maximum $\epsilon_\infty=0.194167793$, and every observed arm selects 1505. This sufficient top-1 condition applies only at the measured position.
+
+\subsection{Direction symmetry and independent conditions}
+For complete states $(A_P,A_T)$ and $(B_P,B_T)$, reversing donor and recipient permutes the POSITION quartet from AA, BA, AB, BB to BB, AB, BA, AA. When the actual state, prefix and receiver agree under this mapping,
+\begin{equation}
+\boldsymbol I=\boldsymbol z_{\rm ALL}-\boldsymbol z_P-\boldsymbol z_T+\boldsymbol z_{\rm EMPTY}
+\end{equation}
+is invariant. The scalar $I(u)-I(r)$ changes sign when $(r,u)$ is reversed. The audit checks actual state, FP32 vectors, prefixes, sampling conditions and F64 bytes in all 12 available direction pairs. For /1248 at47 both directions give $-0.09655952453613281$ in pair order $(220,832)$, despite opposite original signs.
+
+Of the 44 oriented repeat rows, 24 are POSITION and 20 L0. Accounting for direction symmetry and two repeats gives six POSITION and ten oriented L0 conditions, still only four underlying inputs. L0 has different surrounding recipient states and is not collapsed by the POSITION identity.
+
+\subsection{Acquisition failure and data scope}
+A new acquisition attempted one request with a registry key missing recipient identity. The planned EMPTY B$\to$A imported B rather than A, completing 127 decodes before failing the input check. It is neither a qualified EMPTY nor an ALL sample; 167 slots were unstarted. The later CPU revision repairs request assembly without new native data. The 54 unique FP32 vectors and 16 residual vectors support the historical 44 contrasts; no missing frontier or independent-machine GPU replication is supplied by that revision.

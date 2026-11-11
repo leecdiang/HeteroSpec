@@ -1,0 +1,11 @@
+# Focused internal review: novelty and overlap — v0.8.1
+
+Internal editorial review of the final manuscript and primary literature, not external peer review or a conference acceptance estimate.
+
+**Does Lossless but Not Free make the old framing misleading?** Yes, if read as novelty for consumer gains/slowdowns, absent verification parallelism or draft/target latency gap. Its correctness gates and target-only batch-shape argmax changes overlap too. The revision acknowledges all of these in the performance paragraph, avoiding an artificial correctness-versus-performance contrast. The Introduction now focuses the question on measured admissibility and complete cost, while the contribution statement names concrete evidence. No claim of first correctness qualification remains.
+
+**Is the B570 frozen held-out mechanism result differentiated?** Yes, narrowly. A target-only harness reproduces the reference, exposed discovery selects a sufficient target partition, H1 is frozen before reserved inference and all predictions precede live outcomes. The 72/72 complete-sequence endpoint includes residual divergence, rather than just an average agreement rate. Qualification stays blocked at 60/72. This is explanatory/predictive evidence for the tested stack, without proving a unique kernel or cross-platform transfer. That temporal evidence is the strongest remaining distinction, not numerical divergence itself.
+
+**Are other systems fairly positioned?** Compiler-Assisted receives credit for analytical profitability and heterogeneous partition optimization, with workshop metadata and correct Riesterer spelling. Lever receives positive credit for flash-backed CPU/NPU co-design; 358H is explicitly one measured state interface, not evidence against mobile acceleration. Official ACL HeteroSpec receives entropy/depth/pruning attribution in the adaptive paragraph; its mechanism is separate from qualification and no name ownership warning is introduced. Existing cost, heterogeneous, numerical, deterministic and reuse work remains cited.
+
+Disposition: positioning is defensible for author review. Transfer beyond the frozen B570 configuration remains an open scientific question, not a request to reopen experiments. No further scientific work executed.

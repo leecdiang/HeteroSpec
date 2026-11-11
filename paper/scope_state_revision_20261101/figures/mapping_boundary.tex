@@ -1,0 +1,22 @@
+\begin{tikzpicture}[font=\footnotesize]
+\node[anchor=north west,inner sep=0] at (0,0) {\begin{minipage}[t]{.48\textwidth}
+\textbf{A\quad Fixed logical length 1023: RTX}\par\vspace{5pt}
+\begin{tabular}{@{}rrrr@{}}\toprule
+Physical extent & Qualification & Kernels & Cost / native A\\\midrule
+1023 (native) & 4/4 pass & 8 & 1.000000\\
+1024 (padded) & \textcolor{draft}{4/4 fail} & 3$^\ast$ & ---\\
+1025 (padded) & \textcolor{qualified}{4/4 pass} & 8 & 1.014783\\\bottomrule
+\end{tabular}\par\vspace{5pt}
+$^\ast$First-call trace only; the failed path has no qualified clean cost. Logical inputs and original mask columns are unchanged.
+\end{minipage}};
+\node[anchor=north west,inner sep=0] at (.515\textwidth,0) {\begin{minipage}[t]{.48\textwidth}
+\textbf{B\quad Complete Q-representation transactions}\par\vspace{5pt}
+\begin{tabular}{@{}llr@{}}\toprule
+Panel & Comparator & Compact-QH ratio\\\midrule
+RTX $q=2$ & QB\_A / QB\_B & 1.002216 / 1.008295\\
+RTX $q=4$ & QB\_A / QB\_B & 1.001598 / 1.004167\\
+B570 $q=2,4$ & dual-QB & 0.992244\\\bottomrule
+\end{tabular}\par\vspace{5pt}
+B570 adjusted interval: [0.979908, 1.004691]. All tested practical-effect screens remain unresolved; no QH advantage is established.
+\end{minipage}};
+\end{tikzpicture}

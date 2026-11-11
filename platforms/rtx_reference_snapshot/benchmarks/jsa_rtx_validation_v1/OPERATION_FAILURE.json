@@ -1,0 +1,106 @@
+{
+  "status": "DOCUMENTED_OPERATIONAL_INCOMPLETE",
+  "model": "SmolLM2",
+  "planned": 1176,
+  "completed": 1164,
+  "missing_slots": [
+    {
+      "slot": "r7-p1-Csel|MBPP/430",
+      "original_ledger_status": "STARTED",
+      "raw_record_exists": false,
+      "error": null
+    },
+    {
+      "slot": "r7-p1-Csel|MBPP/311",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p1-Csel|MBPP/129",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p1-Csel|MBPP/426",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/290",
+      "original_ledger_status": "STARTED",
+      "raw_record_exists": false,
+      "error": null
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/166",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/163",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/87",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/430",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/311",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/129",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    },
+    {
+      "slot": "r7-p6-E32|MBPP/426",
+      "original_ledger_status": "MISSING_BLOCK_FAILURE",
+      "raw_record_exists": false,
+      "error": "PermissionError(13, '拒绝访问。')"
+    }
+  ],
+  "block_errors": {
+    "r7-p1-Csel-ERROR.json": {
+      "error": "PermissionError(13, '拒绝访问。')",
+      "utc": "2026-10-10T14:26:50.271328+00:00"
+    },
+    "r7-p6-E32-ERROR.json": {
+      "error": "PermissionError(13, '拒绝访问。')",
+      "utc": "2026-10-10T14:29:03.559208+00:00"
+    }
+  },
+  "ordinary_read_can_block_atomic_replace": {
+    "reproduced": true,
+    "failure": {
+      "type": "PermissionError",
+      "errno": 13,
+      "winerror": 5,
+      "message": "[WinError 5] 拒绝访问。: 'work\\\\io-proof\\\\ledger.json.tmp' -> 'work\\\\io-proof\\\\ledger.json'"
+    },
+    "bounded_metadata_retry_proof_attempts": 5,
+    "new_bytes_verified": true,
+    "model_requests": 0,
+    "changed_original_runner": false
+  },
+  "causal_scope": "The reproducible Windows read/rename conflict and live ordinary-read monitoring are consistent with the recorded PermissionError. The original errors lack traceback/filename, so exact lock ownership is not established. Terminal STARTED without raw record, and formal.py placing its initial ledger save outside the request try block, support failure before request dispatch; this is a control-flow inference, not a captured stack trace.",
+  "protocol_response": "No formal rerun, no ledger relabel, no passing-subset qualification. Any future I/O repair and further scientific execution require a separate frozen study, preserving this original study.",
+  "suggested_engineering_fix": "Use delete-shared monitoring or immutable progress snapshots and bounded retries for metadata rename only; never silently replay a paid HTTP generation."
+}

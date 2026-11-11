@@ -1,0 +1,15 @@
+\subsection{Historical k1 service controls}
+\label{sec:service}
+The earlier RTX and B570 studies place the matched result in context. Both use Qwen3-8B/0.6B Q8\_0, $k=1$, F16 KV, non-flash attention and four exposed inputs. Their request formats, stopping windows, prefill policies and drivers differ. Each timer charges fresh-context creation, graph reservation, prefill, generation, synchronization and destruction, with model loading separate. Full contracts and all blocks appear in \sref{supp:service}~\cite{b570servicerecords,rtxservicerecords}.
+
+The paired layout estimator uses two identical PQ controls:
+\begin{equation}
+\bar T_{is,\PQ}=\tfrac12(T_{is,\PQ_A}+T_{is,\PQ_B}),\qquad
+r_{is}=T_{is,\QB}/\bar T_{is,\PQ}.
+\label{eq:servicepair}
+\end{equation}
+Input/session ratios are combined with equal log weights. The finite-panel screen requires a reduction above both 2\% and the largest input-aggregate A/A imbalance, with improvement in every session. Both original panels fail this practical layout screen: QB/dual-PQ is 0.995144 on B570 and 0.989284 on RTX. The corresponding point reductions are 0.486\% and 1.072\%, against A/A imbalances of 0.754\% and 5.208\%; two of four RTX sessions favor PQ.
+
+The speculative policy has a different outcome. On RTX, QB/R=0.582325 and dual-PQ/R=0.588633, so PQ already obtains most of the 41.8\% service-time reduction. On B570, QB/R=2.619763 under its separate two-model Vulkan contract. Its qualified R/PQ/QB requests match complete endpoints, 346 PQ/QB full-logit pairs and cycle traces, while costly draft work dominates the request. Changing the draft thread parameter produces DRAFT1/dual-baseline=1.003994~\cite{b570policyrecords}. The later CPU-draft prefill-submission study gives SUBMIT/dual-baseline=0.999161 and also fails its practical screen~\cite{b570prefillrecords}.
+
+These controls distinguish the speculative policy's value from QB's incremental layout value. The common-runtime study above tests draft length and lifecycle directly; the original panels retain their separate references and timers. Their complete qualification, phase intervals, warmups and execution records remain in \sref{supp:service}.

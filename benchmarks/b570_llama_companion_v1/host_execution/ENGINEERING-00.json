@@ -1,0 +1,28 @@
+{
+  "status": "PRE_FORWARD_ENGINEERING",
+  "utc": "2026-11-02T11:34:48.798959+00:00",
+  "source_pr": 161,
+  "source_commit": "98b9e57f1412ad885bf479cf0d9bbf40c5511cb7",
+  "model_requests": 0,
+  "failures": [
+    {
+      "attempt": "history",
+      "error": "TypeError: NoneType object is not subscriptable",
+      "evidence": "I:\\HeteroSpec\\b570-llama-20261102\\history",
+      "cause": "Pinned historical sparse panel contains null entries; index real inputs while preserving original bytes.",
+      "recovery": "I:\\HeteroSpec\\b570-llama-20261102\\history-01"
+    },
+    {
+      "attempt": "CPU tests initial",
+      "result": "54 passed, test_cpp_cycle failed because g++ unavailable",
+      "recovery": "Actual C++ fixture now compiled/executed with installed MSVC; 55 passed; tests-01.log"
+    }
+  ],
+  "resource_actions": [
+    {
+      "action": "Stopped automatically spawned git pack-objects process 47604",
+      "reason": "Read-only historical fetch triggered 16.41 GiB auto-maintenance; no experiment process stopped and no refs or tracked evidence deleted."
+    }
+  ],
+  "rtx_pr160_modified": false
+}

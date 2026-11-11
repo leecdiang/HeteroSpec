@@ -1,0 +1,80 @@
+--- PR97/native/worker.cpp
++++ partition98/native/worker.cpp
+@@ -50,6 +50,7 @@
+  }
+ };
+ Work * work=nullptr;
++int partition98=512;std::string payload_dir98;json payloads98=json::object();
+ bool diagnostic96=false,sham96=false;int boundary96=0,sham_count96=0;
+ std::vector<int> prefix96;std::set<int>cuts96;json boundaries96=json::array();
+ std::string sha96(const void*data,size_t size){
+@@ -119,9 +120,9 @@
+   emit({{"event","CONTEXT"},{"role",role},{"n_ctx",llama_n_ctx(ctx)},{"ub",llama_n_ubatch(ctx)},{"outputs_max",capacity},{"outputs_per_seq",capacity},{"layers",llama_model_n_layer(model)+1},{"numeric_path","Vulkan0_F16_KV_FAoff"},{"sampler","native_greedy_seed123_no_stochastic_state"},{"load_forward_calls",0}});memory->require(role+"_CONTEXT");
+  }
+  void reset(){llama_synchronize(ctx);llama_memory_clear(llama_get_memory(ctx),true);llama_sampler_reset(sampler);llama_b570_pilot_bind_phase_ubatch(ctx,ub);decodes=0;llama_b570_work_enable(ctx,counted());if(work)work->inc("inherited_explicit_sync_calls");compute_violation=false;continuation_seen=false;observed_ops.clear();trace=json::array();reset_min=llama_memory_seq_pos_min(llama_get_memory(ctx),0);reset_max=llama_memory_seq_pos_max(llama_get_memory(ctx),0);if(reset_min!=-1||reset_max!=-1)throw std::runtime_error("KV reset");}
+- void decode(const std::vector<int>&ids,int pos,bool all,std::string phase){
++ void decode(const std::vector<int>&ids,int pos,bool all,std::string phase,bool last_output=true){
+   if(ids.empty()||ids.size()>512)throw std::runtime_error("Decode size");last_input96=ids;last_pos96=pos;last_phase96=phase;auto b=llama_batch_init(int(ids.size()),0,1);b.n_tokens=int(ids.size());
+-  for(int i=0;i<b.n_tokens;++i){b.token[i]=ids[i];b.pos[i]=pos+i;b.n_seq_id[i]=1;b.seq_id[i][0]=0;b.logits[i]=all||i==b.n_tokens-1;}
++  for(int i=0;i<b.n_tokens;++i){b.token[i]=ids[i];b.pos[i]=pos+i;b.n_seq_id[i]=1;b.seq_id[i][0]=0;b.logits[i]=all||(last_output&&i==b.n_tokens-1);}
+   if(phase!="PREFILL"&&!continuation_seen){observed_ops.clear();continuation_seen=true;}
+   auto phase_begin=timed()?clock_type::now():clock_type::time_point{};
+   uint64_t g0=llama_b570_work_graphs(ctx),r0=llama_b570_work_rows(ctx);std::vector<uint64_t> widths(513);if(counted())for(int w=1;w<=512;++w)widths[w]=llama_b570_work_width(ctx,w);
+@@ -141,10 +142,13 @@
+   if(memory->violation)throw std::runtime_error("MEMORY_BLOCKED:ENGINEERING_PEAK");
+   if(capture){
+  json wh=json::object();for(int w=1;w<=512;++w){auto d=llama_b570_work_width(ctx,w)-widths[w];if(d)wh[std::to_string(w)]=d;}
+- trace.push_back({{"role",role},{"phase",phase},{"pos",pos},{"input_ids",ids},{"ub",llama_n_ubatch(ctx)},{"all_outputs",all},{"kv_min",llama_memory_seq_pos_min(llama_get_memory(ctx),0)},{"kv_max",llama_memory_seq_pos_max(llama_get_memory(ctx),0)},{"successful_micrographs",llama_b570_work_graphs(ctx)-g0},{"occupied_rows",llama_b570_work_rows(ctx)-r0},{"physical_width_hist",wh},{"GPU_completed_stage_wall",nullptr}});
+-}
+- }
+- void prefill(const std::vector<int>&ids){for(size_t i=0;i<ids.size();i+=512)decode(std::vector<int>(ids.begin()+i,ids.begin()+std::min(ids.size(),i+512)),int(i),false,"PREFILL");}
++ trace.push_back({{"role",role},{"phase",phase},{"pos",pos},{"input_ids",ids},{"ub",llama_n_ubatch(ctx)},{"all_outputs",all},{"last_output_requested",last_output},{"logits_requested_positions",last_output?json::array({pos+int(ids.size())-1}):json::array()},{"kv_min",llama_memory_seq_pos_min(llama_get_memory(ctx),0)},{"kv_max",llama_memory_seq_pos_max(llama_get_memory(ctx),0)},{"successful_micrographs",llama_b570_work_graphs(ctx)-g0},{"occupied_rows",llama_b570_work_rows(ctx)-r0},{"physical_width_hist",wh},{"GPU_completed_stage_wall",nullptr}});
++}
++ }
++ void prefill(const std::vector<int>&ids){
++ for(size_t i=0;i<ids.size();i+=partition98){size_t end=std::min(ids.size(),i+partition98);
++ decode(std::vector<int>(ids.begin()+i,ids.begin()+end),int(i),false,"PREFILL",end==ids.size());}
++}
+  void boundary_snapshot96(int index,int sampled){
+  if(!diagnostic96||!capture||role!="TARGET"||cuts96.count(boundary96)==0)return;
+  const float *l=llama_get_logits_ith(ctx,index);if(!l)throw std::runtime_error("Boundary logits");
+@@ -152,9 +156,20 @@
+  for(int i=0;i<count;++i){if(a<0||l[i]>l[a]){b=a;a=i;}else if(b<0||l[i]>l[b])b=i;}
+  if(a!=sampled||b<0||!std::isfinite(l[a])||!std::isfinite(l[b]))throw std::runtime_error("Boundary top1 identity");
+  std::string lh=sha96(l,sizeof(float)*count);float l1=l[a],l2=l[b];
++ auto put=[&](const void*data,size_t bytes,const std::string&h,const std::string&suffix){
++ auto p=std::filesystem::path(payload_dir98)/(h+suffix);
++ if(!std::filesystem::exists(p)){std::ofstream f(p,std::ios::binary);f.write((const char*)data,bytes);f.close();if(!f)throw std::runtime_error("Raw state persistence");}
++ if(std::filesystem::file_size(p)!=bytes)throw std::runtime_error("Raw state size");
++ return json{{"path","payloads/"+h+suffix},{"sha256",h},{"bytes",bytes}};
++ };
++ auto lv=put(l,sizeof(float)*count,lh,".logits.f32");
++
+  auto full=[&](){std::vector<uint8_t>v(llama_state_get_size(ctx));v.resize(llama_state_get_data(ctx,v.data(),v.size()));if(v.empty())throw std::runtime_error("Full state empty");return v;};
+  auto kv=[&](){std::vector<uint8_t>v(llama_state_seq_get_size(ctx,0));v.resize(llama_state_seq_get_data(ctx,v.data(),v.size(),0));if(v.empty())throw std::runtime_error("KV state empty");return v;};
+  auto f=full(),k=kv();auto fh=sha96(f.data(),f.size()),kh=sha96(k.data(),k.size());json sham=nullptr;
++ json kvp=nullptr;if(boundary96==0)kvp=put(k.data(),k.size(),kh,".seqkv.bin");
++ payloads98[std::to_string(boundary96)]={{"logits",lv},{"sequence_KV",kvp}};
++
+  if(sham96){auto u=llama_n_ubatch(ctx);llama_b570_pilot_bind_phase_ubatch(ctx,u);++sham_count96;auto ff=full(),kk=kv();if(f!=ff||k!=kk)throw std::runtime_error("Own binding sham state changed");
+  sham={{"status","PASS_SAME_CONTEXT_BINDING_NOOP_NOT_RESTORE"},{"ub_before",u},{"ub_after",llama_n_ubatch(ctx)},{"full_context_bytes_equal",f==ff},{"sequence_KV_bytes_equal",k==kk},{"future_tokens_forced",false},{"state_clone_or_restore_performed",false}};}
+  boundaries96.push_back({{"output_index_zero_based",boundary96},{"naturally_committed_prefix_ids",prefix96},{"sampled_top1_id",sampled},{"top2_id",b},{"top1_logit",l1},{"top2_logit",l2},{"top2_margin",double(l1)-double(l2)},{"full_logits_sha256",lh},{"logits_scope","TOP2_VALUES_FULL_FP32_VECTOR_HASH_NOT_RAW_VECTOR"},{"last_consumed_input_ids",last_input96},{"last_consumed_position",last_pos96},{"last_phase",last_phase96},{"native_sample_output_row",index},{"actual_current_ub",llama_n_ubatch(ctx)},{"output_capacity",capacity},{"kv_min",llama_memory_seq_pos_min(llama_get_memory(ctx),0)},{"kv_max",llama_memory_seq_pos_max(llama_get_memory(ctx),0)},{"full_context_serialized_bytes",f.size()},{"full_context_sha256",fh},{"sequence_KV_serialized_bytes",k.size()},{"sequence_KV_sha256",kh},{"sampler","same-owned-native-greedy-no-stochastic-state"},{"pending_scope","last decoded IDs consumed; natural committed prefix separate; verify KV may retain uncommitted proposal"},{"same_owned_target_context",true},{"diagnostic_sync_readbacks",true},{"own_path_binding_sham",sham}});
+@@ -192,6 +207,10 @@
+    if(!checked)throw std::runtime_error("Explicit outside-timer memory admission required");checked=false;std::string rid=req.at("request_id");
+    observation_mode=req.value("observation_mode",observation_mode);if(observation_mode!="baseline"&&observation_mode!="counts"&&observation_mode!="lite"&&observation_mode!="heavy")throw std::runtime_error("Unknown request observation mode");
+    auto start=clock_type::now();auto inp=req.at("prompt_ids").get<std::vector<int>>();int cap=req.at("cap");bool capture=req.at("capture");if(capture&&!heavy())throw std::runtime_error("Full capture only heavy engineering");Work current(int(inp.size()));work=&current;
++ partition98=req.value("prefill_partition",512);payload_dir98=req.value("payload_dir","");
++ if((partition98!=128&&partition98!=512)||draft!="NONE"||mode!="ordinary")throw std::runtime_error("Diagnostic target-only partition contract");
++ if(capture&&payload_dir98.empty())throw std::runtime_error("Missing diagnostic payload directory");
++ payloads98=json::object();
+  diagnostic96=req.value("phase96_diagnostic",false);sham96=req.value("own_bind_sham",false);cuts96.clear();boundaries96=json::array();prefix96.clear();boundary96=0;sham_count96=0;
+  if(diagnostic96&&!heavy())throw std::runtime_error("Boundary capture needs heavy");
+  if(sham96&&!diagnostic96)throw std::runtime_error("Sham needs capture");
+@@ -222,6 +241,7 @@
+    result["observation"]={{"phase_timers",timed()},{"heavy_capture",capture},{"etw",false},{"added_sync",heavy()}};
+    result["elapsed_hooks"]=timed()?work->spans:json(nullptr);result["component_completed_wall"]=nullptr;result["GPU_completion_event_ms"]=nullptr;
+    result["phase96"]={{"diagnostic_capture",diagnostic96},{"requested_boundary_indices",cuts96},{"boundaries",boundaries96},{"own_bind_sham",sham96},{"own_bind_sham_calls",sham_count96},{"fork_status","FORK_NOT_IMPLEMENTABLE_CURRENT_ACTOR_NO_VALIDATED_FULL_CLONE"},{"evidence_scope","EXPOSED_DIAGNOSTIC_OUTPUT_WORK_NOT_PAID_FORMAL_COST"},{"GPU_completed_stage_wall",nullptr}};
++ result["partition98"]={{"external_submission_limit",partition98},{"context_ub_fixed",ub},{"prefill_logits_policy","ONLY_COMPLETE_PROMPT_FINAL_POSITION"},{"full_payloads",payloads98},{"cost_scope","DIAGNOSTIC_ONLY"}};
+  result["component_timing_status"]=timed()?"ASYNC_ENQUEUE_SPANS_NOT_COMPLETED_WALL_PARTITION":"DISABLED_COUNTS_CHANNEL";
+    emit(result); // Complete IDs travel before any disk persistence; controller hashes afterward.
+    if(capture){std::ofstream f(dir+"/"+rid+".trace.json");f<<json({{"target",tgt.trace},{"draft",dft?dft->trace:json::array()},{"verify",verifies},{"memory",mem}}).dump()<<"\n";if(!f)throw std::runtime_error("Trace persistence");}

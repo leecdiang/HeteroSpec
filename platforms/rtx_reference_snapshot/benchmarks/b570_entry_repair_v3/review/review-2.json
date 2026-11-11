@@ -1,0 +1,100 @@
+{
+  "findings": [
+    {
+      "title": "[P2] Write actual newline delimiters in smoke-test journals",
+      "body": "The fixture appends `'\\\\n'`, which writes literal backslash-n characters instead of newline delimiters. Consequently, every SmokeAuditTests case fails at `partial smoke journal`: the positive test cannot pass, and the negative tests never reach their expected validation errors. Use `'\\n'` so these regressions exercise exit coverage and decision reconstruction.",
+      "priority": "P2",
+      "confidence": 1,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_entry_repair_v3/source/test_entry_repairs.py",
+        "line": 131
+      },
+      "source_attribution": null
+    },
+    {
+      "title": "[P2] Bind smoke decisions to the registered resource profile",
+      "body": "The checker compares decision limits only with the limits recorded in OBSERVER_START; it never compares either with `profile(kind, seconds)`. An observer mistakenly using an enlarged review limit can therefore produce internally consistent journals and receive OBSERVER_SMOKE_PASS. For example, a 33-process healthy run with a recorded live limit of 64 passes the healthy checks. Validate the start record against the canonical profile before reconstructing decisions.",
+      "priority": "P2",
+      "confidence": 0.97,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_entry_repair_v3/source/check_observer_smoke.py",
+        "line": 30
+      },
+      "source_attribution": null
+    },
+    {
+      "title": "[P2] Reconcile sampled Job identities with recorded exits",
+      "body": "Exit coverage is checked only for identities that received PROCESS_CREATE records. Identities present in resource census `members` are never reconciled with that set. In particular, the rejection branch can pass with 33 sampled processes but only one created-and-closed identity, provided cleanup reports an empty Job. This certifies the smoke despite missing actual exits for known sampled members\u2014the gap that matters for nested-debugger descendants. Require every sampled `(pid, created_filetime)` identity to have matching lifecycle and OS exit evidence, and reject unresolved census coverage.",
+      "priority": "P2",
+      "confidence": 0.96,
+      "category": "bug",
+      "code_location": {
+        "file_path": "benchmarks/b570_entry_repair_v3/source/check_observer_smoke.py",
+        "line": 26
+      },
+      "source_attribution": null
+    }
+  ],
+  "overall_correctness": "patch is incorrect",
+  "overall_explanation": "The supplied change contains a deterministic regression-test failure and two false-pass paths in the smoke validator. Assessment is based on the complete supplied source; project code and native Windows behavior were not executed. The excluded legacy CPU8 adapter was not assessed.",
+  "overall_confidence": 0.96,
+  "provider_report": {
+    "findings": [
+      {
+        "title": "[P2] Write actual newline delimiters in smoke-test journals",
+        "body": "The fixture appends `'\\\\n'`, which writes literal backslash-n characters instead of newline delimiters. Consequently, every SmokeAuditTests case fails at `partial smoke journal`: the positive test cannot pass, and the negative tests never reach their expected validation errors. Use `'\\n'` so these regressions exercise exit coverage and decision reconstruction.",
+        "priority": "P2",
+        "confidence": 1,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_entry_repair_v3/source/test_entry_repairs.py",
+          "line": 131
+        },
+        "source_attribution": null
+      },
+      {
+        "title": "[P2] Bind smoke decisions to the registered resource profile",
+        "body": "The checker compares decision limits only with the limits recorded in OBSERVER_START; it never compares either with `profile(kind, seconds)`. An observer mistakenly using an enlarged review limit can therefore produce internally consistent journals and receive OBSERVER_SMOKE_PASS. For example, a 33-process healthy run with a recorded live limit of 64 passes the healthy checks. Validate the start record against the canonical profile before reconstructing decisions.",
+        "priority": "P2",
+        "confidence": 0.97,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_entry_repair_v3/source/check_observer_smoke.py",
+          "line": 30
+        },
+        "source_attribution": null
+      },
+      {
+        "title": "[P2] Reconcile sampled Job identities with recorded exits",
+        "body": "Exit coverage is checked only for identities that received PROCESS_CREATE records. Identities present in resource census `members` are never reconciled with that set. In particular, the rejection branch can pass with 33 sampled processes but only one created-and-closed identity, provided cleanup reports an empty Job. This certifies the smoke despite missing actual exits for known sampled members\u2014the gap that matters for nested-debugger descendants. Require every sampled `(pid, created_filetime)` identity to have matching lifecycle and OS exit evidence, and reject unresolved census coverage.",
+        "priority": "P2",
+        "confidence": 0.96,
+        "category": "bug",
+        "code_location": {
+          "file_path": "benchmarks/b570_entry_repair_v3/source/check_observer_smoke.py",
+          "line": 26
+        },
+        "source_attribution": null
+      }
+    ],
+    "overall_correctness": "patch is incorrect",
+    "overall_explanation": "The supplied change contains a deterministic regression-test failure and two false-pass paths in the smoke validator. Assessment is based on the complete supplied source; project code and native Windows behavior were not executed. The excluded legacy CPU8 adapter was not assessed.",
+    "overall_confidence": 0.96
+  },
+  "usage": {
+    "attempts": 1,
+    "reported_attempts": 1,
+    "unknown_attempts": 0,
+    "partial_attempts": 0,
+    "complete": true,
+    "tokens": {
+      "input_tokens": 63092,
+      "cached_input_tokens": 0,
+      "output_tokens": 1602,
+      "reasoning_output_tokens": 921
+    }
+  },
+  "review_status": "findings"
+}

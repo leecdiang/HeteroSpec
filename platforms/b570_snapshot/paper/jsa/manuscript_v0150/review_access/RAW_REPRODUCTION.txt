@@ -1,0 +1,55 @@
+Local full-raw reconstruction and CPU audit
+
+These commands are author-side preparation in paper/jsa/manuscript_v0150.
+Requirements: Python 3.11 or later, standard library, sufficient local disk space.
+Fetching private pinned sources also requires the author's authenticated GitHub CLI.
+No model weights, native executable or GPU are loaded by these commands.
+
+1. Download and authenticate every part, then assemble the six archives:
+   python3 scripts/restore_raw_archives.py
+   Large parts use resumable CDN range reads; temporary signed URLs are not logged.
+   Recovery can also be resumed with python3 scripts/recover_large_raw_parts.py.
+   Completed archives are in output/raw_restore/<campaign>/archive.zip.
+
+2. Reconstruct every indexed logical path and independently rehash it:
+   python3 scripts/verify_restored_archives.py
+   A campaign can be selected with --archive rtx98 (or another listed ID).
+   Inputs remain immutable. Existing complete restorations are rechecked.
+   The verifier checks canonical manifests and records any CRLF/LF-only difference.
+   The RTX CPU_DIAGNOSTIC/corrupt.zip is an intentionally malformed negative fixture,
+   authenticated by the outer archive and its original RECEIPT.json; its rejection
+   is required and is never treated as scientific data corruption.
+
+3. Rerun the archived CPU analyses/auditors, one campaign per command:
+   python3 -B scripts/audit_restored_raw.py --archive rtx91
+   python3 -B scripts/audit_restored_raw.py --archive rtx98
+   python3 -B scripts/audit_restored_raw.py --archive b57092
+   python3 -B scripts/audit_restored_raw.py --archive b57097
+   python3 -B scripts/audit_restored_raw.py --archive b57099
+   python3 -B scripts/audit_restored_raw.py --archive b570101
+
+The RTX91 check first reconstructs all 3,600 exported records from native RECORD.json
+files and verifies completion hashes, full IDs, work counters and timer endpoints.
+It then runs the original qualification/cost and model-availability analyses. This
+is not a claim that the separate PR94 cross-audit program was rerun.
+
+B57092 and B570101 need a runtime Path binding that translates Windows backslash separators to
+POSIX. This changes no archived file, assertion or numerical formula. Other auditors
+run from their original sources. External model rehash is explicitly disabled;
+this omission is recorded, including the two skipped checks in B57092.
+
+Derived artifacts are compared against their archived results. Boolean flags for
+external-model rehash are reported separately. Any floating-point difference below
+the declared 1e-12 comparison tolerance is listed with both values; other changes
+fail the comparison. Raw file and tensor SHA256 checks remain exact.
+
+Outputs and original rejection-test logs are under output/raw_restore/<campaign>.
+The rtx98 auditor requires a fresh RESULTS.json output; retain an earlier audit by
+moving its rederived directory before repeating it. The final B570 tests use a
+separate temporary fixture because the original test writes its own result file.
+
+The archive scope is the six primary manuscript campaigns and their retained nested
+source/runtime and inherited evidence. Logical-path totals include inherited copies;
+they are not counts of distinct experiments. Model weights and earlier campaigns
+outside these manifests are separate dependencies. Byte integrity, CPU rederivation,
+and a hardware rerun are different verification levels.

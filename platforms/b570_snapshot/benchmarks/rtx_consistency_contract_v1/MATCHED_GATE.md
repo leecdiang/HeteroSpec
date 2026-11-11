@@ -1,0 +1,13 @@
+# Frozen matched-prefill, observation-disabled gate
+
+The completed four-condition width4/k3 panel qualified both constrained candidates. Query-batch achieved task-median geometric-mean ratios1.851883819852783 (whole request) and1.242366842919199 (native generation) against original globalUB1 target-only; ordinary k3 failed /25 and /18 in all four repetitions. Those results remain a separate, retained experiment.
+
+Two remaining confounds merit a bounded follow-up before interpreting practical speculative benefit: target-only should receive the same fast prefill graph/capacity as the candidate, and disabled capture should bypass inherited metadata construction/synchronization. No numerical attention change is made here.
+
+Add only an early return in `hs::decode` when native capture is disabled, delegating directly to `llama_decode`. Existing trace-enabled diagnosis/qualification behavior remains available; cost uses no capture, graph callbacks, state movement or export. Other cheap disabled hooks remain, so call this observation-disabled private frontend, not an independently verified byte-identical released frontend.
+
+Freeze8 qualification trajectories: /15,/25,/18,/31 x matched target-only and query-batch k3, globalUB4 and query-batch enabled in BOTH conditions, FA off, other original contracts unchanged. Native capture is disabled. Every complete ID/EOG-cap128 boundary must equal immutable original CLI R; otherwise stop dependent cost interpretation. Keep every failure; no new model/configuration search.
+
+Only after8/8 qualify, measure19 original exposed tasks x2 conditions x4 repetitions =152 measured resident requests plus8 excluded warmups. Both conditions use the same new executable, globalUB4, same attention lowering and prompt settings. The speculative condition additionally uses the0.6B drafter k3/UB4. Alternate condition order twice each way and rotate tasks. Fresh matched target-only outputs must equal original R. Compare per-task four-run median durations; report geometric mean of target/candidate ratios and count of faster tasks. Primary uncached request wall includes prefill/draft/target/response; secondary native generation interval is separately labeled. No model-load time or warmup is included in resident-request costs.
+
+This panel measures incremental speculation on the same constrained prefill path. It does not establish gains over unconstrained FA-on deployments, held-out tasks, other hardware/models, functional code correctness, energy/throughput or kernel invariance. Both model graphs remain constrained. No teacher-forced prefix, reference IDs, recorded proposals, divergence trigger or task routing is passed to the online candidate.

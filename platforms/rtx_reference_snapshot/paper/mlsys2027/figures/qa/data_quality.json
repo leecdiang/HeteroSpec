@@ -1,0 +1,74 @@
+{
+  "status": "PASS",
+  "profiles": [
+    {
+      "source": "work/m4/llama_verify_q8_synced.csv",
+      "rows": 84,
+      "columns": 4,
+      "grain": [
+        "prefix_tokens",
+        "verify_tokens",
+        "repetition"
+      ],
+      "duplicate_keys": 0,
+      "missing_cells": 0
+    },
+    {
+      "source": "analysis/m4_confirmatory_prompt_summary.csv",
+      "rows": 24,
+      "columns": 12,
+      "grain": [
+        "question_id"
+      ],
+      "duplicate_keys": 0,
+      "missing_cells": 0
+    },
+    {
+      "source": "analysis/m4_humaneval_prompt_summary.csv",
+      "rows": 30,
+      "columns": 13,
+      "grain": [
+        "task_id"
+      ],
+      "duplicate_keys": 0,
+      "missing_cells": 0
+    },
+    {
+      "source": "analysis/358h_draft_device_summary.csv",
+      "rows": 6,
+      "columns": 8,
+      "grain": [
+        "device",
+        "context"
+      ],
+      "duplicate_keys": 0,
+      "missing_cells": 0
+    },
+    {
+      "source": "analysis/358h_phase3_prompt_summary.csv",
+      "rows": 180,
+      "columns": 17,
+      "grain": [
+        "condition",
+        "task_id",
+        "repetition"
+      ],
+      "duplicate_keys": 0,
+      "missing_cells": 0
+    },
+    {
+      "source": "analysis/358h_phase3_prompt_level.csv",
+      "rows": 0,
+      "action": "EXCLUDED: historical blocked-preflight header-only scaffold"
+    }
+  ],
+  "notes": [
+    "Figure IDs follow user request: F2 is paths and F3 is M4, overriding older outline numbering.",
+    "Windows CSV BOM and CRLF are parsed explicitly; original source bytes retained.",
+    "Phase-3 prompt_summary has request grain: 180 rows, not 60 prompt aggregates.",
+    "B570 old reconnection-contaminated fallback cells 2.0352/2.0177 are excluded.",
+    "B570 formal V2 NOT RUN; only explicitly diagnostic post-gate fast and final serialized cells used.",
+    "Phase-1 raw run files are not tracked separately; CSV/JSON summaries and retained TPOT sample vectors support checks.",
+    "Micro ranges are across tested contexts, not confidence intervals or matched cross-platform comparisons."
+  ]
+}

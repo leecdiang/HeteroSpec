@@ -1,0 +1,68 @@
+# Paper-critical raw archives must enter Git byte-for-byte without EOL filters.
+artifacts/windows_humaneval_replication/** binary
+artifacts/windows_verification_mechanism/** binary
+artifacts/windows_cuda_divergence/** binary
+artifacts/windows_humaneval_replication/manifest.json text
+artifacts/windows_verification_mechanism/manifest.json text
+artifacts/windows_cuda_divergence/manifest.json text
+
+# B570 paper-critical provenance must remain byte-for-byte.
+artifacts/b570_backend_control/** -text
+artifacts/b570_direct_id_v1/** -text
+benchmarks/b570_direct_id_v1/** -text
+scripts/platform/b570_direct_id_v1/** -text
+
+# Authoritative 358H evidence is byte-addressed by its archive manifest.
+artifacts/358h_threshold_validation/phase3-final-20260918-144458/** -text
+artifacts/m4_runtime/runtime-profitability-control-20260925/m4_runtime_complete_evidence.tar.gz -text
+
+# New direct-ID replication source/freeze records have stable byte hashes.
+benchmarks/rtx_direct_id_v1/** -text
+artifacts/rtx_direct_id_v1/** -text
+scripts/rtx_direct_id.py -text
+scripts/verify_rtx_direct_id.py -text
+benchmarks/rtx_direct_id_v2/** -text
+artifacts/rtx_direct_id_v2/** -text
+scripts/rtx_direct_id_v2.py -text
+scripts/verify_rtx_direct_id_v2.py -text
+scripts/rtx_direct_id_v2_background.py -text
+
+# Prospective RTX transfer and matched-latency identities stay byte-for-byte.
+benchmarks/rtx_transfer_latency_v1/** -text
+scripts/platform/rtx_transfer_latency_v1/** -text
+artifacts/rtx_predictive_transfer_v1/** -text
+artifacts/rtx_matched_latency_v1/** -text
+
+benchmarks/rtx_independent_proposal_replay_v2/** -text
+scripts/platform/rtx_independent_proposal_replay_v2/** -text
+artifacts/rtx_independent_proposal_replay_v2/** -text
+
+# B570 prefill closeout receipts and raw-bound hashes retain original bytes.
+benchmarks/b570_prefill_closeout_v1/** -text
+# Preserve native diagnostic output, including its original trailing spaces.
+benchmarks/b570_prefill_closeout_v1/*.log -whitespace
+
+# Review receipts bind the exact read-only auditor bytes.
+reports/b570/prefill_closeout_review_v1/** -text
+
+# RTX native bridge freeze pins exact source and evidence bytes.
+scripts/native_reproduction/rtx_bridge/** -text
+scripts/native_reproduction/rtx_*.py -text
+benchmarks/rtx_native_bridge_20261026/** -text
+
+scripts/native_reproduction/rtx_delivery/** -text
+benchmarks/rtx_native_delivery_20261026/** -text
+
+# Reference repair authenticates source fixtures and frozen runtime bytes.
+scripts/experiments/rtx_reference_repair_v1/** -text
+benchmarks/rtx_reference_repair_v1/** -text
+benchmarks/rtx_reference_repair_v1/host_execution/** whitespace=cr-at-eol
+benchmarks/rtx_reference_repair_v1/host_execution/*.log -whitespace
+benchmarks/rtx_reference_repair_v1/host_execution/*.diff -whitespace
+
+# Llama repair evidence and executed source have byte-addressed identities.
+scripts/experiments/rtx_llama_repair_v1/** -text whitespace=cr-at-eol
+benchmarks/rtx_llama_repair_v1/** -text whitespace=cr-at-eol
+benchmarks/rtx_llama_repair_v1/host_execution/** whitespace=cr-at-eol
+benchmarks/rtx_llama_repair_v1/host_execution/**/*.log -whitespace
+benchmarks/rtx_llama_repair_v1/host_execution/**/*.diff -whitespace

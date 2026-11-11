@@ -1,0 +1,15 @@
+\Needspace{7\baselineskip}
+\section{Design implications for reference-preserving execution}
+\label{sec:transfer}
+The experiments connect three implementation choices: where numerical evaluation is constrained, which state reaches that computation, and which complete transaction pays for it.
+
+\paragraph{Preserve evaluation within a query; expose work across queries.}
+QB turns independent queries into batch instances while retaining their operands, masks and head mapping. The scoped Vulkan port makes this distinction concrete: it reuses the existing noncontiguous AV shader, supplies a zero V batch stride and dispatches independent query workgroups. The packed alternative changes the AV path and loses byte correspondence, whereas the preserved path qualifies all six registered coordinates. The reusable engineering principle is to separate cross-query scheduling freedom from changes to the evaluation of one output~\cite{b570gqarecords}. Backend admission and exact stage tests remain tied to the stated layouts.
+
+\paragraph{Bind numerical behavior to the state producer and graph identity.}
+A query view is part of a stateful interface. Phase/layout tags control graph reuse; prefill organization determines the KV subsequently consumed. The whole-state and component crosses show why matching endpoints cannot certify arbitrary cache substitution. A port therefore records producer recipe, positions, pending-token ownership and receiver behavior alongside tensor descriptors. The CUDA and Vulkan studies provide concrete tests of these obligations, rather than requiring all internal states to be identical.
+
+\paragraph{Choose repair and drafting jointly, then charge deployment cost.}
+The seven-arm panel shows a draft-profitability crossover under local repair for two families. Representation selection is the next decision: QB's incremental gain is measured against PQ, not attributed the full GS-to-local benefit. CUDA Graph replay, query preparation and fresh-context service then change the paid transaction. The new service panels retain distinct policies and do not pass their practical QB/PQ screens. These results motivate comparing complete qualified implementations at the intended request boundary.
+
+Batch-invariant kernels~\cite{thinkingmachines}, reproducible accumulation~\cite{reproblas} and phase-aware tiled execution~\cite{spectra} offer complementary control points. A hardware extension would preserve a declared evaluation while sharing resources across independent work; dtype alone does not specify every matrix-instruction detail~\cite{ptx}. The companion same-policy AV model is a parity control~\cite{studyrecords}. Establishing a hardware advantage requires a measured request-critical cost and an equal-resource baseline with the same legitimate sharing and buffering capabilities. The present contribution is the graph transformation, its empirical transfer conditions and their effect on request economics.

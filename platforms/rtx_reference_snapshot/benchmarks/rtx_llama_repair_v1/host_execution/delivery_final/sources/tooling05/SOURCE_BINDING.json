@@ -1,0 +1,18 @@
+{
+  "status": "SOURCE_BOUND_TRANSPORT_SUCCESSOR",
+  "parent_path": "E:\\rtx160\\parent159\\diagnostics\\parallel_upload.py",
+  "parent_sha256": "cd8d726a2031ba77ac9a1071d91e998739d747831ee2b9bc61cac54fd892603e",
+  "successor_path": "E:\\rtx160\\transport01\\tooling05\\parallel_upload_bounded.py",
+  "successor_sha256": "0a755f99368d9fba200f38bc890114032c66baa629ceb47a6155632d244f156d",
+  "changes": [
+    "Preserve every failed network command. At most three attempts only for identified network errors after successful server query proves exact asset absent. No overwrite.",
+    "One cumulative two-hour per-asset deadline and same original 24-hour transport deadline; five uploads unchanged.",
+    "Include all prior upload/recovery/source generations in separate delivery metadata.",
+    "Bounded logged retries for read-only API network failures. A failed query never establishes absence; existing assets are never overwritten.",
+    "Use paginated initial asset inventory so continuation remains valid above embedded release-list limits.",
+    "A tag-lookup release-not-found error is retryable only after a successful numeric-ID query proves the exact same draft/tag/target still exists and a paginated asset query proves the failed asset absent. Three attempts and original cumulative deadlines unchanged.",
+    "Byte-identical uploader resumed after a prolonged network outage; no attempt/deadline reset within the new uploader, original cumulative transport deadline retained."
+  ],
+  "native_requests_added": 0,
+  "previous_successor_sha256": "0a755f99368d9fba200f38bc890114032c66baa629ceb47a6155632d244f156d"
+}

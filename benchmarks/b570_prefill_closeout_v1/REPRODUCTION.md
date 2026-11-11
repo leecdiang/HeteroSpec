@@ -1,0 +1,13 @@
+# Re-analysis and evidence access
+
+The original native root is `C:/hs/b570-prefill-closeout-20261021`; paths are intentionally retained for exact host provenance. Do not execute prepare/create_driver/register/freeze over this sealed root or restart its UUID. Native execution belongs only to a fresh independently preregistered study and is not authorized by these reproduction commands.
+
+CPU-only re-analysis of the existing root uses `python -B audit.py E0`, `python -B audit.py E1`, `python -B audit.py E2` and `python -B verify_delivery.py`. The first three regenerate deterministic audits from original native records and full raw vectors. The last checks unchanged frozen bytes, raw archives, receipts/nonoverlap, complete slots and ledger sums. They load no model or backend. The original PR141 CPU test command is `python -B -m unittest test_toolkit -v` from `design/`.
+
+COMPACT_EVIDENCE.zip contains detailed geometry/progress/result/receipt/log records. LOCAL_RAW_ARCHIVE.json identifies FULL_RAW_LOCAL.zip by absolute path, size and SHA-256. Original PR134 references remain in `C:/hs/b570-formal-request-20261020` and are individually authenticated by the recorded original manifest. A remote reviewer must obtain these raw archives from the author and verify their hashes; Git alone does not provide external raw-vector access or certify that every local file remains available.
+
+All five numerical DLLs are copied unchanged from PR134/135. Only the C++ host is compiled, using the CMake include/library paths and frozen build identities. Arbitrary current upstream headers, llama libraries or model weights are not substitutes. FROZEN_FILES.json binds the actual executable, DLLs, models, original references and source. No model, executable, DLL or full raw-vector archive is committed. All committed artifact bytes have Git text conversion disabled.
+
+FULL_RAW_LOCAL.zip and HISTORICAL_COMPACT.zip preserve new observations and earlier incomplete/failed studies separately. Historical unreceipted time-1 cost remains unknown; do not infer its complete parent cost from request timers, timestamps or the new matrix. Cost windows in ALL_COST_WINDOWS.csv overlap and must not be added as if disjoint.
+
+Only the nine native model workers have individual process receipts. Compiler/control/auditor/coordination costs use conservative owned wall and command-level evidence; individual helper descendants were not separately counted. The 128-other-process reservation is not independently reconciled. RESOURCE_RECEIPT.json records this limit on the full resource-accounting claim; the complete scientific panel and native safety/accounting checks remain separately reported.

@@ -1,0 +1,16 @@
+\begin{tikzpicture}[font=\footnotesize]
+\begin{axis}[name=sess,scale only axis,width=13.5cm,height=3.4cm,
+xmin=.955,xmax=1.095,xtick={.96,1,1.04,1.08},xticklabels={0.96,1,1.04,1.08},
+ymin=.5,ymax=6.5,ytick={6,5,4,3,2,1},yticklabels={Qwen3 M,Qwen3 C,SmolLM2 M,SmolLM2 C,Llama M,Llama C},
+xlabel={PQ / QB request-time ratio},xlabel style={font=\footnotesize},tick label style={font=\footnotesize},
+axis lines*=left,axis line style={aux},tick style={aux},grid=major,grid style={gray!13}]
+\draw[aux,dashed] (axis cs:1,.5)--(axis cs:1,6.5);
+\addplot[target,only marks,mark=o,mark size=2.4pt,line width=.7pt] coordinates {(0.971380,6) (1.041728,5) (1.040019,4) (1.066179,3) (0.994477,2) (1.016460,1)};
+\addplot[qualified,only marks,mark=square*,mark size=2.4pt] coordinates {(1.085118,6) (1.045626,5) (1.036939,4) (1.070046,3) (1.032698,2) (1.027264,1)};
+\end{axis}
+\coordinate (legend) at ($(sess.south)+(0,-1.00cm)$);
+\draw[target,line width=.7pt] ($(legend)+(-1.5cm,0)$) circle[radius=2.4pt];
+\node[anchor=west,xshift=5pt,inner sep=0pt] at ($(legend)+(-1.5cm,0)$) {Session 0};
+\fill[qualified] ($(legend)+(.5cm,-.07cm)$) rectangle ++(.14,.14);
+\node[anchor=west,xshift=6pt,inner sep=0pt] at ($(legend)+(.5cm,0)$) {Session 1};
+\end{tikzpicture}

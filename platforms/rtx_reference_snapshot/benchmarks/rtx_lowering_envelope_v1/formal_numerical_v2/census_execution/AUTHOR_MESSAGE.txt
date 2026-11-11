@@ -1,0 +1,102 @@
+确认执行 HeteroSpec PR113 正式数值v2的 census 阶段。
+本次批准仅为支持检查，不授权任何正式数值图计算。
+
+已审查提交：
+05912d0b10191b861af5cdb85333f1d963dba294
+
+目录：
+benchmarks/rtx_lowering_envelope_v1/formal_numerical_v2/
+
+批准的精确 F0 SHA256：
+73ef7106240be73ab914e4c6a36064a0d1fd6d41ce5d9c38bf65f38e8331f080
+
+run_id：
+pr113-formal-numerical-v2
+
+授权类型：
+FORMAL_V2_CENSUS_ONLY
+
+一、执行入口与授权记录
+
+按当前实际收到的本条确认，创建独立 census 批准记录。
+准确填写 stage、run_id、F0_sha256、author_message 及其真实 SHA256；
+不得改写历史F0、认证回执或伪造此前授权。
+
+使用F0绑定的Python和当前冻结执行器：
+run_formal.py --stage census --approval <本次census批准记录的实际路径>
+
+不得使用 --stage numerical。
+不得生成或代填 FORMAL_V2_NUMERICAL_EXACT 授权。
+
+二、批准范围
+
+仅允许：
+1个census控制器；
+1个显式就绪查询进程；
+1个支持检查原生宿主；
+最多2个已登记并核验身份的系统conhost辅助进程。
+
+支持检查覆盖原72个上下文×5布局，共360张实际图，
+完整记录5,418次节点支持API查询。
+
+本轮：
+0个数值宿主；
+0次graph_compute；
+0模型请求、warmup、额外probe、科学重试。
+允许支持检查所需的冻结CUDA加载、初始化和元数据构图；
+不能把这些动作称为“零设备活动”。
+
+三、资源与执行前核对
+
+采用F0中 census 的独立预算：
+控制器墙钟≤600秒；
+保守owned≤1800秒；
+census原生宿主≤240秒；
+就绪查询≤10秒。
+其余内存、输出、磁盘、JobObject和日志限制全部沿冻结值执行。
+不得挪用后续numerical预算，不放宽超时或监测规则。
+
+只做必要的只读身份与状态核对，不再扩大CPU工程测试：
+核对实际源码、EXE、核心库、21个数值DLL、driver、环境、
+计划、完整wire、F0及认证远端字节一致；
+确认本census未启动且没有冲突任务。
+
+发现漂移、既有启动记录、就绪失败或预算不足，停止并保留证据；
+不删除账本、不冷却后自动重试、不重新生成F0绕过。
+
+四、固定候选与结果解释
+
+QH_C仍为固定主候选，QH_D仅为既定对照。
+不得按census结果切换候选或修改图实现。
+
+按已冻结 census_decision 规则处理：
+不完整census，或MQ/PQ/QB/QH_C及任何q1控制不支持，阻止数值阶段；
+仅q>1 QH_D不支持时，保留准确NOT_SUPPORTED坐标和受影响比较，
+不得静默删臂或宣称完整五布局覆盖。
+
+即使360张图全部支持，也只能报告“后端支持查询通过”；
+不能据此宣称实际图执行、GPU数值对应、完整actor资格或性能通过。
+census结果中的 numerical_admitted 只是技术条件判断，不是作者执行授权。
+
+五、结束后封存，不继续运行
+
+完成后使用已提供的 seal_census.py 做纯CPU封存，
+将实际census、decision、进程/资源回执及必要原始证据推送PR113，
+完成远端字节认证并记录：
+F0 SHA；
+census SHA；
+decision SHA；
+实际结果commit。
+
+直接汇报：
+360张图各布局的支持数量及全部不支持坐标；
+实际宿主、查询、辅助进程和资源成本；
+是否满足准备数值阶段确认的技术条件；
+仍未建立的执行与数值资格。
+
+随后停止，等待针对实际census和decision哈希的单独数值授权。
+不启动720数值槽位、计时/profile、S2/S3或actor。
+
+旧720的1失败/719未启动/0完成，以及GPU14的14完成/0失败，
+全部保持原样，不回填、不混入本次。
+PR113保持Draft，不修改B570、论文、main、发布或自动化。

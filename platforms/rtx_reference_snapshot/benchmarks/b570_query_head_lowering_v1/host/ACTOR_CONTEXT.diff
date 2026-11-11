@@ -1,0 +1,11 @@
+--- PR109/llama-context.cpp
++++ PR112/llama-context.cpp
+@@ -4366,7 +4366,7 @@
+ // Single-threaded host graph construction; each context owns its binding identity.
+ thread_local int b570_active_layout=0;
+ void llama_context::b570_geometry_bind(int role,int phase,int layout,uint32_t ub,int capacity) {
+- if(role<0||role>1||phase<0||phase>4||layout<0||layout>2||capacity<1||capacity>4||
++ if(role<0||role>1||phase<0||phase>4||layout<0||layout>4||layout==2||capacity<1||capacity>4||
+     (phase==0&&(layout!=0||(ub!=128&&ub!=512)))||
+     (role==1&&(layout!=0||(phase!=0&&ub!=1)))||
+     (role==0&&phase!=0&&ub!=4&&ub!=128)) throw std::runtime_error("PR108 phase guard");

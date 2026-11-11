@@ -1,0 +1,402 @@
+{
+  "date": "2026-10-13",
+  "status": "PASS_WITH_EXPLICIT_SCOPE_LIMITS",
+  "campaigns": [
+    {
+      "id": "rtx98",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "361367119223e1be5e8a5f82b4fdee1ed0c248e63bd588700d1096aa61c188b5",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "f41bb797802b552fd16656f21a64dcd72d6565e26583830fe344f6a15492dfe2",
+          "actual_sha256": "82c7f253f9f65f083fb91e84ed8cc91b6075f4298d6c4aacd5a4759b65156695",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/families/Qwen/comparisons/2/domains/MBPP",
+              "expected": 1.4231454886318042,
+              "actual": 1.423145488631804,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            },
+            {
+              "path": "/families/Qwen/comparisons/5/task_effects/4/ratio",
+              "expected": 1.470872247666862,
+              "actual": 1.4708722476668619,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            },
+            {
+              "path": "/families/SmolLM2/comparisons/4/task_effects/5/ratio",
+              "expected": 0.6924643070303627,
+              "actual": 0.6924643070303625,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            },
+            {
+              "path": "/families/SmolLM2/comparisons/6/domains/GSM8K",
+              "expected": 0.8053282384294123,
+              "actual": 0.8053282384294121,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            }
+          ]
+        }
+      ],
+      "synthetic_rejection": {
+        "status": "PASS",
+        "tests": 14
+      }
+    },
+    {
+      "id": "rtx91",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "92ad63da4cfa66839531a63bdc2360c47aa6c750a394140b5355f9ce33e6642e",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "a7b6e40946656a0341fd97755daaaefebc1671c0cdf23ba84f28f25b613ceccb",
+          "actual_sha256": "a7b6e40946656a0341fd97755daaaefebc1671c0cdf23ba84f28f25b613ceccb",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "MODEL_VALIDATION.json",
+          "expected_sha256": "01975b838cf1b79f1c89529cf6b57e43fa4d32d2992d3d8f119e9cd2401a3045",
+          "actual_sha256": "01975b838cf1b79f1c89529cf6b57e43fa4d32d2992d3d8f119e9cd2401a3045",
+          "byte_equal": true,
+          "allowed_differences": []
+        }
+      ],
+      "raw_records_crosschecked": 3600,
+      "scope": "All native record hashes, completion seals, full IDs, workload and timer endpoints crosschecked; original CPU qualification/cost and model-availability analyses rerun. Not a new execution of the separate PR94 audit."
+    },
+    {
+      "id": "b57092",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "e89a4a60f849c48bafcbba636fe20476c090e5347f6a879516191a11c37727a9",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "INDEPENDENT_VERIFICATION.json",
+          "expected_sha256": "a20f63c063d4edc0b9aaea46c95aca64632c7f66b66f6c72c6bc4211662f14de",
+          "actual_sha256": "d0bf609f679564b668460781618661fb58a369b71147b26016e9632386768887",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/checks",
+              "expected": 87723,
+              "actual": 87721,
+              "reason": "2 external model weight checks intentionally omitted"
+            }
+          ]
+        }
+      ],
+      "path_adapter": "Runtime Path binding converts Windows backslashes to POSIX separators only; original source and data bytes unchanged."
+    },
+    {
+      "id": "b57097",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "bc272a888b88c4a2163146c46deb28693f04998b1bde90f05a1e28fc456284f0",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "FORK_SHAMS.json",
+          "expected_sha256": "724787ac56ad9476bb438c3c04e2fea6a3736d7af7c0c560922d2acd4c29db36",
+          "actual_sha256": "724787ac56ad9476bb438c3c04e2fea6a3736d7af7c0c560922d2acd4c29db36",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "INDEPENDENT_VERIFICATION.json",
+          "expected_sha256": "a71f58b8520e59d82ad00a805c0821f8556ce3117e8d5de9293a5d7abd1a6bcc",
+          "actual_sha256": "8376563336954ad1c8af1b4ea3331661b90747f7211002c56d34e77f82e45b7e",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/models_rehashed",
+              "expected": true,
+              "actual": false,
+              "reason": "external model weights intentionally not rehashed"
+            }
+          ]
+        },
+        {
+          "file": "PHASE_INTERVENTION.json",
+          "expected_sha256": "e4c087fa53daa22b47f4b1ea2ab223fa8bd145ef9779e41158a36d6c2f90bff4",
+          "actual_sha256": "e4c087fa53daa22b47f4b1ea2ab223fa8bd145ef9779e41158a36d6c2f90bff4",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "QUALIFICATION.json",
+          "expected_sha256": "fdd27c3d2236b542147339d5684661414313937e4090455fb1a90b4859a0c112",
+          "actual_sha256": "0f83f00edcaf4494cb4cf194e21cb30dcb3db4b9a99817cf691d9aedf0b979c9",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/posthoc_production_pairwise/1/task_effects/8/ratio",
+              "expected": 0.7165561913168503,
+              "actual": 0.7165561913168504,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            }
+          ]
+        },
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "907e7879fb3f425e93692acf8bc064d042494db95e67857f089ebd5dd3d286b9",
+          "actual_sha256": "072bcdbe1d97c6fd8f028384a26d5c112f9817170a7f5663a719509ec373ed24",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/paid_posthoc_pairs/1/task_effects/8/ratio",
+              "expected": 0.7165561913168503,
+              "actual": 0.7165561913168504,
+              "reason": "platform floating-point rounding below 1e-12 comparison tolerance"
+            }
+          ]
+        },
+        {
+          "file": "WORK_WITNESSES.json",
+          "expected_sha256": "e5cf84b9a8e88cbd680fe83626ee251a88de2455dacb534657390b0761f97848",
+          "actual_sha256": "e5cf84b9a8e88cbd680fe83626ee251a88de2455dacb534657390b0761f97848",
+          "byte_equal": true,
+          "allowed_differences": []
+        }
+      ],
+      "synthetic_rejection": {
+        "status": "PASS",
+        "tests": 10
+      }
+    },
+    {
+      "id": "b57099",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "a58730731a24f5189dc6305e2a45a4fd665bca252c4b3904594235801bedcefd",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "INDEPENDENT_VERIFICATION.json",
+          "expected_sha256": "ccdbfb61ced0137838a4a23db802ff2b238c7100e9a6aa849ba76ea566e64759",
+          "actual_sha256": "4ba08c2dd834844cbf85e3900a7fe3b5cbe9c426426540c293f5f6ab52f953a0",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/models_full_rehashed",
+              "expected": true,
+              "actual": false,
+              "reason": "external model weights intentionally not rehashed"
+            }
+          ]
+        },
+        {
+          "file": "NUMERICAL_STATE_LAYOUTS.json",
+          "expected_sha256": "b37ea3794fb2b4c9e5f0c81399e72c74d181658c3f1bbdd583580480347e39f6",
+          "actual_sha256": "b37ea3794fb2b4c9e5f0c81399e72c74d181658c3f1bbdd583580480347e39f6",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "QUALIFICATION.json",
+          "expected_sha256": "2e672d2ad61bd9c1c9a3f915f764d99618eac7a7243883a3fbb5b2cf7220a5a3",
+          "actual_sha256": "2e672d2ad61bd9c1c9a3f915f764d99618eac7a7243883a3fbb5b2cf7220a5a3",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "23113e75a16116289176725355506ac142dcf83c418ab469248d1ce19c21b735",
+          "actual_sha256": "23113e75a16116289176725355506ac142dcf83c418ab469248d1ce19c21b735",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "WORK_WITNESSES.json",
+          "expected_sha256": "1afc68636f036afd1d689d65d76cf114d865b22b643b8ff861de110dd7321a85",
+          "actual_sha256": "1afc68636f036afd1d689d65d76cf114d865b22b643b8ff861de110dd7321a85",
+          "byte_equal": true,
+          "allowed_differences": []
+        }
+      ],
+      "synthetic_rejection": {
+        "status": "PASS",
+        "tests": 12
+      }
+    },
+    {
+      "id": "b570101",
+      "status": "PASS_ORIGINAL_CPU_AUDITOR_REDERIVATION",
+      "original_auditor_sha256": "d689c20889e3ca823fbc8505c16f334e813e52185967f77e9d258194f7c721e6",
+      "external_model_weights_rehashed": false,
+      "new_GPU_forwards": 0,
+      "artifacts": [
+        {
+          "file": "FIXED_INPUT_REPLAY.json",
+          "expected_sha256": "2b74ed6ac5e8b7bec05166845e4fb7edce702a77f912564014394670b357c9a3",
+          "actual_sha256": "2b74ed6ac5e8b7bec05166845e4fb7edce702a77f912564014394670b357c9a3",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "GPU_TIMELINE.json",
+          "expected_sha256": "032a28a9eaf3e0c14fc22b39019ca76392c5f595cb35d02dd89fc616c1860675",
+          "actual_sha256": "032a28a9eaf3e0c14fc22b39019ca76392c5f595cb35d02dd89fc616c1860675",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "INDEPENDENT_VERIFICATION.json",
+          "expected_sha256": "7e653f65c77e7eed42cdcf20053b6af7463c2d06ee0904e7dc0c374ed6ece888",
+          "actual_sha256": "59de0406a8298773ef6f40be452b928b30a50effddfc6c2973cc12269d89b27f",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/full_target_model_rehashed",
+              "expected": true,
+              "actual": false,
+              "reason": "external model weights intentionally not rehashed"
+            }
+          ]
+        },
+        {
+          "file": "KV_LOGITS_CROSS.json",
+          "expected_sha256": "2214d6337ca12ef593e800a1935700ee220907b847f22921c9766626b711329f",
+          "actual_sha256": "2214d6337ca12ef593e800a1935700ee220907b847f22921c9766626b711329f",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "OPERATOR_FIRST_DIFF.json",
+          "expected_sha256": "6ace29fc05f38aeeee702d9a885ce6ffc42d0fe7095981d6cc8e6ee886c4ab5e",
+          "actual_sha256": "6ace29fc05f38aeeee702d9a885ce6ffc42d0fe7095981d6cc8e6ee886c4ab5e",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "PARTITION_MATRIX.json",
+          "expected_sha256": "e866b709578596d35cec0fc4b5e682e716bbb456f625f428812b4441bd5655b6",
+          "actual_sha256": "e866b709578596d35cec0fc4b5e682e716bbb456f625f428812b4441bd5655b6",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "QUALIFICATION.json",
+          "expected_sha256": "d8f0180db100ac76c06d30e6c9da19e8213cdd082026046cee259bb4604e2dd6",
+          "actual_sha256": "d8f0180db100ac76c06d30e6c9da19e8213cdd082026046cee259bb4604e2dd6",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "RAW_EVIDENCE.json",
+          "expected_sha256": "00e869e6ff445500046a629e45af0229fba1915298147cd59cd13e5877f22340",
+          "actual_sha256": "b8ee1d1101f6881f96672893242ae3563a4933cdd9085a49169a3d29b1bb5e1b",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/files",
+              "reason": "Manifest file order only: Windows and POSIX path collation; identical path/size/SHA256 mapping",
+              "entries": 1071
+            },
+            {
+              "path": "/external_model_bytes_verified",
+              "expected": true,
+              "actual": false,
+              "reason": "external model weights intentionally not rehashed"
+            }
+          ]
+        },
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "51dd0facf0d2a6d8da3fecb1418d91be72914d1939a6684c23fcd893f9f2c0c3",
+          "actual_sha256": "51dd0facf0d2a6d8da3fecb1418d91be72914d1939a6684c23fcd893f9f2c0c3",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "STATE_RESTORE_ADMISSION.json",
+          "expected_sha256": "c837dc793ef26021cedc0c28734b6a8eba4b485ca902f1ce907bb9396900a0dd",
+          "actual_sha256": "c837dc793ef26021cedc0c28734b6a8eba4b485ca902f1ce907bb9396900a0dd",
+          "byte_equal": true,
+          "allowed_differences": []
+        }
+      ],
+      "path_adapter": "Runtime Path binding converts Windows backslashes to POSIX separators only; original source and data bytes unchanged.",
+      "inherited_PR99_artifacts": [
+        {
+          "file": "INDEPENDENT_VERIFICATION.json",
+          "expected_sha256": "ccdbfb61ced0137838a4a23db802ff2b238c7100e9a6aa849ba76ea566e64759",
+          "actual_sha256": "4ba08c2dd834844cbf85e3900a7fe3b5cbe9c426426540c293f5f6ab52f953a0",
+          "byte_equal": false,
+          "allowed_differences": [
+            {
+              "path": "/models_full_rehashed",
+              "expected": true,
+              "actual": false,
+              "reason": "external model weights intentionally not rehashed"
+            }
+          ]
+        },
+        {
+          "file": "NUMERICAL_STATE_LAYOUTS.json",
+          "expected_sha256": "b37ea3794fb2b4c9e5f0c81399e72c74d181658c3f1bbdd583580480347e39f6",
+          "actual_sha256": "b37ea3794fb2b4c9e5f0c81399e72c74d181658c3f1bbdd583580480347e39f6",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "QUALIFICATION.json",
+          "expected_sha256": "2e672d2ad61bd9c1c9a3f915f764d99618eac7a7243883a3fbb5b2cf7220a5a3",
+          "actual_sha256": "2e672d2ad61bd9c1c9a3f915f764d99618eac7a7243883a3fbb5b2cf7220a5a3",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "RESULTS.json",
+          "expected_sha256": "23113e75a16116289176725355506ac142dcf83c418ab469248d1ce19c21b735",
+          "actual_sha256": "23113e75a16116289176725355506ac142dcf83c418ab469248d1ce19c21b735",
+          "byte_equal": true,
+          "allowed_differences": []
+        },
+        {
+          "file": "WORK_WITNESSES.json",
+          "expected_sha256": "1afc68636f036afd1d689d65d76cf114d865b22b643b8ff861de110dd7321a85",
+          "actual_sha256": "1afc68636f036afd1d689d65d76cf114d865b22b643b8ff861de110dd7321a85",
+          "byte_equal": true,
+          "allowed_differences": []
+        }
+      ],
+      "synthetic_rejection": {
+        "status": "PASS",
+        "tests": 15,
+        "rejected": [
+          "cropped_CAP_endpoint",
+          "wrong_owned_PID",
+          "wrong_output_capacity",
+          "fabricated_physical_rows",
+          "wrong_EOG_flag",
+          "missing_registered_slot",
+          "duplicate_registered_slot",
+          "intermediate_logits_request",
+          "shifted_native_KV_positions",
+          "fake_physical_width",
+          "bad_sequence_KV_magic",
+          "wrong_actual_KV_cell_position",
+          "NaN_FP32_logits",
+          "raw_payload_tamper",
+          "cropped_state_payload"
+        ],
+        "model_forwards": 0,
+        "native_imports": 0,
+        "scope": "Malformed source payloads/native endpoint/geometry/coordinate evidence"
+      }
+    }
+  ],
+  "external_model_weights_rehashed": false,
+  "new_GPU_forwards": 0,
+  "comparison_relative_and_absolute_tolerance": 1e-12,
+  "boundary": "Raw file and tensor hashes are exact. Only explicitly listed model-rehash metadata, manifest path ordering and floating-point aggregate roundoff differ. RTX91 reruns original analyses after native-record binding; the separate PR94 audit was not rerun. B57097 cannot recreate state payloads not saved by the original observer."
+}

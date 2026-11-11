@@ -1,0 +1,1449 @@
+{
+  "design_head": "a1925c4a3b040f9ad3db7ec4301042791a82fe75",
+  "parent_head": "c0e16aff9f3eeb0e677a52fcdc092068c096bf5d",
+  "arms": {
+    "A": {
+      "mode": "ordinary",
+      "ub": 512,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 512,
+      "partition": 512,
+      "source_role": "original UB512 one-call prefill"
+    },
+    "B": {
+      "mode": "ordinary",
+      "ub": 512,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 512,
+      "partition": 128,
+      "source_role": "UB512 external 128-token partition; final-only logits"
+    },
+    "C": {
+      "mode": "ordinary",
+      "ub": 128,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 128,
+      "partition": 512,
+      "source_role": "original UB128 one-call prefill"
+    },
+    "D": {
+      "mode": "ordinary",
+      "ub": 128,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 128,
+      "partition": 128,
+      "source_role": "NEW UB128 explicit external128/remainder"
+    }
+  },
+  "blocks": [
+    {
+      "name": "p1a_r0_D",
+      "phase": "P1A",
+      "repeat": 0,
+      "arm": "D",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1A/r0/D|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            128,
+            62
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            128,
+            35
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127",
+          "schedule": [
+            127
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128",
+          "schedule": [
+            128
+          ]
+        },
+        {
+          "slot": "P1A/r0/D|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            128,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p1a_r1_D",
+      "phase": "P1A",
+      "repeat": 1,
+      "arm": "D",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1A/r1/D|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            128,
+            62
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            128,
+            35
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127",
+          "schedule": [
+            127
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128",
+          "schedule": [
+            128
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            128,
+            1
+          ]
+        },
+        {
+          "slot": "P1A/r1/D|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p1a_r2_D",
+      "phase": "P1A",
+      "repeat": 2,
+      "arm": "D",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1A/r2/D|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            128,
+            62
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            128,
+            35
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127",
+          "schedule": [
+            127
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128",
+          "schedule": [
+            128
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            128,
+            1
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ]
+        },
+        {
+          "slot": "P1A/r2/D|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p1b_r0",
+      "phase": "P1B",
+      "repeat": 0,
+      "arm": "A",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1B/r0/s0|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            64,
+            64,
+            33
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s1|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            96,
+            65
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s2|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r0/s3|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            160,
+            1
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s0|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            64,
+            64,
+            5
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s1|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            96,
+            37
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s2|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r0/s3|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            132,
+            1
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s0|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            64,
+            64,
+            62
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s1|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            96,
+            94
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s2|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            128,
+            62
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r0/s3|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            160,
+            30
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s0|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            64,
+            64,
+            35
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s1|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            96,
+            67
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s2|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            128,
+            35
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r0/s3|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            160,
+            3
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s0|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            64,
+            65
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s1|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            96,
+            33
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r0/s2|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            128,
+            1
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        }
+      ]
+    },
+    {
+      "name": "p1b_r1",
+      "phase": "P1B",
+      "repeat": 1,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1B/r1/s1|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            96,
+            65
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s2|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r1/s3|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            160,
+            1
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s0|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            64,
+            64,
+            5
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s1|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            96,
+            37
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s2|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r1/s3|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            132,
+            1
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s0|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            64,
+            64,
+            62
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s1|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            96,
+            94
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s2|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            128,
+            62
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r1/s3|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [
+            160,
+            30
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s0|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            64,
+            64,
+            35
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s1|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            96,
+            67
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s2|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            128,
+            35
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r1/s3|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [
+            160,
+            3
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s0|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            64,
+            65
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s1|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            96,
+            33
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        },
+        {
+          "slot": "P1B/r1/s2|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129",
+          "schedule": [
+            128,
+            1
+          ],
+          "exposure": "EXPOSED_REPLICATION"
+        },
+        {
+          "slot": "P1B/r1/s0|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            64,
+            64,
+            33
+          ],
+          "exposure": "EXPOSED_INPUT_NEW_PARTITION"
+        }
+      ]
+    },
+    {
+      "name": "p1c_r0_A",
+      "phase": "P1C",
+      "repeat": 0,
+      "arm": "A",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r0/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r0/A|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r0_B",
+      "phase": "P1C",
+      "repeat": 0,
+      "arm": "B",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r0/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r0/B|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r0_C",
+      "phase": "P1C",
+      "repeat": 0,
+      "arm": "C",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r0/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r0/C|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": false,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r1_B",
+      "phase": "P1C",
+      "repeat": 1,
+      "arm": "B",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r1/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r1/B|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r1_C",
+      "phase": "P1C",
+      "repeat": 1,
+      "arm": "C",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r1/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r1/C|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r1_A",
+      "phase": "P1C",
+      "repeat": 1,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r1/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r1/A|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r2_C",
+      "phase": "P1C",
+      "repeat": 2,
+      "arm": "C",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r2/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r2/C|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r2_A",
+      "phase": "P1C",
+      "repeat": 2,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r2/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            161
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r2/A|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            133
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p1c_r2_B",
+      "phase": "P1C",
+      "repeat": 2,
+      "arm": "B",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P1C/r2/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [
+            128,
+            33
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        },
+        {
+          "slot": "P1C/r2/B|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [
+            128,
+            5
+          ],
+          "operator_capture": true,
+          "operator_layer": 0
+        }
+      ]
+    },
+    {
+      "name": "p0_r0",
+      "phase": "P0",
+      "repeat": 0,
+      "arm": "A",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P0/r0/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r0/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r0/A|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r0/B|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r0/A|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r0/B|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r0/A|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r0/B|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p0_r1",
+      "phase": "P0",
+      "repeat": 1,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P0/r1/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r1/A|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r1/B|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r1/A|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r1/B|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r1/A|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P0/r1/B|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P0/r1/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        }
+      ]
+    }
+  ],
+  "conditional_blocks": [
+    {
+      "name": "p2_r0",
+      "phase": "P2",
+      "repeat": 0,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P2/r0/AA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/AB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/BA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/BB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/AA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/AB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/BA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/BB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/AA|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/AB|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/BA|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/BB|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/AA|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/AB|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r0/BA|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r0/BB|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p2_r1",
+      "phase": "P2",
+      "repeat": 1,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P2/r1/AB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/BA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/BB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/AA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/AB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/BA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/BB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/AA|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/AB|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/BA|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/BB|GSM8K/test/1011",
+          "task": "GSM8K/test/1011",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/AA|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/AB|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/BA|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r1/BB|GSM8K/test/1249",
+          "task": "GSM8K/test/1249",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r1/AA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "p2_r2",
+      "phase": "P2",
+      "repeat": 2,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "slots": [
+        {
+          "slot": "P2/r2/BA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r2/BB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r2/AA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r2/AB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r2/BA|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r2/BB|GSM8K/test/831",
+          "task": "GSM8K/test/831",
+          "schedule": [],
+          "restore_donors": [
+            "B",
+            "B"
+          ]
+        },
+        {
+          "slot": "P2/r2/AA|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "A"
+          ]
+        },
+        {
+          "slot": "P2/r2/AB|GSM8K/test/1248",
+          "task": "GSM8K/test/1248",
+          "schedule": [],
+          "restore_donors": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    }
+  ],
+  "load_probes": [
+    {
+      "name": "base_probe_A",
+      "arm": "A"
+    }
+  ],
+  "limits": {
+    "P1A": 21,
+    "P1B": 38,
+    "P1C": 18,
+    "P0": 16,
+    "P2": 40,
+    "P3": 18,
+    "total_whole": 200,
+    "registered_max": 151,
+    "engineering": 49,
+    "probe": 8,
+    "operator_starts": 72,
+    "owned_gpu_seconds": 21600,
+    "operator_payload_bytes": 536870912,
+    "timeline_bytes": 67108864,
+    "total_disk_bytes": 4294967296
+  },
+  "warmups": 0,
+  "retries": 0,
+  "paid_cost": false,
+  "operator_rule": "Traverse all source-bound named layer0 ops and all dynamic source operands; no later layer if layer0 first comparable divergence exists; if no first-divergence in layer0 after 2 captures, report bounded localization unresolved, no extra requests.",
+  "operator_replay_rule": "RMS_NORM, norm-weight MUL, Q/K/V MUL_MAT at layer0 of A source operands; 2 cases x5 ops x2 geometries(full vs128/remainder) x2 repeats =40 max replay starts. Same full input values and shader/backend DLLs; no result selection.",
+  "restore_gate": "P2 executes only after standalone CPU P0 own-path admission across all16 slots; any failure blocks allcrosses."
+}

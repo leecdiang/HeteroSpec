@@ -1,0 +1,13 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[box/.style={draw,rounded corners,align=center,text width=2.75in,inner sep=5pt},arr/.style={-{Stealth}}]
+\node[box] (candidate) {Candidate execution path};
+\node[box,below=0.17in of candidate] (gate) {Greedy token-equivalence gate\\for the frozen workload};
+\node[box,below=0.17in of gate] (cost) {Admissible path: measure realized\\$\dreal$, complete $\rtarget$, and $X$};
+\node[box,below=0.17in of cost] (out) {Count all committed output $C$\\$S=C/(\dreal+\rtarget+X)$};
+\node[box,dashed,below=0.17in of out] (proxy) {Separate diagnostic: $\microv$\\target-forward opportunity only};
+\draw[arr] (candidate)--(gate);\draw[arr] (gate)--(cost);\draw[arr] (cost)--(out);
+\end{tikzpicture}
+\caption{What must be measured after correctness filtering? Complete round accounting applies only to an admissible path. A failed gate leaves diagnostics; the dashed microbenchmark box is not substituted into the realized denominator.}
+\label{fig:framework}
+\end{figure}

@@ -1,0 +1,22 @@
+{
+  "schema": "heterospec.358h.canonical_gguf_smoke.v1",
+  "formal_measurement": false,
+  "captured_at_utc": "2026-09-16T03:04:33.403520+00:00",
+  "model": "C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\models\\gguf\\Qwen3-0.6B-Q8_0.gguf",
+  "model_sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+  "requested_device": "NPU",
+  "available_devices": [
+    "CPU",
+    "GPU",
+    "NPU"
+  ],
+  "openvino": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+  "openvino_genai": "2026.3.1.0-3290-56d9685302d",
+  "python": "3.11.9",
+  "status": "FAIL",
+  "actual_execution_devices": null,
+  "actual_execution_devices_status": "UNAVAILABLE_FROM_LLMPipeline_GGUF_PYTHON_API; explicit physical plugin request alone does not satisfy the independent EXECUTION_DEVICES evidence gate",
+  "error_type": "RuntimeError",
+  "error": "Exception from src\\inference\\src\\cpp\\core.cpp:120:\nException from src\\inference\\src\\dev\\plugin.cpp:54:\nCheck 'DimType::broadcast_merge(result_shape[i], arg_shape_vec[i], target_input_shape[i])' failed at src\\core\\shape_inference\\include\\broadcast_shape_inference.hpp:155:\nWhile validating node 'opset3::Broadcast Broadcast_196 (opset1::Unsqueeze Unsqueeze_187[0]:f32[1,8,1,1024,128], opset1::Concat Concat_194[0]:i64[5]) -> (f32[?,8,2,0,128])' with friendly_name 'Broadcast_196':\nBroadcast incorrect target shape. Expecting either 1 or 1024. Got 0\n\n\n",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\YinHuuuuuu\\Documents\\ChatGPT\\HeteroSpec\\scripts\\platform\\358h\\smoke_canonical_gguf.py\", line 50, in main\n    pipe = ov_genai.LLMPipeline(str(args.model), args.device, PERFORMANCE_HINT=\"LATENCY\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Exception from src\\inference\\src\\cpp\\core.cpp:120:\nException from src\\inference\\src\\dev\\plugin.cpp:54:\nCheck 'DimType::broadcast_merge(result_shape[i], arg_shape_vec[i], target_input_shape[i])' failed at src\\core\\shape_inference\\include\\broadcast_shape_inference.hpp:155:\nWhile validating node 'opset3::Broadcast Broadcast_196 (opset1::Unsqueeze Unsqueeze_187[0]:f32[1,8,1,1024,128], opset1::Concat Concat_194[0]:i64[5]) -> (f32[?,8,2,0,128])' with friendly_name 'Broadcast_196':\nBroadcast incorrect target shape. Expecting either 1 or 1024. Got 0\n\n\n\n"
+}

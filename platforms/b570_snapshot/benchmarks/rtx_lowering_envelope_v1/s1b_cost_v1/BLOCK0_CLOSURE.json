@@ -1,0 +1,85 @@
+{
+  "status": "BLOCK0_STOPPED_BEFORE_CONTROLLER;CPU_LOCAL_RECONSTRUCTION_PASS;REMOTE_ARCHIVE_AUTH_FAILED_NOT_RETRIED",
+  "recorded_utc": "2026-10-16T11:06:38.198629+00:00",
+  "Block0_planned": 72,
+  "Block0_started": 0,
+  "Block0_completed": 0,
+  "Block0_invalid_started": 0,
+  "Block0_unstarted": 72,
+  "CUDA_success_rate": null,
+  "CUDA_success_rate_denominator": 0,
+  "ordinary_outputs": 0,
+  "timing_samples": 0,
+  "graph_calls": 0,
+  "warmups": 0,
+  "GPU_owned_seconds": 0,
+  "GPU_phase_controlled_process_starts": 0,
+  "archive": {
+    "bytes": 21700698,
+    "sha256": "b88a698fd0b0ee72378d449d8d7c29610c9fda1746595b25ad9d940110954c26",
+    "parts": [
+      {
+        "name": "raw-000.zip.part",
+        "bytes": 21700698,
+        "sha256": "b88a698fd0b0ee72378d449d8d7c29610c9fda1746595b25ad9d940110954c26"
+      }
+    ],
+    "members": 197
+  },
+  "local_fresh_restore": {
+    "members_verified": 197,
+    "archive_sha256": "b88a698fd0b0ee72378d449d8d7c29610c9fda1746595b25ad9d940110954c26"
+  },
+  "local_fresh_analysis_equal": true,
+  "remote_archive_authenticated": false,
+  "remote_failure": "09-readback HTTP404;raw/ignored in first Git commit;no retry",
+  "publication_fix": "force-stage exact existing archive bytes without modifying implementation or frozen raw",
+  "CPU_actions": [
+    {
+      "action": "06-analyze",
+      "status": "COMPLETE",
+      "wall": 0.1708710999955656,
+      "owned": 0.5126132999866968
+    },
+    {
+      "action": "07-package",
+      "status": "COMPLETE",
+      "wall": 1.2012879999965662,
+      "owned": 3.6038639999896986
+    },
+    {
+      "action": "08-git-push",
+      "status": "COMPLETE",
+      "wall": 4.792753300003824,
+      "owned": 81.476806100065
+    },
+    {
+      "action": "09-readback",
+      "status": "CPU_DELIVERY_FAILED",
+      "wall": 1.012246900005266,
+      "owned": 3.036740700015798
+    },
+    {
+      "action": "10-local-fresh-restore",
+      "status": "COMPLETE",
+      "wall": 0.4988378999987617,
+      "owned": 1.4965158000122756
+    },
+    {
+      "action": "11-recompute",
+      "status": "COMPLETE",
+      "wall": 0.2480446999979904,
+      "owned": 0.7441340999939712
+    }
+  ],
+  "CPU_registered_wall_through_recompute": 7.924041899997974,
+  "CPU_registered_owned_through_recompute": 90.87067400006345,
+  "CPU_failure_receipts_zip": {
+    "path": "BLOCK0_CPU_DELIVERY_RECEIPTS.zip",
+    "bytes": 27609,
+    "sha256": "b65663fb9ba741374d5e94ea2618327a2499a4d400464078588290e7a64770b9",
+    "members": 69
+  },
+  "Block1_admitted": false,
+  "Block2_admitted": false
+}

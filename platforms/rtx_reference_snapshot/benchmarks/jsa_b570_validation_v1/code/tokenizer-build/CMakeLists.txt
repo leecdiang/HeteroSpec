@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(b570_full_vocab LANGUAGES CXX)
+add_executable(b570-tokenizer ../tokenizer.cpp)
+target_compile_features(b570-tokenizer PRIVATE cxx_std_17)
+target_compile_definitions(b570-tokenizer PRIVATE LLAMA_SHARED GGML_SHARED GGML_BACKEND_SHARED)
+target_include_directories(b570-tokenizer PRIVATE C:/hs/b570-direct-id-v1-src/include C:/hs/b570-direct-id-v1-src/ggml/include C:/hs/b570-direct-id-v1-src/vendor)
+target_link_libraries(b570-tokenizer PRIVATE C:/hs/b570-direct-id-v1-build/src/Release/llama.lib C:/hs/b570-direct-id-v1-build/ggml/src/Release/ggml.lib)

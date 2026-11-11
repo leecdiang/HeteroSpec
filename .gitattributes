@@ -37,6 +37,18 @@ benchmarks/rtx_independent_proposal_replay_v2/** -text
 scripts/platform/rtx_independent_proposal_replay_v2/** -text
 artifacts/rtx_independent_proposal_replay_v2/** -text
 
+# B570 prefill closeout receipts and raw-bound hashes retain original bytes.
+benchmarks/b570_prefill_closeout_v1/** -text
+# Preserve native diagnostic output, including its original trailing spaces.
+benchmarks/b570_prefill_closeout_v1/*.log -whitespace
+
+# Review receipts bind the exact read-only auditor bytes.
+reports/b570/prefill_closeout_review_v1/** -text
+benchmarks/b570_native_reproduction_v1/** -text
+# Archived unified-diff context lines are significant and retain their exact bytes.
+benchmarks/b570_native_reproduction_v1/patches/*.patch -whitespace
+benchmarks/b570_native_delivery_v1/** -text
+
 # Amended RTX identities and raw receipts are byte-addressed.
 benchmarks/rtx_jsa_closeout_v1/revision_a/** -text
 benchmarks/rtx_jsa_closeout_v1/revision_a/DATASET_CARD.md whitespace=-blank-at-eol

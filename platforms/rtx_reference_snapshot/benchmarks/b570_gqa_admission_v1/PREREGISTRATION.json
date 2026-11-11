@@ -1,0 +1,21 @@
+{
+  "study": "B570_E2_GQA_ADMISSION",
+  "uuid": "7b9c744d-5a68-4977-b26a-cb89447e7407",
+  "design_source": "PR130@7a209727f151f375c28653605f58252b6da77953",
+  "parent_source": "PR129@c541241ad62213a8d31006e539e4ce0623793040",
+  "prior_cumulative_seconds": 246.8043431,
+  "budget_cap_seconds": 300,
+  "native_processes_planned": 1,
+  "parent_deadline_seconds": 20,
+  "internal_deadline_seconds": 18,
+  "cleanup_and_capture_reserve_seconds": 15,
+  "matrix": {"key_extents": [256,512], "q":[1,2,4], "arms":["PQ","QB"], "Hq":32,"Hkv":8,"d":128,"kv_capacity":1024},
+  "data": "Synthetic deterministic exactly representable inputs, derived causal masks. No captured model tensor values, no natural speculative state.",
+  "key256": "PR129 observed physical extent and exact K/V stride descriptors; synthetic visible length124",
+  "key512": "Prospective next256-aligned physical extent for visible length260; not an observed natural request",
+  "reference": "New operator reference R_E2_PQ: same candidate DLL, query-serial attention, identical full backing stores, original K/V objects, QK F32 precision and inherited AV precision",
+  "qualification": "Ten descriptor-only admission controls: each QK/AV expects valid q2 true, q3/head16/changed capacity stride/F32 A false. FP64 logical reference atol0.0002+rtol0.002 on full QK/prob/AV/final plus byte-identical full PQ/QB QK/prob/AV/final. Full backing input readback before and after, all node buffers on B570.",
+  "scope": "Single scoped backend admission repair and nc dispatch guard. Frozen existing147shader objects. No QH, KV REPEAT, performance timing, models, actor, RTL or CPU8.",
+  "stop": "First unsupported graph, wrong placement, input mutation, numerical/reference mismatch, process failure or deadline ends attempt. No automatic retry. Failed values remain evidence.",
+  "exit": "PASS only supports this synthetic GQA panel. Real speculative request, endpoint, natural KV updates and runtime graph integration remain unqualified."
+}

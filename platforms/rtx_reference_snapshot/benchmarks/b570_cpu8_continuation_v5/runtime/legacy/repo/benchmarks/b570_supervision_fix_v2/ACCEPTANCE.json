@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "confirmation_rounds": 3,
+  "transition_pairs_per_round": 8,
+  "orders": [
+    "listed",
+    "reversed",
+    "sha256_case_id"
+  ],
+  "cases": [
+    {
+      "id": "normal_single",
+      "kind": "positive",
+      "trigger": null,
+      "detector": "NORMAL_COMPLETE",
+      "requirement": "正常追加 stdout/stderr 与活动输出；退出后审计延迟不扩大运行监控空窗"
+    },
+    {
+      "id": "normal_transition",
+      "kind": "positive",
+      "trigger": null,
+      "detector": "TRANSITIONS_COMPLETE",
+      "requirement": "共享注册根/监督下8对A→B，16唯一槽位；封存A持续受保护，无未解释拒绝"
+    },
+    {
+      "id": "normal_late_panel",
+      "kind": "positive",
+      "trigger": null,
+      "detector": "NORMAL_COMPLETE",
+      "requirement": "新建8000个小历史文件，总≤16MiB；历史树仍受保护，周期目录扫描仅活动槽位"
+    },
+    {
+      "id": "frozen_input",
+      "kind": "negative",
+      "trigger": "WRITE_FROZEN_INPUT",
+      "detector": "SEALED_WRITE_REJECTED",
+      "requirement": "注入器已修改固定输入的指定文件；原始通知与实际副作用吻合"
+    },
+    {
+      "id": "inactive_output",
+      "kind": "negative",
+      "trigger": "WRITE_INACTIVE_OUTPUT",
+      "detector": "SEALED_WRITE_REJECTED",
+      "requirement": "指定未激活槽位文件实际修改，拒绝绑定该路径"
+    },
+    {
+      "id": "sealed_results",
+      "kind": "negative",
+      "trigger": "WRITE_SEALED_RESULTS",
+      "detector": "SEALED_WRITE_REJECTED",
+      "requirement": "封存结果文件实际修改，不接受任意祖先通知代替"
+    },
+    {
+      "id": "late_closed_slot_write",
+      "kind": "negative",
+      "trigger": "WRITE_CLOSED_SLOT_A",
+      "detector": "SEALED_WRITE_REJECTED",
+      "requirement": "A已封存且B活动时修改A，证明持续保护而非忽略旧槽位"
+    },
+    {
+      "id": "terminal_pending_completion",
+      "kind": "negative",
+      "trigger": "SEALED_WRITE_DURING_CLOSE",
+      "detector": "SEALED_WRITE_REJECTED",
+      "requirement": "受控协调使关闭/取消期间已有封存区写入完成通知；记录completion和关闭，不能漏掉该写入"
+    },
+    {
+      "id": "notification_loss",
+      "kind": "negative",
+      "trigger": "INJECT_NOTIFICATION_LOSS",
+      "detector": "NOTIFICATION_LOSS_REJECTED",
+      "requirement": "生产解析路径明确空/丢失通知注入，有原始注入回执；不是内核真实溢出"
+    },
+    {
+      "id": "log_overflow",
+      "kind": "negative",
+      "trigger": "EXCEED_LOG_SOFT_LIMIT",
+      "detector": "LOG_LIMIT_REJECTED",
+      "requirement": "实际完整FRAME与ACK、达到软界、完整ACK子集保留与硬预留检查"
+    },
+    {
+      "id": "resource_read_failure",
+      "kind": "negative",
+      "trigger": "FAIL_RESOURCE_READ",
+      "detector": "RESOURCE_READ_REJECTED",
+      "requirement": "实际生产资源读取点注入失败，记录调用与失败回执"
+    },
+    {
+      "id": "directory_read_timeout",
+      "kind": "negative",
+      "trigger": "STALL_DIRECTORY_READ",
+      "detector": "COVERAGE_GAP_REJECTED",
+      "requirement": "活动目录读取点实际阻塞超过1s，独立监督拒绝"
+    },
+    {
+      "id": "watcher_stall",
+      "kind": "negative",
+      "trigger": "STALL_WATCHER",
+      "detector": "WATCHER_GAP_REJECTED",
+      "requirement": "watcher真实循环阻塞超过1s，外层独立心跳检测并终止"
+    },
+    {
+      "id": "journal_write_failure",
+      "kind": "negative",
+      "trigger": "FAIL_JOURNAL_WRITE",
+      "detector": "JOURNAL_FAILURE_REJECTED",
+      "requirement": "关键日志写入真实失败，独立外层回执仍在；失败后不再GO"
+    },
+    {
+      "id": "wrong_module",
+      "kind": "negative",
+      "trigger": "PRESENT_WRONG_MODULE_IDENTITY",
+      "detector": "IDENTITY_REJECTED",
+      "requirement": "子进程身份门实际命中错误哈希，未收到GO/未写DATA"
+    },
+    {
+      "id": "truncated_stdout",
+      "kind": "negative",
+      "trigger": "EMIT_TRUNCATED_RECORD",
+      "detector": "TRUNCATED_OUTPUT_REJECTED",
+      "requirement": "实际输出不完整尾记录，后置raw审计拒绝"
+    },
+    {
+      "id": "abnormal_exit",
+      "kind": "negative",
+      "trigger": "EXIT_NONZERO",
+      "detector": "ABNORMAL_EXIT_REJECTED",
+      "requirement": "实际启动并以固定非零码退出；不能以提前目录拒绝代替"
+    },
+    {
+      "id": "child_timeout",
+      "kind": "negative",
+      "trigger": "EXCEED_CHILD_DEADLINE",
+      "detector": "CHILD_TIMEOUT_REJECTED",
+      "requirement": "实际运行达到固定deadline；记录终止及子树退出"
+    },
+    {
+      "id": "quick_exit",
+      "kind": "negative",
+      "trigger": "EXIT_BEFORE_HANDSHAKE",
+      "detector": "HANDSHAKE_INCOMPLETE_REJECTED",
+      "requirement": "真实PID/创建/退出时间；缺握手明确失败，不能伪造覆盖资格"
+    }
+  ]
+}

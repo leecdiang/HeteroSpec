@@ -1,0 +1,84 @@
+{
+  "status": "ALL_RAW_AND_COUNTER_CHECKS_PASS",
+  "gpu_execution": false,
+  "successful_native_processes": 11,
+  "failed_entry_processes": 1,
+  "requests": 33,
+  "complete_logits_arrays": 528,
+  "values_per_array": 151936,
+  "geometry": {
+    "model": "Qwen3-8B Q8_0",
+    "Hq": 32,
+    "Hkv": 8,
+    "d": 128,
+    "physical_key": 256,
+    "q": 1,
+    "layers": 36,
+    "prompt_tokens": 124,
+    "generated_tokens": 16,
+    "input": "HumanEval/42 previously exposed"
+  },
+  "qualification_scope": "All528 complete logits and greedy IDs match original bridge CLEAN_A reference, including fixed DLL and logger variants. Not full workload qualification.",
+  "observer_gates": [
+    {
+      "observer": "serial_per_op",
+      "clean_a_ms": 27.733500000000003,
+      "profile_ms": 31.2112,
+      "clean_b_ms": 27.860599999999998,
+      "clean_b_over_a": 1.0045829051508102,
+      "profile_over_a": 1.1253970829502227,
+      "profile_over_b": 1.1202630237683324,
+      "coarse_10pct_gate_pass": false
+    },
+    {
+      "observer": "concurrent_missing_tail",
+      "clean_a_ms": 27.860599999999998,
+      "profile_ms": 29.281499999999998,
+      "clean_b_ms": 27.7311,
+      "clean_b_over_a": 0.9953518588975113,
+      "profile_over_a": 1.051000337394026,
+      "profile_over_b": 1.055908348388632,
+      "coarse_10pct_gate_pass": true
+    },
+    {
+      "observer": "concurrent_tail_fixed",
+      "clean_a_ms": 27.3321,
+      "profile_ms": 29.4865,
+      "clean_b_ms": 27.5181,
+      "clean_b_over_a": 1.0068051851120112,
+      "profile_over_a": 1.0788230688457894,
+      "profile_over_b": 1.0715311013478401,
+      "coarse_10pct_gate_pass": true
+    },
+    {
+      "observer": "concurrent_active_labels_fixed",
+      "clean_a_ms": 27.6675,
+      "profile_ms": 29.605800000000002,
+      "clean_b_ms": 27.6794,
+      "clean_b_over_a": 1.0004301075268818,
+      "profile_over_a": 1.070056925996205,
+      "profile_over_b": 1.0695968843255272,
+      "coarse_10pct_gate_pass": true
+    }
+  ],
+  "old_concurrent_lm_head_count": 0,
+  "cumulative_seconds": 246.8043431,
+  "remaining_seconds": 53.19565689999999,
+  "new_charge_this_turn_seconds": 193.026892,
+  "limitations": [
+    "single exposed prompt and single device/date",
+    "15 dependent decode times per process; descriptive calibration only",
+    "timestamp sums are GPU instrumented subtotals, not natural-request critical-path fractions",
+    "no physical bandwidth/occupancy/power measurement",
+    "QKV and output projections belong to quantized groups, not the small QK/softmax/AV core",
+    "no multiquery/model optimization enabled",
+    "no actor RTL CPU8 or merge"
+  ],
+  "final_profile_group_fractions": {
+    "attention_core_pure": 0.02800459589635738,
+    "attention_core_mixed": 2.1055738137057425e-05,
+    "quantized_matvec_groups": 0.9251523522450839,
+    "recombine_cont": 0.0043762159498233555,
+    "other": 0.04244515840656491
+  }
+}

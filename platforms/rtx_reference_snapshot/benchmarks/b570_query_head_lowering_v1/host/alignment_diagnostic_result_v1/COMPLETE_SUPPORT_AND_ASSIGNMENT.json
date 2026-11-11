@@ -1,0 +1,3913 @@
+[
+  {
+    "index": 0,
+    "slot": "a9db3861430f7147045edb6ede247f9d06ee436bb16a9c9a6ea3f12a541d7ab8",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          63,
+          128,
+          8,
+          1
+        ],
+        "nb": [
+          2,
+          126,
+          16128,
+          129024
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          63,
+          8,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          16128,
+          129024
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          1032,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4128,
+          4128,
+          4128
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          4096
+        ],
+        "view_offset": 32,
+        "op_parameters": [
+          32,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 4,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          32,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 5,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 6,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 8,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 4,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 6,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 7,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 1,
+    "slot": "ea0be5c098bf036a30d86d8a4bb297f20fd74b52513e64e1f621fc20d2c2e83a",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          63,
+          128,
+          8,
+          1
+        ],
+        "nb": [
+          2,
+          126,
+          16128,
+          129024
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          63,
+          8,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          16128,
+          129024
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 4,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          32,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 5,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 6,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 8,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 4,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 6,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 7,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "slot": "a6c27c914def3aedd748552d79470ed5f2cdf2b55a830a3318c17502efa82b72",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          63,
+          128,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          126,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          63,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          8192,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 4,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 5,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          32,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 6,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 8,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 10,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 11,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 4096,
+        "op_parameters": [
+          4096,
+          0
+        ],
+        "id": 12,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 13,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 252,
+        "op_parameters": [
+          252,
+          0
+        ],
+        "id": 14,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 15,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 16,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 17,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 18,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "CONCAT",
+        "type": "f32",
+        "ne": [
+          1024,
+          2,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1,
+          0
+        ],
+        "id": 19,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 5,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 8,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 11,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 13,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 15,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 16,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 18,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 19,
+        "node": {
+          "op": "CONCAT",
+          "type": "f32",
+          "ne": [
+            1024,
+            2,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            8192,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 3,
+    "slot": "d18cd03248e6dafe8d102a3374fca491542dd3f6bb38e7d738d5a6fd058e5726",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          63,
+          128,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          126,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          63,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          8192,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 4,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 5,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          252
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 6,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 8,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 10,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 11,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 4096,
+        "op_parameters": [
+          4096,
+          0
+        ],
+        "id": 12,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 13,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          252
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 14,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 15,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          2016
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 16,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 17,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 18,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 19,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "CONCAT",
+        "type": "f32",
+        "ne": [
+          1024,
+          2,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1,
+          0
+        ],
+        "id": 20,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 5,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 8,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 11,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 13,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 16,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            2016
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 17,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 19,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 20,
+        "node": {
+          "op": "CONCAT",
+          "type": "f32",
+          "ne": [
+            1024,
+            2,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            8192,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 4,
+    "slot": "9445b03cf0603629c18d05037f7013e7b9673690fe57553053fcf2d2ed14237e",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          63,
+          128,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          126,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          63,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          16128,
+          32256
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          8192,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          1024,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 4,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "RESHAPE",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 5,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          4032
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 6,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          63,
+          32,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          8064,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          2,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          8064
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 8,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          63,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          252,
+          252,
+          4032
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 10,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "RESHAPE",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          1024,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 11,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          2,
+          1
+        ],
+        "nb": [
+          4,
+          1024,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 12,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          2,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 13,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 4,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            128,
+            2,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            1024,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 6,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            4032
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            63,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            252,
+            252,
+            4032
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 10,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 13,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            2,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            8192,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 5,
+    "slot": "a2c1333655c1bda2dea0549b632134cd61b03e7fb5be4558eb88fc47965c3653",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          257,
+          128,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          514,
+          65792,
+          131584
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          257,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          65792,
+          131584
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          8192,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 4,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          8224
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 5,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          1028
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 6,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          32896,
+          32896
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          8224
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 8,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 10,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 11,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 4096,
+        "op_parameters": [
+          4096,
+          0
+        ],
+        "id": 12,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          8224
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 13,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          1028
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 14,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          32896,
+          32896
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 15,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          8224
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 16,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 17,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 18,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          4096,
+          4096
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 19,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "CONCAT",
+        "type": "f32",
+        "ne": [
+          1024,
+          2,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1,
+          0
+        ],
+        "id": 20,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 5,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            8224
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 8,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            8224
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 11,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 13,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            8224
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 16,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            8224
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 17,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 19,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            1,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            4096,
+            4096
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 20,
+        "node": {
+          "op": "CONCAT",
+          "type": "f32",
+          "ne": [
+            1024,
+            2,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            8192,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  },
+  {
+    "index": 6,
+    "slot": "d1ebf923a5d7f43ae3fa3d297ab7640e20b71d82ec01340ca33e7a2aee0e59fd",
+    "nodes": [
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          257,
+          128,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          514,
+          65792,
+          131584
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 0,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f16",
+        "ne": [
+          128,
+          257,
+          2,
+          1
+        ],
+        "nb": [
+          2,
+          256,
+          65792,
+          131584
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 1,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          8192,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 2,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 3,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          1024,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 4,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "RESHAPE",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 5,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          16448
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          10,
+          0
+        ],
+        "id": 6,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "NONE",
+        "type": "f32",
+        "ne": [
+          257,
+          32,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          32896,
+          32896
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 7,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "VIEW",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          2,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          32896
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 8,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "SOFT_MAX",
+        "type": "f32",
+        "ne": [
+          257,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          1028,
+          1028,
+          16448
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          1035273459,
+          0
+        ],
+        "id": 9,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "MUL_MAT",
+        "type": "f32",
+        "ne": [
+          128,
+          1,
+          16,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 10,
+        "executable": true,
+        "supports_op": true
+      },
+      {
+        "op": "RESHAPE",
+        "type": "f32",
+        "ne": [
+          128,
+          2,
+          8,
+          1
+        ],
+        "nb": [
+          4,
+          512,
+          1024,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 11,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "PERMUTE",
+        "type": "f32",
+        "ne": [
+          128,
+          8,
+          2,
+          1
+        ],
+        "nb": [
+          4,
+          1024,
+          512,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          2
+        ],
+        "id": 12,
+        "executable": false,
+        "supports_op": true
+      },
+      {
+        "op": "CONT",
+        "type": "f32",
+        "ne": [
+          1024,
+          2,
+          1,
+          1
+        ],
+        "nb": [
+          4,
+          4096,
+          8192,
+          8192
+        ],
+        "view_offset": 0,
+        "op_parameters": [
+          0,
+          0
+        ],
+        "id": 13,
+        "executable": true,
+        "supports_op": true
+      }
+    ],
+    "assignment_before_compute": [
+      {
+        "id": 4,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            128,
+            2,
+            8,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            1024,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 6,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            16448
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            10,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 9,
+        "node": {
+          "op": "SOFT_MAX",
+          "type": "f32",
+          "ne": [
+            257,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            1028,
+            1028,
+            16448
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            1035273459,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 10,
+        "node": {
+          "op": "MUL_MAT",
+          "type": "f32",
+          "ne": [
+            128,
+            1,
+            16,
+            1
+          ],
+          "nb": [
+            4,
+            512,
+            512,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      },
+      {
+        "id": 13,
+        "node": {
+          "op": "CONT",
+          "type": "f32",
+          "ne": [
+            1024,
+            2,
+            1,
+            1
+          ],
+          "nb": [
+            4,
+            4096,
+            8192,
+            8192
+          ],
+          "view_offset": 0,
+          "op_parameters": [
+            0,
+            0
+          ]
+        },
+        "direct_execution_backend": "Vulkan0",
+        "buffer_name": "Vulkan0",
+        "device_matches": true
+      }
+    ]
+  }
+]

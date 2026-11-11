@@ -1,0 +1,30 @@
+\section{Reference-sensitive execution mechanisms}
+\label{sec:mechanisms}
+\subsection{A fixed reference and observable correspondence}
+Let $\rho$ identify the model and tokenizer bytes, prompt construction, numerical runtime, scalar execution recipe, sampler and stopping rule. The reference output is the complete native token sequence together with end-of-generation flags, generated length and stop reason. The principal experiments use greedy sampling, native EOG or a cap of 128 generated tokens. Reference preservation means correspondence with this original execution, rather than a new reference produced by the repaired binary.
+
+We inspect complete vocabulary vectors at committed decisions in addition to endpoints. These observations distinguish a token match from a numerical match: different vectors can select the same token, then produce different state and a later divergence. Operator replays compare actual stored operands at a shared state, while natural requests establish the behavior of the complete transaction. Each comparison addresses a different part of the same execution.
+
+\subsection{Physical prefix changes attention evaluation}
+\label{sec:extentmechanism}
+In the CUDA Llama counterexample, the first output mismatch is at zero-based output 81. The earliest saved common-prefix full-vector difference is already at output 29, cycle 8, where the consumed positions are 765--768. The scalar reference reaches physical extents $768,768,768,1024$, whereas the original four-row verification uses extent 1024 throughout~\cite{rtxllamarepair}.
+
+The captured visible Q, K, V, QK and probability prefixes agree bitwise, and the additional probability suffix is zero. Nevertheless, AV differs. Native replay reproduces both original paths; shortening the physical operands to 768 reproduces the scalar result, while extending the operation to 1024 with the masked suffix reproduces the batched result. Own-path repetition, both consumer orders and observation controls accompany this intervention. Thus logical masking alone does not preserve the reference's physical evaluation.
+
+\begin{figure*}[t]
+\centering\input{figures/prefix}
+\caption{Physical-prefix grouping at the observed boundary. Logical query positions and causal masks remain fixed. The ordinary batch exposes all rows to physical extent 1024. The repaired graph uses the scalar extent for each maximal adjacent group: three queries at 768 and one at 1024. The rectangles depict operand extents, not probabilities or measured kernel time.}
+\label{fig:prefix}
+\end{figure*}
+
+Vulkan independently reproduces the same extent pattern after its projection repair. Its crossed-extent AV intervention changes the actual dispatch between noncontiguous and contiguous matvec paths~\cite{b570llamarepair}. The common factor is the physical representation presented to the backend. The two implementations need not change the same kernel in the same way.
+
+\subsection{Activation arithmetic and placement are separate factors}
+\label{sec:arithmetic}
+Vulkan's original Q8 projection path uses F32 activations for one row but Q8\_1 activation quantization for multiple rows. Keeping the weight file fixed therefore does not keep projection arithmetic fixed. Replays using real Q/K/V operands reproduce this distinction. A scoped precision policy routes the batched projection through an existing F32-activation path without changing the Q8 weights or serializing the projection~\cite{b570llamarepair}.
+
+Projection repair alone restores the development endpoints but leaves 99 committed full-vector differences, beginning at output 29. Adding physical-prefix grouping removes those differences. Disabling the prefix component in the same binary restores the projection-only trajectory and its 99 differences; disabling the precision component restores endpoint failures. These reversals distinguish the two factors and show why successful endpoints alone were insufficient to locate the complete repair.
+
+A distinct CUDA Qwen3-14B case demonstrates a placement requirement. With identical normalized K operands, the original single-row path places K RoPE on CPU while the multirow path places it on CUDA. Captured outputs differ in 851 of 1,024 F32 values. Eight exact-operand native replays reproduce the own-path and crossed-backend outcomes. A row-count-dependent offload preference at head-normalization scaling propagates to RoPE. The repair queries the original preference using a read-only single-row geometry descriptor, leaving the actual batched tensor and numerical libraries unchanged~\cite{rtxqwenrepair}.
+
+These interventions motivate three concrete requirements: physical prefix, activation arithmetic and placement of the affected operator class. They do not imply that all operators share one universal signature. Each backend must map the requirements to a supported execution path.

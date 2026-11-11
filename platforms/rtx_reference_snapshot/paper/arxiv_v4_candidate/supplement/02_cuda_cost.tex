@@ -1,0 +1,74 @@
+\section{Complete output and repair-cost results}
+\label{supp:confirmation}\label{supp:cost}
+\subsection{Larger confirmation}
+The larger campaign has 3,600 complete required requests: three families, five arms, 24 tasks, two adjacent sessions and five repetitions, plus 150 excluded warmups. Its panel was frozen against accessible execution history. $M_3$ and $C_3$ each match 240/240 endpoints per family. $M_0$ differs on 5, 14 and 9 tasks; the Qwen3 failures are GSM8K141,443,562,660,722. The ordinary-production path qualifies for Qwen3 but fails 140 SmolLM2 and 80 Llama requests. Table~\ref{tab:largecost} keeps failed comparisons as dashes.
+\begin{table}[t]\centering\small
+\caption{Larger confirmation ratios. Numerator time / denominator time. Dashes preserve failed qualification.}
+\label{tab:largecost}
+\label{tab:confirmationratios}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Comparison&Qwen3&SmolLM2&Llama\\\midrule
+$R_{\rm prod}/C_3$&1.569566&---&---\\
+$M_3/C_3$&1.134924&0.607389&1.072227\\
+$R/C_3$&1.569977&0.877174&1.609468\\
+$M_0/M_3$&---&---&---\\
+$R/M_0$&---&---&---\\
+$R/M_3$&1.383332&1.444173&1.501051\\
+$R_{\rm prod}/M_3$&1.382970&---&---\\\bottomrule
+\end{tabular}
+\end{table}
+For $M_3/C_3$, regressed tasks number 0/24, 24/24 and 4/24. Llama regressions are MBPP418,476,79,99. Failed $M_0/M_3$ comparisons have diagnostic ratios 0.968456, 0.948603 and 0.936943; failed SmolLM2/Llama $R_{\rm prod}/C_3$ comparisons are 0.512333 and 0.842790. They remain unqualified because the outputs differ. The 72 separate lite timing observations did not establish mutually exclusive completed GPU stages; their component model remains unavailable.
+
+\subsection{Seven-arm implementation comparison}
+The 12-task panel comprises MBPP 123, 140, 255, 401, 413, 418 and GSM8K 111, 120, 1308, 141, 322, 443. Two adjacent sessions and four repetitions per arm/family give 2,016 formal requests and 96 qualified endpoints per arm/family. Table~\ref{tab:allcost} gives all 21 ratios. Figure~\ref{fig:taskcost} retains the task-level local-repair and draft comparisons.
+\begin{table}[t]\centering\small
+\caption{All 21 qualified implementation comparisons at reported six-decimal precision. Regressions count tasks on which the denominator is slower.}
+\label{tab:allcost}
+\begin{tabular}{@{}llrr@{}}\toprule
+Family&Comparison&Ratio&Regressions\\\midrule
+Qwen3 & $M_{\PQ}/M_{\QB}$ & 1.026676 & 2/12 \\
+Qwen3 & $C_{\PQ}/C_{\QB}$ & 1.043676 & 0/12 \\
+Qwen3 & $M_{\GS}/M_{\QB}$ & 1.330106 & 0/12 \\
+Qwen3 & $C_{\GS}/C_{\QB}$ & 2.143525 & 0/12 \\
+Qwen3 & $M_{\QB}/C_{\QB}$ & 1.143749 & 1/12 \\
+Qwen3 & $R/M_{\QB}$ & 1.334051 & 0/12 \\
+Qwen3 & $R/C_{\QB}$ & 1.525820 & 0/12 \\
+SmolLM2 & $M_{\PQ}/M_{\QB}$ & 1.038478 & 0/12 \\
+SmolLM2 & $C_{\PQ}/C_{\QB}$ & 1.068111 & 0/12 \\
+SmolLM2 & $M_{\GS}/M_{\QB}$ & 1.366008 & 0/12 \\
+SmolLM2 & $C_{\GS}/C_{\QB}$ & 1.462530 & 0/12 \\
+SmolLM2 & $M_{\QB}/C_{\QB}$ & 0.633948 & 12/12 \\
+SmolLM2 & $R/M_{\QB}$ & 1.369890 & 0/12 \\
+SmolLM2 & $R/C_{\QB}$ & 0.868439 & 10/12 \\
+Llama & $M_{\PQ}/M_{\QB}$ & 1.013407 & 1/12 \\
+Llama & $C_{\PQ}/C_{\QB}$ & 1.021848 & 2/12 \\
+Llama & $M_{\GS}/M_{\QB}$ & 1.411508 & 0/12 \\
+Llama & $C_{\GS}/C_{\QB}$ & 2.175941 & 0/12 \\
+Llama & $M_{\QB}/C_{\QB}$ & 1.116620 & 1/12 \\
+Llama & $R/M_{\QB}$ & 1.426161 & 0/12 \\
+Llama & $R/C_{\QB}$ & 1.592480 & 0/12 \\
+\bottomrule\end{tabular}
+\end{table}
+\begin{figure*}[t]\centering\input{figures/task_cost}
+\caption{Original repair campaign: task-level local-repair benefit $C_{\PQ}/C_{\QB}$ (circles) and draft increment $M_{\QB}/C_{\QB}$ (triangles). Session medians are combined geometrically. The dagger marks Llama GSM8K141, whose local-repair ratio is 0.999919. These are not E2 observations.}
+\label{fig:taskcost}\end{figure*}
+
+Qwen3 target-only local-repair regressions are GSM8K141 and 322. Llama regresses on MBPP418 for target-only and GSM8K120,141 for speculative local repair. SmolLM2 favors QB on all tasks in both local comparisons. Every GS/QB task favors QB. For the draft increment, Qwen3 regresses on MBPP413, Llama on MBPP418, and SmolLM2 on all 12 tasks. SmolLM2's ordinary-to-candidate comparison regresses on 10/12.
+
+The original session-specific ratios are retained below. Target-only Qwen3 and Llama reverse direction; speculative comparisons favor QB in both adjacent sessions. E2 tests these small effects with a different, independently scheduled design and is reported separately.
+\begin{table}[t]\centering\small
+\caption{Original two-adjacent-session PQ/QB ratios.}\label{tab:oldsessions}
+\begin{tabular}{llrr}\toprule
+Family & Path & Session 0 & Session 1\\\midrule
+Qwen3&M&0.971380&1.085118\\
+Qwen3&C&1.041728&1.045626\\
+SmolLM2&M&1.040019&1.036939\\
+SmolLM2&C&1.066179&1.070046\\
+Llama&M&0.994477&1.032698\\
+Llama&C&1.016460&1.027264\\
+\bottomrule\end{tabular}\end{table}
+All original task-level and session values are retained in \texttt{anc/plot\_values.json}. The paired-ratio identities used for draft value assume the same complete panel and weights. They do not estimate attention, projection, feed-forward or synchronization shares of request time.
+
+\input{tables/repair_interaction}
+
+Table~\ref{tab:repairinteraction} makes the repair--draft comparison explicit using the existing common-panel estimates. The source values are reported to six decimal places. Propagating their rounding bounds leaves the displayed three-decimal contrasts and all draft-parity classifications unchanged. These numerical rounding bounds are separate from sampling uncertainty; the retrospective contrast adds neither requests nor a new confidence interval.

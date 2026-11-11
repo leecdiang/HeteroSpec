@@ -1,0 +1,77 @@
+\section{Reference transfer across inputs and backends}
+\label{sec:state}
+\input{sections/10_input_transfer}
+
+\begin{figure*}[t]\centering
+\resizebox{\textwidth}{!}{\input{figures/composition}}
+\caption{State composition at two levels. A: layer-0 endpoint classes; rec. retains the recipient, don. reproduces a distinguishable donor and new is a third trajectory. Each cell has two agreeing process repeats. B: full-logit comparison for /1248, B$\to$A, at output 47 after a common consumed prefix. The hollow diamond is the additive prediction, not a fifth execution.}
+\label{fig:composition}
+\end{figure*}
+
+\subsection{Qualify the producer state}
+A local attention repair consumes state produced upstream. The B570 studies test whether prefill partitioning changes that state and the resulting single-query continuation. With target context UB512 and output capacity one, arm A submits the whole prompt; B splits it into 128 tokens and a remainder. Arm C uses UB128 with internal partitioning. All arms request final-position logits and then continue naturally.
+
+For two exposed inputs of 161 and 133 prompt tokens, B reproduces C's complete endpoint, initial FP32 logits and sequence-KV bytes. A diverges at generated indices 47 and 81. Two longer controls have unequal A/B states but equal endpoints. A partition sweep yields several endpoint classes, including a third trajectory for the 133-token input split as $132+1$: smaller chunks are not monotonically closer to the reference (\sref{supp:b570}).
+
+The differences begin before attention: first-layer K/V projections differ for the 161-token input, and Q/K/V differ for the 133-token input. Fixed-operand replay qualifies 32 of 40 calls and reproduces projection sensitivity. Eight scale/MUL calls are excluded because an in-place consumer overwrote their captured operands. The partition sweep is diagnostic because its driver body was authenticated after execution; the later replay has an authenticated admission record (\sref{supp:b570}).
+
+A common UB512 receiver isolates the state link. It imports sequence KV and positions, samples the selected complete initial logits, and restores pending-token semantics. Sixteen own-path shams reproduce natural endpoints; 40 crosses then vary KV and logit sources. For the two affected tasks,
+\begin{align}
+Y(KV_A,L_A)=Y(KV_A,L_B)&=Y_A,\\
+Y(KV_B,L_A)=Y(KV_B,L_B)&=Y_B.
+\label{eq:cross}
+\end{align}
+All initial vectors choose token 1271, making the logit swap a first-decision negative control. The suffix follows the KV source; the stable controls retain their endpoint despite unequal KV. Local consumer qualification alone cannot certify the producer state. Transfer requires qualification of both.
+
+\subsection{Endpoint agreement and state substitution}
+\label{sec:composition}
+The subset study tests ten selectors on four exposed inputs in both donor directions. After 32 EMPTY/ALL controls, 80 coordinates each run in two independent processes, with agreement at every coordinate. Of the 160 requests, 30 reproduce a distinguishable donor endpoint, 54 produce a third trajectory and 76 retain the recipient endpoint despite changed bytes (\sref{supp:composition}).
+
+A layer-0 K-only or V-only replacement selects $1/64$ of total K/V value storage and can reproduce a donor endpoint. This sufficiency is nonmonotone. For /1248 B$\to$A, layer-0 V reproduces the donor, but adding K removes that effect. In the reverse direction, layer-0 V works while replacing V at every layer does not.
+
+Endpoint equality also fails as a cache-substitution criterion. Natural A/B states for /1011 and /1249 have equal endpoints but unequal KV. On /1011, 16 of 20 subset/direction coordinates produce a third trajectory; all 20 retain the endpoint on /1249. These interventions refute arbitrary component interchangeability; they do not establish natural reachability of mixed states.
+
+To distinguish additive changes crossing an argmax threshold from a nonadditive score response, we compare full FP32 logits at the first divergence after a common consumed prefix. For fixed tokens $(r,u)$, write $d_S=z_S(u)-z_S(r)$ and
+\begin{equation}
+I_{KV}=d_{KV}-d_K-d_V+d_\emptyset.
+\label{eq:interaction}
+\end{equation}
+For /1248 B$\to$A at output 47, $(r,u)=(220,832)$. EMPTY/K/V/KV scores are $-0.066515$, $-0.006771$, $+0.021633$ and $-0.054487$. The additive prediction is $+0.081377$, opposite in sign to the observed joint score; $I_{KV}=-0.135864$. Full-vocabulary argmax tokens are 220/220/832/220. The result establishes a nonadditive response through subsequent computation, without localizing it to one kernel.
+
+\sref{supp:composition} records the 44 complete contrasts among 112 planned repeat-level contrasts, canonical token coordinates and missing vectors.
+
+\subsection{Qualify backend execution}
+\label{sec:backend}
+The original Vulkan pilot combines reference-like or bulk prefill with MQ, PQ or QB continuation. Reference monitoring fails the declared sampling schedule: 48 of 49 attempted requests complete, one is interrupted and 31 coordinates remain unstarted. Speculative QB also changes the /831 and /1011 outputs. The pilot fails qualification; \sref{supp:pilot} retains its full record.
+
+Independent address and scalar oracles pass 432 synthetic fixtures over 72 geometries. Yet the original $q=2$ QB graph violates a necessary condition of the frozen Vulkan matrix-multiplication backend:
+\begin{equation}
+b_3(\mathrm{src}_0)=b_3(\mathrm{src}_1),
+\label{eq:backend}
+\end{equation}
+where $b_3$ is the fourth tensor extent. QK pairs K at extent 1 with lifted Q at extent 2; AV pairs V at extent 1 with probabilities at extent 2. Both are rejected. MQ and each PQ slice satisfy this check with $(1,1)$.
+
+The frozen backend rejects these lifted QK and AV descriptors because their fourth source extents differ. Actual placement and fallback transfers were not observed in the failed pilot; the later port addresses the source-level admission requirement directly.
+
+\subsection{Preserving the AV path in a scoped GQA port}
+A scoped port targets F16/F32, $d=128$, 32-query-head/8-KV-head layouts, physical key extents 256/512 and $q=2,4$. Its packed route matches PQ at QK and softmax but differs in 7,160 of 8,192 AV values at key512/$q=2$, with maximum absolute difference $1.22236\times10^{-9}$. That route fails the exact reference~\cite{b570gqarecords}.
+
+The successful route reuses the existing noncontiguous AV shader with zero V batch stride, real probability/output strides and independent query workgroups. All six key256/512 by $q=1,2,4$ coordinates match byte-for-byte at QK, softmax, AV and final output; all 20 earlier PQ stage files remain unchanged. The port retains per-output evaluation while exposing parallel work across queries. Section~\ref{sec:service} qualifies this fixed-layout port in real requests; the earlier Llama Q6\_K pilot remains failed.
+
+
+\subsection{Producer-conditioned reference eligibility}
+\label{sec:producerfinal}
+The successful port permits a controlled test of how producer state affects a local consumer. Eight natural mathematical inputs are selected by a frozen hash rule before new forwards: four GSM8K inputs of 64--192 tokens and four MATH-500 inputs of 256--352 tokens. A pre-forward source amendment and the original input strings are preserved in the evidence record~\cite{b570producer}.
+
+The target producer uses PQ in both conditions. P1 submits one prompt ID per caller; P4T submits four, with a fixed three-token tail split into two plus one. Both request logits at the final prompt position only. The experiment saves the complete boundary state, including serialized sequence KV and initial FP32 logits, and restores it into a clean receiver. C1 continues target-only; PQ and QB consumers use the existing $k=1$ speculative transaction. Draft prefill is independently reconstructed under the same unchanged recipe. This isolates the defined target boundary-state intervention within the receiver contract.
+
+All 32 historical observer and own-path controls pass before the 120 new-input requests. The full audit checks 96 actual restored boundaries and 88 observer/own-path comparisons. All eight P1+C1 endpoints match an independently executed strict $R$. Producer changes alter KV and initial logits on every input; PQ and QB agree in endpoints, cycles and captured full-vocabulary vectors in all sixteen input--producer pairs.
+
+Figure~\ref{fig:producerfinal} retains the complete six-cell outcome for every input. On prealgebra/1865 and /1804, both natural C1 endpoints preserve the same $R$. Yet PQ/QB depart from $R$ after P1 and preserve it after P4T. Their first P1 departures are outputs 5 and 25, respectively (one-based). The supplied state changes local reference eligibility while the natural serial endpoint stays fixed. GSM8K/1184 is a distinct case: its natural C1 endpoint changes too, and local consumers depart from their own C1 under both producers. The remaining five inputs retain $R$ in all six cells.
+
+\begin{figure*}[t]\centering
+\resizebox{\textwidth}{!}{\input{figures/producer_boundary}}
+\caption{Producer state and reference eligibility in the clean receiver. A: all 48 scientific cells in the original input order; symbols compare each endpoint with its input's fixed strict $R$. G is GSM8K; M/P and M/G are MATH-500 prealgebra and geometry. Shading identifies the two prealgebra cases expanded in B. Their serial C1 endpoints retain the same $R$, while PQ/QB switch from divergence to preservation. The intervention includes KV and initial logits; the arrow compares producer conditions, not temporal recovery. All 48 cells satisfy the evidence contract, and 39 match $R$. The two fixed-$R$ cases require a producer--consumer relation; separate binary pass labels cannot reproduce their pattern.}\label{fig:producerfinal}
+\end{figure*}
+
+The two fixed-$R$ submatrices cannot be represented by independent producer and consumer pass labels (\sref{supp:targetedeligibility}). A consumer's qualification is conditional on the supplied state. The intervention changes KV and initial logits together, identifying their combined boundary-state effect. The tested boundary is the validated boundary0 clean receiver. Natural integrated P4T speculative execution and a specific earliest failing operator were not tested. Detailed schedules, all endpoint comparisons and access records are in \sref{supp:finalproducer}.

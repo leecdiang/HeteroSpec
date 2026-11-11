@@ -1,0 +1,22 @@
+# Primary use case and fixed objective
+
+The user is an inference engineer investigating a stable output regression after choosing a native speculative execution configuration. The trigger is an exact committed-token/endpoint mismatch against an independently declared retained reference on a workload. The primary objective is **offline feasibility of selecting one configuration-level intervention that restores that reference across the workload without creating new deviations**. This is token-reference compatibility, not functional correctness or pass@1.
+
+Four objectives must remain separate:
+
+| Objective | Required evidence | What the current evidence says |
+|---|---|---|
+| Reproduce an intervention | Match its arrays and contract endpoints | Ordinary RTX U2 already reproduces N1 on all 19 exposed tasks. |
+| Restore the declared reference (primary) | Repair every baseline mismatch and retain every matching control | B570 N1 passes its 24-task panel; RTX N1/U2 do not pass the 19-task panel. |
+| Localize a cause | Aligned live-state controls and targeted intervention | State/shape observations bound explanations, but a mismatch or small margin alone does not identify a unique causal origin. |
+| Improve deployed performance | Comparable setup/probe/validation and deployment timings | Not measured by these instrumented studies; no savings are claimed. |
+
+RTX reference R is the preserved ordinary released global-UB1 output contract from PR #53, retained unchanged in the neutral export. It is not replaced by U2 after viewing outcomes. B570 R is its preserved ordinary CLI reference, including its declared formatting/settings (prefill UB128 reference stack). Their protocols, callers, thread histories and endpoint contracts differ; they are not a joint factorial experiment. RTX comparison uses all committed IDs through inclusive EOG or cap128. B570 compares the complete inclusive-first-runtime-EOG/cap128 contract; original native outputs can contain 128–130 IDs, and the 60/63 extra N0/N1 suffix IDs remain outside this finite comparison contract. Both use length/reason/terminal-ID boundaries explicitly. Neither contract licenses equal later live state.
+
+Initial information is the workload/configuration manifest, supported qualified action descriptors and an existing independently fixed reference. Obtaining missing baseline/reference executions is paid acquisition. Caller grouping, graph shapes and baseline scores require captured execution unless already available. All outcomes used by P2 are exposed only after charged whole-workload queries. Configuration-level choices use all retained tasks and repeats; identifiers and reference tokens are hidden from the selector.
+
+Eligible native interventions are RTX target continuation UB2→UB1 (prefill/draft UB2 retained; N1) and B570 target prefill UB1→UB128 followed by UB1 continuation (N1). Their qualified smaller paths are RTX H1, which still executes a draft and target verification, and B570 T1, which removes draft. Ordinary RTX U2 is an additional non-speculative alternative; ordinary reference fallback is a strong baseline. The separately qualified B570 sampled late-fork UB1→UB128 action is a diagnostic on another cohort/state and is not an executed full-workload reference repair on the prefill panel. Unsupported cross-platform counterparts remain UNKNOWN.
+
+Success requires complete coverage, stable repeats, full reference-array/boundary agreement and no newly divergent control. Repair/regression/persistence counts are always shown. ABSTAIN means no action was selected under the policy; ABSTAIN_UNKNOWN retains unassessable actions. A proxy rejection is not a measurement of the unqueried native result. The engineer can use reference fallback, losing speculation; it is not an unexplained failure or a novel solution.
+
+Budget: CPU-only analysis of existing arrays and bounded raw records; at most two policy specifications, each with at most one development revision. Actual policy revisions: zero. No new model process, GPU forward, downloads of models or paid compute. Replay charges three observations per task per requested condition, plus CPU comparison; these are historical record equivalents, not newly incurred GPU work. Choosing a per-prompt remedy from task IDs would violate this use case. Retaining speculation would need an operational benefit; its performance justification remains unresolved.

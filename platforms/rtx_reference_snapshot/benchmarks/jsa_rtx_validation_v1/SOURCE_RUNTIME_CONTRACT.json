@@ -1,0 +1,20 @@
+{
+  "files_sha256": {
+    "common/speculative.cpp": "12696be36a70fee8097f947863e32e4a60b9a2858c63999b31d7285e2b46ffea",
+    "common/sampling.cpp": "5ac59f40882c8b0eb444379043dbdc3adab75b3ecce3b07f460c4f36f66bddcc",
+    "common/common.h": "6e678df90075831853a3b509a7a3fe01e5aa4cbeb1b3ae4364c0ac51442b36c3",
+    "tools/server/server-common.h": "bdc72be7321bebbcbc203d8eeef4d46f7a04bbceb106a946eeb71a21d6b8a902",
+    "tools/server/server-context.cpp": "72ffc1f9950a3e7c520a53b9bf9b6e91b64e63592114e87c7d2e3f42cb4b3383",
+    "src/hs_scope.h": "be813ea9ee446a49ded5f906461e5c5bd0da2dc11e15c2da307382690c54dcb2",
+    "src/llama-graph.cpp": "5e4dc981538b4737fb3d20a3c8ff57a1bcf42d86138063ff0e626e096790f227"
+  },
+  "target_sampling": "actual model suppression plus native ordinary temperature0 greedy; request seed123; native greedy E suppression uses same actual model list",
+  "draft_sampling": "draft-simple constructs common top_k10 chain with default random seed; sampler may draw dist but speculative.cpp discards selected ID and uses sorted cur_p->data[0].id; p_min0; acceptance0 minimum, maximum3; effective proposal choice is rank0, not RNG draw. No change to original S implementation.",
+  "seed_scope": "123 is the target request seed; do not claim it is the draft constructor seed",
+  "KV": "F16 K/V;ctx4096;single sequence; fullGPU; one shared target weight object with two contexts for E only",
+  "S_and_native_generation_timer": "server_slot_stats t_gen_ms based on native slot generation clock; same old server boundary in all S conditions; generation is secondary only",
+  "E_generation_timer": "custom prefill boundary then generation through state clearing/content construction differs; no E/native generation ratios",
+  "shared_primary": "client perf_counter before completion submission through full nonstreaming HTTP response JSON parsing",
+  "engineering_capture": "graph callbacks and state byte comparisons only in engineering; E formal retains minimal block counts/owner metadata plus native committed arrays",
+  "graph_scope": "four actual target/draft prefill/decode bits; graph reuse key includes scope state; original Qwen branch unchanged; separate Llama branch guarded for supported dense shapes"
+}

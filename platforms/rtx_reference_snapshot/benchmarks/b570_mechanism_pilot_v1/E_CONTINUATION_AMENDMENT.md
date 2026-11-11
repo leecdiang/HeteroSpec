@@ -1,0 +1,3 @@
+# E infrastructure continuation
+
+The controller and its recorded frontend are absent on 2026-10-08. One previously charged old_N1 round-one MBPP/400 request has no durable capture or metrics. Its attempt is retained and cannot be rescored. No scientific mismatch is retried. The frozen numerical sources, 15 inputs, 120 planned slots and reverse condition order remain unchanged. Only the 60 never-started round-two units run. Thus the finite budget closes at312 nonwarm starts and311 complete, with E119/120 and one explicit infrastructure omission. No all-matrix completion or GO claim is permitted. Interrupted request/cleanup duration is unavailable. This is the single infrastructure continuation.

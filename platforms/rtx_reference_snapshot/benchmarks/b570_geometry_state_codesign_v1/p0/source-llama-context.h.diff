@@ -1,0 +1,13 @@
+--- PR97/llama-context.h
++++ PR108/llama-context.h
+@@ -60,6 +60,10 @@
+     //   - etc.
+     void sched_reserve();
+     void b570_pilot_bind_phase_ubatch(uint32_t ub);
++    std::string b570_geometry_key;
++    bool b570_order_enabled=false;
++    std::vector<uint32_t> b570_order;
++    void b570_geometry_bind(int role,int phase,int layout,uint32_t ub,int capacity);
+ 
+     void synchronize();
+ 

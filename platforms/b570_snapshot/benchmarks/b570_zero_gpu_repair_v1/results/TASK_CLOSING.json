@@ -1,0 +1,61 @@
+{
+  "status": "ACCOUNTING_INCOMPLETE_ENGINEERING_BLOCKED",
+  "scope": "Exact recorded post-arm task children, plus explicit incomplete bootstrap/rebootstrap boundaries; not all-machine accounting",
+  "observed_task_child_starts": 528,
+  "observed_task_child_closes": 528,
+  "observed_child_OS_lifetime_sum_seconds": 8519.465014199995,
+  "recorded_children_closed": true,
+  "record_errors": [],
+  "recorded_engineering_wall_seconds": 6988.138427,
+  "full_engineering_wall_seconds": null,
+  "full_task_process_starts": null,
+  "full_task_lifetime_sum_seconds": null,
+  "missing_observations": [
+    "Initial read-only Git/shell identities and lifetimes before ledger arming",
+    "Broker1 actual OS exit FILETIME",
+    "Initial outer-shell OS boundaries",
+    "Wrapper2 own OS exit FILETIME; tool exit receipt available",
+    "Preparation/tool transient storage and helper peak RSS were not completely observed"
+  ],
+  "outer_containers": [
+    {
+      "role": "broker1",
+      "pid": 20044,
+      "created_FILETIME": "134366049397271288",
+      "exit_FILETIME": null,
+      "observed_armed_to_stop_seconds": 2227.8240694
+    },
+    {
+      "role": "initial_outer_shell",
+      "pid": 44428,
+      "created_FILETIME": null,
+      "exit_FILETIME": null
+    },
+    {
+      "role": "broker2",
+      "pid": 12304,
+      "created_FILETIME": "134366074508012377",
+      "exit_FILETIME": "134366119279705203",
+      "actual_OS_lifetime_seconds": 4477.1692826
+    },
+    {
+      "role": "rebootstrap_outer_shell",
+      "pid": 13128,
+      "created_FILETIME": "134366074505090695",
+      "exit_FILETIME": null,
+      "external_exit_code": 0
+    }
+  ],
+  "first_ledger_sha256": "9377eecdb86a818551f81294da3c618e90d2900b216da4f80d8fbb910dc232d5",
+  "second_ledger_sha256": "f8a2cf90d659afd69dda82a249f1a4c3d97758d25c98f31ec7f666288eb78432",
+  "final_ledger_event": "BROKER_CLOSING",
+  "archive_prefix": "task/snapshots/blocked-final/LEDGER.jsonl; immutable packaged prefix",
+  "tail_boundary": "Final local subprocess commands and broker close are in these final ledger parts; later connector-only metadata commits/PR actions are separately acknowledged and not represented as local child processes",
+  "bootstrap2_tool_exit": {
+    "chunk_id": "4c36d6",
+    "wall_time_seconds": 0.0626389,
+    "exit_code": 0,
+    "original_token_count": 0,
+    "output": ""
+  }
+}

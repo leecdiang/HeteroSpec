@@ -1,0 +1,206 @@
+确认接受 HeteroSpec PR114 的有限 S1A Bridge 协议修订，
+并授权执行第一阶段 BRIDGE_CENSUS_ONLY。
+
+本次授权严格绑定以下提交、F0和执行范围。
+
+项目：
+https://github.com/leecdiang/HeteroSpec
+
+Draft PR：
+https://github.com/leecdiang/HeteroSpec/pull/114
+
+已审查提交：
+f19978106dd930943f93072fd2d7e73a8ca87e4d
+
+Run ID：
+pr113-s1a-bridge-v1
+
+批准的精确 F0 SHA256：
+c5f980b1a56673145fced02f38864eb8cbff4d793b285705fd66f88b6338c92a
+
+目录：
+benchmarks/rtx_lowering_envelope_v1/s1a_bridge_v1/
+
+授权类型：
+BRIDGE_CENSUS_ONLY
+
+一、明确接受有限协议修订
+
+我接受 AMENDMENT.md 中针对原先预注册24上下文的有限修订。
+
+允许在未来通过一轮独立、完整、合格的24上下文数值Bridge，
+为针对相同24上下文的S1B成本研究建立数值前置证据。
+
+但这不意味着：
+原72上下文面板已经完成；
+旧474条数值记录获得新的资格；
+S1B、actor、S2/S3或硬件实验已经获准执行。
+
+旧PR113的720槽位继续保持：
+474合格、246未启动。
+
+本次绝不恢复或重试旧实验。
+
+二、本次只批准Census
+
+允许执行：
+
+1个Census控制器；
+1个显式GPU就绪查询进程；
+1个原生支持检查宿主；
+最多2个已登记conhost辅助进程。
+
+检查：
+24个固定上下文×5种布局＝120张图；
+共1806次节点支持API查询。
+
+本轮：
+0次graph_compute；
+0个正式数值宿主；
+0模型请求；
+0 warmup；
+0 profiler；
+0额外probe；
+0科学retry。
+
+Census阶段墙钟≤600秒；
+保守owned上限≤1800秒；
+原生支持宿主≤240秒；
+就绪查询≤10秒。
+
+内存、JobObject、磁盘及输出限制全部采用冻结F0。
+
+不得动用后续Numerical的1800秒阶段预算。
+
+三、执行前准入
+
+首先核对：
+PR114当前分支、commit和F0；
+原生EXE与共享核心DLL；
+21个数值DLL；
+模型与全部24个完整输入；
+冻结driver、GPU、电源和CUDA环境；
+完整PLAN、120个图描述和1806次预定查询；
+实际Python、分析器、CAS与原始参考。
+
+确认：
+新Census尚未执行；
+对应controller ledger与run root没有已启动记录；
+旧PR113进程已经结束；
+当前没有冲突GPU任务。
+
+任何身份漂移、已有执行记录、资源不足或控制失败，
+均应停止并保留证据。
+
+不要重新生成F0、改模型、改输入或改变QH_C选择。
+
+四、创建实际作者批准记录
+
+按当前真实收到的本条消息，
+创建独立的Census授权记录。
+
+记录必须包含：
+
+stage = BRIDGE_CENSUS_ONLY
+
+run_id = pr113-s1a-bridge-v1
+
+F0_sha256 =
+c5f980b1a56673145fced02f38864eb8cbff4d793b285705fd66f88b6338c92a
+
+prospective_24_context_amendment_accepted = true
+
+以及实际作者消息原文、真实SHA256和接收时间。
+
+不得伪造提前批准，也不得自动生成Numerical授权。
+
+批准记录的位置由原机选择，
+但不得覆盖任何冻结文件或旧执行回执。
+
+五、使用唯一冻结入口
+
+使用F0绑定的Python，以 -B 模式执行：
+
+run_bridge.py --stage census --approval <实际Census授权记录路径>
+
+不要直接启动原生EXE。
+
+不要使用：
+--stage numerical
+
+不要创建BRIDGE_NUMERICAL_EXACT授权。
+
+不允许运行后自动进入Numerical。
+
+六、支持判据
+
+完整核验120张图的：
+实际节点数量和身份；
+全部1806次supports_op结果；
+冻结图结构和参数；
+实际CUDA核心及插件模块身份；
+原始Q/K/V/mask与表示映射。
+
+MQ、PQ、QB、QH_C及所有q1图必须支持。
+
+只有q>1的QH_D可以按原规则保留NOT_SUPPORTED，
+同时保留所有受影响坐标与比较缺口。
+
+不得因为某个QH_D不支持，
+就临时替换QH_C或删除实验坐标。
+
+支持检查通过不等于GPU数值通过。
+不得报告QH性能优势、Tensor Core收益或端到端资格。
+
+任何控制、身份、模块、执行预算或Census完整性失败，
+立即停止。
+
+七、完成后独立封存
+
+Census完整结束后，
+使用当前冻结的CPU-only工具进行独立审计和封存。
+
+核验：
+CENSUS_ENDED；
+原生CENSUS.json；
+完整节点支持记录；
+CENSUS_DECISION.json；
+实际PID、模块和资源回执；
+F0、输入和执行身份。
+
+使用现有seal_census.py及offline.py工作流。
+
+将实际Census与Decision、必要原始回执推送PR114，
+完成远端字节认证及SHA256回读。
+
+所有CPU认证必须真实执行，
+不能先填写通过状态。
+
+结束后直接汇报：
+
+1. 120张图的实际支持情况；
+2. 1806次节点支持查询是否全部完成；
+3. MQ/PQ/QB/QH_C/QH_D各布局的支持数量；
+4. 所有NOT_SUPPORTED坐标与原因；
+5. 实际控制器、原生宿主、辅助进程及资源成本；
+6. F0 SHA、Census SHA、Decision SHA及结果commit；
+7. 是否满足申请后续240图Numerical授权的技术条件。
+
+八、严格停止于Census结束
+
+Census即使全部通过，也不能自动执行240个数值宿主。
+
+后续Numerical必须：
+先认证真实Census和Decision；
+重新取得作者独立授权；
+使用BRIDGE_NUMERICAL_EXACT及对应哈希绑定。
+
+本次不启动S1B clean timing、trace、actor、S2/S3、
+新的硬件模拟器或RTL。
+
+PR114继续保持Draft。
+PR113、PR104、PR110、B570、论文、main及发布均不修改。
+
+现在按精确F0执行一次Census。
+正常完成后封存并等待下一条授权；
+任何冻结停止条件触发后不重试。

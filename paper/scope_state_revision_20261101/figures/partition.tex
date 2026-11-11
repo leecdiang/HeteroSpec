@@ -1,0 +1,12 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+\node[anchor=west,font=\bfseries\small] at (0,3.35) {Prefill partition $\to$ complete output class};
+\node[anchor=west,text=target] at (0,2.86) {GSM1248, $N=161$};
+\node[anchor=west,text=target] at (4.0,2.86) {GSM831, $N=133$};
+\foreach \y/\lab/\out in {2.3/{64+64+33}/A,1.65/{96+65}/A,1.0/{128+33}/{B/C: 47},.35/{160+1}/A}{
+ \node[anchor=west] at (0,\y) {\lab};\draw[flow] (1.67,\y)--(2.15,\y);\node[anchor=west] at (2.25,\y) {\out};}
+\foreach \y/\lab/\out in {2.3/{64+64+5}/A,1.65/{96+37}/A,1.0/{128+5}/{B/C: 81},.35/{132+1}/{new: 40}}{
+ \node[anchor=west] at (4.0,\y) {\lab};\draw[flow] (5.51,\y)--(5.98,\y);\node[anchor=west] at (6.06,\y) {\out};}
+\draw[qualified,densely dashed] (-.04,.70) rectangle (3.67,1.30);
+\draw[qualified,densely dashed] (3.93,.70) rectangle (7.45,1.30);
+\node[anchor=west,text=aux,font=\scriptsize] at (0,-.32) {Same input within a task; different partitions need not form a monotone order};
+\end{tikzpicture}

@@ -1,0 +1,26 @@
+Complete the following Python function. Return only the completed Python code, without Markdown fences.
+
+
+def next_smallest(lst):
+    """
+    You are given a list of integers.
+    Write a function next_smallest() that returns the 2nd smallest element of the list.
+    Return None if there is no such element.
+    
+    next_smallest([1, 2, 3, 4, 5]) == 2
+    next_smallest([5, 1, 4, 3, 2]) == 2
+    next_smallest([]) == None
+    next_smallest([1, 1]) == None
+    """
+
+
+def next_smallest(lst):
+    if len(lst) < 2:
+        return None
+    unique_sorted = sorted(set(lst))
+    if len(unique_sorted) < 2:
+        return None
+    return unique_sorted[1] if unique_sorted else None
+
+Wait, no. Let me think again. The code I wrote has a problem. Because if the list has duplicates, like [1, 1], then set(lst) would be {1}, and unique_sorted would be [1], so len(unique_sorted) is 1, which is less than 2, so return None. That's correct. But
+

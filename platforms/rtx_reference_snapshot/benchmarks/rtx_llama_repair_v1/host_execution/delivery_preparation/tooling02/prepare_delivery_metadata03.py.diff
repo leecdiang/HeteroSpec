@@ -1,0 +1,28 @@
+--- tooling01/prepare_delivery_metadata02.py
++++ tooling02/prepare_delivery_metadata03.py
+@@ -36,9 +36,10 @@
+     def copy(source,name):
+         assert source.is_file() and not source.is_symlink() and source.suffix.lower() not in ('.gguf','.dll','.exe','.pem','.key','.zip')
+         dest=payload/name;dest.parent.mkdir(parents=True,exist_ok=True);assert not dest.exists();shutil.copy2(source,dest)
+-    for prefix,folder in [('upload',a.upload),('remote',a.remote),('prior-upload01',a.upload.parent/'upload01'),('recovery01',a.upload.parent/'recovery01')]:
+-        for f in sorted(folder.rglob('*')):
+-            if f.is_file():copy(f,Path(prefix)/f.relative_to(folder))
++    for folder in sorted(a.upload.parent.iterdir()):
++        if folder.is_dir() and (folder.name.startswith(('upload','recovery')) or folder==a.remote):
++            for f in sorted(folder.rglob('*')):
++                if f.is_file():copy(f,Path(folder.name)/f.relative_to(folder))
+     # Release creation and source-snapshot commands settled before upload began.
+     # Preserve these separate post-science receipts as well as the transfers.
+     for f in sorted(a.upload.parent.iterdir()):
+@@ -48,8 +49,9 @@
+         if f.is_file() and f.name.startswith(('PACK','ARCHIVE','UPLOAD','REMOTE','CREATE_EVIDENCE','RELEASE','RESULT_PR')):
+             copy(f,Path('operations')/f.name)
+     code=Path('C:/Users/ASUS/Documents/ChatGPT/HeteroSpec/pr160/benchmarks/rtx_llama_repair_v1/host_execution')
+-    for f in sorted(a.upload_source.parent.iterdir()):
+-        if f.is_file():copy(f,Path('source/transport-successor')/f.name)
++    for folder in sorted(a.upload.parent.glob('tooling*')):
++        for f in sorted(folder.iterdir()):
++            if f.is_file():copy(f,Path('source/transport-successor')/folder.name/f.name)
+     for name in ('pack_evidence.py','prepare_delivery_metadata.py','verify_delivery_metadata.py','finish_transport.py','publish_delivery.py'):
+         copy(code/name,Path('source')/name)
+     for name in ('parallel_upload.py','parallel_verify.py','remote_delivery.py'):

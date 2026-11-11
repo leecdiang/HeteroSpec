@@ -1,0 +1,51 @@
+\section{Execution-state and backend boundaries}
+\label{sec:boundaries}
+\subsection{A prefill intervention independent of the CUDA repair}
+The B570 experiments use a distinct Vulkan frontend and a Llama-3.1-8B Q6\_K target. They address an applicability question raised by QB: can local attention control suffice when upstream projections and retained state depend on prefill organization? The experiments intervene on prefill partitions and boundary state while keeping single-query continuation. They diagnose that boundary independently of the CUDA repair; QB itself is not evaluated on Vulkan.
+
+The original intervention~\cite{bpartition} holds a UB512/capacity 1 target context fixed. Arm A submits the full prompt in one prefill caller; B submits 128 tokens and the remainder. Arm C uses UB128 with one caller that the native runtime internally partitions. All arms request logits only for the final absolute prompt position; B's intermediate call requests none. Positions remain contiguous, and subsequent sampling and pending-token consumption are natural. For a 161-token prompt, actual physical widths are 161 in A and 128+33 in B/C. For 133 tokens the remainder is 5.
+
+On the two exposed affected tasks, B reproduces C's full output and its initial full FP32 logits and source-defined sequence KV byte-for-byte, while A differs at generated indices 47 and 81. Two longer stable controls have different A/B numerical states but identical output. Synthetic prefixes of length 127 and 128 are unchanged, while a 129-token prefix differs at output 57. Thus exceeding 128 does not imply output divergence, and observing different state does not imply a changed greedy decision. The causal statement is that the specific external partition intervention is sufficient to reproduce these output boundaries, including its inherent per-call scheduling behavior.
+
+\subsection{Partition equivalence is not a universal threshold}
+In the final follow-up~\cite{bfinal}, a fourth arm D uses UB128 and an explicit 128+remainder caller split. It agrees with B/C in the full initial FP32 vector, all 64 K/V tensors and complete endpoints across the seven inputs. A frozen 19-schedule sweep, measured with observation off and on, further separates partition classes (Figure~\ref{fig:partition}). For the 133-token task, 64+64+5 and 96+37 match A, 128+5 matches B/C, and 132+1 yields a third full endpoint whose first difference occurs at 40. Smaller chunks are therefore not monotonically closer to the UB128 reference. More generally, A/B differ despite sharing UB512, while B/C/D agree despite different UB settings. A capacity number alone does not specify the observed reference behavior: actual partitioning and the resulting numerical state must also be recorded.
+
+\begin{figure}[t]
+\centering\input{figures/partition.tex}
+\caption{Observed partition/output classes for two exposed Vulkan inputs. A denotes whole UB512 prefill and B/C the 128-split reference class. Numbers indicate the first output difference from A; ``new'' is a third endpoint. Dashed outlines mark B/C and the dotted outline marks the third endpoint. This map does not imply a universal 128-token threshold. The follow-up sweep has the driver-hash preregistration limitation stated in the text.}
+\label{fig:partition}
+\end{figure}
+
+The fourth-arm and sweep stages did not initially authenticate full external driver-body hashes, so they remain supplementary diagnostic evidence. Their later authentication does not retroactively repair that protocol gap. The independent source/payload audits still support the observed endpoints and tensor comparisons. We distinguish that narrower evidential value from a perfectly compliant new confirmation cohort.
+
+\subsection{The numerical frontier can precede attention}
+Source-aligned native observation finds equal A/B embeddings and admitted projection input activations, with B/C agreement at the named tensors. Differences are already present at the first-layer K/V projections for the 161-token task, and at Q/K/V for the 133-token task. The reported maximum absolute K/V differences for the first task are 0.052734375 and 0.0023193359375. For the second, Q differs only at logical positions 128--132, and K/V differ as well. This localizes a divergent projection frontier before later attention; the order in which sibling projections were listed is not evidence of a unique first-cause kernel.
+
+Forty standalone operator calls compare full versus 128-split geometry on identical captured operands. Thirty-two pass native same-arm shams. RMS and the first task's Q-projection controls are bitwise invariant, while the admitted differing projection replays reproduce geometry sensitivity. All eight scale/MUL calls fail correspondence because their operands were captured after an in-place consumer had modified an aliased buffer. They are excluded, not counted as successful mechanism observations. Exact Vulkan shader, pipeline and dispatch identities remain unknown.
+
+QB retains projection batching, so its portability depends on numerical differences outside the constrained attention graph. The CUDA qualification establishes suitability for that stack and panel. On B570, projection differences precede attention, and later continuations remain sensitive to retained-state differences. This earlier frontier can require constraints on state formation beyond the attention layout.
+
+\subsection{A controlled retained-KV intervention}
+Stage-Replay has already shown that transplanted KV can select a later suffix despite identical initial tokens~\cite{stagereplay}. Here, the final study tests states formed by fixed-precision partition interventions, using a boundary0 reconstruction admitted through own-path controls (Figure~\ref{fig:state}). Two prefill recipes provide $(KV_A,L_A)$ and $(KV_B,L_B)$, where $L$ is the complete initial FP32 logit vector. A clean common UB512 receiver restores sequence K/V content and positions, applies the identical native greedy sampler to the selected logits, reconstructs the empty generated prefix and pending-token obligations, and proceeds with single-query continuation. Sixteen own-path shams reproduce entire natural endpoints and retained-state checks before the cross is admitted.
+
+\begin{figure}[t]
+\centering\input{figures/state.tex}
+\caption{Qualified boundary0 state cross on the two affected Vulkan tasks. Each cell gives the complete trajectory class. All initial logit vectors choose token 1271, making a logit-source swap a first-decision negative control. Changing the KV source changes the later suffix at indices 47/81. The two stable long controls remain output-invariant despite differing KV bytes.}
+\label{fig:state}
+\end{figure}
+
+Forty cross requests cover the two affected inputs with three repetitions per cell and two stable long inputs with two. For the affected tasks,
+\begin{equation}
+Y(KV_A,L_A)=Y(KV_A,L_B)=Y_A,
+\end{equation}
+\begin{equation}
+Y(KV_B,L_A)=Y(KV_B,L_B)=Y_B,
+\end{equation}
+with $Y_A\ne Y_B$ at the historical first-difference positions. All initial vectors choose token 1271, so the null logit-swap result does not establish that future logits are irrelevant. The positive intervention is conditional suffix sensitivity to the KV source under the common validated receiver contract. It neither proves universal causal necessity of KV nor implements arbitrary opaque state cloning. The stable controls retain the same full endpoint under both KV sources.
+
+The projection replay and KV cross strengthen different links in the explanation. They do not isolate which individual layer, token or K-versus-V change accounts for the full effect. A claim that every projection perturbation is mediated exclusively through a particular KV subset would require additional interventions. The practical boundary is that constraining later calls to one-query geometry does not remove differences already carried by retained state. Choosing a local repair therefore requires checking both the numerical frontier and the state that crosses the constrained boundary.
+
+\subsection{Physical verification and the cost boundary}
+In the separate B570 speculative implementation, a logical $k=1$ verification caller with two rows executes two occupied width-one target micrographs, plus draft proposal and catch-up work. The physical-work study records this decomposition in 563 cycles across 11 completed candidate witnesses~\cite{bwork}. High measured acceptance therefore does not establish multiquery physical graph amortization. Micrographs are not shader launches, and their counts cannot assign a fraction of request time to a component.
+
+The earlier 1,200-request B570 campaign~\cite{bcost} failed its frozen stock-reference qualification on two tasks. A separate post-hoc audit established that $R_{\rm prod}$, $M_{\rm match}$ and $C_{k 1}$ have identical full outputs on all 240 paired repetitions across 24 tasks~\cite{bpostaudit}. Their observed ratios, $R_{\rm prod}/C=0.719264$ and $M/C=0.727927$, describe negative same-output production-path economics; they do not repair the original stock gate. Every task regresses. No new latency benchmark or phase-time model is supplied by the later diagnostic experiments. Hardware timestamps are supported, but the pinned backend interface does not expose a qualified completed GPU timeline; continuous physical residency also remains unproved.

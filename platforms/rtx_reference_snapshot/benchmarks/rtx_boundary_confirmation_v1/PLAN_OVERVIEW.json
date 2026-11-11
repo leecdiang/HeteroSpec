@@ -1,0 +1,609 @@
+{
+  "schema_version": 1,
+  "kind": "CPU_TASK_PLAN_NOT_EXECUTION_AUTHORIZATION",
+  "parent_commit": "c6eb66368bc876332afe82f9df5ea51fe0b4b5ec",
+  "plan_sha256": "fbfd827eac7db0f49261ece8e0eef3ab50c2a1e5311ba9069b6187d45a63f82c",
+  "scientific_state": "NOT_RUN",
+  "samples": 30,
+  "qualification_method": "H1",
+  "arms": [
+    "PQ",
+    "QB_A",
+    "QH_C",
+    "QB_B"
+  ],
+  "arm_to_layout": {
+    "PQ": "PQ",
+    "QB_A": "QB",
+    "QH_C": "QH_C",
+    "QB_B": "QB"
+  },
+  "order_cycles": [
+    [
+      "PQ",
+      "QB_A",
+      "QB_B",
+      "QH_C"
+    ],
+    [
+      "QB_A",
+      "QH_C",
+      "PQ",
+      "QB_B"
+    ],
+    [
+      "QH_C",
+      "QB_B",
+      "QB_A",
+      "PQ"
+    ],
+    [
+      "QB_B",
+      "PQ",
+      "QH_C",
+      "QB_A"
+    ]
+  ],
+  "counts": {
+    "reference/core": {
+      "native_hosts": 296,
+      "graph_calls": 296
+    },
+    "reference/optional": {
+      "native_hosts": 72,
+      "graph_calls": 72
+    },
+    "qualification/core": {
+      "native_hosts": 328,
+      "graph_calls": 11152
+    },
+    "qualification/optional": {
+      "native_hosts": 72,
+      "graph_calls": 2448
+    },
+    "aa_pilot/core": {
+      "native_hosts": 192,
+      "graph_calls": 7296
+    },
+    "confirm/core": {
+      "native_hosts": 1664,
+      "graph_calls": 63232
+    },
+    "holdout/optional": {
+      "native_hosts": 384,
+      "graph_calls": 14592
+    }
+  },
+  "aa_anchor_ids": [
+    "q1-short-v0",
+    "q1-long-v0",
+    "q2-k256-v0",
+    "q4-k256-v0",
+    "q2-k1024-v0",
+    "q4-k1024-v0",
+    "q2-d64-v0",
+    "q4-d64-v0"
+  ],
+  "factor_edges": [
+    {
+      "base": "q2-k255",
+      "changed": "q2-k256",
+      "factor": "keys"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-k257",
+      "factor": "keys"
+    },
+    {
+      "base": "q2-k1023",
+      "changed": "q2-k1024",
+      "factor": "keys"
+    },
+    {
+      "base": "q2-k1024",
+      "changed": "q2-k1025",
+      "factor": "keys"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-g1",
+      "factor": "Hkv"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-g32",
+      "factor": "Hkv"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-compact",
+      "factor": "storage"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-irregular",
+      "factor": "mask"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-single_visible",
+      "factor": "mask"
+    },
+    {
+      "base": "q2-k256",
+      "changed": "q2-d64",
+      "factor": "d"
+    },
+    {
+      "base": "q4-k255",
+      "changed": "q4-k256",
+      "factor": "keys"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-k257",
+      "factor": "keys"
+    },
+    {
+      "base": "q4-k1023",
+      "changed": "q4-k1024",
+      "factor": "keys"
+    },
+    {
+      "base": "q4-k1024",
+      "changed": "q4-k1025",
+      "factor": "keys"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-g1",
+      "factor": "Hkv"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-g32",
+      "factor": "Hkv"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-compact",
+      "factor": "storage"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-irregular",
+      "factor": "mask"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-single_visible",
+      "factor": "mask"
+    },
+    {
+      "base": "q4-k256",
+      "changed": "q4-d64",
+      "factor": "d"
+    }
+  ],
+  "resource_defaults": {
+    "wall_seconds": 28800,
+    "closure_seconds": 3600,
+    "new_storage_bytes": 8589934592,
+    "host_ram_bytes": 8589934592,
+    "GPU_workers": 1,
+    "native_timeout_seconds": 120
+  },
+  "unresolved": [
+    "actual input/reference hashes",
+    "compiled runtime/source hashes",
+    "GPU identity",
+    "selected method",
+    "actual session IDs",
+    "formal freeze",
+    "raw run root"
+  ],
+  "total_tasks": 3008,
+  "core_totals": {
+    "native_hosts": 2480,
+    "graph_calls": 81976
+  },
+  "optional_totals": {
+    "native_hosts": 528,
+    "graph_calls": 17112
+  },
+  "geometries": [
+    {
+      "geometry_id": "q2-k255",
+      "q": 2,
+      "keys": 255,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-k256",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-k257",
+      "q": 2,
+      "keys": 257,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-k1023",
+      "q": 2,
+      "keys": 1023,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-k1024",
+      "q": 2,
+      "keys": 1024,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-k1025",
+      "q": 2,
+      "keys": 1025,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-g1",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 1,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "GQA",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-g32",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 32,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "GQA",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-compact",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "compact",
+      "mask": "causal",
+      "factor": "Q_storage",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-irregular",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "irregular",
+      "factor": "mask",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-single_visible",
+      "q": 2,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "single_visible",
+      "factor": "mask",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q2-d64",
+      "q": 2,
+      "keys": 256,
+      "d": 64,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "head_dimension",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k255",
+      "q": 4,
+      "keys": 255,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k256",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k257",
+      "q": 4,
+      "keys": 257,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k1023",
+      "q": 4,
+      "keys": 1023,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k1024",
+      "q": 4,
+      "keys": 1024,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-k1025",
+      "q": 4,
+      "keys": 1025,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "length",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-g1",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 1,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "GQA",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-g32",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 32,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "GQA",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-compact",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "compact",
+      "mask": "causal",
+      "factor": "Q_storage",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-irregular",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "irregular",
+      "factor": "mask",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-single_visible",
+      "q": 4,
+      "keys": 256,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "single_visible",
+      "factor": "mask",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q4-d64",
+      "q": 4,
+      "keys": 256,
+      "d": 64,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "head_dimension",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q1-short",
+      "q": 1,
+      "keys": 128,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "common_path_control",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "q1-long",
+      "q": 1,
+      "keys": 1024,
+      "d": 64,
+      "Hq": 32,
+      "Hkv": 32,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "common_path_control",
+      "cohort": "confirmation"
+    },
+    {
+      "geometry_id": "hold-q3-g4-k511",
+      "q": 3,
+      "keys": 511,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 4,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    },
+    {
+      "geometry_id": "hold-q3-g4-k512",
+      "q": 3,
+      "keys": 512,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 4,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    },
+    {
+      "geometry_id": "hold-q3-g4-k513",
+      "q": 3,
+      "keys": 513,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 4,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    },
+    {
+      "geometry_id": "hold-q3-g8-k511",
+      "q": 3,
+      "keys": 511,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    },
+    {
+      "geometry_id": "hold-q3-g8-k512",
+      "q": 3,
+      "keys": 512,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    },
+    {
+      "geometry_id": "hold-q3-g8-k513",
+      "q": 3,
+      "keys": 513,
+      "d": 128,
+      "Hq": 32,
+      "Hkv": 8,
+      "storage": "permuted",
+      "mask": "causal",
+      "factor": "prospective_q3_boundary",
+      "cohort": "holdout"
+    }
+  ],
+  "inputs": {
+    "core": 52,
+    "optional": 12,
+    "realizations_per_geometry": 2,
+    "optional_seed_offset": 10000
+  },
+  "optional_gate": "prediction_freeze before reference, qualification, or timing",
+  "note": "Generated from study.make_plan(); task totals are plans, not observations. Full plan uses unresolved runtime/input identities."
+}

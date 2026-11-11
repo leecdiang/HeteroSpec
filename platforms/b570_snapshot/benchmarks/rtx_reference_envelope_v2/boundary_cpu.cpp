@@ -1,0 +1,14 @@
+#include "graph_base.h"
+int main(int argc,char**argv){try{hs113::require(argc==3,"CPU job output");repair113::no_gpu_modules();auto job=read(argv[1]);auto spec=read(job.at("spec").get<std::string>());auto runtime=fs::path(spec["runtime_directory"].get<std::string>());auto&core=repair113::process_core(runtime/"ggml-base.dll",spec["numerical_DLLs"]["ggml-base.dll"]);core.verify_shared_import("ggml_init");
+    auto c=job["context"];auto m=read(fs::path(c["root"].get<std::string>())/"snapshot.json");std::string name=job["layout"];Graph g(m,name,false);int64_t D=g.in[0]->ne[0],q=g.in[0]->ne[1],H=g.in[0]->ne[2],S=g.in[1]->ne[1];int layout=q==1?0:hs113::layout(name);std::vector<ggml_tensor*>mm,sm,av;
+    for(int i=0;i<ggml_graph_n_nodes(g.g);i++){auto*t=ggml_graph_node(g.g,i);if(t->op==GGML_OP_MUL_MAT&&t->src[0]==g.in[1])mm.push_back(t);if(t->op==GGML_OP_SOFT_MAX)sm.push_back(t);if(t->op==GGML_OP_MUL_MAT&&t->src[0]==g.in[2])av.push_back(t);}
+    hs113::require(mm.size()==size_t(layout==4?q:1)&&sm.size()==mm.size()&&av.size()==mm.size(),"real arithmetic graph cardinality");
+    std::map<ggml_tensor*,std::vector<unsigned char>>raw;raw[g.in[0]]=bytes(fs::path(c["root"].get<std::string>())/"Q.bin");raw[g.in[3]]=bytes(fs::path(c["root"].get<std::string>())/"mask.bin");for(auto*t:av)raw[t]=std::vector<unsigned char>(ggml_nbytes(t));size_t checked=0;
+    for(int64_t h=0;h<H;h++)for(int64_t j=0;j<q;j++){
+        size_t n=layout==4?j:0;
+        for(int64_t a=0;a<D;a++){I ix=layout==1?I{a,0,h,j}:layout==2?I{a,0,h*q+j,0}:layout==4?I{a,0,h,0}:I{a,j,h,0};hs113::require(storage(mm[n]->src[1],ix,raw)==storage(g.in[0],I{a,j,h,0},raw),"full Q storage mapping");auto*t=av[n];size_t off=0;for(int d=0;d<4;d++)off+=ix[d]*t->nb[d];uint32_t marker=1+a+D*(j+q*h);hs113::require(off+4<=raw[t].size(),"marker bounds");memcpy(raw[t].data()+off,&marker,4);checked++;}
+        for(int64_t k=0;k<S;k++){I ix=layout==1?I{k,0,0,j}:layout==2?I{k,0,j,0}:layout==4?I{k,0,0,0}:I{k,j,0,0};hs113::require(storage(sm[n]->src[1],ix,raw)==storage(g.in[3],I{k,j,0,0},raw),"full mask storage mapping");checked++;}
+    }
+    for(int64_t h=0;h<H;h++)for(int64_t j=0;j<q;j++)for(int64_t a=0;a<D;a++){hs113::require(storage(g.result.ordinary,I{a+D*h,j,0,0},raw)==uint32_t(1+a+D*(j+q*h)),"all output restoration indices");checked++;}
+    repair113::no_gpu_modules();write(argv[2],{{"status","PASS"},{"whole_Q_mask_output_words",checked},{"graph",g.registry()},{"GPU_calls",0},{"CUDA_loads",0},{"scope","actual native full-geometry storage/serializer checks;no arithmetic computation"}});return 0;
+}catch(const std::exception&e){std::cerr<<e.what()<<"\n";return 2;}}

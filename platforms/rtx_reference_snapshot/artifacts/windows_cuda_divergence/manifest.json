@@ -1,0 +1,43 @@
+{
+  "schema": "heterospec.raw_archive_manifest.v1",
+  "archive_id": "windows_cuda_divergence",
+  "purpose": "Raw evidence for the stable CUDA divergence and isolated same-commit numerical diagnosis.",
+  "runtime": {
+    "formal": {"name": "llama.cpp", "build": 10839, "commit": "0cae43063", "backend": "CUDA 12.4"},
+    "diagnostic": {"base_commit": "0cae43063", "instrumentation": "scripts/debug/cuda_divergence/server-context-logprobs.patch", "build": "Zig 0.16.0 Release static host with frozen b10839 CUDA backend DLLs"}
+  },
+  "files": [
+    {
+      "original_local_path": "logs/windows-cuda-divergence-minrepro.json",
+      "archived_relative_path": "artifacts/windows_cuda_divergence/windows-cuda-divergence-minrepro.json",
+      "size": 90083,
+      "sha256": "5AD1C00E65DB124B370006D9FAA07C893D28EB4F0939EA92F6B5C59372663BA2",
+      "experiment_run_id": "windows_cuda_divergence_minrepro; HumanEval/106 and /129; 12 runs",
+      "classification": "authoritative",
+      "derived_processed_files": ["reports/5070ti/WINDOWS_CUDA_DIVERGENCE_MINREPRO.csv", "reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md"]
+    },
+    {
+      "original_local_path": "logs/cuda-divergence-logits-server.json",
+      "archived_relative_path": "artifacts/windows_cuda_divergence/cuda-divergence-logits-server.json",
+      "size": 4219653,
+      "sha256": "9394AC5F1400418ABE5526F22409ACD273514BB62406209F281F0F8ABD21AEB9",
+      "experiment_run_id": "cuda_divergence_logits_server; HumanEval/106; 3 paths x 3 independent processes",
+      "classification": "authoritative",
+      "derived_processed_files": ["reports/5070ti/CUDA_DIVERGENCE_LOGITS.csv", "reports/5070ti/CUDA_DIVERGENCE_LOGITS_SUMMARY.json", "reports/5070ti/CUDA_DIVERGENCE_NUMERICAL_DIAGNOSIS.md"]
+    },
+    {
+      "original_local_path": "telemetry/windows-cuda-divergence-minrepro.csv",
+      "archived_relative_path": "artifacts/windows_cuda_divergence/windows-cuda-divergence-minrepro-nvml.csv",
+      "size": 11925,
+      "sha256": "992D69400B90BA12C6EBF36AD2ECCCD31EB9F6E5EC0192D879C4B03F25EC9B1B",
+      "experiment_run_id": "windows_cuda_divergence_minrepro_nvml",
+      "classification": "supporting",
+      "derived_processed_files": ["reports/5070ti/WINDOWS_VERIFICATION_MECHANISM_CONTROLS.md"]
+    }
+  ],
+  "exclusions": [
+    {"paths": "logs/cuda-divergence-server/*.log", "count": 9, "total_size": 62949, "classification": "redundant", "reason": "Audit found only startup/configuration, aggregate acceptance and timing messages. They contain no token IDs, top-logit scores, margin evidence, errors, or facts unavailable in the authoritative JSON and committed build metadata."},
+    {"paths": "tools/llama-debug-src and tools/llama-debug-build*", "classification": "excluded", "reason": "Reproducible source/build products; the base commit, instrumentation patch, build description and capture scripts are committed."}
+  ],
+  "integrity": "Every archived payload is an unmodified byte-for-byte copy; verify each entry against size and SHA-256."
+}

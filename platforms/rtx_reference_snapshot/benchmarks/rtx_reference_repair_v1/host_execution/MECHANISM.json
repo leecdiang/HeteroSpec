@@ -1,0 +1,106 @@
+{
+  "utc": "2026-11-01T18:08:34.490824+00:00",
+  "root_cause_evidence": {
+    "D0": "Original roles0 build and admission passed. All96 development requests retained; canonical producer alone failed C/reference on GSM8K111 while fixing other paths. Same-boundary seed isolation required.",
+    "localization": "Natural first-seed position92 of the exposed GSM8K111 input, same canonical boundary KV and pending seed. Heavy trace/no-trace controls preserve endpoints, complete decision vectors, transactions and states. Explicit axis1 row0 maps l_out and final logits. First captured l_out difference at layer10, not asserted globally earliest.",
+    "operator": "Layer10 K normalization output is bitwise equal on the aligned logical row. Scheduler assigns R K scaling/RoPE to CPU and C to CUDA. Actual normalized K operands, immutable positions and complete RoPE parameters were captured. Kcur-10 differs in851/1024 F32 values (max2.3126602172851562e-05). Q/K/V projections and normalized K row agree.",
+    "causal_replay": "Eight native CPU/CUDA own-path and cross-backend replays with exact captured operands reproduce original R and C outputs. CPU four-row row0 equals R one-row; CUDA one-row equals C four-row row0. Repeats agree. This proves this backend-dependent RoPE discrepancy; it is not a unique global-cause proof for every later mismatch.",
+    "source": "CUDA offload preference uses row count with threshold32. Eight K heads cross it at four tokens;40 Q heads already exceed it at one token. Scheduler propagation then changes the subsequent RoPE backend in CPU-weight layers. Buffer ownership alone is not placement evidence."
+  },
+  "intervention": {
+    "rule": "In scoped target head-normalization MUL operations named Qcur_normed-/Kcur_normed-, with2..4 token rows, ask the original offload predicate on a read-only one-token geometry copy. Preserve actual graph shapes/data/operations. R/q1, inactive draft and unrelated operations unchanged. No task, token, layer number or margin conditions.",
+    "policy": {
+      "prefill": "native",
+      "rowwise_roles": 0,
+      "mechanism": "Preserve original single-token offload preference for scoped target Q/K head normalization; avoids token-count-induced CPU/CUDA RoPE switching. No rowwise matmul; no canonical producer in selected native-prefill policy.",
+      "revision": "dev03-norm-offload",
+      "stable_norm_offload": true
+    },
+    "worker": {
+      "path": "D:\\rtx158\\config03\\build\\bin\\rtx-scope-transfer.exe",
+      "sha256": "55cc7e9fecefc209ea0b17f1c787f906ff8fe8760a8e43a18a0e3b04ee6e6b15"
+    },
+    "source": {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\pr158\\scripts\\experiments\\rtx_reference_repair_v1\\repair_offload.hpp",
+      "sha256": "65b7411194461fe883e421cd567f633626f4260ee071a5fea7cffa55fad3c2d8"
+    },
+    "numerical_cohort": "Original21 DLLs unchanged. Repaired scheduler is statically linked ggml-base; supplementary static-component hashes retained. No rowwise matmul repair enabled."
+  },
+  "ablation_result": {
+    "before": "D0 counterexamples and complete96-cell outcomes retained, including canonical C/reference failure.",
+    "after": "Same eight natural first-seed trace/control requests: M_QB,C_PQ,C_QB now bitwise equal to R at all40 l_out checkpoints and final norm/logits. Complete natural endpoints equal R. Full96 development: all48 observer pairs and every recipe preserve fixed R.",
+    "selected_policy": "Native prefill chosen prospectively before epoch03 outputs; canonical producer remains a diagnostic sham, not hidden selected-request overhead."
+  },
+  "regression_result": {
+    "Qwen3_8B": "144/144 requests equal pinned original references; all72 observer pairs stable. Original12-input qualified panel, models, source and DLLs retained. First zero-generation admission failed on incorrect32-layer adapter binding; corrected to authenticated36 and retained failure.",
+    "Llama": "24/24 match authenticated original native endpoints, transactions/KV bounds and2356 full-vector artifacts. R/native and R/reference plus two controls preserve R. Known CodeContests108 C_PQ/C_QB failure remains four requests against R, not reported as reference PASS.",
+    "Llama_engineering_failure": "Earlier24-request attempt crashed after15 completed records (16th active), from an explicit fresh-context state-capture use-after-free. Complete reservation and partial evidence retained, not qualification. New metadata4 worker snapshots live contexts before teardown and writes owned bytes outside timer; natural loop byte-identical. New build/admission/full24 regression passes.",
+    "budget": {
+      "charged_before_freeze": 420,
+      "development_ceiling": 480,
+      "confirmation_planned": 720,
+      "projected_charged_total": 1140,
+      "old_PR156_requests_separate": 40
+    }
+  },
+  "remaining_limits": [
+    "No held-out14B output has been used. Qualification and performance remain unproven until actual confirm completes.",
+    "The original Llama counterexample remains. This is not a universal greedy-reference theorem or a cross-model all-PASS claim.",
+    "Layer10 is the first captured l_out discrepancy in this localization. Earlier unobserved internal differences or F16 rounding cancellation are not excluded.",
+    "The same-operand proof covers the captured operands; whole-model sufficiency is finite-panel empirical evidence.",
+    "No kernel-occupancy or physical bottleneck fractions are inferred from scheduler assignments.",
+    "All failed/slow cells and original references remain. Four-session timing is a finite engineering screen, not a population confidence interval."
+  ],
+  "reviewed_by_agent": true,
+  "review_scope": "Agent reviewed actual native records, source mapping, logical rows, observer controls, exact-operand replay, ablation, full development and pinned regressions. This is not an external human review or independent laboratory replication.",
+  "evidence": [
+    {
+      "path": "D:\\rtx158\\research\\epoch01\\development01_AUDIT.json",
+      "sha256": "5163be1ceee4511c0909d5f95628f249d5fc374dc7b3ad2dd18d7a9ae59ba0d1"
+    },
+    {
+      "path": "D:\\rtx158\\research\\epoch01\\LOCALIZE_FIRST01_AUDIT.json",
+      "sha256": "316a8e32fd2acbfb2b8260b6f9eddc90e9d423177b4794b47632f55982cf9108"
+    },
+    {
+      "path": "D:\\rtx158\\research\\epoch01\\LOCALIZE_LAYER10_AUDIT.json",
+      "sha256": "8b7993d1747879ce5ae16660dc3991101a23bbde698c8f697f2452b42f9a0baf"
+    },
+    {
+      "path": "D:\\rtx158\\research\\epoch02\\ROPE_REPLAY_AUDIT.json",
+      "sha256": "30d45f088c6ed79072cfecfdeab6119d388f30b09a304db747344248118f1278"
+    },
+    {
+      "path": "D:\\rtx158\\research\\epoch03\\REPAIRED_FIRST03_AUDIT.json",
+      "sha256": "0457f23103065498f4caf89af4cc064020d7cfb14f80debb0928fa6a1a7cfd18"
+    },
+    {
+      "path": "D:\\rtx158\\research\\epoch03\\development03_AUDIT.json",
+      "sha256": "f259045791ffdbbe79ad906d29692104f70fa3024d4386f2a55e538d0234a2ab"
+    },
+    {
+      "path": "D:\\rtx158\\research\\regression_qwen02\\REGRESSION_AUDIT.json",
+      "sha256": "c29f0199218a0e1368d67a2b9c2985f2bc76ba91f48843129996d7dec735e2c1"
+    },
+    {
+      "path": "D:\\rtx158\\research\\regression_llama03\\REGRESSION_AUDIT.json",
+      "sha256": "7395fdf2886f918376e2cad96e655d262c0f600a6e343986bc432552abb7374a"
+    },
+    {
+      "path": "D:\\rtx158\\research\\regression_llama03\\HISTORICAL_BEHAVIOR_AUDIT.json",
+      "sha256": "5598f2635354a9bc5fad6dd74c4ed913d92ecaff7eb06ba599141041547c13a7"
+    },
+    {
+      "path": "D:\\rtx158\\research\\provenance\\LLAMA_ACCESS_VIOLATION.json",
+      "sha256": "e1c796dbd6d81a035d655660bc1f2ead45c6140befffc925f3fc497ca06d6e71"
+    },
+    {
+      "path": "D:\\rtx158\\research\\ENGINEERING_CHANGES.jsonl",
+      "sha256": "e041b87b55d9b6c785d4f4799df5cfee6523552ad5414eff1d7179a6b27d69c6"
+    },
+    {
+      "path": "D:\\rtx158\\research\\LEDGER.jsonl",
+      "sha256": "a6783917bdf4d2187cb5e57af6c1c462f299760f58ac75f057b33f9d7046e4b9"
+    }
+  ]
+}

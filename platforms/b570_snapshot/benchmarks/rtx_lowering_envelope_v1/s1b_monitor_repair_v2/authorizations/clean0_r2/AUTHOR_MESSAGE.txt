@@ -1,0 +1,178 @@
+批准执行 HeteroSpec PR118 的 S1B Block 0，严格按照最新冻结提交执行。
+
+这是一次独立的 GPU 执行授权。不得修改 F0、Census、run_id、execution_id、实验坐标、监督规则或任何数值判据；不得使用历史 F0 或历史 Census 结果替代本次绑定。
+
+【精确身份绑定】
+
+canonical run_id:
+pr116-s1b-cost-v1
+
+execution_id:
+pr116-s1b-exact-r2
+
+F0 SHA256:
+f2d6965646e1f53c5d8a8b974f0277efc2903ed022689374af3f178fbad8e587
+
+Execution-bound CRLF Census SHA256:
+d8c79ed1b4fc748ec8ce22a201137ef6fc201de79052fa7c6c4f7711806e8256
+
+Archive manifest SHA256:
+3b84a2d8f000e2a8be7aceb46695d562696cb6912c8b875b90913e4b1db11c56
+
+【授权范围】
+
+仅执行 Block 0。
+
+范围：
+- 72 个 clean coordinates
+- 648 次图调用
+- 不执行 Block 1
+- 不执行 Block 2
+- 不执行 trace/profile
+- 不执行 actor
+- 不执行 decoder
+- 不增加任何额外坐标
+- 不进行 retry
+- 不进行 warmup，除非 F0 明确将其作为既定实验流程的一部分；不得自行增加 warmup
+
+Block 0 的目标是建立：
+1. CUDA clean-path 实际执行资格；
+2. ordinary output correctness；
+3. PQ / QB / QH_C clean-path 的实际输出关系；
+4. allocation / preparation / upload / compute / synchronization / readback 的实际成本；
+5. QPC timing distribution；
+6. 输入前后字节完整性及执行身份完整性。
+
+【执行前硬门槛】
+
+执行前必须再次确认：
+
+1. 实际执行入口绑定上述 F0 SHA256；
+2. Census 使用上述 CRLF 原始字节，SHA256 必须精确匹配；
+3. canonical run_id 与 execution_id 必须分别等于上述值；
+4. GPU 就绪检查通过；
+5. GPU 利用率必须满足冻结准入规则；
+6. 所有 72 coordinates 均属于 execution-bound Census 的支持集合；
+7. 监督器使用已经 CPU 验证的 QPC 监测实现；
+8. 不得对 Census 做换行归一化、JSON 语义替换或重新序列化后再进行授权匹配。
+
+任何一项不满足：
+- 在 GPU 数值宿主启动前停止；
+- 不修改任何授权字段；
+- 不绕过检查；
+- 不重试；
+- 保存 STOP 证据。
+
+【运行期冻结规则】
+
+严格执行最新 F0 中已经冻结的监督、生命周期、资源、容量和身份规则。
+
+特别是：
+- 监测相邻间隔 > 1,000,000,000 ns 时立即按冻结规则处理；
+- 不允许因为结果正常而追认监测失效槽位；
+- 不得用退出后的审计时间填充运行期监测窗口；
+- 不得因为后置审计较慢而扩大运行期判据；
+- 输入发生任何未经授权的字节变化立即停止；
+- CUDA/module/IAT/host identity 发生漂移立即停止；
+- 非有限输出、图执行异常、同步异常或输出缺失立即停止；
+- 资源/容量/日志监督异常立即停止；
+- 不得自动 retry。
+
+【数据与计时】
+
+对每个合格 coordinate，完整保留并独立记录：
+
+- input pre/post bytes；
+- graph identity；
+- allocation；
+- input preparation；
+- upload；
+- compute；
+- synchronization；
+- output readback；
+- ordinary output；
+- QPC timing；
+- lifecycle supervision；
+- GPU/CUDA/module identity；
+- failure evidence（如有）。
+
+成本必须同时保留冻结定义下的：
+- resident execution cost；
+- input-inclusive cost。
+
+不得把未执行项目记为 0 ms；没有样本就明确记为 UNKNOWN / NO SAMPLE。
+
+统计时保留：
+- median；
+- p95；
+- max；
+- 每坐标原始样本；
+- 退化坐标和尾部坐标。
+
+不要只报告平均值。
+
+【结果解释限制】
+
+不要预设 PQ/QB/QH_C 一定一致，也不要预设 MQ 的差异来源。
+
+Block 0 只允许报告实际观察到的：
+- CUDA clean execution success/failure；
+- ordinary correctness；
+- 跨布局逐位关系或实际数值差异；
+- 各成本项；
+- timing distribution。
+
+不得由 Block 0 单独推出：
+- 全域等价；
+- 数学真值优越性；
+- 更优 kernel；
+- 加速；
+- decoder qualification；
+- actor qualification；
+- 硬件机制结论。
+
+若观察到 MQ 与其他布局的差异，只记录逐坐标、逐阶段的事实，不提前指定 shader、accumulator、reduction tree 等后端原因。
+
+【停止条件】
+
+以下任一情况发生即停止整个 Block 0，不重试：
+
+- 任意冻结身份不匹配；
+- Census/F0 字节哈希不匹配；
+- GPU readiness 不合格；
+- 支持查询或实际绑定不合格；
+- 输入字节变化；
+- CUDA/module/IAT 漂移；
+- 图调用失败；
+- synchronization failure；
+- 输出缺失/截断；
+- 非有限值；
+- 监测契约违反；
+- 生命周期异常；
+- 资源/日志/容量异常；
+- 任何无法由冻结规则明确判定的异常。
+
+【最终交付】
+
+完成后：
+1. 不自动进入 Block 1/2；
+2. 不追加任何 GPU 任务；
+3. 完整封存所有原始输出和审计证据；
+4. 远端提交前进行 manifest/hash 检查；
+5. fresh restore 后独立复核；
+6. 明确报告：
+   - 72/72 坐标启动/完成/失效/未启动；
+   - 648 图调用实际数量；
+   - CUDA success；
+   - ordinary correctness；
+   - PQ/QB/QH_C 关系；
+   - 各阶段成本；
+   - QPC median/p95/max；
+   - GPU-owned；
+   - 存储；
+   - 所有停止原因；
+   - UNKNOWN 项；
+7. 推送 Draft PR，但不要 merge；
+8. 完成后停在 Block 0 结果审查节点，等待下一次独立授权。
+
+本授权只批准上述精确 F0 + Execution-bound Census + Block 0。

@@ -1,0 +1,235 @@
+{
+  "schema": "heterospec.jsa_third_family.design.v1",
+  "study_id": "JSA_THIRD_FAMILY_V1",
+  "status": "DESIGN_NO_EXPERIMENT_RESULTS",
+  "primary_host": "RTX CUDA Windows",
+  "families": [
+    "Qwen",
+    "SmolLM2",
+    "Llama"
+  ],
+  "family_fallback": null,
+  "same_stack": "PR80 final F native core plus unchanged published numerical DLLs",
+  "upstream": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+  "effective_settings": {
+    "ctx": 1024,
+    "logical_batch": 2048,
+    "FA": false,
+    "K": "F16",
+    "V": "F16",
+    "sequences": 1,
+    "threads": 24,
+    "target_request_seed": 123,
+    "greedy": true,
+    "generation_cap": 128,
+    "cross_request_cache": false,
+    "placement": "ALL_GPU_REQUIRED",
+    "draft_proposal": "native rank0; p_min0; minimum0; maximum condition k",
+    "chat_template": "target model template; same target/draft prompt IDs"
+  },
+  "conditions": [
+    {
+      "name": "R",
+      "mask": 0,
+      "spec": false,
+      "target_ub": 1,
+      "draft_ub": null,
+      "maximum_k": 0
+    },
+    {
+      "name": "N",
+      "mask": 0,
+      "spec": true,
+      "target_ub": 4,
+      "draft_ub": 1,
+      "maximum_k": 3
+    },
+    {
+      "name": "M3",
+      "mask": 3,
+      "spec": false,
+      "target_ub": 4,
+      "draft_ub": null,
+      "maximum_k": 0
+    },
+    {
+      "name": "C3_K3",
+      "mask": 3,
+      "spec": true,
+      "target_ub": 4,
+      "draft_ub": 1,
+      "maximum_k": 3
+    },
+    {
+      "name": "C3_K1",
+      "mask": 3,
+      "spec": true,
+      "target_ub": 4,
+      "draft_ub": 1,
+      "maximum_k": 1
+    },
+    {
+      "name": "C3_K2",
+      "mask": 3,
+      "spec": true,
+      "target_ub": 4,
+      "draft_ub": 1,
+      "maximum_k": 2
+    }
+  ],
+  "confirmation": {
+    "domains": {
+      "MBPP": 12,
+      "GSM8K": 12
+    },
+    "total_tasks": 24,
+    "dates": 6,
+    "rounds_per_family_date": 4,
+    "requests_per_condition_family": 576,
+    "input_selection_salt": "heterospec-jsa-third-family-20261011-v1",
+    "ranking_string": "<salt>|<domain>|<full_task_id>",
+    "ranking": "SHA256 UTF8 ascending; tie full_task_id",
+    "max_prompt_ids_any_pair_model": 768,
+    "audit_scope": "all accessible project/host evidence, with unknown histories explicit; do not claim absence from pretraining",
+    "F0A": "before any model forward, including engineering and warmup",
+    "F0B": "after engineering, before confirmation; final code and full slots frozen",
+    "family_order": "rotate [Qwen,SmolLM2,Llama] left by date_index mod3",
+    "condition_order": "base rows: base, reverse(base), rotate_left(base,3), reverse(rotate_left(base,3)); on date_index d rotate each row left by d",
+    "task_order_hash_string": "<salt>|order|<date_index>|<round_index>|<full_task_id>",
+    "indexing": "date_index=0..5; round_index=0..3; family_index=0..2",
+    "calendar_gap_hours_min": 20,
+    "timezone": "Asia/Shanghai",
+    "condition_base_rows": [
+      [
+        "R",
+        "N",
+        "M3",
+        "C3_K3",
+        "C3_K1",
+        "C3_K2"
+      ],
+      [
+        "C3_K2",
+        "C3_K1",
+        "C3_K3",
+        "M3",
+        "N",
+        "R"
+      ],
+      [
+        "C3_K3",
+        "C3_K1",
+        "C3_K2",
+        "R",
+        "N",
+        "M3"
+      ],
+      [
+        "M3",
+        "N",
+        "R",
+        "C3_K2",
+        "C3_K1",
+        "C3_K3"
+      ]
+    ],
+    "primary_position_balance": "R/M3/C3_K3 have identical position multisets within every date; all conditions every position4 times across6 dates"
+  },
+  "engineering": {
+    "discovery_tasks_per_family": 12,
+    "rounds": 2,
+    "conditions": 6,
+    "families": 3,
+    "planned_discovery_requests": 432,
+    "capture_probes": 2,
+    "capture_states": 2,
+    "planned_capture_requests": 72,
+    "planned_requests_before_extra_warmups": 504,
+    "source": "PR79 12 exposed discovery inputs, bound by PR80; never confirmation tasks",
+    "full_request_cap_including_engineering_warmups": 640,
+    "aux_decode_cap": 128,
+    "owned_GPU_process_wall_hours_cap": 8
+  },
+  "formal": {
+    "full_requests": 10368,
+    "warmups": 432,
+    "warmup_cap_tokens": 32,
+    "servers": 432,
+    "owned_GPU_process_wall_hours_cap": 24
+  },
+  "total_limits": {
+    "planned_maximum_full_requests": 11440,
+    "hard_error_guard_full_requests": 12000,
+    "owned_GPU_process_wall_hours": 32,
+    "calendar_days": 14,
+    "formal_retries": 0,
+    "configuration_search": "NONE; predeclared k1/k2/k3 all reported; UB4/mask3 fixed"
+  },
+  "qualification": {
+    "primary_output": "all runtime-native committed output IDs, length, terminal and stop reason match paid stable ordinary R; no posthoc endpoint truncation",
+    "endpoint": "secondary diagnostic only; all raw suffix saved and paid",
+    "condition": "all 576 planned slots complete and stable for each family/condition; compare all actual R arrays",
+    "comparison_completeness": "prospective pair gate plus stable complete R; failures of unrelated condition do not erase complete pair",
+    "old_PR80_global_matrix_gate": "UNCHANGED; not superseded retroactively",
+    "qualified_speed_if_mismatch_missing_or_unstable_R": null
+  },
+  "statistics": {
+    "primary_comparison": {
+      "family": "Llama",
+      "baseline": "M3",
+      "candidate": "C3_K3",
+      "timer": "resident client HTTP through full JSON parsing"
+    },
+    "ordinary_companion": "R/C3_K3",
+    "target_path": "R/M3",
+    "aggregation": "median of 4 absolute times per task/condition/date; mean 24 paired log ratios per date; average 6 date effects",
+    "main_CI": {
+      "confidence": 0.95,
+      "df": 5,
+      "t": 2.570581835636314,
+      "formula": "exp(mean(z) +/- t * sample_sd(z)/sqrt(6))"
+    },
+    "positive_rule": "complete qualified pair; interval lower >1; at least5/6 positive dates",
+    "sensitivity_comparisons": 12,
+    "sensitivity_CI_confidence": 0.9958333333333333,
+    "sensitivity_tail_alpha": 0.0020833333333333333,
+    "sensitivity_t_quantile": 0.9979166666666667,
+    "sensitivity_df": 5,
+    "no_confirmation_winner_selection": true,
+    "no_family_random_sample_inference": true,
+    "secondary_order_limit": "N and C3_K1 do not share primary comparator position multiset within each date; all positions balanced over6 dates; record order limitation"
+  },
+  "outputs": [
+    "immutable full slot ledger and native arrays",
+    "source/asset/template/input hashes and readback",
+    "per-family/condition qualification with failure/suffix",
+    "per-date/task absolute costs and paired effects",
+    "unqualified cost diagnostics clearly separated",
+    "engineering acceptance/verify cost counters",
+    "CPU reproduction and independent restore/readback"
+  ],
+  "new_paper_claims": "NONE_WITHOUT_RESULTS",
+  "B570": "separate prospective Vulkan study; not part of RTX matrix; zero-forward asset preflight independent",
+  "datasets": {
+    "MBPP": {
+      "publisher": "google-research-datasets/mbpp",
+      "revision": "e49bbfe381c9c0e564b937f1c4e163a2273c65cc",
+      "configuration": "sanitized",
+      "id_range": [
+        11,
+        510
+      ],
+      "prompt": "description-only as existing RTX template; no tests/solution"
+    },
+    "GSM8K": {
+      "publisher": "openai/grade-school-math",
+      "revision": "3101c7d5072418e28b9008a6636bde82a006892c",
+      "path": "grade_school_math/data/test.jsonl",
+      "sha256": "3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14",
+      "rows": 1319,
+      "stable_id": "GSM8K/test/<zero-based-line-index>",
+      "user_template": "Solve the following problem and explain your reasoning.\n\n{question}",
+      "answer_field": "OFFLINE_ISOLATED_NOT_READ_BY_RUNNER"
+    }
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "study_id": "JSA_RTX_VALIDATION_V1",
+  "design_version": 1,
+  "design_date": "2026-10-10",
+  "status": "DESIGN_ONLY_NO_NEW_MODEL_RESULTS",
+  "execution_authorization": "prepare_freeze_publish_receipt_then_execute_within_protocol",
+  "platforms": [
+    "RTX"
+  ],
+  "integration_anchor_sha": "7386ba2d18164a9ab8c483d6d88e8c3a113aba55",
+  "required_host_materialization": [
+    "actual_starting_sha",
+    "design_pr_head_sha",
+    "host_and_asset_identity",
+    "model_choice_before_family_forward",
+    "exposure_audit",
+    "confirmation_task_ids_and_hashes",
+    "source_build_mapping",
+    "exact_schedule_and_dates",
+    "timer_audit",
+    "freeze_and_remote_receipts"
+  ],
+  "common": {
+    "upstream_sha": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "quantization": "Q8_0",
+    "context": 4096,
+    "logical_batch": 2048,
+    "flash_attention": "off",
+    "sequence_count": 1,
+    "threads": 24,
+    "target_seed": 123,
+    "sampling": "greedy; freeze effective target and draft sampler chains",
+    "cap": 128,
+    "endpoint": "full committed-ID response including first EOG or cap; full raw suffix retained",
+    "primary_timer": "client monotonic request submit through full non-streaming HTTP response receive and parse",
+    "reference": "paid within-family ordinary target-only UB1 mask0; never supplied online"
+  },
+  "S": {
+    "task_ids": [
+      "MBPP/439",
+      "MBPP/415",
+      "MBPP/124",
+      "MBPP/234",
+      "MBPP/441",
+      "MBPP/229",
+      "MBPP/12",
+      "MBPP/458",
+      "MBPP/299",
+      "MBPP/443",
+      "MBPP/18",
+      "MBPP/93",
+      "MBPP/437",
+      "MBPP/230",
+      "MBPP/253",
+      "MBPP/436",
+      "MBPP/115",
+      "MBPP/133",
+      "MBPP/448",
+      "MBPP/274",
+      "MBPP/454",
+      "MBPP/393",
+      "MBPP/242",
+      "MBPP/397"
+    ],
+    "tasks": 24,
+    "cohort": "historically_exposed_fixed_replication_panel",
+    "conditions": [
+      {
+        "name": "scalar_reference",
+        "mask": 0,
+        "spec": false,
+        "ub": 1,
+        "k": 0
+      },
+      {
+        "name": "matched_target",
+        "mask": 3,
+        "spec": false,
+        "ub": 4,
+        "k": 0
+      },
+      {
+        "name": "target_scopes",
+        "mask": 3,
+        "spec": true,
+        "ub": 4,
+        "k": 3
+      },
+      {
+        "name": "all_scopes",
+        "mask": 15,
+        "spec": true,
+        "ub": 4,
+        "k": 3
+      }
+    ],
+    "rounds_per_session": 4,
+    "sessions": 12,
+    "calendar_dates": 6,
+    "sessions_per_date": 2,
+    "same_date_start_spacing_min_hours": 4,
+    "first_window_interdate_spacing_min_hours": 20,
+    "formal_requests": 4608,
+    "warmups": 192,
+    "primary_comparison": "matched_target/target_scopes resident request",
+    "primary_unit": "date",
+    "t_df": 5,
+    "t_critical_975": 2.570581835636314,
+    "success": {
+      "full_matrix_and_output_qualification": true,
+      "day_level_95pct_lower_ratio_gt": 1,
+      "positive_dates_min": 5,
+      "output_qualification_scope": "repeat-stable R, all M and C3; C15 independent"
+    },
+    "no_optional_stopping": true,
+    "engineering_full_request_cap": 96,
+    "engineering_auxiliary_decode_cap": 64,
+    "engineering_active_gpu_hours_cap": 4
+  },
+  "F": {
+    "model_choice_order": [
+      {
+        "target": "meta-llama/Llama-3.1-8B-Instruct",
+        "draft": "meta-llama/Llama-3.2-1B-Instruct",
+        "quantization": "Q8_0",
+        "host_compatibility": "UNVERIFIED"
+      },
+      {
+        "target": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+        "draft": "HuggingFaceTB/SmolLM2-135M-Instruct",
+        "quantization": "Q8_0",
+        "host_compatibility": "UNVERIFIED",
+        "target_revision": "31b70e2e869a7173562077fd711b654946d38674",
+        "draft_revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+        "official_tokenizer_components_equal": true
+      }
+    ],
+    "fallback_allowed_only": "before any second-family model forward, based on availability/vocabulary/runtime/memory, never output or speed",
+    "discovery_task_ids": [
+      "HumanEval/15",
+      "HumanEval/25",
+      "HumanEval/18",
+      "HumanEval/31",
+      "MBPP/439",
+      "MBPP/415",
+      "MBPP/124",
+      "MBPP/234",
+      "MBPP/441",
+      "MBPP/229",
+      "MBPP/12",
+      "MBPP/458"
+    ],
+    "discovery_repetitions": 2,
+    "mask_bits": {
+      "target_prefill": 1,
+      "target_continuation": 2,
+      "draft_prefill": 4,
+      "draft_continuation": 8
+    },
+    "finite_masks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "fixed_primary_mask": 3,
+    "optional_candidate_rank": [
+      "enabled_bit_count",
+      "integer_mask"
+    ],
+    "optional_candidate_never_replaces_primary": true,
+    "natural_cross_task_limit": 2,
+    "engineering_full_request_cap": 1024,
+    "engineering_auxiliary_decode_cap": 2048,
+    "engineering_active_gpu_hours_cap": 16,
+    "discovery_matched_target_masks": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "optional_candidate_qualification": "stable R plus candidate and corresponding target-only matched control pass all discovery records"
+  },
+  "confirmation": {
+    "dataset": "official sanitized MBPP",
+    "revision": "e49bbfe381c9c0e564b937f1c4e163a2273c65cc",
+    "test_id_range": [
+      11,
+      510
+    ],
+    "selection_salt": "JSA_RTX_VALIDATION_V1|confirmation|20261010|",
+    "sort": "sha256(UTF8(salt + full_task_id)), then full_task_id",
+    "count": 24,
+    "actual_ids": null,
+    "ids_status": "HOST_EXPOSURE_AUDIT_REQUIRED_BEFORE_DISCOVERY",
+    "base_conditions": [
+      "R",
+      "N",
+      "M3",
+      "C3",
+      "E32"
+    ],
+    "optional_conditions": [
+      "Msel",
+      "Csel"
+    ],
+    "rounds": "number_of_frozen_conditions; cyclic balanced positions",
+    "Qwen_E_formal_requests": 600,
+    "family_with_E_formal_requests": [
+      600,
+      1176
+    ],
+    "family_without_E_formal_requests": [
+      384,
+      864
+    ],
+    "shared_records": "R/M/C may be shared between F and E only with exact run IDs; count once"
+  },
+  "E": {
+    "method": "LLM42_DVR_GGML_W32",
+    "classification": "external_method_adaptation_not_original_system_reproduction",
+    "window": 32,
+    "verify_request_count": 1,
+    "fast_path": "same target ordinary greedy, no small drafter or offline oracle",
+    "heterospec_scope_recipe_in_verifier": false,
+    "numerical_stack": "same frozen GGML/CUDA as R/M/C",
+    "ordinary_reference_equality_required_for_qualified_speedup": true,
+    "contract_mismatch_is_not_original_paper_failure": true,
+    "engineering_full_request_cap": 256,
+    "engineering_auxiliary_decode_cap": 512,
+    "engineering_active_gpu_hours_cap": 16,
+    "fast_ubatch": 4,
+    "verifier_ubatch": 32,
+    "window_semantics": "one consistent pending token plus at most31 proposals, causal dummy padding to32; correction/bonus obey firstEOG/cap; verified KV replaces optimistic KV"
+  },
+  "analysis": {
+    "ratio": "baseline_time/candidate_time; >1 candidate faster",
+    "task_estimator": "ratio of within-task condition medians, then unweighted GM",
+    "S_date_estimator": "average two session log GM effects within date, then average six date effects; exponentiate",
+    "task_bootstrap_draws": 10000,
+    "task_bootstrap_rng": "NumPy PCG64",
+    "task_bootstrap_seed": 20261010,
+    "task_bootstrap_quantile": "linear/type7",
+    "task_bootstrap_scope": "descriptive; not session/day uncertainty",
+    "failed_or_missing_qualified_speedup": null
+  },
+  "stopping": {
+    "formal_complete_request_cap": 7000,
+    "formal_active_gpu_hours_cap": 48,
+    "calendar_days_after_first_formal_cap": 14,
+    "automatic_formal_retries": false,
+    "replace_missing_slots": false,
+    "retune_after_confirmation": false,
+    "preserve_negative_results": true
+  },
+  "deliverable_paths": [
+    "benchmarks/jsa_rtx_validation_v1",
+    "scripts/platform/jsa_rtx_validation_v1"
+  ],
+  "result_pr": "new Draft PR; do not merge or change manuscript"
+}

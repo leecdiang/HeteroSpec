@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(supervised_numerical_v3 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(supervised-host-v3 generated/host.cpp)
+target_include_directories(supervised-host-v3 PRIVATE "${PINNED}/ggml/include" "${PINNED}/vendor" ../../native)
+target_link_libraries(supervised-host-v3 PRIVATE "${BASE_LIB}" psapi)
+target_compile_options(supervised-host-v3 PRIVATE /O2 /W4 /fp:precise)

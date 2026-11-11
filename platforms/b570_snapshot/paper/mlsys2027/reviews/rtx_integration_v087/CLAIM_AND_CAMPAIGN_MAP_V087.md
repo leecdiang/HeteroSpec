@@ -1,0 +1,26 @@
+# Claim and campaign map — v0.8.7
+
+This is the integration-time claim ledger. It does not change sealed experiments or promise acceptance. Physical page anchors refer to the fixed main PDF (12 total) and appendix (14 total) in the v087 manifest.
+
+| Study / manuscript location | Data and comparator | Written inference | Excluded inference |
+|---|---|---|---|
+| Original B570 H1; main pp.1,5 / Fig.2; appendix J, pp.5–7 | 36/36 exposed discovery, then 24 reserved prompts ×3; prediction/live 72/72, UB128 reference/live 60/72 | Draft-free target-only UB1 predictor has finite prospective complete-trajectory sufficiency on this tested path | Unique numerical cause; native draft causally irrelevant; a lossless-compatible replacement; universal transfer |
+| B570 fork; main p.6; appendix L, pp.7–8 | Separate 24×3 cohort; 72/72 scores changed, 0/72 immediate top-1/decisions; 195 correlated events; persistent UB128 later changes18/72 on6 prompts | Partition intervention changes numerical state without a sampled immediate discrete effect; persistent alternate continuation can diverge | Single-block cause of delayed divergence; population no-effect; original H1 divergent prompts reused |
+| Earlier RTX H1; main p.6; appendix M, pp.8–9 | Target-only UB2 discovery24/36; failed stopping gate; H2 not executed in that arm; reserved0 | Candidate failed exposed discovery and was not prospectively selected | Reserved failure rate; hidden H2 run; direct B570 H1 transfer success |
+| RTX H2 V2; main p.6; appendix N, pp.9–10 | New24×3 cohort; H2/live,R_ONLY/live,H2/R_ONLY72/72; UB1 reference/live60/72 | Separate program orchestration can prospectively reproduce complete live trajectories, sharing numerical routines | Independent numerical implementation; V2 same-set UB2 comparison; necessary/minimal history state |
+| Earlier RTX serialized cost; main pp.6–7; appendix N/P, pp.10,12 | Separate30×3 reference pairs, fresh90/90 gate,180 runs; target/serialized .646 [.630,.660];0/30 faster | Serialized qualified path is slower in that study's instrumented boundary | Same-study qualified batching; deployment throughput; optimization trend versus V4 |
+| RTX failed V3; appendix Q.1,p.12 | Planned576; valid A-pre72 and B54; two failed captures;448 not reached; A-live0 | Terminal incomplete schedule and parser/EOG failure retained | Full-cohort trajectory rate, speedup or CI; pool prefixes into V4 |
+| RTX V4 A; main p.6 / Table3; appendix Q,pp.12–14 | All19 remaining exposure-audited tasks after145 exclusions;3 repeats;285 arrays; UB2/live51/57 fails15/25,UB1/live51/57 fails15/18;H2/live,R_ONLY/live,H2/R_ONLY57/57 | Rejects the specified UB2 candidate; replay empirically sufficient on this finite cohort | Every target-only hypothesis fails; proposal/history necessary;57 independent prompts; unique cause |
+| RTX V4 B; main p.7 / Table4; appendix Q.4,p.13 | Same19 prompts,fresh171 runs,balanced57 blocks,same executable/timer;batched51/57 BLOCKED ratio/CI null;serialized57/57 QUALIFIED,.677 [.662,.692],0/19 faster | No measured fast-and-qualified choice among these three configurations in instrumented post-prefill latency | Blocked-path speedup;logging-free/production performance;isolated target causal intervention;A/B independent task generalization;comparison .646→.677 as improvement |
+| 358H; main pp.7–8 / Fig.4; appendix C/G/P | CPU/NPU90/90 qualified; complete replay/proposal interface costs; zero draft/residual conditional bounds .82745/.83519 | At fixed measured progress,target work,baseline,eliminating draft/residual cannot reach total-time parity | New optimization execution;prompt-GM bound;general NPU weakness;runtime gain after qualification stop |
+| M4; main pp.8–9 / Table5; appendix H/P | Guard1.3114×,Always1.3469×,180/180 each;Guard/Always1.0271;Always/oracle1.000692 | Guard beats target-only but loses to fixed Always under measured aggregate objective;little two-fixed-mode oracle headroom | Adaptive-policy win;fallback fraction as helpful decisions;oracle over arbitrary switching policies |
+
+## Protocol and endpoint scope
+
+H, Q and P remain separate endpoints. Full generated-ID arrays include length and the first EOG or cap128; HumanEval IDs do not claim functional pass@k. RTX V4 has 285 A and171 B arrays, not456 independent prompts. B uses A's task set but fresh runs; its global micro-batch configuration also affects draft and is a whole-path comparison.
+
+V4 compact projection recomputes sealed prediction/native array equality and native timer intervals plus the fixed paired-prompt bootstrap. It is explicitly post-study. The earlier nine-capsule/native-log audit remains a prior completed CPU-only closeout. Neither offline hashes nor record order authenticate omitted external assets or independently trusted absolute chronology. Original strict-host stop and the disclosed author-authorized host-policy amendment stay visible; fan adjustment is not a rerun blocker under current instructions.
+
+## Closed scope
+
+All existing studies are closed. No new inference/GPU experiment occurred in this integration. B570 dense scanning is deferred/not authorized. A future bounded single-block/common-continuation study would support a stronger causal question and requires its own protocol; it is not necessary to preserve the finite claims above.

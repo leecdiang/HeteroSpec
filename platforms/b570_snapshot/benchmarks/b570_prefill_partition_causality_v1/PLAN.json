@@ -1,0 +1,412 @@
+{
+  "parent_pr": 97,
+  "parent_head": "5a66653bd0ce413d4eb9aef3a4501b93c138071b",
+  "arms": {
+    "A": {
+      "mode": "ordinary",
+      "ub": 512,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 512,
+      "partition": 512,
+      "source_role": "original UB512 one-call prefill"
+    },
+    "B": {
+      "mode": "ordinary",
+      "ub": 512,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 512,
+      "partition": 128,
+      "source_role": "UB512 external 128-token partition; final-only logits"
+    },
+    "C": {
+      "mode": "ordinary",
+      "ub": 128,
+      "spec": false,
+      "capacity": 1,
+      "continuation_ub": 128,
+      "partition": 512,
+      "source_role": "original UB128 one-call prefill"
+    }
+  },
+  "blocks": [
+    {
+      "name": "p1_r0_p0_A",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "A",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r0/A|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r0/A|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r0/A|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r0/A|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r0/A|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r0/A|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        }
+      ]
+    },
+    {
+      "name": "p1_r0_p1_B",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "B",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/B|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r0/B|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r0/B|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r0/B|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r0/B|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r0/B|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r0/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        }
+      ]
+    },
+    {
+      "name": "p1_r0_p2_C",
+      "phase": "P1",
+      "repeat": 0,
+      "arm": "C",
+      "observation_mode": "counts",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r0/C|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r0/C|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r0/C|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r0/C|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r0/C|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r0/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r0/C|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p0_B",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "B",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/B|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r1/B|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r1/B|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r1/B|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r1/B|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r1/B|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r1/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p1_C",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "C",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/C|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r1/C|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r1/C|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r1/C|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r1/C|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r1/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r1/C|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r1_p2_A",
+      "phase": "P1",
+      "repeat": 1,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r1/A|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r1/A|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r1/A|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r1/A|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r1/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r1/A|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r1/A|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p0_C",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "C",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/C|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r2/C|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r2/C|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r2/C|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r2/C|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r2/C|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/C|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p1_A",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "A",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/A|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        },
+        {
+          "slot": "P1/r2/A|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r2/A|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r2/A|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r2/A|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/A|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r2/A|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        }
+      ]
+    },
+    {
+      "name": "p1_r2_p2_B",
+      "phase": "P1",
+      "repeat": 2,
+      "arm": "B",
+      "observation_mode": "heavy",
+      "own_bind_sham": false,
+      "api_dump": false,
+      "slots": [
+        {
+          "slot": "P1/r2/B|FIXED_PREFIX_1248/127",
+          "task": "FIXED_PREFIX_1248/127"
+        },
+        {
+          "slot": "P1/r2/B|FIXED_PREFIX_1248/128",
+          "task": "FIXED_PREFIX_1248/128"
+        },
+        {
+          "slot": "P1/r2/B|FIXED_PREFIX_1248/129",
+          "task": "FIXED_PREFIX_1248/129"
+        },
+        {
+          "slot": "P1/r2/B|GSM8K/test/1248",
+          "task": "GSM8K/test/1248"
+        },
+        {
+          "slot": "P1/r2/B|GSM8K/test/831",
+          "task": "GSM8K/test/831"
+        },
+        {
+          "slot": "P1/r2/B|GSM8K/test/1011",
+          "task": "GSM8K/test/1011"
+        },
+        {
+          "slot": "P1/r2/B|GSM8K/test/1249",
+          "task": "GSM8K/test/1249"
+        }
+      ]
+    }
+  ],
+  "load_probes": [
+    {
+      "name": "p0_probe_A",
+      "arm": "A"
+    }
+  ],
+  "limits": {
+    "P1": 63,
+    "P2": 0,
+    "probe": 1,
+    "total_charged_new_units": 64,
+    "owned_gpu_seconds": 3600
+  },
+  "warmups": 0,
+  "retries": 0,
+  "forks": 0,
+  "primary_intervention": "A versus B at fixed UB512/capacity1: external prefill submission boundaries only, no intermediate logits requests; invocation-boundary scheduling inherent in treatment; not isolated kernel-only claim",
+  "historical_reference": "C UB128 physically internally split; own-path full outputs must match R_stock, A R_prod",
+  "guard": "3 independent fresh-worker repeats: one counts capture-off, two heavy capture-on; no sham bind or continuation reconfiguration",
+  "state_payloads": "full little-endian FP32 logits at cuts; full source-defined sequence KV serialization only at prefill-end/output0; byte hashes at later cuts; not complete frontend clone",
+  "hypotheses": {
+    "positive": "A != B complete output and B == C complete output, plus B/C prefill FP32 and sequence KV bitwise equality, repeat stability and capture guards",
+    "negative": "B == A complete output but C differs: external partition insufficient",
+    "partial": "all other patterns reported per input with raw numeric distances and exact hashes; no forced suffix"
+  },
+  "cost": "all new elapsed diagnostic, no formal economics or residence upgrade; PR92 stock gate preserved"
+}

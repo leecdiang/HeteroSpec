@@ -1,0 +1,24 @@
+{
+  "phase": "after capture-a1, before any stage replay or ordinary smoke",
+  "prior_freeze_commit": "bcfea0627d335c9db5992e1e309bde53d5685cdc",
+  "capture_a1": {
+    "native_exit_code": 0,
+    "native_status": "QUALIFICATION_PASS",
+    "historical_full_vectors_equal": 175,
+    "wrapper_status": "failed",
+    "job_total_processes": 2,
+    "job_active_at_exit": 0,
+    "error": "Wrapper incorrectly equated the one-active-process limit with one total lifetime process",
+    "stage_capture": "Q/K/V/mask/QK/softmax/AV present; final absent because caller renames hs_qb_final-0 to kqv_out-0"
+  },
+  "changes": [
+    "Capture kqv_out-0 only under QB layout; retain stage names and provenance",
+    "Keep suspended-before-job-assignment and active-process limit one; permit/report at most four cumulative job processes per worker, require zero active at exit",
+    "Report unknown auxiliary job-process identities explicitly; no inference of their names or lifetimes from the cumulative count"
+  ],
+  "numerical_libraries": "UNCHANGED; only diagnostic harness rebuilt",
+  "reference_model_input_algorithm": "UNCHANGED",
+  "retry": "One technical whole R/PQ/QB capture triplet, attempt a2, using one of two reserved retries; no numerical-failure retry",
+  "budgets": "Existing 24 model requests / 8 model workers / 2040 native seconds unchanged. Additional total-job-process bound four per worker applies prospectively.",
+  "preservation": "Original receipts, output, partial fixture, runtime-a1 and source-kit-a1 preserved locally; original source also in prior freeze commit"
+}

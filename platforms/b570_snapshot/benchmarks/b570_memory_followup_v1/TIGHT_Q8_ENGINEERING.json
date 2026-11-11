@@ -1,0 +1,140 @@
+{
+  "profile": "TIGHT_Q8",
+  "utc": "2026-10-11T10:30:48.531570+00:00",
+  "status": "MEMORY_BLOCKED",
+  "candidates": [
+    {
+      "candidate_id": "Q4_K_M_native_greedy_k1",
+      "draft": "Q4_K_M",
+      "mode": "native_greedy",
+      "k_max": 1,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    },
+    {
+      "candidate_id": "Q4_K_M_native_greedy_k2",
+      "draft": "Q4_K_M",
+      "mode": "native_greedy",
+      "k_max": 2,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    },
+    {
+      "candidate_id": "Q4_K_M_native_greedy_k3",
+      "draft": "Q4_K_M",
+      "mode": "native_greedy",
+      "k_max": 3,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    },
+    {
+      "candidate_id": "Q4_K_M_vulkan_batched_repair_k1",
+      "draft": "Q4_K_M",
+      "mode": "vulkan_batched_repair",
+      "k_max": 1,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    },
+    {
+      "candidate_id": "Q4_K_M_vulkan_batched_repair_k2",
+      "draft": "Q4_K_M",
+      "mode": "vulkan_batched_repair",
+      "k_max": 2,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    },
+    {
+      "candidate_id": "Q4_K_M_vulkan_batched_repair_k3",
+      "draft": "Q4_K_M",
+      "mode": "vulkan_batched_repair",
+      "k_max": 3,
+      "status": "MEMORY_BLOCKED_AT_DRAFT_WEIGHTS_BEFORE_DRAFT_CONTEXT",
+      "complete_raw_equal": null,
+      "qualified_ratio": null
+    }
+  ],
+  "blocking_samples": [
+    {
+      "event": "MEMORY",
+      "point": "DRAFT_WEIGHTS",
+      "profile": "TIGHT_Q8",
+      "pid": 31080,
+      "timestamp_utc": "2026-10-11T10:15:13.996Z",
+      "device_name": "Intel(R) Arc(TM) B570 Graphics",
+      "vendor_id": 32902,
+      "device_id": 57868,
+      "device_type": 2,
+      "scope": "OWNED_MODEL_PROCESS",
+      "heaps": [
+        {
+          "index": 0,
+          "physical_size_bytes": 10563354624,
+          "budget_bytes": 9266945994,
+          "usage_bytes": 9475055616,
+          "device_local": true
+        },
+        {
+          "index": 1,
+          "physical_size_bytes": 17026263040,
+          "budget_bytes": 16220956672,
+          "usage_bytes": 1847296,
+          "device_local": false
+        }
+      ],
+      "device_local_headroom_bytes": -208109622,
+      "threshold_bytes": 134217728,
+      "headroom_gate": false
+    },
+    {
+      "event": "MEMORY",
+      "point": "DRAFT_WEIGHTS",
+      "profile": "TIGHT_Q8",
+      "pid": 36828,
+      "timestamp_utc": "2026-10-11T10:15:27.281Z",
+      "device_name": "Intel(R) Arc(TM) B570 Graphics",
+      "vendor_id": 32902,
+      "device_id": 57868,
+      "device_type": 2,
+      "scope": "OWNED_MODEL_PROCESS",
+      "heaps": [
+        {
+          "index": 0,
+          "physical_size_bytes": 10563354624,
+          "budget_bytes": 9221529562,
+          "usage_bytes": 9475055616,
+          "device_local": true
+        },
+        {
+          "index": 1,
+          "physical_size_bytes": 17026263040,
+          "budget_bytes": 16220956672,
+          "usage_bytes": 1847296,
+          "device_local": false
+        }
+      ],
+      "device_local_headroom_bytes": -253526054,
+      "threshold_bytes": 134217728,
+      "headroom_gate": false
+    }
+  ],
+  "budget": {
+    "engineering_units": 10,
+    "probe_units": 10,
+    "owned_gpu_seconds": 66.06406830003834
+  },
+  "engineering_generation_requests": 0,
+  "formal_requests": 0,
+  "R_grid": "NOT_RUN_PAIR_MEMORY_ADMISSION_FAILED",
+  "N_diagnostic": "NOT_TESTED_PAIR_MEMORY_ADMISSION_FAILED",
+  "full_boundary_gate": "NOT_TESTED",
+  "R_prod_ub": null,
+  "selected_candidate": null,
+  "F0B": "NOT_CREATED",
+  "all_qualified_ratios": null,
+  "reason": "Negative signed dedicated budget at full-GPU draft weights; k/output-capacity reductions cannot repair this observed pre-context failure. No offload/precision/threshold fallback."
+}

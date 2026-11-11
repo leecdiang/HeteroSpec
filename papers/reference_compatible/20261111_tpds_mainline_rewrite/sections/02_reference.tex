@@ -1,0 +1,36 @@
+\section{Why Batching Changes Results}
+\label{sec:reference}
+\subsection{A masked suffix changes attention}
+The CUDA Llama reference processes continuation queries singly. At one four-query append, positions 765--768 require physical KV extents $[768,768,768,1024]$; an unsplit batch uses 1024 throughout. The first saved full target-vector difference occurs at generated-output index 29, whereas the first emitted-token difference occurs at index 81~\cite{records}. Inspecting only the divergent token would therefore start from a state that had already accumulated earlier discrepancies.
+
+Captures at the first affected attention computation show identical visible query (Q), key (K), value (V), query--key (QK) and softmax probability prefixes. The masked probability suffix is exactly zero. We then replay the native attention--value (AV) aggregation operator with captured operands, keeping the consumer query width at one. Cropping the wide execution's probability and V ranges to 768 reproduces the reference AV output. Padding the reference probability range with zeros and supplying the corresponding 1024-entry V range reproduces the wide output. Own-path replays reproduce their respective captures. These bidirectional interventions isolate the physical attention range as a numerical execution dependency (Fig.~\ref{fig:extent_intervention}).
+
+
+
+The physical range is thus part of the operator's numerical descriptor, including entries with zero attention mass. A Vulkan companion exposes a related dependency: changing the extent also changes contiguity and matvec dispatch. That intervention identifies their combined physical effect, which the backend recipe must preserve.
+
+\subsection{Query width selects arithmetic and placement}
+Query width also changes numerical choices outside attention. On an affected Vulkan Q8-weight path, a scalar operation consumes F32 activations, while a wider operation selects Q8\_1 activation quantization. Retaining the F32 path repairs that projection mismatch. In the Llama companion, this repair makes the emitted tokens agree while 99 committed full target vectors still differ. Applying the physical-prefix repair removes the remaining discrepancies~\cite{records}. Activation arithmetic and attention extent are separate requirements of the same execution.
+
+On CUDA, the affected Q8 projection uses a small-column quantized matrix--vector (MMVQ) specialization. Traces for four and eight query columns show the same Q8\_1 input-quantizer kernel but different MMVQ launch organizations. Source inspection identifies four reduction warps at four columns and two at eight. Native replays with actual model operands match the scalar reference for the small-column path and diverge for the wider path~\cite{records}. This gives a useful unit of parallel work: preserve the four-column computation and expose several independent groups without selecting the eight-column reduction.
+
+Placement also matters. In a partially offloaded Qwen deployment, increasing width moves K normalization and rotary position embedding (RoPE) from CPU to CUDA. Native RoPE replays with the same normalized K operands reproduce the output of the selected placement~\cite{records}. A compatible implementation must retain the reference scheduling decision where it affects arithmetic. The backend recipe therefore records activation types, reduction organization, placement, strides and dispatch conditions.
+
+\subsection{Producer history and logical state connect the calls}
+The prompt \emph{producer} creates the incoming KV cache and initial target vector. In a controlled Vulkan experiment, exchanging the producer changes both the serialized KV and the complete initial target vector on all eight tested inputs. On two long inputs, either producer followed by scalar continuation reaches the reference token endpoint, but the parallel consumers reach that endpoint after only one producer~\cite{records}. Scalar endpoint agreement therefore does not establish interchangeable producer state.
+
+The reference binds producer semantics by phase. Our CUDA reference uses physical microbatch one with the original prompt caller and last-only output request. Candidate prefill can regroup these known rows when its outputs and state preserve that producer's result. The resident Vulkan plan retains the original physical microbatch 128 and outer prompt chunks, then selects a compatible continuation recipe.
+
+State must also survive the boundary after a call. Verification may materialize several proposed tokens and retain only an accepted prefix. Its last physical output buffer can then belong to a rejected row instead of the retained frontier. A correction or bonus token can be emitted before it is materialized, and a generation cap or end-of-generation stop can leave that token pending. The executor must own requested vectors by logical row and update the active KV, frontier and pending-token record together.
+
+\subsection{The resulting execution target}
+These observations define what is fixed before optimization. A deployment reference $R_d$ includes model and tokenizer bytes, formatting, numerical modules, device placement, KV type and capacity, producer calls, requested outputs, sampling and stopping behavior. The candidate $F_d$ changes the organization of known-query work under that reference.
+
+For a materialized token prefix $x$, let $\ell^R(x)$ be its full binary32 target vocabulary vector and $K^R(x)$ its active KV in canonical logical order. The target relation at an observed state boundary is
+\begin{equation}
+ \ell^F(x)\bit\ell^R(x),\qquad K^F(x)\bit K^R(x),
+ \label{eq:contract}
+\end{equation}
+together with matching logical positions, frontier, pending token and termination behavior. Equality compares complete values without a tolerance; unused storage is outside the active state.
+
+Speculative verification also requests vectors on branches that may later be rejected. For each such vector, an independent reference follows the same prefix after the original producer. A separate autonomous reference supplies the emitted-token and stopping endpoint. The draft may propose different tokens; compatibility concerns the target computations on the prefixes actually evaluated.

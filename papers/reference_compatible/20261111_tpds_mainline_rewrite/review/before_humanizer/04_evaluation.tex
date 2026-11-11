@@ -1,0 +1,41 @@
+\section{Implementation and Evaluation Design}
+\label{sec:eval}
+\subsection{Implementations and controls}
+We implement the phase planner, attention cuts, typed projection grouping and resident state owner in a pinned llama.cpp/ggml runtime~\cite{records}. CUDA deployments use an RTX 5070 Ti Laptop GPU on Windows and an RTX A5000 on Linux; Vulkan uses an Intel Arc B570. The model families are Qwen3, Llama and SmolLM2~\cite{qwen3,llama3,smol}. Every deployment fixes its reference from the model, tokenizer, prompt producer and numerical modules before evaluating the candidate. The Linux reference and candidates are rebuilt from source, including their CUDA, CPU and base numerical modules.
+
+The evaluated profile uses one dense, nonwrapping sequence, F16 KV, greedy generation and non-flash attention. Known-query calls contain up to 32 positions. The main natural-request studies use context capacity 1024; Vulkan append experiments also use capacity 4096. The Qwen target/draft pairs use Qwen3-8B or 14B with Qwen3-0.6B; the Llama pair uses 8B/1B. Supplement~S1 specifies the producers and numerical qualification; Table~\ref{tab:panels} summarizes the timing designs.
+
+\begin{table*}[t]
+\centering\footnotesize\tighttable
+\caption{Evaluation panels. A root is one task input; repeated timings retain that root identity. Counts give measured requests or operations, followed by separate warmups. The two Qwen service panels and their factorials reuse the same 16 roots.}
+\label{tab:panels}
+\begin{tabularx}{\textwidth}{@{}L{2.22cm}L{2.48cm}L{2.62cm}L{2.24cm}Y@{}}\toprule
+Question & Deployment & Comparison & Independent unit & Measured / warm\\\midrule
+Component attribution & A5000; Qwen3-8B, 14B & Whole/local $\times$ loop4/packed & 16 roots; 4 balanced rows & $256/32$ per model\\
+Natural-request value & A5000; Qwen3-8B, 14B & Four target-only; two speculative & 16 roots; 4 sessions & $384/48$ per model\\
+Family transfer & A5000; Llama-8B & Same six controls & 12 roots; 4 sessions & $288/48$\\
+Mixed quantization & A5000; Qwen3-32B & Six scalar-loop/grouped paths & 4 roots; 4 rounds & $96/96$\\
+Boundary geometry & B570; SmolLM2-1.7B & Scalar, whole and local append & 12 fixed cells; 3 repeats & $108/108$\\
+Equal-work width & Windows RTX; Qwen3-8B & One q8 call / two q4 calls & 4 fixed origins; paired repeats & $128/32$\\
+Live proposal width & Windows RTX; Qwen3-8B & Whole/local $\times$ loop4/packed $\times$ k3/k7 & 16 roots; 8 balanced rows & $1024/128$\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+We denote whole-graph and local-attention cuts by W and L, and backend-loop4 and independent-group packing by L4 and P. The loop4 control quantizes activations once and invokes the reference dot computation in the backend. M is ordinary target-only generation. D4 is speculative generation with draft prefill microbatch four; its proposal count is $k=3$ unless stated otherwise. Thus D4, physical query width $q$ and Q8\_0 weight quantization name different properties. All controls receive the same applicable residency, graph-reuse and numerical improvements. M loads only its target resources.
+
+\subsection{Numerical observations and timing boundaries}
+Numerical qualification compares each requested full vocabulary vector and active KV state against repeated independent reference runs. Forced-prefix references supply the target values for speculative branches, and autonomous references supply the emitted-token and stopping endpoints. Tests exercise prefill, continuation, boundary crossings, acceptance and rejection, trim, pending tokens, native end of generation, caps and reset. Heavy observers run separately from clean timing; clean runs retain endpoint, transaction-trace, module-identity and physical-work checks.
+
+Natural requests use pinned APPS and MATH inputs~\cite{apps,math}. Linux Qwen experiments reuse the 16 Windows task records with separately established deployment references. Llama uses 12 subsequently selected project-unseen roots. The live-width panel uses another 16 roots; its equal-work diagnostic uses one APPS and three GSM8K origins~\cite{gsm8k}. The four-root mixed-Q4 study is descriptive. Supplement~S1 gives input, warmup and order details.
+
+Resident-service time includes reset, planning, target and draft execution, sampling, state bookkeeping, synchronization and requested-output copying. Separate worker clocks include model loading and warmup. Vulkan append and equal-work width timings start from prepared state and include their registered execution and output-copy boundary. These windows answer distinct deployment questions and are reported separately.
+
+\subsection{Paired estimates}
+For method $A$, root $r$ and session $s$, let $t_{rsA}$ be resident-service time. Our main effect is the ratio of totals,
+\begin{equation}
+ \rho_{A/B}=\frac{\sum_{r,s}t_{rsA}}{\sum_{r,s}t_{rsB}}.
+ \label{eq:ratio}
+\end{equation}
+Time reduction is $1-\rho$. We compare the candidate with every fixed control; the fastest measured M provides a descriptive application summary. Paired-root bootstrap resampling keeps all arms and sessions of each sampled root together. Application and factorial panels use 10,000 draws and 99\% percentile intervals for five predeclared comparisons. Four-arm Williams orders balance positions and directed neighbors in the factorials, which isolate cut and projection effects. The service panels use partial six-arm order balance.
+
+The live-width panel uses eight Williams rows and 98.75\% intervals for four primary width contrasts; its secondary fixed-k7 contrasts form a separate family. Intervals describe variation across the tested roots under the observed sessions. Fixed structural cells and four-root pilots are reported with their observations, without population intervals. Supplement~S3--S4 gives the complete estimands and reconstruction inputs.

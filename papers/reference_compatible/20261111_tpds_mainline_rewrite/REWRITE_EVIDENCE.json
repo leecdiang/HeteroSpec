@@ -1,0 +1,536 @@
+{
+  "release": "TPDS author-review reconstruction, 2026-11-11",
+  "core_question": "How can a quantized deployment parallelize known queries while preserving its established numerical outputs and state?",
+  "source_basis": {
+    "repository": "leecdiang/HeteroSpec",
+    "base_branch": {
+      "branch": "main",
+      "sha": "701079f265c0ff8fd05d43fbc2d8d5054a711e1b",
+      "tree": "66c2d9aa699b773a23d3275d08ee5dbb1df33f88"
+    },
+    "prior_paper_pr": 220,
+    "prior_paper_head": "8aea751bde42cd69bf923ed4524972f9af98d694",
+    "latest_completed_followup_pr": 218,
+    "followup_head": "4fe337a8ff349d547023f9dd60b8e114e5323207",
+    "followup_status_checked_utc": "2026-11-11T09:13:56Z",
+    "current_status": "S1/S2 operator studies and B2 matched-history width panel complete; full-model S3 in progress",
+    "historical_manifest_note": "SOURCE_MANIFEST.json retains the original snapshot and its earlier status notes; this file records the current rewrite evidence."
+  },
+  "unchanged_numeric_inputs": {
+    "source_ref": "8aea751bde42cd69bf923ed4524972f9af98d694",
+    "scope": "Unmodified numeric inputs restored from the PR220 author package. New figure source projection is tracked separately in FIGURE_MANIFEST.json.",
+    "files": [
+      {
+        "path": "data/applications.json",
+        "git_blob_sha1": "2b0436803117dabf99b4699534944633a4b16f8c",
+        "sha256": "ab7e824107681bb7a1244dccca4d0c16e98d861d48b1752758b667a653b145af"
+      },
+      {
+        "path": "data/b570_append.json",
+        "git_blob_sha1": "2c72587f28c81b83d4880dd03125113f481dfa7c",
+        "sha256": "6ec5ea92db1d6a1429e3df21ae8202b095bcc30e573acbc9580a0f65210bb18d"
+      },
+      {
+        "path": "data/b570_inputs.json",
+        "git_blob_sha1": "0097f69606a9ab20517fede6875fff4336c84874",
+        "sha256": "a2c9440abd5755eee7a3e332cabf0cadcc2de5351cb73563beeb3238a8f4c781"
+      },
+      {
+        "path": "data/factor14.json",
+        "git_blob_sha1": "559240dc9f8304d0357de9cc22c419f92f9935ee",
+        "sha256": "98e63db4f9f2e39a085343730a5f83c55624be066f4d5318b70e3d9b10862944"
+      },
+      {
+        "path": "data/factor8.json",
+        "git_blob_sha1": "432793faf3b07189801475724b9c2bf4854c4b15",
+        "sha256": "36c13ef317a9ecd898b237a6ec1cb32ae77b2530a4befb69d4464d4f4fcdcb0e"
+      },
+      {
+        "path": "data/factor8_anchor.csv",
+        "git_blob_sha1": "ca80298374e6cf12ba4c793523d311a8163e36f7",
+        "sha256": "b83aab68128cbb98e7a5b36f45d025eb1c7a47657db932721dcc98804017d4f9"
+      },
+      {
+        "path": "data/historical_evidence.json",
+        "git_blob_sha1": "6bddb5a2499dc4f69d80070c5960a65740527ba1",
+        "sha256": "400f7c0165bbfd83ceece1a7516060ffcc171b9b9ea2eab51254ad8ba37b5bd5"
+      },
+      {
+        "path": "data/previous_phase_analysis.json",
+        "git_blob_sha1": "dc1d66581e4f74e5588ebb2759242c6ad5aaba82",
+        "sha256": "7dfe5a82dacab5c9c4026de0c8b80a1a8670cdb3ea8af5d1b10e417dfe27c968"
+      },
+      {
+        "path": "data/previous_phase_roots.json",
+        "git_blob_sha1": "25cfb6fc530620a1b78c5033a7624aea50bb8b74",
+        "sha256": "eeeec07f6af9f001fcd4bb00b61976c59242f7368028d09f1132086ee7e7b428"
+      },
+      {
+        "path": "data/q32_measurements.csv",
+        "git_blob_sha1": "bf0c8590bee58e8dfcdf884fc2d84000aaf65b96",
+        "sha256": "9031264280ca93c563cce99458df6adcb04d0d999f1c5f431ec51ddf36f91e64"
+      },
+      {
+        "path": "data/q32_recomputed.json",
+        "git_blob_sha1": "424cc1564ccc6308e24f3dad3689785029f93765",
+        "sha256": "d8f6f56bf56dbc52c4d98bd407123a5111fee0daddb584e35b1b31e8e44b635e"
+      },
+      {
+        "path": "data/q8_equal_work.json",
+        "git_blob_sha1": "8d9df2883a8e74aa9581ac5d05def256e2453128",
+        "sha256": "bf25f6b5a00240456c9adc505516771ca5434fb5e43e1f96b85994e53b72e82f"
+      },
+      {
+        "path": "data/q8_phase_work.json",
+        "git_blob_sha1": "1ade99d0a4a8abf9300f70c0a2881a9561488915",
+        "sha256": "7b6e6f06a602e4537e18cbdd3b113d10df4467de784637ebb5ffc1e6f7ad0591"
+      },
+      {
+        "path": "data/q8_recomputed.json",
+        "git_blob_sha1": "91684729bb4ef5d22101a02d1b8a87a460a2d266",
+        "sha256": "0ed5d4d43f70d432be3777292e0ce8b226078012bc4ea80ecd33e4611a547214"
+      },
+      {
+        "path": "data/q8_root_sums.json",
+        "git_blob_sha1": "6485efbc723e3b9c3e00e7688096b2b6a805eb36",
+        "sha256": "26ba379412894b9b971cac19e82d8ad445fdccac4fe0f422c227b76f7e10b849"
+      },
+      {
+        "path": "data/rtx_factor_cells.json",
+        "git_blob_sha1": "a736b29a3502b0845c925edefe47e66af824b163",
+        "sha256": "88c73106a32c3bbe554102174ef74f88f5512210598da1305670ff51b85690b5"
+      },
+      {
+        "path": "data/vulkan_economics.json",
+        "git_blob_sha1": "5cc1ac49863653cff74b10ab1a7865991f7135cc",
+        "sha256": "e427738d1249a4c15528af6d2ecae5035c51a472326b9ec32281084a48d614a7"
+      },
+      {
+        "path": "data/windows_r2.json",
+        "git_blob_sha1": "ff68e9638e2487b479f2bca1ddc22de5019cd384",
+        "sha256": "cc67453b2b786e0b9ec6754180aaef5cef0a8be07d26a8ff32c6d69064b6101f"
+      },
+      {
+        "path": "data/windows_r2_inputs.json",
+        "git_blob_sha1": "de7dc5fc6782a66c1d883e8982b32dfaaef27ab0",
+        "sha256": "d366c31e6428544284f57251da61f69f55474f7e3498c0dc9daf6d7369fbfa9f"
+      },
+      {
+        "path": "data_added/a5000_pilot_source_projection.json",
+        "git_blob_sha1": "9336e9088db56d1c5b935e323503ef203c0d7a99",
+        "sha256": "0c0c161c2d2f866872db08056d141c27a45d1d19f454835701e753241ab174f6"
+      },
+      {
+        "path": "data_added/application_root_ratios.json",
+        "git_blob_sha1": "0f39b4ba889999e2190ba055be2d9fc2cdc955d6",
+        "sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89"
+      },
+      {
+        "path": "data_added/strong_s2_source_projection.json",
+        "git_blob_sha1": "2b436dd2bc9170568ee896b01d85c93673126124",
+        "sha256": "a141b2305e6171bd343e22e3716983a1564ca7a4c19cc051eec2f6bd7ac1a338"
+      }
+    ]
+  },
+  "new_completed_data": {
+    "status": "PASS",
+    "source_commit": "4fe337a8ff349d547023f9dd60b8e114e5323207",
+    "source_path": "benchmarks/server_expansion_v1/strong_baseline_followup_20261110/RESULTS_B2_20261110/INDEPENDENT_PUBLIC_STATS_01.json",
+    "source_blob": "61a27fc5a230179ba6b17231605bf8c486a18ff3",
+    "source_sha256": "2944749ca52692b19cf90827d1f0ad0367328afb9a6604182e061aa6c8207b10",
+    "operations_checked": 128,
+    "measurements": 64,
+    "warmups": 64,
+    "processes": 16,
+    "root_count": 1,
+    "summaries": [
+      {
+        "core": "loop4",
+        "prefix_coordinate": 248,
+        "process_ratios": [
+          1.0426534263843414,
+          0.9414492734041041,
+          1.0011897641395608,
+          0.9791908438499349
+        ],
+        "geometric_ratio": 0.9904445372731789,
+        "observed_range": [
+          0.9414492734041041,
+          1.0426534263843414
+        ]
+      },
+      {
+        "core": "loop4",
+        "prefix_coordinate": 252,
+        "process_ratios": [
+          0.9522379294217845,
+          0.9521206935753128,
+          0.9865892984433793,
+          1.0230506371560766
+        ],
+        "geometric_ratio": 0.978065078348427,
+        "observed_range": [
+          0.9521206935753128,
+          1.0230506371560766
+        ]
+      },
+      {
+        "core": "packed",
+        "prefix_coordinate": 248,
+        "process_ratios": [
+          1.001187354693348,
+          0.891884090291209,
+          0.9398714375578332,
+          0.9184289875683336
+        ],
+        "geometric_ratio": 0.9369889121771803,
+        "observed_range": [
+          0.891884090291209,
+          1.001187354693348
+        ]
+      },
+      {
+        "core": "packed",
+        "prefix_coordinate": 252,
+        "process_ratios": [
+          0.9777128704924594,
+          0.9346443205126551,
+          0.9254603098822999,
+          0.9532826879035788
+        ],
+        "geometric_ratio": 0.9475656348625566,
+        "observed_range": [
+          0.9254603098822999,
+          0.9777128704924594
+        ]
+      }
+    ],
+    "interval_type": "Observed process range; no population confidence interval",
+    "new_GPU_requests": 0
+  },
+  "figures": [
+    {
+      "file": "service_controls",
+      "size_in": [
+        6.875,
+        3.35
+      ],
+      "semantics": "All 12 fixed target-only M contrasts and all 176 published root ratios across 3 separate Linux deployments; original 99% adjusted intervals and total-ratio estimates. Rounded percentage reductions; all six absolute means in Table S1. No minimum-selection significance test.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 188,
+      "expected_marker_count": 188,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "factorial",
+      "size_in": [
+        6.875,
+        3.28
+      ],
+      "semantics": "All 8 direct factor contrasts and all 16 root ratios each. Original 99% family-adjusted intervals and total-ratio estimates; neutral hollow markers when the interval includes 1. Root-geometric interaction is separately identified and fully reported in Supplement S3.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 136,
+      "expected_marker_count": 136,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "mixed_q4",
+      "size_in": [
+        3.35,
+        3.15
+      ],
+      "semantics": "All 6 complete-service means and all 4 exposed-root means. Both fixed-scope group/graph-loop reductions are labelled. Grouped D4 versus fastest M is +14%; the graph-level control is distinct from a backend loop. No population interval.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 30,
+      "expected_marker_count": 30,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "extent_intervention",
+      "size_in": [
+        6.875,
+        2.5
+      ],
+      "semantics": "RTX Llama measured positions 765--768 and scalar extents [768,768,768,1024]. Native AV replay on the first query exchanges physical extent: same visible operands, padding/cropping probabilities and V as in source. Exact output 29/81 indices are not elapsed-time coordinates. Matrix text and hatching are redundant with color.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 0,
+      "expected_marker_count": null,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "execution_method",
+      "size_in": [
+        6.875,
+        3.72
+      ],
+      "semantics": "Diagram of two distinct axes: ordered physical-extent graph cuts and independent arithmetic-group packing. Measured 3+1 example for Whole/Local; illustrative 8-column packing at a=4 or a=1. Output ownership and the resident state connect stages. No physical-group concurrency or automatic fastest-strategy selection is implied.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 0,
+      "expected_marker_count": null,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "geometry_opportunity",
+      "size_in": [
+        6.875,
+        3.02
+      ],
+      "semantics": "Left: exact PR204 census of 20/2224 logical verification cycles and physical calls 2244 versus 2224; bar length preserves the 0.899% fraction. Right: all 12 PR194 controlled Vulkan cells, original means and 3-repeat paired ranges. Platforms, units and cohorts remain separate; no natural-service speed is inferred from controlled appends.",
+      "axis_count": 2,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 12,
+      "expected_marker_count": 12,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "width_tradeoff",
+      "size_in": [
+        6.875,
+        3.58
+      ],
+      "semantics": "Windows RTX: all 4 equal-work cells and 16 origin ratios; all 4 registered live k7/k3 contrasts with original 98.75% intervals, on separate cohorts. Exact work counts for the same 11472 emitted tokens: cycles 3504->2296, verified rows 14016->18368, proposals 10512->16072. q is physical width; weights remain Q8_0. No confidence interval is invented for work counts.",
+      "axis_count": 3,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 30,
+      "expected_marker_count": 30,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "supp_width_cost",
+      "size_in": [
+        3.35,
+        2.48
+      ],
+      "semantics": "Exact inherited host-phase deltas for Local-packed, all signed values and residual retained. Nested timing categories are not attributed to unique GPU kernels.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 0,
+      "expected_marker_count": null,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    },
+    {
+      "file": "supp_historical_geometry",
+      "size_in": [
+        6.875,
+        2.45
+      ],
+      "semantics": "All 14 inherited historical Vulkan cells; exact inverse ratios and explicit unmeasured cell. Separate from the final interface and natural-opportunity census.",
+      "axis_count": 1,
+      "pdf_exporter": "Inkscape/Cairo from editable Matplotlib SVG",
+      "font_family": "P052",
+      "plotted_marker_count": 0,
+      "expected_marker_count": null,
+      "clipped_marker_count": 0,
+      "analysis_sha256": "bba2583369fd0b7f62d7c93e0dc28f70ac633969f2906ef7a7a2eccf1bd07ea0",
+      "added_root_points_sha256": "f2acf4f0b1ecdaf2a98afd1939de97310f575f7fb2a754818c407d304ed87d89",
+      "rewrite_source_projection_sha256": "db695455d55b033e0ded87f34604c3dacc7b2a9c4c8cf38ef66351eeecb2a3e4"
+    }
+  ],
+  "figure_source_mapping": "data_added/rewrite_figure_sources.json",
+  "documents": {
+    "main": {
+      "pages": 10,
+      "bytes": 655304,
+      "sha256": "b90a2bec4236763f5be21d0973abf0a27aa6c4805f55a7dd0c0579f954c501ce",
+      "git_blob_sha1": "634c764e57c615c897f4ba23a44ea5a746e1bc15",
+      "latex_warnings": 0,
+      "overfull_boxes": 0,
+      "underfull_boxes": 0,
+      "pdf_page_group_notices": 2
+    },
+    "supplement": {
+      "pages": 5,
+      "bytes": 254032,
+      "sha256": "4cb7353acb1b890e0ad1f6d29cc81520de84d8af285c45b0593aab9c24e25583",
+      "git_blob_sha1": "6e3e76beddb0b460dab8ccc7ec2efba7a35301f6",
+      "latex_warnings": 0,
+      "overfull_boxes": 0,
+      "underfull_boxes": 0,
+      "pdf_page_group_notices": 1
+    }
+  },
+  "manuscript_source_sha256": {
+    "abstract.tex": "5c4cd135ae96337452c790d7cea072556f8d10f2dd811a4b734e1ef5489fc959",
+    "manuscript.tex": "3c5f32d52e5435c0e82c03a012606cf71aad19fa8b33740d1c8f04a2445876b3",
+    "preamble.tex": "1bfa62558da579c7ed070cf55d4f2fd68766800526fe207fa2816de9367e4ba1",
+    "supplement.tex": "eddf56f97ee4324e7947969ae28df37ecdb211ad5b13dfc71aed2a13ecf6f60d",
+    "supplement_body.tex": "ecf0de6bcbee674ebb87f9d54278bb03ebe87b8eeb67e1a74df43d40fe5097b8",
+    "references.bib": "161783dbbcaf815284dee2421fd7f1b7a2983f9f50576f9c377399f30e060e69",
+    "sections/01_introduction.tex": "45f9e5c006b6723f9876026d2e2b2a0f17b896d2c249a3a7e68fdc28247f324d",
+    "sections/02_reference.tex": "f62f28fc0543a852e9731b99146a7f72f21575bd802c584053c0f3af574d21be",
+    "sections/03_method.tex": "04d8daeb5393c7741a585fa5586a660f943ed095e86c47a5ecbaf65601f535d9",
+    "sections/04_evaluation.tex": "e5b5f958c95ce54bf022b2351d8ea2001bfcb7120b9f56759a69206233d729ae",
+    "sections/05_results.tex": "dfb28f5b6e796ab0c899928e37b971b924bcb3e0196cd848a04b0a2b6afbec52",
+    "sections/06_related.tex": "7ab6ff2460692a3adad8651d9b26cd6c9a2248251f24adcb9f9d731bf1e98ae5",
+    "sections/07_conclusion.tex": "bccfc6d7b97496ff950f943446330e0bbb08f66f77b2bd8321f3dd818445d074"
+  },
+  "build_script_sha256": {
+    "scripts/build_figures.py": "6b7ddcb3a95540e519bbfd576029bb6097d551e3d22ef66d92f2c59f615b0c88",
+    "scripts/build_tables.py": "74d73702e07a25889caf314f8d6ebdc90748e00ba677888d39c47a52610dfc15",
+    "scripts/check_figures.py": "3366d75552439d3d65d8563ad9cba51bb67b67e7d690c2dc9c5b2bccffdc42ee",
+    "scripts/derive.py": "78b83693df2e47b563941169c338f10771b6aa2355ca963d4d5a8b6d132c554f",
+    "scripts/derive_revision.py": "df6491bc7fb7f99684890f7b33e937f0064cef2258a86bea073bad665901db72",
+    "scripts/derive_rewrite.py": "921881186da3e6c4a66595907a1bc8d92ce68361f523bcf889a7551fb0fad97d",
+    "scripts/test_manuscript_data.py": "8494605180e5ad4155e583264a6bbddf5be7eb5b03cf2e9655ecffd31a48529b",
+    "scripts/test_revision_evidence.py": "c13738093067b8cfa51793ff5855b7856973315f2aa22880603b23753906afd6"
+  },
+  "validation": {
+    "data_tests_passed": 35,
+    "original_numeric_inputs_unchanged": 22,
+    "b2_operations_reconstructed": 128,
+    "vector_figures": 9,
+    "figure_fonts_embedded": true,
+    "clipped_markers": 0,
+    "full_build": "PASS",
+    "all_15_pages_visually_inspected": true,
+    "clean_extraction_build": {
+      "status": "PASS",
+      "checks": {
+        "author_full": {
+          "main": {
+            "pages": 10,
+            "extracted_text_identical": true,
+            "rendered_pages_identical_at_72dpi": true,
+            "pdf_bytes_identical": false
+          },
+          "supplement": {
+            "pages": 5,
+            "extracted_text_identical": true,
+            "rendered_pages_identical_at_72dpi": true,
+            "pdf_bytes_identical": false
+          },
+          "evidence_tests_passed": 35,
+          "regenerated_figures": {
+            "execution_method.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "extent_intervention.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "factorial.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "geometry_opportunity.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "mixed_q4.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "service_controls.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "supp_historical_geometry.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "supp_width_cost.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            },
+            "width_tradeoff.pdf": {
+              "pages": 1,
+              "extracted_text_identical": true,
+              "rendered_pages_identical_at_72dpi": true,
+              "pdf_bytes_identical": false
+            }
+          },
+          "pdf_metadata_note": "Original figures use SOURCE_DATE_EPOCH 1794391200; the clean build uses the script default 1794387600. Creation-date bytes differ; all text and rendered pages are identical."
+        },
+        "latex_only": {
+          "main": {
+            "pages": 10,
+            "extracted_text_identical": true,
+            "rendered_pages_identical_at_72dpi": true,
+            "pdf_bytes_identical": true
+          },
+          "supplement": {
+            "pages": 5,
+            "extracted_text_identical": true,
+            "rendered_pages_identical_at_72dpi": true,
+            "pdf_bytes_identical": true
+          }
+        }
+      },
+      "document_font_checks": {
+        "main": {
+          "embedded_fonts": 40,
+          "all_embedded": true,
+          "type3_fonts": 0
+        },
+        "supplement": {
+          "embedded_fonts": 17,
+          "all_embedded": true,
+          "type3_fonts": 0
+        }
+      }
+    },
+    "GPU_experiments_run_for_this_rewrite": 0
+  },
+  "interpretation": {
+    "packing_increment": "0.80%--1.64% against backend-loop4 at fixed cut scope",
+    "application_gains": "17.21%, 25.54%, 11.52% include speculation; separate from component attribution",
+    "width": "Equal-work q8/q4-pair and live k7/k3 are separate comparisons",
+    "mixed_q4": "Completed service evidence uses the graph-level scalar loop; stronger backend-loop evidence is at operator level"
+  },
+  "skills": "review/SKILLS_APPLIED.md",
+  "validation_report": "review/FINAL_VALIDATION.md"
+}

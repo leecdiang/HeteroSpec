@@ -1,0 +1,16 @@
+\section{Discussion and Related Work}
+\label{sec:related}
+\subsection{Preserving numerical behavior during optimization}
+Batch-invariant inference controls reduction choices in normalization, matrix multiplication and attention~\cite{thinkingmachines}. Taming reconstructs cuBLAS arithmetic, enforces specified reduction order during lowering and statically checks compiled kernels~\cite{taming}. Our experiments trace these numerical dependencies through a quantized runtime's physical attention range, backend arithmetic and placement, and producer/state boundary.
+
+The public \texttt{llama\_reproducible} implementation uses the small-column quantized path~\cite{loop4code}. We retain backend-loop4 as a direct performance control. The packing experiment asks what remains to be gained by exposing its independent groups to the GPU; the factorial design separates that change from attention-local cuts. The mixed-Q4 extension applies the same construction with scalar-column inner arithmetic and its own stated control.
+
+\subsection{Deterministic engines and speculation}
+Vosti relates engine state and cache behavior to kernel properties through formal determinism contracts~\cite{vosti}. LLM-42 combines a consistent verifier execution with verification and state repair~\cite{llm42}. CoRun isolates prefill and uses fixed-shape batched decode for deterministic service~\cite{corun}. Our plans combine offline arithmetic qualification with live physical-range and phase requirements, permitting both whole-graph cuts and attention-local cuts within a wider graph.
+
+Speculative decoding and sampling reduce target invocations by verifying proposed tokens together~\cite{leviathan2023,chen2023}. Their distributional arguments and our numerical target address different properties: the latter compares full finite-precision vectors and active state on the evaluated prefixes. HeteroSpec uses contextual heterogeneity to allocate verification effort~\cite{liu2026heterospec}. Proposal policy remains an application choice here; reference-compatible execution supplies the target work that the policy requests.
+
+\subsection{Scope and deployment choices}
+The implementation covers a dense, nonwrapping cache, one sequence, F16 KV and non-Flash attention. Its guards make those assumptions explicit. Paged or wrapped caches, additional KV types and fused attention require corresponding geometry extraction and native arithmetic recipes. The two backends already illustrate why the recipe is hardware-specific: identical logical tensors can invoke different activation, reduction and placement choices.
+
+Whole and Local satisfy the same numerical target while exposing different amounts of outer-graph parallel work. Their relative cost depends on boundary frequency and the work outside attention; packing contributes separately. Choosing an application policy also requires the complete cost of draft computation, target verification, output handling and state maintenance.

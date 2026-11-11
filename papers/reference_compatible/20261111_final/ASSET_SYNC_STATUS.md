@@ -1,19 +1,21 @@
-# Manuscript asset synchronization status
+# Complete author-source synchronization for Draft PR #220
 
-Draft PR #220; author-owned source SHA256:
-`e56013eace463b0615cf69dd130155b90bd2a26385286029891904689084f78b`.
+The manuscript author's fixed ZIP `HeteroSpec_Final_20261111_Author.zip` (SHA256 `e56013eace463b0615cf69dd130155b90bd2a26385286029891904689084f78b`) contains **130 files**. All 130 are now committed to this versioned subtree under the same source paths, with top-level metadata in `author_archive_root/`.
 
-The directly synced LaTeX entrypoints, seven main sections, TikZ diagrams, bibliography and typography files match the 2026-11-11 author ZIP at Git-blob identity. Other assets must still be imported before this branch is independently buildable; **a README is not a substitute for the missing figures and data**.
+The final GitHub tree was independently enumerated: **130/130** entries matched the exact local Git blob SHA-1 in the authenticated author ZIP. This includes LaTeX, IEEE class/bibliography, numerical data, scripts, generated and editable figures, PDFs, validation logs and visual review assets. There were no path or hash mismatches.
 
-Run from a clean checkout on `paper/recovery-final-20261111`, with the provided author ZIP saved locally:
+## Rebuild
 
 ```bash
-python3 papers/reference_compatible/20261111_final/import_author_assets.py \
-    --archive /path/to/HeteroSpec_Final_20261111_Author.zip --mode check
-python3 papers/reference_compatible/20261111_final/import_author_assets.py \
-    --archive /path/to/HeteroSpec_Final_20261111_Author.zip --mode commit-and-push
+cd papers/reference_compatible/20261111_final/paper
+bash build.sh
 ```
 
-The importer validates the top-level archive SHA256 and all 129 manifest-listed members, verifies any already-synced files byte-for-byte, writes all 130 entries, compiles main/journal in an isolated temporary copy and pushes a normal fast-forward commit. All assets remain confined to this paper subtree. It never merges or publishes the manuscript.
+An independent clean-directory extraction of the exact ZIP completed the data tests, figure generation, pdfLaTeX/BibTeX passes and produced **byte-identical** `main.pdf` and `journal.pdf`:
 
-Once completed, verify the branch includes 130 author entries plus the original PR metadata, and confirm the new head matches the modelled `PACKAGE_MANIFEST.json` before declaring source sync complete.
+- `main.pdf`: SHA256 `81376232b6765983bc91b8765fa2ed06e57a09edfe88c68db476f61210a6fd61`.
+- `journal.pdf`: SHA256 `8d8abaa4fe47eed08a67cdce7828bc319a2f473aba64da20ee4781025d7af2ca`.
+
+The independent build was run from the ZIP, whose files match the repository by Git blob identity. It did not execute a new GPU experiment, recover private native KV captures, or constitute independent on-GPU reproduction.
+
+This PR remains **Draft**; no experiment was merged, and neither arXiv nor TPDS was submitted. The author still decides the publication and access policy for raw native evidence, author metadata and disclosures.

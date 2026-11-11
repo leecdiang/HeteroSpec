@@ -1,0 +1,26 @@
+{
+  "candidate": "Same pinned runtime native flash attention; draft-simple k3",
+  "status": "SOURCE_ROUTE_IDENTIFIED_NOT_QUALIFIED",
+  "source_evidence": {
+    "path": "src/llama-graph.cpp",
+    "sha256": "2ca4f5cd56b4945f9c2a4fdf78a1debce9e51b04d617d74b187038e9337c31d3",
+    "bytes": 141614
+  },
+  "guard": "Local repair branches assert !cparams.flash_attn; unrepaired branch uses ggml_flash_attn_ext",
+  "prospective_flags": {
+    "HS_SCOPE_MASK": 0,
+    "flash_attention": "on",
+    "context": 1024,
+    "target_ub": 4,
+    "draft_ub": 1,
+    "maximum_k": 3,
+    "KV": "F16"
+  },
+  "unchanged_contract": "Q8_0 model bytes, tokenizer/templates, greedy/EOG/cap128 and resident HTTP timer",
+  "qualification": "NOT_RUN_S0_MISSING_COVERAGE",
+  "eligible_families": [],
+  "production_admission": false,
+  "baseline_victory_claim": false,
+  "numerical_library_differences": "No new libraries proposed; kernel/reduction behavior differs and is unqualified",
+  "other_comparators_reviewed": 0
+}

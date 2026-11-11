@@ -1,0 +1,82 @@
+{
+  "schema": "heterospec.matched-cost-cpu-failure-detail.v1",
+  "result_sha256": "e187f26187b030850009a3bef8fd536039040def190b763890ad79b18cdd4f1f",
+  "case": "controlled-p248",
+  "q": 2,
+  "comparison": {
+    "continuation_geometry": true,
+    "continuation_state": false,
+    "final_geometry": true,
+    "final_state": false,
+    "full_continuation_vector": false,
+    "full_operation_vectors": false,
+    "initial_geometry": true,
+    "initial_state": true
+  },
+  "reference_schedule": [
+    1,
+    1
+  ],
+  "candidate_schedule": [
+    2
+  ],
+  "actual_reference_widths": {
+    "1": 2
+  },
+  "actual_candidate_widths": {
+    "2": 1
+  },
+  "timing_started": false,
+  "details": {
+    "continuation_state": {
+      "reference_bytes": 517132,
+      "candidate_bytes": 517132,
+      "different_bytes": 43,
+      "first_differing_byte": 130254
+    },
+    "continuation_vector": {
+      "reference_bytes": 512,
+      "candidate_bytes": 512,
+      "different_bytes": 174,
+      "first_differing_byte": 0,
+      "bitwise_changed_float_entries": 127,
+      "first_differing_row_and_vocab_index": [
+        0,
+        0
+      ],
+      "max_abs_difference": 4.023313522338867e-06,
+      "argmax_equal_by_row": [
+        true
+      ]
+    },
+    "final_state": {
+      "reference_bytes": 515072,
+      "candidate_bytes": 515072,
+      "different_bytes": 43,
+      "first_differing_byte": 130242
+    },
+    "initial_state": {
+      "reference_bytes": 510952,
+      "candidate_bytes": 510952,
+      "different_bytes": 0,
+      "first_differing_byte": null
+    },
+    "operation_vectors": {
+      "reference_bytes": 1024,
+      "candidate_bytes": 1024,
+      "different_bytes": 335,
+      "first_differing_byte": 4,
+      "bitwise_changed_float_entries": 242,
+      "first_differing_row_and_vocab_index": [
+        0,
+        1
+      ],
+      "max_abs_difference": 1.9937753677368164e-05,
+      "argmax_equal_by_row": [
+        true,
+        true
+      ]
+    }
+  },
+  "interpretation": "Observed complete-vector and serialized active-sequence differences, despite matching initial bytes and geometry. Arithmetic cause is not localized; CPU failure does not establish CUDA failure."
+}

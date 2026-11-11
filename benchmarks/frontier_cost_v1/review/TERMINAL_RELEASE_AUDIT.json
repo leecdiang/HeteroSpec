@@ -1,0 +1,137 @@
+{
+  "schema": "heterospec.independent-terminal-release-audit.v1",
+  "status": "PASS_SCOPED_DRAFT_HOST_ONLY",
+  "created_utc": "2026-11-11T09:35:42.441638+00:00",
+  "reviewer_native_model_executions": 0,
+  "reviewer_GPU_driver_calls": 0,
+  "reviewer_GPU_kernel_executions": 0,
+  "host_checks_this_revision": {
+    "count": 3,
+    "scope": "Only environment and mocked physical inventory/CUDA-query results; subprocess.run is mocked in device-query tests.",
+    "tests": [
+      "test_declared_env",
+      "test_physical_gpu0_mig_and_ambiguity_rejections",
+      "test_visible_cuda_pci_binding_without_driver_execution"
+    ],
+    "result": "PASS",
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "bytes": 454,
+      "sha256": "27f1c1dae6b18752bdcb9177fc4b927053a0c5cc7c63a6a24b557238720797af"
+    }
+  },
+  "static_device_admission_review": {
+    "allocated_physical_index_strictly_greater_than_zero": true,
+    "unique_NVML_index_and_normalized_PCI": true,
+    "both_physical_0_and_requested_index_required": true,
+    "selected_MIG_enabled_or_unknown_rejected": true,
+    "known_disabled_or_unsupported_MIG_modes_only": true,
+    "physical_GPU0_alias_rejected": true,
+    "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+    "CUDA_ordinal": "Derived from sorted physical PCI inventory; can differ from NVML physical index. Observed CUDA PCI match still mandatory.",
+    "visible_device_count_exactly_one_checked_in_child_and_parent": true,
+    "actual_visible_PCI_must_match_requested_physical_PCI": true,
+    "UUID_query_or_recording_in_admission": false,
+    "actual_CUDA_driver_branch": "NOT_EXECUTED"
+  },
+  "timing_limits": {
+    "native_child_seconds": 1800,
+    "native_kill_reap_seconds": 5,
+    "driver_identity_query_seconds": 15,
+    "source_hash_build_in_native_deadline": false,
+    "whole_pipeline_1800_second_claim": false
+  },
+  "public_budget_independently_enumerated": {
+    "qualification": {
+      "contexts": 38,
+      "native_calls": 444,
+      "target_rows": 9789
+    },
+    "measurement": {
+      "contexts": 152,
+      "native_calls": 2588,
+      "target_rows": 58658
+    },
+    "total": {
+      "contexts": 190,
+      "native_calls": 3032,
+      "target_rows": 68447
+    }
+  },
+  "documentation_review": {
+    "RESULTS.md": "PASS_OBSERVED_COUNTS_AND_SCOPE",
+    "HOST_EXECUTION.md": "PASS_RESOURCE_AND_BUDGET_SCOPE",
+    "publication/PR_BODY.md": "PASS_SCOPED_DRAFT_NO_PERFORMANCE_OR_NOVELTY_CLAIM"
+  },
+  "cost_postprocessing": {
+    "width_failure_status": "NO_COST_ADMITTED_QUALIFICATION_OR_EXECUTION_FAILED",
+    "q1_smoke_status": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+    "cost_pairs_emitted": 0,
+    "qualified_q8_positive_path": "STATIC_REVIEW_ONLY_NO_QUALIFIED_Q8_NATIVE_DATA",
+    "static_scope": "Raw verification and PASS required; pair by same case/mode/repeat; require three complete schedules and matching initial bytes/geometry; no across-q A fit or complete-service aggregation."
+  },
+  "open": [
+    "Actual CUDA build and driver/device mapping on assigned host",
+    "Historical GPU reference bridge",
+    "Production-model full request equality",
+    "Matched complete-service performance",
+    "5 percent and cross-deployment generality"
+  ],
+  "bindings": {
+    "matched_cost/run_probe.py": {
+      "bytes": 22702,
+      "sha256": "d10df8f66e5d2a31301445037b0bc8f3c5135e5086b29074e06cd38949299a8f"
+    },
+    "matched_cost/matched_cost_probe.cpp": {
+      "bytes": 21982,
+      "sha256": "4cc4c7114262bea71957e95478e963486a95cc416a0465d37bb897e971f838ec"
+    },
+    "matched_cost/summarize_cost.py": {
+      "bytes": 3031,
+      "sha256": "9f9c6a5e43755274a03c0a40d1f7d3468016ecf1a13a547912697c5e1fe1bd2e"
+    },
+    "matched_cost/verify_run.py": {
+      "bytes": 5012,
+      "sha256": "7749726db762f007a7aebce359ee958ee942aa46ca06cca938c153f3f7f2be0f"
+    },
+    "matched_cost/test_probe_protocol.py": {
+      "bytes": 6489,
+      "sha256": "14f9168f3c184a3590d856975aae54b8eaae8cec4f9008cec340a48557757cb3"
+    },
+    "matched_cost/inputs_public.json": {
+      "bytes": 9045,
+      "sha256": "d4ff0a2bf769a322b17a456631d7da5c0813a1f2c82ebd05960a448ed8e3eb0a"
+    },
+    "matched_cost/README.md": {
+      "bytes": 17009,
+      "sha256": "701b9e58f7cd1ba74e3a88d626bf0667aa88f100dfdb27c43895d4b7e81df1d4"
+    },
+    "RESULTS.md": {
+      "bytes": 5550,
+      "sha256": "1981611cdad95648e9e6f353c72f6e118ce73fa19ee89001007b7790fd9310ca"
+    },
+    "HOST_EXECUTION.md": {
+      "bytes": 6183,
+      "sha256": "ab8d7fee33afa41452af80732f6801ab84a799187b67064254a6665647ae2832"
+    },
+    "publication/PR_BODY.md": {
+      "bytes": 4515,
+      "sha256": "e5380c94ed7567da35f8896482e52ebc2910c1632fbeb0598943404dc98c7fd2"
+    },
+    "implementation_checks/public_plan_final/PLAN.json": {
+      "bytes": 1017,
+      "sha256": "ab8f4bfe2d8bcbc9f7349bcd3b0f9347189d781b2646a89231089f25dfbac0a3"
+    },
+    "review/TERMINAL_WIDTH_COST_SUMMARY.stdout": {
+      "bytes": 536,
+      "sha256": "4edb7371bf11aac916d5f18231ed4e3af885f3d521a431fa706708791df6a606"
+    },
+    "review/TERMINAL_Q1_COST_SUMMARY.stdout": {
+      "bytes": 504,
+      "sha256": "a687ddef4e19e37b12733d13fa8366b4f52efc1a3eb74347a309ba3b7f448dee"
+    }
+  }
+}

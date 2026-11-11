@@ -1,0 +1,196 @@
+{
+  "schema": "heterospec.continuation.independent-final-review.v1",
+  "reviewer": "continuation_review",
+  "created_utc": "2026-11-11T09:20:10.763323+00:00",
+  "recommendation": "APPROVE_SCOPED_DRAFT",
+  "production_merge_approval": false,
+  "performance_claim": false,
+  "reviewer_native_executions": 0,
+  "reviewer_GPU_executions": 0,
+  "results": {
+    "prepared_source_and_library_binding": "PASS",
+    "complete_worker_request": "PASS_CPU_SYNTHETIC_F32",
+    "first_distinct_width_candidate": "FAIL_QUALIFICATION_P248_Q2_CPU",
+    "q1_only_smoke": "PASS_PROTOCOL_ONLY",
+    "historical_GPU_reference": "OPEN_NOT_RUN",
+    "production_model_and_quantized_path": "OPEN_NOT_RUN",
+    "full_service_gain_and_5_percent_goal": "OPEN_NOT_RUN",
+    "remote_admission_and_deadline": "PASS_HOST_ONLY_GPU_EXECUTION_OPEN",
+    "publication_documentation": "PASS_FINAL_READ_ONLY_REVIEW",
+    "physical_GPU0_MIG_PCI_admission": "PASS_STATIC_AND_MOCK_HOST_GPU_DRIVER_NOT_RUN"
+  },
+  "native_scope": {
+    "request_pairs": 32,
+    "full_vector_pairs": 552,
+    "active_sequence_pairs": 272,
+    "bytes_per_side": 76633984,
+    "tail_skipped_calls": 29,
+    "tail_recovered_calls": 19,
+    "inactive_storage_and_all_hidden_backend_state_byte_equality": false
+  },
+  "matched_failure_scope": {
+    "contexts": 3,
+    "native_calls": 31,
+    "target_rows": 752,
+    "measurements": 0,
+    "same_initial_bytes_and_geometry": true,
+    "q1_plus_q1_vs_q2_full_vectors_equal": false,
+    "same_operation_argmax": true,
+    "final_state_different_bytes": 43,
+    "next_state_different_bytes": 43,
+    "inference_to_CUDA_failure": false
+  },
+  "q1_smoke_scope": {
+    "contexts": 10,
+    "native_calls": 136,
+    "target_rows": 3524,
+    "measurement_records": 8,
+    "capture_references_rehashed": 50,
+    "comparison_blob_pairs": 40,
+    "raw_unique_bytes": 3104840,
+    "distinct_width_candidate_count": 0,
+    "steady_state_claim": false
+  },
+  "initial_finding_resolution": [
+    {
+      "id": "R1",
+      "status": "CLOSED_IN_CPU_SCOPE",
+      "resolution": "Unchanged complete worker provision/request with actual accept/stop/reset."
+    },
+    {
+      "id": "R2",
+      "status": "CLOSED_IN_CPU_SCOPE",
+      "resolution": "Literal entire consumer-vector and trim/reset/terminal event stream; no post-hoc capture filter."
+    },
+    {
+      "id": "R3",
+      "status": "CLOSED_PROTOCOL",
+      "resolution": "Fresh context/prefix replay plus active sequence and native dense/head/extent checks; width candidate actually failed downstream."
+    },
+    {
+      "id": "R4",
+      "status": "CLOSED_IMPLEMENTATION_SCOPE",
+      "resolution": "All requested outputs copied and synchronization/materialization included; bookkeeping outside timing."
+    },
+    {
+      "id": "R5",
+      "status": "CLOSED_LABELING_ONLY",
+      "resolution": "Capture-conditioned first/reset modes explicit; q1 graph actually rebuilt in both; no hot/steady claim."
+    },
+    {
+      "id": "R6",
+      "status": "CLOSED_REPORT_SCOPE",
+      "resolution": "A not identified from mixed split/fused cost; draft sync separate; old threshold not transferred."
+    },
+    {
+      "id": "R7",
+      "status": "CLOSED_IN_CPU_SCOPE",
+      "resolution": "SPM native EOS id127 exercised, no synthetic override."
+    },
+    {
+      "id": "R8",
+      "status": "PASS_SCOPED_RELEASE_WITH_OPEN_GPU_EXECUTION",
+      "resolution": "Portable explicit implementation paths, source/module identities, public target/input binding, deadline and malformed-partial preservation reviewed; raw/weights outside Git. Original CPU wrapper preserved. New wrapper tested only on host fixtures; no GPU validation."
+    }
+  ],
+  "evidence": {
+    "PREPARE_SOURCE_AUDIT.json": {
+      "bytes": 1472,
+      "sha256": "2e8b697fa953b872b49b44bbfcf48a3f52660119a1497dcb1bc28660cd908b42"
+    },
+    "MATCHED_BUDGET_AUDIT.json": {
+      "bytes": 1457,
+      "sha256": "798f4ec8c6904948145bf463d6bd7b5fddf395aab3c0fb18e31f7bc9b8f6529f"
+    },
+    "NATIVE_INTEGRATION_RAW_AUDIT.json": {
+      "bytes": 19916,
+      "sha256": "493687add07a7b125c69f5282e88ab35d89ebac2c04560bc84682a556b5624f5"
+    },
+    "MATCHED_FAILURE_RAW_AUDIT.json": {
+      "bytes": 3786,
+      "sha256": "c7cfda5b892b710b40d99f10770021a2c27d9d2014198c04aaaee30340d5735b"
+    },
+    "MATCHED_Q1_SMOKE_AUDIT.json": {
+      "bytes": 2529,
+      "sha256": "0d272bb7a2faf6d345e29836a3e058397b943c824c48763523ed91f3936927be"
+    },
+    "audit_native_outputs.py": {
+      "bytes": 15289,
+      "sha256": "5a18f9b633a075af6b4e2710fe5d40708f69f06bdd3c92fb56c1d790e509e45c"
+    },
+    "audit_matched_smoke.py": {
+      "bytes": 9311,
+      "sha256": "87707cea0c87b7febabf007e8bc5c6809a1da42896830d8c9f4b9b190a952d03"
+    },
+    "FINAL_REVIEW.md": {
+      "bytes": 12081,
+      "sha256": "70f01c62bc2d81633a0bb99edd81c63ce1bc37e634516bc1d399e9dc28c4e611"
+    },
+    "HOST_ADMISSION_AUDIT.json": {
+      "bytes": 3510,
+      "sha256": "6d8358b65bca9bfdb17ad13f0d75053d07f9ba156dfdb2e042f79030aa237c5c"
+    },
+    "HOST_ADMISSION_TEST.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "HOST_ADMISSION_TEST.stderr": {
+      "bytes": 370,
+      "sha256": "3178da7bc04f6de01708bc6443e700c089150a10936825c835ac619bdf88752e"
+    },
+    "TERMINAL_RELEASE_AUDIT.json": {
+      "bytes": 5250,
+      "sha256": "688c48d6598057eb369000b2e6a6fd81c0c4e699f9078ce8068ea414469eb59e"
+    },
+    "TERMINAL_HOST_TEST.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "TERMINAL_HOST_TEST.stderr": {
+      "bytes": 454,
+      "sha256": "27f1c1dae6b18752bdcb9177fc4b927053a0c5cc7c63a6a24b557238720797af"
+    },
+    "TERMINAL_WIDTH_COST_SUMMARY.stdout": {
+      "bytes": 536,
+      "sha256": "4edb7371bf11aac916d5f18231ed4e3af885f3d521a431fa706708791df6a606"
+    },
+    "TERMINAL_Q1_COST_SUMMARY.stdout": {
+      "bytes": 504,
+      "sha256": "a687ddef4e19e37b12733d13fa8366b4f52efc1a3eb74347a309ba3b7f448dee"
+    }
+  },
+  "updated_utc": "2026-11-11T09:35:42.445791+00:00",
+  "host_only_tests_run_by_reviewer": 5,
+  "host_only_test_batches": [
+    {
+      "bound_wrapper_sha256": "60c9a21b29de1d2170a5207663c5111de91827f78f18ba6c159537f626478040",
+      "tests": 2
+    },
+    {
+      "bound_wrapper_sha256": "d10df8f66e5d2a31301445037b0bc8f3c5135e5086b29074e06cd38949299a8f",
+      "tests": 3
+    }
+  ],
+  "public_budget": {
+    "qualification": {
+      "contexts": 38,
+      "native_calls": 444,
+      "target_rows": 9789
+    },
+    "measurement": {
+      "contexts": 152,
+      "native_calls": 2588,
+      "target_rows": 58658
+    },
+    "total": {
+      "contexts": 190,
+      "native_calls": 3032,
+      "target_rows": 68447
+    }
+  },
+  "cost_postprocessor_actual_saved_results": {
+    "width_failure": "NO_COST_ADMITTED_QUALIFICATION_OR_EXECUTION_FAILED",
+    "q1_only_smoke": "NO_Q8_PAIRS_Q1_PROTOCOL_SMOKE_ONLY",
+    "cost_pairs": 0
+  }
+}

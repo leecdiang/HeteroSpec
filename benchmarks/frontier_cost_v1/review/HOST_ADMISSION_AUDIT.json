@@ -1,0 +1,89 @@
+{
+  "schema": "heterospec.independent-host-admission-audit.v1",
+  "status": "PASS_HOST_ONLY",
+  "created_utc": "2026-11-11T09:24:05.203418+00:00",
+  "native_model_executions": 0,
+  "GPU_executions": 0,
+  "tests": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_probe_protocol.Protocol.test_owned_child_timeout_preserves_partial_output",
+      "test_probe_protocol.Protocol.test_public_model_identity_cannot_be_overridden"
+    ],
+    "returncode": 0,
+    "scope": "Owned sleeping Python child only; truncated RESULT retained; supplied model digest cannot override fixed original target identity.",
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "bytes": 370,
+      "sha256": "3178da7bc04f6de01708bc6443e700c089150a10936825c835ac619bdf88752e"
+    }
+  },
+  "source_review": {
+    "native_deadline_seconds": 1800,
+    "owned_child_reap_seconds": 5,
+    "signals_unrelated_pid_or_GPU": false,
+    "timeout_exit_code": 124,
+    "truncated_partial_result_preserved": true,
+    "compile_source_changed_since_q1_smoke": false,
+    "new_wrapper_model_run": "NOT_RUN",
+    "GPU_resource_placement_and_execution": "OPEN_NOT_RUN",
+    "committed_profile_enforcement": "Runner, C++ and public JSON must be tracked inside a clean committed experiment subtree; static review only."
+  },
+  "original_model_identity": {
+    "archive_sha256": "a643ae73871989e653f59766be1b7ddd60a66094c2b3daa4d43fe83a9448c0bc",
+    "TEXT_INDEX_sha256": "bfa6185cc93d461251106f41a249ab7e44c56e0653853b70b1a2a2602233e232",
+    "extracted_members_independently_rehashed_against_index": 4,
+    "jobs_rechecked": 64,
+    "target_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "tokenizer_metadata_sha256": "6a5d5b777059e82fb664b418fb59cd2526d1cf65f4b7846892745c84a5124912",
+    "vocab": 151936,
+    "scope": "Rehashed full archive and saved four extracted members against authenticated index; parsed all job identities. Metadata digest is not a vocabulary digest; entire GGUF pin binds embedded tokenizer. Actual private target weights were not opened."
+  },
+  "public_inputs_independently_reconstructed": [
+    {
+      "name": "public-p248",
+      "root": "APPS/train/296",
+      "cycle": 11,
+      "eligible_cycles": 2
+    },
+    {
+      "name": "public-p255",
+      "root": "APPS/train/603",
+      "cycle": 28,
+      "eligible_cycles": 1
+    }
+  ],
+  "bindings": {
+    "matched_cost/run_probe.py": {
+      "bytes": 19130,
+      "sha256": "60c9a21b29de1d2170a5207663c5111de91827f78f18ba6c159537f626478040"
+    },
+    "matched_cost/matched_cost_probe.cpp": {
+      "bytes": 21982,
+      "sha256": "4cc4c7114262bea71957e95478e963486a95cc416a0465d37bb897e971f838ec"
+    },
+    "matched_cost/inputs_public.json": {
+      "bytes": 9045,
+      "sha256": "d4ff0a2bf769a322b17a456631d7da5c0813a1f2c82ebd05960a448ed8e3eb0a"
+    },
+    "matched_cost/test_probe_protocol.py": {
+      "bytes": 4720,
+      "sha256": "9a8830cda5c14aec07cd94e86f9c0ef899d0fd6bc9bddfe4800ba57754488deb"
+    },
+    "matched_cost/README.md": {
+      "bytes": 15500,
+      "sha256": "eb3f1878192e73f14a40db95c2ae63419fc4c48f059cf3278212b13c7bdc870d"
+    },
+    "matched_cost/retained_protocol_snapshot/run_probe.py": {
+      "bytes": 16004,
+      "sha256": "2d365ee8f3ef6e7169b613ccce785e7bfafa4704e5cbfa5956f3e705c4ddf5b3"
+    }
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "schema": "linux-transfer.public-qualification-summary.v1",
+  "passed": true,
+  "finite_only": true,
+  "reference_repeat": {
+    "passed": true,
+    "capture_pair_comparisons": 550,
+    "freeze_sha256": "fa8ceec6d54f98730d63880436a6bf088c119232c0f091406725e724a4665731",
+    "candidate_outputs_before_global_freeze": 0
+  },
+  "model_structures": {
+    "Qwen": {
+      "architecture": "qwen3",
+      "layers": 36,
+      "query_heads": 32,
+      "kv_heads": 8,
+      "head_k": 128,
+      "head_v": 128,
+      "K_elements": 1024,
+      "V_elements": 1024,
+      "vocab": 151936,
+      "tensor_count": 399,
+      "declared_stop_ids": {
+        "tokenizer.ggml.eos_token_id": 151645
+      }
+    },
+    "Smol": {
+      "architecture": "llama",
+      "layers": 24,
+      "query_heads": 32,
+      "kv_heads": 32,
+      "head_k": 64,
+      "head_v": 64,
+      "K_elements": 2048,
+      "V_elements": 2048,
+      "vocab": 49152,
+      "tensor_count": 218,
+      "declared_stop_ids": {
+        "tokenizer.ggml.eos_token_id": 2
+      }
+    }
+  },
+  "matrix": {
+    "reports": 8,
+    "arm_family_cases": 96,
+    "full_requested_vector_comparisons": 216,
+    "active_state_comparisons": 96
+  },
+  "natural": {
+    "reports": 12,
+    "root_arm_checks": 48,
+    "full_requested_vector_comparisons": 6524,
+    "committed_state_comparisons": 4628,
+    "terminal_state_comparisons": 48,
+    "cap1_state_comparisons": 12,
+    "clean_API_counters_all_zero": true
+  },
+  "all_serialized_state_comparison_records": {
+    "raw_equal": 4784,
+    "raw_different": 0
+  },
+  "all_original_requested_vectors_compared": true,
+  "all_committed_boundaries_observed": true,
+  "native_EOG_observed": [
+    {
+      "family": "Smol",
+      "arm": "W_L4_M",
+      "root": "CodeContests/valid/66"
+    },
+    {
+      "family": "Smol",
+      "arm": "W_P_M",
+      "root": "CodeContests/valid/66"
+    },
+    {
+      "family": "Smol",
+      "arm": "L_L4_M",
+      "root": "CodeContests/valid/66"
+    },
+    {
+      "family": "Smol",
+      "arm": "L_P_M",
+      "root": "CodeContests/valid/66"
+    },
+    {
+      "family": "Smol",
+      "arm": "W_L4_D4",
+      "root": "CodeContests/valid/66"
+    },
+    {
+      "family": "Smol",
+      "arm": "L_P_D4",
+      "root": "CodeContests/valid/66"
+    }
+  ],
+  "first_and_later_rejections_observed": true,
+  "original_qualification_attempt": {
+    "status": "FAILED_RETAINED",
+    "reason": "12 heavy geometry cases exceeded unchanged900s worker timeout",
+    "completed_cases_diagnosed": 9,
+    "partial_candidate_proofs_count_as_eligibility": false
+  },
+  "qualified_epoch": {
+    "name": "qualification-02",
+    "geometry_cases_per_candidate_worker": 3,
+    "all_numerical_binaries_unchanged": true,
+    "independent_R_matrix_reused_after_identity_verification": true,
+    "no_formal_reservations_before_continuation": true
+  },
+  "proofs": [
+    {
+      "path": "qualification-02/Qwen-matrix-L_L4_M-CHECKED.json",
+      "sha256": "9a4dc81a652187b8d656021a0bb9e4d49c01587a50fbc8e900a8613cfb2d23b4"
+    },
+    {
+      "path": "qualification-02/Qwen-matrix-L_P_M-CHECKED.json",
+      "sha256": "49d0c464d71f7c3d52ef71bcff107ac41c68e18887cf3ddd32a7016c2ee8ecf2"
+    },
+    {
+      "path": "qualification-02/Qwen-matrix-W_L4_M-CHECKED.json",
+      "sha256": "6598954b62fe42528aace09b4b4d07823d23e49299477ef500adfe04eefc8bea"
+    },
+    {
+      "path": "qualification-02/Qwen-matrix-W_P_M-CHECKED.json",
+      "sha256": "7c3f3f4357ca2c7ac411e6017530d001436ebc5c48486b65338680b5a21947a2"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-L_L4_M-CHECKED.json",
+      "sha256": "3471868cd6eb64d98362e681eea02d0aeec452b611c41a4e6e962bcd5cc7f052"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-L_P_D4-CHECKED.json",
+      "sha256": "aa5724efb114349fa4c640cd31f27d9789f7ebc75d670ac10591ad961d5831e2"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-L_P_M-CHECKED.json",
+      "sha256": "4d831046f005d02dcc8ce6993ea88ec1d942c0f1491b8caf030cc420d0a698b8"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-W_L4_D4-CHECKED.json",
+      "sha256": "643f7ac2819895e3c0ad5858dd76df765d30b5a0061a970e08304a26292b2f74"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-W_L4_M-CHECKED.json",
+      "sha256": "968689ff5c11e57c4c6f11d0f5eeb2a9cd5b7235240122090fee3f0cb6fdbb1f"
+    },
+    {
+      "path": "qualification-02/Qwen-natural-W_P_M-CHECKED.json",
+      "sha256": "60366836e03bcca0e00c9d2b38fadaca7b6da3ea0ef6e2e90a691faad393d1d0"
+    },
+    {
+      "path": "qualification-02/Smol-matrix-L_L4_M-CHECKED.json",
+      "sha256": "ff665436b26b03d97574eb49b86dc21259d39ecf508637599e368b1b53c5e7b5"
+    },
+    {
+      "path": "qualification-02/Smol-matrix-L_P_M-CHECKED.json",
+      "sha256": "973e8dfe0a08ff766c21a31e955d134631ed722074317b3cfdd9faacd523dc41"
+    },
+    {
+      "path": "qualification-02/Smol-matrix-W_L4_M-CHECKED.json",
+      "sha256": "df513a98f2c38542815a97c79a8de06b5cd24fb2738e9a5518692b6d98252d00"
+    },
+    {
+      "path": "qualification-02/Smol-matrix-W_P_M-CHECKED.json",
+      "sha256": "e25deacfde7d3a5680244fbf1ac34084bac9438a0501c3e56bf029f70499fca0"
+    },
+    {
+      "path": "qualification-02/Smol-natural-L_L4_M-CHECKED.json",
+      "sha256": "74507eb93586703e4760b7691e090116abc463310d95d35c4e79740fb8656639"
+    },
+    {
+      "path": "qualification-02/Smol-natural-L_P_D4-CHECKED.json",
+      "sha256": "66479478cd2d62eaf9900b36a2e56618bfbeb38c51f4091732a65053817d5ef0"
+    },
+    {
+      "path": "qualification-02/Smol-natural-L_P_M-CHECKED.json",
+      "sha256": "dc2f7ff1e61830f2bd226308d9d02c8fb7537e8ead49284f12f341f046d7d85b"
+    },
+    {
+      "path": "qualification-02/Smol-natural-W_L4_D4-CHECKED.json",
+      "sha256": "48a757d3b219b3cdd80c66e7923453956fa3dbdbcc00fd03b0e8ed30d9e85352"
+    },
+    {
+      "path": "qualification-02/Smol-natural-W_L4_M-CHECKED.json",
+      "sha256": "bf76af45e99774134f56d7c34edd833ec7125fc11bfa841cc9bab7518abaf51a"
+    },
+    {
+      "path": "qualification-02/Smol-natural-W_P_M-CHECKED.json",
+      "sha256": "7ab8cd8aa5426774be528dd2733d183d868d9839aaa3d142b2f6847ba3db9e6e"
+    }
+  ],
+  "native_summary_sha256": "41c4f5760b437366dd13feeb90d7551c97d98087ffe11e7c7bffee46ba91af8e",
+  "registry_sha256": "e1a3e1939ce8bc1207f7e9f916f9a28de8fcb5f212393733a7f7ae17315a7748",
+  "source_review_sha256": "4528f427e369e6257d3f97e624fc6c3e5c099d8ad490f334049dc962436bab80",
+  "writer_review_sha256": "f3bc5793f7fb0ec927ec76350cd934165c4ee3998fc5ae9677151eaf140cc996",
+  "confirmation_freeze_sha256": "8742e7e6dc08c1199b37d2dd916d9516563832c302c7397f1e8a229d9f549848",
+  "scope": "Exact finite comparisons against independent Linux R, including repeated terminal/cap comparisons; counts are comparison records, not independent statistical replications; no Windows cross-hardware bit-identity claim"
+}

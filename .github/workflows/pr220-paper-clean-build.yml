@@ -1,0 +1,85 @@
+name: PR220 clean remote manuscript build
+
+on:
+  push:
+    branches:
+      - paper/recovery-final-20261111
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr220-paper-clean-build
+  cancel-in-progress: false
+
+jobs:
+  clean-checkout-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout the exact remote commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: \${{ github.sha }}
+          persist-credentials: false
+
+      - name: Record the checked-out revision and preserve committed PDF baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GITHUB_SHA=\${GITHUB_SHA}"
+          echo "HEAD=$(git rev-parse HEAD)"
+          echo "BRANCH=\${GITHUB_REF_NAME}"
+          mkdir -p papers/reference_compatible/20261111_final/ci-results/baseline
+          cp papers/reference_compatible/20261111_final/paper/main.pdf papers/reference_compatible/20261111_final/ci-results/baseline/main.pdf
+          cp papers/reference_compatible/20261111_final/paper/journal.pdf papers/reference_compatible/20261111_final/ci-results/baseline/journal.pdf
+
+      - name: Install clean-build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-numpy python3-matplotlib python3-pil \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-science texlive-fonts-recommended \
+            texlive-publishers texlive-bibtex-extra poppler-utils
+
+      - name: Verify every author-package asset from the remote checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 papers/reference_compatible/20261111_final/ci/verify_remote_checkout.py \
+            --assets-only \
+            --out papers/reference_compatible/20261111_final/ci-results/source-assets.json
+
+      - name: Rebuild main and journal with BibTeX from the remote checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd papers/reference_compatible/20261111_final/paper
+          bash build.sh 2>&1 | tee ../ci-results/build.log
+
+      - name: Check PDF content, page counts, fonts and raster output
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 papers/reference_compatible/20261111_final/ci/verify_remote_checkout.py \
+            --pdf-check \
+            --baseline-dir papers/reference_compatible/20261111_final/ci-results/baseline \
+            --out papers/reference_compatible/20261111_final/ci-results/remote-pdf-verification.json
+
+      - name: Upload build logs, source manifest check and generated PDFs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: pr220-remote-build-\${{ github.run_id }}
+          path: |
+            papers/reference_compatible/20261111_final/ci-results/**
+            papers/reference_compatible/20261111_final/paper/validation_logs/**
+            papers/reference_compatible/20261111_final/paper/main.pdf
+            papers/reference_compatible/20261111_final/paper/journal.pdf
+            papers/reference_compatible/20261111_final/paper/main.bbl
+            papers/reference_compatible/20261111_final/paper/journal.bbl
+          if-no-files-found: warn
+          retention-days: 30

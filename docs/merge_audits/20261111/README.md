@@ -33,3 +33,7 @@ For example, `git worktree add --detach /tmp/heterospec-pr205-replay 8990a80da23
 ## Verification scope
 
 The review checked complete PR path/blob inventories, fixed runtime source identities, available public numerical summaries and request tables, and relevant existing CPU tests. GitHub check/status absence is not a CI pass. Private complete GPU captures were not independently downloaded or regenerated. Scientific qualification remains tied to each original deployment and commit.
+
+## Completed integration result
+
+See [RESULT.md](RESULT.md) for the completed merge list, retained PRs and preservation evidence, and [RESULT.json](RESULT.json) for all 71 original/current heads and machine-readable dispositions.

@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: pr220-paper-clean-build
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   clean-checkout-build:
@@ -23,6 +23,11 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            .github/workflows
+            papers/reference_compatible/20261111_final
+          sparse-checkout-cone-mode: true
 
       - name: Record the checked-out revision and preserve committed PDF baselines
         shell: bash

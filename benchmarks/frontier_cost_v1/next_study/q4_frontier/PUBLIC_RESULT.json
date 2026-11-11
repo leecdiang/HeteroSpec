@@ -1,0 +1,370 @@
+{
+  "budget": {
+    "contexts": 14,
+    "model_loads": 1,
+    "native_calls": 146,
+    "target_rows": 3612,
+    "trim_calls": 4
+  },
+  "claim_gates": {
+    "GPU_qualified": false,
+    "five_percent_claim_admitted": false,
+    "historical_R_qualified": false,
+    "natural_acceptance_tested": false,
+    "original_production_gate_modified": false,
+    "paper_contract_relaxed": false,
+    "production_q8_full_requested_mask_qualified": false,
+    "real_model_generalization_established": false,
+    "service_speedup_measured": false,
+    "stage_costs_admitted": false
+  },
+  "fifth_nonconsumer_diagnostics": [
+    {
+      "argmax_equal": true,
+      "case": "controlled-p248",
+      "differing_float_count": 117,
+      "full_vector_bitwise_equal": false,
+      "interpretation": "Diagnostic only. Equal argmax does not establish vector-contract compatibility; this extra output was excluded from the shared consumer contract before execution.",
+      "max_absolute_difference": 3.5762786865234375e-07,
+      "numerically_unequal_float_count": 117,
+      "primary_contract_member": false,
+      "reference_argmax_diagnostic": 13,
+      "reference_blob": {
+        "bytes": 512,
+        "path": "blobs/fc485f16a622b0197b9a0055e844e06b67d912e69a29b41929505eb03a466b14.bin",
+        "sha256": "fc485f16a622b0197b9a0055e844e06b67d912e69a29b41929505eb03a466b14"
+      },
+      "vocabulary": 128,
+      "wide_argmax_diagnostic": 13,
+      "wide_blob": {
+        "bytes": 512,
+        "path": "blobs/4832d72c7d79a030375959b6575edcb287e8496b5098586ea21d28e7f2ca8c24.bin",
+        "sha256": "4832d72c7d79a030375959b6575edcb287e8496b5098586ea21d28e7f2ca8c24"
+      }
+    },
+    {
+      "argmax_equal": true,
+      "case": "controlled-p252",
+      "differing_float_count": 128,
+      "full_vector_bitwise_equal": false,
+      "interpretation": "Diagnostic only. Equal argmax does not establish vector-contract compatibility; this extra output was excluded from the shared consumer contract before execution.",
+      "max_absolute_difference": 3.889203071594238e-06,
+      "numerically_unequal_float_count": 128,
+      "primary_contract_member": false,
+      "reference_argmax_diagnostic": 14,
+      "reference_blob": {
+        "bytes": 512,
+        "path": "blobs/ed31e1a17211c093700623350011fb0b357e3c8489f5003a26699757e83eecac.bin",
+        "sha256": "ed31e1a17211c093700623350011fb0b357e3c8489f5003a26699757e83eecac"
+      },
+      "vocabulary": 128,
+      "wide_argmax_diagnostic": 14,
+      "wide_blob": {
+        "bytes": 512,
+        "path": "blobs/2c0f8dc12b33aafa1b3c6d7c4b1713602c592e55dde7b63999c247416050b5af.bin",
+        "sha256": "2c0f8dc12b33aafa1b3c6d7c4b1713602c592e55dde7b63999c247416050b5af"
+      }
+    }
+  ],
+  "observed": {
+    "all_operation_vectors_finite_diagnostic": true,
+    "automatic_retry": false,
+    "cross_schedule_or_frontier_comparisons_passed": 6,
+    "fresh_contexts": 14,
+    "model_loads": 1,
+    "native_child_launches": 1,
+    "native_geometry_pairs_compared": 24,
+    "outer_decode_calls": 146,
+    "own_path_repeat_comparisons_passed": 2,
+    "physical_decode_calls": 146,
+    "primary_active_state_pairs_compared": 24,
+    "primary_float_values_compared": 7168,
+    "primary_vector_row_pairs_compared": 56,
+    "raw_bytes": 7385976,
+    "target_rows": 3612,
+    "timed_out": false,
+    "trim_calls": 4,
+    "unique_raw_blobs": 30
+  },
+  "original_source_manifest": {
+    "bytes": 1887,
+    "sha256": "34bac297d055d622d5efd2edabb7309d9141f9551054cc9e7773aa25c564302f"
+  },
+  "performance_admitted": false,
+  "primary_comparisons": [
+    {
+      "arm": "macro_reference_repeat",
+      "case": "controlled-p248",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 256,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 256,
+        "used": 256
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "macro_reference",
+      "shared_operation_rows": 8
+    },
+    {
+      "arm": "macro_wide",
+      "case": "controlled-p248",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 256,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 256,
+        "used": 256
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "macro_reference",
+      "shared_operation_rows": 8
+    },
+    {
+      "arm": "frontier4_wide_trim",
+      "case": "controlled-p248",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 256,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          256
+        ],
+        "occupied_end": 252,
+        "used": 252
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "frontier4_reference",
+      "shared_operation_rows": 4
+    },
+    {
+      "arm": "frontier5_wide_trim",
+      "case": "controlled-p248",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 256,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          256
+        ],
+        "occupied_end": 253,
+        "used": 253
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "frontier5_reference_materialize",
+      "shared_operation_rows": 4
+    },
+    {
+      "arm": "macro_reference_repeat",
+      "case": "controlled-p252",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 512,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 260,
+        "used": 260
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "macro_reference",
+      "shared_operation_rows": 8
+    },
+    {
+      "arm": "macro_wide",
+      "case": "controlled-p252",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 512,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 260,
+        "used": 260
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "macro_reference",
+      "shared_operation_rows": 8
+    },
+    {
+      "arm": "frontier4_wide_trim",
+      "case": "controlled-p252",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 256,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 256,
+        "used": 256
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "frontier4_reference",
+      "shared_operation_rows": 4
+    },
+    {
+      "arm": "frontier5_wide_trim",
+      "case": "controlled-p252",
+      "common_continuation_rows": 1,
+      "final_geometry": {
+        "dense_seq0": true,
+        "extent": 512,
+        "head_equals_next_by_native_guard": true,
+        "n_ctx": 1024,
+        "n_ubatch": 32,
+        "next_q1_extents": [
+          512
+        ],
+        "occupied_end": 257,
+        "used": 257
+      },
+      "primary_checks": {
+        "continuation_geometry": true,
+        "continuation_state": true,
+        "continuation_vector": true,
+        "final_geometry": true,
+        "final_state": true,
+        "initial_geometry": true,
+        "initial_state": true,
+        "shared_operation_vectors": true
+      },
+      "reference": "frontier5_reference_materialize",
+      "shared_operation_rows": 4
+    }
+  ],
+  "published_source_commit": "ef2766327e7821fe188d1ad788b2c3b05531eb9a",
+  "receipts": {
+    "build": {
+      "bytes": 6929,
+      "sha256": "47a5b368ae15b12ace25cb60a630c94da7559479fbcea2a9eca51b397c386205"
+    },
+    "native_result": {
+      "bytes": 92981,
+      "sha256": "6aebb51bb96ffa962ee8907ffa03900890414b752e1f021f17382af982e6c967"
+    },
+    "offline_verification": {
+      "bytes": 13386,
+      "sha256": "36e3053443e6aa0f4e249f4196963e43f5d56047f87c1d4157c4a04e9abcc856"
+    },
+    "runner": {
+      "bytes": 3742,
+      "sha256": "b0119921d3aa5987755499acd253ad91a3ca440b00fa9c3ae9125bbf69192b49"
+    }
+  },
+  "schema": "heterospec.q4-frontier-public-result.v1",
+  "scope": {
+    "KV_storage": "F16",
+    "backend": "CPU",
+    "flash_attention": false,
+    "history_lengths": [
+      248,
+      252
+    ],
+    "known_forced_tokens": true,
+    "model_layers": 2,
+    "model_sha256": "e4b4f329077cc07036a307566f652a35b10e6f41c3b7a98478f2dfca4b09c044",
+    "model_storage": "F32",
+    "model_trained": false,
+    "n_ctx": 1024,
+    "n_ubatch": 32,
+    "prefix_producer_width": 32,
+    "q_notation": "token rows, not quantization bits",
+    "reference": "explicit same-deployment q4+q4 diagnostic; not historical paper R",
+    "threads": 1,
+    "vocabulary": 128
+  },
+  "status": "DIAGNOSTIC_PASS_OFFLINE_VERIFIED"
+}

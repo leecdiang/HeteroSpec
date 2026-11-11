@@ -1,0 +1,554 @@
+--- recovery/abstract.tex
++++ final/abstract.tex
+@@ -1 +1 @@
+-Batching a quantized language model can change its logits even when token positions and causal masks remain unchanged. We present reference-derived phase plans that preserve a fixed deployment's numerical behavior while executing known queries in parallel. A plan combines physical KV-prefix requirements, qualified arithmetic recipes and logical output ownership on one resident target state. Whole-graph and local-attention lowerings retain different amounts of outer parallelism. Independent-channel packing preserves four-column CUDA Q8 reductions and extends to scalar-column Q4\_K/Q6\_K arithmetic. Native studies cover Qwen, Llama and SmolLM2, Windows and Linux, and CUDA and Vulkan. On Linux/A5000, compatible speculative execution reduces resident-service time by 17.21\%, 25.54\% and 11.52\% relative to the fastest measured fixed target-only control for Qwen3-8B, Qwen3-14B and Llama-8B, respectively. Balanced factorial studies separate packing from local-cut effects. In a 32B mixed-quantization deployment, channel grouping reduces ordinary service time by 5.61\% relative to graph-level scalar-column execution. Equal-work eight-query verification is also faster than two four-query calls in the tested RTX cells. The results establish an execution method that composes reference arithmetic with physical state, and show how its parallelism translates into complete-request value.
++Batching a quantized language model can change its numerical output even when token positions and causal masks stay the same. We introduce reference-derived phase plans for parallel inference that retains an established deployment's numerical behavior. A plan binds the prompt producer, physical KV range, arithmetic recipe and ownership of outputs and state. It places cuts around whole graphs or within attention, while packing independent arithmetic groups into wider operations. Implementations on CUDA and Vulkan cover Qwen, Llama and SmolLM2, including a mixed-Q4 32B model. On Linux/A5000, compatible speculative applications reduce resident-service time by 17.21\%, 25.54\% and 11.52\% against the fastest measured fixed target-only control for Qwen3-8B, Qwen3-14B and Llama-8B. Separate balanced experiments attribute 0.80\%--1.64\% to Q8 projection packing; local cuts contribute smaller, geometry-dependent gains. For 32B mixed quantization, independent-channel grouping reduces ordinary service time by 5.61\% relative to a graph-level scalar-column loop. Eight-query execution also lowers aggregate cost at equal work, while longer live proposals add enough work to favor the shorter configuration. Phase plans thus preserve reference-sensitive computation while exposing parallel work, with complete-request costs guiding the choice of execution strategy.
+--- recovery/figures/arithmetic.tex
++++ final/figures/arithmetic.tex
+@@ -11,7 +11,7 @@
+ \node[anchor=west,text=ASVgray] at (.12,4.13) {Same weights and eight input columns};
+ \node[anchor=west,text=ASVgray] at (9.18,4.13) {Same per-type quantizer, dot and accumulation};
+ \node[anchor=west,font=\bfseries] at (.30,3.61) {Backend loop4};
+-\node[anchor=west,font=\bfseries] at (4.65,3.61) {Independent-group packing};
++\node[anchor=center,font=\bfseries] at (6.49,3.61) {Group packing};
+ \node[inner,minimum width=3.28cm,minimum height=.63cm] (g1) at (2.02,2.99) {Original 4-column MMVQ\\$x_1\;x_2\;x_3\;x_4$};
+ \node[inner,minimum width=3.28cm,minimum height=.63cm] (g2) at (2.02,1.81) {Original 4-column MMVQ\\$x_5\;x_6\;x_7\;x_8$};
+ \draw[flow] (g1.south)--(g2.north) node[midway,right,text=ASVgray] {next call};
+@@ -22,7 +22,7 @@
+ \draw[ASVrule,densely dashed] (3.72,2.99)--(4.78,2.99);
+ \draw[ASVrule,densely dashed] (3.72,1.81)--(4.78,1.81);
+ \node[anchor=west,text=ASVgray] at (.30,.98) {Two original calls, in sequence};
+-\node[anchor=west,text=ASVgray] at (4.65,.98) {One operation over both groups};
++\node[anchor=center,text=ASVgray] at (6.49,.98) {One batched operation};
+ \node[anchor=west] at (.30,.43) {$[K,8]\ \longrightarrow\ [K,4,2]$: the inner group stays four columns.};
+ % Mixed Q4: same visual distinction, but the indivisible recipe is scalar.
+ \node[anchor=west,font=\bfseries] at (9.34,3.61) {Graph-level column loop};
+@@ -36,7 +36,7 @@
+  \node[scalar,minimum width=.66cm,minimum height=.68cm] at (\x,\y) {$x_{\i}$\\dot};
+ }
+ \node[text=ASVgreen,font=\fontsize{7.7}{9}\selectfont] at (15.55,2.38) {independent channel index};
+-\node[anchor=west,text=ASVgray] at (9.34,.98) {Column calls and concatenation};
+-\node[anchor=west,text=ASVgray] at (13.62,.98) {One operation; reshape outputs};
++\node[anchor=center,text=ASVgray] at (10.83,.98) {Calls, then concatenate};
++\node[anchor=center,text=ASVgray] at (15.55,.98) {Group, then reshape};
+ \node[anchor=west] at (9.34,.43) {$[K,8]\ \longrightarrow\ [K,1,8]$: the inner group stays one column.};
+ \end{tikzpicture}
+--- recovery/figures/overview.tex
++++ final/figures/overview.tex
+@@ -20,8 +20,8 @@
+ \draw[flow] (8.66,5.26)--(8.66,5.12);
+ \node[one,minimum width=1.20cm,minimum height=.38cm] at (8.66,4.88) {$1024$};
+ \draw[ASVrule,densely dashed] (7.97,4.62)--(7.97,5.80);
+-\node[anchor=north west,align=left,text width=7.35cm] at (10.07,5.76) {The causal mask fixes visible keys.\\The physical extent also fixes the native computation.};
+-\node[anchor=west,text=ASVgray] at (10.07,4.88) {Bind the arithmetic recipe and requested-row mask.};
++\node[anchor=north west,align=left,text width=7.35cm] at (10.07,5.80) {The mask selects visible keys.\\[2pt]The physical range also shapes native execution.};
++\node[anchor=west,text=ASVgray] at (10.07,4.82) {Bind the recipe and requested outputs.};
+ % Branch to two alternative lowerings of exactly the same four rows.
+ \draw[ASVgray,line width=.65pt] (6.60,4.64)--(6.60,4.43);
+ \draw[flow] (6.60,4.43)--(4.10,4.43)--(4.10,4.15);
+--- recovery/manuscript.tex
++++ final/manuscript.tex
+@@ -1,6 +1,7 @@
+ \documentclass[10pt,journal,compsoc]{IEEEtran}
+ \input{preamble}
+ \input{generated/table_macros}
++\input{generated/ampere_pilot_macro}
+ \ifdefined\arxivReadable\input{preprint-style}\fi
+ \begin{document}
+ \ifdefined\arxivReadable
+@@ -23,7 +24,7 @@
+ \input{sections/06_related}
+ \input{sections/07_conclusion}
+ \section*{Acknowledgments}
+-OpenAI ChatGPT and Codex assisted with implementation and experiment tooling, analysis scripts, manuscript drafting and revision, and figure-generation code. The assistance covers the method, evaluation, supplement and reproducibility materials. Scientific interpretation and manuscript approval remain the author's responsibility.
++OpenAI ChatGPT and Codex assisted with implementation, experiment and analysis tools, manuscript editing and figure code. The author is responsible for scientific interpretation and final approval.
+ \bibliographystyle{IEEEtran}
+ \bibliography{references}
+ \label{lastmainpage}
+--- recovery/preamble.tex
++++ final/preamble.tex
+@@ -44,3 +44,5 @@
+ \renewcommand{\floatpagefraction}{.80}
+ \renewcommand{\dblfloatpagefraction}{.80}
+ \raggedbottom
++
++\input{generated/strong_s2_macro}
+--- recovery/sections/01_introduction.tex
++++ final/sections/01_introduction.tex
+@@ -2,9 +2,9 @@
+ \label{sec:intro}
+ Quantized language-model runtimes expose parallel work whenever the next inputs are already known. Prompt processing supplies a sequence of queries; speculative decoding supplies proposed continuations for batched target verification~\cite{leviathan2023,chen2023}. The execution can use this parallelism without changing the mathematical model, yet produce different floating-point outputs. Batch width can change activation quantization, reduction organization or the physical range consumed by attention. A causal mask fixes which keys are logically visible, but does not fix those numerical operations.
+ 
+-For an established deployment, this creates a concrete optimization problem: how can a runtime reorganize known-query work while retaining the numerical behavior already used by regression tests and stateful continuations? Repeatedly producing the same new output is insufficient when the required reference is an existing execution. The incoming KV state, the prompt producer and the requested output rows are part of that reference, along with the weights and numerical libraries. An optimization must preserve their composition across prefill, continuation, verification and commit.
++An established deployment needs more than repeatable output: it needs compatibility with the execution already used by regression tests and stateful continuations. That execution includes the prompt producer, incoming KV state and requested output rows, as well as weights and numerical libraries. The optimization problem is to retain their numerical behavior across prefill, continuation, verification and commit while reorganizing known-query work.
+ 
+-There are several ways to control numerical execution. Batch-invariant operators fix reduction choices~\cite{thinkingmachines}; arithmetic reconstruction and compiler enforcement can preserve existing library behavior~\cite{taming}; deterministic engines can relate state invariants to kernel contracts~\cite{vosti}. Fixed-shape schedules and verified speculation provide other system designs~\cite{corun,llm42}. The problem studied here is a native, quantized deployment in which a numerical reference is fixed before optimization. We retain its admitted arithmetic and expose parallelism through the organization of independent work.
++There are several ways to control numerical execution. Batch-invariant operators fix reduction choices~\cite{thinkingmachines}; arithmetic reconstruction and compiler enforcement can preserve existing library behavior~\cite{taming}; deterministic engines can relate state invariants to kernel contracts~\cite{vosti}. Fixed-shape schedules and verified speculation provide other system designs~\cite{corun,llm42}. We study compatibility with a quantized deployment fixed before optimization. Parallelism comes from reorganizing independent work around its reference arithmetic.
+ 
+ \begin{figure*}[t]
+ \centering
+@@ -13,12 +13,12 @@
+ \label{fig:overview}
+ \end{figure*}
+ 
+-We represent the execution requirements as \emph{reference-derived phase plans} (Fig.~\ref{fig:overview}). Source analysis and native tests establish an arithmetic recipe for a supported operator domain. The runtime then reads the actual cache occupancy, head and padding, assigns each query its physical-prefix requirement, and executes compatible groups. Requested vectors are owned by logical row, so graph splitting and later scratch-buffer reuse do not discard the frontier needed by a commit or trim. The target and its KV allocation remain resident across phases.
++A \emph{reference-derived phase plan} connects these requirements (Fig.~\ref{fig:overview}). Source analysis and native tests establish an arithmetic recipe; the runtime reads cache occupancy, head and padding to assign each query its physical range. In the illustrated append, the first three queries require extent 768 and the fourth requires 1024. The plan executes these compatible groups while keeping the target and KV resident. Requested vectors remain associated with their logical rows, preserving the frontier needed after a commit or trim.
+ 
+ Two lowerings implement these requirements. Whole-graph lowering places cuts around an entire graph and can realign subsequent groups after a physical boundary. Local-attention lowering applies the cuts within attention, retaining broader projection and feed-forward work. Projection organization is a separate choice. A backend loop reuses a reference-compatible small-column arithmetic path; independent-channel packing executes several such groups together. For the affected CUDA Q8 path, the preserved group has four columns. The mixed Q4\_K/Q6\_K extension retains scalar-column arithmetic and parallelizes the independent columns. The arithmetic group is type- and backend-specific; the physical-prefix and state interface is shared.
+ 
+-The evaluation connects these mechanisms to complete requests. Native implementations cover three model families and both CUDA and Vulkan. A Linux/Ampere deployment rebuilds the numerical modules from source and establishes its own independent reference. Frozen CUDA rules transfer between grouped-query and multi-head attention structures, while a typed recipe extension supports a 32B mixed-quantization model. Each result is compared within its deployment and numerical contract.
++The evaluation covers three model families and both backends. A Linux/Ampere deployment rebuilds the numerical modules and establishes its own reference. Frozen CUDA rules transfer between grouped-query and multi-head attention structures; a typed recipe extension supports a 32B mixed-quantization model. Comparisons stay within each deployment's numerical contract.
+ 
+-On Linux/A5000, reference-compatible speculative execution reduces resident service by 17.21\%, 25.54\% and 11.52\% against the fastest measured fixed target-only control in the Qwen3-8B, Qwen3-14B and Llama-8B panels. All four ordinary-generation controls load only target resources. Separate balanced factorial experiments identify the contribution of projection packing and the frequency-dependent contribution of local cuts. A 32B target-only study shows a 5.61\% reduction from independent-channel grouping relative to graph-level scalar-column execution. The evaluation separates complete application value from each lowering's increment.
++On Linux/A5000, compatible speculative applications reduce resident service by 17.21\%, 25.54\% and 11.52\% relative to the fastest measured fixed target-only control for Qwen3-8B, Qwen3-14B and Llama-8B. These are application gains. Balanced factorial experiments isolate packing's 0.80\%--1.64\% increment and the smaller, geometry-dependent contribution of local cuts. In a 32B target-only deployment, channel grouping saves 5.61\% relative to graph-level scalar-column execution.
+ 
+-The paper makes three contributions. First, it gives a phase execution interface that composes physical-prefix requirements, arithmetic recipes and output/state ownership under a fixed numerical reference. Second, it implements whole and local lowerings with arithmetic-preserving parallel groups across Q8 and mixed-Q4 paths, including native CUDA/Vulkan mappings. Third, it evaluates complete service, factor attribution and structural transfer with independent numerical oracles and explicit strong controls. The resulting method supports ordinary generation and speculative verification through the same execution requirements, while allowing each deployment to use the configuration justified by its full cost.
++The contributions are a phase-plan interface that composes producer, physical-prefix, arithmetic and state requirements; whole and local implementations with reference-compatible Q8 and mixed-Q4 groups; and an evaluation that separates structural transfer, implementation increments and complete-service value. Ordinary generation and speculative verification use the same interface, with strong simple controls and full request costs determining the useful configuration.
+--- recovery/sections/02_reference.tex
++++ final/sections/02_reference.tex
+@@ -8,7 +8,7 @@
+  \ell^F(x)\bit\ell^R(x),\qquad K^F(x)\bit K^R(x),
+  \label{eq:contract}
+ \end{equation}
+-with matching logical positions, frontier and termination behavior. Equality is checked on complete values, without a tolerance. Active state excludes unused storage, whose bytes need not describe a logical token. The reference fixes the execution whose behavior must be retained.
++with matching logical positions, frontier and termination behavior. Equality is checked on complete values, without a tolerance. Active state excludes unused storage, whose bytes need not describe a logical token. 
+ 
+ The producer is phase-specific. The CUDA references use a whole-prompt caller with physical microbatch one and last-only prompt output. The Vulkan reference retains its original physical microbatch 128 producer, with the declared outer prompt chunks, then scalar continuation. Replacing that producer with scalar prefill would change the numerical reference. Likewise, a context's output reservation is a capacity declaration, not the number of occupied query rows in a call.
+ 
+@@ -19,7 +19,7 @@
+ 
+ The intervention identifies a physical execution requirement. On Vulkan, extent changes continuity and dispatch as well, so the intervention identifies their combined physical effect. A second mechanism concerns activation arithmetic: affected Q8-weight projections use F32 activations on the scalar path, but a wider path can introduce Q8\_1 activation quantization. Retaining the F32 path restores the corresponding arithmetic condition. In a Llama control, that repair alone matched emitted tokens while 99 committed full vectors still differed; the physical-prefix repair removed the remaining discrepancies. The mechanisms are separable and have different backend implementations.
+ 
+-The final planner derives boundaries from live state. For example, a retained Qwen witness at physical head 767 requires extents $[768,1024,1024,1024]$. A whole-graph $1+3$ plan and its local-attention counterpart both preserve the independent reference. No input identifier or output position is used as a repair condition.
++The planner derives cuts from live state. At physical head 767, a Qwen witness requires extents $[768,1024,1024,1024]$; the resulting whole-graph $1+3$ plan and local-attention counterpart both preserve the independent reference. The same extent rule handles this witness and the $3+1$ example in Fig.~\ref{fig:overview}.
+ 
+ \subsection{State and requested outputs connect the phases}
+ The state at a commit contains more than a token list. It includes the materialized prefix, its active KV, the logical frontier vector and any emitted token that has not yet been materialized. A cap or end-of-generation stop can leave the last emitted token pending. Verification can instead append several proposals and then trim rejected state.
+--- recovery/sections/03_method.tex
++++ final/sections/03_method.tex
+@@ -3,14 +3,14 @@
+ \subsection{Separate arithmetic qualification from per-call planning}
+ A backend recipe describes the operator conditions that preserve the deployment reference: weight and activation types, reduction organization, supported shapes and strides, placement and output layout. We establish these conditions through source analysis, own-path replay and controlled comparisons with independent reference operands. Descriptor guards select recipes whose numerical correspondence is established separately through native tests.
+ 
+-The planner combines this recipe with the current cache and caller requirements. It inspects sequence ownership, occupied slots, physical head, capacity and padding. The implemented dense, nonwrapping append profile requires occupied cells to form the logical prefix and the physical head to agree with its end. The extractor rejects shifted, wrapped or holey states outside this profile. This prevents a logical token index from being treated as an allocator address without checking the relationship.
++The planner combines the recipe with sequence ownership, occupied slots, physical head, capacity and padding. In the supported dense, nonwrapping append profile, occupied cells form the logical prefix and the physical head agrees with its end. The extractor checks this correspondence and rejects shifted, wrapped or holey states.
+ 
+ For first physical slot $H$, query row $i$, cache capacity $N$ and padding $P$, this profile gives
+ \begin{equation}
+  e_i=\min\!\left(N,\max\!\left(P,P\left\lceil\frac{H+i+1}{P}\right\rceil\right)\right).
+  \label{eq:extent}
+ \end{equation}
+-Each row carries its position, $e_i$, admitted arithmetic class and requested-output flag. The class is normally constant within one attention graph, while the extent changes at a physical boundary. The recipe and these effective requirements also participate in native graph-reuse checks. Reuse identity includes effective per-row geometry and phase policy as well as the outer shape.
++Each row carries its position, $e_i$, admitted arithmetic class and requested-output flag. The class is normally constant within one attention graph, while the extent changes at a physical boundary. Graph-reuse identity includes the recipe, per-row geometry and phase policy as well as the outer shape.
+ 
+ \subsection{Group compatible queries and place the cuts}
+ Let $\kappa_i$ contain a row's physical extent and recipe class. Whole-graph lowering (W) takes maximal adjacent runs of equal $\kappa_i$, subject to the native width bound $W_{\max}$. For constant-key run lengths $r_1,\ldots,r_m$, its minimum number of contiguous calls is
+@@ -18,7 +18,7 @@
+  G_{\min}=\sum_{j=1}^{m}\left\lceil r_j/W_{\max}\right\rceil.
+  \label{eq:groups}
+ \end{equation}
+-Every key change forces a cut, and each run needs at least the stated number of bounded calls. Taking the longest allowed prefix of each run attains the bound. This is a property of the specified grouping constraints; the fastest execution also depends on where the cuts are placed and how the backend implements each group.
++Every key change forces a cut, and each run needs at least the stated number of bounded calls. Taking the longest allowed prefix of each run attains this grouping bound. Runtime also depends on cut placement and the backend implementation of each group.
+ 
+ Whole lowering executes projection, attention and feed-forward work for each compatible call. After a boundary, it can restart full-width calls rather than preserve the remainder of an arbitrary outer chunk. We retain this rechunking behavior as a strong simple implementation.
+ 
+@@ -62,19 +62,19 @@
+ \end{figure*}
+ 
+ \subsubsection{CUDA Q8 recipe}
+-For affected Q8\_0 projections with F32 input, the implementation preserves the existing small-column MMVQ path with $a=4$. The backend-loop4 control quantizes the input and invokes the original small-column specialization for successive groups and the supported tail. Packing uses $[K, 4,g]$ views for eligible multi-group work and shares the weight across groups. The four-column reduction within a group is retained. Tail cases use their explicitly qualified native path and preserve the registered arithmetic.
++For affected Q8\_0 projections with F32 input, the implementation preserves the existing small-column MMVQ path with $a=4$. The backend-loop4 control quantizes the input and invokes the original small-column specialization for successive groups and the supported tail. Packing uses $[K, 4,g]$ views for eligible multi-group work and shares the weight across groups. The four-column reduction within a group is retained. Tails retain the native path validated for their shape.
+ 
+ This distinction matters for verification. A $k=3$ transaction requests at most four target positions and does not enter the wider packing route. A $k=7$ transaction can request eight positions and two independent four-column groups. The draft's prefill microbatch, denoted D1 or D4 in the experiments, is a separate parameter.
+ 
+ \subsubsection{Mixed Q4\_K/Q6\_K recipe}
+-The 32B model contains Q4\_K, Q6\_K and F32 tensors. Its affected mixed-quantized projections retain the original scalar-column path, so $a=1$. One implementation creates a view, scalar matrix operation and output concatenation for each column. The grouped implementation maps the same columns to $[K, 1,q]$ and executes them as independent channels, then reshapes the output to the caller's layout. The original per-type dot functions, activation quantizer and accumulation organization are preserved. The Q8 marker and its four-column guard remain unchanged.
++The 32B model contains Q4\_K, Q6\_K and F32 tensors. Its affected mixed-quantized projections retain the original scalar-column path, so $a=1$. One implementation creates a view, scalar matrix operation and output concatenation for each column. The grouped implementation maps the same columns to $[K, 1,q]$ and executes them as independent channels, then reshapes the output to the caller's layout. The original per-type dot functions, activation quantizer and accumulation organization are preserved. The Q8 four-column guard remains unchanged.
+ 
+-The mixed-Q4 change is implemented in graph lowering and compiled into a new core archive; the recorded CUDA numerical objects remain byte-identical. Qualification uses actual full-model operands and an independent scalar reference, followed by full-model state and output checks. The performance control is graph-level scalar-column execution using the same per-type arithmetic.
++The mixed-Q4 service implementation changes graph lowering and compiled into a new core archive; the recorded CUDA numerical objects remain byte-identical. Qualification uses actual full-model operands and an independent scalar reference, followed by full-model state and output checks. The full-service control is graph-level scalar-column execution using the same per-type arithmetic.
+ 
+ \subsubsection{Vulkan mapping}
+-Affected Q8-weight projections retain F32 activation input rather than selecting the wider Q8\_1 path. Attention preserves the admitted scalar-equivalent AV reduction and its stride/dispatch requirements, including the p021 mapping used by the resident implementation. The physical-prefix grouping principle is shared with CUDA; its native arithmetic implementation is backend-specific. This allows actual two-query verification and wider known-query append without replacing the original prompt producer.
++Affected Q8-weight projections retain F32 activation input rather than selecting the wider Q8\_1 path. Attention preserves the admitted scalar-equivalent AV reduction and its stride/dispatch requirements, including the p021 mapping used by the resident implementation. The physical-prefix grouping principle is shared with CUDA; its native arithmetic implementation is backend-specific. This supports two-query verification and wider known-query append with the original prompt producer.
+ 
+-\subsection{Keep one state owner and explicit output ownership}
++\subsection{Keep one state owner across phases}
+ The phase interface binds each plan to the existing target context. Prefill, ordinary continuation and verification share one resident target/KV owner; a phase transition changes the execution policy while retaining that allocation.
+ 
+ The caller's requested-row mask is preserved through splitting. After a native call has made the requested vectors available, the executor copies them into logical output slots before subsequent calls can reuse scratch memory. The accepted prefix can then select its frontier even when a later physical row was rejected. A commit or trim updates active state and pending-token bookkeeping together. Reset returns the owner to its declared initial condition; an execution failure prevents further use of a partially updated owner.
+--- recovery/sections/04_evaluation.tex
++++ final/sections/04_evaluation.tex
+@@ -3,9 +3,9 @@
+ \subsection{Deployments and comparison structure}
+ The implementations extend a pinned llama.cpp/ggml runtime, with commit-bound numerical modules, model bytes, tokenizer and prompt templates~\cite{records}. CUDA studies use a Windows RTX 5070 Ti Laptop GPU and a Linux RTX A5000; Vulkan studies use an Intel Arc B570. Models cover Qwen3, Llama and SmolLM2~\cite{qwen3,llama3,smol}. Each deployment fixes its own reference before candidate comparisons. The Linux deployment rebuilds the reference and candidate numerical modules from source, including the CUDA, base and CPU backends.
+ 
+-The evaluated state profile is dense single-sequence inference, with F16 KV, greedy output and no FlashAttention. Outer known-query work reaches 32 positions; the later CUDA verification study supports true q8. Natural service panels use C1024, and the final Vulkan append interface is also checked at C4096. Table~\ref{tab:panels} binds the measured profiles, producer semantics and cost windows.
++The evaluated state profile is dense single-sequence inference, with F16 KV, greedy output and no FlashAttention. Outer known-query work reaches 32 positions; the later CUDA verification study supports eight occupied query rows. Natural service panels use C1024, and the final Vulkan append interface is also checked at C4096. Table~\ref{tab:panels} binds the measured profiles, producer semantics and cost windows.
+ 
+-We use W/L to denote whole/local cut scope, and L4/P for the Q8 backend-loop4/packed projection choices. M is ordinary target-only generation. D4 uses draft prefill physical microbatch 4, with subsequent proposal and synchronization calls following their registered paths. Unless stated otherwise, $k=3$. The same legal numerical, resident-state and graph-reuse improvements are provided to every applicable control. Ordinary generation remains an application alternative and loads no idle draft in the latest Linux panels.
++W/L denotes whole/local cuts, and L4/P denotes backend-loop4/packed projections. Q8\_0 names weight quantization; $q$ is the number of query rows and $k$ the number of draft proposals. M denotes target-only generation. D4 sets draft prefill microbatch UB4; it does not set $k$. Unless stated otherwise, $k=3$. All applicable controls receive the same legal numerical, residency and graph-reuse improvements. Ordinary generation remains an application alternative and loads no idle draft in the latest Linux panels.
+ 
+ \begin{table*}[t]
+ \centering\footnotesize\tighttable
+@@ -13,11 +13,11 @@
+ \label{tab:panels}
+ \begin{tabularx}{\textwidth}{@{}L{2.00cm}L{2.22cm}L{2.40cm}L{1.64cm}L{1.40cm}Y@{}}\toprule
+ Panel & Platform / model & Compared paths & Root / repetition unit & Measured + warm & Observation and cost window\\\midrule
+-Linux service & A5000; Qwen3-8B, 14B & Four real M; W-L4-D4, L-P-D4 & 16 exposed roots; 4 sessions & $384+48$ each & Resident service plus actual startup, request burst and worker clocks.\\
++Linux service & A5000; Qwen3-8B, 14B & Four target-only M; W-L4-D4, L-P-D4 & 16 exposed roots; 4 sessions & $384+48$ each & Resident service plus actual startup, request burst and worker clocks.\\
+ Llama service & A5000; Llama-8B/1B & Same six paths & 12 new project roots; 4 sessions & $288+48$ & Independent family reference; all fixed controls.\\
+ Balanced factors & A5000; Qwen3-8B, 14B & W/L $\times$ L4/P; D4 fixed & 16 roots; 4 Williams rows & $256+32$ each & Cut and projection attribution in the same panel.\\
+ Mixed-Q4 & A5000; Qwen3-32B & Four M; two D4; REF1 loop/group & 4 exposed roots; 4 rounds & $96+96$ & Resident service; shared graphs-off policy; descriptive.\\
+-True-q8 live & Windows RTX; Qwen3-8B & W/L $\times$ L4/P $\times$ k3/k7 & 16 new roots; 8 Williams rows & $1024+128$ & Complete service; common candidate output reserve 8.\\
++Eight-query live & Windows RTX; Qwen3-8B & W/L $\times$ L4/P $\times$ k3/k7 & 16 new roots; 8 Williams rows & $1024+128$ & Complete service; common candidate output reserve 8.\\
+ Equal-work width & Windows RTX; Qwen3-8B & One q8 vs two q4 calls & 4 fixed origins; paired cells & $128+32$ & Identical state, eight tokens and all eight outputs.\\
+ Vulkan append & B570; SmolLM2-1.7B & Scalar reference, W, L & 12 structural cells; 3 repeats & $108+108$ & C1024/C4096; append after valid state preparation.\\\bottomrule
+ \end{tabularx}
+@@ -33,11 +33,11 @@
+ Clean performance runs check reference endpoints, semantic traces, physical work, module identity and the absence of heavy state APIs. Full-vector/state correspondence is established at the declared heavy qualification boundaries; clean timing measures the same numerical implementation with endpoint and trace checks.
+ 
+ \subsection{Natural inputs, warmup and service clocks}
+-Code and mathematics inputs are drawn from pinned APPS and MATH snapshots~\cite{apps,math}. The historical producer-boundary study also uses GSM8K~\cite{gsm8k} and MATH-500 inputs; its original eight-root, all-mathematics selection and separate producer interventions are reported in Supplement~S5. The 16-root Linux Qwen panels reuse the same source task records, prompt IDs and cap definitions as the earlier Windows panel, with each Linux deployment establishing its own independent reference. Repeated deployment measurements are not additional independent tasks. The Llama panel prospectively selects 12 roots after a recorded project-exposure exclusion. The Windows q8 panel selects 16 roots with prompt length at most 192 tokens and cap 96. The 32B panel uses four exposed mathematics roots with cap 128. Here, project-exposure history defines whether a task is new; training-set membership is unspecified.
++Natural service inputs come from pinned APPS and MATH snapshots~\cite{apps,math}. The Linux Qwen panels reuse the Windows panel's 16 task records, tokenized prompts and cap definitions. Each deployment establishes its own numerical reference and measurements; task reuse does not enlarge the independent sample. Llama uses 12 roots selected after project-exposure exclusion. The Windows $q=8$ live panel has 16 separate roots, prompt length at most 192 tokens and cap 96. Its equal-work study instead uses one APPS and three GSM8K~\cite{gsm8k} development origins selected before timing (Supplement~S4). The 32B panel uses four exposed mathematics roots with cap 128. The earlier producer study uses GSM8K and MATH-500 (Supplement~S5). ``New'' refers to project exposure, not model-training membership.
+ 
+ In the Linux service panels, each arm/session starts one resident worker, loads its required models and contexts, performs two separate primer requests, and processes the fixed test roots with the declared reset policy. The 32B panel instead uses an identical-root full warmup immediately before each measured request. Both warmup schemes are retained as distinct designs. Each request ends at native EOG or its token cap, preserving its naturally observed output length.
+ 
+-Resident service contains the registered reset, planning, target/draft execution, sampling, required state bookkeeping, synchronization and requested-output materialization. Separate clocks record process startup, model loading, integrity checks, primers, request-string wall time and wrapper work. These overlapping windows describe distinct lifecycle costs. The first completed response measures full-request latency. Memory is reported from periodic device-global samples.
++Resident service contains the registered reset, planning, target/draft execution, sampling, required state bookkeeping, synchronization and requested-output materialization. Separate clocks record process startup, model loading, integrity checks, primers, request-burst wall time and wrapper work. These overlapping windows describe distinct lifecycle costs. The first completed response measures full-request latency. Memory is reported from periodic device-global samples.
+ 
+ Vulkan's structural endpoint starts after valid state preparation and includes phase binding, decode, synchronization and output copying. State preparation and import are separately accounted. Equal-work q8 diagnostics likewise retain identical input/state/output contracts and report their operation boundary. Profiling and synchronized host-component diagnostics use separate runs. Primary latencies include every operation within their declared measurement boundary.
+ 
+--- recovery/sections/05_results.tex
++++ final/sections/05_results.tex
+@@ -5,15 +5,15 @@
+ 
+ \begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{figures/service_controls.pdf}
+-\caption{Linux/A5000 resident service. Each diamond compares LOCAL-packed D4 (draft prefill UB4, $k=3$) with a fixed target-only M; segments are 99\% paired-root intervals adjusted for five contrasts. Headers give fastest fixed M and D4 mean times. Qwen panels share 16 tasks; Llama has 12. Deployments are analyzed separately. Table~S1 reports all six arm means.}
++\caption{Linux/A5000 resident service. Faint points show all task-root ratios. Each diamond compares LOCAL-packed D4 (draft prefill UB4, $k=3$) with a fixed target-only M; segments are 99\% paired-root intervals from the five-contrast family (the four M comparisons shown here and the W-L4-D4 comparison). Headers give fastest fixed M and D4 mean times. Qwen panels share 16 tasks; Llama has 12. Deployments are analyzed separately. Table~S1 reports all six arm means.}
+ \label{fig:service}
+ \end{figure*}
+ 
+ The 14B deployment also retains the benefit outside the internal service timer. The actual measured-request burst totals 294.632\,s for its strongest fixed M and 219.405\,s for LOCAL-packed D4, a 25.53\% reduction. Complete native-worker totals, including integrity checks, loading, primers and the request strings, change from 662.546 to 594.559\,s, a 10.26\% reduction. For Llama, resident requests benefit, while the recorded process-level total favors M for this short worker workload. Table~S2 reports resident and full-worker costs separately.
+ 
+-A separate Windows practical panel retains all four real target-only controls and 16 new roots. LOCAL-packed D4 reduces resident service by 29.11\%, actual request-burst time by 29.09\% and worker-wall time by 26.00\%. Its complete phase account locates the savings primarily in continuation/verification. Supplement~S2 gives the absolute times and disjoint cost balance. The Windows and Linux panels have separate inputs, references and lifecycles.
++The Windows practical panel originally selected 16 task roots and retained all four target-only controls. LOCAL-packed D4 reduces resident service by 29.11\%, actual request-burst time by 29.09\% and worker-wall time by 26.00\%. Its complete phase account locates the savings primarily in continuation/verification. Supplement~S2 gives the absolute times and disjoint cost balance. The Linux Qwen panels reuse the Windows task records, while numerical references, measurements and deployment lifecycles are established separately.
+ 
+-Compatible target verification saves enough target work to pay for a real drafter in these deployments. This gain belongs to the reference-compatible application, which whole-graph execution also supports. The balanced studies resolve the incremental effects of the two implementation choices.
++Compatible target verification saves enough target work to cover draft work in these deployments. This gain belongs to the reference-compatible application, which whole-graph execution also supports. The balanced studies resolve the incremental effects of the two implementation choices.
+ 
+ \subsection{Balanced studies separate the sources of improvement}
+ \label{sec:factors}
+@@ -21,21 +21,21 @@
+ 
+ \begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{figures/factorial.pdf}
+-\caption{Balanced D4 attribution. Faint points show all 16 root ratios. Diamonds (8B) and squares (14B) mark complete-service total ratios; segments are 99\% adjusted intervals. Hollow, neutral estimates include 1. The two sections isolate cut scope and projection. Table~S3 lists the fixed effects; Supplement~S3 defines the equal-root interaction.}
++\caption{Balanced D4 attribution. Faint points show all 16 root ratios. Diamonds (8B) and squares (14B) mark complete-service total ratios; segments are 99\% adjusted intervals. Hollow, neutral markers identify intervals that include 1. The two sections isolate cut scope and projection. Table~S3 lists the fixed effects; Supplement~S3 defines the equal-root interaction.}
+ \label{fig:factorial}
+ \end{figure*}
+ 
+-At 8B, packing reduces service by 1.635\% with W and 1.556\% with L. At 14B, the corresponding reductions are 0.987\% and 0.796\%. The comparison is against a real backend-loop4 implementation, rather than just the older graph-level tiling and concatenation. It therefore measures the increment left after moving the simple loop into the backend.
++At 8B, packing reduces service by 1.64\% with W and 1.56\% with L; at 14B, it saves 0.99\% and 0.80\%. Backend-loop4 already moves the simple loop out of the graph, so these comparisons measure the remaining packing increment.
+ 
+-Local cuts have a smaller natural-request increment. At fixed loop4, they reduce time by 0.209\% and 0.304\% for 8B and 14B. At fixed packing, the point estimates are 0.128\% and 0.112\%, with intervals containing 1. The multiplicative interactions are 1.000696 and 1.001703. These estimates show mild attenuation between the two optimizations rather than additional positive synergy.
++At fixed loop4, local cuts save 0.21\% and 0.30\% for 8B and 14B. At fixed packing, the point reductions are 0.13\% and 0.11\%, with intervals containing 1. The interactions, 1.000696 and 1.001703, indicate mild attenuation when the two optimizations are combined.
+ 
+-The physical execution explains the scale of the cut effect. In the 8B factorial, 20 of 2,224 logical verification cycles require an extra whole-graph boundary split, approximately 0.899\%. LOCAL executes 2,224 four-row graphs and W executes 2,244 verification graphs, with the same number of target rows and the same prefill-width distribution. Local grouping avoids real repeated graph work, but most calls in this natural panel already have compatible geometry. The remaining projection effect is observed across the broader known-query work.
++The physical execution explains the scale of the cut effect. In the 8B factorial, 20 of 2,224 logical verification cycles require an extra whole-graph boundary split, approximately 0.899\%. LOCAL executes 2,224 four-row graphs and W executes 2,244 verification graphs, with the same number of target rows and the same prefill-width distribution. Local grouping avoids repeated graph work at those boundaries; most calls already have compatible geometry. The native observer places wide packing in prefill, not in four-row verification. This phase distinction explains where packing can contribute at $k=3$.
+ 
+-These results give the two optimizations different roles. Packing improves the organization of admitted arithmetic groups. Local cuts preserve outer parallelism when physical-prefix boundaries divide a call. The evaluated deployments bind these roles to fixed qualified choices; per-call planning derives compatible groups from the actual structure.
++Packing organizes independent arithmetic groups, while local cuts preserve outer parallelism when a physical boundary divides a call. A deployment selects the implementations; per-call planning supplies their compatible groups.
+ 
+ \subsection{Typed grouping extends the method to 32B mixed quantization}
+ \label{sec:q4result}
+-The 32B deployment contains 385 Q4\_K, 65 Q6\_K and 257 F32 tensors. Its REF1 recipe is a typed extension: it retains scalar-column arithmetic for the mixed quantized projections and exposes independent columns as channels. All six paths pass the declared finite native qualifications before the four-root descriptive timing panel. The candidates share C1024, F16 KV, reserve 32 and a CUDA-Graphs-disabled policy. Transformer and output layers are GPU offloaded, with the standard CPU-mapped input embedding.
++The 32B deployment contains 385 Q4\_K, 65 Q6\_K and 257 F32 tensors. Its REF1 recipe is a typed extension: it retains scalar-column arithmetic for the mixed quantized projections and exposes independent columns as channels. All six paths pass finite vector/state checks before the four-root descriptive timing panel. The candidates share C1024, F16 KV, reserve 32 and a CUDA-Graphs-disabled policy. Transformer and output layers are GPU offloaded, with the standard CPU-mapped input embedding.
+ 
+ \begin{figure}[t]
+ \centering\includegraphics[width=\columnwidth]{figures/mixed_q4.pdf}
+@@ -43,11 +43,11 @@
+ \label{fig:q4}
+ \end{figure}
+ 
+-With W fixed, grouping reduces ordinary service from 124.182883 to 117.208239\,s across 16 measured requests, or 5.616\%. With L fixed, the reduction is 5.606\%, from 124.100017 to 117.143582\,s. Both comparisons improve in all 16 matched root/round pairs. Complete worker totals also decrease by 3.98\% and 4.56\%, respectively, while complete caller totals decrease by 3.85\% and 3.81\%. The service reduction is also visible in the worker and caller windows.
++Grouping reduces ordinary service from 124.183 to 117.208\,s with W fixed (5.62\%), and from 124.100 to 117.144\,s with L fixed (5.61\%), over 16 requests per arm. Both comparisons improve in all 16 matched root/round pairs. Worker totals fall by 3.98\% and 4.56\%, and caller totals by 3.85\% and 3.81\%, respectively. The grouped implementation retains scalar-column arithmetic while replacing separate column graphs and concatenation with one operation over independent channels.
+ 
+-Figure~\ref{fig:q4} identifies target-only grouped execution as the appropriate measured application choice. The grouped D4 path improves on the graph-loop D4 path, but takes 14.00\% more resident time than the fastest M. The ordinary-generation comparison fixes cut scope and excludes draft work, isolating the measured grouping package.
++Figure~\ref{fig:q4} identifies target-only grouped execution as the appropriate measured application choice. The grouped D4 path improves on the graph-loop D4 path, but takes 14.00\% more resident time than the fastest M. The ordinary-generation comparison fixes cut scope and excludes draft work, isolating the measured grouping package. A subsequent operand-level comparison with a backend-internal loop is reported in Supplement~S3.
+ 
+-Grouping preserves the qualified scalar-column arithmetic while reducing ordinary service time by 5.61\% relative to the graph-level column control. The grouped implementation replaces separate column graphs and concatenation with one operation over independent channels.
++
+ 
+ \subsection{Physical geometry determines the value of local cuts}
+ The final Vulkan interface supports actual C1024 and C4096 allocations, the original prompt producer and known-query appends of 2, 4 and 32 rows. Figure~\ref{fig:vulkan} retains both within-bucket and crossing cases. In the six crossing coordinates, LOCAL reduces append time by 20.34\%--44.68\% relative to W. The paired inside controls are within approximately 0.43\%--3.74\% in the other direction.
+@@ -64,21 +64,21 @@
+ 
+ \subsection{Eight-row execution improves equal work; live width changes work}
+ \label{sec:width}
+-The true-q8 implementation retains the original Q8\_0 weights and arithmetic reference while extending the native transaction to $k=7$ with common candidate output reserve 8. The width is physical: LOCAL can execute eight verification positions, while W splits according to actual extents. Original requested rows, pending/correction/bonus state, trim frontier and terminal handling are qualified against the independent reference.
++The $q=8$ implementation retains Q8\_0 weights and the arithmetic reference, extending the transaction to $k=7$ with candidate output reserve 8 for both widths. The width is physical: LOCAL can execute eight verification positions, while W splits according to actual extents. Original requested rows, pending/correction/bonus state, trim frontier and terminal handling are qualified against the independent reference.
+ 
+ \begin{figure*}[t]
+ \centering
+ \includegraphics[width=.493\textwidth]{figures/width_equal.pdf}\hfill
+ \includegraphics[width=.493\textwidth]{figures/width_live.pdf}
+-\caption{Equal-work efficiency and live workload. (a) One q8 call versus two q4 calls: identical state, eight known tokens and eight full outputs. Faint points are four fixed-origin ratios; percentages denote time reductions. (b) All four fixed-method k7/k3 contrasts from the eight-arm live panel, with 16 roots and 98.75\% adjusted intervals; percentages denote service-time increases. D4 is fixed; no contemporaneous M is timed.}
++\caption{Equal-work efficiency and live workload. (a) One $q=8$ call versus two $q=4$ calls from the same state, using eight known tokens and all eight full outputs. Diamonds and percentages summarize total operation time; faint points retain all four origin ratios (one APPS, three GSM8K). (b) Four fixed-method $k=7$/$k=3$ service ratios from the separate 16-root live panel, with 98.75\% adjusted intervals; percentages denote increases. D4 is fixed; no contemporaneous M is timed.}
+ \label{fig:width}
+ \end{figure*}
+ 
+-For identical state, eight known tokens and all eight outputs, one q8 operation is faster than two q4 operations in all four tested RTX aggregate cells: 3.94\%--11.91\% lower operation time (Fig.~\ref{fig:width}a). This reduction holds in the aggregate for both projection paths and both tested geometries.
++Across the four development origins, one $q=8$ operation uses 3.94\%--11.91\% less aggregate time than two $q=4$ operations in the four RTX cells (Fig.~\ref{fig:width}a). Individual origin ratios remain visible, including the loop4-crossing origin above 1. The separate A5000 live pilot is reported in Supplement~S4.
+ 
+ In live generation, k7 reduces cycles from 3,504 to 2,296 per arm but increases verification rows from 14,016 to 18,368 for the same 11,472 emitted tokens. Acceptance among inspected proposals is 87.47\% and 87.93\%; acceptance among all proposals is 75.42\% and 56.94\%. The separate proposal accounts in the supplement distinguish actual mismatches from unconsumed suffixes.
+ 
+-All four complete-service width comparisons favor k3 by the ratios shown in Fig.~\ref{fig:width}b. For LOCAL-packed, k7 adds 24.8969\,s over 128 requests. Target verification adds 13.5668\,s, draft proposal adds 13.2235\,s, and draft synchronization saves 2.7916\,s; other recorded work closes the balance. Requested-output copying contributes 0.2519\,s of the net increase. Supplementary Fig.~S1 and Table~S5 preserve the decomposition and all eight arms.
++All four complete-service width comparisons favor k3 by the ratios shown in Fig.~\ref{fig:width}b. For LOCAL-packed, $k=7$ adds 24.897\,s over 128 requests: verification adds 13.567\,s, draft proposal adds 13.224\,s, and draft synchronization saves 2.792\,s. Output copying contributes 0.252\,s; the remaining work closes the balance. Supplementary Fig.~S1 and Table~S6 preserve the decomposition and all eight arms.
+ 
+ The complete cost can be written as
+ \begin{equation}
+--- recovery/sections/06_related.tex
++++ final/sections/06_related.tex
+@@ -1,9 +1,9 @@
+ \section{Related Work}
+ \label{sec:related}
+ \subsection{Preserving arithmetic across parallel execution}
+-Thinking Machines studies batch-invariant reduction choices for normalization, matrix multiplication and attention~\cite{thinkingmachines}. Taming reconstructs the bitwise arithmetic of existing cuBLAS kernels, enforces reduction descriptions during lowering and verifies compiled arithmetic properties~\cite{taming}. These works establish that existing numerical behavior can be an optimization target. Our contribution connects qualified arithmetic to actual dense-cache prefixes, phase transitions and requested-output ownership in a quantized inference runtime. The native grouping recipes expose independent work while retaining the reference-sensitive organization within each group.
++Thinking Machines studies batch-invariant reduction choices for normalization, matrix multiplication and attention~\cite{thinkingmachines}. Taming reconstructs the bitwise arithmetic of existing cuBLAS kernels, enforces reduction descriptions during lowering and verifies compiled arithmetic properties~\cite{taming}. These works establish that existing numerical behavior can be an optimization target. Our contribution connects reference-compatible arithmetic to dense-cache prefixes, phase transitions and requested-output ownership in a quantized inference runtime. The native grouping recipes expose independent work while retaining the reference-sensitive organization within each group.
+ 
+-Public \texttt{llama\_reproducible} code includes a small-column quantized execution path~\cite{loop4code}. Backend-loop4 is therefore a direct performance control. The balanced experiments separate its remaining projection increment from cut scope. The mixed-Q4 study uses a scalar-column recipe and a different graph-level baseline, which is labeled explicitly.
++Public \texttt{llama\_reproducible} code includes a small-column quantized execution path~\cite{loop4code}. Backend-loop4 is therefore a direct performance control. The balanced experiments separate its remaining projection increment from cut scope. The mixed-Q4 study uses a scalar-column recipe and a different graph-level baseline, as summarized in Fig.~\ref{fig:q4}.
+ 
+ \subsection{System determinism and speculative execution}
+ Vosti studies engine-level determinism through formal relationships between engine state, cache behavior and kernel properties~\cite{vosti}. We study compatibility with an existing quantized deployment: phase-specific producers, physical cache geometry and qualified arithmetic determine the whole/local execution plans. Native numerical correspondence and complete-service measurements evaluate these plans.
+--- recovery/sections/07_conclusion.tex
++++ final/sections/07_conclusion.tex
+@@ -1,4 +1,4 @@
+ \section{Conclusion}
+-Reference-derived phase plans turn a fixed numerical deployment into explicit requirements for parallel execution. Actual physical prefixes determine compatible query groups; typed arithmetic recipes preserve reference-sensitive reductions; resident state and logical output ownership carry those requirements across phases. Whole-graph and local-attention lowerings then expose different amounts of parallel work without changing the target observations required by the reference.
++Reference-derived phase plans connect a deployment's numerical behavior to its parallel execution. They combine the producer history, physical KV range, type-specific arithmetic and ownership of logical outputs and state. Whole-graph and local-attention implementations place the cuts differently while preserving the reference-sensitive computation within each group.
+ 
+-Native CUDA and Vulkan studies establish the method across model structures, operating environments and quantized paths, including a 32B mixed-Q4 extension. Complete-service comparisons identify useful ordinary and speculative configurations; balanced controls separate packing gains from the geometry-dependent value of local cuts. The method preserves the arithmetic that defines an established reference while reorganizing the independent work around it.
++CUDA and Vulkan studies support this approach across model structures, operating environments and quantized paths, including mixed-Q4 at 32B. Controlled comparisons separate packing's contribution from geometry-dependent local cuts. Complete requests then determine the useful deployment: speculative execution improves the three Linux service panels, grouped ordinary generation is preferable in the tested 32B configuration, and shorter proposals remain preferable in the live width study despite the aggregate equal-work advantage of eight-query execution. Phase plans make these choices available within an established numerical reference.
+--- recovery/supplement_body.tex
++++ final/supplement_body.tex
+@@ -1,4 +1,5 @@
+ \setcounter{section}{0}
++\setcounter{dbltopnumber}{3}
+ \renewcommand{\thesection}{S\arabic{section}}
+ \setcounter{table}{0}\renewcommand{\thetable}{S\arabic{table}}
+ \setcounter{figure}{0}\renewcommand{\thefigure}{S\arabic{figure}}
+@@ -8,13 +9,13 @@
+ \end{center}
+ 
+ \section{Deployment and Evidence Register}
+-The tables below give all completed control paths and their measurement windows. W and L denote whole-graph and local-attention lowering. L4 and P denote the Q8 backend loop and packing implementation. M is true target-only generation in the Linux service panels. D4 denotes draft prefill physical microbatch 4, not speculative length 4. The 32B REF1-loop and REF1-group paths retain single-column Q4\_K/Q6\_K arithmetic.
+-
+-The supported deployment profile is dense seq0 with F16 K/V, greedy stopping and no FlashAttention. CUDA prompt references use a whole-prompt caller, physical UB1 and last-only output. The Vulkan producer retains its registered UB128 and outer prompt calls. Numerical modules, context capacity, placement and output requests belong to the reference identity. Each model/platform study has its own fixed R. Transfer applies the method against that deployment's reference.
++W/L denotes whole-graph/local-attention lowering; L4/P denotes the Q8 backend loop/packing implementation. M loads target resources only. D4 sets draft prefill UB4, independently of proposal count $k$. The 32B REF1-loop/group paths retain single-column Q4\_K/Q6\_K arithmetic. Tables retain every control and its cost window.
++
++The profile is dense seq0, F16 K/V, greedy stopping and no FlashAttention. CUDA references use whole-prompt callers, physical UB1 and last-only output; Vulkan retains UB128 and its outer prompt calls. Each model/platform has its own R, including numerical modules, capacity, placement and output requests.
+ 
+ The Linux Qwen/Smol qualification records 6,740 requested full-vector comparisons and 4,784 active-state comparison records. Table~\ref{tab:panels} lists the task-root and repetition units separately.
+ 
+-The source register binds completed studies to immutable records. The accompanying source manifest identifies the numerical projections used for tables and figures; Section~S6 describes their reconstruction.
++Section~S6 and the companion manifest bind each result to its immutable source and reconstruction level.
+ 
+ \section{Complete Application and Lifecycle Costs}
+ \begin{table*}[t]
+@@ -40,11 +41,11 @@
+ Linux Qwen3-8B & W-P-M / L-P-D4 & 172.146 / 142.523 & --- & 200.739 / 168.973 & Worker totals shown at reported millisecond precision.\\
+ Linux Qwen3-14B & W-P-M / L-P-D4 & 294.542 / 219.318 & 294.632 / 219.405 & 662.546 / 594.559 & Same registered requests; worker includes integrity, loading and primers.\\
+ Linux Llama-8B & L-P-M / L-P-D4 & 136.873 / 121.102 & --- & 361.717 / 368.822 & Resident improvement does not preserve the process-level ranking.\\
+-Windows Qwen3-8B & W-P-M / L-P-D4 & 219.810 / 155.814 & 220.178 / 156.126 & 260.240 / 192.568 & Independent practical panel; no timing pool with Linux.\\\bottomrule
++Windows Qwen3-8B & W-P-M / L-P-D4 & 219.810 / 155.814 & 220.178 / 156.126 & 260.240 / 192.568 & Windows measurements; task records reused for Linux, with separate references.\\\bottomrule
+ \end{tabularx}
+ \end{table*}
+ 
+-The Windows practical panel has 16 new roots, four sessions, four real target-only M controls, one matched-residency M and L-P-D4. Its mean fixed-M times are 3.483689, 3.434533, 3.511301 and 3.474824\,s; L-P-D4 averages 2.434597\,s. The four-comparison adjusted root intervals support the reported resident-service direction. The added draft requires more initialization and sampled memory; its per-worker setup difference is approximately 0.420\,s and device-global sampled peak difference approximately 0.705\,GiB. The memory difference is a device-global sampled value; per-process peaks and energy were not measured.
++The Windows practical panel originally selected 16 new roots, four sessions, four real target-only M controls, one matched-residency M and L-P-D4. Its mean fixed-M times are 3.483689, 3.434533, 3.511301 and 3.474824\,s; L-P-D4 averages 2.434597\,s. The four-comparison adjusted root intervals support the reported resident-service direction. The added draft requires more initialization and sampled memory; its per-worker setup difference is approximately 0.420\,s and device-global sampled peak difference approximately 0.705\,GiB. The memory difference is a device-global sampled value; per-process peaks and energy were not measured.
+ 
+ The complete Windows 64-request phase account gives target savings 96.889\,s, draft additions 31.931\,s and other net additions 0.962\,s, yielding 63.996\,s of resident savings. In the two-root synchronized Vulkan cost diagnostic, target savings 0.466681\,s are offset by draft additions 1.923330\,s and other additions 0.210582\,s. The synchronized diagnostic and the four-root clean Vulkan pilot use distinct measurement windows and are reported separately.
+ 
+@@ -70,14 +71,30 @@
+ \bottomrule\end{tabular}
+ \end{table*}
+ 
+-The 32B reference is pristine Linux scalar execution with UB1/reserve 1. The candidates use UB32/reserve 32, C1024, F16 KV, no flash and a common graphs-disabled policy fixed before timing. The graph-level REF1-loop and independent REF1-group retain the per-type scalar dot functions and the original activation quantizer. The 5.61\% comparison uses graph-level scalar-column execution; evaluation against a backend-internal REF1-loop remains outside this completed study. The precise candidate source modification is in graph lowering; unchanged CUDA archive members are bound in the build record. Each requested full output and active state in the finite qualification is checked against this deployment's own reference.
++The 32B reference is pristine Linux scalar execution with UB1/reserve 1. The candidates use UB32/reserve 32, C1024, F16 KV, no flash and a common graphs-disabled policy fixed before timing. The graph-level REF1-loop and independent REF1-group retain the per-type scalar dot functions and the original activation quantizer. The 5.61\% comparison uses graph-level scalar-column execution. The precise candidate source modification is in graph lowering; unchanged CUDA archive members are bound in the build record. Each requested full output and active state in the finite qualification is checked against this deployment's own reference.
+ 
+ The four exposed roots are short mathematics inputs. Whole/group and local/group improve ordinary service by 5.616\% and 5.606\% relative to their respective graph-level loops. At fixed projection, L/W differs by approximately 0.055\%--0.067\%. L-REF1-group-D4 takes 9.614\% less service than W-REF1-loop-D4, a compound comparison, but 14.000\% more than the strongest M. Table~\ref{tab:q32all} includes all six paths. Model size, quantization, recipe and graph policy jointly distinguish this deployment from the 14B Q8 study.
+ 
++
++\subsection{Backend-internal loop: completed operator follow-up}
++The follow-up at \texttt{f419a89d} fixes whole lowering and scalar-column arithmetic. G loops in the graph; B quantizes once and dispatches scalar dots inside the backend; C groups independent columns. After S1 qualification (243 workers, 783 operations), S2 completes three matched blocks in four exposed tensor cells: 36 fresh workers, each with one warmup and one measurement, all with CUDA Graphs off.
++
++\begin{table}[t]
++\centering\footnotesize\tighttable
++\caption{Strong-loop operator comparison. B/G and C/B are geometric means of three paired elapsed-time ratios. The final column gives the observed C/B minimum--maximum, not a confidence interval. All four exposed cells are shown.}
++\label{tab:strong-operator}
++\begin{tabular}{@{}llrrl@{}}\toprule
++Type & Width & B/G & C/B & C/B range\\\midrule
++\StrongSTwoRows
++\bottomrule\end{tabular}
++\end{table}
++
++B/G and C/B have equal-cell geometric ratios of 0.6390 and 0.8528 (Table~\ref{tab:strong-operator}); Q6\_K/$q=4$ has mixed paired directions. These one-warmup operator results complement the 5.61\% graph-loop service comparison. The full-model B comparison and matched-history A5000 width follow-up have no performance results in this fixed version. The package recomputes cell summaries from public block ratios, separately from the source authors' raw-time replay.
++
+ \section{Verification Width}
+ \begin{table}[t]
+ \centering\footnotesize\tighttable
+-\caption{All eight Windows true-q8 live arms. Each arm has 128 formal requests: 16 roots across eight order blocks. The candidate output reservation is 8 for both k3 and k7.}
++\caption{All eight Windows width-study arms. Each arm has 128 formal requests: 16 roots across eight order blocks. The candidate output reservation is 8 for both k3 and k7.}
+ \begin{tabular}{@{}lrr@{}}\toprule
+ Arm & Service sum (s) & Mean (s)\\\midrule
+ \QEightRows
+@@ -101,83 +118,88 @@
+ 
+ Each arm emits 11,472 tokens. The corresponding k3/k7 counts are 3,504/2,296 verification cycles, 10,512/16,072 proposed tokens, 7,928/9,152 accepted proposals, 1,136/1,256 first inspected mismatches and 1,448/5,664 unconsumed suffix tokens. There are 14,016/18,368 verification rows and 28,416/32,768 total target rows. Native cap/EOG counts are 104/24 in each arm. Unconsumed suffixes include both post-rejection and terminal-boundary work, whose separate contributions are not resolved by these aggregate counts.
+ 
+-The per-row LOCAL-packed verification envelope improves by approximately 9.68\%, while row count grows 31.05\%. This normalization divides the measured phase cost by the actual number of verification rows. The separate equal-work study uses four exposed origins, the same state, the same eight known tokens and all eight full output vectors. Its four aggregate ratios are 0.880898, 0.960562, 0.895916 and 0.890962 for loop4-inside, loop4-crossing, packed-inside and packed-crossing. Figure~\ref{fig:width}a displays all four cells and their origin-level ratios.
++Dividing LOCAL-packed verification time by its row count gives a 9.68\% decrease per row, alongside 31.05\% more rows. The equal-work study instead holds state, eight known tokens and all eight full outputs constant. Its exposed origins are APPS/train/65 and GSM8K/test/70, /806 and /986. The protocol binds these origins and scalar continuations before timing; four AB/BA paired repetitions are diagnostics, separate from the 16-root live cohort. Its four aggregate ratios are 0.880898, 0.960562, 0.895916 and 0.890962 for loop4-inside, loop4-crossing, packed-inside and packed-crossing. Figure~\ref{fig:width}a displays all four cells and their origin-level ratios.
+ 
+ The original clean width panel retains all 1,024 measurements and 128 live primers. The complete performance source/input/order/statistics manifests preceded clean measurements; some earlier qualification fixtures were frozen in stages. A post-native mask-reader correction reused the unchanged first worker after offline validation, without a GPU rerun, and its inter-worker gap remains in the cost record. Later joint boundary/rollback qualification on an exposed natural root adds 1,936 full-vector and 296 active-target-KV comparisons across all eight arms. These comparisons cover the newly observed state transitions; the earlier clean runs retain their original endpoint and trace observations.
+ 
+-The artifact retains the A5000 follow-up as a startup diagnostic because one phase has unmatched first-use histories. Width-efficiency results here use the RTX equal-work study; matched-history A5000 timing is pending.
++\subsection{A5000 live pilot and subsequent startup diagnostic}
++The completed A5000 pilot at commit \texttt{2d076402} uses four exposed roots with cap 128, two live rounds and eight arms: 64 measurements and 32 primers. Table~\ref{tab:ampere-pilot} gives every live arm. LOCAL-packed $k=7$/$k=3$ service is 1.140572, while packed/loop4 at fixed LOCAL and $k=7$ is 0.981741. Verification time falls by 2.28\% in the latter comparison. The pilot is descriptive; it establishes the measured trade-off on those four inputs. A separate 32-measurement proposal-tape replay performs no draft work and has different target-row counts between widths.
++
++\begin{table}[t]
++\centering\footnotesize\tighttable
++\caption{Completed A5000 live pilot, separate from the later first-use diagnostic. Each entry is the service total for eight requests (four roots, two rounds); D4 is fixed and both widths use reserve 8. Full precision and source identities accompany the manuscript.}
++\label{tab:ampere-pilot}
++\begin{tabular}{@{}lrr@{}}\toprule
++Cut / projection & $k=3$ (s) & $k=7$ (s)\\\midrule
++\AmperePilotRows
++\bottomrule\end{tabular}
++\end{table}
++
++The subsequent A5000 equal-work follow-up uses unmatched first-use histories in one phase. Its measurements describe startup behavior and are kept separate from the completed live pilot and the RTX equal-work results. Matched-history A5000 timing has no completed result in this revision.
+ 
+ \section{Structural Geometry and Earlier Controls}
+ 
+ 
+ The final C1024/C4096 Vulkan append study records 12 coordinates, three paths and three repeats, giving 108 measured operations and 108 corresponding warmups. All allocated capacities and requested-output rules are checked natively. q32 retains the registered last-only output mask and copies the final requested vocabulary vector. The timer begins after valid state preparation and includes native phase binding, decode, synchronization and copied requested output. Caller batch preparation and state import are accounted separately.
+ 
+-Earlier natural-prefix experiments compare local grouping, whole cuts, boundary realignment and a frozen AUTO choice. They establish that natural alignment can leave little distinct work for local cuts and that a simple rechunk implementation can be competitive. These results motivate the whole-graph option. The method exposes legal implementations and uses fixed deployment choices.
+-
+-In the final Vulkan resident pilot, compatible q2 work is real: the separate mechanism window counts 578 local target graphs for 1,156 rows and 582 whole target graphs for the same rows, while ordinary M uses 992 graphs/rows. The fastest clean speculative mean is approximately 1.8235\,s and fastest M 1.1503\,s on four exposed roots. The target-side parallel capability and the application decision are reported separately.
++In the Vulkan resident pilot, LOCAL uses 578 target graphs for 1,156 rows and W uses 582 graphs for those rows; M uses 992 scalar graphs/rows. On four exposed roots, the fastest speculative mean is 1.8235\,s versus 1.1503\,s for M, so this deployment favors ordinary generation.
+ 
+ 
+ \subsection{Archived structural and producer controls}
+ \label{supp:archive}
+-The RTX fixed-geometry study used the same two Qwen and Smol request families across three widths (q4/q8/q32) and two physical-range conditions. Table~\ref{tab:all-rtx-cells} retains all twelve coordinates and four implementation means, including packing regressions. These are two-repeat known-token append measurements, not natural-request population estimates. q4 is a negative control for the wide packing route; changed q4 timings do not identify that kernel's contribution.
++Table~\ref{tab:all-rtx-cells} gives the complete Qwen/Smol matrix across q4/q8/q32 and two physical ranges, with two known-token append repeats per cell. Packing improves some cells and regresses in others. q4 does not enter the wide packing route, so its timing differences are not attributed to that kernel.
+ 
+ \begin{table*}[t]
+ \centering\footnotesize\tighttable
+ \caption{Complete archived RTX known-query structural panel. Values are mean append milliseconds over two repetitions; W and L denote whole and local cut placement. L4 is backend-loop4 and P is independent-group packing. These fixed coordinates are separate from the sixteen-root natural D4 factorial.}
+ \label{tab:all-rtx-cells}
+-\begin{tabular}{@{}lrrrr@{}}\toprule
+-Fixed geometry & W--L4 (ms) & W--P (ms) & L--L4 (ms) & L--P (ms)\\\midrule
+-Qwen q32 / crossing & 167.24 & 188.30 & 161.62 & 163.33 \\
+-Qwen q32 / inside & 149.19 & 158.82 & 168.04 & 159.56 \\
+-Qwen q4 / crossing & 41.76 & 49.28 & 25.28 & 29.78 \\
+-Qwen q4 / inside & 25.35 & 27.77 & 27.23 & 27.33 \\
+-Qwen q8 / crossing & 59.48 & 73.48 & 42.93 & 48.51 \\
+-Qwen q8 / inside & 40.60 & 46.11 & 40.84 & 46.17 \\
+-Smol q32 / crossing & 46.67 & 43.03 & 42.22 & 34.96 \\
+-Smol q32 / inside & 45.65 & 33.00 & 41.40 & 33.02 \\
+-Smol q4 / crossing & 14.18 & 14.34 & 9.16 & 9.69 \\
+-Smol q4 / inside & 7.64 & 7.70 & 7.74 & 7.77 \\
+-Smol q8 / crossing & 19.27 & 21.08 & 13.65 & 12.88 \\
+-Smol q8 / inside & 12.48 & 11.48 & 12.68 & 11.40 \\
+-\bottomrule\end{tabular}
+-\end{table*}
+-
+-\begin{figure}[t]
+-\centering\includegraphics[width=\columnwidth]{figures/supp_historical_geometry.pdf}
++\begin{tabular}{@{}lrrrrrrrr@{}}\toprule
++ & \multicolumn{4}{c}{Qwen3-8B} & \multicolumn{4}{c}{SmolLM2-1.7B}\\
++\cmidrule(lr){2-5}\cmidrule(lr){6-9}
++Geometry & W--L4 & W--P & L--L4 & L--P & W--L4 & W--P & L--L4 & L--P\\\midrule
++q4 / inside & 25.35 & 27.77 & 27.23 & 27.33 & 7.64 & 7.70 & 7.74 & 7.77 \\
++q4 / crossing & 41.76 & 49.28 & 25.28 & 29.78 & 14.18 & 14.34 & 9.16 & 9.69 \\
++q8 / inside & 40.60 & 46.11 & 40.84 & 46.17 & 12.48 & 11.48 & 12.68 & 11.40 \\
++q8 / crossing & 59.48 & 73.48 & 42.93 & 48.51 & 19.27 & 21.08 & 13.65 & 12.88 \\
++q32 / inside & 149.19 & 158.82 & 168.04 & 159.56 & 45.65 & 33.00 & 41.40 & 33.02 \\
++q32 / crossing & 167.24 & 188.30 & 161.62 & 163.33 & 46.67 & 43.03 & 42.22 & 34.96 \\
++\bottomrule\end{tabular}
++\end{table*}
++
++\begin{table*}[t]
++\centering\footnotesize\tighttable
++\caption{Immutable experimental versions. Linked commits identify source trees; the accompanying manifest provides full paths, hashes and figure-input mappings.}
++\label{tab:source-versions}
++\begin{tabularx}{\textwidth}{@{}YlYl@{}}\toprule
++Evidence & Commit & Evidence & Commit\\\midrule
++CUDA prefix repair & \href{https://github.com/leecdiang/HeteroSpec/tree/e11d2b75d82422409ba2b701aa38c59f36acc50b}{\texttt{e11d2b75}} & Qwen3-14B service & \href{https://github.com/leecdiang/HeteroSpec/tree/0e9bb82432dc0a860a43ab9ba1c034f41176fe05}{\texttt{0e9bb824}} \\
++Vulkan arithmetic/prefix repair & \href{https://github.com/leecdiang/HeteroSpec/tree/10a70566ce01ab707dbdcc57d8270c1434088f07}{\texttt{10a70566}} & Qwen3-14B balanced factors & \href{https://github.com/leecdiang/HeteroSpec/tree/44ef9b6654cfe3a800059d7311f8ecf73ffd8983}{\texttt{44ef9b66}} \\
++Windows resident service & \href{https://github.com/leecdiang/HeteroSpec/tree/873d16712fbf3bc04f54e9b3753515c5dbebb60f}{\texttt{873d1671}} & A5000 four-root live pilot & \href{https://github.com/leecdiang/HeteroSpec/tree/2d076402b4ddc29c92549d360cd974af40d3f0a4}{\texttt{2d076402}} \\
++Vulkan C1024/C4096 append & \href{https://github.com/leecdiang/HeteroSpec/tree/0575a34a88acff8298191e172205bf8726fe4174}{\texttt{0575a34a}} & RTX eight-query experiments & \href{https://github.com/leecdiang/HeteroSpec/tree/ba5b4c8e01d50d4bfaab1ac3908f798347be063a}{\texttt{ba5b4c8e}} \\
++Linux Qwen3-8B service & \href{https://github.com/leecdiang/HeteroSpec/tree/592abdfe9267fd97ecbde18cd0ee9a1bfc319e20}{\texttt{592abdfe}} & q8 crossing-state extension & \href{https://github.com/leecdiang/HeteroSpec/tree/29a3751f3745668f287a8dcc3b2ad2c0d15bdc43}{\texttt{29a3751f}} \\
++Qwen3-8B balanced factors & \href{https://github.com/leecdiang/HeteroSpec/tree/55f501e9a93013a4b4d82cc4967e82b8d9054a81}{\texttt{55f501e9}} & 32B mixed-Q4 deployment & \href{https://github.com/leecdiang/HeteroSpec/tree/41ef4ca6bbc382c02fb97ebea874651fbf9fd4ac}{\texttt{41ef4ca6}} \\
++Llama final-method transfer & \href{https://github.com/leecdiang/HeteroSpec/tree/8990a80da23f75c071d6d161c8c79a2dc1347bd7}{\texttt{8990a80d}} & 32B strong-loop operators & \href{https://github.com/leecdiang/HeteroSpec/tree/f419a89d54f4ec93b4c9c328b4ea9f416ae3c989}{\texttt{f419a89d}} \\
++\bottomrule
++\end{tabularx}
++\end{table*}
++
++\begin{figure*}[t]
++\centering\includegraphics[width=\textwidth]{figures/supp_historical_geometry.pdf}
+ \caption{Archived Vulkan fixed-work layout geometry. Each labelled cell gives its measured crossing ratio and paired within-bucket control. A grey unmeasured cell is retained as missing, rather than interpolated. This historical configuration differs from the final resident C4096 experiment of Fig.~\ref{fig:vulkan}.}
+ \label{fig:historical-vulkan}
+-\end{figure}
+-
+-In the earlier natural-prefix study, both independent RTX and B570 frozen AUTO policies remained constant fixed policies. The RTX panel tested 32 natural roots across four sessions, with a registered AUTO service advantage screen unmet and all three baseline/AUTO adjusted intervals containing one. The B570 32-root/four-session panel also had no established AUTO service advantage. These deployments used distinct file-backed and host-memory snapshot lifecycles and are not pooled. A separate eight-root RTX study selected previously unexposed cases with distinguishing whole/rechunk calls by a pre-output criterion; WB-rechunk/QB append time was 0.960486 while whole service was 0.994379, with opposite session directions in the service contrast. This supports including an optimized whole-rechunk control in current comparisons.
+-
+-A B570 producer intervention over eight previously selected math roots changed the initial full binary32 vectors and serialized state in all eight cases when changing the incoming prompt schedule from P1 to P4T. Consumer eligibility subsequently depended on that produced state; the matrix also retained input/producer pairs that did not preserve the original free reference. This identifies producer state as part of the deployment reference rather than an optimization-neutral prompt loader. The source study contains 48 scientific cells and 152 complete model requests. GSM8K~\cite{gsm8k} and MATH-500 were the original mathematical input sources. The independent RTX draft-state witness at a 704-token prompt similarly records an identical emitted answer with a different active target KV and frontier; the diagnostic 1+3 physical split restored the scalar reference without becoming a new measured service improvement.
+-
+-The four-origin q8 live pilot and the A5000 startup diagnostic have distinct observation contracts. The pilot establishes real q8 physical execution and its measured four-root service trade-off; the A5000 equal-work phase varied first-use history and is retained only as a startup diagnostic. Later 16-root RTX confirmation and matched-history qualification supply the formal width comparison reported in Fig.~\ref{fig:width}.
++\end{figure*}
++
++The RTX and B570 natural-prefix panels each use 32 held-out roots and four sessions. Both frozen AUTO policies are constant; neither meets its service-benefit screen, and all three baseline/AUTO intervals include 1. Their file-backed and host-memory snapshot lifecycles remain separate. A subsequent RTX study selects eight unexposed roots with distinguishing whole/rechunk calls before outputs. WB-rechunk/QB is 0.960486 for append and 0.994379 for complete service, with reversed service directions across sessions. These findings motivate the strong whole-rechunk control.
++
++The B570 producer intervention uses eight preselected GSM8K~\cite{gsm8k}/MATH-500 roots, 48 scientific cells and 152 requests. P1-to-P4T changes initial full vectors and serialized state on all eight inputs; consumer compatibility depends on the resulting state, and some pairs still differ from the free reference. In the independent RTX witness, a 704-token prompt yields matching text but different active KV/frontier. A diagnostic $1+3$ split restores the scalar result; it supplies state evidence rather than a new service measurement.
++
++
+ 
+ \section{Sources and Reproduction}
+-\begin{table}[t]
+-\centering\footnotesize\tighttable
+-\caption{Immutable experimental versions. Each commit links to its source tree. Full paths, hashes and figure-input mappings are supplied in the accompanying evidence manifest.}
+-\begin{tabularx}{\columnwidth}{@{}Yl@{}}\toprule
+-Evidence & Commit\\\midrule
+-CUDA prefix repair & \href{https://github.com/leecdiang/HeteroSpec/tree/e11d2b75d82422409ba2b701aa38c59f36acc50b}{\texttt{e11d2b75}}\\
+-Vulkan arithmetic/prefix repair & \href{https://github.com/leecdiang/HeteroSpec/tree/10a70566ce01ab707dbdcc57d8270c1434088f07}{\texttt{10a70566}}\\
+-Windows resident service & \href{https://github.com/leecdiang/HeteroSpec/tree/873d16712fbf3bc04f54e9b3753515c5dbebb60f}{\texttt{873d1671}}\\
+-Vulkan C1024/C4096 append & \href{https://github.com/leecdiang/HeteroSpec/tree/0575a34a88acff8298191e172205bf8726fe4174}{\texttt{0575a34a}}\\
+-Linux Qwen3-8B service & \href{https://github.com/leecdiang/HeteroSpec/tree/592abdfe9267fd97ecbde18cd0ee9a1bfc319e20}{\texttt{592abdfe}}\\
+-Qwen3-8B balanced factors & \href{https://github.com/leecdiang/HeteroSpec/tree/55f501e9a93013a4b4d82cc4967e82b8d9054a81}{\texttt{55f501e9}}\\
+-Llama final-method transfer & \href{https://github.com/leecdiang/HeteroSpec/tree/8990a80da23f75c071d6d161c8c79a2dc1347bd7}{\texttt{8990a80d}}\\
+-Qwen3-14B service & \href{https://github.com/leecdiang/HeteroSpec/tree/0e9bb82432dc0a860a43ab9ba1c034f41176fe05}{\texttt{0e9bb824}}\\
+-Qwen3-14B balanced factors & \href{https://github.com/leecdiang/HeteroSpec/tree/44ef9b6654cfe3a800059d7311f8ecf73ffd8983}{\texttt{44ef9b66}}\\
+-RTX true-q8 experiments & \href{https://github.com/leecdiang/HeteroSpec/tree/ba5b4c8e01d50d4bfaab1ac3908f798347be063a}{\texttt{ba5b4c8e}}\\
+-q8 crossing-state extension & \href{https://github.com/leecdiang/HeteroSpec/tree/29a3751f3745668f287a8dcc3b2ad2c0d15bdc43}{\texttt{29a3751f}}\\
+-32B mixed-Q4 deployment & \href{https://github.com/leecdiang/HeteroSpec/tree/41ef4ca6bbc382c02fb97ebea874651fbf9fd4ac}{\texttt{41ef4ca6}}\\
+-\bottomrule
+-\end{tabularx}
+-\end{table}
+-
+-The companion repository~\cite{records} provides fixed build/recipe histories, experiment plans, complete control records and public statistical reconstructions. Byte hashes identify exact models, which are obtained under their original licenses. The public package supports source and selected artifact-byte verification, aggregate reconstruction and the separately identified root-level statistics. Weights and some large raw vector/KV captures remain in their original or private storage; independent native numerical replication requires those inputs and a new GPU execution.
+-
+-The supplied manuscript source includes the numerical projections, the data manifest and code that regenerates tables and figures. Its arithmetic checks reconstruct all 96 mixed-Q4 measurements and all 16 registered q8 interval endpoints from the complete 128 arm/root aggregates. Other intervals are retained from their fixed source reports with their original estimator and multiplicity family. These checks reproduce the manuscript's numerical analysis.
+-
+-The repository retains original failed source epochs, timeout/reader corrections and accounting alongside the clean performance records. Each new recipe, graph policy, device or capacity configuration binds its reference and requalifies the affected operations. The tables and native observation boundaries specify the completed support reported here.
++
++
++The repository~\cite{records} supplies build/recipe histories, protocols, complete control records and statistical reconstructions. Model hashes bind licensed weight files. The manuscript package regenerates figures and tables from fixed projections, recomputes all 96 mixed-Q4 measurements and 16 registered $q=8$ interval endpoints from 128 arm/root aggregates, and identifies inherited intervals separately.
++
++For the 8B factorial, 64 supplied W-L4 request times anchor other arm/root sums recovered from published paired ratios; these reproduce its four direct intervals and interaction. The 14B root ratios reproduce the interaction only. Added session and leave-one-root-out summaries are descriptive sensitivity checks. None changes the primary estimator or multiplicity family.
++
++Weights and some large vector/KV captures remain in licensed or private storage. Independent numerical replication requires those inputs and new GPU execution; public-byte and statistical reconstruction alone does not perform it. Failed epochs, reader corrections and accounting remain in the repository. New recipes, devices or capacities bind a reference and requalify the affected operations.

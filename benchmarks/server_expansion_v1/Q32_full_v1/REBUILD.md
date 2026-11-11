@@ -1,0 +1,190 @@
+# Rebuild and continuation boundaries
+
+Use the fixed Linux source packet, compiler/CUDA and original complete numerical
+source build described by PR196 and its delivered successor. Upstream reference
+is `0cae43063cf15170e91a2ff4d034da0ecef4a1b2`; candidate source is
+`873d16712fbf3bc04f54e9b3753515c5dbebb60f`. No moving branch or Windows DLL.
+The full compiled CUDA dependency receipts remain mandatory, not just libraries.
+
+Before CUDA initialize, use the explicitly allocated single UUID in private host
+config, retain protected GPU0 and all resource reserves, and use two CPU tasks.
+Check all model bytes/SHA/licenses. The model inventory and plan specify the
+exact32B mixed-Q4 and0.6B Q8_0 files. Output reserve32 is a new32B candidate
+contract; the pristine32B scalar R uses UB1/reserve1 and remains independent.
+
+In a fresh installation with the same recorded root layout:
+
+```sh
+python -B prepare_host.py --work "$HS_ROOT/q32-q4-full-20261109-01"
+python -B build.py --root "$HS_ROOT" --out "$HS_ROOT/q32-q4-full-build-01"
+python -B seed_epoch.py --from-build "$HS_ROOT/q32-q4-full-build-01" --out "$HS_ROOT/q32-q4-full-build-04"
+python -B build_frontend.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-04"
+python -B build_operands.py --root "$HS_ROOT" --builds "$HS_ROOT/q32-q4-full-build-04" --out "$HS_ROOT/q32-q4-full-operands-build-04"
+```
+
+`build.py` actually compiles the modified graph translation unit and proves all
+other archive members unchanged. The seed copies this exact new numerical core
+for a fresh frontend epoch, then verifies its compiled dependency/source binding.
+The operand observer/verifier are separate offline executables. A clean timing
+worker never captures intermediate operands or exports states within service.
+
+Reference preparation and execution are separate commands in `reference.py`.
+The controller requires its own repeated32B R freeze before candidate forwards,
+and charges exact job payloads, all reference branches and expected failures.
+The source01 long-geometry timeout and partial short-case pass remain retained.
+Source02 is an unused reserve32 build epoch. Source03 adds exact descriptor
+dedup before JSON allocation, with every-invocation placement validation and all
+original per-call physical execution records. No numerical tolerance is added.
+
+The detached `coordinator.py` launches `qualification.py`, `finish.py`, then a
+terminal-only `archive.py` reader. It is bound to this study's recorded paths,
+dates, predecessor and ledger; it is not a generic command to replay over an
+existing run. A new deployment must use fresh paths and an explicitly registered
+schedule/allocation, and may not copy this study's reference outputs as its oracle.
+
+Remaining gates include all full vectors,64-layer active KV/frontier, clean/heavy
+bridge, all six controls, real typed operands, native EOG/cap, pending/rollback,
+actual width/packing, capacity and native invalid-contract rejection. Only a
+complete eligible192-request descriptive panel is analyzed. Never automatically
+launch a larger confirmation panel, merge, Release, modify a manuscript or delete
+raw artifacts. Public text replay is distinct from private numerical comparison.
+
+Source04 applies the same explicit `cuda_graphs:false` to every new32B arm,
+using the fixed backend original `GGML_CUDA_DISABLE_GRAPHS` switch before backend
+initialization. Kernel fusion and numerical CUDA objects stay unchanged. The
+scalar R and earlier completed deployments retain their original configuration.
+Two graph-enabled long-loop qualification attempts timed out; both remain charged
+and retained. This switch is a candidate policy to requalify, not an attributed
+optimization or a performance result.
+
+The actual latest controller sources are preserved verbatim in
+`epochs/cached_recording_v1/`. Before any timing, the common frontend successor
+adds complete binary PREFILL descriptors, the same full native SHA through the
+pinned system libcrypto DSO, and the per-request immutable device-type cache.
+`build_recording_successor.py --root "$HS_ROOT" --original
+"$HS_ROOT/q32-q4-full-build-04" --out "$HS_ROOT/q32-q4-full-build-10"`
+compiles both new frontends against the exact unchanged numerical archives.
+Use the updated `build_operands.py` for its separate offline observer/verifier.
+Record all commands, compiler, original/current archive members, full dependencies,
+actual modules and ELF SHA. A rebuild never authorizes reuse of numerical results.
+
+`prepare_recording_epoch.py` preserves all six original checks and reconstructs
+complete binary descriptors offline. `prepare_cached_epoch.py` then generates
+the latest common cache-policy capability, corrects every remaining direct
+reserve8 constructor, and specializes the host clock records for interleaved
+exact-root warmups. It copies the existing host adapter into a fresh runtime;
+old host adapters, compiled baselines and result directories remain unchanged.
+Review generated scripts and `ADAPTER_BINDING.json` before launching the detached
+`cached_coordinator.py`. These dated controllers intentionally fail closed after
+their registered deadline; a later reproduction needs a new prospective plan.
+
+The two profiled diagnostics use unchanged native numerical ELFs and retain
+complete model/dependency SHA, allocation/lock/budget checks. The first attempt
+failed because Nsight starts its application in a new process group; it remains
+charged. The successor admits only the exact expected native argv/UID/ELF when
+proven a descendant of the own profiler launcher; all other GPU processes still
+fail the original conflict check. `sample_own_cpu.c` collects only this process's
+signal-context instruction pointer, without stack unwinding or external attach.
+No diagnostic profiler/sampler is present in qualification or clean timing.
+
+`prepare_batched_geometry.py` generates the later untimed batching controller
+from the cached recording epoch. The exact generated sources are in
+`epochs/batched_geometry_v1/`. Its compiled ELF and all original checks/inputs
+remain unchanged; at most three independently reset new geometry cases share
+a model-loaded worker. `batched_geometry_coordinator.py` finishes the active
+request before handoff, rechecks complete identical predecessors, and detaches
+the full all-six qualification, remaining gates, panel and terminal exporter.
+
+After terminal export, `postprocess_delivery.py` runs `delivery_audit.py` without
+starting any native request. It inventories all preserved errors and costs,
+recomputes the192-request panel from original receipts, checks each exact-root
+warmup/measurement pair and compares its96 measured rows with the independent
+archive analysis. Caller/native totals include startup and ALL warmups; resident
+service comparisons remain separate. Full sanitized public byte readback must
+follow upload and is not inferred from local export or numerical qualification.
+
+The latest remaining-gate continuation is preserved in `epochs/remaining_v2/`.
+It consumes the same passed epoch08 core gates and main build10 ELFs, and uses
+fresh offline operand build12. `build_operands.py` explicitly fixes only that
+offline observer's post-compute callback to return true after copying; the
+scheduler otherwise stops the graph split. Full-model R/vector/KV bridge and
+entire real Q4_K/Q6_K operand-output comparisons remain mandatory.
+
+`BUDGET_REGISTRATION_V2.json` binds the prospective640-request independent32B
+envelope to the original ledger prefix and unchanged R. `runtime_budget_v2/`
+preserves the exact host adapter with that bound; old host adapters remain in
+their original epochs. `SCHEDULE_REGISTRATION_V2.json` registers03:30 as the
+latest whole-panel admission, with observed complete runtime+900s still fitting
+before05:00 and08:00 delivery unchanged. The public source/budget readback
+binding must exist before any formal warmup or measurement is admitted.
+
+`b2_controlled.py` prepares the optional controlled B supplement using the exact
+closed B ELF and unchanged state/output contract. Its CPU-only preparation
+rehashes the public-committed32 qualification captures and independent oracles.
+`b2_await_delivery.py` starts nothing until complete32B public/statistical
+readback AND the separate B2 public plan/source binding pass; it skips the whole
+supplement if its complete runtime+900s margin no longer fits. `b2_export.py`
+independently recalculates all64 measured operations and retains64 warmups,
+all complete costs and failures. This is physical q8 width, not a weight format,
+and it is never an automatic D/E or576-request confirmation launch.
+
+## Final admitted continuation and public-data replay
+
+The admitted panel uses main build10, core qualification epoch08, remaining
+qualification closure09 and offline observer/verifier build12. The pristine
+scalar R remains the original independent reference. Exact V3 timing-admission
+and terminal-only recovery sources are in epochs/panel_cost_v3/. They accept
+only the complete qualification certificate and the preserved old cost-model
+refusal; they do not bypass numerical/capacity/physical failures. The new
+continuation was admitted at2026-11-09T19:13:12Z with all192 requests intact.
+Its resource guard is separate from the closed qualification guard.
+
+Archive13 waits for BOTH the original remaining controller and the V3 panel
+continuation, all native workers and all resource guards. Delivery04 rehashes
+the frozen reference and independently recalculates the resident-service and
+complete caller/worker totals. stage_public.py adds a terminal-only privacy
+check/transform and retains source/public byte commitments. No model weights
+or private vector/KV/operand payloads are distributed. Their hashes do not
+constitute an independent public numerical rerun.
+
+For the published result packet, reconstruct the compressed text stream by
+concatenating archive/BUNDLE.json ordered_parts in exactly that order. Individual
+parts are chunks of one XZ stream, not separately decompressible archives. Every
+text record has a path, full text and original/public hash commitments in
+archive/TEXT_INDEX.json. FILES.json inventories the standalone packet files.
+The data-only command below verifies every packet file and full text record,
+all96 measured and96 warmup requests, exact endpoint and physical-row counts,
+all retained reservations, and independently recomputes the reported contrasts:
+
+```sh
+python3 -B replay_public.py --directory results_20261109 --out PUBLIC_REPLAY.json
+```
+
+Extract records only into a fresh directory, reject absolute or parent-traversal
+paths, and substitute your own authorized root/allocation in operational job
+files. Redacted operational paths necessarily have new public hashes. Preserve
+the original commitments; record new payload/build hashes for a new run. A new
+platform must rebuild the fixed source and create/qualify its own independent R;
+it may not import this host's numerical outputs or assume cross-host ELF/state
+identity. The dated controllers are execution records, not authorization to
+reuse this study's allocation, elapsed deadlines, or result directories.
+
+The final post-export cost-reader adapter is epochs/delivery_adapter_v4/. The
+original delivery03 stopped on a scalar-reference receipt that records heavy
+and service_s rather than candidate capture and service_seconds. Preserve its
+partial reference-integrity proof and both error logs. Delivery04 maps only
+these recorded fields, keeps absent reference physical histograms null rather
+than inventing zero, and performs a fresh full reference hash check. Its
+statistical formulas,192 native requests and all native binaries remain
+unchanged. The final packet includes the post-export failure/recovery evidence.
+The original root stage_public.py remains a historical prepared version; the
+final data-only packaging source is the V4 epoch copy.
+
+The final public packaging source is epochs/public_source_identity_v5/. A
+prepublication identity match collided with a legitimate SIMD local variable
+in the fixed vendor/stb/stb_image.h. Preserve only that exact canonical source
+SHA1f8c1b6b408f26e3b20cbfbbd4758afb3dc9b837ff1e17c258928f406148a87c;
+all other privacy rules stay intact. The invalid partial package is retained
+privately and never published. This is a public-source preservation correction,
+not a numerical or statistical change. Full source/public commitments and
+post-export failure/recovery logs are included in the final packet.

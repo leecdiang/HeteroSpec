@@ -21,7 +21,7 @@ def selected():
             continue
         if len(rel.parts) > 1 and rel.parts[0] not in TOP_DIRS:
             continue
-        if p.suffix not in TEXT and p.name not in (".gitignore", "UPSTREAM_LICENSE"):
+        if p.suffix not in TEXT and p.name not in (".gitignore", ".gitattributes", "UPSTREAM_LICENSE"):
             continue
         if rel.parts[:2] == ("audit", "recovered_operand") and p.name != "PROVENANCE.json":
             continue

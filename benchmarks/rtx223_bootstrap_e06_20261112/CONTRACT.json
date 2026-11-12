@@ -1,0 +1,79 @@
+{
+  "schema": "heterospec.e06.bootstrap-contract.v1",
+  "parent_pr": 223,
+  "parent_commit": "ba2b8734f60183c58b09c30163ea0eeb13fc009d",
+  "contract_id": "HeteroSpec-RTX223-B1",
+  "independent_ledger": "D:/HeteroSpec-PC/rtx223-bootstrap-b1/attempt.jsonl",
+  "device": {
+    "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+    "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "driver": "616.92",
+    "visible_device_count": 1,
+    "permitted_ordinal": 0
+  },
+  "proposed_window": {
+    "tz": "Asia/Shanghai",
+    "start": "2026-11-13T20:00:00+08:00",
+    "end": "2026-11-13T20:05:00+08:00",
+    "scheduled": false
+  },
+  "one_shot": {
+    "attempts": 1,
+    "retries": 0,
+    "new_experiment_processes": 1,
+    "additional_processes_inside_job": 0,
+    "explicit_meter_dll_loads": 1,
+    "explicit_numeric_root_loads": 1,
+    "cuda_calls": [
+      "cudaGetDeviceCount once",
+      "cudaGetDeviceProperties_v2 at most once on ordinal 0, only if count==1"
+    ],
+    "explicit_context_creation": 0,
+    "application_kernel_launches": 0,
+    "model_or_GGUF_loads": 0,
+    "model_requests": 0,
+    "input_rows": 0,
+    "output_rows": 0,
+    "target_rows": 0,
+    "draft_rows": 0,
+    "forwards": 0,
+    "gpu_capture_bytes": 0
+  },
+  "ceiling_and_stops": {
+    "job_commit_bytes": 2147483648,
+    "controlled_evidence_bytes": 67108864,
+    "reserved_terminal_bytes": 65536,
+    "cupti_application_buffers": {
+      "count": 4,
+      "bytes_each": 4194304
+    },
+    "disk_admission_free_bytes": 2147483648,
+    "disk_stop_below_bytes": 1073741824,
+    "device_admission_free_bytes": 8589934592,
+    "device_stop_free_below_bytes": 7516192768,
+    "device_stop_used_growth_at_bytes": 1073741824,
+    "management_max_sample_gap_s": 1,
+    "stop_new_operations_s": 80,
+    "terminate_own_job_trigger_s": 90
+  },
+  "release_requires": [
+    "explicit owner approval of this contract and frozen release digest",
+    "fresh full-host, locks, queues, old leases and an exclusive fenced window",
+    "ETW CPU smoke success under actual runner identity and tested Job containment",
+    "restricted child can read approved images and cannot read protected model paths",
+    "all artifact identities match and live observer and OS preflight succeed"
+  ],
+  "physical_launch_upper_bound": null,
+  "implicit_context_upper_bound": null,
+  "driver_cleanup_duration_upper_bound_s": null,
+  "observations_only": [
+    "physical kernel activity in CUPTI recording interval",
+    "device occupancy and free memory at samples",
+    "device cleanup after process or Job stops"
+  ],
+  "canonical_e02_ledger_writes": 0,
+  "reuse_or_extend_original_allowance": false,
+  "native_A_B_C_or_qualification": false,
+  "performance_timing": false,
+  "round_two": false
+}

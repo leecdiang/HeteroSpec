@@ -1,0 +1,383 @@
+{
+  "scope": "CPU fake; actual Windows pipes. No CUPTI/DLL/CUDA or Job qualification.",
+  "binary": {
+    "sha256": "8a5cc2607dfdf3e59902dbb359e09e20e4348aa736b7bd3fac788fa996f449cb",
+    "imports": [
+      "KERNEL32.dll"
+    ],
+    "objects": [
+      "fake.obj",
+      "main.obj"
+    ]
+  },
+  "checks": [
+    {
+      "case": "all_grants",
+      "exit": 0,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "OK_FLUSH",
+        "RECEIPT {\"schema\":\"heterospec.e06.probe.v1\",\"backend\":\"cpu-fake\",\"pid\":18256,\"uuid\":\"GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd\",\"device_count\":1,\"device_name\":\"NVIDIA GeForce RTX 5070 Ti Laptop GPU\",\"cupti_version\":28,\"count_correlation\":41,\"uuid_correlation\":42,\"runtime_records\":2,\"driver_records\":0,\"context_records\":0,\"memcpy_records\":0,\"kernel_records\":0,\"api_callbacks\":4,\"drop_reads\":[0,0],\"dropped\":0,\"flush_ok\":true,\"drained\":true,\"physical_upper_bound\":null}",
+        "END"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "deadline_absent",
+      "exit": 2,
+      "stdout": [
+        "ERROR PREFLIGHT deadline_missing dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "deadline_expired",
+      "exit": 2,
+      "stdout": [
+        "ERROR PREFLIGHT deadline_binding dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "deadline_excess",
+      "exit": 2,
+      "stdout": [
+        "ERROR PREFLIGHT deadline_binding dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_meter",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "ERROR METER fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_meter",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "ERROR METER grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_load",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "ERROR LOAD fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_load",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "ERROR LOAD grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_count",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "ERROR COUNT fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_count",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "ERROR COUNT grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_uuid",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "ERROR UUID fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_uuid",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "ERROR UUID grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_close",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "ERROR CLOSE fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_close",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "ERROR CLOSE grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "fault_flush",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH fixture_failure dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "eof_flush",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "stale_grant_meter",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "ERROR METER deadline_elapsed dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "stale_grant_load",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "ERROR LOAD deadline_elapsed dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "stale_grant_count",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "ERROR COUNT deadline_elapsed dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "stale_grant_uuid",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "ERROR UUID deadline_elapsed dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "late_cleanup_allowed",
+      "exit": 0,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "OK_FLUSH",
+        "RECEIPT {\"schema\":\"heterospec.e06.probe.v1\",\"backend\":\"cpu-fake\",\"pid\":23864,\"uuid\":\"GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd\",\"device_count\":1,\"device_name\":\"NVIDIA GeForce RTX 5070 Ti Laptop GPU\",\"cupti_version\":28,\"count_correlation\":41,\"uuid_correlation\":42,\"runtime_records\":2,\"driver_records\":0,\"context_records\":0,\"memcpy_records\":0,\"kernel_records\":0,\"api_callbacks\":4,\"drop_reads\":[0,0],\"dropped\":0,\"flush_ok\":true,\"drained\":true,\"physical_upper_bound\":null}",
+        "END"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "wrong_order",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "ERROR METER grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=0 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "parent_stop",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "ERROR COUNT grant_denied dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "count2",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "ERROR COUNT device_count dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "wrong_uuid",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "ERROR UUID device_identity dropped_first=0 dropped_final=0 drop_reads_valid=1 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "drop",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH trace_loss_or_kernel dropped_first=1 dropped_final=0 drop_reads_valid=3 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "kernel",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH trace_loss_or_kernel dropped_first=0 dropped_final=0 drop_reads_valid=3 kernels=1 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "pool",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH trace_incomplete dropped_first=0 dropped_final=0 drop_reads_valid=3 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "incomplete",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH trace_incomplete dropped_first=0 dropped_final=0 drop_reads_valid=3 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "unattributed",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "ERROR FLUSH trace_attribution dropped_first=0 dropped_final=0 drop_reads_valid=3 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "late",
+      "exit": 2,
+      "stdout": [
+        "READY",
+        "OK_METER",
+        "OK_LOAD",
+        "OK_COUNT",
+        "OK_UUID",
+        "OK_CLOSE",
+        "OK_FLUSH",
+        "ERROR FLUSH late_callback dropped_first=0 dropped_final=0 drop_reads_valid=3 kernels=0 complete=0"
+      ],
+      "stderr": ""
+    }
+  ],
+  "normal_numeric_DLL_loads": 0,
+  "GPU_contexts": 0,
+  "kernel_launches": 0,
+  "models": 0
+}

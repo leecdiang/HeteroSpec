@@ -1,0 +1,9 @@
+{
+  "status": "CPU_TEST_FAILED",
+  "case": "second_CPU_process_refused_in_one_member_Job",
+  "message": "RuntimeError: Second process admitted",
+  "original_assertion": "result.startswith(b'REFUSED ') and job.active()==0 in the same immediate sample",
+  "diagnostic_followup": "In a separate CPU reproduction, the OS refused the second process with ERROR_NOT_ENOUGH_QUOTA 1816. The original process had signaled with exit code 0 when Job accounting still briefly returned active=1. The failed run did not save the first sample's individual operands.",
+  "repair": "Require real error 1816 and a bounded wait for active=0 after the owned process is signaled. Production success and failure cleanup now also wait for accounting drain. No relaxation of active limit.",
+  "numerical_DLL_loads": 0, "models": 0, "gpu_contexts": 0, "launches": 0
+}

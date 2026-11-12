@@ -1,0 +1,73 @@
+{
+  "schema": "heterospec.e05.readonly-host-public-summary-v1",
+  "start_utc": "2026-11-12T12:46:20.4526805Z",
+  "time_zone": "China Standard Time",
+  "processes": {
+    "source": "WMI/CIM Win32_Process, no session or owner filter",
+    "taken_utc": "2026-11-12T12:46:20.6033386Z",
+    "rows": 367,
+    "system_pid4": 1,
+    "user_session_shells": 1,
+    "unavailable_commandlines": 177,
+    "unavailable_image_paths": 177,
+    "study_match_pattern": "HeteroSpec|rtx[-_]?(?:221|223)|hs223|GPU-6dd57db3|llama[-_](?:server|cli|bench)|ggml-cuda|(?:loop4|packed)[-_]worker",
+    "candidate_image_pattern": "^(?:worker|llama[^.]*|nvcc|opencode|cmake|zig|ninja|llamafile|dflash[^.]*|cuda-gdb|nsys|ncu)\\.exe$",
+    "generic_pattern": "^(?:pythonw?|py|node|powershell|pwsh|cmd|bash|sh|wsl|wslhost|codex)\\.exe$",
+    "candidate_image_hits": 0,
+    "project_image_hits": 0,
+    "project_argv_hits": 1,
+    "direct_matches": [
+      {
+        "role": "this_readonly_collection",
+        "image": "pwsh.exe",
+        "tags": [
+          "generic_host",
+          "project_argv"
+        ]
+      }
+    ],
+    "generic_host_counts": {
+      "cmd.exe": 6,
+      "codex.exe": 2,
+      "node.exe": 11,
+      "pwsh.exe": 2
+    }
+  },
+  "task_scheduler": {
+    "source": "Get-ScheduledTask, all folders visible to current principal",
+    "taken_utc": "2026-11-12T12:46:21.5808068Z",
+    "rows": 204,
+    "states": [
+      {
+        "state": "Disabled",
+        "rows": 29
+      },
+      {
+        "state": "Ready",
+        "rows": 172
+      },
+      {
+        "state": "Running",
+        "rows": 3
+      }
+    ],
+    "actions": [
+      {
+        "kind": "MSFT_TaskComHandlerAction",
+        "rows": 113
+      },
+      {
+        "kind": "MSFT_TaskExecAction",
+        "rows": 93
+      }
+    ],
+    "project_matches": []
+  },
+  "services": {
+    "rows": 313,
+    "unavailable_pathnames": 4,
+    "project_matches": []
+  },
+  "end_utc": "2026-11-12T12:46:21.7960991Z",
+  "disclosure": "Aggregate of full-host sample. Per-process identities, host name and boot time withheld."
+}

@@ -1,0 +1,28 @@
+        else if(job.contains("forced")||job.contains("cases")){
+          const json cases=job.contains("cases")?job.at("cases"):json::array({job});result["cases"]=json::array();
+          for(size_t index=0;index<cases.size();++index){
+            const auto& one=cases[index];const auto& f=one.at("forced");auto*ctx=pool.target.get();auto case_root=job.contains("cases")?root/one.at("name").get<std::string>():root;ctx->reset(true,case_root/"forced");int position=0;hsc::begin("heavy",int(f.at(0).at("ids").size()));
+            const auto wanted=one.at("observe_positions").get<std::vector<int>>(),states=one.at("state_positions").get<std::vector<int>>();
+            auto observe=[&](int p,int row){if(std::find(wanted.begin(),wanted.end(),p)!=wanted.end())observe_state(*ctx,case_root/"captures"/std::to_string(p),row,std::find(states.begin(),states.end(),p)!=states.end());};
+            for(const auto& call:f){auto tokens=call.at("ids").get<std::vector<int>>();std::string phase=call.value("phase",std::string("VERIFY"));bool all=call.value("all",phase!="PREFILL");
+#if PHASE_CANDIDATE
+                ctx->decode(tokens,position,all,phase.c_str());for(size_t j=0;j<tokens.size();++j)if(all||j+1==tokens.size())observe(position+int(j)+1,all?int(j):-1);
+#else
+                if(phase=="PREFILL"){ctx->decode(tokens,position,false,"PREFILL");observe(position+int(tokens.size()),-1);}
+                else for(size_t j=0;j<tokens.size();++j){ctx->decode({tokens[j]},position+int(j),false,phase.c_str());observe(position+int(j)+1,-1);}
+#endif
+                position+=int(tokens.size());result["token_rows"]=result["token_rows"].get<int>()+int(tokens.size());
+            }
+            json record={{"index",index},{"rows",position},{"graphs_reused",hsc::w.graphs_reused},{"geometry",json::array()}};for(auto& x:ctx->obs.signatures)record["geometry"].push_back(x.second);
+#if PHASE_CANDIDATE
+            record["executions"]=ctx->plan.executions;record["planning_s"]=ctx->plan.planning_s;record["output_copy_s"]=ctx->plan.output_copy_s;
+            if(!job.contains("cases"))result["executions"]=ctx->plan.executions;
+#endif
+            result["cases"].push_back(record);result["trajectories"]=result["trajectories"].get<int>()+1;dump(root/"result.json",result);
+          }
+        }else{
+            for(const auto& entry:job.at("inputs")){
+                std::string name=entry.at("name");bool capture=entry.value("capture",false);auto input=entry.at("input");auto dir=root/name;fs::create_directories(dir);
+                const auto exports=phase_exports,imports=phase_imports,contexts=phase_contexts,heavy_before=phase_heavy_captures;
+                auto r=request(t,d,input,spec,"resident",capture,"NATIVE",dir,pool);
+                r["observed_API_calls_within_service"]={{"state_exports",phase_exports-exports},{"state_imports",phase_imports-imports},{"context_creates",phase_contexts-contexts}};

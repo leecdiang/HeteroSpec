@@ -1,0 +1,39 @@
+    add((new field_bool("cache_prompt", params.cache_prompt))
+        ->set_desc("Re-use KV cache from a previous request if possible. This way the common prefix does not have to be re-processed, only the suffix that differs between the requests"));
+
+    add((new field_bool("return_tokens", params.return_tokens))
+        ->set_desc("Return the raw generated token ids in the `tokens` field"));
+
+    add((new field_bool("return_progress", params.return_progress))
+        ->set_desc("Include prompt processing progress events in stream mode"));
+
+    add((new field_num("sse_ping_interval", params.sse_ping_interval))
+        ->set_hard_limits(-1, INT32_MAX)
+        ->set_desc("Interval in seconds between SSE comment pings emitted while the stream stays silent, -1 disables pings"));
+
+    add((new field_num("n_predict", params.n_predict))
+        ->set_hard_limits(-1, INT32_MAX)
+        ->add_alias("max_completion_tokens")
+        ->add_alias("max_tokens")
+        ->set_desc("Set the maximum number of tokens to predict. When 0, no tokens will be generated but the prompt is evaluated into the cache"));
+
+    add((new field_num("n_indent", params.n_indent))
+        ->set_hard_limits(0, INT32_MAX)
+        ->set_desc("Specify the minimum line indentation for the generated text in number of whitespace characters. Useful for code completion tasks"));
+
+    add((new field_num("n_keep", params.n_keep))
+        ->set_hard_limits(-1, INT32_MAX)
+        ->set_desc("Specify the number of tokens from the initial prompt to retain when context size is exceeded. Use -1 to retain all tokens from the prompt"));
+
+    add((new field_num("n_discard", params.n_discard))
+        ->set_hard_limits(0, INT32_MAX)
+        ->set_desc("Number of tokens after n_keep that may be discarded when shifting context (0 = half context)"));
+
+    add((new field_num("n_cmpl", params.n_cmpl))
+        ->set_hard_limits(1, params_base.n_parallel)
+        ->add_alias("n") // alias "n" as fallback (OpenAI completions API)
+        ->set_desc("Number of completions to generate. If the input has multiple prompts, total outputs will be N prompts times n_cmpl"));
+
+    add((new field_num("n_cache_reuse", params.n_cache_reuse))
+        ->set_hard_limits(0, INT32_MAX)
+        ->set_desc("Min chunk size to attempt reusing from the cache via KV shifting. See --cache-reuse arg"));

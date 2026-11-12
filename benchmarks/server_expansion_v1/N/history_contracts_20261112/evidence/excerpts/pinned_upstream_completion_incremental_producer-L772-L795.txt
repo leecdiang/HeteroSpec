@@ -1,0 +1,24 @@
+                if (is_antiprompt) {
+                    LOG_DBG("found antiprompt: %s\n", last_output.c_str());
+                }
+            }
+
+            // deal with end of generation tokens in interactive mode
+            if (!waiting_for_first_input && llama_vocab_is_eog(vocab, common_sampler_last(smpl))) {
+                LOG_DBG("found an EOG token\n");
+
+                if (params.interactive) {
+                    if (!params.antiprompt.empty()) {
+                        // tokenize and inject first reverse prompt
+                        const auto first_antiprompt = common_tokenize(ctx, params.antiprompt.front(), false, true);
+                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
+                        is_antiprompt = true;
+                    }
+
+                    if (params.enable_chat_template) {
+                        chat_add_and_format("assistant", assistant_ss.str());
+                    }
+                    is_interacting = true;
+                    LOG("\n");
+                }
+            }

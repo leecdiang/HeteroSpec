@@ -1,0 +1,23 @@
+    llama_context*c=nullptr;llama_model*model;bool target,capture,scoped;const int selector,ub;Observer obs;
+    json caller_trace=json::array();fs::path path;int calls=0;std::map<std::string,double> phases;json physical_by_phase=json::object();
+    Context(llama_model*m,int ub,bool istarget,bool scope,bool cap,const fs::path&dir,int layout,int draft_physical=1):model(m),target(istarget),capture(cap),scoped(scope),selector(layout),ub(ub),path(dir){
+        hs_scope::requested_layout=selector;
+        hs_scope::active=scoped;
+        auto p=llama_context_default_params();p.n_ctx=1024;p.n_batch=1024;p.n_ubatch=istarget?ub:phase_draft_width;
+        p.n_threads=phase_threads;p.n_threads_batch=phase_threads;p.n_outputs_max=istarget?phase_target_reserve:1;p.n_outputs_max_per_seq=istarget?phase_target_reserve:1;
+        p.type_k=GGML_TYPE_F16;p.type_v=GGML_TYPE_F16;p.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;
+        p.cb_eval=Observer::callback;p.cb_eval_user_data=&obs;if(cap)fs::create_directories(dir);
+        hs_scope::active=false;c=llama_init_from_model(m,p);need(c,"context initialization");hs_scope::active=scoped;
+    }
+    ~Context(){if(c)llama_free(c);}
+    void reset(bool cap,const fs::path&dir){plan.clear();capture=cap;path=dir;calls=0;caller_trace=json::array();phases.clear();physical_by_phase=json::object();obs=Observer{};if(cap)fs::create_directories(dir);hs_scope::requested_layout=selector;hs_scope::active=scoped;llama_memory_clear(llama_get_memory(c),false);need(llama_memory_seq_pos_max(llama_get_memory(c),0)<0,"KV not empty after reset");}
+
+    void decode(const std::vector<int>&ids,int pos,bool all,const char*phase){
+        if(target){if(capture)caller_trace.push_back({{"phase",phase},{"position",pos},{"rows",ids.size()},{"all_outputs",all}});plan.decode(*this,ids,pos,all,phase);return;}
+        if(capture)caller_trace.push_back({{"phase",phase},{"position",pos},{"rows",ids.size()},{"all_outputs",all}});obs.phase=phase;obs.base=pos;obs.caller=int(ids.size());hs_scope::requested_layout=selector;hs_scope::active=scoped;
+        auto widths_before=hsc::w.target_physical;
+        auto b=llama_batch_init(int(ids.size()),0,1);b.n_tokens=int(ids.size());
+        for(int i=0;i<b.n_tokens;i++){b.token[i]=ids[i];b.pos[i]=pos+i;b.n_seq_id[i]=1;b.seq_id[i][0]=0;b.logits[i]=all||i==b.n_tokens-1;}
+        hsc::decode_begin(c,target?"target":"draft",std::string(phase)=="PREFILL",b.n_tokens);
+        auto t=Clock::now();int rc=llama_decode(c,b);llama_batch_free(b);
+        need(rc==0,"decode failed");llama_synchronize(c);phases[phase]+=since(t);hsc::decode_end();calls++;

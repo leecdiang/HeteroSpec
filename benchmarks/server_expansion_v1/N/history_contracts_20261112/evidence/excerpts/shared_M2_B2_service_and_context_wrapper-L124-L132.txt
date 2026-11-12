@@ -1,0 +1,9 @@
+    int sample(int row,const std::string&name){
+        auto*p=target?plan.logits(row):llama_get_logits_ith(c,row);need(p,"logits missing");int n=llama_vocab_n_tokens(llama_model_get_vocab(model));
+        int best=0;for(int i=0;i<n;i++){need(std::isfinite(p[i]),"nonfinite logit");if(p[i]>p[best])best=i;}
+        if(capture){++phase_heavy_captures;std::ofstream f(path/(name+".f32"),std::ios::binary);f.write((char*)p,size_t(n)*sizeof(float));need(bool(f),"full logits write");}
+        return best;
+    }
+    void trim(int keep){need(llama_memory_seq_rm(llama_get_memory(c),0,keep,-1),"KV trim failed");}
+
+    void snapshot(const std::string & key,int row) {

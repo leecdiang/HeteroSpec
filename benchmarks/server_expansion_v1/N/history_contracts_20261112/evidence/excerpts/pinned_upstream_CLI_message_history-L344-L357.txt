@@ -1,0 +1,14 @@
+    if (output_file) {
+        (*output_file) << content;
+        output_file->flush();
+    }
+}
+
+bool cli_context::generate_completion(generated_content & content_out, cli_timings & timings) {
+    json body = {
+        {"messages",          impl->messages},
+        {"stream",            true},
+        // in order to get timings even when we cancel mid-way
+        {"timings_per_token", true},
+    };
+    if (!client.model.empty()) {

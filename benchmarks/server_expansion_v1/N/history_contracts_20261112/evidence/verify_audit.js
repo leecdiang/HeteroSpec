@@ -1,0 +1,8 @@
+'use strict';
+const fs=require('fs'),path=require('path'),crypto=require('crypto');
+const root=__dirname,d=JSON.parse(fs.readFileSync(path.join(root,'SOURCE_AUDIT.json')));
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');let fragments=0;
+for(const s of d.source_objects){for(const f of s.fragments){const b=fs.readFileSync(path.join(root,f.local_excerpt_relative_path));if(b.length!==f.byte_count||sha(b)!==f.sha256||b.toString('utf8')!==f.utf8)throw Error('fragment bytes/hash '+f.local_excerpt_relative_path);const count=f.utf8.split('\n').length-(f.utf8.endsWith('\n')?1:0);if(f.end_line>s.full_file_lines||count!==f.end_line-f.start_line+1)throw Error('fragment lines '+f.local_excerpt_relative_path);fragments++;}}
+for(const b of d.built_ELF_identities){if(b.executable_sha256_read_now!==b.executable_sha256_from_BUILD||!b.executable_matches_BUILD||b.audited_frontend_checks.some(x=>x.actual_source_sha256!==x.source_sha256_from_BUILD||!x.matches))throw Error('recorded build binding');}
+const publicFiles=['SOURCE_AUDIT.json','SOURCE_STATUS.md','verify_audit.js'];for(const f of publicFiles){const t=fs.readFileSync(path.join(root,f),'utf8');if(/\/home\/[^/\s]+\//.test(t)||(t.match(/(?:\d{1,3}\.){3}\d{1,3}/g)||[]).some(ip=>ip!=='127.0.0.1')||/GPU-[0-9a-f]{8}-/.test(t))throw Error('private marker in public file '+f);}
+console.log(JSON.stringify({status:'PASS',source_objects:d.source_objects.length,verified_exact_excerpt_files:fragments,recorded_built_ELF_bindings:d.built_ELF_identities.length,no_native_executable_or_model_or_GPU_invoked:true,scope:'Delivered fragment bytes and recorded identity consistency; full cached sources/ELFs were not re-fetched by this verifier.'},null,2));

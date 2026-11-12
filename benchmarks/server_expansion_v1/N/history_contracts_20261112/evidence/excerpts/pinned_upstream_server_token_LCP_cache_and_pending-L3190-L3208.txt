@@ -1,0 +1,19 @@
+                        } else {
+                            if (slot.task->n_tokens() >= slot.n_ctx) {
+                                send_error(slot,
+                                           string_format("request (%d tokens) exceeds the available context size (%d "
+                                                         "tokens), try increasing it",
+                                                         slot.task->n_tokens(), slot.n_ctx),
+                                           ERROR_TYPE_EXCEED_CONTEXT_SIZE);
+                                slot.release();
+                                return;
+                            }
+
+                            if (slot.task->params.cache_prompt) {
+                                // reuse any previously computed tokens that are common with the new prompt
+                                n_past = slot.prompt.tokens.get_common_prefix(input_tokens);
+
+                                // if there is an alora invoked, don't cache after the invocation start
+                                if (slot.alora_invocation_start > 0) {
+                                    SLT_DBG(slot, "only caching to alora invocation start (n_past = %d, alora_invocation_start = %d)\n", n_past, slot.alora_invocation_start);
+                                    n_past = std::min(n_past, slot.alora_invocation_start - 1);

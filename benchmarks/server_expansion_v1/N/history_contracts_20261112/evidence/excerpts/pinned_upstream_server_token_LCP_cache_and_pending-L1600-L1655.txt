@@ -1,0 +1,56 @@
+                if (task.id_slot == -1) {
+                    SLT_INF(*ret, "selected slot by LCP similarity, f_sim_best = %.3f (> %.3f thold), f_keep = %.3f\n",
+                            f_sim_best, slot_prompt_similarity, f_keep);
+                }
+
+                // if we are about to lose a large portion of the existing context - save it in the prompt cache
+                if (f_keep < 0.5f) {
+                    update_cache = true;
+                }
+            }
+        }
+
+        // find the slot that has been least recently used
+        if (ret == nullptr) {
+            int64_t t_last = -1;
+
+            for (server_slot & slot : slots) {
+                // skip the slot if it is not available
+                if (slot.is_processing()) {
+                    continue;
+                }
+
+                // select the current slot if the criteria match
+                if (!ret || slot.t_last_used <= t_last) {
+                    t_last = slot.t_last_used;
+                    ret = &slot;
+                }
+            }
+
+            if (ret != nullptr) {
+                SLT_INF(*ret, "selected slot by LRU, t_last = %" PRId64 "\n", t_last);
+
+                update_cache = true;
+            }
+        }
+
+        if (ret) {
+            update_cache = update_cache && prompt_cache;
+
+            // cache prompts only for completion tasks
+            update_cache = update_cache && task.type == SERVER_TASK_TYPE_COMPLETION;
+
+            if (update_cache) {
+                SRV_TRC("%s", "updating prompt cache\n");
+
+                const int64_t t_start = ggml_time_us();
+
+                ret->prompt_save(*prompt_cache);
+
+                if (!ret->prompt_load(*prompt_cache, task.tokens)) {
+                    ret->prompt_clear();
+                }
+
+                prompt_cache->update();
+
+                SRV_TRC("prompt cache update took %.2f ms\n", (ggml_time_us() - t_start) / 1000.0);

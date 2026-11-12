@@ -1,0 +1,14 @@
+{
+  "schema": "heterospec.windows-runner.cpu-debug-history.v1",
+  "new_model_requests": 0,
+  "new_GPU_launches": 0,
+  "scope": "New CPU-only OS fixture debugging; old e01 failures retained unchanged",
+  "entries": [
+    {"test_epoch": "initial", "tests": 10, "passed": 8, "failed": 2, "finding": "Virtualenv launcher PID differed from actual interpreter heartbeat PID", "resolution": "Launch base interpreter directly; strict PID/birth binding retained", "record": "INITIAL_TEST_FAILURE.json"},
+    {"test_epoch": "base-interpreter", "tests": 10, "passed": 9, "failed": 1, "finding": "Timeout0.4s fixture observed0.406s including cleanup and correctly charged OVERRUN; test expected TIMEOUT without cleanup reservation", "resolution": "CPU fixture reserves0.5s cleanup margin inside its synthetic family; overshoot accounting remains strict"},
+    {"test_epoch": "expanded-regressions", "tests": 16, "passed": 15, "failed": 1, "finding": "Heartbeat atomic replacement raced CRT read sharing and returned PermissionError", "resolution": "Use Win32 shared READ/WRITE/DELETE snapshot handles; no numerical check relaxed"},
+    {"test_epoch": "os-checks-v1", "tests_per_mode": 16, "ordinary_pass": true, "optimized_pass": true, "receipt": "os-checks-v1/RECEIPT.json"},
+    {"test_epoch": "os-checks-v2", "tests_per_mode": 18, "ordinary_pass": true, "optimized_pass": true, "receipt": "os-checks-v2/RECEIPT.json", "raw_fixture_records_retained": true}
+  ],
+  "early_debug_record_limit": "Early failed unittest outputs were observed in tool results and summarized here; their temporary fixture directories were cleaned by unittest. These are not described as fully frozen raw native attempts. Final v2 logs/raw CPU fixtures are retained."
+}

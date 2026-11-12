@@ -1,0 +1,13 @@
+{
+  "id": "F2",
+  "status": "FIX_AND_FRESH_BUILD_PENDING",
+  "component": "frontend hooked_frontend_v5 worker.cpp dump",
+  "finding": "JSON encoded.size was reserved before a text-mode std::ofstream write. Windows LF-to-CRLF expansion can exceed those reserved bytes and underreport bytes_written.",
+  "source_confirmed_by_independent_reviewer": true,
+  "required_fix": "Write the encoded JSON buffer in binary mode and bind a fresh source/build receipt. Preserve v5 and its prior review as history.",
+  "prior_review_receipt": "FINAL_INDEPENDENT_REVIEW.json binds v5 only",
+  "GPU_or_model_work_affected": 0,
+  "research_decision": "INCONCLUSIVE",
+  "native_gate": "BLOCKED",
+  "capture_ceiling_claim": "PENDING_V6_RECHECK"
+}

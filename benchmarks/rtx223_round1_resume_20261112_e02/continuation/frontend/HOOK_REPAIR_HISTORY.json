@@ -1,0 +1,27 @@
+{
+  "schema": "heterospec.native-hook-source-history.v1",
+  "new_model_requests": 0,
+  "new_GPU_launches": 0,
+  "generated_sources": [
+    {"version": "hooked_frontend", "change": "initial full-output/state, owner poison and host timeline hook source"},
+    {"version": "hooked_frontend_v2", "change": "actual-q8 callback integration and initial fresh-pointer cleanup"},
+    {"version": "hooked_frontend_v3", "change": "shared reserve-before-write byte ceiling, pointer nulling before fresh teardown, legacy sample writer accounting"},
+    {"version": "hooked_frontend_v4", "change": "legacy capture.txt byte accounting, exact ceiling CPU selftest, loaded-path disk SHA inventories"},
+    {"version": "hooked_frontend_v5", "change": "EnumProcessModules required-byte bound before fixed-array traversal"},
+    {"version": "hooked_frontend_v6", "change": "binary JSON output prevents Windows newline expansion from exceeding reserved byte count"},
+    {"version": "hooked_frontend_v7", "change": "early CPU-only multiline UTF8 JSON file test through the actual writer, physical/encoded/reserved/written byte equality, exact-limit extra-byte refusal"}
+  ],
+  "discovered_findings": [
+    "A fresh-owner pointer could dangle after explicit fresh teardown if later JSON construction threw. Fixed by nulling pointers before teardown; resident-owner failure poisoning remains.",
+    "Caller capture and native operator capture initially lacked one shared hard byte ceiling. The final source reserves every instrumented binary/JSON write before opening output; stdout is explicitly external.",
+    "Legacy capture.txt and sample writes required inclusion in the byte ceiling.",
+    "Text-mode JSON output on Windows could expand LF to CRLF beyond the reserved encoded byte length. The final source uses binary mode.",
+    "The old module inventory could traverse beyond HMODULE[1024] if EnumProcessModules reported a larger required size. The final source rejects that condition."
+  ],
+  "helper_failures": [
+    "A one-line PowerShell/Python attempt to duplicate a generator had unterminated quoting; no output source or native work was produced. Direct patching followed.",
+    "One combined apply_patch for v6 initially failed a documentation context match; no file was changed by that failed patch. A corrected patch generated v6."
+  ],
+  "build_and_selftest_evidence": "Parent-owned hooked-build-* receipts contain actual command/log/compiled-source identity. Source generation and CPU-only selftest do not qualify native model execution.",
+  "native_qualification": "NOT_RUN"
+}

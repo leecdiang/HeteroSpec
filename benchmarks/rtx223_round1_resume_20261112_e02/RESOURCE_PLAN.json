@@ -1,0 +1,25 @@
+{
+  "schema": "heterospec.windows-rtx221-round1.resources.v1",
+  "epoch": "rtx221-round1-20261112-e01",
+  "authorization": "User Prompt 1 dated 2026-11-12; independent new budget, no old-budget transfers",
+  "profile": "windows-native-single-rtx5070ti",
+  "device": {"physical_index": 0, "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd", "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU", "memory_mib": 12227, "driver": "616.92"},
+  "maximums": {"model_requests": 256, "target_draft_rows": 1000000, "native_gpu_seconds": 10800, "kernel_launches": 4096, "capture_bytes": 2147483648},
+  "request_allocations": {
+    "qualification_including_warmup": {"model_requests": 96, "target_draft_rows": 256000},
+    "real_request_closure": {"model_requests": 64, "target_draft_rows": 320000},
+    "matched_service": {"model_requests": 64, "target_draft_rows": 296000},
+    "failure_margin": {"model_requests": 32, "target_draft_rows": 128000}
+  },
+  "warmup_included_not_additional": {"model_requests": 8, "target_draft_rows": 16000, "kernel_launches": 192},
+  "kernel_launch_allocations": {"warmup": 192, "correctness": 96, "paired_kernel_and_operator_timing": 3456, "failure_margin": 352},
+  "counting": "All model warmup, failures, target/draft prefill/decode rows and standalone quantizer/MMVQ launches count; reserve conservatively before execution, no refunds or retries; model rows and standalone operator rows are separate quantities",
+  "legacy_lock": "D:/HeteroSpec-PC/RTX_EXPERIMENT.lock",
+  "new_lock": "resources/WINDOWS_RTX_EPOCH.lock",
+  "legacy_write_allowed": false,
+  "gpu_admission": "BLOCKED_ORIGINAL_THREAD_UNVERIFIED",
+  "original_thread": {"status": "UNVERIFIED", "current_thread_lookup": "Codex app list_threads failed -32000 twice", "prior_record_only": "2026-11-11 completed #221 CPU work; no GPU then; not a present liveness attestation"},
+  "freeze": "Concrete caps fixed before any GPU execution; this plan does not by itself release the execution gate",
+  "no_multi_gpu": true,
+  "prohibited": ["modifying Linux/A5000 server GPU0 protections", "old-ledger writes", "power/fan/driver changes", "GPU reset", "terminating other tasks", "automatic retries", "budget borrowing", "B570 or Metal runs"]
+}

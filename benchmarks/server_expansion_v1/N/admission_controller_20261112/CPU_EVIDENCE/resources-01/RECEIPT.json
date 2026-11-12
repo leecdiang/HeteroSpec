@@ -1,0 +1,125 @@
+{
+  "actual_cgroup_or_unit_changes": 0,
+  "actual_native_model_backend_context_placement_forwards": 0,
+  "commands": [
+    "python3 test_resources.py --out FRESH_ABSOLUTE_NORMAL",
+    "python3 -O test_resources.py --out FRESH_ABSOLUTE_OPTIMIZED"
+  ],
+  "failure_history": "Parent controller epoch02 failed before any STATE because cold canonical_ids were None. Retained upstream; resource epoch01 explicitly tests preservation of those unresolved IDs.",
+  "frozen_manifest_sha256": "f4cd66d571b65454a188f78717042254ae6fa00c255ff699ec64abcb2bd079d6",
+  "normal": {
+    "actual_cgroup_activations": 0,
+    "errors": 0,
+    "failures": 0,
+    "native_or_model_operations": 0,
+    "scope": "INJECTED_CPU_RESOURCE_AND_ORDINARY_FILE_TESTS_ONLY",
+    "status": "PASS",
+    "tests": 15
+  },
+  "python_optimized": {
+    "actual_cgroup_activations": 0,
+    "errors": 0,
+    "failures": 0,
+    "native_or_model_operations": 0,
+    "scope": "INJECTED_CPU_RESOURCE_AND_ORDINARY_FILE_TESTS_ONLY",
+    "status": "PASS",
+    "tests": 15
+  },
+  "resource_budget": {
+    "archive_bytes": 147651175875,
+    "archive_entries": 4096,
+    "archive_header_bytes": 16777216,
+    "build_artifacts_bytes": 7516192768,
+    "build_text_bytes": 8589934592,
+    "capture_bytes": 144202735616,
+    "controller_logs_bytes": 268435456,
+    "controller_state_indices_bytes": 536870912,
+    "failed_metadata_composition_bytes": 25427968,
+    "journal_bytes": 536870912,
+    "known_archive_entries": 2471,
+    "last_launch_offset_seconds": 6600,
+    "max_capture_directories": 348,
+    "max_window_seconds": 18000,
+    "metadata_bytes": 398458880,
+    "minimum_free_VRAM_bytes": 2147483648,
+    "native_end_offset_seconds": 7200,
+    "partial_marker_bytes": 1048576,
+    "planned_metadata_composition_bytes": 351469568,
+    "prelaunch_RAM_bytes": 51539607552,
+    "prepaid_marker_bytes_per_capture": 1024,
+    "probe_timeout_seconds": 120,
+    "protected_RAM_bytes": 25769803776,
+    "protected_disk_bytes": 107374182400,
+    "raw_and_journal_bytes": 144739606528,
+    "raw_bytes": 143804276736,
+    "required_disk_bytes": 553094505923,
+    "restore_bytes": 144739606528,
+    "snapshot_max_age_seconds": 10,
+    "worker_RSS_bytes": 25769803776,
+    "worker_logs_bytes": 268435456,
+    "worker_timeout_seconds": 600
+  },
+  "schema": "hs.N1a.cpu-resource-evidence.v1",
+  "scope": "Pure injected evidence, arithmetic and ordinary-file mocks; not a real resource admission or native qualification",
+  "source": {
+    "generate_manifest.py": {
+      "bytes": 14957,
+      "sha256": "8114e0204aa16f72d1d188b19a4cd9977d812db1e7de8c01b8a904ef91d79356"
+    },
+    "resource_limits.py": {
+      "bytes": 18721,
+      "sha256": "ec6caa7f09142ee336dd4d8152c021a6f5945fe7b970594825dcbf09eb5b4447"
+    },
+    "test_resources.py": {
+      "bytes": 13223,
+      "sha256": "e511022793448d25eaf79c6d4563ac2942a0deb0f8676f3a8ed0b900716e435b"
+    }
+  },
+  "static_RPC_bound": {
+    "aggregate_command_ceiling": 250000,
+    "command_components": {
+      "append_begin_RPC": 9880,
+      "decode_RPC": 85738,
+      "owned_RPC": 1280,
+      "producer_RPC": 32,
+      "records_RPC": 588,
+      "request_trace_finish_RPC": 228,
+      "startup_frames_and_probe_allowance": 1024,
+      "state_RPC": 100122,
+      "trim_clear_RPC": 304
+    },
+    "including_failure_states": {
+      "KV_chunks": 36000,
+      "nonempty_states": 192,
+      "state_RPC": 100122,
+      "state_phases": 268,
+      "state_vector_rows": 4737
+    },
+    "journal_bytes_product": 512204800,
+    "journal_record_bytes_max": 2048,
+    "journal_records_max": 250100,
+    "log_requirement": "Pre-reserve each bounded log stream once or buffer fixed64KiB; unbounded one-byte-per-read journaling is not covered",
+    "native_RPC_upper_bound": 199196,
+    "per_worker_state_RPC": {
+      "COLD_CANONICAL_ORACLE/CONTROL": 6080,
+      "COLD_CANONICAL_ORACLE/NATURAL": 14960,
+      "REPEAT_RESIDENT_R/CONTROL": 6070,
+      "REPEAT_RESIDENT_R/NATURAL": 14952,
+      "RESIDENT_R/CONTROL": 6070,
+      "RESIDENT_R/NATURAL": 14952,
+      "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL": 6070,
+      "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL": 14952
+    },
+    "planned_states": {
+      "KV_chunks": 29088,
+      "nonempty_states": 180,
+      "state_RPC": 84106,
+      "state_phases": 252,
+      "state_vector_rows": 4217
+    },
+    "remaining_command_headroom": 50804,
+    "source_rule": "State constant18+72(nonempty)+2*(72ceil(head/512)+vectorrows); owned16; record4. Decode count<=charged rows. No comparison/read/finite check is removed.",
+    "status": "STATIC_SOURCE_UPPER_BOUND_NOT_OBSERVED"
+  },
+  "status": "PASS"
+}

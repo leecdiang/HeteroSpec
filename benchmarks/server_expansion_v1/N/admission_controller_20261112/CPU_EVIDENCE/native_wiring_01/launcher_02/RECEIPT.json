@@ -1,0 +1,144 @@
+{
+  "schema": "hs.N1a.bounded-launcher.cpu-tests.v1",
+  "status": "PASS",
+  "scope": "FIXED_STD_ONLY_CPU_CHILDREN_NOT_NATIVE_GPU_QUALIFICATION",
+  "source_files": [
+    {
+      "file": "bounded_launcher.hpp",
+      "bytes": 10856,
+      "sha256": "f76a2cb2cbd79613bf851aff2ee62e302105c45299ca9be3df65259b208e6291"
+    },
+    {
+      "file": "native_client.hpp",
+      "bytes": 11108,
+      "sha256": "ed92a8f3766a110dfd4a05c274c4b14024b1a222427524caac8406b0c14b581e"
+    },
+    {
+      "file": "bounded_native_launcher.cpp",
+      "bytes": 708,
+      "sha256": "681537874a3bbcc1961d8cbcffb647096c2994fec2963b8a28707bc428f65eb8"
+    },
+    {
+      "file": "test_launcher.cpp",
+      "bytes": 9647,
+      "sha256": "e7b5dc58a8fc5931bc12b288a05d900a534bd5ebc41fee1130fffe0cac7ef8cb"
+    }
+  ],
+  "tests": [
+    {
+      "mode": "normal",
+      "executable": "${LAUNCHER_MOCK_OUTPUT}/mock-normal",
+      "sha256": "099fcc7cd31140c2b83f27927bc7e3abed31d492da597de802f312027f2cbc6b",
+      "bytes": 143336,
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "result": {
+        "status": "CPU_ONLY_BOUNDED_LAUNCHER_PASS",
+        "groups": 18,
+        "native_executables_started": 0,
+        "backend_model_context_placement_forward_calls": 0,
+        "native_authority": false
+      },
+      "status": "PASS"
+    },
+    {
+      "mode": "ndebug",
+      "executable": "${LAUNCHER_MOCK_OUTPUT}/mock-ndebug",
+      "sha256": "099fcc7cd31140c2b83f27927bc7e3abed31d492da597de802f312027f2cbc6b",
+      "bytes": 143336,
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "result": {
+        "status": "CPU_ONLY_BOUNDED_LAUNCHER_PASS",
+        "groups": 18,
+        "native_executables_started": 0,
+        "backend_model_context_placement_forward_calls": 0,
+        "native_authority": false
+      },
+      "status": "PASS"
+    }
+  ],
+  "commands": [
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp",
+      "-o",
+      "${LAUNCHER_MOCK_OUTPUT}/mock-normal"
+    ],
+    [
+      "readelf",
+      "-d",
+      "${LAUNCHER_MOCK_OUTPUT}/mock-normal"
+    ],
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-DNDEBUG",
+      "${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp",
+      "-o",
+      "${LAUNCHER_MOCK_OUTPUT}/mock-ndebug"
+    ],
+    [
+      "readelf",
+      "-d",
+      "${LAUNCHER_MOCK_OUTPUT}/mock-ndebug"
+    ],
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O0",
+      "-g",
+      "-fno-inline",
+      "-fno-lto",
+      "${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_native_launcher.cpp",
+      "-o",
+      "${LAUNCHER_MOCK_OUTPUT}/native-launcher-not-admitted"
+    ],
+    [
+      "readelf",
+      "-d",
+      "${LAUNCHER_MOCK_OUTPUT}/native-launcher-not-admitted"
+    ],
+    [
+      "nm",
+      "-C",
+      "${LAUNCHER_MOCK_OUTPUT}/native-launcher-not-admitted"
+    ],
+    [
+      "${LAUNCHER_MOCK_OUTPUT}/mock-normal",
+      "--cpu-only-launcher-test",
+      "${LAUNCHER_MOCK_OUTPUT}/cases-normal"
+    ],
+    [
+      "${LAUNCHER_MOCK_OUTPUT}/mock-ndebug",
+      "--cpu-only-launcher-test",
+      "${LAUNCHER_MOCK_OUTPUT}/cases-ndebug"
+    ]
+  ],
+  "closed_launcher": {
+    "bytes": 324520,
+    "sha256": "005edd35e4593311528d25088b742ebd310e0fcab791d14a9e639d69fd3df332",
+    "executed": false,
+    "CLI": "NOT_ADMITTED_NO_PRODUCTION_JOB_PARSER"
+  },
+  "all_mock_dependencies_checked_before_first_mock_execution": true,
+  "elapsed_s": 9.74379542299721,
+  "actual_backend_model_context_placement_forward_calls": 0,
+  "native_executables_started": 0,
+  "native_authority": false,
+  "device_quiescence_at_watchdog": "NOT_RUN_REQUIRES_NATIVE_VALIDATION",
+  "native_controller_CLI_supervisor_glue": "BLOCKED_PENDING_SEPARATE_REVIEW"
+}

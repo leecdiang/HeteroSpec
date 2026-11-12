@@ -1,0 +1,99 @@
+{
+  "schema": "heterospec.round1.independent-cross-review.v1",
+  "scope": "Independent static review and adversarial CPU fixtures; no model, CUDA API or GPU launch",
+  "initial_reviewed_sources": {
+    "src/windows_epoch.py": "460cb440de8d98a467a5e727c14ecdda71f227bcd897f53248ec5a50c8cf1fea",
+    "RESOURCE_PLAN.json": "c801e0ae529a14e7911e678b02d018086be3eed5712b3bb16ece06c3b638bd63"
+  },
+  "resource_reproduction": "audit/RESOURCE_GAPS_INITIAL.json",
+  "findings": [
+    {
+      "id": "R1",
+      "kind": "IMPLEMENTATION_DEFECT_LIVE_BLOCKER",
+      "component": "src/windows_epoch.py:admit_live",
+      "finding": "The admission helper ignores the resource plan's BLOCKED_ORIGINAL_THREAD_UNVERIFIED status. A self-reported fresh boolean plus unverified thread evidence can produce ADMITTED even while the frozen plan blocks execution.",
+      "reproduced": true,
+      "required_resolution": "Keep blocked plans blocked; bind any future live release to validated current-thread/device/source receipts and explicit timestamp/window limits. The preparation helper is not a resource arbiter."
+    },
+    {
+      "id": "R2",
+      "kind": "IMPLEMENTATION_DEFECT",
+      "component": "src/windows_epoch.py:Ledger.finish",
+      "finding": "Actual count fields permit fractional numbers; a model_requests value of 0.5 was persisted.",
+      "reproduced": true,
+      "required_resolution": "Require integer counts for requests, rows, launches and capture bytes, retaining finite nonnegative seconds as the only real-valued resource."
+    },
+    {
+      "id": "R3",
+      "kind": "IMPLEMENTATION_DEFECT",
+      "component": "src/windows_epoch.py:Ledger.finish",
+      "finding": "Actual usage above reservation raises before recording the actual cost. The attempt remains RESERVED with null actual usage, losing the observed overrun in the ledger.",
+      "reproduced": true,
+      "required_resolution": "Retain actual usage and an explicit budget-violation terminal record; reject all subsequent reservations. No refunds or automatic retries."
+    },
+    {
+      "id": "R4",
+      "kind": "IMPLEMENTATION_DEFECT_LIVE_BLOCKER",
+      "component": "src/admission.py:validate_bundle",
+      "finding": "The initial validator trusts producer-declared requested_rows and vocab_size. A self-consistent record can omit requested rows or shrink vocabulary size without binding to the independent request contract.",
+      "reproduced": false,
+      "source_review_confirmed": true,
+      "required_resolution": "Require independent expected requested row IDs and expected vocabulary size. The qualification agent accepted this finding and is implementing the fix."
+    },
+    {
+      "id": "R5",
+      "kind": "IMPLEMENTATION_DEFECT_LIVE_BLOCKER",
+      "component": "src/admission.py:admit_descriptor",
+      "finding": "The initial metadata recipe accepts arbitrary GPU-prefixed UUIDs with SM120 rather than binding the actual authorized device.",
+      "reproduced": false,
+      "source_review_confirmed": true,
+      "required_resolution": "Require an externally frozen authorized device UUID. The qualification agent accepted this finding and is implementing the fix."
+    },
+    {
+      "id": "P1",
+      "kind": "PREPARATION_ONLY_LIMIT",
+      "component": "resource execution adapter",
+      "finding": "The reviewed helper does not acquire a process-bound exclusive lock, enforce one three-hour wall-clock window, monitor actual launches, or stop its own worker on budget expiry. No live launcher is claimed or available.",
+      "required_resolution": "Implement and qualify those controls before future GPU admission; current preparation remains zero GPU."
+    },
+    {
+      "id": "P2",
+      "kind": "PREPARATION_ONLY_LIMIT",
+      "component": "original execution-thread and actual loaded modules",
+      "finding": "Original-thread liveness is unverified because the app thread-list connector failed. Historical disk pins and an empty nvidia-smi process list cannot establish duplicate-work clearance or newly loaded DLL identities.",
+      "required_resolution": "Retain INCONCLUSIVE and the blocked GPU gate until fresh evidence is available."
+    },
+    {
+      "id": "P3",
+      "kind": "PREPARATION_ONLY_LIMIT",
+      "component": "audit/recovered_operand/PROVENANCE.json",
+      "finding": "The recovered operand is an explicitly derived q8 replay from a real q32 capture. Historical A/B q8 outputs agree, but this is not a new actual q8 projection capture and does not qualify C.",
+      "required_resolution": "Use only as a labeled CPU/build fixture. Obtain a true admitted q8 capture before the main native A/B/C comparison."
+    }
+  ],
+  "positive_checks": {
+    "old_ledger_main_hashes_match": true,
+    "old_ledgers_not_opened_in_place_by_sqlite": true,
+    "old_reference_and_loop4_packed_v2_disk_module_pins_match": true,
+    "target_and_draft_model_hashes_match": true,
+    "target_draft_vocabulary_count": 151936,
+    "target_draft_vocabulary_canonical_fingerprints_match": true,
+    "resource_stage_request_allocations_sum_to_256": true,
+    "resource_stage_row_allocations_sum_to_1000000": true,
+    "standalone_launch_allocations_sum_to_4096": true,
+    "warmup_and_failure_margins_explicit": true,
+    "old_budget_borrowing": false
+  },
+  "publication_exclusions": ["audit/ledger_copies/**", "audit/recovered_operand/*.bin", "model weights", "old raw logs and binaries"],
+  "review_verdict_at_initial_source": "SOURCE_FIXES_REQUIRED; NATIVE_WORK_REMAINS_BLOCKED; PREPARATION_CAN_CONTINUE",
+  "final_recheck": {
+    "status": "ALL_FIVE_SOURCE_FINDINGS_FIXED_IN_REVIEWED_HOST_HELPERS",
+    "ordinary": "audit/CROSS_REVIEW_RECHECK.json",
+    "python_O": "audit/CROSS_REVIEW_RECHECK_O.json",
+    "independent_cases_per_mode": 9,
+    "all_cases_pass": true,
+    "native_qualification": "NOT_RUN",
+    "live_runner_readiness": "PREPARATION_ONLY; original thread, exclusive lock, wall-clock window and worker monitoring remain unqualified",
+    "initial_failure_receipt_preserved": "audit/RESOURCE_GAPS_INITIAL.json"
+  }
+}

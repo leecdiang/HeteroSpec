@@ -1,0 +1,77 @@
+{
+  "schema": "heterospec.packed-q8-qualification-design.v1",
+  "status": "DESIGN_ONLY_NOT_EXECUTED",
+  "motivating_guard_ids": ["G03", "G04", "G09"],
+  "question": "Does every admitted packed-Q8 descriptor execute the qualified four-column arithmetic with correct logical outputs/state, and does every unsupported or failed execution have the declared rejection/invalidation behavior?",
+  "scope": {
+    "weights": "Q8_0",
+    "activation_and_output": "F32",
+    "arithmetic_group_columns": 4,
+    "outer_columns_max": 32,
+    "backend": "bound NVIDIA CUDA deployment only",
+    "no_claims_for": ["mixed Q4_K/Q6_K", "Vulkan", "Flash", "SWA", "paged or wrapping KV", "MoE", "MLA"]
+  },
+  "prerequisites": [
+    "Use the exact frozen model/core/frontend/compiler/modules and device identity for the intended comparison; record all hashes and architecture flags.",
+    "Use actual captured model projection operands and descriptors, with independently replayable old four-column/tail paths.",
+    "Keep source/binary changes for a prospective guard isolated from the already qualified baseline; this design supplies no authorization to label new binaries qualified.",
+    "Record source, build and loaded-module identity separately from data-dependent shape, stride, padding and actual allocation/device descriptors."
+  ],
+  "descriptor_fields_to_record": [
+    "weight/input/output ggml type and ne[0..3]",
+    "weight/input/output nb[0..3] and contiguous status",
+    "actual buffer type, buffer usage, buffer device, view_src and allocation-vs-data byte size",
+    "CUDA device compute capability and warp size",
+    "op, precision hint, IDs and fusion presence",
+    "outer q, arithmetic columns a=4, independent channel count g, first_tail and each tail width",
+    "actual dispatcher route for the grouped node and every old tile",
+    "activation quantizer type/configuration and quantized row identity",
+    "MMVQ type specialization, ncols_dst, channel/sample counts, row/column/channel/sample strides and integer offset spans",
+    "phase policy, live physical prefix vector, output mask and reserve",
+    "full structural recipe identity; hashes may label receipts but must not replace equality of admission fields"
+  ],
+  "positive_cases": [
+    {"id":"P01","q":4,"purpose":"No multi-group packing; observed native four-column path remains the control.","native_result":"NOT_RUN"},
+    {"id":"P02","q":5,"purpose":"First outer split and a one-column tail; packed branch still inactive.","native_result":"NOT_RUN"},
+    {"id":"P03","q":7,"purpose":"One four-column tile and three-column tail without multi-group packing.","native_result":"NOT_RUN"},
+    {"id":"P04","q":8,"purpose":"First actual packed mapping: [K,4,2], no tail.","native_result":"NOT_RUN"},
+    {"id":"P05","q":9,"purpose":"Two packed groups plus one-column tail.","native_result":"NOT_RUN"},
+    {"id":"P06","q":11,"purpose":"Two packed groups plus three-column tail.","native_result":"NOT_RUN"},
+    {"id":"P07","q":12,"purpose":"Three packed groups with no tail.","native_result":"NOT_RUN"},
+    {"id":"P08","q":31,"purpose":"Seven packed groups plus tail near the maximum width.","native_result":"NOT_RUN"},
+    {"id":"P09","q":32,"purpose":"Maximum admitted outer width and eight groups.","native_result":"NOT_RUN"},
+    {"id":"P10","q":"actual request case","purpose":"Same outer query count on opposite sides of an actual physical padding boundary; compare W and L without changing projection recipe.","native_result":"NOT_RUN"},
+    {"id":"P11","q":"actual request case","purpose":"Commit an earlier accepted frontier while later verified rows are rejected; compare owned full vector and extracted active KV.","native_result":"NOT_RUN"}
+  ],
+  "negative_and_failure_cases": [
+    {"id":"N01","change":"Unsupported q>32 or zero width","required_decision":"Reject as outside the packed recipe before native work, or name and separately qualify the ordinary fallback.","native_result":"NOT_RUN"},
+    {"id":"N02","change":"Noncontiguous activation with otherwise supported dtype/shape","required_decision":"Explicit rejection or separately qualified graph-tile fallback; never infer compatibility from branch availability.","native_result":"NOT_RUN"},
+    {"id":"N03","change":"Noncontiguous weight or unsupported weight batch dimension","required_decision":"Record exact route and stride predicate; reject if not in the admitted descriptor set.","native_result":"NOT_RUN"},
+    {"id":"N04","change":"Compute-buffer view with padding-clear conflict","required_decision":"Exercise the generic cuBLAS branch condition using safe diagnostic metadata/fixtures; unsupported reference recipe must be rejected rather than silently relabeled MMVQ.","native_result":"NOT_RUN"},
+    {"id":"N05","change":"Foreign buffer/device or CPU-resident operand","required_decision":"Actual buffer admission must reject or use a separately qualified route; configuration intent is insufficient.","native_result":"NOT_RUN"},
+    {"id":"N06","change":"Unsupported warp/backend identity","required_decision":"Reject at deployment admission. Do not execute fabricated device pointers or unsupported kernels to test this.","native_result":"NOT_RUN"},
+    {"id":"N07","change":"Precision hint, IDs, fused arithmetic or activation dtype differing from recipe","required_decision":"Reject before numerical work unless specifically included in qualification.","native_result":"NOT_RUN"},
+    {"id":"N08","change":"Integer stride/offset span outside admitted range","required_decision":"Reject with checked metadata arithmetic before allocation/launch; do not allocate huge tensors to provoke overflow.","native_result":"NOT_RUN"},
+    {"id":"N09","change":"Same outer shape but changed prefix vector or active/layout policy","required_decision":"Graph reuse must reject/rebuild as specified; compare requested outputs/state after rebuilt execution.","native_result":"NOT_RUN"},
+    {"id":"N10","change":"Failure after an earlier native group/operator has executed","required_decision":"Poison or terminate owner; no success result, no same-owner retry or next request.","native_result":"NOT_RUN"},
+    {"id":"N11","change":"Trim/draft/sample failure caught by an embedding caller","required_decision":"Either prohibit continuation by a transaction-invalid flag or declare CLI process termination as the only supported failure contract.","native_result":"NOT_RUN"}
+  ],
+  "required_evidence_layers": [
+    {"layer":"source admission","pass_condition":"Predicates and rejection boundary are explicit and source-bound; unsupported descriptors have declared outcomes."},
+    {"layer":"operator own-path replay","pass_condition":"Every original four-column/tail path reproduces its captured output under the unchanged recipe."},
+    {"layer":"operator cross-path comparison","pass_condition":"Packed and backend-loop4 outputs, quantized activations and logical ordering satisfy the declared exact reference relation for each admitted captured descriptor."},
+    {"layer":"full request qualification","pass_condition":"Independent original-reference tokens, full requested vectors, extracted active KV, accepted frontier, trim and pending-token behavior agree for the declared cases."},
+    {"layer":"clean runtime binding","pass_condition":"Loaded modules, model, device and admitted descriptor/dispatch fingerprint match qualification while capture remains off; always-on guard cost is included."},
+    {"layer":"service timing","pass_condition":"Paired strong-baseline requests with complete resident-service cost, confidence intervals, warmup and control drift; no isolated operator percentage promoted to full-model gain."}
+  ],
+  "forbidden_inferences": [
+    "A static binding receipt is not a native correctness pass.",
+    "The four-column loop4 marker checks do not apply to unmarked packed nodes.",
+    "A clean observer bad=false value is not a placement observation.",
+    "One captured shape does not qualify all shapes accepted by a broader C++ branch.",
+    "Theoretical reduction preservation is a premise to test with the bound dispatcher, not proof that dispatch selected it.",
+    "Any speedup from relaxing output/state/reference requirements is outside this experiment."
+  ],
+  "execution_counters": {"model_runs":0,"native_runs":0,"gpu_runs":0},
+  "performance_result": "NOT_MEASURED"
+}

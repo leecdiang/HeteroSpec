@@ -1,0 +1,11 @@
+{
+  "schema": "heterospec.e04.independent-frontend-pre-freeze.v1",
+  "scope": "Source preparation review before frontend code generation",
+  "findings": [
+    {"id":"F01","status":"OPEN_AT_REVIEW","issue":"cpu_features regex lacks closing quote after quoted cc1 option, permitting empty==empty comparison","required":"Robust quoted/unquoted argv parsing, exactly one nonempty CPU and nonempty native feature binding; host fixtures"},
+    {"id":"F02","status":"OPEN_AT_REVIEW","issue":"Actually imported original input_freeze.py helper is not checked/held along with copied workflow version","required":"Bind and lock actual helper source before codegen or import only frozen helper"},
+    {"id":"F03","status":"OPEN_AT_REVIEW","issue":"Dependency parser only finds a delimiter and returns tokens without exact target/source, nonempty closure or strict grammar checks","required":"Fail closed on empty/malformed/variable/extra-rule/truncated dependencies; validate source/target and headers"}
+  ],
+  "native_release": false,
+  "old_writes_tests_GPU": 0
+}

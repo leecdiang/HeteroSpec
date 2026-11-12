@@ -1,0 +1,13 @@
+{
+  "schema": "heterospec.e04.independent-pre-freeze-findings.v1",
+  "scope": "Source review before numerical compiler start; no GPU or numerical DLL loading",
+  "source_snapshot": "frozen_build.py",
+  "findings": [
+    {"id":"D01","status":"OPEN_AT_REVIEW","issue":"NVCC Make dependency parser drops the first recipe line and accepts empty/malformed existing files as a source-only closure PASS","required":"Strict target/RHS/continuation/escaping grammar and nonempty complete source binding, adversarial CPU fixtures"},
+    {"id":"D02","status":"OPEN_AT_REVIEW","issue":"FREEZE.json is read into memory but not itself held deny-write or pre/post digest checked","required":"Hold manifest file and independently bind observed digest before and after build"},
+    {"id":"D03","status":"OPEN_AT_REVIEW","issue":"Any existing file under build output is accepted as generated input","required":"Constrain generated inputs to per-invocation declared outputs and retain generator/invocation provenance"},
+    {"id":"D04","status":"SCOPE_LIMIT","issue":"Python executable hash is not a full Python runtime/stdlib freeze; Windows runtime and hardware are also outside copied codegen toolchain","required":"Record precise scope; do not call all orchestration/OS components immutable"}
+  ],
+  "resolution": "Native owner notified before input freeze; later corrected source and receipts must supersede these preparation-only findings",
+  "native_release": false
+}

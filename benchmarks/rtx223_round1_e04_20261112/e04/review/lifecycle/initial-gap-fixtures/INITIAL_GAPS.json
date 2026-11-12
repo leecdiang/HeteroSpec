@@ -1,0 +1,73 @@
+{
+  "schema": "heterospec.e04.independent-initial-planner-gaps.v1",
+  "source_sha256": "0308f0577f50c2d058cb17e9ac4852d07dbe6edfe1a15e5f9d10eeeeffc64d5d",
+  "scope": "Own mock SQLite fixtures only; real canonical ledger never opened",
+  "models": 0,
+  "CUDA_calls": 0,
+  "old_tests_rerun": false,
+  "findings": [
+    {
+      "id": "M1",
+      "hardlink_alias_accepted": false,
+      "exception": "PermissionError: [WinError 5] \u62d2\u7edd\u8bbf\u95ee\u3002: 'C:\\\\Users\\\\ASUS\\\\Documents\\\\ChatGPT\\\\HeteroSpec\\\\rtx223-round1-resume-20261112-e04\\\\e04\\\\review\\\\lifecycle\\\\initial-gap-fixtures\\\\harmless-original.sqlite' -> 'C:\\\\Users\\\\ASUS\\\\Documents\\\\ChatGPT\\\\HeteroSpec\\\\rtx223-round1-resume-20261112-e04\\\\e04\\\\review\\\\lifecycle\\\\initial-gap-fixtures\\\\CPU-MOCK-hardlink.sqlite'",
+      "own_original_mutated": false
+    },
+    {
+      "id": "M2",
+      "new_lease_after_unclosed_running_accepted": true,
+      "snapshot": {
+        "scope": "CPU_MOCK_ONLY_NOT_GPU_ACCOUNTING",
+        "family": "CPU-MOCK-pending",
+        "ceiling": 4096,
+        "parent_binding": "parent",
+        "inherited_mock_charge": 0,
+        "stop_reason": null,
+        "charged_mock_reservations": 2,
+        "refunds": 0,
+        "leases": [
+          {
+            "id": "unfinished",
+            "epoch": "e04",
+            "plan_hash": "0cf74bbbf9464408f90ce064b2865fe2f41f2b75295f6267721a50a685aa33ec",
+            "reserved": 1,
+            "status": "RUNNING",
+            "emitted_mock": 0,
+            "reason": null
+          },
+          {
+            "id": "new-after-unclosed",
+            "epoch": "e05",
+            "plan_hash": "0cf74bbbf9464408f90ce064b2865fe2f41f2b75295f6267721a50a685aa33ec",
+            "reserved": 1,
+            "status": "RESERVED",
+            "emitted_mock": 0,
+            "reason": null
+          }
+        ],
+        "poststats": [],
+        "events": [
+          {
+            "kind": "RESERVED_BEFORE_ANY_MOCK_LIFECYCLE_ENTRY",
+            "value": {
+              "bound": 1,
+              "lease": "unfinished"
+            }
+          },
+          {
+            "kind": "RESERVED_BEFORE_ANY_MOCK_LIFECYCLE_ENTRY",
+            "value": {
+              "bound": 1,
+              "lease": "new-after-unclosed"
+            }
+          }
+        ],
+        "actual_GPU_calls": 0,
+        "physical_GPU_observations": "NOT_RUN"
+      }
+    },
+    {
+      "id": "M3",
+      "nonhex_policy_digest_accepted": true
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+--- pinned/llama-graph.cpp
++++ strong/llama-graph.cpp
+@@ -1,3 +1,5 @@
++#include "../ggml/src/ggml-cuda/hs_strong_ref1.hpp"
++extern "C" int hs_strong_selected_arm();
+ #include "../ggml/src/hs_loop4_tensor.hpp"
+ #include "hs_reference_batching.hpp"
+ #include "hs_scope.h"
+@@ -1578,12 +1580,26 @@
+             w->ne[2] != 1 || w->ne[3] != 1 || !ggml_is_contiguous(w) ||
+             w->ne[0] != cur->ne[0] || w->ne[0] % ggml_blck_size(w->type) != 0)
+             throw std::runtime_error("unsupported mixed-Q4 REF1 descriptor");
++        const int strong_arm=hs_strong_selected_arm();
++        if(strong_arm==1) {
+         for (int64_t i=0;i<cur->ne[1];++i) {
+             auto * x=ggml_view_2d(ctx0,cur,cur->ne[0],1,cur->nb[1],i*cur->nb[1]);
+             auto * column=ggml_mul_mat(ctx0,w,x);
+             ggml_format_name(column,"hs_ref1_loop_%s_%s_%lld",ggml_type_name(w->type),w->name,(long long)i);
+             res=res?ggml_concat(ctx0,res,column,1):column;
+         }
++        } else if(strong_arm==2) {
++            if(!ggml_is_contiguous(cur)) throw std::runtime_error("B rejects noncontiguous activation; no fallback");
++            res=ggml_mul_mat(ctx0,w,cur);
++            hs_strong_mark(res);
++            ggml_format_name(res,"hs_backend_ref1_%s",w->name);
++        } else if(strong_arm==3) {
++            if(!ggml_is_contiguous(cur)) throw std::runtime_error("C rejects noncontiguous activation; no fallback");
++            auto * channels=ggml_view_3d(ctx0,cur,cur->ne[0],1,cur->ne[1],cur->nb[1],cur->nb[1],0);
++            auto * grouped=ggml_mul_mat(ctx0,w,channels);
++            ggml_format_name(grouped,"hs_ref1_group_%s_%s",ggml_type_name(w->type),w->name);
++            res=ggml_reshape_2d(ctx0,grouped,w->ne[1],cur->ne[1]);
++        } else throw std::runtime_error("Strong arm not selected before graph construction");
+     } else if (hs_query_batch && w->type == GGML_TYPE_Q8_0 && cur->type == GGML_TYPE_F32 &&
+         cur->ne[1] > 4 && cur->ne[1] <= 32 && cur->ne[2] == 1 && cur->ne[3] == 1) {
+         // A wide MM dispatch is a different numerical operation on this backend.

@@ -1,0 +1,75 @@
+--- 
++++ 
+@@ -16,7 +16,7 @@
+ static bool phase1_profiling=false;
+ #include "llama-model.h"
+ 
+-#include "m1_capability.hpp"
++#include "model_capability.hpp"
+ static json module_inventory(){ return json(linux_transfer::modules()); }
+ static void observe_state(Context& c,const fs::path& dir,int row,bool state=true){
+     ++phase_heavy_captures;
+@@ -31,14 +31,14 @@
+ }
+ #include "rtx_append.inc"
+ #include "m2_tapes.hpp"
+-int main(int argc,char**argv){
++int sb217_legacy_main(int argc,char**argv){
+     const auto phase1_main_started=Clock::now();
+     llama_model*t=nullptr,*d=nullptr;Pair pool;fs::path root;
+     try{
+         need(argc==3,"phase worker JOB OUT");const auto job=load(argv[1]);root=argv[2];need(!fs::exists(root),"fresh native output");fs::create_directories(root);
+         phase_target_reserve=job.at("target_output_reserve");
+         const int m2_k=job.at("k");phase_proposal_mode=job.at("proposal_mode");
+-        need(phase_target_reserve==32&&m2_k==3&&((job.at("draft")==true&&job.at("draft_width")==4)||(job.at("draft")==false&&job.at("draft_width")==1)),"Q32 explicit k3 reserve32 M/D4 contract");
++        need(phase_target_reserve==32&&m2_k==0&&job.at("draft")==false&&job.at("draft_width")==1,"Q32 explicit k3 reserve32 M/D4 contract");
+         need(phase_proposal_mode=="live"||phase_proposal_mode=="replay"||phase_proposal_mode=="producer","M2 proposal mode");
+         phase_threads=job.at("threads").get<int>();need(phase_threads>0 && phase_threads<=2,"allocated CPU thread budget");
+         const auto bin=linux_transfer::executable().parent_path();
+@@ -62,7 +62,7 @@
+         need(llama_vocab_n_tokens(tv)==llama_vocab_n_tokens(dv),"vocab size");
+         for(int i=0;i<llama_vocab_n_tokens(tv);++i)need(strcmp(llama_vocab_get_text(tv,i),llama_vocab_get_text(dv,i))==0&&llama_vocab_is_eog(tv,i)==llama_vocab_is_eog(dv,i),"vocab mismatch");}
+ #if PHASE_CANDIDATE
+-        phase_lowering=job.at("lowering");phase_draft_width=job.value("draft_width",1);need(phase_draft_width==1||phase_draft_width==4,"draft width");
++        phase_lowering="SIMPLE"; // Preserve original W/whole physical-extent cutsphase_draft_width=job.value("draft_width",1);need(phase_draft_width==1||phase_draft_width==4,"draft width");
+         auto spec=ArmSpec{"phase","QB",0,32,m2_k,true,job.value("draft",false)};
+ #else
+         auto spec=arm_spec("R");
+@@ -79,7 +79,7 @@
+         else if(job.contains("forced")||job.contains("cases")){
+           const json cases=job.contains("cases")?job.at("cases"):json::array({job});result["cases"]=json::array();
+           for(size_t index=0;index<cases.size();++index){
+-            const auto& one=cases[index];const auto& f=one.at("forced");auto*ctx=pool.target.get();auto case_root=job.contains("cases")?root/one.at("name").get<std::string>():root;ctx->reset(true,case_root/"forced");int position=0;hsc::begin("heavy",int(f.at(0).at("ids").size()));
++            const auto& one=cases[index];const auto& f=one.at("forced");auto*ctx=pool.target.get();auto case_root=job.contains("cases")?root/one.at("name").get<std::string>():root;ctx->reset(true,case_root/"forced");int position=0;hs_work_reset();hsc::begin("heavy",int(f.at(0).at("ids").size()));
+             const auto wanted=one.at("observe_positions").get<std::vector<int>>(),states=one.at("state_positions").get<std::vector<int>>();
+             auto observe=[&](int p,int row){if(std::find(wanted.begin(),wanted.end(),p)!=wanted.end())observe_state(*ctx,case_root/"captures"/std::to_string(p),row,std::find(states.begin(),states.end(),p)!=states.end());};
+             for(const auto& call:f){auto tokens=call.at("ids").get<std::vector<int>>();std::string phase=call.value("phase",std::string("VERIFY"));bool all=call.value("all",phase!="PREFILL");
+@@ -96,17 +96,17 @@
+             record["executions"]=ctx->plan.executions;record["planning_s"]=ctx->plan.planning_s;record["output_copy_s"]=ctx->plan.output_copy_s;
+             if(!job.contains("cases"))result["executions"]=ctx->plan.executions;
+ #endif
+-            record["prefill_descriptor_journal"]=ctx->obs.journal_meta();result["cases"].push_back(record);result["trajectories"]=result["trajectories"].get<int>()+1;dump(root/"result.json",result);
++            auto forced_work=hs_work_finish();record["application_work"]={{"quant_calls",forced_work.quant_calls},{"quant_rows",forced_work.quant_rows},{"scalar_dot_dispatches",forced_work.scalar_dot_dispatches},{"scalar_dot_columns",forced_work.scalar_dot_columns},{"backend_loop_entries",forced_work.backend_loop_entries},{"kernel_application_launch_calls",forced_work.kernel_calls}};if(job.value("capacity_overflow_probe",false)&&one.at("name")=="synthetic-capacity1024-actual-q32-first"){need(position==1024,"Capacity probe initial extent");observe_state(*ctx,case_root/"before-overflow",-1);bool rejected=false;std::string error;hs_work_reset();try{ctx->decode({0},1024,false,"ILLEGAL_OVERFLOW");}catch(const std::exception& e){error=e.what();rejected=error=="unsupported cache/append requirements";}auto negative_work=hs_work_finish();need(rejected&&negative_work.kernel_calls==0&&negative_work.quant_calls==0&&negative_work.scalar_dot_dispatches==0,"Expected pre-forward overflow rejection");observe_state(*ctx,case_root/"after-overflow",-1);record["overflow_probe"]={{"expected_rejection",true},{"message",error},{"actual_forward_rows",0},{"observed_kernel_launches",negative_work.kernel_calls},{"state_comparison_required",true}};result["trajectories"]=result["trajectories"].get<int>()+1;}record["prefill_descriptor_journal"]=ctx->obs.journal_meta();result["cases"].push_back(record);result["trajectories"]=result["trajectories"].get<int>()+1;dump(root/"result.json",result);
+           }
+         }else{
+             for(const auto& entry:job.at("inputs")){
+                 std::string name=entry.at("name");bool capture=entry.value("capture",false);auto input=entry.at("input");auto dir=root/name;fs::create_directories(dir);
+                 const auto exports=phase_exports,imports=phase_imports,contexts=phase_contexts,heavy_before=phase_heavy_captures;
+-                auto r=request(t,d,input,spec,"resident",capture,"NATIVE",dir,pool);
++                hs_work_reset();auto r=request(t,d,input,spec,"resident",capture,"NATIVE",dir,pool);auto work=hs_work_finish();r["application_work"]={{"quant_calls",work.quant_calls},{"quant_rows",work.quant_rows},{"quant_bytes",work.quant_bytes},{"scalar_dot_dispatches",work.scalar_dot_dispatches},{"scalar_dot_columns",work.scalar_dot_columns},{"backend_loop_entries",work.backend_loop_entries},{"kernel_application_launch_calls",work.kernel_calls},{"copy_calls",work.copy_calls},{"copy_bytes",work.copy_bytes},{"sync_calls",work.sync_calls},{"opaque_library_internal_launches",nullptr}};
+                 r["observed_API_calls_within_service"]={{"state_exports",phase_exports-exports},{"state_imports",phase_imports-imports},{"context_creates",phase_contexts-contexts}};
+                 r["observed_API_calls_within_service"]["heavy_captures"]=phase_heavy_captures-heavy_before;
+                 if(capture){const int row=r["cycles"].empty()?-1:r["cycles"].back().at("accepted").get<int>();observe_state(*pool.target,dir/"target/state/terminal",row);}
+-                r["online_state_exports"]=capture?json(nullptr):json(0);r["online_state_imports"]=0;r["online_reference_replays"]=0;r["online_context_creates"]=0;
++                if(!capture){observe_state(*pool.target,dir/"post-service-terminal",-1);r["post_service_terminal_state_export"]=true;}json tape={{"ids",r.at("ids")},{"prompt_ids",r.at("prompt_ids")},{"stop_reason",r.at("stop_reason")},{"target_final_kv",r.at("target_final_kv")},{"executions",pool.target->plan.executions}};r["semantic_tape_sha256"]=hash_text(tape.dump());dump(dir/"semantic-tape.json",tape);r["online_state_exports"]=capture?json(nullptr):json(0);r["online_state_imports"]=0;r["online_reference_replays"]=0;r["online_context_creates"]=0;
+ #if PHASE_CANDIDATE
+                 r["executions"]=pool.target->plan.executions;r["planning_s"]=pool.target->plan.planning_s;r["output_copy_s"]=pool.target->plan.output_copy_s;r["first_call_plan_s"]=pool.target->plan.first_call_plan_s;
+ #endif
+@@ -123,6 +123,6 @@
+         result["resident_initial_plan_compile_s"]=pool.target->plan.resident_initial_plan_s;
+ #endif
+         if(phase1_profiling && !job.contains("append_probes"))profile::end(root/"cuda-events.json");
+-        result["total_observed_API_calls"]={{"state_exports",phase_exports},{"state_imports",phase_imports},{"context_creates",phase_contexts}};result["modules_after"]=module_inventory();pool.draft.reset();pool.target.reset();if(d)llama_model_free(d);d=nullptr;llama_model_free(t);t=nullptr;llama_backend_free();result["status"]="COMPLETE";dump(root/"result.json",result);return 0;
++        result["total_observed_API_calls"]={{"state_exports",phase_exports},{"state_imports",phase_imports},{"context_creates",phase_contexts}};result["modules_after"]=module_inventory();result["native_module_maps"]=hs_loaded_modules();pool.draft.reset();pool.target.reset();if(d)llama_model_free(d);d=nullptr;llama_model_free(t);t=nullptr;llama_backend_free();result["status"]="COMPLETE";dump(root/"result.json",result);return 0;
+     }catch(const std::exception&e){if(!root.empty()&&fs::exists(root))dump(root/"failure.json",{{"error",e.what()}});std::cerr<<e.what()<<std::endl;return 2;}
+ }

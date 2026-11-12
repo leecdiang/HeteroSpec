@@ -1,0 +1,89 @@
+{
+  "status": "SAME_PANEL_RECEIPT_COST_AUDIT_COMPLETE",
+  "new_GPU_requests": 0,
+  "groups": {
+    "B": {
+      "workers": 48,
+      "warm_service_s": 366.2394183,
+      "measured": {
+        "requests": 48,
+        "service_s": 364.8316790080001,
+        "reset_s": 0.00551443,
+        "prefill_s": 143.92656936699998,
+        "decode_s": 216.663232421,
+        "planning_s": 0.005185591999999999,
+        "owned_host_output_copy_s": 0.3599496350000001,
+        "residual_unpartitioned_s": 3.8712275630000077
+      },
+      "host_caller_s": 3125.536716013994,
+      "launch_to_exit_observation_s": 2043.5084183550425,
+      "cumulative_native_main_to_measured_ready_s": 1891.0388514830006,
+      "model_load_s": 164.19691954500004,
+      "pool_setup_s": 2.423302971
+    },
+    "C": {
+      "workers": 48,
+      "warm_service_s": 360.25178701600004,
+      "measured": {
+        "requests": 48,
+        "service_s": 358.9248593159999,
+        "reset_s": 0.0055244940000000005,
+        "prefill_s": 137.984134692,
+        "decode_s": 216.68981281800006,
+        "planning_s": 0.005159405000000001,
+        "owned_host_output_copy_s": 0.36729467600000004,
+        "residual_unpartitioned_s": 3.872933231000017
+      },
+      "host_caller_s": 3103.218234072003,
+      "launch_to_exit_observation_s": 2026.457812585977,
+      "cumulative_native_main_to_measured_ready_s": 1878.8374219199998,
+      "model_load_s": 164.23045020200004,
+      "pool_setup_s": 2.449954251
+    },
+    "G": {
+      "workers": 48,
+      "warm_service_s": 384.88497934299994,
+      "measured": {
+        "requests": 48,
+        "service_s": 382.2939776129999,
+        "reset_s": 0.005524874000000001,
+        "prefill_s": 161.324593401,
+        "decode_s": 216.71453288200001,
+        "planning_s": 0.005137682,
+        "owned_host_output_copy_s": 0.3717384780000001,
+        "residual_unpartitioned_s": 3.872450296000036
+      },
+      "host_caller_s": 3156.8124395669365,
+      "launch_to_exit_observation_s": 2080.7747508289976,
+      "cumulative_native_main_to_measured_ready_s": 1929.4060923480004,
+      "model_load_s": 164.20006106,
+      "pool_setup_s": 2.442716829
+    }
+  },
+  "primary_scope": "Reset-inclusive resident clean request; warm service distinct from measured service",
+  "sibling_intervals": [
+    "reset_s",
+    "prefill_s",
+    "decode_s",
+    "planning_s",
+    "owned_host_output_copy_s"
+  ],
+  "parent_interval": "S3_service",
+  "nested_subsets": [
+    "first_call_plan_s inside planning_s",
+    "backend quantization/kernel/copy/synchronization inside prefill/decode; counters are not durations"
+  ],
+  "unmeasured_residual": "Sampling full finite logits and greedy argmax, commit/EOG/cap, batch/output allocation and setup, physical metadata/counters, final sync gaps and timer overhead are not individually partitioned",
+  "exclusions": [
+    "Model load/context provision occurs before service, with their own recorded timers in native result.json",
+    "Terminal full state export and semantic-tape/receipt serialization occur after service",
+    "Exact native lifetime is not measured: launch_to_exit_observation_s and exit_observed_monotonic_ns are filled after post-exit module/budget validation, beyond polling",
+    "phase1_main_to_result_s for measured is cumulative from process start, including warm request and earlier post-service work"
+  ],
+  "limitations": [
+    "No S2 operator-time stack is combined with these service times",
+    "Same-panel phase differences are descriptive and do not isolate quantization vs scalar dot vs launch costs",
+    "Single warm per fresh process is prescribed, not general steady-state evidence",
+    "Host caller totals include warm plus measured plus checks; do not add them to service sums"
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "native_model_requests": 0,
+  "records": [
+    {
+      "case": "G",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"G\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"flash_attention\":false,\"kv\":\"F16\",\"monotonic_ns\":21865574388901,\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "B",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"B\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"flash_attention\":false,\"kv\":\"F16\",\"monotonic_ns\":21865623138759,\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "C",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"C\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"flash_attention\":false,\"kv\":\"F16\",\"monotonic_ns\":21865663749282,\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "reserve8",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "HS_NATIVE_FAILURE {\"backend_initialization_entered\":false,\"error\":\"Context/UB/reserve32\"}\n",
+      "stdout": "",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "ub4",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "HS_NATIVE_FAILURE {\"backend_initialization_entered\":false,\"error\":\"Context/UB/reserve32\"}\n",
+      "stdout": "",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "graphs-on",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "HS_NATIVE_FAILURE {\"backend_initialization_entered\":false,\"error\":\"Common policy\"}\n",
+      "stdout": "",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "wrong-backend",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "HS_NATIVE_FAILURE {\"backend_initialization_entered\":false,\"error\":\"Unknown backend\"}\n",
+      "stdout": "",
+      "worker": "backend/operand-worker"
+    },
+    {
+      "case": "G",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"G\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"dispatch\":\"graph_scalar_columns\",\"draft\":false,\"flash_attention\":false,\"kv\":\"F16\",\"lowering\":\"WHOLE\",\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"planned_native_planner\":\"SIMPLE\",\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "B",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"B\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"dispatch\":\"one_backend_entry_batch_quant_then_scalar_dispatch_loop\",\"draft\":false,\"flash_attention\":false,\"kv\":\"F16\",\"lowering\":\"WHOLE\",\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"planned_native_planner\":\"SIMPLE\",\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "C",
+      "expected": 0,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"arm\":\"C\",\"cuda_graphs\":false,\"cuda_initialized\":false,\"dispatch\":\"independent_channels_ne11_1\",\"draft\":false,\"flash_attention\":false,\"kv\":\"F16\",\"lowering\":\"WHOLE\",\"n_ctx\":1024,\"n_ubatch\":32,\"output_reserve\":32,\"planned_native_planner\":\"SIMPLE\",\"scope\":\"CPU_PARSE_ONLY_NOT_GPU_QUALIFICATION\"}\n",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "reserve8",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "Strong context/UB/reserve\n",
+      "stdout": "",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "ub4",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "Strong context/UB/reserve\n",
+      "stdout": "",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "graphs-on",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "Strong common policy\n",
+      "stdout": "",
+      "worker": "model/model-worker"
+    },
+    {
+      "case": "wrong-backend",
+      "expected": 2,
+      "returncode": 2,
+      "stderr": "Unknown strong arm\n",
+      "stdout": "",
+      "worker": "model/model-worker"
+    }
+  ]
+}

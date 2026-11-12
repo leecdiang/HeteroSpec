@@ -1,0 +1,19 @@
+--- 
++++ 
+@@ -65,6 +65,7 @@
+ inline int phase_threads=2;
+ #include "geometry_observer.hpp"
+ #include "resident_context.hpp"
++#include "request_contract.hpp"
+ #define draft_ubatch phase_draft_width
+ struct Context {
+     PhaseContext plan;
+@@ -142,7 +143,7 @@
+     need(input.contains("proposal_tape")==replay,"live/replay tape permission");
+     if(replay){need(input.at("proposal_tape").at("prompt_ids")==input.at("prompt_ids"),"owned tape prompt");
+         need(hash_text(input.at("proposal_tape").dump())==input.at("proposal_tape_sha256"),"owned tape content SHA");}
+-    need(input.at("prompt_ids").size()+size_t(input.at("cap").get<int>())+size_t(k+1)<=llama_n_ctx(target->c),"transient position capacity");
++    need(hs_m_input_valid(input.at("prompt_ids").size(),input.at("cap").get<int>(),llama_n_ctx(target->c)),"transient position capacity");
+     r["proposal_mode"]=phase_proposal_mode;r["target_output_reserve"]=phase_target_reserve;
+     if(replay)r["proposal_tape_sha256"]=input.at("proposal_tape_sha256");
+     double setup=since(start);

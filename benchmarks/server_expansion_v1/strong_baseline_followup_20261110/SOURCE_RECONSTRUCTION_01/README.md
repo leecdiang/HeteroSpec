@@ -1,0 +1,5 @@
+# Source reconstruction supplement
+
+`SOURCE_TEXT_03.tar.gz`:12,167,196 bytes; SHA-256 `752d5bb302058b95962e7013bd97b941d25afa22dce0047ac0ffef25fe5fb0f9`. Contains4,173 reviewed text payloads, including4,172 actual source/header/receipt files and complete735-step compile/link recipe; no old object/archive/ELF/model/oracle build inputs. Exact source/tool/1,258 external dependency preflight passed in1.552seconds with zero compiler and zero GPU calls. Full cold compilation has **not** been executed by this supplement and is not numerical qualification. See `../execution_archive_v1/SOURCE_RECONSTRUCTION.md` for the bounded entry, exact SDK requirements and limits. The CPU capture draft history and its retained/unavailable records are explicit.
+
+Independent Node statistical verification uses the frozen Python primary estimand unchanged. Heterogeneous synthetic12-root/four-round data agree for all three estimates and CI endpoints; this is a CPU test only, not a new observation. Actual S3 results remain pending complete qualification/formal execution.

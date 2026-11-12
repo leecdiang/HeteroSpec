@@ -1,0 +1,41 @@
+--- pinned/mmvq.cu
++++ strong/mmvq.cu
+@@ -1,3 +1,4 @@
++#include "hs_strong_ref1.hpp"
+ #include "../hs_loop4_tensor.hpp"
+ #include "mmvq.cuh"
+ #include "quantize.cuh"
+@@ -1446,7 +1447,9 @@
+         const int64_t s11 = src1->nb[1] / ts_src1;
+         const int64_t s12 = src1->nb[2] / ts_src1;
+         const int64_t s13 = src1->nb[3] / ts_src1;
++        hs_work_quant(ne13*ne12*ne11, ne13*ne12*ne11*ne10_padded*sizeof(block_q8_1)/QK8_1);
+         quantize_row_q8_1_cuda(src1_d, nullptr, src1_q8_1.get(), src0->type, ne10, s11, s12, s13, ne10_padded, ne11, ne12, ne13, stream);
++        hs_work_quant_payload(src1_q8_1.get(),ne13*ne12*ne11,ne13*ne12*ne11*ne10_padded*sizeof(block_q8_1)/QK8_1,stream);
+     }
+ 
+     const int64_t s01 = src0->nb[1] / ts_src0;
+@@ -1471,6 +1474,23 @@
+ 
+     const int64_t ids_stride = ids ? ids->nb[1] / ggml_type_size(ids->type) : 0;
+ 
++
++    if (hs_strong_marked(dst)) {
++        hs_strong_require(src0, src1, dst);
++        if (ids || fusion) {
++            throw std::runtime_error("strong REF1 rejects IDs or fused descriptors");
++        }
++        for (int64_t col = 0; col < ne11; ++col) {
++            const void * input = src1_q8_1.get() + col*s11*sizeof(block_q8_1);
++            float * output = dst_d + col*s1;
++            hs_work_dot(1);
++            mul_mat_vec_q_switch_type(src0->data, src0->type, input, nullptr, fusion_local,
++                output, ne00, ne01, 1, s01, s11, s1,
++                1, 1, 1, s02, s11, ne0, 1, 1, s03, s11, ne0, 0, stream);
++        }
++        return;
++    }
++    hs_work_dot(ncols_dst*nchannels_dst*ne3);
+     if (hs_loop4::marked(dst)) {
+         hs_loop4::require(src0,src1,dst);
+         if (ids || fusion)throw std::runtime_error("loop4 rejects IDs and fused arithmetic");

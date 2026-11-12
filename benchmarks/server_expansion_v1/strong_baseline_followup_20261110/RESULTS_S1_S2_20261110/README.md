@@ -1,0 +1,13 @@
+# 32B strong baseline S1/S2 result, 2026-11-10
+
+S1 passed all required gates: 243 workers and 783 logical operations, including independent scalar-reference comparisons, complete owned vectors, active KV/frontier, boundary, EOG/cap, reset/pending, and expected-negative checks. S2 completed its frozen 36 fresh-worker schedule: 36 warmups and 36 measured operations across four exposed tensor cells and G/B/C. CUDA graphs were off for all arms. G is graph-level REF1-loop, B is backend-internal REF1-loop, and C is independent-channel group. No full-model S3 measurements are included here.
+
+The per-cell geometric C/B elapsed-time ratios (three matched blocks each) are 0.969303 (Q4_K/q4), 0.692862 (Q4_K/q32), 0.990319 (Q6_K/q4), and 0.795353 (Q6_K/q32). The equal-cell geometric C/B ratio is 0.852826. B/G is 0.639041 and C/G is 0.544991. These describe this small exposed-cell mechanism panel, not full-service speedup. One warm per fresh worker does not establish general steady state; opaque library internal launches are unobserved. The Q6_K/q4 observations have mixed signs.
+
+The archive contains all S1/F1 logical text records, every S2 warm and measured receipt, complete stdout/stderr and failure history, exact configuration/source/build identities, dispatch counters, statistics, CPU build/source history, and the cumulative hash-chained ledger. Numeric captures remain in the retained execution workspace, with complete byte/hash inventories; public text replay is not a fresh GPU numerical rerun.
+
+Final 32B accounting is 1,373 requests and 677,712 reserved rows, including the immutable historical 514-request anchor, all qualification and warmup costs, four charged early startup failures, and 72 S2 operations. The current S1/S2 ceiling is 1,385, leaving 12 requests. Six CPU preparation epochs and the reader correction are retained. No failed slots were refunded. Full S2 phase wall time was 315.502 seconds, including 108 seconds of fixed gaps; native-worker caller totals were 203.844 seconds. These nested clocks must not be added together.
+
+The complete archive is RESULT_S1_S2_TEXT_02.tar.gz, 4,382,148 bytes, SHA-256 f63765ae9b5e31bba1e6f6c98bb815a79277d942420985a81b3e3fa17f3a1b33. Extract and verify using execution_v1/deliver.py replay; execution_archive_v1/recompute_s2.js independently recomputes statistics using Node. Public anonymous readback proof is appended only after downloading these immutable published bytes. Earlier exports are retained privately and are not silently replaced.
+
+B2 and S3 are separate subsequent stages and have no performance results in this archive. Original references, historical panels and paper files are unchanged.

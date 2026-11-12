@@ -1,0 +1,89 @@
+{
+  "schema": "hs.N1chain.prospective-resource-budget.v1",
+  "status": "PROPOSED_NOT_APPROVED_NOT_MEASURED",
+  "execution_authorized": false,
+  "current_GPU_execution_authorized": false,
+  "model_or_backend_or_context_or_placement_or_forward_operations_performed": 0,
+  "source_snapshot_sha256": "f2469bf917c41ce3c64230e4d0b1a05a04bc2dc43beedb1ed13431d94da48f5d",
+  "observed_utc": "2026-11-12T11:56:51.245427+00:00",
+  "proposed_limits": {
+    "planned_requests": 72,
+    "failed_consumption_request_reserve": 4,
+    "request_ceiling": 76,
+    "planned_model_rows": 69354,
+    "failed_consumption_row_reserve": 16384,
+    "model_rows_ceiling": 85738,
+    "backend_initializations": 10,
+    "model_loads": 10,
+    "native_context_creations": 10,
+    "placement_reservations": 10,
+    "preflight_probes": 2,
+    "workers": 8,
+    "placement_semantics": "Reserve once before native ELF exec, verify existing reservation inside worker; probes are placeholders until separately approved and implemented.",
+    "command_ceiling_proposal": 250000,
+    "journal_bytes_hard_ceiling": 536870912,
+    "automatic_retry": false,
+    "STATE_reentry": false
+  },
+  "byte_budget": {
+    "active_KV_C4096_F16": 603979776,
+    "full_F32_vocabulary_row": 607744,
+    "raw_tensor_ceiling": 143804276736,
+    "aggregate_metadata_ceiling": 398458880,
+    "planned_metadata_composition_ceiling": 351469568,
+    "failure_metadata_composition_ceiling": 25427968,
+    "partial_marker_bytes_allowance": 1048576,
+    "global_journal_ceiling": 536870912,
+    "raw_including_journal": 144739606528,
+    "archive_ceiling": 147651175875,
+    "strict_restore_ceiling": 144739606528,
+    "build_and_text_excluding_global_journal_allowance": 8589934592,
+    "protected_free_space": 107374182400,
+    "available_space_required": 553094505923,
+    "note": "Includes132 fullrows/request conservatively covering sampling/frontier and ownership copies; RESET rawtensorbytes are0. Archive uses2percent expansion plus16MiB headers; source/model weights are separately bound, not duplicated into rawcaptures."
+  },
+  "archive_file_budget": {
+    "planned_state_payload_files": 1512,
+    "planned_owned_payload_files": 288,
+    "planned_transition_and_binding_files": 99,
+    "planned_base_files": 1899,
+    "actual_planned_producer_receipts": 24,
+    "planned_files_including_actual_producer_receipts": 1923,
+    "producer_scope": "Own producer for R/repeat/strong natural requests only; cold oracle replays R canonical IDs and has no independent producer. The32-record bound is conservative allowance, not an executed or planned32-producer count.",
+    "additional_natural_or_oracle_producer_receipt_allowance": 32,
+    "failed_request_file_allowance": 144,
+    "OPEN_UNCERTAIN_partial_marker_allowance": 48,
+    "capture_directory_entry_allowance": 348,
+    "known_file_and_directory_entries": 2471,
+    "outer_archive_entry_ceiling": 4096,
+    "remaining_entries_for_worker_logs_indices_global_ledger_and_build_metadata": 1625,
+    "required_archive_guard": "At most4096 outerentries, each header/PAX envelope at most4096bytes;16MiB totalheader budget. Do not silently include an unbounded extracted upstream tree."
+  },
+  "current_readonly_resources": {
+    "available_RAM_bytes": 527385636864,
+    "available_workspace_bytes": 1660191739904,
+    "target_devices": [
+      {
+        "uuid_sha256": "6ccb2731be2eeeec3f0763a9397d88aaf523aa93acb087f7683c87648fd3512d",
+        "name": "NVIDIA RTX A5000",
+        "free_MiB": 24111
+      }
+    ],
+    "target_compute_process_count": 0
+  },
+  "disk_snapshot_exceeds_proposed_requirement": true,
+  "required_RAM_bytes_proposal": 51539607552,
+  "required_worker_RSS_hard_ceiling_proposal": 25769803776,
+  "protected_host_RAM_proposal": 25769803776,
+  "wall_time": {
+    "watchdog_seconds": 18000,
+    "status": "UNMEASURED_WATCHDOG_NOT_ETA",
+    "note": "RPC/fsync cost and real model/capture work are unmeasured. Exceeding deadline must preserve partial data and stop, without starting a new worker."
+  },
+  "gates": [
+    "Fresh resource/UUID/quiet-window verification before any future admission.",
+    "Native schema producer receipts, capture/record size caps, entrycount/ledger caps and actual controller graph must remain enforced.",
+    "Ten deployment limits include two prospective probe placements and eight workers; no existing quota or old STATE is reused.",
+    "Accounting ACKs, static source maps and compiled linkage are not native execution permission."
+  ]
+}

@@ -25,7 +25,7 @@ The existing Qwen3-8B-Q8_0 exact file is8,709,518,112bytes, SHA408b955510e196121
 | Predicted C4096 capacity rejections |0|
 | Later true-token-prefix reuse predictions |0 /1,127|
 | Later canonical-prefix mismatch predictions |1,127 /1,127|
-| Complete provided body+EOS cap128 incompatibilities |616 historical turns|
+| Histories with at least one prior supplied body+EOS cap128 conflict |616 user-turn histories|
 | Necessary length/EOG-compatible hypothetical turns |1,029, including511later|
 
 Branches share roots and ancestors; paths/turns are not independent roots. Capacity admission here means only prompt_length+127<=4096, not native eligibility. No supplied answer was truncated to128. The frozen body>128 diagnostic flagged614 historical turns; independent replay correctly includes EOS and identifies616, two additional boundary conflicts. Original rows/flags are unchanged. There are no supplied embedded-EOG cases. The necessary cap/stop-compatible diagnostic subset is not a new selected cohort or proof of greedy production: all511later turns in it also fail prefix reuse. Full first-difference histograms, all per-turn tokens/heads/calls and every unsupported flag remain in the packet.
@@ -63,3 +63,14 @@ GPU_PROPOSAL_NOT_ADMITTED.json provides a **conditional, unapproved** upper enve
 Supported claim: this complete fixed supplied-history census reveals a canonical-template prefix-policy obstacle and no distinct cut-schedule opportunity after common rebuild. Evidence: full denominators, actual tokenizer/template and independent reconstruction. Limit: no true native head, sequential R or four-arm free-episode/performance evidence. It therefore adds an honest limitation, not a natural multi-round speedup claim or a universal negative about LOCAL. Earlier results remain intact; no manuscript, merge, Release, rental or second GPU action was performed.
 
 Reproduce saved data with the reused packaging/archive.py strict CPU replay and verify_saved_census.js (fresh output directories). Copy the companion parquet into restored assets/ at its fixed basename before independent replay. The payload source/zero_forward-02.py is the actual executed source; source/zero_forward.py is the retained unexecuted preparation draft. Retokenization needs the separately verified exact model/helper and pinned renderer; it is not necessary for public saved-data replay. PUBLIC_READBACK.json will separately record actual immutable anonymous download and full replay, without pretending it reruns tokenization or a model.
+
+Actual anonymous public delivery passed for all22 files at immutable commit9f6592ba2b4c546e16860eb243d1ebebcaa3ac17. The downloaded packet passed strict53-member Python restoration and independent reconstruction, including the separately downloaded exact parquet. See PUBLIC_READBACK.json and ANONYMOUS_INDEPENDENT_VERIFICATION.json. The raw frozen packet remains unchanged; later handoff wording clarifies context capacity, history-mode budgeting and minimum disk floors.
+
+Saved-data CPU reproduction (fresh output paths, no model/tokenizer invocation):
+
+```sh
+python -B packaging/archive.py replay --archive N0_TEXT_PACKET.tar.gz \
+  --sha256 7c5768f77ccbcf0521d4508324db3b4f87b6f7ed5d8f896f8a681eb0c2a75f8e --out "$RESTORED"
+cp OASST1_validation.parquet "$RESTORED/assets/validation-00000-of-00001-134b8fd0c89408b6.parquet"
+node verify_saved_census.js "$RESTORED" "$NEW_REPORT_DIRECTORY"
+```

@@ -15,7 +15,8 @@ Its actual GGUF says36 layers,32 query heads,8 KV heads,128-wide K/V heads,
 full F32 output rows add19,447,808bytes. These metadata estimates exclude graph,
 workspace/driver/allocator costs and do not establish admission or placement.
 
-The inspected original Linux reference frontend explicitly rejects cap!=1024
+The inspected original Linux reference frontend explicitly rejects context
+capacity!=1024 (this is separate from the response-generation cap128)
 and clears memory before each input/case. Passing n_ctx4096 in JSON cannot make
 that binary an N reference. Reuse its fixed arithmetic/source foundation in a
 separate versioned descendant; preserve the old reference and bind an independent
@@ -67,6 +68,13 @@ sessions. Its primary unit is the whole conversation, including initial prefill,
 append, responses, state work and necessary rebuilds. Freeze all four equally
 optimized controls and complete requests/rows; no tuning roots/offsets/rounds to
 obtain5%, no borrowing S3/8B allowance, and no automatic confirmation panel.
+
+The proposed N1 envelope covers one prospectively selected history-producer
+mode. Running both teacher-forced replay and free sequential generation needs a
+new exact manifest and separately accounted allowance; they cannot both consume
+the same256-request envelope or be pooled as independent evidence. The proposed
+250GiB disk value is a minimum floor, not a computed complete raw-capture bound.
+Compute the actual state/vector capture and archive/safety bound before admission.
 
 The successful CPU corpus/schedule tests and saved-data checks do not satisfy any
 native numerical or state-lifecycle gate above.

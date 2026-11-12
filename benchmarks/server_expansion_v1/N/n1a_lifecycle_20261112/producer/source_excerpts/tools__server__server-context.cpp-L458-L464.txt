@@ -1,0 +1,7 @@
+    int32_t n_remaining() const {
+        return n_predict_max == -1 ? -1 : n_predict_max - (int32_t) stats.n_gen;
+    }
+
+    bool has_budget() const {
+        return n_predict_max == -1 || n_remaining() > 0;
+    }

@@ -1,0 +1,40 @@
+    void send_final_response(server_slot & slot) {
+        auto res = std::make_unique<server_task_result_cmpl_final>();
+
+        res->id      = slot.task->id;
+        res->id_slot = slot.id;
+
+        res->index = slot.task->index;
+
+        // keep copy of last generated text for debugging purposes
+        if (slots_debug) {
+            slot.debug_generated_text = slot.generated_text;
+        }
+
+        // in stream mode, content and tokens are already in last partial chunk
+        if (slot.task->params.stream) {
+            res->content     = "";
+            res->tokens      = llama_tokens{};
+        } else {
+            res->content     = std::move(slot.generated_text);
+            res->tokens      = std::move(slot.generated_tokens);
+        }
+        res->stats           = slot.stats;
+        res->prompt          = slot.task->tokens.detokenize(ctx_tgt, true);
+        res->response_fields = std::move(slot.task->params.response_fields);
+
+        res->truncated             = slot.truncated;
+        res->n_decoded             = slot.stats.n_gen;
+        res->n_prompt_tokens       = slot.task->n_tokens();
+        res->n_prompt_tokens_cache = slot.stats.n_prompt_cached;
+        res->n_tokens_cached       = slot.prompt.n_tokens();
+        res->has_new_line          = slot.has_new_line;
+        res->stopping_word         = slot.stopping_word;
+        res->stop                  = slot.stop;
+        res->post_sampling_probs   = slot.task->params.post_sampling_probs;
+
+        res->verbose           = slot.task->params.verbose;
+        res->stream            = slot.task->params.stream;
+        res->include_usage     = slot.task->params.include_usage;
+        res->res_type          = slot.task->params.res_type;
+        res->oaicompat_model   = slot.task->params.oaicompat_model;

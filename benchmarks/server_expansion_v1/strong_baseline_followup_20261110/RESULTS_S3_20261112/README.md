@@ -84,3 +84,19 @@ Design head c85b98636d5e0a7d9c367be8f3447b0799d12a78; public recovery began at4f
 ## Saved-data reproduction
 
 Strictly replay RESULT_S3_TEXT.tar.gz with the parent execution_s3_v1/deliver.py replay entry and transport SHA53c9a894f9c99dda7a483870f3f2835311ee273a63ae19ae8344443169c91989 into a fresh directory. No CUDA/model execution occurs. Then run the accompanying independent_receipts.js on restored text and a fresh report directory; optional original study root enables original path-sensitive SHA checks in memory. Public transport/member hashes and all raw receipt statistics are checkable without that private path. Public-delivery closure is established only by the separately added PUBLIC_REPLAY_PASS.json for actual anonymous immutable download/readback and independent public replay, not by the local replay. No merges, Release, paper edits, second device or new measurements are part of this delivery.
+
+Actual anonymous closure passed for all28 files at immutable commit64a3d1d0a35b2b81903e915746e5f40957e8b968. The downloaded archive passed the original strict Python member/ledger/288-operation analysis replay and the independent Node receipt reconstruction/root bootstrap/history audit. The public-only mode explicitly cannot repeat788 path-sensitive original hashes without the private study-root substitution; those checks passed separately in the host recovery. It still verifies all8,364 anonymized member bytes and the complete public journal hash chain. An initial history-reader layout lookup failed before any report; a read-only view to the restored public archive supplied its documented ORIGINAL_TEXT layout. No experiment or numerical data were changed.
+
+With the public result files in `$PUBLIC`, restore directly to its required fresh ORIGINAL_TEXT subdirectory and use fresh output paths:
+
+```sh
+python -B "$PROTOCOL/execution_s3_v1/deliver.py" replay \
+  --archive "$PUBLIC/RESULT_S3_TEXT.tar.gz" \
+  --sha256 53c9a894f9c99dda7a483870f3f2835311ee273a63ae19ae8344443169c91989 \
+  --out "$PUBLIC/ORIGINAL_TEXT" --report "$NEW_PYTHON_REPORT"
+node "$PUBLIC/independent_receipts.js" "$PUBLIC/ORIGINAL_TEXT" "$NEW_NODE_REPORT_DIRECTORY"
+node "$PUBLIC/independent_history.js" "$PUBLIC" "$NEW_HISTORY_REPORT"
+node "$PUBLIC/recompute_costs.js" "$PUBLIC/ORIGINAL_TEXT" "$NEW_COST_REPORT"
+```
+
+`PROTOCOL` is the parent strong_baseline_followup_20261110 directory from this PR. These are saved-data CPU entries only. The original runner remains closed and its STATE is preserved; any further measurement needs a separately authorized successor protocol.

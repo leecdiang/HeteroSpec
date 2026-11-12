@@ -1,0 +1,20 @@
+--- frozen/mmvq.cu
++++ e02-capture/mmvq.cu
+@@ -1,5 +1,6 @@
+ #include "../hs_loop4_tensor.hpp"
+-#include "mmvq.cuh"
++#include "mmvq.cuh"
++#include "backend_export_hook.hpp"
+ #include "quantize.cuh"
+ #include "unary.cuh"
+ #include "vecdotq.cuh"
+@@ -1449,6 +1450,9 @@
+         quantize_row_q8_1_cuda(src1_d, nullptr, src1_q8_1.get(), src0->type, ne10, s11, s12, s13, ne10_padded, ne11, ne12, ne13, stream);
+     }
+ 
++    hs_e02_backend_export::quantized(src0,src1,dst,src1_q8_1.get(),
++        size_t(ne13*ne12*ne11*ne10_padded/QK8_1)*sizeof(block_q8_1),stream);
++
+     const int64_t s01 = src0->nb[1] / ts_src0;
+     const int64_t s11 = ne10_padded / QK8_1;
+     const int64_t s1  =  dst->nb[1] / ts_dst;

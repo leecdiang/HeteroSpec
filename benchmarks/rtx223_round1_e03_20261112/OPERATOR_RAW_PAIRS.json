@@ -1,0 +1,10 @@
+{
+  "schema": "heterospec.rtx221-round1.abc-raw-pairs.v1",
+  "status": "NOT_RUN",
+  "records": [],
+  "reason": "No new native GPU work was admitted. Empty records are missing evidence, not zero latency or a negative performance measurement.",
+  "separate_historical_evidence": "review/INDEPENDENT_RAW_CHECK.json binds historical derived-q8 A/B equality. It does not include C or new timings.",
+  "intended_input": "One captured actual q8 Q8_0/F32 projection with exact shape/stride/placement/dispatch binding",
+  "planned_order": "native/OPERATOR_PREPARATION.json",
+  "required_checks": ["two own-path repeats per arm", "complete quantized activation bytes including padding", "all output floats bitwise", "independent backend oracle before timing", "paired kernel-only", "paired common-quantizer-plus-sync complete operator"]
+}

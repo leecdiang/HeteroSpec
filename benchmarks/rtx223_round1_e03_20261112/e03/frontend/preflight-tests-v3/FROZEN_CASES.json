@@ -1,0 +1,1792 @@
+[
+  {
+    "name": "dedicated-target-A",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 0,
+    "expected_reason_contains": null,
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "dedicated-target-B",
+    "core": "packed",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "B",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "B",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "B",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 0,
+    "expected_reason_contains": null,
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "dedicated-target-C-cannot-masquerade-oracle",
+    "core": "packed",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "C",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "C",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "C",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "oracle is A/B only",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "M2-live-D4-A",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "m2_dynamic_request",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": true,
+      "draft_width": 4,
+      "residency": "matched",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "capability_request": {},
+      "draft_model": "not-loaded-draft.gguf",
+      "draft_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "CPU_ONLY_NOT_EXECUTED",
+          "input": {
+            "prompt_ids": [
+              1,
+              2,
+              3
+            ],
+            "cap": 8
+          }
+        }
+      ]
+    },
+    "expected_code": 0,
+    "expected_reason_contains": null,
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "M2-live-D4-C",
+    "core": "packed",
+    "job": {
+      "execution_profile": "m2_dynamic_request",
+      "arm": "C",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "C",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": true,
+      "draft_width": 4,
+      "residency": "matched",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "capability_request": {},
+      "draft_model": "not-loaded-draft.gguf",
+      "draft_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "CPU_ONLY_NOT_EXECUTED",
+          "input": {
+            "prompt_ids": [
+              1,
+              2,
+              3
+            ],
+            "cap": 8
+          }
+        }
+      ]
+    },
+    "expected_code": 0,
+    "expected_reason_contains": null,
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "target-profile-cannot-enable-draft",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": true,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "dedicated q8 capture profile",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "target-profile-unused-draft-identity-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {},
+      "draft_model": "unused.gguf"
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "unused draft identities",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "M2-missing-draft-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "m2_dynamic_request",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 4,
+      "residency": "matched",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "capability_request": {},
+      "draft_model": "not-loaded-draft.gguf",
+      "draft_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "CPU_ONLY_NOT_EXECUTED",
+          "input": {
+            "prompt_ids": [
+              1,
+              2,
+              3
+            ],
+            "cap": 8
+          }
+        }
+      ]
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "requires actual D4",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "unknown-field-reject-before-backend",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {},
+      "unbound_switch": true
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "Unknown e03 native job field",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "wrong-core-C-loop4",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "C",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "C",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "C",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "linked graph core",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "foreign-device-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-foreign",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "wrong frozen physical device",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "self-declared-release-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "READY",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "cannot self-release",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "empty-q8-input-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "nonempty forced native input",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "derived-input-capture-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": true,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "descriptor contract mismatch",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "launch-reservation-overflow-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 4097,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "original family cap",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "C-M2-cannot-label-oracle-capture",
+    "core": "packed",
+    "job": {
+      "execution_profile": "m2_dynamic_request",
+      "arm": "C",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "C",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": true,
+      "draft_width": 4,
+      "residency": "matched",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "capability_request": {},
+      "draft_model": "not-loaded-draft.gguf",
+      "draft_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "CPU_ONLY_NOT_EXECUTED",
+          "input": {
+            "prompt_ids": [
+              1,
+              2,
+              3
+            ],
+            "cap": 8
+          }
+        }
+      ],
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      }
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "cannot masquerade",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "budget-family-reset-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "new-budget",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "budget family binding",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "self-declared-kernel-coverage-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "QUALIFIED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "cannot be self-released",
+    "mode": "--e03-preflight"
+  },
+  {
+    "name": "native-DLL-gate-target-refuses",
+    "core": "loop4",
+    "job": {
+      "execution_profile": "target_q8_capture",
+      "arm": "A",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "A",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": false,
+      "draft_width": 1,
+      "residency": "target_only",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "actual_q8_capture": {
+        "schema": "heterospec.actual-q8-capture.v1",
+        "arm": "A",
+        "q": 8,
+        "weight_type": "Q8_0",
+        "activation_type": "F32",
+        "allow_derived_input": false,
+        "phase": "VERIFY",
+        "weight_name": "blk.0.attn_q.weight",
+        "output_dir": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\e03\\frontend\\preflight-tests-v3\\never-created-capture",
+        "capture_byte_reservation": 67108864
+      },
+      "forced": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "phase": "PREFILL",
+          "all": false
+        },
+        {
+          "ids": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "phase": "VERIFY",
+          "all": true
+        }
+      ],
+      "observe_positions": [],
+      "state_positions": [],
+      "capability_request": {}
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "NATIVE_BLOCKED",
+    "mode": "--e03-native-gate"
+  },
+  {
+    "name": "native-DLL-gate-M2-refuses",
+    "core": "packed",
+    "job": {
+      "execution_profile": "m2_dynamic_request",
+      "arm": "B",
+      "runtime_binding": {
+        "schema": "heterospec.e03.isolated-runtime.v1",
+        "device_uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+        "graph_policy": "disabled_for_all_arms_draft_and_reference",
+        "arm": "B",
+        "budget_family": "rtx221-round1-20261112-e01",
+        "native_release": "BLOCKED",
+        "directory": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v2\\bin",
+        "modules": {
+          "ggml-cuda.dll": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "ggml-base.dll": {
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "expected_runtime_metadata": {
+          "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+        },
+        "launch_budget": {
+          "schema": "heterospec.e03.worker-launch-reservation.v1",
+          "family_limit": 4096,
+          "inherited_charged": 0,
+          "worker_reservation": 128,
+          "epoch_tag": "rtx223-round1-20261112-e03",
+          "coverage": "UNQUALIFIED_BLOCKED",
+          "expected_metadata": {
+            "scope": "CPU_CONFIGURATION_FIXTURE_NOT_ACTUAL_IDENTITY"
+          }
+        }
+      },
+      "family": "Qwen",
+      "target_model": "not-loaded.gguf",
+      "target_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "n_ctx": 1024,
+      "threads": 24,
+      "lowering": "LOCAL",
+      "draft": true,
+      "draft_width": 4,
+      "residency": "matched",
+      "profile": false,
+      "k": 7,
+      "target_output_reserve": 8,
+      "proposal_mode": "live",
+      "evidence_capture_byte_reservation": 67108864,
+      "capability_request": {},
+      "draft_model": "not-loaded-draft.gguf",
+      "draft_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "CPU_ONLY_NOT_EXECUTED",
+          "input": {
+            "prompt_ids": [
+              1,
+              2,
+              3
+            ],
+            "cap": 8
+          }
+        }
+      ]
+    },
+    "expected_code": 2,
+    "expected_reason_contains": "NATIVE_BLOCKED",
+    "mode": "--e03-native-gate"
+  }
+]

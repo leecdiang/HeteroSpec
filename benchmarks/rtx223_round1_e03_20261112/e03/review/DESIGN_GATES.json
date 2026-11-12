@@ -1,0 +1,33 @@
+{
+  "schema": "heterospec.e03.independent-design-gates.v1",
+  "review_scope": "New CPU/source/native-DLL integration only; no model/CUDA initialization or GPU execution",
+  "required_launch_budget_properties": [
+    "One process-wide shared atomic state covers every linked CUDA translation unit, target and draft, and all submitting host threads",
+    "Per-worker launch allowance is bound to a durable reservation within the existing 4096 family ceiling; it is not 4096 newly granted to every worker",
+    "Every explicit raw launch, generic launch wrapper and kernel-launch API checks/reserves before submission; failed/aborted attempts remain charged",
+    "Missing budget, duplicate/reentrant configuration, thread races, overflow and any unknown route fail closed",
+    "CUDA graph capture/replay is disabled or refused on all A/B/C and applicable reference/draft controls, with the same declared graph policy",
+    "cuBLAS/CUB/other library submissions cannot be counted by enumerating only ggml raw launch sites; uncounted routes must be denied or separately instrumented",
+    "Source inventory and CPU counter tests do not establish dynamic physical-kernel coverage or native request qualification",
+    "Budget accounting includes model load/context initialization and runtime device work, or explicitly marks those paths unadmitted"
+  ],
+  "source_backed_uninstrumented_routes_to_review": [
+    {"file":"ggml-cuda.cu","symbol":"ggml_cuda_mul_mat_cublas_impl","original_lines":"1413 and cuBLAS GEMM calls1549/1556/1571/1609","risk":"Hidden library kernels are not represented by ggml raw launch syntax"},
+    {"file":"ggml-cuda.cu","symbol":"ggml_cuda_mul_mat","original_lines":"1856-1899","risk":"Bad-padding and generic fallback can choose cuBLAS unless rejected before invocation"},
+    {"file":"ggml-cuda.cu","symbol":"cudaGraphLaunch / cudaStreamBeginCapture","original_lines":"4418/4494","risk":"One replay submission can execute many kernel nodes"},
+    {"file":"common.cuh","symbol":"GGML_CUDA_DISABLE_GRAPHS","original_lines":"1265","risk":"Environment policy is sampled into static state; must bind before initialization and verify actual backend policy"},
+    {"file":"cumsum.cu","symbol":"cub::DeviceScan::InclusiveSum","original_lines":"198/209","risk":"CUB work launch path is outside raw launch inventory; a block-scan primitive inside one owned kernel is a different case"},
+    {"file":"ggml-cuda.cu","symbol":"NCCL communication paths","original_lines":"GGML_USE_NCCL conditional paths","risk":"Single-device profile must exclude uncounted collectives and library initialization"},
+    {"file":"ggml-cuda.cu","symbol":"cudaMemset / cudaMemsetAsync","original_lines":"774/784/853/1028/1054","risk":"The source-level explicit-kernel inventory does not attest internal runtime device activity; physical-kernel coverage remains unknown without a proved policy"}
+  ],
+  "required_integration_evidence": [
+    "A real newly linked numerical backend DLL includes C dispatcher and counter provider bindings; compiling a translation unit is insufficient",
+    "Metadata-only DLL loading records path/hash/exports without claiming GPU device initialization, dispatch execution or numerical qualification",
+    "Frontend binds actual loaded DLL identities, authorized device, graph policy and request/counter reservation before native work",
+    "C remains Q8_0/F32 q8 g2 two independent four-column accumulator groups with preserved per-output K/lane/reduction order",
+    "Actual quantized activation bytes, all outputs, target/draft state and complete real request consumers remain separate native obligations"
+  ],
+  "current_default_decision": "INCONCLUSIVE_UNTIL_NATIVE_GATES_PASS",
+  "automatic_GPU_release": false,
+  "old_41_or_18_test_reruns": false
+}

@@ -1,0 +1,77 @@
+--- frozen/mmvq.cu
++++ e03/mmvq.cu
+@@ -3,6 +3,9 @@
+ #include "quantize.cuh"
+ #include "unary.cuh"
+ #include "vecdotq.cuh"
++#include "hs_pair4_q8.cuh"
++#include "hs_e03_runtime.hpp"
++#include "backend_export_hook.hpp"
+ 
+ #include <cstdint>
+ #include <type_traits>
+@@ -1429,6 +1432,25 @@
+         if (ids || fusion)throw std::runtime_error("loop4 rejects IDs and fused arithmetic");
+         hs_loop4::plan(ne11,GGML_PAD(ne10,MATRIX_ROW_PADDING)/QK8_1,nb1/sizeof(float),sizeof(block_q8_1));
+     }
++    const bool hs_pair_shape=src0->type==GGML_TYPE_Q8_0 && src1->type==GGML_TYPE_F32 && dst->type==GGML_TYPE_F32 &&
++        ne11==4 && ne12==2 && ne13==1 && ne02==1 && ne03==1 && ne1==4 && ne2==2 && ne3==1;
++    if(hs_e03_selected_arm()==2 && hs_pair_shape) {
++        if(ids||fusion||!ggml_is_contiguous(src0)||!ggml_is_contiguous(src1)||!ggml_is_contiguous(dst) ||
++           ne00<=0||ne01<=0||ne00%512!=0||ne01%2!=0||GGML_PAD(ne10,MATRIX_ROW_PADDING)!=ne00 ||
++           ne00>INT_MAX||ne01>INT_MAX||ggml_nbytes(src0)>INT_MAX||ggml_nbytes(src1)>INT_MAX||ggml_nbytes(dst)>INT_MAX ||
++           ggml_get_op_params_i32(dst,0)!=GGML_PREC_DEFAULT)
++            throw std::runtime_error("e03 pair4 descriptor unsupported before quantizer");
++        for(const auto * tensor:{src0,src1,static_cast<const ggml_tensor *>(dst)}) {
++            if(!tensor->data||!tensor->buffer||tensor->buffer->buft!=ggml_backend_cuda_buffer_type(ctx.device))
++                throw std::runtime_error("e03 pair4 requires actual same-device CUDA buffers");
++        }
++        const auto & device=ggml_cuda_info().devices[ctx.device];
++        if(device.warp_size!=32||device.cc!=1200||calc_nwarps(GGML_TYPE_Q8_0,4,get_device_table_id(device.cc))!=4)
++            throw std::runtime_error("e03 pair4 requires SM120 native case4 warps");
++        if(ggml_backend_buffer_get_usage(src0->buffer)==GGML_BACKEND_BUFFER_USAGE_COMPUTE && src0->view_src &&
++           ggml_backend_buffer_get_alloc_size(src0->buffer,src0)!=ggml_nbytes(src0))
++            throw std::runtime_error("e03 pair4 rejects padded compute views");
++    }
+     // If src0 is a temporary compute buffer, clear any potential padding.
+     if (ggml_backend_buffer_get_usage(src0->buffer) == GGML_BACKEND_BUFFER_USAGE_COMPUTE) {
+         const size_t size_data  = ggml_nbytes(src0);
+@@ -1449,6 +1471,8 @@
+         quantize_row_q8_1_cuda(src1_d, nullptr, src1_q8_1.get(), src0->type, ne10, s11, s12, s13, ne10_padded, ne11, ne12, ne13, stream);
+     }
+ 
++    hs_e02_backend_export::quantized(src0,src1,dst,src1_q8_1.get(),
++        size_t(ne13*ne12*ne11*ne10_padded/QK8_1)*sizeof(block_q8_1),stream);
+     const int64_t s01 = src0->nb[1] / ts_src0;
+     const int64_t s11 = ne10_padded / QK8_1;
+     const int64_t s1  =  dst->nb[1] / ts_dst;
+@@ -1471,9 +1495,21 @@
+ 
+     const int64_t ids_stride = ids ? ids->nb[1] / ggml_type_size(ids->type) : 0;
+ 
++    const int hs_arm=hs_e03_selected_arm();
++    if(hs_arm<0)throw std::runtime_error("e03 runtime policy not selected");
++    if(hs_arm==2 && hs_pair_shape) {
++        hs_e03_note_dispatch(2);
++        const ggml_cuda_kernel_launch_params launch(dim3(unsigned(ne01/2),1,1),dim3(32,4,1),0,stream);
++        ggml_cuda_kernel_launch(hs_two_group_q8,launch,
++            static_cast<const block_q8_0 *>(src0->data),reinterpret_cast<const block_q8_1 *>(src1_q8_1.get()),
++            dst_d,int(ne00),int(ne01),int(ne10_padded));
++        return;
++    }
+     if (hs_loop4::marked(dst)) {
++        if(hs_arm!=0)throw std::runtime_error("e03 marked loop4 graph requires A policy");
+         hs_loop4::require(src0,src1,dst);
+         if (ids || fusion)throw std::runtime_error("loop4 rejects IDs and fused arithmetic");
++        hs_e03_note_dispatch(0);
+         const auto tiles=hs_loop4::plan(ncols_dst,stride_col_y,stride_col_dst,sizeof(block_q8_1));
+         for (const auto & tile : tiles) {
+             const void * quantized=src1_q8_1.get()+tile.input_byte_offset;
+@@ -1487,6 +1523,7 @@
+         }
+         return;
+     }
++    if(ne11==4 && ne12>=2)hs_e03_note_dispatch(1);
+     mul_mat_vec_q_switch_type(
+         src0->data, src0->type, src1_q8_1.get(), ids_d, fusion_local, dst_d, ne00,
+         ne01,              ncols_dst,     s01, stride_col_y,     stride_col_dst,

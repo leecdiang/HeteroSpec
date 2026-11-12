@@ -1,0 +1,2973 @@
+{
+  "schema": "heterospec.launch-source-catalog.v1",
+  "root": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\source\\ggml\\src\\ggml-cuda",
+  "files": [
+    {
+      "path": "acc.cu",
+      "before_sha256": "461048014a04df2f2ecc2e8fad68229147f2eb0e6389eed1dcfa2ea89db7de69",
+      "after_sha256": "922959669e2c9bd28bb88c8144645f990a28dd2e18a576e26a9c2e180ff6353f",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 34,
+          "site": "acc.cu:34:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "add-id.cu",
+      "before_sha256": "ac31c0dc34a58aad1845dfe6296ca65d290f17e795d29bff901c5294150d7f8d",
+      "after_sha256": "0f7a5355fb670baf5aaacff003b9de111505317223960de5f1e8e79360c2431d",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 51,
+          "site": "add-id.cu:51:raw",
+          "grid_expression": "blocks"
+        }
+      ]
+    },
+    {
+      "path": "allreduce.cu",
+      "before_sha256": "e80b42fe18e30bc89b476d57f8d177373c018925cc2439dcf0dffd16bff8e7bb",
+      "after_sha256": "a15df3a04ae403c3612b5a161c3c4d46fc9b46afb0ce99fc1dedc9755f3b060c",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 691,
+          "site": "allreduce.cu:691:raw",
+          "grid_expression": "n_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 920,
+          "site": "allreduce.cu:920:raw",
+          "grid_expression": "dim3(GGML_CUDA_AR_KERNEL_BLOCKS)"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 275,
+          "api": "cudaHostAlloc",
+          "site": "allreduce.cu:275:cudaHostAlloc"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 281,
+          "api": "cudaHostGetDevicePointer",
+          "site": "allreduce.cu:281:cudaHostGetDevicePointer"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 283,
+          "api": "cudaFreeHost",
+          "site": "allreduce.cu:283:cudaFreeHost"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 292,
+          "api": "cudaFreeHost",
+          "site": "allreduce.cu:292:cudaFreeHost"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 368,
+          "api": "cudaEventSynchronize",
+          "site": "allreduce.cu:368:cudaEventSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 388,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:388:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 389,
+          "api": "cudaStreamWaitEvent",
+          "site": "allreduce.cu:389:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 440,
+          "api": "cudaStreamCreateWithFlags",
+          "site": "allreduce.cu:440:cudaStreamCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 450,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:450:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 451,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:451:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 452,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:452:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 454,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:454:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 464,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:464:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 470,
+          "api": "cudaEventCreateWithFlags",
+          "site": "allreduce.cu:470:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 489,
+          "api": "cudaMemset",
+          "site": "allreduce.cu:489:cudaMemset"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 522,
+          "api": "cudaMalloc",
+          "site": "allreduce.cu:522:cudaMalloc"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 546,
+          "api": "cudaStreamSynchronize",
+          "site": "allreduce.cu:546:cudaStreamSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 555,
+          "api": "cudaFree",
+          "site": "allreduce.cu:555:cudaFree"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 559,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:559:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 561,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:561:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 563,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:563:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 564,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:564:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 568,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:568:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 572,
+          "api": "cudaEventDestroy",
+          "site": "allreduce.cu:572:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 576,
+          "api": "cudaStreamDestroy",
+          "site": "allreduce.cu:576:cudaStreamDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 629,
+          "api": "cudaStreamWaitEvent",
+          "site": "allreduce.cu:629:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 633,
+          "api": "cudaMemsetAsync",
+          "site": "allreduce.cu:633:cudaMemsetAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 641,
+          "api": "cudaMemcpyAsync",
+          "site": "allreduce.cu:641:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 644,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:644:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 663,
+          "api": "cudaStreamWaitEvent",
+          "site": "allreduce.cu:663:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 671,
+          "api": "cudaStreamWaitEvent",
+          "site": "allreduce.cu:671:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 672,
+          "api": "cudaMemcpyAsync",
+          "site": "allreduce.cu:672:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 679,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:679:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 683,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:683:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 684,
+          "api": "cudaStreamWaitEvent",
+          "site": "allreduce.cu:684:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 695,
+          "api": "cudaGetLastError",
+          "site": "allreduce.cu:695:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 700,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:700:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 701,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:701:cudaEventRecord"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 796,
+          "api": "cudaMemsetAsync",
+          "site": "allreduce.cu:796:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 817,
+          "api": "cudaGetLastError",
+          "site": "allreduce.cu:817:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 819,
+          "api": "cudaMemsetAsync",
+          "site": "allreduce.cu:819:cudaMemsetAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 916,
+          "api": "cudaMemsetAsync",
+          "site": "allreduce.cu:916:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 943,
+          "api": "cudaGetLastError",
+          "site": "allreduce.cu:943:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 946,
+          "api": "cudaEventRecord",
+          "site": "allreduce.cu:946:cudaEventRecord"
+        }
+      ]
+    },
+    {
+      "path": "arange.cu",
+      "before_sha256": "0e915a550dd6347ac55eba3f66633bbb8a41698f832f43e870b761a2cc03c798",
+      "after_sha256": "7fd0a9a921265de31e4228350b7aa304c6495711d5a1b9065ec6c9be320b68f1",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 14,
+          "site": "arange.cu:14:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "argmax.cu",
+      "before_sha256": "76159025bdae27cb16cac8e423e251fb21eff036640ac56635659353d017d545",
+      "after_sha256": "0a5d1d211174205c5a7c52471892a46c27662f6223255761cbfc317754701111",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 90,
+          "site": "argmax.cu:90:raw",
+          "grid_expression": "blocks_num"
+        }
+      ]
+    },
+    {
+      "path": "argsort.cu",
+      "before_sha256": "25a19408ac9d3b59eecb235c9b4c63e75a90b4a36bd90b86141fe72b5975c495",
+      "after_sha256": "0780c69519b9665f24a28baccf8de701c09618525921ccd6a1da25d40829aaea",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 60,
+          "site": "argsort.cu:60:raw",
+          "grid_expression": "grid_size"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 70,
+          "site": "argsort.cu:70:raw",
+          "grid_expression": "offset_grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 242,
+          "site": "argsort.cu:242:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 245,
+          "site": "argsort.cu:245:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 72,
+          "api": "cudaMemcpyAsync",
+          "site": "argsort.cu:72:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 82,
+          "api": "cudaStreamIsCapturing",
+          "site": "argsort.cu:82:cudaStreamIsCapturing"
+        }
+      ]
+    },
+    {
+      "path": "backend_export_hook.hpp",
+      "before_sha256": "ca3b9f8f6241934951f269a9181bbc2bef4f2f717b1a1ae0bcb492b0b01e1ad0",
+      "after_sha256": "7a2377fe27f64a21623d6e9fe87e0260028149f1dfccf403bc7d4348994f09ed",
+      "sites": [
+        {
+          "kind": "deny-opaque",
+          "line": 34,
+          "api": "cudaMemcpyAsync",
+          "site": "backend_export_hook.hpp:34:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 35,
+          "api": "cudaStreamSynchronize",
+          "site": "backend_export_hook.hpp:35:cudaStreamSynchronize"
+        }
+      ]
+    },
+    {
+      "path": "binbcast.cu",
+      "before_sha256": "79b2454b0610f06fdd5159a0f7815b8be3b809a87fada4639461219f221f275b",
+      "after_sha256": "7d219bb5c3715d236e54a084268a91ec52a3be3c5b60542028e2177858b18a0f",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 407,
+          "site": "binbcast.cu:407:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "clamp.cu",
+      "before_sha256": "0c707d16d0dad556cc65fdc9222f8a4a28c97b0628a460df89ecf669ecccd380",
+      "after_sha256": "b31afb1b9f354a9fee61589839d08eb965b5e751c540839a437c941671cd1179",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 21,
+          "site": "clamp.cu:21:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "col2im-1d.cu",
+      "before_sha256": "79d978c44279a1dec98264cb19f0ba677f6f06a29d0d750e4819796cfee14f41",
+      "after_sha256": "0e6c97f2a55610cd7a9df9e6fe6d2ffd68e4547534cd44ee95fcaa5841c3b9f1",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 64,
+          "site": "col2im-1d.cu:64:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 69,
+          "site": "col2im-1d.cu:69:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 74,
+          "site": "col2im-1d.cu:74:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "common.cuh",
+      "before_sha256": "2a521c64e4fe8ba743770fa5d76fa2fb455679326be905f84639997c4007f337",
+      "after_sha256": "e9deb5706e0e17a0ff840f0c50e75b88202abd0701c640b48032ca20e03e2bdf",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 1682,
+          "site": "common.cuh:1682:raw",
+          "grid_expression": "launch_params.block_nums"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 132,
+          "api": "cudaGridDependencySynchronize",
+          "site": "common.cuh:132:cudaGridDependencySynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 138,
+          "api": "cudaTriggerProgrammaticLaunchCompletion",
+          "site": "common.cuh:138:cudaTriggerProgrammaticLaunchCompletion"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 203,
+          "api": "cublasGetStatusString",
+          "site": "common.cuh:203:cublasGetStatusString"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 231,
+          "api": "cuGetErrorString",
+          "site": "common.cuh:231:cuGetErrorString"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 243,
+          "api": "cudaFuncSetAttribute",
+          "site": "common.cuh:243:cudaFuncSetAttribute"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1242,
+          "api": "cudaGraphExecDestroy",
+          "site": "common.cuh:1242:cudaGraphExecDestroy"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1245,
+          "api": "cudaGraphDestroy",
+          "site": "common.cuh:1245:cudaGraphDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1293,
+          "api": "cudaEventCreateWithFlags",
+          "site": "common.cuh:1293:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1296,
+          "api": "cudaEventCreateWithFlags",
+          "site": "common.cuh:1296:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1404,
+          "api": "cudaEventDestroy",
+          "site": "common.cuh:1404:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1408,
+          "api": "cudaEventDestroy",
+          "site": "common.cuh:1408:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1498,
+          "api": "cudaStreamCreateWithFlags",
+          "site": "common.cuh:1498:cudaStreamCreateWithFlags"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1510,
+          "api": "cublasCreate",
+          "site": "common.cuh:1510:cublasCreate"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1511,
+          "api": "cublasSetMathMode",
+          "site": "common.cuh:1511:cublasSetMathMode"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1512,
+          "api": "cublasSetStream",
+          "site": "common.cuh:1512:cublasSetStream"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1518,
+          "api": "cudaMalloc",
+          "site": "common.cuh:1518:cudaMalloc"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1519,
+          "api": "cublasSetWorkspace",
+          "site": "common.cuh:1519:cublasSetWorkspace"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1646,
+          "api": "cudaFuncGetAttributes",
+          "site": "common.cuh:1646:cudaFuncGetAttributes"
+        },
+        {
+          "kind": "prelaunch-api",
+          "line": 1677,
+          "api": "cudaLaunchKernelEx",
+          "site": "common.cuh:1677:cudaLaunchKernelEx"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1683,
+          "api": "cudaGetLastError",
+          "site": "common.cuh:1683:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "concat.cu",
+      "before_sha256": "7d3addbb7b93fcf834034ba0af74d90e674c8b50c3e86c36fccc6ad9f2d435bf",
+      "after_sha256": "4d0e961a5641ffe96d660d9626a49e7a059efb6849a86b8d63545d7aea85ae61",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 76,
+          "site": "concat.cu:76:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 79,
+          "site": "concat.cu:79:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 168,
+          "site": "concat.cu:168:raw",
+          "grid_expression": "grid_dim"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 161,
+          "api": "cudaMemcpyAsync",
+          "site": "concat.cu:161:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 162,
+          "api": "cudaMemcpyAsync",
+          "site": "concat.cu:162:cudaMemcpyAsync"
+        }
+      ]
+    },
+    {
+      "path": "conv-transpose-1d.cu",
+      "before_sha256": "3e7303627beae5e95acb1a3e07afe38edfca5ee55be979ddaa04c9eba98b0c31",
+      "after_sha256": "fadfd787dd0bffcbaa224177d7bfd63c1f1dc169ff259516fcbaf8efa78e0df8",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 51,
+          "site": "conv-transpose-1d.cu:51:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "conv2d-dw.cu",
+      "before_sha256": "49638cf2a71b2b407f835ff426967b812eadad6d27f305c2d8ce6ec5c9e0c662",
+      "after_sha256": "a354822faa02d00a999fbc8bf0999e07f8ef594c200892d660e30063e5a712b7",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 151,
+          "site": "conv2d-dw.cu:151:raw",
+          "grid_expression": "blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 155,
+          "site": "conv2d-dw.cu:155:raw",
+          "grid_expression": "blocks"
+        }
+      ]
+    },
+    {
+      "path": "conv2d-transpose.cu",
+      "before_sha256": "9cc6a620070e928f903264d91f511bbca3574a1b9e2dcd737538a4c1d3057b36",
+      "after_sha256": "39cafb2e0930c654030188f763d2110216ae5100b5fe5aea79fc1aaf2a336616",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 106,
+          "site": "conv2d-transpose.cu:106:raw",
+          "grid_expression": "blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 111,
+          "site": "conv2d-transpose.cu:111:raw",
+          "grid_expression": "blocks"
+        }
+      ]
+    },
+    {
+      "path": "conv2d.cu",
+      "before_sha256": "18e984c24075d993ad220691b59a709c5005835103a9dda263e2b126fd971bc7",
+      "after_sha256": "7a8bdd76a74273c37540edb0ab0a687368e79ff323ae403331383481e946ad10",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 111,
+          "site": "conv2d.cu:111:raw",
+          "grid_expression": "blocks"
+        }
+      ]
+    },
+    {
+      "path": "convert.cu",
+      "before_sha256": "dd6da7a3772069b92b643d5b3b8a461b349a3a33eadce26e2fb88c36aa1e4a50",
+      "after_sha256": "12e4c8b3fbf45c0308d2e7dd8620a01f9af5c873159ab942bb630c875ac5971a",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 253,
+          "site": "convert.cu:253:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 266,
+          "site": "convert.cu:266:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 269,
+          "site": "convert.cu:269:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 276,
+          "site": "convert.cu:276:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 282,
+          "site": "convert.cu:282:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 289,
+          "site": "convert.cu:289:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 296,
+          "site": "convert.cu:296:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 302,
+          "site": "convert.cu:302:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 308,
+          "site": "convert.cu:308:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 314,
+          "site": "convert.cu:314:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 320,
+          "site": "convert.cu:320:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 326,
+          "site": "convert.cu:326:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 332,
+          "site": "convert.cu:332:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 338,
+          "site": "convert.cu:338:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 344,
+          "site": "convert.cu:344:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 350,
+          "site": "convert.cu:350:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 356,
+          "site": "convert.cu:356:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 362,
+          "site": "convert.cu:362:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 368,
+          "site": "convert.cu:368:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 374,
+          "site": "convert.cu:374:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 414,
+          "site": "convert.cu:414:raw",
+          "grid_expression": "nb"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 449,
+          "site": "convert.cu:449:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "count-equal.cu",
+      "before_sha256": "9b7230a4d7bba5c2b2f0dd51646db15540e7ac75d49fd0338f4dea66935763a7",
+      "after_sha256": "28bc3db153690e473edf9fdde4be9a78c3c5f69725112ccdd8b4cdc590a06964",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 58,
+          "site": "count-equal.cu:58:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 49,
+          "api": "cudaMemsetAsync",
+          "site": "count-equal.cu:49:cudaMemsetAsync"
+        }
+      ]
+    },
+    {
+      "path": "cpy.cu",
+      "before_sha256": "e58b43514b8c394a97573f99f74325aa69052f3b5ea73ef49e7a5768ca77c28c",
+      "after_sha256": "123fa08a94350fd2c0a2c46155094f7e2ea4f76278c009017086699f3bf9273b",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 258,
+          "site": "cpy.cu:258:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 269,
+          "site": "cpy.cu:269:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 281,
+          "site": "cpy.cu:281:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 294,
+          "site": "cpy.cu:294:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 307,
+          "site": "cpy.cu:307:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 320,
+          "site": "cpy.cu:320:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 333,
+          "site": "cpy.cu:333:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 346,
+          "site": "cpy.cu:346:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 359,
+          "site": "cpy.cu:359:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 372,
+          "site": "cpy.cu:372:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 385,
+          "site": "cpy.cu:385:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 474,
+          "api": "cudaMemcpyAsync",
+          "site": "cpy.cu:474:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 477,
+          "api": "cudaMemcpy2DAsync",
+          "site": "cpy.cu:477:cudaMemcpy2DAsync"
+        }
+      ]
+    },
+    {
+      "path": "cross-entropy-loss.cu",
+      "before_sha256": "e97abaa6ec7df2ecba0112eddd9b7193b75e6f07565d44c9dc764625855fe5a0",
+      "after_sha256": "d3c6016442b7eabb6fe996f9f64f4303d5917ffb3e9a4ce14f26a32eb5bb47e8",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 127,
+          "site": "cross-entropy-loss.cu:127:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 129,
+          "site": "cross-entropy-loss.cu:129:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 173,
+          "site": "cross-entropy-loss.cu:173:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 175,
+          "site": "cross-entropy-loss.cu:175:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 131,
+          "api": "cudaGetLastError",
+          "site": "cross-entropy-loss.cu:131:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "cumsum.cu",
+      "before_sha256": "cd5b57b05d6dc755f10bcdfbd72dbdecdbbd68709929bb78a3c03eee7a8c59f1",
+      "after_sha256": "9c3dbed019801bc7deee4307bfa7f55be8f3bc1696dfcac6ca6dfba918447082",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 251,
+          "site": "cumsum.cu:251:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 258,
+          "site": "cumsum.cu:258:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 198,
+          "api": "cub::DeviceScan::InclusiveSum",
+          "site": "cumsum.cu:198:cub::DeviceScan::InclusiveSum"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 209,
+          "api": "cub::DeviceScan::InclusiveSum",
+          "site": "cumsum.cu:209:cub::DeviceScan::InclusiveSum"
+        }
+      ]
+    },
+    {
+      "path": "diag.cu",
+      "before_sha256": "ae14f4ee4b482c8a02758a8ee1b68452afb49de63000890d5332cbd29ea69652",
+      "after_sha256": "cfa2bc1e76f497a3957f419dceba051326a1e153d20fd0707f4897fc54450632",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 67,
+          "site": "diag.cu:67:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 71,
+          "site": "diag.cu:71:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "diagmask.cu",
+      "before_sha256": "37b32d3286599877fffebc5682cb0d433791deff1a70e9a44df11b2a52d73f6f",
+      "after_sha256": "055208b04d44af978de7a2efaede58661ba2db79b0e0a3c64a82b07440cbe6be",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 21,
+          "site": "diagmask.cu:21:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "fattn-common.cuh",
+      "before_sha256": "3e46bc5ca40bbcf6a28d8f8055da5ceac70ad0bcae017959957448757a3c4053",
+      "after_sha256": "3e46bc5ca40bbcf6a28d8f8055da5ceac70ad0bcae017959957448757a3c4053",
+      "sites": [
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1122,
+          "api": "cudaGetLastError",
+          "site": "fattn-common.cuh:1122:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1127,
+          "api": "cudaOccupancyMaxActiveBlocksPerMultiprocessor",
+          "site": "fattn-common.cuh:1127:cudaOccupancyMaxActiveBlocksPerMultiprocessor"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1241,
+          "api": "cudaGetLastError",
+          "site": "fattn-common.cuh:1241:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1288,
+          "api": "cudaGetLastError",
+          "site": "fattn-common.cuh:1288:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "fattn-mma-f16.cuh",
+      "before_sha256": "7aa847c82d8906f98af0b05549cb36095d8bc803397ebec343d9c1cb8e5d358a",
+      "after_sha256": "7aa847c82d8906f98af0b05549cb36095d8bc803397ebec343d9c1cb8e5d358a",
+      "sites": [
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2024,
+          "api": "cudaFuncSetAttribute",
+          "site": "fattn-mma-f16.cuh:2024:cudaFuncSetAttribute"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2033,
+          "api": "cudaFuncSetAttribute",
+          "site": "fattn-mma-f16.cuh:2033:cudaFuncSetAttribute"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2046,
+          "api": "cudaFuncSetAttribute",
+          "site": "fattn-mma-f16.cuh:2046:cudaFuncSetAttribute"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2059,
+          "api": "cudaFuncSetAttribute",
+          "site": "fattn-mma-f16.cuh:2059:cudaFuncSetAttribute"
+        }
+      ]
+    },
+    {
+      "path": "fattn.cu",
+      "before_sha256": "7918ae8861a9e55d9d9c0f90d878212d23922d330dcc1d9d68cdea4dd15d3e56",
+      "after_sha256": "7918ae8861a9e55d9d9c0f90d878212d23922d330dcc1d9d68cdea4dd15d3e56",
+      "sites": [
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 105,
+          "api": "cudaGetLastError",
+          "site": "fattn.cu:105:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "fill.cu",
+      "before_sha256": "a80514d4be0073f2b51bc70353d052a8f363f4d424f7694b13c6294924703913",
+      "after_sha256": "b706d831e2cafceb847fa2c7c588c704330bffa52d41d573694e9ec1e80f1c80",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 29,
+          "site": "fill.cu:29:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 32,
+          "site": "fill.cu:32:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "getrows.cu",
+      "before_sha256": "3b399af2e669cca806a55168cbd28ec22365390ad4e7b6cb0a9f0fad66fba4e4",
+      "after_sha256": "dd6d926b0018a5eabb41348eb814ba5df9844b5253a522b29f1dbefbca41d743",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 187,
+          "site": "getrows.cu:187:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 224,
+          "site": "getrows.cu:224:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 489,
+          "site": "getrows.cu:489:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "ggml-cuda.cu",
+      "before_sha256": "3c0b0eccc6edfab445cb2eb1203515f4369fb37f904a40e6117f6e5e42640f09",
+      "after_sha256": "5c41d9ac19cc371f407bbcf9999e447a01592ffe730127a01afc5aab2589c7ff",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 1600,
+          "site": "ggml-cuda.cu:1600:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 107,
+          "api": "cudaGetDevice",
+          "site": "ggml-cuda.cu:107:cudaGetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 130,
+          "api": "cudaGetDevice",
+          "site": "ggml-cuda.cu:130:cudaGetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 136,
+          "api": "cudaSetDevice",
+          "site": "ggml-cuda.cu:136:cudaSetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 141,
+          "api": "cudaGetDevice",
+          "site": "ggml-cuda.cu:141:cudaGetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 149,
+          "api": "cudaMallocManaged",
+          "site": "ggml-cuda.cu:149:cudaMallocManaged"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 154,
+          "api": "cudaMemAdvise",
+          "site": "ggml-cuda.cu:154:cudaMemAdvise"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 166,
+          "api": "cudaMalloc",
+          "site": "ggml-cuda.cu:166:cudaMalloc"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 170,
+          "api": "cudaMalloc",
+          "site": "ggml-cuda.cu:170:cudaMalloc"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 227,
+          "api": "cudaGetDeviceCount",
+          "site": "ggml-cuda.cu:227:cudaGetDeviceCount"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 229,
+          "api": "cudaGetErrorString",
+          "site": "ggml-cuda.cu:229:cudaGetErrorString"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 267,
+          "api": "cudaGetDeviceProperties",
+          "site": "ggml-cuda.cu:267:cudaGetDeviceProperties"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 286,
+          "api": "cuDeviceGet",
+          "site": "ggml-cuda.cu:286:cuDeviceGet"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 287,
+          "api": "cuDeviceGetAttribute",
+          "site": "ggml-cuda.cu:287:cuDeviceGetAttribute"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 294,
+          "api": "cuMemGetAllocationGranularity",
+          "site": "ggml-cuda.cu:294:cuMemGetAllocationGranularity"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 300,
+          "api": "cudaGetDeviceProperties",
+          "site": "ggml-cuda.cu:300:cudaGetDeviceProperties"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 322,
+          "api": "cudaDeviceGetAttribute",
+          "site": "ggml-cuda.cu:322:cudaDeviceGetAttribute"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 375,
+          "api": "cudaSetDevice",
+          "site": "ggml-cuda.cu:375:cudaSetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 376,
+          "api": "cudaSetDeviceFlags",
+          "site": "ggml-cuda.cu:376:cudaSetDeviceFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 401,
+          "api": "cudaSetDevice",
+          "site": "ggml-cuda.cu:401:cudaSetDevice"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 407,
+          "api": "cudaDeviceCanAccessPeer",
+          "site": "ggml-cuda.cu:407:cudaDeviceCanAccessPeer"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 409,
+          "api": "cudaDeviceEnablePeerAccess",
+          "site": "ggml-cuda.cu:409:cudaDeviceEnablePeerAccess"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 452,
+          "api": "cudaFree",
+          "site": "ggml-cuda.cu:452:cudaFree"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 504,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:504:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 508,
+          "api": "cudaDeviceSynchronize",
+          "site": "ggml-cuda.cu:508:cudaDeviceSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 536,
+          "api": "cudaFree",
+          "site": "ggml-cuda.cu:536:cudaFree"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 567,
+          "api": "cuMemUnmap",
+          "site": "ggml-cuda.cu:567:cuMemUnmap"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 570,
+          "api": "cuMemUnmap",
+          "site": "ggml-cuda.cu:570:cuMemUnmap"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 572,
+          "api": "cuMemAddressFree",
+          "site": "ggml-cuda.cu:572:cuMemAddressFree"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 596,
+          "api": "cuMemCreate",
+          "site": "ggml-cuda.cu:596:cuMemCreate"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 600,
+          "api": "cuMemAddressReserve",
+          "site": "ggml-cuda.cu:600:cuMemAddressReserve"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 605,
+          "api": "cuMemMap",
+          "site": "ggml-cuda.cu:605:cuMemMap"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 611,
+          "api": "cuMemRelease",
+          "site": "ggml-cuda.cu:611:cuMemRelease"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 633,
+          "api": "cudaDeviceCanAccessPeer",
+          "site": "ggml-cuda.cu:633:cudaDeviceCanAccessPeer"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 648,
+          "api": "cuMemSetAccess",
+          "site": "ggml-cuda.cu:648:cuMemSetAccess"
+        },
+        {
+          "kind": "deny-opaque-driver",
+          "line": 655,
+          "api": "cuMemSetAccess",
+          "site": "ggml-cuda.cu:655:cuMemSetAccess"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 714,
+          "api": "cudaEventDestroy",
+          "site": "ggml-cuda.cu:714:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 719,
+          "api": "cudaStreamDestroy",
+          "site": "ggml-cuda.cu:719:cudaStreamDestroy"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 722,
+          "api": "cublasDestroy",
+          "site": "ggml-cuda.cu:722:cublasDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 725,
+          "api": "cudaFree",
+          "site": "ggml-cuda.cu:725:cudaFree"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 745,
+          "api": "cudaFree",
+          "site": "ggml-cuda.cu:745:cudaFree"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 778,
+          "api": "cudaMemset",
+          "site": "ggml-cuda.cu:778:cudaMemset"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 788,
+          "api": "cudaMemsetAsync",
+          "site": "ggml-cuda.cu:788:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 789,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:789:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 796,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:796:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 797,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:797:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 804,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:804:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 805,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:805:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 813,
+          "api": "cudaMemcpy2DAsync",
+          "site": "ggml-cuda.cu:813:cudaMemcpy2DAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 815,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:815:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 823,
+          "api": "cudaMemcpy2DAsync",
+          "site": "ggml-cuda.cu:823:cudaMemcpy2DAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 825,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:825:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 837,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:837:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 842,
+          "api": "cudaMemcpyPeerAsync",
+          "site": "ggml-cuda.cu:842:cudaMemcpyPeerAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 845,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:845:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 857,
+          "api": "cudaMemsetAsync",
+          "site": "ggml-cuda.cu:857:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 858,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:858:cudaStreamSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 900,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:900:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 901,
+          "api": "cudaGetErrorString",
+          "site": "ggml-cuda.cu:901:cudaGetErrorString"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 998,
+          "api": "ncclCommDestroy",
+          "site": "ggml-cuda.cu:998:ncclCommDestroy"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1032,
+          "api": "cudaMemsetAsync",
+          "site": "ggml-cuda.cu:1032:cudaMemsetAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1035,
+          "api": "ncclGroupStart",
+          "site": "ggml-cuda.cu:1035:ncclGroupStart"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1038,
+          "api": "ncclAllReduce",
+          "site": "ggml-cuda.cu:1038:ncclAllReduce"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1040,
+          "api": "ncclGroupEnd",
+          "site": "ggml-cuda.cu:1040:ncclGroupEnd"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1058,
+          "api": "cudaMemsetAsync",
+          "site": "ggml-cuda.cu:1058:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1060,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:1060:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1063,
+          "api": "ncclGroupStart",
+          "site": "ggml-cuda.cu:1063:ncclGroupStart"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1066,
+          "api": "ncclAllReduce",
+          "site": "ggml-cuda.cu:1066:ncclAllReduce"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1068,
+          "api": "ncclGroupEnd",
+          "site": "ggml-cuda.cu:1068:ncclGroupEnd"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1075,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:1075:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1177,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:1177:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1196,
+          "api": "ncclCommInitAll",
+          "site": "ggml-cuda.cu:1196:ncclCommInitAll"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1204,
+          "api": "ncclGetErrorString",
+          "site": "ggml-cuda.cu:1204:ncclGetErrorString"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1281,
+          "api": "cudaFreeHost",
+          "site": "ggml-cuda.cu:1281:cudaFreeHost"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1290,
+          "api": "cudaMallocHost",
+          "site": "ggml-cuda.cu:1290:cudaMallocHost"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1293,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:1293:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1295,
+          "api": "cudaGetErrorString",
+          "site": "ggml-cuda.cu:1295:cudaGetErrorString"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1553,
+          "api": "cublasSgemm",
+          "site": "ggml-cuda.cu:1553:cublasSgemm"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1560,
+          "api": "cublasGemmEx",
+          "site": "ggml-cuda.cu:1560:cublasGemmEx"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1575,
+          "api": "cublasGemmStridedBatchedEx",
+          "site": "ggml-cuda.cu:1575:cublasGemmStridedBatchedEx"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1610,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:1610:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 1613,
+          "api": "cublasGemmBatchedEx",
+          "site": "ggml-cuda.cu:1613:cublasGemmBatchedEx"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2006,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2006:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2007,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:2007:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2027,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2027:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2028,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:2028:cudaStreamSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2037,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:2037:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2082,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:2082:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2446,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:2446:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2478,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2478:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2487,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2487:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2497,
+          "api": "cudaMemcpy2DAsync",
+          "site": "ggml-cuda.cu:2497:cudaMemcpy2DAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2508,
+          "api": "cudaMemcpy2DAsync",
+          "site": "ggml-cuda.cu:2508:cudaMemcpy2DAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2545,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2545:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2550,
+          "api": "cudaMemcpyPeerAsync",
+          "site": "ggml-cuda.cu:2550:cudaMemcpyPeerAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2557,
+          "api": "cudaEventCreateWithFlags",
+          "site": "ggml-cuda.cu:2557:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2560,
+          "api": "cudaEventRecord",
+          "site": "ggml-cuda.cu:2560:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2563,
+          "api": "cudaStreamWaitEvent",
+          "site": "ggml-cuda.cu:2563:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2566,
+          "api": "cudaMemcpyAsync",
+          "site": "ggml-cuda.cu:2566:cudaMemcpyAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2574,
+          "api": "cudaStreamSynchronize",
+          "site": "ggml-cuda.cu:2574:cudaStreamSynchronize"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2669,
+          "api": "cudaGraphExecUpdate",
+          "site": "ggml-cuda.cu:2669:cudaGraphExecUpdate"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2673,
+          "api": "cudaGraphExecUpdate",
+          "site": "ggml-cuda.cu:2673:cudaGraphExecUpdate"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 2683,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:2683:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2684,
+          "api": "cudaGraphExecDestroy",
+          "site": "ggml-cuda.cu:2684:cudaGraphExecDestroy"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 2686,
+          "api": "cudaGraphInstantiate",
+          "site": "ggml-cuda.cu:2686:cudaGraphInstantiate"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4233,
+          "api": "cudaEventRecord",
+          "site": "ggml-cuda.cu:4233:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4237,
+          "api": "cudaStreamWaitEvent",
+          "site": "ggml-cuda.cu:4237:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4319,
+          "api": "cudaEventRecord",
+          "site": "ggml-cuda.cu:4319:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4321,
+          "api": "cudaStreamWaitEvent",
+          "site": "ggml-cuda.cu:4321:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4397,
+          "api": "cudaGraphDestroy",
+          "site": "ggml-cuda.cu:4397:cudaGraphDestroy"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4401,
+          "api": "cudaStreamEndCapture",
+          "site": "ggml-cuda.cu:4401:cudaStreamEndCapture"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4416,
+          "api": "cudaGraphInstantiate",
+          "site": "ggml-cuda.cu:4416:cudaGraphInstantiate"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4422,
+          "api": "cudaGraphLaunch",
+          "site": "ggml-cuda.cu:4422:cudaGraphLaunch"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4498,
+          "api": "cudaStreamBeginCapture",
+          "site": "ggml-cuda.cu:4498:cudaStreamBeginCapture"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4509,
+          "api": "cudaEventRecord",
+          "site": "ggml-cuda.cu:4509:cudaEventRecord"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4516,
+          "api": "cudaStreamWaitEvent",
+          "site": "ggml-cuda.cu:4516:cudaStreamWaitEvent"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 4525,
+          "api": "cudaLaunchHostFunc",
+          "site": "ggml-cuda.cu:4525:cudaLaunchHostFunc"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4833,
+          "api": "cudaGetDeviceProperties",
+          "site": "ggml-cuda.cu:4833:cudaGetDeviceProperties"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4857,
+          "api": "cudaMemGetInfo",
+          "site": "ggml-cuda.cu:4857:cudaMemGetInfo"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4871,
+          "api": "cudaHostRegister",
+          "site": "ggml-cuda.cu:4871:cudaHostRegister"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4874,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:4874:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4877,
+          "api": "cudaGetErrorString",
+          "site": "ggml-cuda.cu:4877:cudaGetErrorString"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4893,
+          "api": "cudaHostUnregister",
+          "site": "ggml-cuda.cu:4893:cudaHostUnregister"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 4896,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:4896:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5000,
+          "api": "cudaMemGetInfo",
+          "site": "ggml-cuda.cu:5000:cudaMemGetInfo"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5002,
+          "api": "cudaGetLastError",
+          "site": "ggml-cuda.cu:5002:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5003,
+          "api": "cudaGetErrorString",
+          "site": "ggml-cuda.cu:5003:cudaGetErrorString"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5013,
+          "api": "cudaGetDeviceProperties",
+          "site": "ggml-cuda.cu:5013:cudaGetDeviceProperties"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5042,
+          "api": "cudaGetDeviceProperties",
+          "site": "ggml-cuda.cu:5042:cudaGetDeviceProperties"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5587,
+          "api": "cudaEventCreateWithFlags",
+          "site": "ggml-cuda.cu:5587:cudaEventCreateWithFlags"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5599,
+          "api": "cudaEventDestroy",
+          "site": "ggml-cuda.cu:5599:cudaEventDestroy"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5605,
+          "api": "cudaEventSynchronize",
+          "site": "ggml-cuda.cu:5605:cudaEventSynchronize"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 5761,
+          "api": "cudaDeviceGetPCIBusId",
+          "site": "ggml-cuda.cu:5761:cudaDeviceGetPCIBusId"
+        }
+      ]
+    },
+    {
+      "path": "gla.cu",
+      "before_sha256": "d335b6769aecd0fab4e81108da993163c9f164a2160e7eeb9d34350882fcb392",
+      "after_sha256": "7e089c0ce1ac21db86c28347a16583c70dcaae7370db940a02fa74a9a952e7d3",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 89,
+          "site": "gla.cu:89:raw",
+          "grid_expression": "B * H"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 91,
+          "site": "gla.cu:91:raw",
+          "grid_expression": "B * H"
+        }
+      ]
+    },
+    {
+      "path": "im2col.cu",
+      "before_sha256": "f6a68e212791cbcdeabaa202580e31d67c62246c8601959143f0c909b3a4a2d4",
+      "after_sha256": "5ee949e80ad105dac35d89e1cd017cb2f705f1b2ebd54eda2ec71d1fec20e94c",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 57,
+          "site": "im2col.cu:57:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 185,
+          "site": "im2col.cu:185:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "lightning-indexer.cu",
+      "before_sha256": "20dffcbb3a48c718feede0135f459f939ea4fe678ab8202f8bc618d1126e117b",
+      "after_sha256": "c90c0304751464510d524927645e16dc23879ce95aa37fd6a1d3380ca28cfc8f",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 388,
+          "site": "lightning-indexer.cu:388:raw",
+          "grid_expression": "grid"
+        }
+      ]
+    },
+    {
+      "path": "mean.cu",
+      "before_sha256": "5747c970904456070a386464af305afb4c66351c0b87296f6ed3b0caaa0e40a8",
+      "after_sha256": "38cf37de6ed89341b8b37959ef75f748ffb2a682a982c3f6efbd95308f90cf29",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 56,
+          "site": "mean.cu:56:raw",
+          "grid_expression": "1"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 30,
+          "api": "cudaStreamIsCapturing",
+          "site": "mean.cu:30:cudaStreamIsCapturing"
+        }
+      ]
+    },
+    {
+      "path": "mmf.cu",
+      "before_sha256": "18da52f6233f1d278e5a0900211d55890f0e8491f1ef11859d20446683ba8388",
+      "after_sha256": "18da52f6233f1d278e5a0900211d55890f0e8491f1ef11859d20446683ba8388",
+      "sites": [
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 89,
+          "api": "cudaGetLastError",
+          "site": "mmf.cu:89:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "mmf.cuh",
+      "before_sha256": "e40e83e5b15e7f2deea1fadd6150c53379d77de15a5f115bc8e4625023d3f65e",
+      "after_sha256": "2a10f4f8d2576ab5a563f41b27f4812b6a8e2802a0a78c0d2b9c67c29e49c243",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 615,
+          "site": "mmf.cuh:615:raw",
+          "grid_expression": "block_nums_ids"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 626,
+          "site": "mmf.cuh:626:raw",
+          "grid_expression": "block_nums_ids"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 631,
+          "site": "mmf.cuh:631:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "mmid.cu",
+      "before_sha256": "336886a55144aa94a0cc02a7288a9a64b24ff09e5403b0f175fffaa857fdf5b7",
+      "after_sha256": "3976606f0953c5a517fedf179b2716e3c34b808b811bfc5ec878490a0f17f315",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 148,
+          "site": "mmid.cu:148:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "mmq.cu",
+      "before_sha256": "d4edb8c52ae103aaa01e54b1c16b22ce53cf6ac21bfa9ecd66386b4173af1590",
+      "after_sha256": "af64bf95daebf1523886d9f4feeeaecfcc82d1caac61af5d54c2f78a772d9be5",
+      "sites": [
+        {
+          "kind": "deny-opaque",
+          "line": 116,
+          "api": "cudaMemsetAsync",
+          "site": "mmq.cu:116:cudaMemsetAsync"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 159,
+          "api": "cudaGetLastError",
+          "site": "mmq.cu:159:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 202,
+          "api": "cudaGetLastError",
+          "site": "mmq.cu:202:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 239,
+          "api": "cudaGetLastError",
+          "site": "mmq.cu:239:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "mmq.cuh",
+      "before_sha256": "8a5fce05a1847ffd24c2070a75bbf78ec9b00cfc0352b703a92dbbd1e48e53a7",
+      "after_sha256": "82dfc41bb326b4b6c94957ebeaf3d561832a9bb382f73abe825bf45d4c732db6",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 1423,
+          "site": "mmq.cuh:1423:raw",
+          "grid_expression": "block_nums_xy_tiling"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 1452,
+          "site": "mmq.cuh:1452:raw",
+          "grid_expression": "block_nums_stream_k"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 1464,
+          "site": "mmq.cuh:1464:raw",
+          "grid_expression": "block_nums_fixup"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 1463,
+          "api": "cudaGetLastError",
+          "site": "mmq.cuh:1463:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "mmvq.cu",
+      "before_sha256": "e8a71930305e3565fb63578d55b010697a5c5289c1ba7ce536d1a1dcb602917c",
+      "after_sha256": "b3f808091826c5bbb29be73aa7470f8262eb39a560d38710c1d30eab9f689f8a",
+      "sites": [
+        {
+          "kind": "deny-opaque",
+          "line": 1461,
+          "api": "cudaMemsetAsync",
+          "site": "mmvq.cu:1461:cudaMemsetAsync"
+        }
+      ]
+    },
+    {
+      "path": "moe-weighted-reduction.cu",
+      "before_sha256": "2294b492b15bbf7175a656084f5d49e13784cbb98296492d2675d81dc46a8baa",
+      "after_sha256": "d442712e7df8ff8cce0ed8e404939c5525d4baa7d7ba86777a5d68c438992100",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 38,
+          "site": "moe-weighted-reduction.cu:38:raw",
+          "grid_expression": "blocks"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 64,
+          "api": "cudaGetLastError",
+          "site": "moe-weighted-reduction.cu:64:cudaGetLastError"
+        }
+      ]
+    },
+    {
+      "path": "norm.cu",
+      "before_sha256": "d8819c148bb371703d3aaaeb4550dc990e06da9be827b19d9ee320d06cffca62",
+      "after_sha256": "535d6d15aa1c754077b99dafb715d124a1850df75aedf9935bdfb99ade16eb8c",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 286,
+          "site": "norm.cu:286:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 289,
+          "site": "norm.cu:289:raw",
+          "grid_expression": "blocks_num"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 297,
+          "site": "norm.cu:297:raw",
+          "grid_expression": "num_groups"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 300,
+          "site": "norm.cu:300:raw",
+          "grid_expression": "num_groups"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 413,
+          "site": "norm.cu:413:raw",
+          "grid_expression": "nrows"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 416,
+          "site": "norm.cu:416:raw",
+          "grid_expression": "nrows"
+        }
+      ]
+    },
+    {
+      "path": "opt-step-adamw.cu",
+      "before_sha256": "9992bb1ff61086c5f4e3aa6d267db60ead1c430dcf4934238eac01ab1a461921",
+      "after_sha256": "2bc260716d3a772ce11a2b8ec2408328465cf83f633a40ff93c0f348b30227fd",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 42,
+          "site": "opt-step-adamw.cu:42:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "opt-step-sgd.cu",
+      "before_sha256": "3e4ee88060505d5a80c62ed6d74b6a317d6db55400451179222284acf2e94739",
+      "after_sha256": "d9115d93112a20c4006849ce8fe1e87c5711df9af89dbfebf7045d704d39c0df",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 23,
+          "site": "opt-step-sgd.cu:23:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "out-prod.cu",
+      "before_sha256": "78c7a0451ec2692f1560d6a92ad4aa0586656ffa0ddebef796b1a314232a7533",
+      "after_sha256": "e58834cc78af95e2a22ad02f0f9faa6c24d2dfad91807c8d2827edc2f42ab3c8",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 103,
+          "site": "out-prod.cu:103:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 83,
+          "api": "cublasSgemmStridedBatched",
+          "site": "out-prod.cu:83:cublasSgemmStridedBatched"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 107,
+          "api": "cudaGetLastError",
+          "site": "out-prod.cu:107:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 110,
+          "api": "cublasSgemmBatched",
+          "site": "out-prod.cu:110:cublasSgemmBatched"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 119,
+          "api": "cublasSgemm",
+          "site": "out-prod.cu:119:cublasSgemm"
+        }
+      ]
+    },
+    {
+      "path": "pad.cu",
+      "before_sha256": "65337858542e9f6c14d64a682e03d39c409cdee802d278f132750e6b972e96e4",
+      "after_sha256": "fe61fafb1edcc8d3dcefebda54afe8495a3975cedb2fa36da7d5f155c23f4dd8",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 71,
+          "site": "pad.cu:71:raw",
+          "grid_expression": "gridDim"
+        }
+      ]
+    },
+    {
+      "path": "pad_reflect_1d.cu",
+      "before_sha256": "685cc32a1b3e6e307fea4b09d20893612bd014ce77193e4e47b2550ba2cf166d",
+      "after_sha256": "d7e07dbaf2e512a3ddf6358632d2623cd88bf0d8ed0c151a40fd681e483f0e07",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 88,
+          "site": "pad_reflect_1d.cu:88:raw",
+          "grid_expression": "grid_dims"
+        }
+      ]
+    },
+    {
+      "path": "pool1d.cu",
+      "before_sha256": "8d8d3bdedc00d77736af41a4728fa59f1049245276852d76c402c81bbdcea7c2",
+      "after_sha256": "ec355005ce330e7261af76eee3963af26e2f776108ca74ce5393d4dda97ed5ef",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 60,
+          "site": "pool1d.cu:60:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "pool2d.cu",
+      "before_sha256": "2de85213a3f4f76c49ebbad7e01729b04175fc0f15473a511a3fe89e962ecbc3",
+      "after_sha256": "ebc064b7548a733a91ef6731ab1b02891e27d50060f395e98c2cf5177be5c11d",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 62,
+          "site": "pool2d.cu:62:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "quantize.cu",
+      "before_sha256": "12ab0782e5e9cf273dcc584edc7413729b18609dc20b4bc6c7a53efd5656c48f",
+      "after_sha256": "e69ec93016250194077d75d55369415b5799ae14734b54a60d1194ffc1ef3e81",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 589,
+          "site": "quantize.cu:589:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 593,
+          "site": "quantize.cu:593:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 597,
+          "site": "quantize.cu:597:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 618,
+          "site": "quantize.cu:618:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 622,
+          "site": "quantize.cu:622:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 626,
+          "site": "quantize.cu:626:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 647,
+          "site": "quantize.cu:647:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 650,
+          "site": "quantize.cu:650:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 660,
+          "site": "quantize.cu:660:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 678,
+          "site": "quantize.cu:678:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 681,
+          "site": "quantize.cu:681:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 695,
+          "site": "quantize.cu:695:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "roll.cu",
+      "before_sha256": "c4520b72491c9e422d5a5f3de9adcbf3b7cbecd8a64ebf9cd1b51fe288dc419b",
+      "after_sha256": "40f904c09eddc58803c2a2c3d27e85d3c99c867a1a3a7c0a38c5d9dabfc47efc",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 65,
+          "site": "roll.cu:65:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "rope.cu",
+      "before_sha256": "6000ed7084c245e129c830b2caa23bea69ddb5a2beff458e57d9861c969d9c1a",
+      "after_sha256": "830cd879b407ae03713c60a9448574d4e843c9d1d931ba522dd11d9192b42fce",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 391,
+          "site": "rope.cu:391:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 395,
+          "site": "rope.cu:395:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 525,
+          "site": "rope.cu:525:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 529,
+          "site": "rope.cu:529:raw",
+          "grid_expression": "block_nums"
+        }
+      ]
+    },
+    {
+      "path": "set-rows.cu",
+      "before_sha256": "fd80362b0ef995414fd3536e330079c11e48616a57abf4d24a73f8ba7654919f",
+      "after_sha256": "2f89687011aa2860c044c4934cec32d6fca13f8587bcfaca2e65ab85ecca9f3e",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 107,
+          "site": "set-rows.cu:107:raw",
+          "grid_expression": "grid_size"
+        }
+      ]
+    },
+    {
+      "path": "snake.cu",
+      "before_sha256": "314452e9e91419ea62536cdf924684a617ee52bb19f73e0f79ff09df96e72d07",
+      "after_sha256": "96bd7ef28bc0536039ca86477c9b57edec2fa348e03bb9051f3d0b9966a24010",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 48,
+          "site": "snake.cu:48:raw",
+          "grid_expression": "grid_size"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 52,
+          "site": "snake.cu:52:raw",
+          "grid_expression": "grid_size"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 56,
+          "site": "snake.cu:56:raw",
+          "grid_expression": "grid_size"
+        }
+      ]
+    },
+    {
+      "path": "softmax.cu",
+      "before_sha256": "af1d261459ef93a5fdbabdea60b4ebef027ccb69f9e040678815e416f3851f5f",
+      "after_sha256": "3161631cc098b9e6d393e91cf1b15ad475727e2e8f22740475ad23052f9027e3",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 291,
+          "site": "softmax.cu:291:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 305,
+          "site": "softmax.cu:305:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 369,
+          "site": "softmax.cu:369:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 380,
+          "site": "softmax.cu:380:raw",
+          "grid_expression": "block_nums"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 363,
+          "api": "cudaLaunchCooperativeKernel",
+          "site": "softmax.cu:363:cudaLaunchCooperativeKernel"
+        }
+      ]
+    },
+    {
+      "path": "solve_tri.cu",
+      "before_sha256": "2c0863793c2f896f9c38ffb24cb4fe3887c318261d6c40ccc9f6eea67a75e307",
+      "after_sha256": "17ebd50e75d486f52ded2ac3199710dda69da857d643f84879b8b6ac891b1cc9",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 65,
+          "site": "solve_tri.cu:65:raw",
+          "grid_expression": "(total_batches + 255) / 256"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 202,
+          "site": "solve_tri.cu:202:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 206,
+          "site": "solve_tri.cu:206:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 210,
+          "site": "solve_tri.cu:210:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 214,
+          "site": "solve_tri.cu:214:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 218,
+          "site": "solve_tri.cu:218:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 222,
+          "site": "solve_tri.cu:222:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 226,
+          "site": "solve_tri.cu:226:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 230,
+          "site": "solve_tri.cu:230:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 234,
+          "site": "solve_tri.cu:234:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 238,
+          "site": "solve_tri.cu:238:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 242,
+          "site": "solve_tri.cu:242:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 246,
+          "site": "solve_tri.cu:246:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 54,
+          "api": "cudaMemcpyAsync",
+          "site": "solve_tri.cu:54:cudaMemcpyAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 69,
+          "api": "cublasSetMathMode",
+          "site": "solve_tri.cu:69:cublasSetMathMode"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 70,
+          "api": "cublasStrsmBatched",
+          "site": "solve_tri.cu:70:cublasStrsmBatched"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 74,
+          "api": "cublasSetMathMode",
+          "site": "solve_tri.cu:74:cublasSetMathMode"
+        }
+      ]
+    },
+    {
+      "path": "ssm-conv.cu",
+      "before_sha256": "082c573c0d973cbdcc7b6c7e435ba55ee009ec70be28cba4d50b3e9596a4ce93",
+      "after_sha256": "8589040f3faaf0f6b3875b36a3e10e130f2f579748b099bbcb154031c4d60c44",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 145,
+          "site": "ssm-conv.cu:145:raw",
+          "grid_expression": "blocks"
+        }
+      ]
+    },
+    {
+      "path": "ssm-scan.cu",
+      "before_sha256": "bbf44b7a6625de61b091d3fa4d2fac71e41f71760828717604ea66836426a23e",
+      "after_sha256": "28338c4a3a9928ba65d915bbdbb64830df6daa7def2d6bae89a83cc0c4c9aa7b",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 617,
+          "site": "ssm-scan.cu:617:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 627,
+          "site": "ssm-scan.cu:627:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 684,
+          "site": "ssm-scan.cu:684:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 739,
+          "site": "ssm-scan.cu:739:raw",
+          "grid_expression": "grid"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 619,
+          "api": "cudaGetLastError",
+          "site": "ssm-scan.cu:619:cudaGetLastError"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 629,
+          "api": "cudaGetLastError",
+          "site": "ssm-scan.cu:629:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 657,
+          "api": "cublasSgemm",
+          "site": "ssm-scan.cu:657:cublasSgemm"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 662,
+          "api": "cublasGemmStridedBatchedEx",
+          "site": "ssm-scan.cu:662:cublasGemmStridedBatchedEx"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 691,
+          "api": "cudaGetLastError",
+          "site": "ssm-scan.cu:691:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 702,
+          "api": "cublasGemmStridedBatchedEx",
+          "site": "ssm-scan.cu:702:cublasGemmStridedBatchedEx"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 722,
+          "api": "cublasGemmStridedBatchedEx",
+          "site": "ssm-scan.cu:722:cublasGemmStridedBatchedEx"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 743,
+          "api": "cudaGetLastError",
+          "site": "ssm-scan.cu:743:cudaGetLastError"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 752,
+          "api": "cublasGemmStridedBatchedEx",
+          "site": "ssm-scan.cu:752:cublasGemmStridedBatchedEx"
+        }
+      ]
+    },
+    {
+      "path": "top-k.cu",
+      "before_sha256": "ed7271124da0e1d52a7d1fed52b6e37aab1fa33fc90ba08770dadda4f99366f4",
+      "after_sha256": "c4f62f07272a4797aa1264819a318f8be2cf8d70b0e3491e28a205bbd9be2a1e",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 193,
+          "site": "top-k.cu:193:raw",
+          "grid_expression": "(nrows + BLOCK_SIZE - 1) / BLOCK_SIZE"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 198,
+          "site": "top-k.cu:198:raw",
+          "grid_expression": "row_grid"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 201,
+          "site": "top-k.cu:201:raw",
+          "grid_expression": "nrows"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 205,
+          "site": "top-k.cu:205:raw",
+          "grid_expression": "(nrows + BLOCK_SIZE - 1) / BLOCK_SIZE"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 207,
+          "site": "top-k.cu:207:raw",
+          "grid_expression": "row_grid"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 254,
+          "api": "cudaMemcpy2DAsync",
+          "site": "top-k.cu:254:cudaMemcpy2DAsync"
+        },
+        {
+          "kind": "deny-opaque",
+          "line": 269,
+          "api": "cudaMemcpy2DAsync",
+          "site": "top-k.cu:269:cudaMemcpy2DAsync"
+        }
+      ]
+    },
+    {
+      "path": "tri.cu",
+      "before_sha256": "247a4dc4bd84c464534685654651d07abf75ab8e1eb5b04a3bd1e3e1c8e2eec0",
+      "after_sha256": "57d1d97ac489028872638a61224022e0a1c88393664cddfddcebd12df1b034e0",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 61,
+          "site": "tri.cu:61:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 68,
+          "site": "tri.cu:68:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 77,
+          "site": "tri.cu:77:raw",
+          "grid_expression": "grid_dims"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 84,
+          "site": "tri.cu:84:raw",
+          "grid_expression": "grid_dims"
+        }
+      ]
+    },
+    {
+      "path": "tsembd.cu",
+      "before_sha256": "f7214a6e049c45b79f88373694aa7607d7d633e2e0f48a132e37ba3f38014d40",
+      "after_sha256": "35489a1b7fc060f6945695c86123890b32d06778c1fc0f9c59180f69c252f5f7",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 31,
+          "site": "tsembd.cu:31:raw",
+          "grid_expression": "gridDim"
+        }
+      ]
+    },
+    {
+      "path": "unary.cu",
+      "before_sha256": "bb85d502d79a5c144f90335ad71a2a0f03ce286aab57934e85180b38677ce775",
+      "after_sha256": "15f7aa8e38d3921aabc7ad9b3de0a85c23046639b4cc4df975d2a705fba07ed2",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 383,
+          "site": "unary.cu:383:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 449,
+          "site": "unary.cu:449:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 529,
+          "site": "unary.cu:529:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 579,
+          "site": "unary.cu:579:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 625,
+          "site": "unary.cu:625:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "upscale.cu",
+      "before_sha256": "9f0fc903d48a2f267c672fd54f988a3354651d896d10a5e5e2138c261daeeee2",
+      "after_sha256": "14fecfe9932a156adebacc98af5b1e5ce3d990e2a71f625b427decfefd2da9ac",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 226,
+          "site": "upscale.cu:226:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 239,
+          "site": "upscale.cu:239:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 241,
+          "site": "upscale.cu:241:raw",
+          "grid_expression": "num_blocks"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 254,
+          "site": "upscale.cu:254:raw",
+          "grid_expression": "num_blocks"
+        }
+      ]
+    },
+    {
+      "path": "vendors/hip.h",
+      "before_sha256": "06257753a0a273348c04210a342e834847713c8b07629cd1cbbd1d4527ec0394",
+      "after_sha256": "45acb0e6d6172f878f58e5bb5b8c775887e66f60eaa39a8020e0bb493a14bcb8",
+      "sites": [
+        {
+          "kind": "deny-opaque",
+          "line": 44,
+          "api": "cublasSetMathMode",
+          "site": "vendors/hip.h:44:cublasSetMathMode"
+        },
+        {
+          "kind": "runtime-call-unqualified",
+          "line": 83,
+          "api": "cudaMallocHost",
+          "site": "vendors/hip.h:83:cudaMallocHost"
+        }
+      ]
+    },
+    {
+      "path": "wkv.cu",
+      "before_sha256": "d71729a0b264af0e85076f31b5f749f9361b9811e6f5fe8276c01267145efc2b",
+      "after_sha256": "a44c98794b352e2372aa7cd42734b4b5e166c962979783cd0b62a316a6d3474f",
+      "sites": [
+        {
+          "kind": "prelaunch-raw",
+          "line": 217,
+          "site": "wkv.cu:217:raw",
+          "grid_expression": "B * H"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 219,
+          "site": "wkv.cu:219:raw",
+          "grid_expression": "B * H"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 247,
+          "site": "wkv.cu:247:raw",
+          "grid_expression": "dim3(B * H, CUDA_WKV_BLOCK_SIZE / rows_per_block)"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 249,
+          "site": "wkv.cu:249:raw",
+          "grid_expression": "B * H"
+        },
+        {
+          "kind": "prelaunch-raw",
+          "line": 251,
+          "site": "wkv.cu:251:raw",
+          "grid_expression": "B * H"
+        }
+      ]
+    }
+  ],
+  "counts_of_source_sites_only": {
+    "prelaunch-raw": 168,
+    "prelaunch-api": 1,
+    "deny-opaque": 85,
+    "deny-opaque-driver": 13,
+    "runtime-call-unqualified": 149
+  },
+  "native_armed": false,
+  "all_physical_kernels_qualified": false,
+  "dynamic_launches_measured": 0,
+  "opaque_runtime_work": "UNKNOWN; numeric backend admission remains blocked",
+  "same_policy_required_for": [
+    "A",
+    "B",
+    "C",
+    "draft",
+    "reference"
+  ],
+  "required_build_options": {
+    "GGML_CUDA_GRAPHS": "OFF",
+    "GGML_CUDA_NCCL": "OFF",
+    "GGML_CUDA_NO_VMM": "ON"
+  }
+}

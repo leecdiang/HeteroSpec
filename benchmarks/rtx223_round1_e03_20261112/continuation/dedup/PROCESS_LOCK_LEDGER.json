@@ -1,0 +1,80 @@
+{
+  "observed_utc": "2026-11-12T08:22:21.640895+00:00",
+  "process_probe": {
+    "snapshot_error": null,
+    "first_error": null,
+    "total_processes": 5,
+    "relevant": [
+      {
+        "pid": 572,
+        "ppid": 40324,
+        "name": "python.exe",
+        "threads": 5,
+        "image": "D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\python.exe",
+        "created_utc": "2026-11-12T08:22:21.556002+00:00"
+      },
+      {
+        "pid": 2948,
+        "ppid": 572,
+        "name": "python.exe",
+        "threads": 5,
+        "image": "D:\\HeteroSpec-PC\\python311\\python.exe",
+        "created_utc": "2026-11-12T08:22:21.571835+00:00"
+      }
+    ]
+  },
+  "locks": [
+    {
+      "path": "D:\\HeteroSpec-PC\\RTX_EXPERIMENT.lock",
+      "exists": false
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\resources\\WINDOWS_RTX_EPOCH.lock",
+      "exists": false
+    }
+  ],
+  "ledger_hashes": [
+    {
+      "path": "D:\\rtx192-review-v2\\ledger.sqlite",
+      "exists": true,
+      "sha256": "58597a16ed833165cd2d3ee1f6d176fc7eb7697fbfd8369b7a51a5862baeabd0"
+    },
+    {
+      "path": "D:\\rtx211-q8-20261109\\ledger.sqlite",
+      "exists": true,
+      "sha256": "e9390101ffa4781cb0b4d859173afdd449aa2847402fdd6a3eb84a06ffcfa42e"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\q8rtx213-supplement-runtime-20261109\\ledger.sqlite",
+      "exists": true,
+      "sha256": "5671a7c693408a2e9521dc78d70cd06244afc784c3e9d4c595005ab3b99500da"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\resources\\ledger.sqlite",
+      "exists": true,
+      "sha256": "0ad33c4d6c566e6482d7130c0d858730c30c9370cd1e0c38e290502f1a8d9001"
+    }
+  ],
+  "nvidia_smi": [
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,memory.total,memory.used,driver_version",
+        "--format=csv"
+      ],
+      "code": 0,
+      "stdout": "index, uuid, name, memory.total [MiB], memory.used [MiB], driver_version\r\n0, GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd, NVIDIA GeForce RTX 5070 Ti Laptop GPU, 12227 MiB, 0 MiB, 616.92\r\n"
+    },
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-compute-apps=pid,process_name,used_memory",
+        "--format=csv"
+      ],
+      "code": 0,
+      "stdout": "pid, process_name, used_gpu_memory [MiB]\r\n"
+    }
+  ],
+  "new_GPU_work": 0,
+  "gpu_idle_is_not_thread_completion": true
+}

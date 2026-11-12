@@ -1,0 +1,72 @@
+{
+  "observed_utc": "2026-11-12T07:47:33.553815+00:00",
+  "observations": [
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version,temperature.gpu,power.draw,power.limit,utilization.gpu",
+        "--format=csv"
+      ],
+      "code": 0,
+      "seconds": 0.07800000000861473,
+      "stdout": "index, uuid, name, memory.total [MiB], memory.used [MiB], memory.free [MiB], driver_version, temperature.gpu, power.draw [W], power.limit [W], utilization.gpu [%]\r\n0, GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd, NVIDIA GeForce RTX 5070 Ti Laptop GPU, 12227 MiB, 182 MiB, 11763 MiB, 616.92, 40, 12.38 W, [N/A], 29 %\r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-compute-apps=pid,process_name,used_memory",
+        "--format=csv"
+      ],
+      "code": 0,
+      "seconds": 0.046999999991385266,
+      "stdout": "pid, process_name, used_gpu_memory [MiB]\r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/rtx184-tools/cuda/bin/nvcc.exe",
+        "--version"
+      ],
+      "code": 0,
+      "seconds": 0.014999999999417923,
+      "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\r\nCopyright (c) 2005-2025 NVIDIA Corporation\r\nBuilt on Tue_May_27_02:24:01_Pacific_Daylight_Time_2025\r\nCuda compilation tools, release 12.9, V12.9.86\r\nBuild cuda_12.9.r12.9/compiler.36037853_0\r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/HeteroSpec-PC/.venv-analysis/Lib/site-packages/ziglang/zig.exe",
+        "version"
+      ],
+      "code": 0,
+      "seconds": 0.01600000000325963,
+      "stdout": "0.16.0\n",
+      "stderr": ""
+    }
+  ],
+  "old_shared_lock": {
+    "path": "D:\\HeteroSpec-PC\\RTX_EXPERIMENT.lock",
+    "exists": false,
+    "modified": false
+  },
+  "cuda_env": {},
+  "disks": {
+    "C:/": {
+      "total": 766426173440,
+      "used": 673032065024,
+      "free": 93394108416
+    },
+    "D:/": {
+      "total": 1610612731904,
+      "used": 1577148436480,
+      "free": 33464295424
+    }
+  },
+  "audit_model_requests": 0,
+  "audit_kernel_launches": 0,
+  "new_native_loaded_modules": null,
+  "original_thread_unverified": true,
+  "exclusive_gpu_resource_not_established": true,
+  "physical_device_binding": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd; observed physical index 0",
+  "elapsed_seconds": 12.171999999991385
+}

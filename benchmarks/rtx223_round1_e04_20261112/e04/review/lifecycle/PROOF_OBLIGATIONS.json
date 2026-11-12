@@ -1,0 +1,53 @@
+{
+  "schema": "heterospec.e04.independent-lifecycle-proof-obligations.v1",
+  "status": "CONCEPTUAL_REQUIREMENTS_NOT_NATIVE_PROOF",
+  "budget_family": "rtx221-round1-20261112-e01",
+  "kernel_ceiling": 4096,
+  "new_allowance": false,
+  "reference_state": "e03 ended INCONCLUSIVE with native configure=-6, zero model/GPU work, and no normal numerical DLL initialization",
+  "counting_contract": {
+    "kernel_unit": "A device kernel grid invocation; grid blocks/threads are not separate kernels",
+    "conservative_charge": "Reserve/charge before a potentially submitted kernel invocation; retain failed/aborted attempt charges without refund so admitted physical invocations cannot exceed charged bounds",
+    "not_equivalent_to_kernel_count": ["number of source call sites", "number of CUDA API calls", "number of graph replay API calls", "number of cuBLAS/CUB calls", "number of CUDA contexts", "device allocation count", "DMA transfer count or bytes", "number of model rows"],
+    "independent_dimensions": ["logical requests", "target/draft rows", "kernel charges", "capture bytes", "native lifetime/window", "API/DMA diagnostics"],
+    "unknown": "Unknown physical activity is not zero. Reject the unproved route or retain a source/binary-bound conservative upper bound with a trusted enforcement proof."
+  },
+  "lifecycle": [
+    {"id":"L00","phase":"Host admission and reservation","before":"Any normal numerical DLL load or device work","required":"Fresh original-thread/host lease clearance; immutable code/model/runtime/device/graph identities; one canonical same-family durable reservation and global deadline","zero_GPU_claim":"Only if this phase performs CPU/PE/file inspection without target DLL initialization"},
+    {"id":"L01","phase":"Numerical DLL dependency loading and initialization","includes":["LoadLibrary dependency traversal","DllMain","CRT static initializers","TLS callbacks","CUDA fatbinary/function/variable registration"],"required":"An authority/enforcement boundary exists before these actions, or a pinned initialization path is proved to emit zero kernels. An exported budget function inside the DLL cannot alone guard code that runs before that function can be called.","e03_limit":"PE parsing/export presence is not normal-load or initialization evidence"},
+    {"id":"L02","phase":"CUDA runtime/driver/device/context initialization","includes":["implicit initialization","device selection","module/JIT/runtime setup","allocation/initialization paths"],"required":"Pin actual runtime/driver path and account for every possible kernel-producing action; distinguish queries/allocations/DMA from kernels without assuming internal activity is zero"},
+    {"id":"L03","phase":"Target and draft model loading","includes":["both models","weight transfer/conversion/padding","workspace creation","backend setup"],"required":"All kernel-producing loading work belongs to the same original quota. No unmetered model-load or setup exception may be introduced because the service endpoint begins later."},
+    {"id":"L04","phase":"Context provisioning, reset and prefill","includes":["target context","draft context","KV reset","target prefill","draft prefill","producer work","graph warmup/capture if allowed"],"required":"Bound actual dispatch paths and physical groups, rows and all emitted kernels. A model request counter alone does not cover setup or warmup."},
+    {"id":"L05","phase":"Complete speculative request","includes":["draft proposals","target quantization","target verification","sampling when on device","guards/planning with device work","correction/bonus","trim/reconciliation","fallback","real continuation"],"required":"One admitted profile covers both target and draft throughout the actual k3 bonus → seed → L4 rejection → correction → continuation chain, preserving requested outputs/state. No source-local counter may reset per cycle or arm."},
+    {"id":"L06","phase":"Qualification and evidence capture","includes":["all qualification arms","own-path repeats","negative/failure attempts","primers/warmups","activation/output/state exports","capture synchronization"],"required":"These are charged work even when excluded from latency estimates. Capture bytes and API/DMA work remain separate dimensions; any capture-associated kernel work is included in the kernel quota."},
+    {"id":"L07","phase":"Normal and abnormal teardown","includes":["stream/context cleanup","library teardown","model free","DLL detach/CRT/TLS destructors","error unwinding","owned worker termination"],"required":"Close the final possible kernel-producing interval before accepting final usage. Process death leaves unknown actuals charged to durable reservation; it is not a refund or evidence of zero teardown work."}
+  ],
+  "launch_routes": [
+    {"route":"Explicit raw/template/extended/cooperative kernel submission","obligation":"A pre-submission guard covers the actual compiled call path, including helper macros and generated templates, not only a source inventory"},
+    {"route":"CUDA graph replay","obligation":"Charge a trusted frozen bound on all kernel-node invocations reachable in each replay, including child/conditional/loop/update behavior, or reject graph capture/replay. One replay call is not one kernel."},
+    {"route":"cuBLAS/CUB/other kernel-launching library","obligation":"Prove/guard internal physical submissions or a conservative per-call bound for the exact binary/algorithm/input/workspace path; otherwise reject before invoking the library. A host library call is not automatically one kernel."},
+    {"route":"Runtime memory/initialization API","obligation":"Do not convert every API/DMA operation into one kernel. Prove the pinned path's kernel activity or leave the physical bound unqualified; blanket denials can make the complete model profile unusable."},
+    {"route":"Multiple TUs/threads/DLL instances/processes","obligation":"All linked TUs and submitting threads in one admitted worker share one atomic allowance. Duplicate DLL copies, reentrant configuration, alternate loaders and new processes cannot manufacture fresh limits. The canonical family ledger bounds the aggregate of worker reservations."}
+  ],
+  "trust_and_release": {
+    "proof_registry": "Native proof IDs and their scope must be owned/frozen by the implementation or independent authority. Caller-created JSON booleans, caller-supplied matching hashes or metadata claims cannot become native authority.",
+    "empty_registry": "An empty compiled-native proof registry necessarily returns BLOCKED/NOT_RUN, even when arithmetic and schema validation of a synthetic plan passes.",
+    "CPU_mock": "Atomic counter and lifecycle planner tests establish CPU behavior only. They do not prove driver/runtime coverage, numerical DLL initialization, actual C dispatch or complete native request usability.",
+    "narrow_profile": "Must prove both closure (no unknown routes) and usability (every required lifecycle action has a qualified admitted route). Rejecting all opaque work is fail-closed but does not establish a runnable model executor.",
+    "graph_fairness": "The same admitted graph policy must apply to A/B/C and relevant reference/draft controls; disabling graphs selectively is a changed comparison contract.",
+    "cost_readiness": "Kernel guards and synchronization have real costs. Complete same-request service costs remain required after numerical qualification; no mock or source bound supplies a latency result."
+  },
+  "currently_unclaimable": [
+    "The original 4096 full physical-kernel quota has been qualified merely because all visible CUDA sites are wrapped",
+    "One API/library/graph call equals one physical kernel",
+    "The numerical DLL was safely initialized because its PE exports exist",
+    "A complete target/draft model request is runnable because unknown routes are denied",
+    "A caller-authored native proof manifest establishes independent release authority",
+    "CPU fixtures or a linked DLL qualify actual quantized activations, full outputs, state or the real consumer chain",
+    "A/B/C system benefit, memory traffic reduction, occupancy or service improvement exists without admitted native evidence",
+    "Second-round admission follows from source, mock, planner or offline PE success"
+  ],
+  "native_release": false,
+  "new_GPU_or_model_work": 0,
+  "old_tests_rerun": false
+}

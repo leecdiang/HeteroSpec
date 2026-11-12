@@ -1,0 +1,613 @@
+{
+  "schema": "heterospec.rtx-round1.qualification-cases.v1",
+  "status": "PROSPECTIVE_FROZEN_EXPECTATIONS",
+  "upstream_head": "af436df989570ad882db65bd8a4b265b9e8cfdae",
+  "upstream_design_sha256": "75d081f0b8df2cc7673e62ebb6dee1b27af88e0458f6fa23adff7dfe71a780d1",
+  "arms": {
+    "A": "backend-loop4",
+    "B": "current packed",
+    "C": "same-CTA two independent four-column groups"
+  },
+  "interpretation": "The new host admission policy is stricter than historical packed source. Expectations are not native observations or retroactive baseline qualifications.",
+  "fallback_policy": "No automatic fallback. Only separately frozen native-qualified fallback receipts admitted by allowlist; allowlist currently empty.",
+  "required_layers": [
+    "source identity",
+    "operator own-path bytes",
+    "A/B/C full-output and activation bytes",
+    "untrimmed and committed target/draft state",
+    "geometry",
+    "real request output ownership/consumer chain",
+    "always-on clean guard and dispatch",
+    "matched complete service cost"
+  ],
+  "cases": [
+    {
+      "id": "P01",
+      "original_purpose": "No multi-group packing; observed native four-column path remains the control.",
+      "frozen_q": 4,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P02",
+      "original_purpose": "First outer split and a one-column tail; packed branch still inactive.",
+      "frozen_q": 5,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P03",
+      "original_purpose": "One four-column tile and three-column tail without multi-group packing.",
+      "frozen_q": 7,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P04",
+      "original_purpose": "First actual packed mapping: [K,4,2], no tail.",
+      "frozen_q": 8,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "pair4 MMVQ with ncols=4,g=2 inside CTA",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P05",
+      "original_purpose": "Two packed groups plus one-column tail.",
+      "frozen_q": 9,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P06",
+      "original_purpose": "Two packed groups plus three-column tail.",
+      "frozen_q": 11,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P07",
+      "original_purpose": "Three packed groups with no tail.",
+      "frozen_q": 12,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P08",
+      "original_purpose": "Seven packed groups plus tail near the maximum width.",
+      "frozen_q": 31,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P09",
+      "original_purpose": "Maximum admitted outer width and eight groups.",
+      "frozen_q": 32,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_C_DOMAIN",
+          "expected_route": "NO_NATIVE_WORK",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "P10",
+      "original_purpose": "Same outer query count on opposite sides of an actual physical padding boundary; compare W and L without changing projection recipe.",
+      "frozen_q": 8,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "pair4 MMVQ with ncols=4,g=2 inside CTA",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      },
+      "extra_obligation": "Same actual q=8 input on each side of the native padding boundary; full target/draft untrimmed and committed states and geometry; same request contract."
+    },
+    {
+      "id": "P11",
+      "original_purpose": "Commit an earlier accepted frontier while later verified rows are rejected; compare owned full vector and extracted active KV.",
+      "frozen_q": 8,
+      "arms": {
+        "A": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "old-four-column-and-tail MMVQ",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "generic MMVQ with ncols=4,channels=q//4 plus old tail",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "EXACT_FULL_OUTPUT_STATE_PASS",
+          "expected_route": "pair4 MMVQ with ncols=4,g=2 inside CTA",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      },
+      "extra_obligation": "Verified q=8 macro with earlier accepted frontier, all owned requested vectors including L4, pretrim state, trim/pending/correction and real continuation."
+    },
+    {
+      "id": "N01",
+      "original_change": "Unsupported q>32 or zero width",
+      "frozen_detail": "q=0 and q=33; no implicit wide fallback",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_WIDTH",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_WIDTH",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_WIDTH",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N02",
+      "original_change": "Noncontiguous activation with otherwise supported dtype/shape",
+      "frozen_detail": "noncontiguous activation",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_STRIDE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_STRIDE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_STRIDE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N03",
+      "original_change": "Noncontiguous weight or unsupported weight batch dimension",
+      "frozen_detail": "noncontiguous weight and batched weight tested separately",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_WEIGHT_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_WEIGHT_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_WEIGHT_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N04",
+      "original_change": "Compute-buffer view with padding-clear conflict",
+      "frozen_detail": "safe metadata-only padding-clear conflict; do not execute unsafe views",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_PADDING_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_PADDING_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_PADDING_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N05",
+      "original_change": "Foreign buffer/device or CPU-resident operand",
+      "frozen_detail": "actual CPU/foreign CUDA buffer; no fabricated pointers",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_PLACEMENT",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_PLACEMENT",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_PLACEMENT",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N06",
+      "original_change": "Unsupported warp/backend identity",
+      "frozen_detail": "bound device must be NVIDIA SM120 warp32; metadata test only",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_BACKEND",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_BACKEND",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_BACKEND",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N07",
+      "original_change": "Precision hint, IDs, fused arithmetic or activation dtype differing from recipe",
+      "frozen_detail": "precision, IDs, fusion and activation dtype each separate subcase",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_ARITHMETIC_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_ARITHMETIC_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_ARITHMETIC_RECIPE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N08",
+      "original_change": "Integer stride/offset span outside admitted range",
+      "frozen_detail": "checked int32 strides/offsets; no large allocation",
+      "arms": {
+        "A": {
+          "expected_decision": "REJECT_PREEXEC_INTEGER_SPAN",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REJECT_PREEXEC_INTEGER_SPAN",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REJECT_PREEXEC_INTEGER_SPAN",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N09",
+      "original_change": "Same outer shape but changed prefix vector or active/layout policy",
+      "frozen_detail": "prefix vector, active/layout policy, head placement, output count, topology or recipe change must rebuild; refresh current mask",
+      "arms": {
+        "A": {
+          "expected_decision": "REBUILD_THEN_EXACT_PASS",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "REBUILD_THEN_EXACT_PASS",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "REBUILD_THEN_EXACT_PASS",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N10",
+      "original_change": "Failure after an earlier native group/operator has executed",
+      "frozen_detail": "failure after at least one native operator: no success, same-owner retry/reset/continuation",
+      "arms": {
+        "A": {
+          "expected_decision": "OWNER_INVALID_AFTER_NATIVE_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "OWNER_INVALID_AFTER_NATIVE_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "OWNER_INVALID_AFTER_NATIVE_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "N11",
+      "original_change": "Trim/draft/sample failure caught by an embedding caller",
+      "frozen_detail": "trim/draft/sample/reset-postcheck failure invalidates new wrapper owner; old CLI remains terminate-only",
+      "arms": {
+        "A": {
+          "expected_decision": "OWNER_INVALID_AFTER_TRANSACTION_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "B": {
+          "expected_decision": "OWNER_INVALID_AFTER_TRANSACTION_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        },
+        "C": {
+          "expected_decision": "OWNER_INVALID_AFTER_TRANSACTION_FAILURE",
+          "native_result": "NOT_RUN",
+          "numerical_result": "NOT_RUN",
+          "clean_guard_result": "NOT_RUN"
+        }
+      }
+    }
+  ],
+  "model_requests": 0,
+  "native_runs": 0,
+  "gpu_runs": 0
+}

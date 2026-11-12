@@ -1,0 +1,13 @@
+# Remaining first-round native entry
+
+The original first round is still blocked. The current user instruction authorizes continuation within the original limits; it does not authorize another budget or a second round. The parent used zero native resources, so the same family ceiling remains 256 model requests, 1,000,000 total target/draft rows, one 10,800-second native window, 4,096 kernel launches and 2 GiB captured data. Warmup and failures remain inside those limits.
+
+Release requires current execution evidence, not a historic title or an empty GPU snapshot. Supply a content-bound current terminal/lease receipt for the original #221 and #223 workers and a trusted host-wide worker/supervisor view. The discovered local catalog has candidate IDs but no terminal events. Both available process enumeration APIs expose only the current sandbox. Do not delete an unknown lock or stop a foreign process to obtain a clean snapshot.
+
+The Windows runner must admit the exact source/build/model/module/device and independent receipt allowlist, acquire its process-bound lock, reserve before creating its owned child, bind the child to a Job before resume, preserve the single family deadline, and retain failures/unknown costs without refund. Native execution stays hard-blocked in this delivered source until those release records are independently reviewed.
+
+A prospective minimal first capture uses the actual eight-token prefix of one already frozen real prompt, one target-only context and one real q8 forward. That is a real q8 operand, unlike slicing the old q32 activation. It needs a dedicated admitted entry, actual backend Q8_1 bytes, dispatch evidence and a conservative all-kernel bound. The old fixed-k M2 job cannot be bypassed with a false draft field. No such capture has run.
+
+The 4,096-launch cap includes model kernels. A known standalone replay bound does not admit an uncounted model worker. The new backend export patch supplies capture instrumentation, not whole-model prelaunch launch veto. Complete and qualify the counter/bound before starting a model; if the frozen ceiling cannot cover the protocol, report the exact shortfall before requesting a changed allocation. No expansion is approved here.
+
+After admission: native recipe/negative cases and own-path/full-output/quantized-buffer replay precede any timing. Keep every applicable one of the 22×3 cells explicit. A source-level refusal test is not a successful GPU arithmetic comparison. Stop on qualification failure; only a qualified paired C-over-B improvement and real-request/full-service evidence can satisfy the existing Go gates. A stage that did not execute stays NOT_RUN, with no fabricated latency or interval.

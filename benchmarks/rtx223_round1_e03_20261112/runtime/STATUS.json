@@ -1,0 +1,83 @@
+{
+  "schema": "heterospec.e03.runtime-final-status.v1",
+  "decision": "INCONCLUSIVE",
+  "scope": "actual numerical CUDA DLL linked; no normal DLL initialization or GPU use",
+  "gates": {
+    "C_runtime_source_dispatch": "PASS_SOURCE_ONLY",
+    "numerical_DLL_link": "PASS",
+    "normal_numerical_DLL_LoadLibrary": "NOT_RUN_BLOCKED",
+    "metadata_exports_called_in_numerical_DLL": "NOT_RUN",
+    "GPU_runtime_C_selection": "NOT_RUN",
+    "native_66_cell_qualification": "NOT_RUN",
+    "numerical_bytes": "NOT_RUN",
+    "operator_or_service_timing": "NOT_RUN"
+  },
+  "DLL": {
+    "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e03\\runtime\\build-v3\\bin\\ggml-cuda.dll",
+    "sha256": "bcdb7642d32609c9242dc8aaecfadfb9f4e082ac8cfeccf5de6b7466546eb24b"
+  },
+  "compile_policy": {
+    "arch": "sm_120a",
+    "original_fast_math_flags_retained": true,
+    "graphs": "disabled",
+    "NCCL": "disabled",
+    "VMM": "disabled",
+    "PDL": "disabled in all recorded compile arguments",
+    "CPU_TEST_ONLY": false
+  },
+  "model_requests": 0,
+  "target_rows": 0,
+  "draft_rows": 0,
+  "CUDA_contexts": 0,
+  "kernel_launches": 0,
+  "native_GPU_seconds": 0,
+  "actual_loaded_numerical_modules": null,
+  "metadata_function_source": {
+    "schema": "heterospec.e03.cuda-runtime.v1",
+    "abi": 1,
+    "arm_api": {
+      "A": 0,
+      "B": 1,
+      "C": 2
+    },
+    "C_domain": "Q8_0/F32,packed[K,4,2],q8,g2,K%512=0,evenM,noIDs,noFusion",
+    "C_kernel": "sameCTA_two_independent_case4_accumulators_weight_fragment_reuse",
+    "A_core_required": "loop4",
+    "B_C_core_required": "packed",
+    "outside_C_domain": "existing_packed_route_not_newly_qualified",
+    "graph_policy": "disabled_all_arms",
+    "numerical_qualification": "NOT_RUN",
+    "dispatch_observation": "branch_attempt_before_launch_guard_not_submitted_or_completed",
+    "metadata_function_calls_CUDA": false,
+    "full_physical_launch_budget": "NOT_QUALIFIED"
+  },
+  "resource_metadata": "COMPILER_RESOURCES.json",
+  "all_physical_launch_budget": "NOT_QUALIFIED; native configure remains -6",
+  "first_batch": {
+    "translation_units": 145,
+    "successes": 144,
+    "failures": 1,
+    "seconds": 617.625,
+    "not_globally_source_frozen": "One superseded provider body synced mid-batch; exact time unknown, old preserved"
+  },
+  "final_link": {
+    "reused_objects": 141,
+    "fresh_objects": 4,
+    "seconds": 32.38999999999942,
+    "exact_provider_implementation_objects": 1
+  },
+  "artifact_reconstruction": {
+    "old_members": 3540,
+    "overrides": 66,
+    "delta_bytes": 1173599,
+    "origin_plus_delta_matches_complete_final_manifest": true,
+    "materializer": "materialize_final_source.py",
+    "fresh_builder": "build_runtime.py --source final-source --out new-output --jobs 2"
+  },
+  "source_and_as_built_binding": "AS_BUILT_BINDINGS_FINAL.json",
+  "failure_history": "PREPARATION_FAILURES.json",
+  "engineering_total_wall_seconds": null,
+  "compiler_wall_is_not_service_latency": true,
+  "old_numerical_sources_and_DLLs_modified": false,
+  "normal_DLL_initialization_not_conflated_with_PE_mapping": true
+}

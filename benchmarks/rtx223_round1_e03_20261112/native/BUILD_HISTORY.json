@@ -1,0 +1,21 @@
+{
+  "schema": "heterospec-rtx221-build-history-v1",
+  "gpu_contexts_created_by_this_task": 0,
+  "kernel_launches": 0,
+  "model_requests": 0,
+  "native_probe_processes_executed": 0,
+  "attempts": [
+    {"directory":"build_tools/build-v1","returncode":2,"reason":"Missing sstream include; compilation stopped before device assembly.","native_sources":"Exact source recovered after build and matched to recorded SHA256 in SOURCE_RECOVERY.json."},
+    {"directory":"build_tools/build-v2","returncode":2,"reason":"Unused original generic host dispatcher referenced ggml_is_quantized; native kernel compilation succeeded, host link failed.","native_sources":"Exact source copied after build and matched to recorded SHA256 in SOURCE_RECOVERY.json."},
+    {"directory":"build_tools/build-v3","returncode":0,"reason":"Omitted unused host dispatcher, unchanged original kernel specialization compiled; prototype never executed.","execution":"UNADMITTED: do not execute; superseded by execution-disabled build-v5."},
+    {"directory":"build_tools/build-v4","returncode":0,"reason":"Added BCrypt operand and oracle SHA256 checks; prototype never executed.","execution":"UNADMITTED: do not execute; superseded by execution-disabled build-v5."},
+    {"directory":"build_tools/build-v5","returncode":0,"reason":"Execution compile switch set to 0; binary refuses before any CUDA API; keeps device code for compiler resource evidence.","execution":"PREPARATION_ONLY_DISABLED","executable_sha256":"61138cd5656e117083aafe635c088164a2bc748300f2f10f854c34f6b1901d33"}
+  ],
+  "latest_build": "build_tools/build-v5/BUILD.json",
+  "logs_and_failed_sources_preserved": true,
+  "source_snapshot_note": "v1 exact source was reconstructed by reversing two local corrections, then verified byte-for-byte against the build-source digest. This was after the failed build and is not described as a pre-build snapshot. v2/v3 exact sources were copied after building; v4/v5 source snapshots were written before compilation.",
+  "resource_gate_integration": "NOT_IMPLEMENTED",
+  "request_runtime_integration": "NOT_IMPLEMENTED",
+  "numerical_qualification": "NOT_RUN",
+  "performance_qualification": "NOT_RUN"
+}

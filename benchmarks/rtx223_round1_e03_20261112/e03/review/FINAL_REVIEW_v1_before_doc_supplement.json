@@ -1,0 +1,187 @@
+{
+  "schema": "heterospec.e03.independent-final-review.v1",
+  "utc": "2026-11-12T09:28:51.207113+00:00",
+  "decision": "INCONCLUSIVE",
+  "round2": "DO_NOT_START",
+  "native_release": false,
+  "scope": "New e03 source/CPU/link/disk identity only; no producer verifier imported",
+  "reviewer_activity": {
+    "numerical_DLL_LoadLibrary": 0,
+    "CUDA_calls": 0,
+    "model_requests": 0,
+    "GPU_kernel_launches": 0,
+    "old_41_suite_rerun": false,
+    "old_18_suite_rerun": false
+  },
+  "gates": [
+    {
+      "gate": "original_e02_and_runtime_core_preservation",
+      "result": "PASS_REHASH",
+      "files": [
+        764,
+        3540
+      ]
+    },
+    {
+      "gate": "new_shared_atomic_CPU_counter",
+      "result": "PASS_CPU_ONLY",
+      "independent_scenarios": 16
+    },
+    {
+      "gate": "actual_numerical_DLL_compile_link",
+      "result": "PASS_LINK_ONLY",
+      "objects": 145,
+      "reused": 141,
+      "fresh": 4,
+      "canonical_provider_objects": 1
+    },
+    {
+      "gate": "actual_numerical_DLL_identity",
+      "result": "PASS_OFFLINE_PE_ONLY",
+      "sha256": "bcdb7642d32609c9242dc8aaecfadfb9f4e082ac8cfeccf5de6b7466546eb24b",
+      "bytes": 33850880
+    },
+    {
+      "gate": "future_source_reconstruction",
+      "result": "PASS_INDEPENDENT_MEMBER_REHASH",
+      "members": 3546,
+      "source_delta_overrides": 66,
+      "reconstruction_mismatches": []
+    },
+    {
+      "gate": "frontend_binding_and_refusal",
+      "result": "PASS_PREPARATION_ONLY",
+      "compiled_preflight_receipt_cases": 22,
+      "receipt_validator_cases_per_mode": 6,
+      "normal_numeric_loader_called": false
+    },
+    {
+      "gate": "original_thread_terminal_and_host_scope_clearance",
+      "result": "BLOCKED_UNVERIFIED",
+      "reason": "MCP -32000 prevents original terminal timeline; local metadata and five-process restricted namespace are insufficient"
+    },
+    {
+      "gate": "normal_numerical_DLL_initialization_and_metadata_calls",
+      "result": "NOT_RUN",
+      "reason": "CUDA DLL constructors/fatbinary registration are not established zero-CUDA work; standalone CPU mock loads do not attest numerical DLL binding"
+    },
+    {
+      "gate": "all_model_original_kernel_budget_coverage",
+      "result": "UNQUALIFIED_BLOCKED",
+      "reason": "Lexical guards and CPU mocks do not prove all kernels on real target/draft/runtime paths; native configure always returns -6"
+    },
+    {
+      "gate": "runnable_same_contract_narrow_model_profile",
+      "result": "NOT_ESTABLISHED",
+      "reason": "Current conservative opaque memcpy/memset/library denials make complete request usability unproved"
+    },
+    {
+      "gate": "native_66_case_qualification",
+      "result": "NOT_RUN"
+    },
+    {
+      "gate": "real_q8_quantization_bytes_and_all_output_ABC",
+      "result": "NOT_RUN"
+    },
+    {
+      "gate": "real_consumer_request_state_chain",
+      "result": "NOT_RUN"
+    },
+    {
+      "gate": "paired_packed_increment_and_complete_service_cost",
+      "result": "NOT_RUN"
+    }
+  ],
+  "counter_failure_semantics": {
+    "C_ABI_exceptions": "Final provider C exports do not throw; status APIs return or instrumented void refusals TerminateProcess only own process",
+    "own_process_failstop_exit_codes_tested": [
+      3761438721,
+      3761438724
+    ],
+    "general_owner_recoverability": false,
+    "DLL_local_graph_callback": "C++ errors caught inside MSVC DLL, returned as GGML_STATUS_FAILED; not generic allocator/transfer recovery",
+    "unknown_actual_after_death": "Supervisor must retain/charge durable reservation, not refund a missing result",
+    "scope": "One bound DLL instance shares all linked TUs; not arbitrary multiple DLL copies"
+  },
+  "kernel_accounting_scope": {
+    "family_limit": 4096,
+    "new_allowance": false,
+    "intended_scope": "Original model/runtime/standalone kernel launches, including target and draft",
+    "lexical_149_runtime_sites_are_kernel_count": false,
+    "runtime_categories": {
+      "query_error_attribute": 59,
+      "event_stream_sync_lifecycle": 59,
+      "configuration": 11,
+      "host_memory": 8,
+      "device_allocation": 10,
+      "in_kernel_PDL_intrinsics": 2
+    },
+    "DMA_added_to_kernel_quota": false,
+    "libraries_graphs": "Library internals and graph replay require proof or denial; static site counts are not dynamic kernels",
+    "current_execution_policy": "Graphs/NCCL/PDL disabled and NO_VMM on, same policy required A/B/C/draft/reference; actual native policy remains unqualified"
+  },
+  "C_source_assessment": {
+    "subdomain": "Q8_0/F32 q8 g2, two independent four-column groups, no IDs/fusion/precision change, SM120warp32case4",
+    "weight_fragment_reuse": "v and dw loaded outside group loop and reused across both accumulator groups",
+    "per_output_order": "Original case4 K/lane partition, per-output arithmetic and cross-warp/lane reduction retained at source level",
+    "native_width_replaced_by_8": false,
+    "guard_fixes": "K/M equality, contiguous geometry, actual same-device CUDA buffer and allocation-span checks precede original quantizer",
+    "numerical_correctness": "NOT_RUN",
+    "outside_C_subdomain_packed_qualified_fallback": false,
+    "compiler_only_resources": {
+      "case4_registers": 63,
+      "case4_shared_bytes": 3072,
+      "C_registers": 91,
+      "C_shared_bytes": 6144,
+      "both_stack_and_spills_bytes": [
+        0,
+        0,
+        0
+      ],
+      "occupancy": "UNKNOWN",
+      "DRAM": "UNKNOWN",
+      "L2": "UNKNOWN"
+    }
+  },
+  "provenance_limit": {
+    "v1_catalog_members": 283,
+    "known_mutation": "Superseded provider .cu body synchronized during batch; exact time unrecorded, approximate catalog time only; old source preserved and old object excluded",
+    "old_provider_sha256": "74e727d1a30dd9c09349371b9a937b25d489f861909234ccbbc3d33f3a4af90d",
+    "final_provider_sha256": "07f4b16222dc260491592a1f9369ecd829fdb393a1f6991f40eb17647882439c",
+    "header_variants": "Old CUDA TUs use 2da1...; final provider uses45e1...; existing C ABI identical, one unused status-helper declaration additive",
+    "noncatalog_changed_original_member": "vendors/hip.h, inactive HIP profile, declared frozen delta match",
+    "all_dependency_compile_time_immutability_attested": false,
+    "what_is_proved": "Recorded successful object bytes/CUDA catalog plus current whole original/final/delta source hashes",
+    "future_fresh_candidate": "Freeze/hash complete code-generating dependency tree before compile; no universal bit-identical DLL rebuild claim"
+  },
+  "retained_failures": [
+    "CPU v1 CABI exception/optimized assumption corrupted three opaque-route results",
+    "CPU v2 OPAQUE Windows macro collision compilation failed",
+    "CPU v3 aggregator initially mishandled expected nonzero failstop codes; original receipt retained and corrected offline",
+    "Native v1 incomplete private type MMVQ failure, native v2 include-path failure",
+    "First materializer long-Windows-path partial output retained; v2 extended-path reconstruction succeeded",
+    "Independent review composer first used ordinary MAX_PATH reads; failed on long UI path. Original reviewer script/error receipt retained and extended-path reader applied before successful rehash"
+  ],
+  "no_performance_claim": true,
+  "speculation_total_gain_attributed_to_C": false,
+  "artifact_sha256": {
+    "e03/review/INDEPENDENT_REVIEW_ZH.md": "2dc64aa6e7a11fab513367061932a8554d6c6f05751102296c186a0c3d6e04ca",
+    "e03/review/FINAL_BINDINGS.json": "cfc8876b96f50d3d58f163df80a550bfe657a98ba20fc9a307b9803bb59fb79c",
+    "e03/review/verify_final_bindings.py": "a158395253172e3aeeef0b630caf361f79680f38b75bdd45b043cdae9f4ae843",
+    "e03/review/make_final_review.py": "e74bb56c1b63ecd10ee8150da339b851e88e9fbead79cb6acdc7b60c5e131e96",
+    "e03/review/counter-independent-v1/RECEIPT.json": "0fa7b92fc92dfebe95de5382e3e6beaac38f3e5adec7f86a484cd67fe82ccbe3",
+    "e03/review/pe-independent/PE_INDEPENDENT_RECEIPT.json": "979d29fa60db77530bde3912a22aacb7bfbc5501f1d6a1a940f3a2402e876203",
+    "e03/review/RUNTIME_API_SCOPE.json": "114e3a62bbdc540ef24adef5a2480e8d397ee8c421999a9f5b83a62c2d7274af",
+    "e03/review/COMPILER_RESOURCE_RECHECK.json": "a033ba9e37e2749af8f978c29679608493a2c0788ee022f406a1140d5b9606ea",
+    "runtime/RECONSTRUCTION_V2_RECEIPT.json": "e531d498c3e7dade6e2b336051c7161729739fc86d81b1126c18d5c3ce4bd2c3",
+    "runtime/AS_BUILT_BINDINGS_FINAL.json": "64f9146d8652debdf9eea872cb423248b3c4ea808e22b974e1549b7eef17fc08",
+    "runtime/FINAL_SOURCE_IDENTITIES.json": "005785364023d32848c792311e4ee4d59328ad6809ea51942930438e7aeeefe3",
+    "e03/launch_budget/STATUS.json": "89b0b5dabd4840c559e64ced399b67e4448227ced12e6960d17d7a676c876ac7",
+    "e03/frontend/STATUS.json": "30f9e2ef471c2e7b463f3baa484ce64bdd1bd7a26e991769fb8938ec6a70bcf6",
+    "e03/frontend/SOURCE_v4.json": "7f9a4b57fe7152db79a78d953864ea2d487df833773efbf26322d49513c5ccae",
+    "e03/frontend/build-v4/BUILD.json": "7d4f5d3e378d57b3e7d063c14df29004ee1d4f89e83d51db4d80abc62d2cef47",
+    "e03/dedup/DEDUP_E03_RESULT.json": "06c7fe7e2523de54e4c59d620fb16c227f7d0b1fd15c68ab9bd224cf4a1efdb9",
+    "e03/BUDGET_CONTINUITY.json": "93233ea3ae429db61879cc7481fcb2dad6100988a0dc29cd8017a523d108ee2a"
+  },
+  "recommendation": "Finish original-thread/host clearance, complete-dependency freeze and a runnable fully chargeable kernel profile before any native admission; then 66-case qualification, real ABC/request chain and complete service costs within original family quota. Do not start round2 from CPU/link evidence."
+}

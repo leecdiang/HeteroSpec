@@ -1,0 +1,26 @@
+{
+  "schema": "heterospec.e02.independent-initial-review.v1",
+  "scope": "New continuation source only; no GPU, model or old 41-test panel run",
+  "findings": [
+    {"id":"S1","component":"safety/windows_runner.py validate_native_release","initial_issue":"Hash-binding five caller-authored JSON files still admits self-declared verified/prelaunch_counted_limits/frozen facts; the caller also supplies the supposed externally frozen hash.","consequence":"These receipts are not independent native clearance.","owner_response":"Current native gate hard-block added before receipt validation. Future trusted release authority remains an explicit integration requirement.","final_recheck":"PENDING"},
+    {"id":"S2","component":"safety/windows_runner.py monitor","initial_issue":"Child exit was handled before elapsed/global deadline check.","consequence":"A just-finished overdue worker could be labeled COMPLETE.","owner_response":"Deadline checked before accepting exit status.","final_recheck":"PENDING"},
+    {"id":"S3","component":"safety/windows_runner.py FamilyLedger.finish","initial_issue":"COMPLETE allowed unknown actual resource values.","consequence":"Incomplete accounting could be represented as completion.","owner_response":"Unknown COMPLETE changed to durable COUNTER_INVALID and family stopped.","final_recheck":"PENDING"},
+    {"id":"S4","component":"safety/windows_runner.py counter monitor","initial_issue":"Observed counters above reservation were rejected before preserving the larger counts.","consequence":"Ledger could charge only reservation despite observed overrun.","owner_response":"Observed counts saved before refusal and charged through OVERRUN.","final_recheck":"PENDING"},
+    {"id":"S5","component":"safety/windows_runner.py JobWorker.spawn_suspended","initial_issue":"A process_creation failure after child creation but before Job assignment closed handles without terminating the own suspended child.","consequence":"An owned suspended child could leak outside Job containment.","owner_response":"Assigned state tracked and only the newly created own child terminated on pre-assignment exception.","final_recheck":"PENDING"},
+    {"id":"F1","component":"frontend request transaction hook","initial_issue":"Fresh contexts destroyed before transaction.complete and final JSON allocations; a later exception could make transaction destructor dereference freed owner pointers.","consequence":"Fresh-lifecycle error path use-after-free.","owner_response":"Sent to frontend owner; awaiting final source.","final_recheck":"PENDING"},
+    {"id":"N1","component":"native standalone operator failure accounting","initial_issue":"Capture output files could be written before failure, while capture_bytes retained its initial zero.","consequence":"Failure accounting could report false zero capture bytes.","owner_response":"Additive operator-v3 measures every attempted binary output path after catch and emits null/lower-bound when file attributes are unavailable.","final_recheck":"PENDING"}
+  ],
+  "required_scope_limits": [
+    "Restricted process inventory is not host-wide duplicate-work clearance",
+    "Local app title/time/catalog matches are not original execution-thread terminal evidence",
+    "CPU Job/mutex/deadline tests do not prove a GPU native execution is admitted",
+    "Capture callbacks and source patches do not attest always-on clean dispatch",
+    "Standalone explicit launch counters do not bound a full model backend",
+    "Native graph/quantizer/kernel counters and independent full-output/state reference bridge remain necessary before GPU timing",
+    "Old e01 sources, old ledgers and old results remain read-only"
+  ],
+  "current_research_decision": "INCONCLUSIVE",
+  "current_GPU_gate": "BLOCKED",
+  "new_model_requests_by_reviewer": 0,
+  "new_kernel_launches_by_reviewer": 0
+}

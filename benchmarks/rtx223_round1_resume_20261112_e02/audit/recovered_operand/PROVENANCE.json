@@ -1,0 +1,158 @@
+{
+  "schema": "heterospec.round1.derived-real-operand.v1",
+  "utc": "2026-11-12T07:47:55.477820+00:00",
+  "status": "DERIVED_Q8_REPLAY_NOT_ACTUAL_Q8_MODEL_CAPTURE",
+  "original_capture_width": 32,
+  "derived_replay_width": 8,
+  "derivation": "First eight contiguous F32 columns from a real q32 projection input; same complete Q8_0 weight.",
+  "original_descriptor": {
+    "backend": "CUDA0",
+    "input": {
+      "bytes": 524288,
+      "name": "attn_norm-0",
+      "nb": [
+        4,
+        16384,
+        524288,
+        524288
+      ],
+      "ne": [
+        4096,
+        32,
+        1,
+        1
+      ],
+      "type": 0
+    },
+    "output": {
+      "bytes": 524288,
+      "name": "Qcur-0",
+      "nb": [
+        4,
+        16384,
+        524288,
+        524288
+      ],
+      "ne": [
+        4096,
+        32,
+        1,
+        1
+      ],
+      "type": 0
+    },
+    "weight": {
+      "bytes": 17825792,
+      "name": "blk.0.attn_q.weight",
+      "nb": [
+        34,
+        4352,
+        17825792,
+        17825792
+      ],
+      "ne": [
+        4096,
+        4096,
+        1,
+        1
+      ],
+      "type": 8
+    }
+  },
+  "original_receipt": {
+    "path": "E:\\rtx170\\witness-8B\\native\\receipt.json",
+    "bytes": 7824,
+    "sha256": "3533b1dd7ad1a05f907975c7a722a8c9b57032204bb1cbfd1a3108d5730802f1"
+  },
+  "original_files": [
+    {
+      "path": "E:\\rtx170\\witness-8B\\native\\blk.0.attn_q.weight\\input.bin",
+      "bytes": 524288,
+      "sha256": "5758a4e1a7a4be34ca44d06a47d1f446cdb2963b6556ea486c7efd3b8aeb5e31"
+    },
+    {
+      "path": "E:\\rtx170\\witness-8B\\native\\blk.0.attn_q.weight\\weight.bin",
+      "bytes": 17825792,
+      "sha256": "822086ad0b394e3f032f5a95a0193df9a6f2f628f58cee4b2d2c44ba4bb26b5e"
+    },
+    {
+      "path": "E:\\rtx170\\witness-8B\\native\\blk.0.attn_q.weight\\output.bin",
+      "bytes": 524288,
+      "sha256": "64bea72ee96b843e9b64c4fa0403979b41154352ba1f0283789870d2c45c67a5"
+    }
+  ],
+  "recovered_files": [
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\audit\\recovered_operand\\input_q8_from_q32.bin",
+      "bytes": 131072,
+      "sha256": "3f8eb688eaa3fb2bd7f64ef60dde87ba29ae5a6e4494a8e28856b08a14e40694"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\audit\\recovered_operand\\weight.bin",
+      "bytes": 17825792,
+      "sha256": "822086ad0b394e3f032f5a95a0193df9a6f2f628f58cee4b2d2c44ba4bb26b5e"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\audit\\recovered_operand\\original_q32_receipt.json",
+      "bytes": 7824,
+      "sha256": "3533b1dd7ad1a05f907975c7a722a8c9b57032204bb1cbfd1a3108d5730802f1"
+    }
+  ],
+  "historical_q8_references": [
+    {
+      "arm": "backend_loop4",
+      "source": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-backend_loop4-clean\\blk.0.attn_q.weight\\8.bin",
+        "bytes": 131072,
+        "sha256": "34d684384e6d090a7f841ff38c00004ea1540d86040af361e7ed6e1b8d1ba767"
+      },
+      "copy": {
+        "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\audit\\recovered_operand\\backend_loop4_historical_q8_output.bin",
+        "bytes": 131072,
+        "sha256": "34d684384e6d090a7f841ff38c00004ea1540d86040af361e7ed6e1b8d1ba767"
+      },
+      "launch_input": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-backend_loop4-clean\\input.json",
+        "bytes": 100,
+        "sha256": "1ed6837982dfe25b3521f6de619d2b95c3b603fa288d66dee6a5485d2ead9efe"
+      },
+      "operator_record": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-backend_loop4-clean\\blk.0.attn_q.weight\\8.json",
+        "bytes": 279,
+        "sha256": "6e5ceefbe92c9fe29c5025e08099e15f5384d692c3cb3f8e1fac0cec5a1c9c78"
+      },
+      "width": 8,
+      "timings_reused_as_round1": false
+    },
+    {
+      "arm": "packed",
+      "source": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-packed-clean\\blk.0.attn_q.weight\\8.bin",
+        "bytes": 131072,
+        "sha256": "34d684384e6d090a7f841ff38c00004ea1540d86040af361e7ed6e1b8d1ba767"
+      },
+      "copy": {
+        "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\audit\\recovered_operand\\packed_historical_q8_output.bin",
+        "bytes": 131072,
+        "sha256": "34d684384e6d090a7f841ff38c00004ea1540d86040af361e7ed6e1b8d1ba767"
+      },
+      "launch_input": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-packed-clean\\input.json",
+        "bytes": 93,
+        "sha256": "b700a7b4b4b371ef2717fb5999427c8e75e6442b9b1acffc3db094e5ecc18c9e"
+      },
+      "operator_record": {
+        "path": "D:\\rtx184-runs\\O-replay-v5-8B-packed-clean\\blk.0.attn_q.weight\\8.json",
+        "bytes": 272,
+        "sha256": "f23e46eb4852000981c638d0eaadace52d080a3b88175456c1016247490812ee"
+      },
+      "width": 8,
+      "timings_reused_as_round1": false
+    }
+  ],
+  "model_requests": 0,
+  "kernel_launches": 0,
+  "used_as_round1_performance": false,
+  "actual_q8_model_capture_requirement_satisfied": false,
+  "instruction": "Do not publish weight.bin or claim this derived prefix is a natural q8 capture. Fresh admitted real-q8 capture remains required."
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "heterospec.rtx223.resume-dedup.v1",
+  "observed_utc": "2026-11-12T08:27:26.796473+00:00",
+  "verdict": "INCONCLUSIVE",
+  "gpu_admission": "BLOCKED_DEDUP_UNVERIFIED",
+  "app_api": {
+    "list_threads": "MCP -32000 from root",
+    "read_thread_by_discovered_id": "Both exact candidate IDs returned MCP -32000"
+  },
+  "local_cli_history": {
+    "threads_database": "state_5.sqlite copy",
+    "history_database": "thread_history_1.sqlite copy",
+    "latest_completed_utc": "2026-11-09T12:08:23+00:00",
+    "turns": 331,
+    "target_marker_matches": 0,
+    "scope": "Older local Codex sessions end on Nov09; no #221/#223 execution receipts"
+  },
+  "local_app_catalog": {
+    "database": "codex.db copy including WAL/SHM",
+    "integrity": "ok",
+    "latest_catalog_source_updated_utc": "2026-11-12T08:21:52.324000+00:00",
+    "candidate_threads": [
+      {
+        "thread_id": "6af3f9e3-1098-83e8-8945-7a1ed4d3611c",
+        "title": "合并关闭PR并审阅",
+        "source_updated_utc": "2026-11-11T12:40:50.957000+00:00",
+        "async_status": null,
+        "timeline_records": 0,
+        "binding_to_execution": "PR221 candidate by exact prior title",
+        "current_terminal_evidence": false
+      },
+      {
+        "thread_id": "6af56d1b-2528-83e8-8b52-17f91f08d8bb",
+        "title": "第一轮结论汇总",
+        "source_updated_utc": "2026-11-12T08:07:55.536000+00:00",
+        "async_status": null,
+        "timeline_records": 0,
+        "binding_to_execution": "PR223 candidate by title/time only, not content-bound",
+        "current_terminal_evidence": false
+      }
+    ],
+    "active_turn_count": 0,
+    "empty_active_turn_table_is_not_terminal_attestation": true
+  },
+  "process_inventory": {
+    "toolhelp_observed_utc": "2026-11-12T08:22:21.640895+00:00",
+    "toolhelp_visible_processes": 5,
+    "NT_observed_utc": "2026-11-12T08:26:23.635100+00:00",
+    "NT_visible_processes": 5,
+    "scope": "Restricted execution process namespace; only current PowerShell/Python tree is exposed. Not a host-wide worker absence proof.",
+    "host_scope_verified": false,
+    "no_relevant_worker_observed_in_visible_namespace": true
+  },
+  "locks": [
+    {
+      "path": "D:\\HeteroSpec-PC\\RTX_EXPERIMENT.lock",
+      "exists": false
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\resources\\WINDOWS_RTX_EPOCH.lock",
+      "exists": false
+    }
+  ],
+  "legacy_ledgers": [
+    {
+      "path": "D:\\rtx192-review-v2\\ledger.sqlite",
+      "expected_sha256": "58597a16ed833165cd2d3ee1f6d176fc7eb7697fbfd8369b7a51a5862baeabd0",
+      "actual_sha256": "58597a16ed833165cd2d3ee1f6d176fc7eb7697fbfd8369b7a51a5862baeabd0",
+      "match": true
+    },
+    {
+      "path": "D:\\rtx211-q8-20261109\\ledger.sqlite",
+      "expected_sha256": "e9390101ffa4781cb0b4d859173afdd449aa2847402fdd6a3eb84a06ffcfa42e",
+      "actual_sha256": "e9390101ffa4781cb0b4d859173afdd449aa2847402fdd6a3eb84a06ffcfa42e",
+      "match": true
+    },
+    {
+      "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\q8rtx213-supplement-runtime-20261109\\ledger.sqlite",
+      "expected_sha256": "5671a7c693408a2e9521dc78d70cd06244afc784c3e9d4c595005ab3b99500da",
+      "actual_sha256": "5671a7c693408a2e9521dc78d70cd06244afc784c3e9d4c595005ab3b99500da",
+      "match": true
+    }
+  ],
+  "parent_epoch_ledger": {
+    "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx221-round1-20261112\\resources\\ledger.sqlite",
+    "sha256": "0ad33c4d6c566e6482d7130c0d858730c30c9370cd1e0c38e290502f1a8d9001",
+    "copied_before_sqlite_read": true,
+    "epoch_rows": [
+      [
+        "rtx221-round1-20261112-e01",
+        "03225e20911c8b4ce2e268e89e0dbda0f4349541b38bd3c17561e38a11968614"
+      ]
+    ],
+    "attempt_count": 0,
+    "gpu_usage_snapshot": {
+      "model_requests": 0,
+      "target_draft_rows": 0,
+      "native_gpu_seconds": 0,
+      "kernel_launches": 0,
+      "capture_bytes": 0
+    },
+    "pending_attempts": 0
+  },
+  "parent_delivery": {
+    "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\HeteroSpec_RTX221_Round1_20261112_v2.zip",
+    "sha256": "791f60490de6784d132d0f182eaf650849aa15cd7bd940cb28a59a21d7647d34",
+    "matches_published": true
+  },
+  "original_prompt": {
+    "source": "Local app prompt-history chatgpt-global item12 markdown",
+    "path": "ORIGINAL_PROMPT_FROM_LOCAL_CACHE.md",
+    "sha256": "e37aee1bc4d604387eac319ea09617db7dcee3cef760b854febe7e69e33242f1",
+    "scope": "User prompt cache only; not an execution/liveness receipt"
+  },
+  "device_observation": [
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,memory.total,memory.used,driver_version",
+        "--format=csv"
+      ],
+      "code": 0,
+      "stdout": "index, uuid, name, memory.total [MiB], memory.used [MiB], driver_version\r\n0, GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd, NVIDIA GeForce RTX 5070 Ti Laptop GPU, 12227 MiB, 0 MiB, 616.92\r\n"
+    },
+    {
+      "argv": [
+        "nvidia-smi",
+        "--query-compute-apps=pid,process_name,used_memory",
+        "--format=csv"
+      ],
+      "code": 0,
+      "stdout": "pid, process_name, used_gpu_memory [MiB]\r\n"
+    }
+  ],
+  "device_idle_alone_not_used_for_admission": true,
+  "missing_evidence": [
+    "Content-bound current terminal/lease evidence for original #221 and #223 execution threads",
+    "Host-wide current relevant worker process scope or equivalent trusted supervisor lease"
+  ],
+  "action": "Stop before GPU admission. CPU/source/build/guard tests may continue. Do not delete unknown locks, terminate foreign processes, or infer completion from GPU idle.",
+  "new_model_requests": 0,
+  "new_target_draft_rows": 0,
+  "new_GPU_launches": 0,
+  "raw_private_exclusion": "Never export continuation/dedup/private/**; contains copied databases and unrelated cached catalog data",
+  "preparation_failures": [
+    {
+      "operation": "first query_history shell one-liner",
+      "failure": "Quoting syntax error before DB query; resolved with script file"
+    },
+    {
+      "operation": "first local paths in process probe",
+      "failure": "Wrong parent directory level gave false missing-file observations; initial receipt retained privately and corrected before final decision"
+    },
+    {
+      "operation": "first NT process probe",
+      "failure": "Codec spelling utf16le unsupported; corrected to utf-16-le; no mutation or GPU activity"
+    }
+  ],
+  "script_hashes": {
+    "finalize.py": "cd6c85b0dd4e33a3fd3532d326aa126ebfd390a465c7c0675c0ac4bc18c90689",
+    "inspect_local.py": "a5624eb20f25c7cf95fb5eb7d9eb241560f1f365ba889999c1a90cfd581b5596",
+    "nt_process_probe.py": "cd43517550ee1ab5e45d3a2051add3863664eeefec8d2549cfdfa6a588df4802",
+    "process_probe.py": "5d1621a021cb2a11a72c9b1b036d45824f69fd06e467d44e52a34f9a714ec236",
+    "query_catalog.py": "ed205a755b8068947c4963636d4c1bed663f14bfea7c6e719f003d6a95635e95",
+    "query_global.py": "2b80082f9e2f84b1528121e3451edc07a2a2abda5e7e22ec00e97aadd4b70efb",
+    "query_history.py": "e515ed8d863569bd28ed326f126f5616c8e77c00b4afdd2c8ad9c4a2ee2c9453",
+    "query_target_timeline.py": "ca1807838c2f760eff097f88349c3331a5040794463ae5d56ed8dda0bd3fa287"
+  }
+}

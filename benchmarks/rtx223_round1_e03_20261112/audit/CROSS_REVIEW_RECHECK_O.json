@@ -1,0 +1,59 @@
+{
+  "schema": "heterospec.round1.cross-review-recheck.v1",
+  "utc": "2026-11-12T07:54:17.725885+00:00",
+  "source_sha256": {
+    "src/windows_epoch.py": "a90457504e36721dd6c568f8466670ecade8d1026e7146022db624fa8a348589",
+    "src/admission.py": "e244a998c2e72986d53d892328e6ccf2d1f0347038015b8253ff916e4af753d4",
+    "RESOURCE_PLAN.json": "c801e0ae529a14e7911e678b02d018086be3eed5712b3bb16ece06c3b638bd63"
+  },
+  "scope": "CPU_FIXTURE_ONLY_ZERO_MODEL_ZERO_KERNEL",
+  "all_cases_pass": true,
+  "cases": [
+    {
+      "case": "blocked_plan_cannot_admit",
+      "pass_check": true,
+      "error": "Frozen plan blocks GPU admission"
+    },
+    {
+      "case": "blocked_plan_cannot_reserve",
+      "pass_check": true,
+      "error": "Frozen plan blocks GPU admission"
+    },
+    {
+      "case": "fractional_actual_rejected",
+      "pass_check": true,
+      "error": "Noninteger actual resource: model_requests"
+    },
+    {
+      "case": "overrun_retained_before_refusal",
+      "pass_check": true,
+      "error": "Actual usage exceeds reservation; overrun persisted and charged"
+    },
+    {
+      "case": "overrun_actual_persisted_and_charged",
+      "pass_check": true
+    },
+    {
+      "case": "reservation_after_overrun_refused",
+      "pass_check": true,
+      "error": "Epoch stopped after resource overrun"
+    },
+    {
+      "case": "producer_cannot_hide_requested_rows",
+      "pass_check": true,
+      "error": "FULL_VECTOR: all and only independently frozen requested rows required"
+    },
+    {
+      "case": "producer_cannot_shrink_vocabulary",
+      "pass_check": true,
+      "error": "FULL_VECTOR: vocabulary size differs from independent frozen model contract"
+    },
+    {
+      "case": "metadata_cannot_change_authorized_uuid",
+      "pass_check": true,
+      "error": "PLACEMENT: actual device must equal independently frozen authorized UUID"
+    }
+  ],
+  "native_live_readiness": "BLOCKED; no exclusive lock/worker monitor/window deadline adapter is claimed",
+  "synthetic_READY_plan_published_or_used_for_GPU": false
+}

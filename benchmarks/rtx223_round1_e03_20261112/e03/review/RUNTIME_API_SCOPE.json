@@ -1,0 +1,121 @@
+{
+  "schema": "heterospec.e03.independent-runtime-API-scope.v1",
+  "source_catalog_sha256": "cc5920d90eee807341e03308def4312f2eed9aebcbd4eca77aac7a6d1cdc8605",
+  "lexical_runtime_occurrences": 149,
+  "distinct_API_names": 37,
+  "classification": [
+    {
+      "category": "query_error_and_read_attributes",
+      "source_occurrences": 59,
+      "distinct_API_names": 13,
+      "API_counts": {
+        "cudaDeviceCanAccessPeer": 2,
+        "cudaDeviceGetAttribute": 1,
+        "cudaDeviceGetPCIBusId": 1,
+        "cudaFuncGetAttributes": 1,
+        "cudaGetDevice": 3,
+        "cudaGetDeviceCount": 1,
+        "cudaGetDeviceProperties": 5,
+        "cudaGetErrorString": 5,
+        "cudaGetLastError": 34,
+        "cudaHostGetDevicePointer": 1,
+        "cudaMemGetInfo": 2,
+        "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 1,
+        "cudaStreamIsCapturing": 2
+      },
+      "explicit_user_kernel_launch_API": false
+    },
+    {
+      "category": "event_stream_sync_and_lifecycle",
+      "source_occurrences": 59,
+      "distinct_API_names": 9,
+      "API_counts": {
+        "cudaDeviceSynchronize": 1,
+        "cudaEventCreateWithFlags": 10,
+        "cudaEventDestroy": 10,
+        "cudaEventRecord": 11,
+        "cudaEventSynchronize": 2,
+        "cudaStreamCreateWithFlags": 2,
+        "cudaStreamDestroy": 2,
+        "cudaStreamSynchronize": 12,
+        "cudaStreamWaitEvent": 9
+      },
+      "explicit_user_kernel_launch_API": false
+    },
+    {
+      "category": "device_configuration_and_attribute_changes",
+      "source_occurrences": 11,
+      "distinct_API_names": 5,
+      "API_counts": {
+        "cudaDeviceEnablePeerAccess": 1,
+        "cudaFuncSetAttribute": 5,
+        "cudaMemAdvise": 1,
+        "cudaSetDevice": 3,
+        "cudaSetDeviceFlags": 1
+      },
+      "explicit_user_kernel_launch_API": false
+    },
+    {
+      "category": "host_memory_allocation_and_pinning",
+      "source_occurrences": 8,
+      "distinct_API_names": 5,
+      "API_counts": {
+        "cudaFreeHost": 3,
+        "cudaHostAlloc": 1,
+        "cudaHostRegister": 1,
+        "cudaHostUnregister": 1,
+        "cudaMallocHost": 2
+      },
+      "explicit_user_kernel_launch_API": false
+    },
+    {
+      "category": "device_memory_allocation_and_free",
+      "source_occurrences": 10,
+      "distinct_API_names": 3,
+      "API_counts": {
+        "cudaFree": 5,
+        "cudaMalloc": 4,
+        "cudaMallocManaged": 1
+      },
+      "explicit_user_kernel_launch_API": false
+    },
+    {
+      "category": "device_side_PDL_intrinsics_inside_existing_kernels",
+      "source_occurrences": 2,
+      "distinct_API_names": 2,
+      "API_counts": {
+        "cudaGridDependencySynchronize": 1,
+        "cudaTriggerProgrammaticLaunchCompletion": 1
+      },
+      "explicit_user_kernel_launch_API": false
+    }
+  ],
+  "meaning": "The 149 occurrences are not 149 hidden kernels. None is an explicit user-kernel launch API. They include queries/errors, events/synchronization, configuration, allocations and in-kernel PDL intrinsics.",
+  "concrete_work_submission_routes_denied_by_current_patch": {
+    "cub::DeviceScan::InclusiveSum": 2,
+    "cublasGemmBatchedEx": 1,
+    "cublasGemmEx": 1,
+    "cublasGemmStridedBatchedEx": 5,
+    "cublasSgemm": 3,
+    "cublasSgemmBatched": 1,
+    "cublasSgemmStridedBatched": 1,
+    "cublasStrsmBatched": 1,
+    "cudaGraphLaunch": 1,
+    "cudaLaunchCooperativeKernel": 1,
+    "ncclAllReduce": 2
+  },
+  "source_count_limits": [
+    "Counts describe lexical sites, not executed invocations",
+    "The two CUB calls include a size-query call and a work call",
+    "Library work may internally submit multiple kernels, hence site counts cannot price that work",
+    "Graph replay can execute multiple nodes; graph policy is disabled and the source replay call is denied",
+    "cudaLaunchHostFunc is a host callback, not an extra GPU kernel",
+    "PDL device-side synchronization/completion intrinsics do not by themselves add a separate host kernel launch"
+  ],
+  "memory_transfer_scope": "Memcpy/DMA calls and byte counts are not silently added to the kernel-launch quota. The current conservative implementation refuses memcpy/memset routes; that is a restrictive prepared-profile policy, not a claim that every transfer is one kernel.",
+  "remaining_proof": "No real model path has been admitted or observed. The bounded relationship between charged explicit submissions and all model kernels is not certified by lexical transformation or CPU mocks. Ordinary numerical DLL initialization, real route use, guard coverage on that path and independent original-reference qualification remain NOT_RUN.",
+  "current_policy": "Native arming remains blocked. Do not widen the frozen definition to all GPU activity or characterize all runtime APIs as kernel submissions.",
+  "model_requests": 0,
+  "CUDA_calls": 0,
+  "kernel_launches": 0
+}

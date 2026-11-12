@@ -1,0 +1,100 @@
+--- frozen-e01/operator_probe.cu
++++ e02/operator-v2/operator_probe.cu
+@@ -1,6 +1,7 @@
+ #include "bound_mmvq_prefix.cuh"
+ #include "bound_quantizer.cuh"
+ #include "two_group_q8.cuh"
++#include "launch_accounting.hpp"
+ #include <nlohmann/json.hpp>
+ #include <windows.h>
+ #include <psapi.h>
+@@ -45,7 +46,9 @@
+     for(auto value:digest)text<<std::setw(2)<<(unsigned)value;
+     return text.str();
+ }
++static std::vector<std::string> attempted_capture_paths;
+ static void save(const std::string & path, const void * data, size_t bytes) {
++    if(path.size()>=4 && path.substr(path.size()-4)==".bin")attempted_capture_paths.push_back(path);
+     need(GetFileAttributesA(path.c_str()) == INVALID_FILE_ATTRIBUTES, "output already exists: " + path);
+     std::ofstream out(path, std::ios::binary); out.write((const char *)data, bytes);
+     need(bool(out), "output write failed: " + path);
+@@ -59,18 +62,22 @@
+     return text.str();
+ }
+ static void launch_arm(int arm, const block_q8_0 * w, const block_q8_1 * a,
+-        float * y, int k, int m, int pk, cudaStream_t stream) {
++        float * y, int k, int m, int pk, cudaStream_t stream, hs_operator_accounting::LaunchCounts & counts) {
+     dim3 block(32,4,1);
+     if (arm==2) {
++        counts.before();
+         hs_two_group_q8<<<dim3(m/2,1,1),block,0,stream>>>(w,a,y,k,m,pk);
++        check(cudaGetLastError());counts.submission_succeeded();
+     } else {
+         const int stride = pk / 32;
+         auto launch = [&](const block_q8_1 * ap, float * yp, int groups) {
++            counts.before();
+             mul_mat_vec_q<GGML_TYPE_Q8_0,4,false><<<dim3(m/2,groups,1),block,0,stream>>>(
+                 w,ap,nullptr,ggml_cuda_mm_fusion_args_device{},yp,k,
+                 make_uint3(1,groups==2 ? 1 : 0,groups),k/32,stride,m,
+                 make_uint3(1,groups==2 ? 1 : 0,groups),m*k/32,
+                 4*stride,4*m,make_uint3(1,0,1),m*k/32,8*stride,8*m,0);
++            check(cudaGetLastError());counts.submission_succeeded();
+         };
+         if (arm==0) { launch(a,y,1); launch(a+4*stride,y+4*m,1); }
+         else launch(a,y,2);
+@@ -95,6 +102,8 @@
+     json result={{"status","FAILED"},{"model_requests",0},{"target_rows",0},{"draft_rows",0},
+         {"kernel_launches",0},{"capture_bytes",0}};
+     std::string out;
++    hs_operator_accounting::LaunchCounts counts;
++    int quantizers=0,projections=0;
+     try {
+         need(argc==2,"usage: operator_probe.exe job.json");
+         std::ifstream config(argv[1]); json job; config>>job;
+@@ -134,15 +143,18 @@
+         check(cudaMemcpy(dw,w.data(),w.size(),cudaMemcpyHostToDevice));
+         check(cudaMemcpy(dx,x.data(),x.size(),cudaMemcpyHostToDevice));
+         cudaStream_t stream; check(cudaStreamCreateWithFlags(&stream,cudaStreamNonBlocking));
+-        int quantizers=0,projections=0;
++
+         auto quantize=[&]() {
++            counts.before();
+             ++quantizers;result["quantizer_launch_attempts"]=quantizers;
+             quantize_q8_1<<<dim3(pk/256,8,1),256,0,stream>>>(dx,da,k,k,8*k,8*k,pk,8,make_uint3(1,0,1));
+-            check(cudaGetLastError());
++            check(cudaGetLastError());counts.submission_succeeded();
+         };
+         auto project=[&](int arm) {
+-            projections+=arm==0?2:1;result["projection_launch_attempts_reserved"]=projections;
+-            launch_arm(arm,dw,da,dy,k,m,pk,stream);
++            const auto before=counts.attempted;
++            try {launch_arm(arm,dw,da,dy,k,m,pk,stream,counts);}
++            catch(...) {projections+=int(counts.attempted-before);throw;}
++            projections+=int(counts.attempted-before);
+         };
+         json qualification=json::array(); std::vector<char> first_a,first_y;
+         for (int arm=0;arm<3;++arm) {
+@@ -186,6 +198,23 @@
+         check(cudaEventDestroy(begin));check(cudaEventDestroy(end));check(cudaStreamDestroy(stream));
+         check(cudaFree(dw));check(cudaFree(dx));check(cudaFree(da));check(cudaFree(dy));
+     } catch(const std::exception & error) {result["error"]=error.what();}
++    result["kernel_launch_attempts"]=counts.attempted;
++    result["kernel_launch_submissions"]=counts.submitted;
++    result["kernel_launches"]=counts.attempted; // failures remain charged
++    result["quantizer_launch_attempts"]=quantizers;
++    result["projection_launch_attempts"]=projections;
++    result["completed_kernel_activity_count"]="unknown";
++    result["counter_scope"]="explicit standalone quantizer/MMVQ sites only; not model backend";
++    std::uint64_t capture_bytes=0;bool capture_bytes_known=true;
++    for(const auto & path:attempted_capture_paths){
++        WIN32_FILE_ATTRIBUTE_DATA info{};
++        if(GetFileAttributesExA(path.c_str(),GetFileExInfoStandard,&info))
++            capture_bytes+=(std::uint64_t(info.nFileSizeHigh)<<32)|info.nFileSizeLow;
++        else if(GetLastError()!=ERROR_FILE_NOT_FOUND)capture_bytes_known=false;
++    }
++    result["capture_bytes"]=capture_bytes_known?json(capture_bytes):json(nullptr);
++    result["capture_binary_bytes_lower_bound"]=capture_bytes;
++    result["capture_bytes_scope"]="all attempted raw binary output paths, including partial failed writes; result metadata accounted separately by supervisor";
+     if(!out.empty()) {
+         auto content=result.dump(2);save(out+"/result.json",content.data(),content.size());
+     }

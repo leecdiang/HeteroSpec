@@ -1,0 +1,168 @@
+{
+  "schema": "heterospec.e03.launch-budget-status.v1",
+  "decision": "INCONCLUSIVE_NATIVE_ADMISSION_BLOCKED",
+  "source_visible_guard": "PASS_STATIC_IN_NEW_SOURCE_COPY",
+  "source_site_counts_only": {
+    "prelaunch-raw": 168,
+    "prelaunch-api": 1,
+    "deny-opaque": 85,
+    "deny-opaque-driver": 13,
+    "runtime-call-unqualified": 149
+  },
+  "dynamic_launches_measured": 0,
+  "all_physical_kernel_coverage": "NOT_QUALIFIED",
+  "native_configure_result": -6,
+  "opaque_runtime_activity": "UNKNOWN_NOT_ADMITTED",
+  "native_model_usability": "NOT_RUN",
+  "actual_GPU_launches": 0,
+  "model_requests": 0,
+  "target_draft_rows": 0,
+  "CPU_counter_scenarios": {
+    "count": 16,
+    "all_pass": true,
+    "receipt": "cpu-checks-v4/RECEIPT.json",
+    "each_exit_expectation": [
+      {
+        "scenario": "unarmed",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "invalid-limit",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "boundary-4096",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "multithread-4096",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "two-TUs-one-state",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "inherited-reservation",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "failed-submission-no-refund",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "prelaunch-order",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "reconfigure-denied",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "reentry-denied",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "graph-replay-denied",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "opaque-BLAS-denied",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "opaque-CUB-denied",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "zero-remaining",
+        "exit_expected": 0,
+        "exit_actual": 0,
+        "pass": true
+      },
+      {
+        "scenario": "failstop-unarmed",
+        "exit_expected": 3761438721,
+        "exit_actual": 3761438721,
+        "pass": true
+      },
+      {
+        "scenario": "failstop-opaque",
+        "exit_expected": 3761438724,
+        "exit_actual": 3761438724,
+        "pass": true
+      }
+    ]
+  },
+  "CPU_default_native_gate_standin": {
+    "pass": true,
+    "receipt": "native-host-standin-v1/RECEIPT.json",
+    "numeric_DLL_loaded": false,
+    "CUDA_imports": false
+  },
+  "Python_transform_tests": {
+    "ordinary": 6,
+    "optimized": 6,
+    "all_pass": true,
+    "optimized_receipt": "TRANSFORM_TESTS_OPTIMIZED.json"
+  },
+  "source_provider": {
+    "canonical_cpp_sha256": "07f4b16222dc260491592a1f9369ecd829fdb393a1f6991f40eb17647882439c",
+    "canonical_header_sha256": "45e1c7863ec931d93172ba62bcf1aa5068759ab47d488d13ceb75b297226408d",
+    "cuda_TU_header_sha256": "2da1adf21c446aa030dae7f92f2e6eeb70741271f1034e96e3a064223f1089a6",
+    "generated_cu_sha256": "07f4b16222dc260491592a1f9369ecd829fdb393a1f6991f40eb17647882439c",
+    "manual_build_provider_count": 1,
+    "denial_semantics": "OWN_PROCESS_FAILSTOP; CABI does not throw"
+  },
+  "same_policy_required_for": [
+    "A",
+    "B",
+    "C",
+    "draft",
+    "reference"
+  ],
+  "resource_family": "rtx221-round1-20261112-e01",
+  "new_epoch_does_not_reset_budget": true,
+  "native_release_authority_available": false,
+  "counter_exception_semantics": "C APIs do not throw; instrumented void refusals fail-stop only the own process",
+  "limitations": [
+    "unresolved runtime/internal-library GPU work prevents strict all-physical4096 proof",
+    "lexical source instrumentation is not dynamic launch measurement",
+    "one provider state covers one bound DLL instance, not unqualified duplicate DLLs",
+    "opaque route denial can make model load unusable; no tested full-model support",
+    "default numeric DLL loading remains blocked; host standin is CUDA-free",
+    "own supervisor must keep full reservation and unknownactual after failstop"
+  ],
+  "retained_failure_history": [
+    "cpu-checks-v1/RECEIPT.json:3opaque CABIthrowcases failed",
+    "cpu-checks-v2:OPAQUE macro collision compile failure",
+    "cpu-checks-v3/RECEIPT.json:individual16pass but incorrect aggregate false",
+    "CPU_RESULT_RECHECK.json:offline aggregate correction;v4freshfinalpass"
+  ]
+}

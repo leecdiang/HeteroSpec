@@ -1,0 +1,209 @@
+{
+  "schema": "heterospec.e04.independent-lifecycle-planner-review.v1",
+  "utc": "2026-11-12T11:10:26.932263+00:00",
+  "decision": "INCONCLUSIVE",
+  "review_result": "PASS_CPU_MOCK_PLANNER_ONLY_NATIVE_REMAINS_BLOCKED",
+  "source_sha256": "4c0aeabf01cf530d9ad0ce20ddc7db7848b0a3c572a858bfece8e1a885d837a4",
+  "test_sha256": "1754aaaf1017d930cf1fd19a7dcf4d1e99bff4f853e106a595a85acb4bccc1be",
+  "runs": [
+    {
+      "mode": "normal",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e04\\e04\\budget",
+        "-p",
+        "test_lifecycle_budget.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 26,
+      "log_sha256": "ba765db1401a28e40b510bd5cb8784e984d1353fded3de412400b6807453b8e1"
+    },
+    {
+      "mode": "optimized",
+      "argv": [
+        "D:\\HeteroSpec-PC\\.venv-analysis\\Scripts\\python.exe",
+        "-B",
+        "-O",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-round1-resume-20261112-e04\\e04\\budget",
+        "-p",
+        "test_lifecycle_budget.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 26,
+      "log_sha256": "078029ee68dab372485b4e1fc63a8148bb5b2963ba403ac546f9775a7ac023ea"
+    }
+  ],
+  "raw_SQL_audit_sha256": "bf99cd2b5a4d64fd742a643fd95b7ecc0abfa800f9dae4c9737d871ea10880d3",
+  "own_fixture_directories": 52,
+  "actual_4097_faults_retained_each_mode": true,
+  "no_unknown_upper_bound_promoted_to_zero": true,
+  "native_preflight": {
+    "decision": "BLOCKED_BEFORE_NUMERICAL_DLL_LOAD",
+    "code": "NATIVE_PROOF_MISSING",
+    "reason": "NATIVE_PROOF_MISSING: No trusted full-physical certificate for worker_bootstrap/unproved:worker_bootstrap",
+    "complete_lifecycle_upper_bound": null,
+    "native_proof_registry_entries": 0,
+    "native_release": false,
+    "normal_DLL_loads": 0,
+    "CUDA_calls": 0,
+    "physical_GPU_observations": "NOT_RUN",
+    "scope": "CURRENT_NATIVE_PROPOSAL_NOT_A_PERMISSION",
+    "original_physical_ceiling": 4096,
+    "resource_family": "rtx221-round1-20261112-e01",
+    "new_epoch_allowance": false,
+    "native_claimed_zero_work_phases_do_not_prove_zero": true,
+    "all_required_phases": [
+      "worker_bootstrap",
+      "numerical_dll_load",
+      "cuda_context_init",
+      "library_init",
+      "target_model_load",
+      "draft_model_load",
+      "target_kv_init",
+      "draft_kv_init",
+      "transfers",
+      "warmup",
+      "target_prefill",
+      "draft_prefill",
+      "draft_generation",
+      "target_verify",
+      "reconciliation",
+      "capture",
+      "error_cleanup",
+      "teardown"
+    ],
+    "missing_trusted_obligations": [
+      {
+        "phase": "worker_bootstrap",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "numerical_dll_load",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "cuda_context_init",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "library_init",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "target_model_load",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "draft_model_load",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "target_kv_init",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "draft_kv_init",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "transfers",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "warmup",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "target_prefill",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "draft_prefill",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "draft_generation",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "target_verify",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "reconciliation",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "capture",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "error_cleanup",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      },
+      {
+        "phase": "teardown",
+        "physical_upper_bound": null,
+        "proof": "UNAVAILABLE"
+      }
+    ],
+    "remaining_family_allowance_not_recomputed_from_partial_local_data": true,
+    "normal_numeric_DLL_LoadLibrary": 0,
+    "numeric_worker_processes_started": 0,
+    "GPU_launches": 0,
+    "model_requests": 0,
+    "target_draft_rows": 0,
+    "canonical_production_ledger_writes": 0,
+    "planner_source_sha256": "4c0aeabf01cf530d9ad0ce20ddc7db7848b0a3c572a858bfece8e1a885d837a4"
+  },
+  "initial_findings": {
+    "M1": "Resolved by dedicated root/alias guards and readonly mock format validation before writable open; actual OS alias-subcase scope remains explicit in raw notes",
+    "M2": "Unclosed lease blocks new-epoch continuation; raw own mock ledger and regression retained",
+    "M3": "Policy digest now hexadecimal SHA256 grammar; regression passes",
+    "M4": "Out-of-reservation observed mock emissions4097 persist as OVERRUN, charge4097 and stop family; independently recomputed from SQLite"
+  },
+  "conceptual_proof_obligations": "../PROOF_OBLIGATIONS.json",
+  "native_full_lifecycle_4096_proof": "NOT_ESTABLISHED",
+  "normal_numerical_DLL_loads": 0,
+  "CUDA_calls": 0,
+  "model_requests": 0,
+  "GPU_kernel_launches": 0,
+  "old_41_or_18_or_prior_counter_tests_rerun": false,
+  "canonical_GPU_ledger_opened_or_modified": false,
+  "scope_limits": [
+    "The CPU mock simulator has synthetic certificates, not physical GPU coverage",
+    "All required lifecycle names and arithmetic can be validated while the native proof registry is empty; this never releases a numerical DLL load",
+    "Graph-node expansion in a CPU fixture does not observe a CUDA graph replay",
+    "Opaque library/runtime upper bounds are trusted only in synthetic mock authority, not as native caller-provided proof",
+    "Whole-model usability, actual initialization, allphysicalkernel coverage, numerical qualification and complete service timing remain NOT_RUN or unqualified",
+    "Hardlink/symlink fixture creation denied by the OS must remain NOT_RUN for that subcase rather than be reported as executed protection"
+  ]
+}

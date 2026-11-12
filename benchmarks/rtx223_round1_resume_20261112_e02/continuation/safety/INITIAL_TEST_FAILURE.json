@@ -1,0 +1,12 @@
+{
+  "kind": "CPU_OS_INTEGRATION_FAILURE",
+  "initial_test_count": 10,
+  "initial_passed": 8,
+  "initial_failed": 2,
+  "failures": ["contained success reported COUNTER_INVALID", "timeout fixture reported COUNTER_INVALID before deadline"],
+  "reason": "Virtualenv Python launcher created an actual interpreter descendant, whose heartbeat PID/creation FILETIME differed from the launcher's bound process. PID binding was correctly fail-closed.",
+  "fix": "Own CPU fixtures launch sys._base_executable directly. Native workers must directly expose the bound OS process identity; no PID/creation-time relaxation.",
+  "new_model_requests": 0,
+  "new_GPU_launches": 0,
+  "initial_test_temporary_ledgers": "Temporary fixture-only ledgers cleaned by unittest; no model/native evidence was produced"
+}

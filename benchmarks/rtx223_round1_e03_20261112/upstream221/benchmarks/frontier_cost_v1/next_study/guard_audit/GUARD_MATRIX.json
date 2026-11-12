@@ -1,0 +1,982 @@
+{
+  "schema": "heterospec.recipe-guard-audit.v1",
+  "status": "STATIC_SOURCE_AUDIT_NOT_NATIVE_QUALIFICATION",
+  "paper": {
+    "commit": "e8a4981ef7db8f05cff7144fd4edc6e5a4109343",
+    "path": "papers/reference_compatible/20261111_tpds_mainline_rewrite/sections/03_method.tex",
+    "sha256": "04d8daeb5393c7741a585fa5586a660f943ed095e86c47a5ecbaf65601f535d9"
+  },
+  "archive": {
+    "url": "https://github.com/leecdiang/HeteroSpec/releases/download/tpds-phase1-rtx-review-v2-evidence-20261107/rtx-phase1-source.zip",
+    "sha256": "57cbfbfe43ae1c4b4ed5ba3f5261412daa2b5c14b712e76d868da55f4f8a4101",
+    "bytes": 39003959,
+    "member_count": 7261,
+    "base_commit_recorded_by_STAGED": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+    "staged_status": "SOURCE_STAGED_NOT_COMPILED_OR_QUALIFIED",
+    "interpretation": "The base commit is ancestry, not a claim that all release bytes equal that Git tree. The archive SHA and per-member SHA bind this audit."
+  },
+  "source_files": [
+    {
+      "id": "phase",
+      "kind": "release_zip_member",
+      "member": "native/frontend/resident_context.hpp",
+      "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+      "bytes": 4650
+    },
+    {
+      "id": "planner",
+      "kind": "release_zip_member",
+      "member": "native/frontend/phase_plan.hpp",
+      "sha256": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+      "bytes": 4571
+    },
+    {
+      "id": "worker",
+      "kind": "release_zip_member",
+      "member": "native/frontend/worker.cpp",
+      "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+      "bytes": 26310
+    },
+    {
+      "id": "entry",
+      "kind": "release_zip_member",
+      "member": "native/frontend/entry.cpp",
+      "sha256": "c0f5a556bddae3907bab9e19a2fc9da46d4c05c9b758a98ed43ec51029be2cad",
+      "bytes": 10910
+    },
+    {
+      "id": "capture",
+      "kind": "release_zip_member",
+      "member": "native/frontend/target_capture.hpp",
+      "sha256": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+      "bytes": 2655
+    },
+    {
+      "id": "kv",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/src/llama-kv-cache.cpp",
+      "sha256": "2654351368f08797778a56b0c45301b074a6b2d5a0ef52672cda1eccab81b48c",
+      "bytes": 98216,
+      "packed_twin": {
+        "member": "native/cores/packed/src/llama-kv-cache.cpp",
+        "sha256": "2654351368f08797778a56b0c45301b074a6b2d5a0ef52672cda1eccab81b48c",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "shared",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/src/hs_reference_batching.hpp",
+      "sha256": "746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c",
+      "bytes": 5907,
+      "packed_twin": {
+        "member": "native/cores/packed/src/hs_reference_batching.hpp",
+        "sha256": "746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "graph_loop4",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/src/llama-graph.cpp",
+      "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+      "bytes": 152605,
+      "packed_twin": {
+        "member": "native/cores/packed/src/llama-graph.cpp",
+        "sha256": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+        "byte_identical": false
+      }
+    },
+    {
+      "id": "graph_packed",
+      "kind": "release_zip_member",
+      "member": "native/cores/packed/src/llama-graph.cpp",
+      "sha256": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+      "bytes": 152868
+    },
+    {
+      "id": "graph_header",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/src/llama-graph.h",
+      "sha256": "07209d8a7e9f6ad8e63678295e8720b1af58f0545d6495f35e61d2d9cfeff16b",
+      "bytes": 49685,
+      "packed_twin": {
+        "member": "native/cores/packed/src/llama-graph.h",
+        "sha256": "07209d8a7e9f6ad8e63678295e8720b1af58f0545d6495f35e61d2d9cfeff16b",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "tensor_guard",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/ggml/src/hs_loop4_tensor.hpp",
+      "sha256": "87a3baef2e4cd15663363b4e010fe4dc7b95e25ab903fdbe3074de84a48f4288",
+      "bytes": 1677,
+      "packed_twin": {
+        "member": "native/cores/packed/ggml/src/hs_loop4_tensor.hpp",
+        "sha256": "87a3baef2e4cd15663363b4e010fe4dc7b95e25ab903fdbe3074de84a48f4288",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "loop4_offsets",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/ggml/src/hs_loop4_plan.hpp",
+      "sha256": "1e5dcd2e0192e2bb1f4f706fd29f3f8dbb93b4ec2b8c294c863cee5d56922f4e",
+      "bytes": 1909,
+      "packed_twin": {
+        "member": "native/cores/packed/ggml/src/hs_loop4_plan.hpp",
+        "sha256": "1e5dcd2e0192e2bb1f4f706fd29f3f8dbb93b4ec2b8c294c863cee5d56922f4e",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "cuda_dispatch",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/ggml/src/ggml-cuda/ggml-cuda.cu",
+      "sha256": "4d65aac9035267b37a064a90f345f40a42d7289293ef32b709ad03d791a28188",
+      "bytes": 244218,
+      "packed_twin": {
+        "member": "native/cores/packed/ggml/src/ggml-cuda/ggml-cuda.cu",
+        "sha256": "4d65aac9035267b37a064a90f345f40a42d7289293ef32b709ad03d791a28188",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "cuda_mmvq",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/ggml/src/ggml-cuda/mmvq.cu",
+      "sha256": "d9c69fafab943383b29e525417f5e2157a445c9b1afca97b7d9de23d20a2564a",
+      "bytes": 73835,
+      "packed_twin": {
+        "member": "native/cores/packed/ggml/src/ggml-cuda/mmvq.cu",
+        "sha256": "d9c69fafab943383b29e525417f5e2157a445c9b1afca97b7d9de23d20a2564a",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "context",
+      "kind": "release_zip_member",
+      "member": "native/cores/loop4/src/llama-context.cpp",
+      "sha256": "f3a5234e8d11f18473d2358295d830983d3f5d4c2670273178b022d7b6512165",
+      "bytes": 159372,
+      "packed_twin": {
+        "member": "native/cores/packed/src/llama-context.cpp",
+        "sha256": "f3a5234e8d11f18473d2358295d830983d3f5d4c2670273178b022d7b6512165",
+        "byte_identical": true
+      }
+    },
+    {
+      "id": "m2_resident_context",
+      "kind": "reconstructed_frontend",
+      "file": "resident_context.hpp",
+      "sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+      "bytes": 4693,
+      "reconstruction_status": "RECONSTRUCTED_NOT_NATIVE_QUALIFIED",
+      "historical_executed_binary_identity_claimed": false
+    },
+    {
+      "id": "m2_worker",
+      "kind": "reconstructed_frontend",
+      "file": "worker.cpp",
+      "sha256": "05e395aa3082b08229946139c1f0d298bfc1c3064f001ba5c10aefcc9487eecb",
+      "bytes": 27891,
+      "reconstruction_status": "RECONSTRUCTED_NOT_NATIVE_QUALIFIED",
+      "historical_executed_binary_identity_claimed": false
+    },
+    {
+      "id": "m2_entry",
+      "kind": "reconstructed_frontend",
+      "file": "entry.cpp",
+      "sha256": "bf301356f7707a3af3327e71102f20834c5b81ee1bcceee4b2879222b96ccae2",
+      "bytes": 11205,
+      "reconstruction_status": "RECONSTRUCTED_NOT_NATIVE_QUALIFIED",
+      "historical_executed_binary_identity_claimed": false
+    },
+    {
+      "id": "m2_phase_plan",
+      "kind": "reconstructed_frontend",
+      "file": "phase_plan.hpp",
+      "sha256": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+      "bytes": 4571,
+      "reconstruction_status": "RECONSTRUCTED_NOT_NATIVE_QUALIFIED",
+      "historical_executed_binary_identity_claimed": false
+    },
+    {
+      "id": "m2_target_capture",
+      "kind": "reconstructed_frontend",
+      "file": "target_capture.hpp",
+      "sha256": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+      "bytes": 2655,
+      "reconstruction_status": "RECONSTRUCTED_NOT_NATIVE_QUALIFIED",
+      "historical_executed_binary_identity_claimed": false
+    }
+  ],
+  "boundary_definitions": {
+    "phase_preflight": "Before first llama_decode of this phase; no new native computation by this phase.",
+    "operator_preflight": "Inside llama_decode but before this operator launches; earlier native operations/groups may already have modified owner.",
+    "post_native": "After native launch/decode/synchronization; owner must not be silently reused on failure.",
+    "assertion": "GGML_ASSERT/abort is process termination, not a caught recoverable unsupported state."
+  },
+  "exclusions": [
+    {
+      "scope": "Mixed Q4_K/Q6_K 32B recipe",
+      "reason": "No independent project-specific recipe implementation audited here. Files named native_q4 in prior work denote four query columns and are not evidence for Q4_K weights."
+    },
+    {
+      "scope": "Vulkan projection and p021 recipe",
+      "reason": "Generic upstream Vulkan files in CUDA sourcekit do not bind the paper-specific Vulkan implementation. No Vulkan guard row inferred from prose."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "guard": "G03",
+      "classification": "RECIPE_GUARD_SCOPE_GAP",
+      "severity": "must-clarify-before-general-claim",
+      "observed_failure": false,
+      "statement": "Packed Q8 is not covered by backend-loop4 marker guards; generic dispatch and graph fallback are present."
+    },
+    {
+      "id": "F02",
+      "guard": "G09",
+      "classification": "OBSERVATION_NOT_CLEAN_GUARD",
+      "severity": "must-clarify-before-general-claim",
+      "observed_failure": false,
+      "statement": "Placement observer is capture-only and its original filter excludes packed projection names; M2 broadens the filter."
+    },
+    {
+      "id": "F03",
+      "guard": "G08",
+      "classification": "FAILURE_BOUNDARY_SCOPE",
+      "severity": "clarify-library-contract",
+      "observed_failure": false,
+      "statement": "Target-group failures explicitly poison; trim/draft/sample failures are contained by CLI process exit."
+    },
+    {
+      "id": "F04",
+      "guard": "G06",
+      "classification": "LIVE_REUSE_VS_UNUSED_HELPER",
+      "severity": "documentation-correction",
+      "observed_failure": false,
+      "statement": "Actual policy/prefix/head-placement keys exist; frontend structural Identity helper is not the live key."
+    }
+  ],
+  "guards": [
+    {
+      "id": "G01",
+      "title": "Dense cache ownership and append preflight",
+      "source_refs": [
+        {
+          "source": "phase",
+          "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+          "symbol": "PhaseContext::decode",
+          "line_start": 18,
+          "line_end": 35,
+          "normalized_excerpt_sha256": "64b0e6cb92f7bd4104459b0d82b0c33caa9e355cdd36938322e38dcffc184708",
+          "anchors": [
+            "dynamic_cast<llama_kv_cache*>",
+            "extents.size()==ids.size()",
+            "GGML_TYPE_F16"
+          ]
+        },
+        {
+          "source": "kv",
+          "sha256": "2654351368f08797778a56b0c45301b074a6b2d5a0ef52672cda1eccab81b48c",
+          "symbol": "llama_kv_cache::phase_append_requirements",
+          "line_start": 1251,
+          "line_end": 1261,
+          "normalized_excerpt_sha256": "f04c700ec417e17cc70316be89cd34f9e0a48e0c949b6f835e42d06b5624580b",
+          "anchors": [
+            "n_stream!=1",
+            "cells.get_used()!=position",
+            "v_heads[0]!=position",
+            "cells.seq_has(i,0)"
+          ]
+        },
+        {
+          "source": "shared",
+          "sha256": "746cce0b2ef4f1aa5504ff3921a6676f3158e0325f6dca035f81829b1ae8261c",
+          "symbol": "scalar_prefix_requirements",
+          "line_start": 38,
+          "line_end": 58,
+          "normalized_excerpt_sha256": "92130a42148058b72a6568912f4d175e8c0a2dee7e2c0d8f6d5da78475d617f8",
+          "anchors": [
+            "const uint64_t end",
+            "s.used != s.occupied_end"
+          ]
+        }
+      ],
+      "predicate": [
+        "Nonempty call; not poisoned; memory dynamically casts to llama_kv_cache; n_stream==1; no SWA; no shifted cells; width>0.",
+        "used==occupied_end==physical_head==position; position+width<=capacity using uint64_t; each cell before position is occupied at its own position and contains sequence 0.",
+        "Returned extent count equals input count; K and V are F16. Per-row padding uses max(n_pad,256), clipped by actual capacity."
+      ],
+      "failure_before_execution": "Before the first llama_decode of this phase: unsupported/malformed cache returns an empty extent vector; need throws. No new native decode has occurred and PhaseContext is not poisoned by these preflight failures.",
+      "failure_after_execution": "The later post-call mapping check is separate (G07). This preflight does not make a partially executed call recoverable.",
+      "fallback_behavior": "No automatic R replay/fallback in this executor; caller gets failure.",
+      "supported_scope": "Dense nonwrapping sequence-0 append; frontend uses one sequence per batch and a fixed resident owner. seq_has(0) is not an exclusivity test for arbitrary externally mutated multi-sequence caches.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "Release frontend and reconstructed M2 share this gate. The helper checks physical metadata, not token equality or KV byte equality.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Fault-inject gap/shift/head/capacity violations on the bound native implementation and assert zero new decode calls plus unchanged owner before rejection.",
+        "For a reusable API accepting externally modified caches, explicitly bind single-sequence ownership or reject cells with additional sequence owners."
+      ]
+    },
+    {
+      "id": "G02",
+      "title": "Whole versus local plan, width and output reserve",
+      "source_refs": [
+        {
+          "source": "phase",
+          "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+          "symbol": "PhaseContext::decode",
+          "line_start": 25,
+          "line_end": 37,
+          "normalized_excerpt_sha256": "aaf2030f6481349942e8590a47e3e2254fbe9c7490a337be98d8bf7811e69c63",
+          "anchors": [
+            "ids.size()<=4",
+            "refplan::plan(rows,32)",
+            "phase_lowering==\"LOCAL\""
+          ]
+        },
+        {
+          "source": "planner",
+          "sha256": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+          "symbol": "refplan::plan",
+          "line_start": 34,
+          "line_end": 50,
+          "normalized_excerpt_sha256": "5b45aa3b34c3df9a0f5a1af7e9194d29f1803f369582e431380211404ea0c399",
+          "anchors": [
+            "physical_extent>r.position",
+            "rows[end].arithmetic_class==rows[i].arithmetic_class"
+          ]
+        },
+        {
+          "source": "m2_resident_context",
+          "sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "symbol": "PhaseContext::decode",
+          "line_start": 25,
+          "line_end": 38,
+          "normalized_excerpt_sha256": "3f8666773be4d1cc9d4d0f8501e651933d06b760a0f4b134d3d176955fab32be",
+          "anchors": [
+            "phase_target_reserve",
+            "refplan::plan(rows,32)"
+          ]
+        },
+        {
+          "source": "m2_entry",
+          "sha256": "bf301356f7707a3af3327e71102f20834c5b81ee1bcceee4b2879222b96ccae2",
+          "symbol": "main M2 profile admission",
+          "line_start": 35,
+          "line_end": 41,
+          "normalized_excerpt_sha256": "3ccf0b0cbe469d479fda8fc8dd8a2d07e659a2b93fa13b78e88bb143795e993f",
+          "anchors": [
+            "phase_target_reserve==8",
+            "m2_k==3||m2_k==7",
+            "M2 explicit k3/7 reserve8 D4 contract"
+          ]
+        }
+      ],
+      "predicate": [
+        "SIMPLE groups adjacent equal extents and equal arithmetic_class, maximum 32 rows; LOCAL takes chunks of at most 32 and delegates physical cuts to attention.",
+        "Frontend arithmetic_class is only 1+type_k+(type_v<<8). It is not a complete projection/backend/placement recipe identifier.",
+        "Original release all-output reserve gate is 4 rows. Reconstructed M2 uses phase_target_reserve; its entry binds reserve 8. Last-only output requests can span wider phases."
+      ],
+      "failure_before_execution": "Invalid SIMPLE positions/extents, unknown lowering, or all-output count above the reserve throw before native execution. LOCAL relies on G01 for position/extent support.",
+      "failure_after_execution": "After execution starts, later failures use G07/G08; a new lower-width plan is not silently retried.",
+      "fallback_behavior": "No automatic scalar replay. Unsupported projection scope has separate behavior (G03/G04).",
+      "supported_scope": "Fixed frontend profile; request masks exposed by this interface are all rows or last row, not arbitrary sparse masks.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "The live plan stores original output flags but its arithmetic class alone cannot justify the method section’s general typed recipe. The original k3 all-output cap does not certify M2 k7.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Bind the recipe fingerprint to frozen deployment metadata outside this two-type arithmetic_class, or narrow the paper wording to this implementation.",
+        "Qualify reserve-8 M2 separately; retain original reserve-4 experiments as their own scope."
+      ]
+    },
+    {
+      "id": "G03",
+      "title": "Packed Q8 projection admission and unmarked dispatch",
+      "source_refs": [
+        {
+          "source": "graph_packed",
+          "sha256": "3b1a6df5a5a7fc902642f42d9373a4d1ae6cf2013a50003698f30bbd3f0f522e",
+          "symbol": "llm_graph_context::build_lora_mm",
+          "line_start": 1566,
+          "line_end": 1605,
+          "normalized_excerpt_sha256": "901eaa3549c34afbf51543debb130c6ffdeda8262703a02112ede55dbf1af805",
+          "anchors": [
+            "GGML_TYPE_Q8_0",
+            "cur->ne[1] > 4",
+            "cur->ne[1]>=8",
+            "ggml_view_3d",
+            "frontier_packed_%s"
+          ]
+        },
+        {
+          "source": "cuda_dispatch",
+          "sha256": "4d65aac9035267b37a064a90f345f40a42d7289293ef32b709ad03d791a28188",
+          "symbol": "ggml_cuda_mul_mat",
+          "line_start": 1817,
+          "line_end": 1917,
+          "normalized_excerpt_sha256": "78c8a7c87a3e7c28f98ba8aa042f826982c2c520fa1329a6f2b38341885cc720",
+          "anchors": [
+            "hs_loop4::marked(dst)",
+            "bad_padding_clear",
+            "ggml_cuda_mul_mat_cublas",
+            "ggml_cuda_should_use_mmvq"
+          ]
+        },
+        {
+          "source": "cuda_mmvq",
+          "sha256": "d9c69fafab943383b29e525417f5e2157a445c9b1afca97b7d9de23d20a2564a",
+          "symbol": "ggml_cuda_mul_mat_vec_q",
+          "line_start": 1442,
+          "line_end": 1498,
+          "normalized_excerpt_sha256": "db8b5f4e5de9c9c7e93767303a6bc9f62d606966bef3deb35b370f5e72f06fd9",
+          "anchors": [
+            "quantize_row_q8_1_cuda",
+            "nchannels_dst",
+            "mul_mat_vec_q_switch_type"
+          ]
+        }
+      ],
+      "predicate": [
+        "Outer path: hs_query_batch; Q8_0 weight; F32 activation; 5<=q<=32; activation ne[2]==ne[3]==1.",
+        "Packing additionally requires contiguous activation, weight ne[2]==ne[3]==1, q>=8. It maps complete groups to [K,4,floor(q/4)], reshapes outputs, and sends remaining columns through ordinary <=4-column matmuls.",
+        "Packed nodes have no hs_loop4 marker. Actual kernel selection remains the ordinary CUDA dispatcher: bad padding can choose cuBLAS; otherwise MMVF/MMF/MMVQ/MMQ/cuBLAS selection runs.",
+        "The packed branch does not itself check actual same-device CUDA buffers, NVIDIA warp32, old-tile MMVQ selection, weight contiguity, or the loop4 integer-offset bounds. These cannot be borrowed from the marked-control path."
+      ],
+      "failure_before_execution": "Failed graph packing predicate selects <=4-column graph operations; failure of the outer predicate selects the ordinary wide matmul. Neither branch reports a typed recipe-unsupported status.",
+      "failure_after_execution": "Ordinary backend assertions/errors can fail during llama_decode; caught exceptions poison PhaseContext, assertions may terminate the process. The missing marked predicate is not itself a detected failure.",
+      "fallback_behavior": "Shape/layout fallback and generic backend dispatch are present. They are not established here as a qualified reference-compatible fallback for every descriptor outside the measured profile.",
+      "supported_scope": "Static path identification for the published CUDA Q8 packed core. No observed numerical error or fallback trigger is claimed for the frozen measured configuration.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "Packed and loop4 graph members are independently pinned. Their CUDA dispatcher/MMVQ files are byte-identical, but only loop4 build_lora_mm marks the node. Four-column MMVQ has an explicit case-4 specialization; grouped channels affect launch dimensions and offsets.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Replay captured operands with packed-versus-loop4 descriptors and record actual kernel/reduction identity, stride arithmetic, buffer device and padding branch.",
+        "Add explicit packed recipe admission before any native work, or a marked per-operator validator with fail-closed owner invalidation. No numerical-core change is proposed as qualified by this audit.",
+        "Adversarial descriptor cases must include bad-padding compute views, noncontiguous activation/weights, foreign placement and q/tail boundaries; expected outcomes must distinguish reject from separately qualified fallback."
+      ]
+    },
+    {
+      "id": "G04",
+      "title": "Backend-loop4 explicit shape, placement and dispatch guard",
+      "source_refs": [
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "llm_graph_context::build_lora_mm",
+          "line_start": 1567,
+          "line_end": 1603,
+          "normalized_excerpt_sha256": "80e89a062d6e55cdd3d66009e56bb6aa18ac3671a0976a6c85da897a04b7cc68",
+          "anchors": [
+            "ggml_is_contiguous(w)",
+            "hs_loop4::mark(res)"
+          ]
+        },
+        {
+          "source": "tensor_guard",
+          "sha256": "87a3baef2e4cd15663363b4e010fe4dc7b95e25ab903fdbe3074de84a48f4288",
+          "symbol": "hs_loop4::require",
+          "line_start": 6,
+          "line_end": 26,
+          "normalized_excerpt_sha256": "d21305c48f11e1abe5f448e3af3fe741e6233826d857f2344df4281c586f3fc1",
+          "anchors": [
+            "x->ne[1]<5",
+            "out->op_params[1]!=0",
+            "row_blocks"
+          ]
+        },
+        {
+          "source": "loop4_offsets",
+          "sha256": "1e5dcd2e0192e2bb1f4f706fd29f3f8dbb93b4ec2b8c294c863cee5d56922f4e",
+          "symbol": "hs_loop4::plan",
+          "line_start": 24,
+          "line_end": 38,
+          "normalized_excerpt_sha256": "3cad76f0e6dbd5231a17064a20f901fdc89959fe1bedabe2611dbbe780697d72",
+          "anchors": [
+            "columns<5",
+            "native MMVQ int stride overflow"
+          ]
+        },
+        {
+          "source": "cuda_dispatch",
+          "sha256": "4d65aac9035267b37a064a90f345f40a42d7289293ef32b709ad03d791a28188",
+          "symbol": "ggml_cuda_mul_mat marked branch",
+          "line_start": 1817,
+          "line_end": 1849,
+          "normalized_excerpt_sha256": "09e6ad20d2dd9f67d3289f229a8e252635094d82700b89da997597ec9e8b719d",
+          "anchors": [
+            "NVIDIA-CUDA-only",
+            "actual same-device CUDA residency",
+            "warp32",
+            "old tile dispatch is not MMVQ"
+          ]
+        },
+        {
+          "source": "cuda_mmvq",
+          "sha256": "d9c69fafab943383b29e525417f5e2157a445c9b1afca97b7d9de23d20a2564a",
+          "symbol": "ggml_cuda_mul_mat_vec_q marked handling",
+          "line_start": 1427,
+          "line_end": 1431,
+          "normalized_excerpt_sha256": "33d245dadd25c2a437fe90367eaa539c61abadcb0dedbda9b34b855aded7bd5f",
+          "anchors": [
+            "ids || fusion",
+            "hs_loop4::plan"
+          ]
+        }
+      ],
+      "predicate": [
+        "Marked MUL_MAT; Q8_0/F32/F32; all three tensors contiguous with singleton ne[2:4]; q in 5..32; K/M/q dimensions agree; bounded positive dimensions; no precision hint.",
+        "Guarded integer row-block and quantized/output offset spans; no IDs or fused arithmetic.",
+        "NVIDIA CUDA only, actual buffers on ctx.device, warp_size==32, no unsafe padded compute view; each original 1..4-column tile must select MMVQ rather than MMVF/MMF."
+      ],
+      "failure_before_execution": "These are before this marked operator’s quantizer/kernel, but occur inside llama_decode: earlier operators or groups may already have changed state. Do not call them whole-phase preflight.",
+      "failure_after_execution": "Thrown exceptions propagate to PhaseContext catch, which poisons the owner. No success record is emitted; process-level catch returns failure.",
+      "fallback_behavior": "Marked failures throw; they do not silently fall through to ordinary matmul. A graph node never marked is outside this guarantee.",
+      "supported_scope": "Strong backend-loop4 control only. The marker and guard do not apply to packed nodes or arbitrary Q4/Vulkan paths.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "Control quantizes the wide activation once and loops over exactly old 4-column/tail specializations with checked offsets. This is a source-backed guard distinction, not a performance or equivalence measurement.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Native own-path and cross-path replay must validate that quantizing all columns together preserves the admitted activations.",
+        "Fault injection must show post-entry failures invalidate owner even when earlier graph work completed."
+      ]
+    },
+    {
+      "id": "G05",
+      "title": "Local attention physical views and arithmetic descriptor",
+      "source_refs": [
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "llm_graph_context::build_attn (grouped prefix branch)",
+          "line_start": 3006,
+          "line_end": 3054,
+          "normalized_excerpt_sha256": "dafddd2b4e583c39fa4609722ce6dac33aa5e37392e02621e9cd4be40df77594",
+          "anchors": [
+            "const bool grouped",
+            "partition_adjacent(prefix, arithmetic, dispatch)",
+            "extent<=k->ne[2]",
+            "ggml_is_contiguous(mg)"
+          ]
+        },
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "llm_graph_context::build_attn_mha query layout",
+          "line_start": 2704,
+          "line_end": 2727,
+          "normalized_excerpt_sha256": "0050cd2d53947b91996a209901b71452cdc31deab2b86b4dcc7c7d606d98f91c",
+          "anchors": [
+            "arch == LLM_ARCH_LLAMA",
+            "q->ne[1] <= 4",
+            "LLM_ARCH_QWEN3",
+            "kq_b == nullptr"
+          ]
+        }
+      ],
+      "predicate": [
+        "Grouped path requires active hs_query_batch, causal/non-Flash, consecutive positions and one unique sequence, matching prefix count, more than one row, one K/V stream, no bias/sinks/MLA.",
+        "Local grouping arithmetic is Q/K/V dtype; dispatch encodes Q head dimension, Q/K head counts and V transposition, with <=65535 asserted field bounds.",
+        "Groups share extent and descriptor; layout 0 uses tiles<=4. K, V and mask views use that extent; mask is made contiguous when needed. Query-batch attention restricts architecture to LLAMA/QWEN3 and dense nonexpert non-Flash shapes."
+      ],
+      "failure_before_execution": "Graph construction uses ordinary branch if grouped predicate is false. Specific attention constraints are GGML_ASSERT: they abort rather than returning a recoverable unsupported result.",
+      "failure_after_execution": "Graph construction follows native batch/cache planning; do not promise unchanged owner on an assertion. Process termination precludes reuse, but catch(...)/poisoned does not catch abort.",
+      "fallback_behavior": "The ordinary attention branch exists. Outside the bound dense profile its numerical equivalence is not established merely by falling through.",
+      "supported_scope": "Fixed non-Flash dense LLAMA/QWEN3 attention recipe with singleton stream; no claim for paged/wrapping/SWA/MoE/MLA or arbitrary layouts.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "Physical views and mask materialization are explicit. The graph also depends on guards that are assertions, not typed admission statuses.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Add native descriptor rejection tests and original-reference state/vector comparisons around padding boundaries.",
+        "Either describe assertion termination accurately or move unsupported-layout checks to preflight for a recoverable serving API."
+      ]
+    },
+    {
+      "id": "G06",
+      "title": "Actual graph-reuse predicates",
+      "source_refs": [
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "hs_reference_policy_identity",
+          "line_start": 1,
+          "line_end": 7,
+          "normalized_excerpt_sha256": "0bd3bc24cf1c17c6a3d4654cac5e39ffbbe056585ba392e2b07ce92a6518c3a6",
+          "anchors": [
+            "Backend::cuda",
+            "hs_scope::active, false, hs_scope::active, 1"
+          ]
+        },
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "llm_graph_input_attn_kv::can_reuse",
+          "line_start": 498,
+          "line_end": 514,
+          "normalized_excerpt_sha256": "0e2fbd011b87a6092578f9c53a4bbd7b3a19d9803bf52aee6061c8ec070dda68",
+          "anchors": [
+            "reference_policy!=hs_reference_policy_identity()",
+            "prefix_n_kv!=mctx->get_prefix_n_kv()"
+          ]
+        },
+        {
+          "source": "graph_header",
+          "sha256": "07209d8a7e9f6ad8e63678295e8720b1af58f0545d6495f35e61d2d9cfeff16b",
+          "symbol": "llm_graph_params::allow_reuse",
+          "line_start": 818,
+          "line_end": 868,
+          "normalized_excerpt_sha256": "87d1619449bc48dbafd6e1c5dbf42e290450b79b519046569012150aa3f7d46b",
+          "anchors": [
+            "hs_query_batch != other.hs_query_batch",
+            "ubatch.n_tokens",
+            "n_outputs != other.n_outputs"
+          ]
+        },
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "current_head_placement_key and llm_graph_result::can_reuse",
+          "line_start": 1375,
+          "line_end": 1476,
+          "normalized_excerpt_sha256": "82a1d589c6056304de084bd30867e0f77c1d4c80ac9aee1b416fb8933964b926",
+          "anchors": [
+            "use_scalar_head_preference",
+            "head_placement_key != current_head_placement_key"
+          ]
+        },
+        {
+          "source": "graph_loop4",
+          "sha256": "947275a6427278fd0f12109e49e0719312f0fa400de5d864c08287e031093ba3",
+          "symbol": "llm_graph_input_out_ids::set_input/can_reuse",
+          "line_start": 210,
+          "line_end": 241,
+          "normalized_excerpt_sha256": "685818f93e5eb56771c88c08aba76c9788494bc364b54769a4250a38d0d4b539",
+          "anchors": [
+            "ubatch->output[i]",
+            "n_outputs == params.n_outputs"
+          ]
+        }
+      ],
+      "predicate": [
+        "Reuse compares policy={backend=cuda,layout,prefix=active,f32_q8_activation=false,scalar_head_norm_offload=active,implementation=1} and the full prefix extent vector.",
+        "Existing graph parameters compare hs_query_batch, ubatch topology/sequence metadata, n_outputs and other model graph settings. Rotary head-scale placement key compares relevant tensor types/shapes, host placement and backend offload decisions.",
+        "Requested-output row indices are refreshed by set_input; arbitrary request-mask identity need not be in topology key if output count matches.",
+        "refplan::Identity(deployment,phase,lowering,rows) is declared in phase_plan.hpp but is not referenced by the audited frontend; live reuse relies on the above core predicates."
+      ],
+      "failure_before_execution": "Mismatch returns false and rebuilds the graph; it does not fail the request or restore a prior state.",
+      "failure_after_execution": "A subsequent execution failure uses the owner failure path; reuse rejection is not a native failure.",
+      "fallback_behavior": "Rebuild is an expected topology adaptation, not reference replay.",
+      "supported_scope": "Frozen model/backend/context deployment. There is no generic runtime projection recipe object compared by this key, nor a literal phase-label comparison.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "The actual reuse protection is stronger than a bare shape key, but the unused frontend Identity helper must not be cited as the implementation of the paper claim.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Qualify transitions changing prefix vector while outer shape stays fixed, layout/active policy, head placement and requested rows.",
+        "Describe fixed model/module binding separately from dynamic reuse identity; add a packed recipe fingerprint if recipe selection becomes mutable."
+      ]
+    },
+    {
+      "id": "G07",
+      "title": "Requested output ownership and append postcondition",
+      "source_refs": [
+        {
+          "source": "phase",
+          "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+          "symbol": "PhaseContext::decode/logits",
+          "line_start": 38,
+          "line_end": 63,
+          "normalized_excerpt_sha256": "3fd7ce9c46c27acc16038abd7e29db2d89229e681b9ddf6e1580e3d3a2069a86",
+          "anchors": [
+            "outputs.assign",
+            "llama_synchronize",
+            "outputs[i].assign",
+            "used_max_p1()",
+            "poisoned=true",
+            "unrequested phase output"
+          ]
+        },
+        {
+          "source": "worker",
+          "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+          "symbol": "Context::sample",
+          "line_start": 108,
+          "line_end": 113,
+          "normalized_excerpt_sha256": "83b387180fa3f85b1e04cbf0f8430a7e2d16baaad7188e424eb8070a5dffc7dd",
+          "anchors": [
+            "std::isfinite",
+            "p[i]>p[best]"
+          ]
+        }
+      ],
+      "predicate": [
+        "Each group uses original requested flags (all or last); synchronization precedes copying each requested full vocabulary vector into PhaseContext-owned storage.",
+        "Requested logits pointer must exist; used_max_p1 must equal the expected append end. logits(row) rejects absent/unrequested rows. sample checks all entries finite and retains lowest index on ties.",
+        "OutputRows helper is not used here; the live owner is vector<vector<float>>. Postcondition checks extent/end, not reference KV bytes."
+      ],
+      "failure_before_execution": "Output reserve gate precedes execution (G02). A consumer requesting an unrequested output is rejected; it is not produced retroactively.",
+      "failure_after_execution": "Missing requested pointer, post-append mapping mismatch, or observed placement failure inside decode poisons the owner. A sample nonfinite failure is outside the PhaseContext catch and terminates via entry catch.",
+      "fallback_behavior": "No hidden extra output-mask/reserve expansion and no retry after native failure.",
+      "supported_scope": "Original reserve-4 frontend; M2 reserve changes must be qualified separately. Owned vectors survive later group scratch reuse.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "The implementation matches the ownership order needed by the induction argument, but not a run-time equality check against R.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Native multi-group tests selecting an earlier accepted frontier must compare full logits and active KV against the independent reference.",
+        "Corrupt/missing output and postcondition failure injections should verify that no success result or reused owner escapes."
+      ]
+    },
+    {
+      "id": "G08",
+      "title": "Commit, pending token, reset and failure ownership boundary",
+      "source_refs": [
+        {
+          "source": "worker",
+          "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+          "symbol": "request greedy speculative commit loop",
+          "line_start": 148,
+          "line_end": 183,
+          "normalized_excerpt_sha256": "a5ab11ad73066d11738a9cdbd1b8876029146ba2eeadc6646812de8d6c4595c8",
+          "anchors": [
+            "int pending=target->sample",
+            "if(accepted==k&&!done)",
+            "int keep=base+1+accepted",
+            "pending_after"
+          ]
+        },
+        {
+          "source": "worker",
+          "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+          "symbol": "Context::reset/trim",
+          "line_start": 90,
+          "line_end": 114,
+          "normalized_excerpt_sha256": "a05922c991309642cca15efd15723cd74b50e0d3cac90931e44536dd563f2258",
+          "anchors": [
+            "plan.clear()",
+            "KV not empty after reset",
+            "KV trim failed"
+          ]
+        },
+        {
+          "source": "phase",
+          "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+          "symbol": "PhaseContext::clear/decode failure",
+          "line_start": 16,
+          "line_end": 63,
+          "normalized_excerpt_sha256": "a4e8022d31ba5b48db63b28fde018f01c6c771def24e8b388ee52aeed26b70a3",
+          "anchors": [
+            "need(!poisoned",
+            "catch(...){poisoned=true;throw;}"
+          ]
+        },
+        {
+          "source": "entry",
+          "sha256": "c0f5a556bddae3907bab9e19a2fc9da46d4c05c9b758a98ed43ec51029be2cad",
+          "symbol": "main failure boundary",
+          "line_start": 109,
+          "line_end": 115,
+          "normalized_excerpt_sha256": "69c7631774d7d3f6e4ddcaf30710801ebc797ad5d89f908272e7a0add9b2faa5",
+          "anchors": [
+            "catch(const std::exception&e)",
+            "return 2;"
+          ]
+        }
+      ],
+      "predicate": [
+        "Corrections/bonuses remain pending until the next decode; native commit logic stops at cap/EOG, and keep=base+1+accepted trims both owners.",
+        "Target native group execution and postchecks are enclosed in a catch-all that sets poisoned=true; subsequent plan.clear/decode reject that owner.",
+        "Context::trim, reset postcheck, draft decode and sample are outside that poison catch. The published entry catches exceptions and exits failure, preventing another request in that process."
+      ],
+      "failure_before_execution": "An already-poisoned owner rejects clear/decode before reset or new execution.",
+      "failure_after_execution": "Target decode exceptions poison. Trim/draft/sample failures rely on process exit rather than setting target.plan.poisoned. GGML assertions/abort terminate directly.",
+      "fallback_behavior": "No automatic replay into the same partially updated owner.",
+      "supported_scope": "CLI worker termination contract; not yet a general reusable service object whose callers may catch trim/sample/draft errors and continue.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "The statement failed native call invalidates owner is implemented at two different boundaries. The target-group poison rule is explicit; other transaction failures are contained by process lifetime.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "For embedding into a persistent library API, add a transaction-level owner-invalid flag covering trim, draft, reset and sampling before allowing caller recovery.",
+        "Retain independent-reference tests for cap/EOG/correction/bonus and prior accepted frontier; this static audit creates none."
+      ]
+    },
+    {
+      "id": "G09",
+      "title": "Placement observation is capture-specific and version-specific",
+      "source_refs": [
+        {
+          "source": "worker",
+          "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+          "symbol": "Observer defaults/callback",
+          "line_start": 47,
+          "line_end": 71,
+          "normalized_excerpt_sha256": "1b51931b7e9b5a4ed16435103cf9bee3b677ddce90ea5a151fa421bff4f5a512",
+          "anchors": [
+            "bool bad=false",
+            "if(!phase_observe)return false",
+            "name.rfind(\"hs_\",0)",
+            "find(\"5070\")"
+          ]
+        },
+        {
+          "source": "phase",
+          "sha256": "57c03f822d19ab0a7284d63b319216a0fc7ebdb3c2d7a51097f5342275cc34db",
+          "symbol": "PhaseContext::decode observer enable/postcheck",
+          "line_start": 44,
+          "line_end": 57,
+          "normalized_excerpt_sha256": "3e6f84a3f56afe6385a896ad3a038ee1cab9d3b42ee20c0501df90fb2b0654f6",
+          "anchors": [
+            "phase_observe=owner.capture",
+            "need(!owner.obs.bad"
+          ]
+        },
+        {
+          "source": "m2_worker",
+          "sha256": "05e395aa3082b08229946139c1f0d298bfc1c3064f001ba5c10aefcc9487eecb",
+          "symbol": "Observer::callback",
+          "line_start": 65,
+          "line_end": 86,
+          "normalized_excerpt_sha256": "8c5f3325aa32dc4efd9b6d1ded24a57bbd10429997cf07f247e2fb870a04cdfd",
+          "anchors": [
+            "bool bad=false",
+            "if(!phase_observe)return false",
+            "t->op!=GGML_OP_MUL_MAT",
+            "GGML_BACKEND_DEVICE_TYPE_GPU"
+          ]
+        },
+        {
+          "source": "entry",
+          "sha256": "c0f5a556bddae3907bab9e19a2fc9da46d4c05c9b758a98ed43ec51029be2cad",
+          "symbol": "main device selection",
+          "line_start": 38,
+          "line_end": 41,
+          "normalized_excerpt_sha256": "e8e6b4114ca6def3b3425e118905bebcaa491736e069a2e80dcc7a45dbd7ec94",
+          "anchors": [
+            "ambiguous GPU",
+            "mp.n_gpu_layers=999",
+            "LLAMA_SPLIT_MODE_NONE"
+          ]
+        }
+      ],
+      "predicate": [
+        "Clean target phases set phase_observe=false; callback returns immediately, leaving bad at its reset default unless some other code changes it.",
+        "Original release heavy observer only selects kq*/hs_* names and requires device description containing 5070. frontier_packed_* projection names do not match that name filter.",
+        "Reconstructed Linux M2 additionally selects MUL_MAT and checks GPU device type instead of the 5070 substring.",
+        "Entry selects one GPU and requests all layers there, but those configuration requests are not an independent per-operator same-device dispatch guard."
+      ],
+      "failure_before_execution": "The single-GPU admission can reject initialization. There is no always-on clean placement observation from Observer::callback.",
+      "failure_after_execution": "Heavy observer bad status is checked after native execution and poisons target PhaseContext. Clean need(!obs.bad) by itself cannot attest placement.",
+      "fallback_behavior": "No evidence here that measured clean execution moved to CPU or another device. The finding is an observation/guard scope distinction, not an observed placement failure.",
+      "supported_scope": "Original RTX capture filter and reconstructed Linux capture filter must be reported separately; neither is a general clean recipe guard.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "Static control flow proves the clean observer bypass. Marked loop4 still has G04 placement checks; packed does not acquire those checks merely by sharing backend source.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Bind clean result to qualified loaded modules/model/device and capture recipe fingerprints for all admitted packed nodes.",
+        "If clean dynamic placement safety is claimed, add a cheap always-on per-operator validator and charge its cost; capture-only logs remain qualification evidence."
+      ]
+    },
+    {
+      "id": "G10",
+      "title": "Diagnostic full-vector/native-state capture is separate from clean guard",
+      "source_refs": [
+        {
+          "source": "capture",
+          "sha256": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+          "symbol": "tpds_decisive::capture_existing",
+          "line_start": 20,
+          "line_end": 46,
+          "normalized_excerpt_sha256": "f95a75bc5abd7d6b9a6ac10f3131dfca07cfbf31c9e5e1cb6ccf3fdb625295f8",
+          "anchors": [
+            "binary32 required",
+            "little endian required",
+            "llama_state_seq_get_size",
+            "active_kv_extraction_required=true"
+          ]
+        },
+        {
+          "source": "worker",
+          "sha256": "afda80c01222a8ecbee11fa689c7231fbedc44d4558c5c28810cd2578a0f57f3",
+          "symbol": "Context::snapshot",
+          "line_start": 116,
+          "line_end": 120,
+          "normalized_excerpt_sha256": "36b6023cd5f533cf91e59916912255142c847b1546b361a1ab4c8fc749128094",
+          "anchors": [
+            "key!=\"initial\" && key!=\"commit-0\"",
+            "capture_existing"
+          ]
+        },
+        {
+          "source": "m2_worker",
+          "sha256": "05e395aa3082b08229946139c1f0d298bfc1c3064f001ba5c10aefcc9487eecb",
+          "symbol": "Context::snapshot",
+          "line_start": 139,
+          "line_end": 145,
+          "normalized_excerpt_sha256": "6f03bc15a62c60209a15e422c02bc1abadd826493de9db822cb64a3336b3aabe",
+          "anchors": [
+            "if (!capture || !target) return",
+            "capture_existing"
+          ]
+        }
+      ],
+      "predicate": [
+        "Capture requires binary32/little endian, a valid context/model/new output directory, requested frontier present/finite, and nonzero complete native sequence export.",
+        "The release snapshot call observes initial and first commit only. Reconstructed M2 expands snapshot coverage to all requested capture points.",
+        "Raw sequence.bin requires active KV extraction; exported bytes are not automatically the reference active-state relation."
+      ],
+      "failure_before_execution": "Capture/path/format failures throw; this diagnostic is not on the clean request path.",
+      "failure_after_execution": "Capture may run after state changes. Failures reach the process boundary, not the target decode poison catch.",
+      "fallback_behavior": "No capture is fabricated by changing output reservation or requested rows.",
+      "supported_scope": "Offline heavy qualification only; no native reference replay or state equality comparison was executed by this audit.",
+      "observed_evidence": {
+        "kind": "STATIC_SOURCE_INSPECTION",
+        "detail": "The capture source supports collecting evidence but does not itself compare R or certify all phases/shapes.",
+        "native_execution_in_this_audit": "NOT_RUN",
+        "native_qualification_in_this_audit": "NOT_ESTABLISHED"
+      },
+      "missing_qualification": [
+        "Tie independent R and candidate captures to the exact deployment binary/source, compare full vectors and extracted active KV, and retain per-case coverage rather than extrapolating from helper presence."
+      ]
+    }
+  ],
+  "conclusions": {
+    "new_model_runs": 0,
+    "new_native_runs": 0,
+    "new_gpu_runs": 0,
+    "numerical_source_changes": 0,
+    "achieved_five_percent": false,
+    "proved_general_reference_equivalence": false,
+    "proved_current_frozen_profile_incorrect": false
+  }
+}

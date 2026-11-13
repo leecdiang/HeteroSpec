@@ -1,0 +1,124 @@
+{
+  "schema": "hs.N1a.production-bridge.status.v1",
+  "parent_pr": 229,
+  "parent_head": "1218f5bf81e987d6bc19a6d46bc20cc252f51639",
+  "status": "CPU_PREPARED_NATIVE_NOT_ADMITTED",
+  "actual_started_stage": "STD_ONLY_CPU_BRIDGE_AND_FAULTS_ONLY",
+  "stages": [
+    "RESIDENT_R",
+    "REPEAT_RESIDENT_R",
+    "COLD_CANONICAL_ORACLE",
+    "STRONG_WHOLE_RECHUNK_LOOP4"
+  ],
+  "native_checks": {
+    "total": 261,
+    "run": 0,
+    "passed": 0,
+    "status": "ALL_NOT_RUN"
+  },
+  "actual_calls": {
+    "models": 0,
+    "backend_initialization": 0,
+    "GPU_contexts": 0,
+    "placements": 0,
+    "forwards": 0,
+    "native_ELF_invocations": 0,
+    "N1a": 0,
+    "N1b": 0,
+    "N2": 0,
+    "kernel_cgroup_activations": 0
+  },
+  "CPU_evidence": {
+    "bridge_tests": {
+      "normal": 32,
+      "optimized": 32,
+      "status": "PASS"
+    },
+    "resource_component": {
+      "normal": 27,
+      "optimized": 27,
+      "status": "PASS"
+    },
+    "resource_finalizer": {
+      "normal": 9,
+      "optimized": 9,
+      "status": "PASS"
+    },
+    "supervisor_deadline_boundary": {
+      "tests": 4,
+      "status": "PASS"
+    },
+    "actual_fixed_process_suite": {
+      "cases": 14,
+      "status": "PASS",
+      "request_and_row_reservations": 40,
+      "scope": "synthetic accounting; no model work"
+    },
+    "independent_CPU_journal_recount": {
+      "cases": 14,
+      "status": "PASS",
+      "path": "CPU_EVIDENCE/interop-09-final/RECOUNT.json",
+      "private_raw_scope": "original CPU bytes checked on server; public derived replay is not kernel or native validation"
+    }
+  },
+  "gates": {
+    "source_static_identities": "PASS_FILE_AND_STATIC_ONLY",
+    "native_R_loop4_launcher_compile_link": "PASS_NEVER_EXECUTED",
+    "v3_launch_child_supervisor_bridge": "PASS_EXERCISED_CPU_ONLY",
+    "durable_reserve_and_fail_closed": "PASS_CPU_SCOPES_ONLY",
+    "production_entry": "CLOSED_PERMANENT_DENIAL",
+    "actual_cgroup_activation": "BLOCKED_CLOSED_NOT_RUN",
+    "atomic_domain_spawn": "BLOCKED_NOT_IMPLEMENTED_OR_ADMITTED",
+    "external_GPU_lease_and_quiet_window": "BLOCKED_NO_APPROVAL",
+    "loaded_native_model_library_device_identity": "NOT_RUN",
+    "native_RAM_VRAM_and_placement_peak": "NOT_RUN",
+    "native_full_vector_active_KV_frontier_pending_EOG": "ALL_261_NOT_RUN",
+    "hard_interruption_or_GPU_release_by_deadline": "BLOCKED_NOT_GUARANTEED",
+    "future_raw_archive_allowlist": "NOT_FROZEN_NO_NATIVE_DATA",
+    "N1a_execution": "NOT_ADMITTED",
+    "N1b_N2": "NOT_AUTHORIZED"
+  },
+  "proposal": {
+    "approval": null,
+    "planned_requests": 72,
+    "max_requests": 76,
+    "planned_rows": 69354,
+    "max_rows": 85738,
+    "deployments": 10,
+    "required_disk_bytes": 553094505923,
+    "max_seconds": 18000,
+    "automatic_retry": false,
+    "old_budget_borrowing": false,
+    "failure_margin_runnable": false
+  },
+  "limitations": [
+    "CPU pass is neither native numerical qualification nor resident/cold equivalence.",
+    "Actual cgroup limits and atomic spawning remain unactivated or unimplemented.",
+    "Device idle/free-memory snapshots do not grant a quiet window or new budget.",
+    "Host pidfd signals and before/after deadline checks do not guarantee interruption of uninterruptible filesystem or GPU operations.",
+    "Public derived CPU traces withhold original process/job identity bytes; original private hashes and recount are retained.",
+    "No throughput, LOCAL advantage or5percent claim is supported."
+  ],
+  "source_fingerprints": {
+    "bridge.py": "4901145180e5bdf6d44cef83899d771db393b9e4653dc3b0c88c80db21e7c45a",
+    "cpu_run.py": "68961c91b8484a8c00a192b840da0661b743f9e7b9e95402bafe0ae935ac7c2f",
+    "resource_domain.py": "709f568b60bce39c7c6880937a1521c3c1720dca02cfac1f17406f6640f9939d",
+    "cpu_resource_fixture.py": "1daa22acc980972f659d5cf4d6fecfe02e9a73b93c753bd717c65fa062b01b0b",
+    "bridge_client.hpp": "c24b82a2d31e3846532e7e1df2e739bb31edceff8a12149b6cbfe0c3e745eee2",
+    "bridge_job.hpp": "c6f5f97a287f5452dc312803234449583b3307b4cfac13053a6ee7e21eb76763",
+    "supervisor.hpp": "aa8308513c930f2de0c8b77105df4c4fa47b1411b07e1e5a93c5647065b52e7d",
+    "cpp_bridge_launcher.cpp": "edcb9fd8d0b896bb8e8b2244d44a0d3c0cbabe1222c15f10ea5ac4fb66806a76",
+    "native/worker.cpp": "0ca2eadcbdc9ac3c92b49f5f89eca6259c4d13976ec6fa794907e0d8ac386848"
+  },
+  "resource_snapshot": "review/CLOSEOUT_READONLY.json",
+  "measured_build_selection": {
+    "files": 7953,
+    "logical_bytes": 2631178832,
+    "allocated_bytes": 2650431488,
+    "with_ancillary_readback_bytes": 3724173312,
+    "pool_bytes": 7516192768,
+    "status": "MEASURED_NOT_NATIVE_ADMISSION"
+  },
+  "final_proposal": "FINAL_EXECUTION_MANIFEST_NOT_ADMITTED.json",
+  "review_summary": "REVIEW_SUMMARY.md"
+}

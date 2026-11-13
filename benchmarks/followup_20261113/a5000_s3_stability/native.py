@@ -233,9 +233,9 @@ class Campaign:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             write(destination / 'PREFLIGHT.private.json', self.preflight())
             if panel == 'R2':
-                first = read(self.root / 'R1' / 'START.json')
+                first = read(self.root / 'R1' / 'STATUS.json')
+                need(first['status'] == 'COMPLETE', 'R1 complete prerequisite')
                 need((dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(first['utc'])).total_seconds() >= 86400, '24h date separation')
-                need(read(self.root / 'R1' / 'STATUS.json')['status'] == 'COMPLETE', 'R1 complete prerequisite')
             if resume:
                 write(destination / ('RESUME-' + str(time.monotonic_ns()) + '.json'), dict(utc=utc(), source_commit=c['source_commit'],
                       reason='Continue only unstarted registered workers; reuse proven successful native exits; failed attempts stay charged'))

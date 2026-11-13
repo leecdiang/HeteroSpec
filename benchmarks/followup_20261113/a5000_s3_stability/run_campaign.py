@@ -17,13 +17,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
     parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--from-panel', choices=['H1','R1','R2'], default='H1')
     args = parser.parse_args()
     root = Path(read(args.config)['output_root'])
     root.mkdir(parents=True, exist_ok=True)
-    for panel, start in STARTS:
+    for panel, start in STARTS[[p for p,_ in STARTS].index(args.from_panel):]:
         deadline = dt.datetime.fromisoformat(start)
-        if panel == 'R2' and (root / 'R1/START.json').exists():
-            first = dt.datetime.fromisoformat(read(root / 'R1/START.json')['utc'])
+        if panel == 'R2' and (root / 'R1/STATUS.json').exists():
+            first = dt.datetime.fromisoformat(read(root / 'R1/STATUS.json')['utc'])
             deadline = max(deadline, first + dt.timedelta(hours=24, seconds=1))
             start = deadline.isoformat()
         write(root / 'QUEUE.json', dict(status='WAITING', next_panel=panel, scheduled_utc=start, utc=utc()))

@@ -19,11 +19,11 @@
       "completed_requests": 72,
       "failed_requests": 2,
       "workers": 49,
-      "native_worker_wall_s": 4837.70928422,
       "actual_forward_rows": 16788,
       "candidate_model_load_s": 85.70645385799999,
       "candidate_pool_setup_s": 1.1349740559999997,
-      "reference_setup_s": 85.01562193999999
+      "reference_setup_s": 85.01562193999999,
+      "launch_to_exit_observation_s": 4837.70928422
     },
     "formal": {
       "reserved_requests": 96,
@@ -31,10 +31,10 @@
       "completed_requests": 96,
       "failed_requests": 0,
       "workers": 48,
-      "native_worker_wall_s": 2030.473621148,
       "model_load_s": 169.95088681,
       "pool_setup_s": 2.2604050929999997,
-      "actual_forward_rows": 22384
+      "actual_forward_rows": 22384,
+      "launch_to_exit_observation_s": 2030.473621148
     }
   },
   "estimate": {
@@ -372,5 +372,6 @@
     "Public packet supports independent text, timing, row-accounting and statistical replay; tensors are retained on host according to disposal inventory, not included in this packet.",
     "Original runtime/job hashes containing the private root are checked only in private host replay, because public paths are redacted.",
     "Historical S3, R1 and R2 are not pooled into H."
-  ]
+  ],
+  "wall_scope": "HOST launch_begin to exit_observed after polling and module validation; excludes prelaunch checks/reservation. Native load/setup and warm/measured service/export are nested. Panel START follows initial preflight; old Host.run included more prelaunch work."
 }

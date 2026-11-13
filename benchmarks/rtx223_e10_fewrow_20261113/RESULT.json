@@ -1,0 +1,226 @@
+{
+  "schema": "heterospec.e10.fewrow-diagnostic.result.v1",
+  "utc": "2026-11-13T02:37:12.168581+00:00",
+  "parent_PR234": "304dcbff6d17461237774464c67ce8cb0ed60189",
+  "parent_PR230": "ba019f30522352c87cac2cc527082ecc6c73ed97",
+  "upstream_commit": "0fb8f157702702f33f4e018de8701b2569a1bc28",
+  "decision": "STOP_GPU;no C2 generic reuse candidate;upstream independent qualification FAIL,not a proof of upstream arithmetic bug;timing NOT_RUN",
+  "gates": {
+    "old_operands_model_tensor_identity": "PASS",
+    "upstream_10_blobs": "PASS",
+    "build_CPU_admission": "PASS",
+    "B_legacy_activation_full_output": "PASS",
+    "U_independent_quantizer_exact_q": "FAIL",
+    "U_scale_subcheck": "PASS",
+    "U_double_quantized_output_bound_subcheck": "PASS",
+    "U_legacy_bitwise": "FAIL_NON_EQUIVALENT",
+    "U_repeat_determinism": "NOT_RUN",
+    "paired_timing": "NOT_RUN",
+    "normal_ETW_terminal_image_closure": "NOT_RUN_PARTIAL_CLOSE",
+    "cleanup_preservation": "PASS",
+    "old4096_contract": "NOT_CLOSED",
+    "production_native": "DENY_UNCHANGED"
+  },
+  "budget": {
+    "limit": 415,
+    "planned": {
+      "qualification": 14,
+      "one_diagnosed_qualification_repair": 14,
+      "timing": 355,
+      "margin": 32
+    },
+    "reserved": 14,
+    "explicit_prelaunch_permits": 6,
+    "unused_reserved_not_refunded": 8,
+    "unreserved": 401,
+    "family_closed": true,
+    "qualification_retries": 0,
+    "timing_samples": 0,
+    "physical_lifecycle_launches": null
+  },
+  "consumption": {
+    "model_loads": 0,
+    "new_captures": 0,
+    "decode": 0,
+    "numerical_root_DLL_explicit_loads": 0,
+    "native_GPU_processes": 1,
+    "CUDA_runtime_driver_initialized": true,
+    "implicit_context_count": null,
+    "explicit_B_quantize": 2,
+    "explicit_B_project": 2,
+    "explicit_U_quantize": 1,
+    "explicit_U_project": 1,
+    "cudaMalloc_requested_bytes": 18124800
+  },
+  "device": {
+    "SMs": 46,
+    "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "shared_optin": 101376,
+    "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd"
+  },
+  "native": {
+    "U_qualification": [
+      {
+        "U_CPU_quant_wrong_values": 10,
+        "U_CPU_scale_max_ULP": 2,
+        "U_CPU_scale_over8ULP": 0,
+        "U_independent_double_bound_fail_values": 0,
+        "U_max_absolute_error_vs_double_quantized_reference": 5.957573578907471e-08,
+        "U_max_error_over_analytic_bound": 0.038298073171462645,
+        "U_own_contract_pass": false,
+        "float_scale_different_from_legacy_half_expanded": 1024,
+        "legacy_half_sum_fields": "NOT_REPRESENTED_D4",
+        "legacy_output_bitwise_equal": false,
+        "legacy_output_different_float_bits": 32766,
+        "legacy_reference_preservation": "NON_EQUIVALENT",
+        "legacy_relative_L2_difference": 0.00023704462080057954,
+        "logical_q_different_from_legacy": 24,
+        "raw_activation_equal_legacy": false
+      }
+    ],
+    "decode_calls": 0,
+    "device": {
+      "SMs": 46,
+      "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+      "shared_optin": 101376,
+      "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd"
+    },
+    "error": "U separate numerical contract failed",
+    "explicit_limit": 14,
+    "explicit_prelaunch_charged": 6,
+    "model_loads": 0,
+    "physical_lifecycle_launches": null,
+    "qualification": [
+      {
+        "arm": "B",
+        "output_sha256": "6f4c7a410b441c266a34f20f5a5c1c2bc67ef4a3ef5e622e4a005cadd42a0fd0",
+        "quant_sha256": "caaf90580faecb85103fb19d9f76f4d8210c3fd2ca72a7da1d28971537000901",
+        "repeat": 0
+      },
+      {
+        "arm": "B",
+        "output_sha256": "6f4c7a410b441c266a34f20f5a5c1c2bc67ef4a3ef5e622e4a005cadd42a0fd0",
+        "quant_sha256": "caaf90580faecb85103fb19d9f76f4d8210c3fd2ca72a7da1d28971537000901",
+        "repeat": 1
+      }
+    ],
+    "resources": {
+      "B": {
+        "DRAM_L2_traffic": "NOT_MEASURED",
+        "actual_occupancy": "NOT_MEASURED",
+        "dynamic_shared_bytes": 0,
+        "local_bytes_per_thread": 0,
+        "registers_per_thread": 63,
+        "static_shared_bytes": 3072,
+        "theoretical_blocks_per_sm": 8,
+        "theoretical_warps_per_sm": 32
+      },
+      "U": {
+        "DRAM_L2_traffic": "NOT_MEASURED",
+        "actual_occupancy": "NOT_MEASURED",
+        "dynamic_shared_bytes": 69632,
+        "local_bytes_per_thread": 0,
+        "registers_per_thread": 244,
+        "static_shared_bytes": 0,
+        "theoretical_blocks_per_sm": 1,
+        "theoretical_warps_per_sm": 4
+      }
+    },
+    "status": "FAILED",
+    "upstream_compile": "fixed0fb8f157 Q8_0,ncg1,nmt1,PDL0-equivalent raw host launch"
+  },
+  "qualification_task_exit": {
+    "utc": "2026-11-13T02:26:00.357809+00:00",
+    "kind": "TASK_EXIT",
+    "request": "002-qualification.json",
+    "status": "FAILED",
+    "exit_code": 1,
+    "wall_seconds": 8.98399999999674,
+    "owned_exit_confirmed": true
+  },
+  "family": [
+    {
+      "utc": "2026-11-13T02:25:08.981713+00:00",
+      "kind": "READY",
+      "pid": 26588,
+      "creation_filetime": 134390103088310757,
+      "contract_sha256": "949dfda0f3962df5f66b1a1379ee466139d1b6286297e7dea3fa53f8c135e48d",
+      "limit": 415,
+      "end": "2026-11-13T12:30:00+08:00"
+    },
+    {
+      "utc": "2026-11-13T02:25:08.988216+00:00",
+      "kind": "RESERVED_BEFORE_TASK",
+      "request": "001-cpu-admission.json",
+      "reserved": 0,
+      "total": 0,
+      "script": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-e10-fewrow\\execute_cpu_001.py",
+      "sha256": "04ecaa9c5e1def162903137744f2ffd9f36ffa2458f18cce73280b4236cd0645"
+    },
+    {
+      "utc": "2026-11-13T02:25:18.035369+00:00",
+      "kind": "TASK_EXIT",
+      "request": "001-cpu-admission.json",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "wall_seconds": 9.046999999991385,
+      "owned_exit_confirmed": true
+    },
+    {
+      "utc": "2026-11-13T02:25:51.361815+00:00",
+      "kind": "RESERVED_BEFORE_TASK",
+      "request": "002-qualification.json",
+      "reserved": 14,
+      "total": 14,
+      "script": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-e10-fewrow\\execute_qualification_001.py",
+      "sha256": "4339e34ef698dc0b204ba23658174ef333aa8a1990d586b08ff5e10fcbf748f6"
+    },
+    {
+      "utc": "2026-11-13T02:26:00.357809+00:00",
+      "kind": "TASK_EXIT",
+      "request": "002-qualification.json",
+      "status": "FAILED",
+      "exit_code": 1,
+      "wall_seconds": 8.98399999999674,
+      "owned_exit_confirmed": true
+    },
+    {
+      "utc": "2026-11-13T02:27:45.897172+00:00",
+      "kind": "RESERVED_BEFORE_TASK",
+      "request": "004-cleanup.json",
+      "reserved": 0,
+      "total": 14,
+      "script": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-e10-fewrow\\execute_cleanup.py",
+      "sha256": "661e90d2bbf814be6bf5b679eb79e662ca716e5bb1c61940f24c925d2252b2cd"
+    },
+    {
+      "utc": "2026-11-13T02:27:46.026663+00:00",
+      "kind": "TASK_EXIT",
+      "request": "004-cleanup.json",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "wall_seconds": 0.125,
+      "owned_exit_confirmed": true
+    },
+    {
+      "utc": "2026-11-13T02:27:52.266602+00:00",
+      "kind": "STOPPED",
+      "reserved": 14
+    }
+  ],
+  "observability": {
+    "actual_occupancy": "NOT_MEASURED",
+    "DRAM_L2": "NOT_MEASURED",
+    "physical_launch_count": "UNKNOWN",
+    "normal_ETW_completion": false,
+    "ETW_partial_close_loss": [
+      0,
+      0,
+      0
+    ],
+    "memory_temperature": "sparse global samples only",
+    "device_hang_cleanup_bound": null
+  },
+  "forbidden_actions_performed": [],
+  "next": "Pre-register a source/compiler-matched independent U quantization contract before any future timing;modern full backend/PDL reference remains unmeasured;no automatic new GPU run"
+}

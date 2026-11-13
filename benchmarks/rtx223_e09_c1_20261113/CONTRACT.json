@@ -1,0 +1,19 @@
+{
+  "schema":"heterospec.e09.C1.explicit-only.v1",
+  "parent":"ba019f30522352c87cac2cc527082ecc6c73ed97",
+  "authorization":"Current user explicitly authorizes independent successor C1 validation, at most415 explicit application kernels, <=120 seconds per controlled run; reuse qualified real q8; no old ledger reuse",
+  "device_uuid":"GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd",
+  "window":["2026-11-13T08:53:00+08:00","2026-11-13T10:30:00+08:00"],
+  "explicit_total":415,
+  "budget":{"model_and_capture":0,"DLL_runtime_loading_explicit_kernels":0,"initial_ABC1_qualification":14,"one_qualification_repair":14,"timing_reservation":355,"unassigned_failure_margin":32},
+  "timing":{"measured_arms":["B","C1"],"blocks_per_boundary":12,"order":"BC1,C1B alternating,6 each","repetitions_per_arm_per_block":4,"warmup_calls_per_arm":2,"warmup_explicit":8,"projection_only_explicit":120,"quantize_plus_projection_explicit":192,"native_max_explicit":320,"unused_of_timing_reservation_not_refunded":35,"post_batch_check":"all Q8_1 bytes and output bytes, outside event interval, no new explicit kernel"},
+  "qualification":"A,B,C1 two full replays each. All actual captured Q8_1 bytes and all32768 F32 outputs bitwise against unchanged backend oracle; no tolerance/reference changes. Stop timing on any mismatch",
+  "hypothesis":"Serial group processing reduces concurrent accumulators and reuses shared reduction storage. Expected compiler registers <=64 and shared3072; B/C1 comparison may reject performance hypothesis. Weight-fragment reuse is intentionally removed and an extra inter-group barrier is needed, so this does not isolate occupancy as causal mechanism",
+  "hard_controls":{"active_native_processes":1,"outer_processes":2,"process_commit_bytes":2147483648,"stdout_bytes":8388608,"stderr_bytes":8388608,"result_tree_bytes":33554432,"stop_new_steps_seconds":110,"terminate_owned_job_seconds":120,"zero_capability_AppContainer":true,"no_breakaway":true,"kill_on_job_handle_close":true,"retry":"only after closed prior process and diagnosed repair; durable reservation before phase, no refund"},
+  "observed_controls":{"admit_device_free_bytes":10737418240,"stop_device_free_bytes":2147483648,"temperature_stop_c":85,"admit_disk_free_bytes":21474836480,"stop_disk_free_bytes":1073741824,"sample_seconds":0.2,"stale_stop_seconds":1},
+  "unknown":{"full_lifecycle_physical_launches":null,"library_driver_internal_launches":null,"implicit_context_count":null,"immediate_device_hang_cleanup_time":null,"achieved_occupancy":"NOT_MEASURED","DRAM_L2_traffic":"NOT_MEASURED"},
+  "old_4096_contract":"NOT_CLOSED_UNCHANGED; independent explicit contract only",
+  "numerical_DLL_loads":0,
+  "native_runtime":"standalone CUDA executable with bound original A/B arithmetic and one C1. CUDA runtime static registration/initialization and library-internal work remain unknown, not zero physical work",
+  "forbidden":["new model/GGUF load","decode/forward","66 cells","service/request chain","paper edits","merge","old reference or ledger writes","unapproved security/ACL changes"]
+}

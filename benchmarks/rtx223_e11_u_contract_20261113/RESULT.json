@@ -1,0 +1,597 @@
+{
+  "schema": "heterospec.e11.real-U-qualification.v3",
+  "utc": "2026-11-13T05:24:42.850715+00:00",
+  "status": "PASS_EXTRACTED_U_DIFFERENT_CONTRACT_EXPLORATORY_HEADROOM",
+  "parents": [
+    {
+      "number": 230,
+      "head": "ba019f30522352c87cac2cc527082ecc6c73ed97",
+      "base": "ba2b8734f60183c58b09c30163ea0eeb13fc009d",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/230"
+    },
+    {
+      "number": 234,
+      "head": "304dcbff6d17461237774464c67ce8cb0ed60189",
+      "base": "ba019f30522352c87cac2cc527082ecc6c73ed97",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/234"
+    },
+    {
+      "number": 235,
+      "head": "01a4cf847bfc8340321564c66132680d4131bf0d",
+      "base": "304dcbff6d17461237774464c67ce8cb0ed60189",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/235"
+    }
+  ],
+  "upstream": "0fb8f157702702f33f4e018de8701b2569a1bc28",
+  "gates": {
+    "A_old_reference_B_full_bitwise": "PASS_2_REPLAYS",
+    "B_new_independent_U": "PASS_2_REPLAYS_AND_SEPARATE_CPU_CHECKER",
+    "U_legacy_bitwise": "NON_EQUIVALENT",
+    "C_paired_timing": "PASS_12_PAIRS_PER_BOUNDARY_ALL_RETAINED",
+    "full_default_backend": "COMPILE_PASS_RUNTIME_NOT_RUN",
+    "actual_occupancy": "NOT_MEASURED",
+    "L2_DRAM": "NOT_MEASURED",
+    "service5pct": "CONDITIONAL_COVERAGE_ONLY_SAME_REQUEST_COSTS_NOT_MEASURED",
+    "cleanup": "PASS_BOTH_PROFILES_AND_ALL_CONTROLLERS_ENDED",
+    "old_e10": "FAIL_UNCHANGED",
+    "old4096": "NOT_CLOSED",
+    "production_native": "DENY_UNCHANGED"
+  },
+  "native_qualification": {
+    "U_qualification": [
+      {
+        "U_CPU_RN_quant_different_values_diagnostic_only": 10,
+        "U_CPU_RN_scale_over8ULP_diagnostic_only": 0,
+        "U_CPU_scale_max_ULP": 2,
+        "U_independent_double_bound_fail_values": 0,
+        "U_joint_quant_block_fail": 0,
+        "U_joint_quant_min_witnesses": 1,
+        "U_joint_quant_nonunique_witness_blocks": 900,
+        "U_max_absolute_error_vs_double_quantized_reference": 5.957573578907471e-08,
+        "U_max_error_over_analytic_bound": 0.038298073171462645,
+        "U_own_contract_pass": true,
+        "float_scale_different_from_legacy_half_expanded": 1024,
+        "legacy_half_sum_fields": "NOT_REPRESENTED_D4",
+        "legacy_output_bitwise_equal": false,
+        "legacy_output_different_float_bits": 32766,
+        "legacy_reference_preservation": "NON_EQUIVALENT",
+        "legacy_relative_L2_difference": 0.00023704462080057954,
+        "logical_q_different_from_legacy": 24,
+        "raw_activation_equal_legacy": false
+      },
+      {
+        "U_CPU_RN_quant_different_values_diagnostic_only": 10,
+        "U_CPU_RN_scale_over8ULP_diagnostic_only": 0,
+        "U_CPU_scale_max_ULP": 2,
+        "U_independent_double_bound_fail_values": 0,
+        "U_joint_quant_block_fail": 0,
+        "U_joint_quant_min_witnesses": 1,
+        "U_joint_quant_nonunique_witness_blocks": 900,
+        "U_max_absolute_error_vs_double_quantized_reference": 5.957573578907471e-08,
+        "U_max_error_over_analytic_bound": 0.038298073171462645,
+        "U_own_contract_pass": true,
+        "float_scale_different_from_legacy_half_expanded": 1024,
+        "legacy_half_sum_fields": "NOT_REPRESENTED_D4",
+        "legacy_output_bitwise_equal": false,
+        "legacy_output_different_float_bits": 32766,
+        "legacy_reference_preservation": "NON_EQUIVALENT",
+        "legacy_relative_L2_difference": 0.00023704462080057954,
+        "logical_q_different_from_legacy": 24,
+        "raw_activation_equal_legacy": false
+      }
+    ],
+    "decode_calls": 0,
+    "device": {
+      "SMs": 46,
+      "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+      "shared_optin": 101376,
+      "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd"
+    },
+    "explicit_by_operation": {
+      "B_projection": 2,
+      "B_quantizer": 2,
+      "U_projection": 2,
+      "U_quantizer": 2
+    },
+    "explicit_limit": 14,
+    "explicit_prelaunch_charged": 8,
+    "model_loads": 0,
+    "physical_lifecycle_launches": null,
+    "qualification": [
+      {
+        "arm": "B",
+        "output_sha256": "6f4c7a410b441c266a34f20f5a5c1c2bc67ef4a3ef5e622e4a005cadd42a0fd0",
+        "quant_sha256": "caaf90580faecb85103fb19d9f76f4d8210c3fd2ca72a7da1d28971537000901",
+        "repeat": 0
+      },
+      {
+        "arm": "B",
+        "output_sha256": "6f4c7a410b441c266a34f20f5a5c1c2bc67ef4a3ef5e622e4a005cadd42a0fd0",
+        "quant_sha256": "caaf90580faecb85103fb19d9f76f4d8210c3fd2ca72a7da1d28971537000901",
+        "repeat": 1
+      },
+      {
+        "arm": "U",
+        "output_sha256": "e7e78637b1a3af945c0ae233ffc4b93d949947ff5fa1312790fee88f5667bb83",
+        "quant_sha256": "a3824e6bbc5b82dc0fb9e65cae9905899da047289929eb85f449f4eee3de1d8e",
+        "repeat": 0
+      },
+      {
+        "arm": "U",
+        "output_sha256": "e7e78637b1a3af945c0ae233ffc4b93d949947ff5fa1312790fee88f5667bb83",
+        "quant_sha256": "a3824e6bbc5b82dc0fb9e65cae9905899da047289929eb85f449f4eee3de1d8e",
+        "repeat": 1
+      }
+    ],
+    "resources": {
+      "B": {
+        "DRAM_L2_traffic": "NOT_MEASURED",
+        "actual_occupancy": "NOT_MEASURED",
+        "dynamic_shared_bytes": 0,
+        "local_bytes_per_thread": 0,
+        "registers_per_thread": 63,
+        "static_shared_bytes": 3072,
+        "theoretical_blocks_per_sm": 8,
+        "theoretical_warps_per_sm": 32
+      },
+      "U": {
+        "DRAM_L2_traffic": "NOT_MEASURED",
+        "actual_occupancy": "NOT_MEASURED",
+        "dynamic_shared_bytes": 69632,
+        "local_bytes_per_thread": 0,
+        "registers_per_thread": 244,
+        "static_shared_bytes": 0,
+        "theoretical_blocks_per_sm": 1,
+        "theoretical_warps_per_sm": 4
+      }
+    },
+    "status": "PASS_E11_TWO_CONTRACTS",
+    "upstream_compile": "fixed0fb8f157 Q8_0,ncg1,nmt1,PDL0-equivalent raw host launch"
+  },
+  "independent_CPU": {
+    "pass_": true,
+    "utc": "2026-11-13T04:16:58.306439+00:00",
+    "B_full_raw_legacy_replays": 2,
+    "U_full_independent_replays": [
+      {
+        "pass": true,
+        "quant_blocks": 1024,
+        "quant_values": 32768,
+        "layout_bytes_checked": 36864,
+        "quant_block_fail": 0,
+        "nonunique_witness_blocks": 900,
+        "minimum_witnesses": 1,
+        "output_values": 32768,
+        "output_bound_fail": 0,
+        "maximum_output_error": 5.957573578907471e-08,
+        "maximum_error_over_bound": 0.038298073171462645,
+        "CUDA_initializations": 0,
+        "repeat": 0,
+        "quant_sha256": "a3824e6bbc5b82dc0fb9e65cae9905899da047289929eb85f449f4eee3de1d8e",
+        "output_sha256": "e7e78637b1a3af945c0ae233ffc4b93d949947ff5fa1312790fee88f5667bb83"
+      },
+      {
+        "pass": true,
+        "quant_blocks": 1024,
+        "quant_values": 32768,
+        "layout_bytes_checked": 36864,
+        "quant_block_fail": 0,
+        "nonunique_witness_blocks": 900,
+        "minimum_witnesses": 1,
+        "output_values": 32768,
+        "output_bound_fail": 0,
+        "maximum_output_error": 5.957573578907471e-08,
+        "maximum_error_over_bound": 0.038298073171462645,
+        "CUDA_initializations": 0,
+        "repeat": 1,
+        "quant_sha256": "a3824e6bbc5b82dc0fb9e65cae9905899da047289929eb85f449f4eee3de1d8e",
+        "output_sha256": "e7e78637b1a3af945c0ae233ffc4b93d949947ff5fa1312790fee88f5667bb83"
+      }
+    ],
+    "U_raw_bitwise_repeatable": true,
+    "checker_sha256": "9173c4838f9078851e6b171b340744d7dbdc9af7f3b053194f41a538aff2508c",
+    "original_e10": "FAIL_UNCHANGED",
+    "CUDA_initializations_in_this_checker": 0
+  },
+  "timing_attempts": [
+    {
+      "name": "qualification-001",
+      "status": "PASS",
+      "native_created": true,
+      "explicit_application_permits": 8,
+      "terminal": {
+        "kind": "PASS",
+        "failure": null,
+        "owned_process_exit_confirmed": true,
+        "physical_launches": null,
+        "implicit_contexts": null
+      }
+    },
+    {
+      "name": "timing-001",
+      "status": "FAIL",
+      "native_created": false,
+      "explicit_application_permits": 0,
+      "terminal": {
+        "kind": "FAIL",
+        "failure": "foreign compute context",
+        "owned_process_exit_confirmed": true,
+        "physical_launches": null,
+        "implicit_contexts": null
+      }
+    },
+    {
+      "name": "timing-002",
+      "status": "FAIL",
+      "native_created": false,
+      "explicit_application_permits": 0,
+      "terminal": {
+        "kind": "FAIL",
+        "failure": "foreign compute context; observed_compute_pids=[39736]; expected_owned_pid=0",
+        "owned_process_exit_confirmed": true,
+        "physical_launches": null,
+        "implicit_contexts": null
+      }
+    },
+    {
+      "name": "timing-003",
+      "status": "PASS",
+      "native_created": true,
+      "explicit_application_permits": 392,
+      "terminal": {
+        "kind": "PASS",
+        "failure": null,
+        "owned_process_exit_confirmed": true,
+        "physical_launches": null,
+        "implicit_contexts": null
+      }
+    }
+  ],
+  "budget": {
+    "limit": 500,
+    "global_reserved": 430,
+    "explicit_application_permits": 400,
+    "qualification": 8,
+    "timing_001": 0,
+    "timing_002": 0,
+    "unused_reserved_not_refunded": 30,
+    "unreserved": 70,
+    "continuation_additional_reserved": 0,
+    "original_timing416_preserved": true,
+    "old_ledgers_unchanged": true,
+    "timing_003": 392
+  },
+  "consumption": {
+    "model_loads": 0,
+    "new_captures": 0,
+    "forward": 0,
+    "numerical_root_DLL_loads": 0,
+    "native_GPU_processes": 2,
+    "CUDA_runtime_driver_initialized": true,
+    "implicit_context_count": null,
+    "full_lifecycle_physical_launches": null
+  },
+  "samples": 48,
+  "pairs": 24,
+  "foreign_context": {
+    "NVML_observed_utc": "2026-11-13T04:40:54.304471+00:00",
+    "NVML_pids": [
+      39736
+    ],
+    "owned_pid": 0,
+    "host_snapshot_start": "2026-11-13T04:40:48.0028875+00:00",
+    "host_snapshot_end": "2026-11-13T04:40:49.5032686+00:00",
+    "snapshot_process": [
+      {
+        "pid": 39736,
+        "parent_pid": 25840,
+        "name": "ToDesk.exe",
+        "path": "C:\\Program Files\\ToDesk\\ToDesk.exe",
+        "video_session_arg": "--isVideoSession=true"
+      }
+    ],
+    "identity_limit": "Snapshot about5s earlier,not simultaneous creation-time binding;PID reuse not conclusively excluded;current lookup no live39736",
+    "timing_native_created": false,
+    "timing_explicit_permits": 0,
+    "guard_not_relaxed": true,
+    "unrelated_processes_terminated": 0,
+    "ToDesk_configuration_changes": 0
+  },
+  "next": "GPU stopped;one legacy-preserving candidate proposal only;new independent authorization needed for candidate/cross-input/service",
+  "candidate": "one conditional8warp raw shared-stage proposal only;not implemented/run",
+  "analysis": "ANALYSIS.json",
+  "timing_summary": {
+    "kernel-only": {
+      "U_over_B_geomean": 0.5823907655654196,
+      "U_time_change_percent": -41.76092344345804,
+      "paired_log_bootstrap_95pct": [
+        0.5786489290987279,
+        0.5858721329041755
+      ],
+      "U_faster_pairs": 12,
+      "stable_exploratory_advantage": true
+    },
+    "complete-operator": {
+      "U_over_B_geomean": 0.6129241707091678,
+      "U_time_change_percent": -38.707582929083216,
+      "paired_log_bootstrap_95pct": [
+        0.6079060430068594,
+        0.6186649050504166
+      ],
+      "U_faster_pairs": 12,
+      "stable_exploratory_advantage": true
+    }
+  },
+  "amdahl": {
+    "measured_r_different_contract": 0.6129241707091678,
+    "conditional_f_min_point": 0.12917365595161498,
+    "conditional_f_min_optimistic": 0.12752045551386734,
+    "conditional_f_min_conservative": 0.13111827540187598,
+    "same_request_f": "NOT_MEASURED",
+    "same_request_h": "NOT_MEASURED",
+    "actual_service_speedup": "NOT_MEASURED",
+    "formula": "new/old=1-f+f*r+h",
+    "sensitivity": [
+      {
+        "assumed_r": 0.25,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.06666666666666667,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.25,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 0.07333333333333333,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.25,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 0.08,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.5,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.1,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.5,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 0.11,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.5,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 0.12000000000000001,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.75,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.2,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.75,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 0.22,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.75,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 0.24000000000000002,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.8,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.25000000000000006,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.8,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 0.2750000000000001,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.8,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 0.3000000000000001,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.9,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.5000000000000001,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.9,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 0.5500000000000002,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.9,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 0.6000000000000002,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.95,
+        "assumed_h": 0,
+        "required_f_for_5pct": 0.9999999999999992,
+        "feasible_with_f_at_most_1": true
+      },
+      {
+        "assumed_r": 0.95,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 1.099999999999999,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 0.95,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 1.199999999999999,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 0.98,
+        "assumed_h": 0,
+        "required_f_for_5pct": 2.499999999999998,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 0.98,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": 2.749999999999998,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 0.98,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": 2.999999999999998,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 1.0,
+        "assumed_h": 0,
+        "required_f_for_5pct": null,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 1.0,
+        "assumed_h": 0.005,
+        "required_f_for_5pct": null,
+        "feasible_with_f_at_most_1": false
+      },
+      {
+        "assumed_r": 1.0,
+        "assumed_h": 0.01,
+        "required_f_for_5pct": null,
+        "feasible_with_f_at_most_1": false
+      }
+    ],
+    "coverage_examples": [
+      {
+        "assumed_f": 0.05,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 1.935379146454161
+      },
+      {
+        "assumed_f": 0.05,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 1.4353791464541608
+      },
+      {
+        "assumed_f": 0.05,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 0.9353791464541609
+      },
+      {
+        "assumed_f": 0.1,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 3.870758292908322
+      },
+      {
+        "assumed_f": 0.1,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 3.370758292908322
+      },
+      {
+        "assumed_f": 0.1,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 2.8707582929083215
+      },
+      {
+        "assumed_f": 0.2,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 7.741516585816644
+      },
+      {
+        "assumed_f": 0.2,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 7.241516585816643
+      },
+      {
+        "assumed_f": 0.2,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 6.741516585816644
+      },
+      {
+        "assumed_f": 0.33,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 12.77350236659746
+      },
+      {
+        "assumed_f": 0.33,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 12.27350236659746
+      },
+      {
+        "assumed_f": 0.33,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 11.773502366597462
+      },
+      {
+        "assumed_f": 0.5,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 19.353791464541608
+      },
+      {
+        "assumed_f": 0.5,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 18.853791464541608
+      },
+      {
+        "assumed_f": 0.5,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 18.353791464541608
+      },
+      {
+        "assumed_f": 0.75,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 29.03068719681241
+      },
+      {
+        "assumed_f": 0.75,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 28.53068719681241
+      },
+      {
+        "assumed_f": 0.75,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 28.03068719681241
+      },
+      {
+        "assumed_f": 1,
+        "assumed_h": 0,
+        "conditional_service_reduction_percent": 38.707582929083216
+      },
+      {
+        "assumed_f": 1,
+        "assumed_h": 0.005,
+        "conditional_service_reduction_percent": 38.207582929083216
+      },
+      {
+        "assumed_f": 1,
+        "assumed_h": 0.01,
+        "conditional_service_reduction_percent": 37.707582929083216
+      }
+    ],
+    "not_an_actual_cost_stack": true,
+    "legacy_preserving_candidate_speedup_not_established": true
+  },
+  "raw_timing_result_sha256": "8ee121e0f02a9c81bb1524ae928376e377a8cb97f1148577f6b88f9636b90c85"
+}

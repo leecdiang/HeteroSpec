@@ -1,0 +1,94 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Physical range is part of the numerical problem}
+\label{sec:range-result}
+The CUDA diagnostic holds the query width at one and intervenes on the physical range supplied to attention--value multiplication. Cropping the wider execution from 1024 to 768 entries reproduces the shorter-reference output; padding the shorter execution to 1024 reproduces the wider output (Fig.~\ref{fig:extent}). Visible operands and probability prefixes agree in the captured case, and the added probabilities are zero. The bidirectional intervention supports the physical-range mechanism at that operator. It observes the complete attention--value output, rather than inferring equality from the eventual argmax.
+
+\begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{fig02_extent.pdf}
+ \caption{A physical-range intervention changes the attention--value result. The captured CUDA comparison fixes a one-query consumer and tests 768- and 1024-entry physical ranges. Cropping and padding reproduce the respective reference outputs while retaining the visible operands. The comparison covers the complete operator output; its boundary excludes persistent KV state and service time.}
+ \label{fig:extent}
+\end{figure*}
+
+A historical Vulkan Llama companion demonstrates why arithmetic and attention requirements must hold together. Restoring the reference F32 projection path makes development endpoints agree, yet each speculative layout still differs in 99 of 128 committed full vectors on the long input. A joint attention repair removes these differences; disabling that repair in the same binary restores them~\cite{records}. This intervention changes physical extent, contiguity and resulting dispatch together. It establishes the need for the combined path in this case, while the CUDA crop/pad test isolates range at its captured operator. The supplement gives the repair controls and their full-vector scope.
+
+At its tested boundaries, the 32B strong-control qualification passes comparisons of full 151,936-entry vocabulary vectors and active F16 KV across 64 layers. These observations complement the construction's conditional argument; the supplement identifies the coverage and retained records for the other profiles.
+
+\subsection{Independent groups improve on shared quantization}
+\label{sec:strong-result}
+Figure~\ref{fig:strong} shows the strongest direct service comparison for the execution organization. On the 32B target-only deployment, C/B is 0.984864, with a 95\% paired-root interval of [0.982148, 0.987721]. The corresponding reduction is 1.51\% [1.23\%, 1.79\%]. All 48 measured paired requests favor C, but the inferential unit is the 12 roots, not the 48 repeats.
+
+\begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{fig03_strong_baseline.pdf}
+ \caption{Independent scalar groups improve the strong 32B control, with the saving concentrated in prefill. A5000, Qwen3-32B-Q4\_K\_M, target-only, $a=1$, whole-graph cuts. Root points average paired log ratios over four rounds; the primary C/B interval is a 95\% bootstrap over 12 roots, stratified by coding and mathematics. Secondary G comparisons use 97.5\% intervals. B shares activation quantization before its backend scalar loop; C schedules those scalar groups independently. Phase panels show descriptive sums over the same 48 measured requests per arm, in seconds; they are separate from the root-weighted estimate. The resident clock includes reset and output ownership and excludes loading and diagnostic capture.}
+ \label{fig:strong}
+\end{figure*}
+
+The weaker control explains why baseline choice matters. B/G is 0.956855 and C/G is 0.942372. Moving the scalar loop into the backend and sharing quantization already obtains much of the advantage over G. C/B isolates the remaining organization change.
+
+The phase account localizes that change. Prefill falls from 143.927 to 137.984\,s, saving 5.942\,s across 48 requests; decode changes from 216.663 to 216.690\,s. Known prompt rows can expose independent scalar groups, whereas the target-only decode proceeds one token at a time. The measured service totals are 364.832 and 358.925\,s, a net saving of 5.907\,s. These same-panel sums locate the benefit without separating quantization, kernel and launch time. Their pooled ratio is 0.983809; the primary root-weighted result remains Eq.~\ref{eq:s3-estimand}. This is the scheduling increment of the $a=1$, whole-cut instance, distinct from the local-cut and four-column packing treatments below.
+
+\subsection{Packing and local cuts have different opportunities}
+\label{sec:factor-result}
+The Q8 factorials fix the draft policy and cross cut placement with projection organization (Fig.~\ref{fig:factorial}). Packing reduces service by 1.64\% with \Simple{} and 1.56\% with \Local{} at 8B, and by 0.99\% and 0.80\% at 14B. Their backend-loop4 controls already share activation quantization, so these contrasts measure the remaining packed-group increment.
+
+\begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{fig04_factorial.pdf}
+ \caption{Separating the two execution changes. Balanced A5000 Q8 factorials fix draft prefill microbatch four and proposal count three. Faint points show individual root ratios; summary markers show ratios of total resident-service time with 99\% paired-root intervals from the five-comparison family. Projection contrasts hold cut placement fixed; cut contrasts hold projection fixed. The interaction summary is an equal-root geometric ratio of ratios. The two models share 16 task roots and are separate measurements.}
+ \label{fig:factorial}
+\end{figure*}
+
+Local cuts reduce service by 0.21\% and 0.30\% at fixed loop4. At fixed packing, the reductions are 0.13\% and 0.11\%, with both intervals containing zero reduction. The equal-root interactions are 1.000696 and 1.001703, indicating slight attenuation when both components are applied. At $k=3$, target verification has at most four queries, so it does not enter the multi-group Q8 packing route. Execution records place that route in prefill. The components consequently address different opportunities even within one request.
+
+\subsection{Boundary geometry explains the local-cut results}
+\label{sec:geometry-result}
+Service value depends on how often useful opportunities occur, how much work each one saves, and what organization or speculative work is added. We examine these terms within each experiment's own contract. Opportunity counts, prepared-state timings and live-work counts illuminate different terms; they are not fitted into a cross-platform performance prediction.
+
+In the natural 8B factorial, 20 of 2,224 logical verification cycles require an additional whole-graph split. \Simple{} uses 2,244 graphs and \Local{} 2,224 for the same target rows: just 0.899\% of cycles present that opportunity. The controlled B570 appends make the opportunity explicit (Fig.~\ref{fig:geometry}). A crossing starts one row before a physical boundary and forces the whole-graph split $1+(q-1)$, for $q=2,4,32$. Across capacities 1024 and 4096, local execution takes 20.34--44.68\% less append time in these cells. Matched inside controls take 0.43--3.74\% more time. Three paired observations per cell show repeat variation, not a workload confidence interval.
+
+\begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{fig06_geometry.pdf}
+ \caption{Opportunity size, frequency and remaining work. B570 panels compare \Local/\Simple{} prepared-state append time; ranges are the minimum and maximum of three paired repeats per cell. Their clock includes binding, decode, synchronization and requested-output copying, excluding state preparation. Capacity and prefix region change together. A separate A5000 panel reports 20 cut opportunities in 2,224 verification cycles, a cycle frequency rather than a fraction of service time. The 89-row panel is source-derived: calls decrease while the 23 ordered tiles per fully consumed projection remain equal and logical mask/concatenation work increases. Those counts and tensor sizes are not measured launches, traffic or latency. Earlier $16+16$ reversals remain in the supplement.}
+ \label{fig:geometry}
+\end{figure*}
+
+Crossing alone is not sufficient. Earlier $q=32$ cells with a $16+16$ whole-graph split include cases favoring \Simple{}. In the natural multi-turn pilot, the four paired episode ratios are 1.0997, 1.0024, 1.0886 and 0.9888 (Table~\ref{tab:natural}). Across the eight timed episodes, \Local{} takes 37.921\,s versus 36.385\,s for \Simple{}, a descriptive ratio of 1.04220. The pilot therefore provides no observed local-cut service improvement; two development conversations cannot establish a population ranking.
+
+\begin{table}[t]
+\centering\small
+\caption{Natural multi-turn pilot: \Local/\Simple{} complete two-turn service ratios. The original backend-loop4 projection, capacity 4096 and request protocol are fixed; there is no draft. Two rounds repeat each development conversation. These four pairs are descriptive, with no population confidence interval.}
+\label{tab:natural}
+\begin{tabular}{@{}lrr@{}}\toprule
+Episode & Round 1 & Round 2\\\midrule
+Development conversation A & 1.0997 & 1.0024\\
+Development conversation B & 1.0886 & 0.9888\\\midrule
+Pooled ratio & \multicolumn{2}{r}{1.04220}\\\bottomrule
+\end{tabular}
+\end{table}
+
+The two-turn producer explains why history reuse does not supply a separate \Local{} advantage. Its generation prompt contains a four-token empty-think suffix. The next canonical history omits that suffix before the assistant body, so the body's token positions and conditioning change. In both actual free responses, all 128 body token IDs are retained by the parser, yet exact prefix reuse stops before the obsolete suffix. Both methods trim there and reconstruct the same canonical continuation. Earlier, already canonicalized history can remain cached on later turns; that reuse is shared. The supplement gives the token timeline and distinguishes these observations from supplied-history predictions.
+
+The pilot's complete calls fall from 1,072 to 1,070. Of the 1.535\,s pooled service difference, 1.420\,s lies in the common CPU sampling span, and the equal-partition control also slows. This account locates the observed difference without attributing it to local attention. A separate source-derived 89-row example makes the remaining opportunity precise: whole calls $[24,32,32,1]$ become local calls $[32,32,25]$, while both retain the same 23 ordered projection tiles and 89 input rows. The local builder creates larger rectangular masks and one more concatenation node per layer. Saving an outer call can therefore leave the main arithmetic unchanged and add assembly work. This source analysis explains competing costs; the proposed append was not timed.
+
+\subsection{Application gains are larger than the method increment}
+\label{sec:application-result}
+In all three A5000 Q8 application panels, the complete speculative path reduces resident-service time relative to each of the four target-only controls. Against the fastest measured fixed M, \Local-packed D4 reduces resident service by 17.21\% for Qwen3-8B, 25.54\% for Qwen3-14B, and 11.52\% for Llama-8B. Their adjusted 99\% intervals are [11.17\%, 24.61\%], [18.21\%, 34.89\%], and [4.33\%, 20.95\%], respectively. These comparisons include the draft and the complete verification application. Against \Simple-loop4 with the same D4 policy, the corresponding increments are 2.01\%, 1.08\% and 1.56\%. The earlier 8B same-D4 pair retains a fixed order; its execution contrast is less isolated than the balanced factorial. Complete root distributions, intervals and all fixed controls appear in the supplement.
+
+Initialization can change the decision. For the 14B request burst, worker time including loading, integrity checks and primers falls from 662.546\,s for W-P-M to 594.559\,s for \Local-packed D4. Llama's resident requests improve, yet its short worker workload favors target-only execution: the fastest M worker takes 355.730\,s versus 368.822\,s for \Local-packed D4. The earlier 32B panel instead favors ordinary grouped generation; grouped D4 takes about 14\% more resident time. A B570 pilot likewise favors target-only generation despite fewer target graphs in the speculative path. The supplement retains these complete cost accounts.
+
+\subsection{Efficient wider calls can induce more application work}
+\label{sec:width-result}
+A Windows RTX equal-work diagnostic makes one $q=8$ call 3.94--11.91\% cheaper than two $q=4$ calls from the same state with the same eight known tokens and requested outputs. In live generation, increasing proposals from $k=3$ to $k=7$ instead raises service time by 13.58--14.59\% across the four methods (Fig.~\ref{fig:work-cost}). For the same 11,472 emitted tokens, verification cycles fall from 3,504 to 2,296, but verified rows rise from 14,016 to 18,368 and draft proposals from 10,512 to 16,072. The policy saves cycles while generating more target and draft work. Its complete cost outweighs the improvement demonstrated for a fixed eight-row operation.
+
+\begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{fig07_work_cost.pdf}
+ \caption{Wider execution and more speculation are different interventions. (a) Equal-work RTX operations hold the eight known tokens, incoming state and requested outputs fixed; points are four origin-level aggregates per cell. (b) Live-work counts cover 128 measured requests per arm (16 roots in eight repeated order blocks). The four methods share the displayed counts at each $k$. (c) Dots show the 16 root ratios; diamonds show ratios of total service with the original 98.75\% paired-root intervals. L4 means backend-loop4 and P packed projection. The operation and resident-service clocks belong to separate experiments.}
+ \label{fig:work-cost}
+\end{figure*}
+
+\subsection{A modern backend is a different engineering choice}
+\label{sec:modern-result}
+A recent upstream llama.cpp few-row implementation~\cite{llama_cpp_fewrow} provides a useful alternative. On one captured Qwen3-8B Q8 input to a $4096\times4096$ projection with $q=8$, the ratio of upstream U to the extracted legacy packed Q8 operator B is 0.612924, with a 95\% paired-repeat interval [0.607906, 0.618665]. This reduces extracted-operator time by 38.7\%. U uses a different quantization and projection contract: 32,766 of 32,768 output bit patterns differ from the legacy reference.
+
+U supplies a faster extracted operator when the numerical reference can change. Full default-backend qualification and paired service timing have not been run. The legacy-compatible C and C1 candidates take 1.1264 and 1.0261 times B's complete-operator time in their separate sessions. The supplementary variant table identifies the changes, resources and timing boundaries of these alternatives.

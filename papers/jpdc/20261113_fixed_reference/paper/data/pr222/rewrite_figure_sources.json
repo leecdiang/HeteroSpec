@@ -1,0 +1,101 @@
+{
+  "scope": "Exact figure-source projection for the 2026-11-11 narrative rewrite. No new measurement, confidence interval or GPU execution.",
+  "extent": {
+    "source_commit": "701079f265c0ff8fd05d43fbc2d8d5054a711e1b",
+    "source_path": "platforms/rtx_reference_snapshot/benchmarks/rtx_llama_repair_v1/host_execution/RESULTS.md",
+    "source_url": "https://github.com/leecdiang/HeteroSpec/blob/701079f265c0ff8fd05d43fbc2d8d5054a711e1b/platforms/rtx_reference_snapshot/benchmarks/rtx_llama_repair_v1/host_execution/RESULTS.md",
+    "query_positions": [
+      765,
+      766,
+      767,
+      768
+    ],
+    "reference_extents": [
+      768,
+      768,
+      768,
+      1024
+    ],
+    "wide_extents": [
+      1024,
+      1024,
+      1024,
+      1024
+    ],
+    "intervention_scope": "First query of captured C_PQ checkpoint. Fixed visible operands; zero-pad probabilities/use wide V, or crop probabilities and V. Both captured attention consumers have query width one.",
+    "replay_outcomes": [
+      {
+        "capture": "scalar",
+        "extent": 768,
+        "outcome": "reference",
+        "transformation": "own path"
+      },
+      {
+        "capture": "scalar",
+        "extent": 1024,
+        "outcome": "wide",
+        "transformation": "pad probabilities; wide V"
+      },
+      {
+        "capture": "wide",
+        "extent": 768,
+        "outcome": "reference",
+        "transformation": "crop probabilities and V"
+      },
+      {
+        "capture": "wide",
+        "extent": 1024,
+        "outcome": "wide",
+        "transformation": "own path"
+      }
+    ],
+    "first_vector_difference_output_index": 29,
+    "first_token_difference_output_index": 81
+  },
+  "natural_geometry": {
+    "source_commit": "55f501e9a93013a4b4d82cc4967e82b8d9054a81",
+    "source_path": "benchmarks/server_expansion_v1/M/results_ampere_m1_20261107/README.md",
+    "source_url": "https://github.com/leecdiang/HeteroSpec/blob/55f501e9a93013a4b4d82cc4967e82b8d9054a81/benchmarks/server_expansion_v1/M/results_ampere_m1_20261107/README.md",
+    "study": "Qwen3-8B Linux/A5000 M1",
+    "logical_cycles": 2224,
+    "whole_extra_call_cycles": 20,
+    "whole_physical_calls": 2244,
+    "local_physical_calls": 2224,
+    "k": 3,
+    "target_width": 4
+  },
+  "arithmetic": {
+    "source_commit": "371223b696bb805030c29f04e39eb17b57fb2ebb",
+    "source_path": "benchmarks/rtx_operator_frontier_v1/execution/RESULTS.md",
+    "Q8_0_inner_columns": 4,
+    "mixed_Q4K_Q6K_inner_columns": 1,
+    "scope": "Illustrative grouping of eight known input columns. Extent groups and arithmetic groups are distinct; ordered graph calls are not depicted as freely concurrent. Typed scalar groups also supported by PR216.",
+    "source_url": "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/RESULTS.md",
+    "typed_extension": {
+      "source_commit": "41ef4ca6bbc382c02fb97ebea874651fbf9fd4ac",
+      "source_path": "benchmarks/server_expansion_v1/Q32_full_v1/RESULTS.md",
+      "source_url": "https://github.com/leecdiang/HeteroSpec/blob/41ef4ca6bbc382c02fb97ebea874651fbf9fd4ac/benchmarks/server_expansion_v1/Q32_full_v1/RESULTS.md",
+      "unit": "One independent channel per query column; each column still computes multiple output-row dot products."
+    }
+  },
+  "phase_interface": [
+    {
+      "source_commit": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+      "source_path": "benchmarks/rtx_phase_plan_v1/native/phase_plan.hpp",
+      "source_blob": "84e1aacf27cdef46c3b905223bae676b945a8f2e",
+      "source_url": "https://github.com/leecdiang/HeteroSpec/blob/a28f3474acac793d07b6e6f462cb70bbccfa6ceb/benchmarks/rtx_phase_plan_v1/native/phase_plan.hpp"
+    },
+    {
+      "source_commit": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+      "source_path": "benchmarks/rtx_phase_plan_v1/native/resident_context.hpp",
+      "source_blob": "d8585f0984dbcfc7845d05dfdf7949e069886124",
+      "source_url": "https://github.com/leecdiang/HeteroSpec/blob/a28f3474acac793d07b6e6f462cb70bbccfa6ceb/benchmarks/rtx_phase_plan_v1/native/resident_context.hpp"
+    },
+    {
+      "source_commit": "a28f3474acac793d07b6e6f462cb70bbccfa6ceb",
+      "source_path": "benchmarks/rtx_phase_plan_v1/native/execute_groups.hpp",
+      "source_blob": "9b0cc5532729a5c2e8ec0d428fc3392fb682ccde",
+      "source_url": "https://github.com/leecdiang/HeteroSpec/blob/a28f3474acac793d07b6e6f462cb70bbccfa6ceb/benchmarks/rtx_phase_plan_v1/native/execute_groups.hpp"
+    }
+  ]
+}

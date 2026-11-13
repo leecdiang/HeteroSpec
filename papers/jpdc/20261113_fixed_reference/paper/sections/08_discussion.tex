@@ -1,0 +1,17 @@
+\section{Discussion and limitations}
+\label{sec:discussion}
+
+\subsection{Compatibility and numerical migration}
+Regression testing, exact replay and unchanged consumers motivate retaining an existing numerical interface during optimization.
+
+The 1.51\% reduction in the 32B experiment quantifies an execution opportunity that remains after the control already shares activation quantization. Independent scalar-group scheduling improves this fixed-reference implementation without changing the arithmetic contract. A deployment that permits a different reference can instead adopt modern arithmetic, as the faster extracted upstream operator illustrates.
+
+\subsection{What the construction transfers}
+The reusable method is to identify the physical and arithmetic requirements separately, place each cut at the operations that require it, and preserve the requested outputs and successor state. The one-column mixed-quantization and four-column Q8 implementations demonstrate distinct instantiations. Existing small-column kernels and packing techniques provide the components; their arrangement around query-specific cache ranges and the consumer contract provides the method studied here.
+
+Transfer requires backend work. Equal extents can hide different descriptors, and equal shapes can select different quantizers or reductions. Paged or sliding caches, Flash attention, mixed-device partitions and concurrent sequences would require new view and state obligations. The reported implementations and finite qualifications cover the stated dense-cache profiles. A persistent service must also provide recovery across its complete state-changing transaction; the current worker terminates on failures outside its target-group invalidation boundary.
+
+\subsection{Scope of the performance evidence}
+The measured benefits concentrate in known-row work. S3 saves time in prefill while decode remains nearly unchanged. In the Q8 applications with $k=3$, target verification supplies at most four rows and therefore does not enter multi-group packing. Local cuts depend on boundary opportunities and on how much surrounding work survives the cut: sparse crossings limit the natural-request increment, while unchanged tile counts and added mask assembly can consume a saved outer call. Wider speculation adds another cost by creating more target and draft work.
+
+Several studies reuse development inputs, and the Qwen sizes share root identities. Root-clustered intervals describe the stated workloads and sessions; they do not sample cross-day or cross-machine variation. Controlled cells and the two-conversation pilot remain descriptive. The post-hoc root-deletion check tests sensitivity of the S3 point estimate, while the prespecified result and its interval remain primary. Source-derived tile and mask counts describe possible work, whereas actual occupancy and memory traffic remain unmeasured.

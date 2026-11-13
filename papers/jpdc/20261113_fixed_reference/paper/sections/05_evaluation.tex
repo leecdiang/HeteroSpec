@@ -1,0 +1,49 @@
+\section{Evaluation design}
+\label{sec:eval}
+
+\subsection{Questions, deployments and controls}
+The experiments follow the construction from numerical mechanism to service value. Captured width replays and attention-path repairs test why both groupings matter. The 32B study isolates scheduling across scalar arithmetic groups; the Q8 factorials separately vary projection packing and cut placement. Controlled appends and natural requests test how often local cuts remove useful work. Complete applications then account for draft execution and the work induced by a speculative policy.
+
+The implementations run on an RTX A5000 with Linux/CUDA, an RTX 5070 Ti Laptop GPU with Windows/CUDA, and an Intel Arc B570 with Vulkan. Each deployment has its own reference. Resident model studies use a single dense, nonwrapping sequence, F16 keys and values, greedy generation, and non-Flash causal attention. The single-request A5000 panels use capacity 1024; the two-turn resident pilot uses 4096. Controlled Vulkan appends cover both capacities. Models come from the Qwen3, Llama and SmolLM2 families~\cite{qwen3,llama3,smol}. Table~\ref{tab:design} maps each experiment to the method component it exercises. Frozen sources, qualification coverage and complete numerical inputs accompany the supplement~\cite{records}.
+
+\begin{table*}[t]
+\centering\small
+\caption{Method instances and the questions they test. Here $a$ is the projection arithmetic-group width and $q$ is the number of known target rows. A root is a task input; its repeated observations stay together in resampling. The Qwen Q8 service and factorial panels reuse the same 16 roots. Each row retains its own reference, experimental unit and clock.}
+\label{tab:design}
+\begin{tabularx}{\textwidth}{@{}p{3.1cm}p{3.8cm}p{3.5cm}Y@{}}
+\toprule
+Instance / question & Grouping and cut placement & Comparison & Units and measurement boundary\\
+\midrule
+32B scheduling increment; A5000, mixed Q4\_K/Q6\_K & $a=1$; whole-graph cuts fixed; target-only & G: graph scalar loop; B: shared quantization + backend scalar loop; C: independent scalar groups & 12 roots $\times$ 4 rounds; 144 measured and 144 warmup requests; resident service\\
+Q8 component attribution; A5000, Qwen3-8B/14B & $a=4$; \Simple/\Local{} $\times$ backend-loop4/packed & Four-arm factorial; draft policy fixed; $q\le4$ in verification, wider prefill packs groups & 16 roots $\times$ 4 balanced rows per model; 256 measured requests; resident service\\
+Controlled boundary opportunity; B570, SmolLM2 & Reference-compatible F32 path; $q=2,4,32$; whole/local cuts & Matched crossing and inside appends & 12 fixed cells, 3 paired repeats; prepared-state append, excluding state preparation\\
+Complete Q8 application; A5000, Qwen3-8B/14B, Llama-8B & $a=4$; full draft and target execution & Four target-only controls and two speculative paths; same-draft increment also reported & 16/16/12 roots $\times$ 4 sessions; 384/384/288 measured requests; resident and worker clocks\\
+Natural two-turn pilot; A5000, Qwen3-8B Q8 & Capacity 4096; whole/local cuts; backend-loop4 fixed; no draft & Common canonical-history repair; local placement is the treatment & 2 development conversations $\times$ 2 rounds $\times$ 2 arms; complete two-turn embedded service\\
+Numerical migration alternative; RTX laptop, Qwen3-8B Q8 & $q=8$; old packed B versus modern U & Quantizer and projection contract change together & 1 captured input, 12 pairs per boundary; extracted operator, excluding allocation, copies and checks\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+In the Q8 panels, W and L denote \Simple{} whole-graph cuts and \Local{} attention cuts, while L4 and P denote backend-loop4 and packed projections. M denotes target-only generation, which loads no draft model. D4 denotes speculative generation with draft prefill microbatch four; the proposal count is $k=3$. Thus, D4 is a draft setting, $q$ counts target query rows, and Q8\_0 is a weight format. Qwen targets use a Qwen3-0.6B draft; the Llama pair is Meta-Llama-3.1-8B-Instruct with Llama-3.2-1B-Instruct. All arms receive the same applicable residency, graph reuse and numerical fixes.
+
+The 32B panel isolates scheduling across groups without a draft or a local-cut treatment. It fixes whole-graph attention cuts, two CPU threads, context capacity 1024, target microbatch and output reserve 32, and disabled CUDA graphs. Its 12 new roots comprise six coding and six mathematics tasks, with 39--187 prompt tokens and a 128-token output cap. Each of 144 fresh workers performs an identical-root warmup followed by one formal request. G slices scalar projections at graph level; B shares activation quantization and loops over scalar backend calls; C exposes those scalar computations as channels. C/B is the primary method comparison. Its $a=1$ scalar-loop B is distinct from the $a=4$ backend-loop4 control in the Q8 factorials.
+
+The Qwen Q8 studies use pinned APPS and MATH inputs~\cite{apps,math}, reusing task identities across sizes and platforms but establishing each deployment's reference separately. Llama's 12 roots were selected after excluding prior project exposure. The multi-turn pilot uses two development conversations from OpenAssistant~\cite{oasst}. These fixed workloads support deployment-specific estimates; model size is not a substitute for independent workload sampling.
+
+\subsection{Qualification and clocks}
+Offline qualification compares requested full vocabulary vectors and active KV entries in canonical logical order. Forced-prefix reference runs check speculative branches; an autonomous reference checks emitted tokens and stopping. Across qualification campaigns, the checked cases include prefill, continuation, boundary crossing, rejection, trim, pending tokens, termination and reset. Clean timing disables heavy observers and retains the corresponding endpoint, identity and execution-trace checks. The supplement associates observation scope with each implementation; it does not treat a clean endpoint check as a new full-state comparison.
+
+Resident-service time includes reset, planning, target and applicable draft work, sampling, state bookkeeping, synchronization and requested-output copies. It excludes model loading, context construction and diagnostic export. The two-turn pilot additionally includes history rendering, tokenization, controller transport and durable per-decode accounting in its frozen host adapter. Worker clocks include initialization and primers and are reported separately. These are embedded request paths, without concurrent network serving or queueing. Prepared-state appends and extracted GPU-event operators have narrower boundaries, stated in their captions.
+
+\subsection{Estimands and uncertainty}
+For the 32B primary comparison, we average paired log time ratios over four rounds within each root and then equally over 12 roots:
+\begin{equation}
+ \rho_{C/B}=\exp\!\left(\frac{1}{12}\sum_{r=1}^{12}
+ \frac{1}{4}\sum_{s=1}^{4}\log\frac{t_{rsC}}{t_{rsB}}\right).
+ \label{eq:s3-estimand}
+\end{equation}
+The paired-root bootstrap resamples six coding roots and six mathematics roots within their strata, preserving their equal contribution. It uses 20,000 draws and a 95\% percentile interval for C/B; the two secondary G comparisons use 97.5\% intervals. All repetitions and arms of a sampled root remain together. The ratio of pooled totals is a different estimand and is identified separately.
+
+A5000 Q8 service and factorial effects use the ratio of total service time, $\sum_{r,s}t_{rsA}/\sum_{r,s}t_{rsB}$. Their 10,000-draw paired-root bootstrap uses 99\% intervals for the five-comparison family. The interaction is an equal-root geometric ratio of component ratios. The factorials use four-arm Williams orders; six-arm service orders have partial balance, and the earlier 8B speculative pair retains its fixed order. Intervals condition on the observed sessions and tested roots. Three-repeat structural cells show their paired ranges; the two-episode pilot has no population interval. All time reductions are $100(1-\rho)$, not throughput increases.
+
+The accompanying CPU scripts reaggregate the published rows and reconstruct the figures. Phase totals are descriptive sums of the same measured requests, kept separate from root-level inference. A supplementary leave-one-root-out check is explicitly post hoc and leaves the primary estimator and interval unchanged. ChatGPT (OpenAI, GPT-6 Astra Pro, accessed 13 November 2026) assisted manuscript preparation, CPU analysis and visualization code, and the conceptual diagrams. Numerical plots use the identified measurements; this revision adds no model execution.

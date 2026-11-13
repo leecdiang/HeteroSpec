@@ -1,0 +1,64 @@
+{
+  "purpose": "Source projections for three historical mechanism tables; no new model execution or timing.",
+  "sources": [
+    {
+      "file": "arithmetic_routes.json",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/evidence/operands.json.gz",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/RESULTS.md",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/replay.inc",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/collect.py",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/evidence/first-divergence.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/witness.py"
+      ],
+      "projection": "All 16 descriptors and all route output digests/equality flags retained. Timing and allocation/accounting fields omitted. Real weights and F32 activations from a deterministic 32-token fixture; comparisons use identical captured operands at each q."
+    },
+    {
+      "file": "arithmetic_dispatch.json",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/evidence/operator-activities.json.gz",
+        "https://github.com/leecdiang/HeteroSpec/blob/371223b696bb805030c29f04e39eb17b57fb2ebb/benchmarks/rtx_operator_frontier_v1/execution/evidence/bindings.json",
+        "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/ggml/src/ggml-cuda/mmvq.cu"
+      ],
+      "projection": "All native-wide and packed activity entries for the eight Qwen3-8B descriptors; kernel names, grid and block retained. Timestamp fields omitted. Trace scope does not include 0.6B."
+    },
+    {
+      "file": "attention_committed_rows.json",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMMITTED_REFERENCE_AUDIT-00.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMBINED_COMMITTED_AUDIT-03.json"
+      ],
+      "projection": "All 15 input-arm cells and all 128 committed output indices per cell for each audit. Equality flags retained; no coordinate filtering; waveform/tensor records not supplied."
+    },
+    {
+      "file": "attention_controls.json",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/Q8_REPAIR_BASELINE_AUDIT.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMBINED_BASELINE_AUDIT.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMBINED_NO_PREFIX_BASELINE_AUDIT.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMBINED_NO_Q8_BASELINE_AUDIT.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/PREFIX_FACTOR_REVERSAL-00.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/COMBINED_INDEPENDENT_DEVELOPMENT-00.json",
+        "https://github.com/leecdiang/HeteroSpec/blob/10a70566ce01ab707dbdcc57d8270c1434088f07/benchmarks/b570_llama_companion_v1/host_execution/RESULTS.md"
+      ],
+      "projection": "Complete public endpoint cells and reversal metadata; workstation paths and receipt identifiers omitted. Prefix-off committed counts follow recorded full trajectory equality, not a separately rerun committed audit."
+    },
+    {
+      "file": "producer_matrix.csv",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/022babfabb3d1b6f4f2a2830dca04b2654d193f9/benchmarks/b570_producer_consumer_boundary_v1/execution/MATRIX.csv",
+        "https://github.com/leecdiang/HeteroSpec/blob/022babfabb3d1b6f4f2a2830dca04b2654d193f9/benchmarks/b570_producer_consumer_boundary_v1/PROTOCOL.md",
+        "https://github.com/leecdiang/HeteroSpec/blob/022babfabb3d1b6f4f2a2830dca04b2654d193f9/benchmarks/b570_producer_consumer_boundary_v1/RESULT.md"
+      ],
+      "projection": "Verbatim public 48-cell CSV; eight inputs by two producers by three consumers. Fixed-reference endpoint comparison, boundary0 clean receiver, k=1."
+    },
+    {
+      "file": "producer_state_effects.csv",
+      "source_urls": [
+        "https://github.com/leecdiang/HeteroSpec/blob/022babfabb3d1b6f4f2a2830dca04b2654d193f9/benchmarks/b570_producer_consumer_boundary_v1/execution/STATE_EFFECTS.csv"
+      ],
+      "projection": "Verbatim public eight-input CSV, including both producer states and PQ/QB endpoint/cycle/vector agreement. Boundary changes include KV and initial logits jointly."
+    }
+  ],
+  "review_scope": "Original public reports and bounded record/source files were read. Counts are reconstructed from public digests/equality records. Raw native tensor archives and GPU inference were not replayed."
+}

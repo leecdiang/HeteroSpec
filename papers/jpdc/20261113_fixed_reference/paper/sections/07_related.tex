@@ -1,0 +1,22 @@
+\Needspace{9\baselineskip}
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Matching an existing numerical reference.}
+Yang et al. reconstruct the arithmetic of cuBLAS kernels and enforce bitwise behavior through compiler transformations and static verification~\cite{taming}. Their computation descriptors separate reduction structure from scheduling: output tiling and pipelining can change when each output retains its arithmetic. Their reconstruction targets matrix multiplication; attention receives a theoretical treatment whose implementation remains open. Our construction adds query-specific physical KV views, local attention cuts and successor-state obligations within a quantized decoder.
+
+\paragraph{Batch invariance and fixed scheduling.}
+He and Thinking Machines Lab construct batch-invariant normalization, matrix multiplication and attention~\cite{thinkingmachines}. Their attention analysis shows why separating cached KV entries from newly computed entries can change reduction grouping. Fixed reductions and the numerical significance of cache boundaries are therefore established ideas. Here, the selected reference supplies each query's physical extent, including initialized entries outside its logical causal prefix; the executor retains that extent where the attention computation requires it.
+
+CoRun fixes the execution context through isolated prefill, padded fixed-shape decode, position-invariant kernels and request-specific sampling state~\cite{corun}. That policy preserves repeatable request-local arithmetic while allowing co-runners and batch slots to change. Our input is a previously selected numerical deployment, which can prescribe different physical ranges for adjacent queries. Local cuts honor those differences while surrounding compatible work remains grouped.
+
+\paragraph{Outputs, persistent state and repair.}
+Vosti specifies deterministic inference through request outputs and verifies engine invariants together with kernel contracts~\cite{vosti}. Its KV invariant covers live and retained reusable entries, tying each value to its logical token prefix. Its engine proof depends on imported kernel contracts, which a separate verifier discharges for supported kernels. Our conditional argument uses output and state obligations to compose an execution transformation in an existing implementation; finite qualification supplies the empirical coverage reported here.
+
+LLM-42 permits dynamic batching on a fast path, then uses fixed-shape verification to commit a consistent prefix or roll back~\cite{llm42}. Even when tokens agree, it replaces the fast path's KV entries with verifier-produced entries. Our transformation instead preserves the selected target path before consumer commit. It adds no separate numerical repair pass; ordinary speculative token acceptance still belongs to the consumer.
+
+\paragraph{Quantized kernels and inference optimization.}
+The implementation inherits deterministic quantized operations and four-column execution from \texttt{llama\_reproducible}~\cite{loop4code}. Modern \texttt{llama.cpp} uses integer tensor-core operations, asynchronous copies and reuse across column groups in its few-row quantized matrix multiplication~\cite{llama_cpp_fewrow}. These are existing optimization mechanisms. Our evaluation separates reorganization under the selected reference from adoption of a modern operator with a different quantizer and projection arithmetic. FlashAttention reduces attention memory traffic through tiling~\cite{flashattention}; FlashInfer supports heterogeneous KV layouts and load-balanced execution~\cite{flashinfer}. Fixed-reference compatibility adds an implementation-level numerical condition to those optimization goals.
+
+\paragraph{Speculative decoding.}
+Speculative decoding and sampling verify several draft tokens together to amortize target work~\cite{leviathan2023,chen2023}. Their distribution-preservation arguments concern the sampling algorithm. Liu et al. adapt verification effort to candidate uncertainty~\cite{liu2026heterospec}. Our method organizes already selected query tokens under a numerical reference. We therefore separate complete speculative-application results from factorials that fix the draft policy and isolate projection packing, local cuts and their interaction.

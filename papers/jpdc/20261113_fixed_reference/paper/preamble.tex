@@ -1,0 +1,30 @@
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{lmodern}
+\usepackage{mathpazo}
+\usepackage{booktabs,tabularx,array}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xurl}
+\usepackage{placeins}
+\usepackage{needspace}
+% The official CAS nologo switch uses text for contact details; class files stay intact.
+\ExplSyntaxOn
+\bool_gset_true:N \g_stm_nologo_bool
+\cs_set:Npn \__first_footerline:
+ {\small\sffamily Author-review~draft\quad 13~November~2026}
+\ExplSyntaxOff
+% No ORCID has been supplied. Avoid printing an empty identity field.
+\RenewDocumentCommand{\printorcid}{}{}
+\graphicspath{{figures/}}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,
+ pdftitle={Parallelizing Quantized LLM Inference Under a Fixed Numerical Reference},
+ pdfauthor={Chengzhan Li},pdfsubject={JPDC author-review manuscript}}
+\setlist{nosep,leftmargin=*}
+\setlength{\emergencystretch}{1.5em}
+\lefthyphenmin=2
+\righthyphenmin=3
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\Simple}{\textsc{Simple}}
+\newcommand{\Local}{\textsc{Local}}
+\newcommand{\ratio}{\rho}

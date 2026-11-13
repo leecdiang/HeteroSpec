@@ -1,0 +1,53 @@
+# RTX JSA closeout: held-out reference transfer and length coverage
+
+Status: **DESIGN_ONLY / NOT_EXECUTED**. This is the primary acceptance-facing study, not a repeat of PR137's exposed k1 service panel. No clock-time deadline is imposed. One frozen matrix ends in a supported gain, a qualified negative result, a reference counterexample, or an explicit engineering/missing-coverage disposition. Do not add experiments to chase a positive result.
+
+## Decision and fixed ancestry
+
+Use the original three-family k3 resident-request implementation and numerical contract from PR104 (`f997262d6b0accb126a1217c9356745cc8bbf708`), not PR137's new k1 fresh-context driver as a silent substitute. Keep Q8_0 weights, tokenizer/template, F16 KV, non-flash QB/PQ, context1024, target UB4, draft UB1, greedy/EOG/cap128 and phase mask3. R retains its original UB1 recipe. Pin executable, source, numerical DLLs, graph/capture settings and driver; any necessary observer-only adaptation is prospectively identified and qualified before candidate timing. Historical references and ledgers are immutable.
+
+H1: the frozen local repair preserves the deployed reference on new natural inputs and actual longer visible contexts. H2: QB's incremental cost advantage survives dual identical PQ controls. H3: an available stronger native execution path is either qualified under the same reference or has an explicit observed/unavailable disposition. The three claims are separate; no production-serving or universal determinism claim follows.
+
+## S0 — read-only preparation and baseline audit
+
+1. Reconcile prior RTX exposures and charges, recover the exact historical runtime/model bytes and native request protocol, and reserve a new UUID with model-request, process, memory, storage and cleanup ceilings. Do not reuse a closed UUID or reset past costs.
+2. Review exactly one stronger comparator, **NATIVE_FAST**, before new candidate outputs. Prefer the same pinned runtime's supported native/fused attention execution with the same k3 draft protocol. Record source guards, sampling/stop semantics and numerical-library differences. No external framework rewrite, precision change, grid search or newly tuned model is allowed. If no such executable route can be recovered, mark it UNAVAILABLE and retain the baseline gap, rather than inventing a comparison.
+3. Select two already-exposed calibration inputs per family (six total), before measurements. Reserve R/PQ/QB/NATIVE_FAST × capture/count controls = 48 calibration requests. Missing fast-path slots remain NOT_RUN. An ineligible fast path is retained as a counterexample, not timed as a qualified speedup. This calibration is numerical admission only; do not select an implementation by pilot speed.
+4. The primary four-arm implementation must be frozen before selecting held-out inputs. A NATIVE_FAST variant that passes both calibration inputs for a family may enter that family's secondary arm, fixed before any held-out candidate result. Its failure on held-out inputs is reported as transfer failure, not removed by post-hoc selection.
+
+## Inputs: genuinely unexposed, actual length
+
+For each of Qwen3, SmolLM2 and Llama, choose 12 natural inputs, four in each formatted prompt-length stratum: **64–192, 256–448, 640–832 tokens**. Balance code/math within each stratum when the source inventory permits. Select by a frozen SHA256 ordering of task ID and dataset snapshot with seed `heterospec-jsa-closeout-20261021`; do not use outputs, timing, acceptance or margins. Exclude prior project use by dataset/task ID, normalized raw text hash and formatted token-ID hash across all branches and archives, not just main. Cross-family reuse is explicitly recorded and is not counted as new independent tasks.
+
+Use the original available natural input pools and formatting, or a source/licence-documented pool approved in S0. No concatenation, repetition, truncation or synthetic padding to fill a length stratum. S0 first publishes eligible counts. If a stratum cannot be filled, stop BEFORE candidate evaluation and report the gap; a changed pool/stratum requires one prospective author-approved protocol amendment. Do not label a shorter fallback as long-context coverage. All IDs/bytes, lengths, exposure checks and provenance are sealed before E1. This is length extension within context1024, **not 8K/32K validation**. Ensure prompt+cap+k fits the real allocation and mask domain.
+
+## E1 — reference, observer and transaction qualification
+
+For each of 36 family/input cells execute **six requests** in three fresh arm workers: R capture/count, PQ capture/count, QB capture/count. This is 216 requests and 108 arm workers. No hidden warmup. Check capture/count endpoints and available state counters; R is stable; PQ/QB reproduce complete native IDs, EOG flags, output length, terminal token and stop reason. Preserve all target/draft decision vectors, rejected verification rows, proposal/accepted/correction/bonus events, pending-logit ownership and KV reconciliation. Compare PQ/QB rows only under matched prefixes/cycles; do not falsely require a speculative rejected row to equal an unrelated serial-R row.
+
+Record actual visible keys, physical key extent, caller rows, occupied q and GQA/strides/masks on first/middle/last target layers. Each family must supply an observed q>1 verification witness for the mechanism-transfer claim. A natural early-EOG input remains in the panel even if it executes no q>1 step; label its geometry NOT_OBSERVED, never replace it. Configured k3/UB4 is not evidence that every q width occurred. A failed reference/observer/state/placement check blocks the affected family's primary timing and leaves all corresponding slots visible as NOT_RUN; no successful-subset speedup. Independent already qualified families may finish according to the frozen schedule.
+
+For eligible NATIVE_FAST, add its capture/count pair per input (maximum72 requests/36 workers). Its held-out qualification is separate from primary PQ/QB admission. Archive every mismatch and stop its timing for that family; primary work may continue without converting this to a strong-baseline victory.
+
+## E2 — clean cost, unchanged primary timer
+
+Four sessions × three families ×12 inputs ×four arms **R, PQ_A, PQ_B, QB** = **576 measured requests**. PQ_A/PQ_B are the identical PQ binary/configuration, independently invoked. Each arm/input/session uses a fresh single-layout worker, performs one explicitly charged identical-input warmup then one measured request: **576 warmups, 576 timing workers**. No concurrent model workers. Order the four arms using a preregistered balanced rotation within each task block; rotate family/input order between sessions. Keep process-fixed layouts rather than switching underneath cached graphs. After each process, verify exit and cleanup before the next.
+
+The primary clock is the original nonstreaming resident HTTP request from encoding/submission through full response parse and endpoint validation. Model load/startup, source hashing, disk writes and warmups remain separately measured and outside it. Native counts payload remains inside; no profiling, raw vector writes or extra synchronization is added to the timed path. Record complete process lifetime separately. Prompt-cache reuse remains disabled and request state resets verified. Do not pool these observations with old sessions.
+
+Eligible NATIVE_FAST is inserted into a fixed five-arm order, with one warmup/measurement per block (at most144+144 additional requests and144 workers). Reuse the same output contract and clock. Report the secondary comparison QB/NATIVE_FAST only for families whose complete fast-path panel qualified; failed families retain their qualification outcome and no qualified cost. Selection is based solely on preregistered numerical admission, never candidate timing.
+
+For each family/input/session compute QB / mean(PQ_A,PQ_B). Aggregate logs with equal input and session weights, and report family-specific estimates, all36 input-level results, all144 primary blocks, length strata, session contrasts and maximum input-aggregate absolute PQ_A/PQ_B imbalance. The practical screen per family requires complete qualification, a reduction greater than max(2%, that A/A imbalance), and QB faster in every session aggregate. An across-family descriptive mean cannot hide a failed family. Four sessions are not a population CI; do not request-bootstrap or use optional stopping. Also report QB/R and dual-PQ/R separately so drafting and representation gains remain distinct.
+
+## Finite budget and stopping
+
+Maximum: **1,776 model requests / 852 model-worker starts** = 48 calibration +216 primary qualification +72 possible fast qualification +1,152 primary timing/warmup +288 possible fast timing/warmup. Without fast-path slots, active counts are lower and all unstarted slots stay enumerated. CPU wrappers/compiler/audit processes have separately reserved counts, not falsely included in the model-worker maximum. Derive and freeze cumulative time/storage/memory reservations from prior observed whole-process costs plus conservative headroom and a cleanup reserve BEFORE any native start; unknown remaining quota means BLOCKED, not unlimited permission.
+
+No fixed overnight cut-off; independent safety/hang timeouts and resource ceilings still apply and are frozen before execution. Scientific slots are executed at most once. Preserve failures; never patch the candidate after held-out results, relax tolerance, change input/output cap, reclassify q, or refill a failed cell. There is no E3 profile search, additional k/model sweep, M4/358H, CPU8, QH, actor or RTL follow-on. Finish this study once, regardless of sign.
+
+## Delivery and paper gate
+
+Provide exposure manifest, S0 comparator disposition, design freeze, full E1 raw hashes/vectors or explicit access, native request/geometry traces, every slot and warmup, process/cleanup receipts, complete timing CSV, independent raw-to-normalized CPU verifier, estimator source/output, resource ledger and final RESULT/PAPER_ADDENDUM. Label numerical failure, practical negative, noise-limited and engineering stop separately. Do not submit arXiv from the experiment machine.
+
+### Secondary-arm ordering
+The core four-arm rotation balances each arm position across the four sessions of every input. Adding NATIVE_FAST produces a five-arm rotation with four sessions; call its position balance approximate, publish exact counts, and freeze that schedule before held-out execution. Do not claim a complete five-period Latin square. The primary estimator remains QB/dual-PQ with the same registered blocks.

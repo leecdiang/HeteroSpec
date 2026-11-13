@@ -1,0 +1,31 @@
+# CPU-only memory preflight
+
+This is a research planning utility, not a GPU probe, runtime adapter, native qualification test, launch gate, or admission controller. It has no GPU or model dependencies and never starts inference. Official DeepInfer at the research pin `a679bb86ce36e883a98a97733492b686e5b9a08e` is treated as NVIDIA SM100 / DeepSeek-V4.1-Flash only. This eight-A5000/SM86 planner always denies `official_deepinfer` mode, regardless of model size or apparent memory fit. There is no override field.
+
+```sh
+python preflight.py examples/qwen14b_tp2.json
+python preflight.py examples/full671b_ideal4bit_tp8.json
+python -m unittest -v
+python -O -m unittest -v
+python -m compileall -q preflight.py test_preflight.py
+```
+
+The first example intentionally returns `unsupported_missing_evidence` (exit 1), because no measured hardware data is supplied. The full 671B example returns `payload_exceeds_memory` (exit 1), even without memory measurements: its ideal 4-bit weights exceed the nominal capacity. The official example returns `unsupported_native` (exit 1). `budget_exceeds_memory` (exit 1) means the planned allocation including metadata, KV, caller-specified reserves or imbalance exceeds a rank bound, while weight payload alone does not. This does not establish unavoidable weight-payload impossibility. Output separates `weight_payload_lower_bound_per_rank_bytes` from `planned_budget_per_rank_bytes` and `planned_budget_all_selected_ranks_bytes`. Malformed or unexpected input returns `invalid_input` (exit 2). Only a conditional memory estimate with all required caller-supplied evidence and no exceeded per-rank budget returns `estimated_possible` (exit 0). **Exit 0 never authorizes execution**: output always includes `runtime_admission: false`, `gpu_tested: false`, and `conditional_estimate_only: true`.
+
+## Input and units
+
+Example JSON files define the entire strict schema. Extra keys, duplicate JSON keys, NaN/Infinity, booleans in numeric fields, nonintegral numbers, negative counts and zero dimensions are rejected. Zero is allowed for absent overhead or measured zero free bytes. Integer byte arithmetic rounds upward, without floating-point conversion.
+
+- Hardware is fixed to eight separate RTX A5000 SM86 devices, nominally 24 GiB each. GiB = 1,073,741,824 bytes. A TP plan selects 1, 2, 4, or 8 devices; unused devices do not contribute memory.
+- Set `free_bytes_per_rank` to the **measured usable free bytes** for each selected rank, in rank order. Supply measurement method/time/device mapping in `memory_evidence` and topology/interconnect measurements plus rank mapping in `topology_evidence`. Until available, use null. Evidence strings are caller-supplied, not independently verified; they do not establish runtime support.
+- `parameter_count` is total stored parameters, not MoE active parameters. Shipped examples use nominal estimates (14B, 32B, 671B), not exact tensor counts. `parameter_basis` explicitly records this. Change to `snapshot_confirmed` only after inspecting the exact selected snapshot; this tool cannot verify that claim.
+- `weight_payload_bytes` is required and nullable. Null selects the nominal parameter/bit floor. A positive integer selects caller-supplied index tensor payload bytes instead, while still reporting `nominal_parameter_bit_floor_bytes` separately and marking the selected source. No ordering relation is imposed: dtype mixtures and nominal parameter counts can differ from the indexed payload. No exact parameter count is inferred. The distill examples use observed official index payloads of 29,540,067,328 bytes (14B) and 65,527,752,704 bytes (32B); these are snapshot/moving-source observations, not tensor-header verification or resident-memory proof. Source revisions: 14B `1df8507178afcc1bef68cd8c393f61a886323761`; 32B `711ad2ea6aa40cfca18895e8aca02ab92df1a746`. API metadata reports all-BF16 counts, but tensor headers have not been locally verified. Actual hardware measurements remain outstanding. The 671B ideal example keeps this field null.
+- `weight_bits` describes ideal packed weight storage. Nominal lower bound is ceil(parameters × bits / 8), selected only when `weight_payload_bytes` is null. It does not prove that a quantized checkpoint, loader, or kernel exists on SM86.
+- `weight_layout: sharded` splits weights and `metadata_bytes` across TP ranks, rounding upward. `replicated` stores a complete copy on each selected rank. This is an explicit simplifying allocation assumption, not a framework sharding guarantee.
+- `metadata_bytes` adds quantization scales, zero points, and other global weight metadata before splitting (or per full copy when replicated). It is not inferred from bit width.
+- `imbalance_percent` adds an integer percentage to each rank's weight-plus-metadata budget, rounded upward. `replicated_bytes` and `extras_per_rank_bytes` are then added to every rank. Use these for replicated tensors and runtime/allocator/workspace/communication/graph reserves. Avoid counting the same tensor twice. Unknown overhead entered as zero remains a lower-bound assumption, not proof of fit.
+- GQA KV bytes per rank are exactly `layers × sequence_length × batch_size × 2 × kv_heads_per_rank × head_dim × dtype_bytes`. Sequence length is the total cache allocation per sequence, including generation headroom, not just prompt length. Dtype byte size is explicit and independent of weight bits.
+- Sharded GQA requires `kv_heads % tp == 0`. Otherwise the planner rejects the allocation unless `allocation: replicated` is explicitly selected, which stores all KV heads on every rank. Partial or uneven KV replication is intentionally not modeled.
+- MLA must use `kv: {"kind": "mla_unmodeled"}`. No GQA formula is applied. Such a plan cannot return `estimated_possible`; its weight-only lower bound can still establish impossibility.
+
+The supplied examples set all overhead to zero and omit real measurements intentionally. They are minimum-bound illustrations, not deployment recipes. Full 671B ideal 4-bit weights alone occupy 335,500,000,000 bytes (about 312.46 GiB), or 41,937,500,000 bytes (about 39.06 GiB) per ideally balanced TP8 rank. Eight nominal 24 GiB devices cannot hold those weights in GPU memory, even before KV, quantization metadata, and runtime allocations. Offload and alternative placement are outside this planner.

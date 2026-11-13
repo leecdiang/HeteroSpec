@@ -1,0 +1,54 @@
+\section{Implementation and Evaluation}
+\label{sec:eval}
+\subsection{Deployments and comparison structure}
+The implementations extend a pinned llama.cpp/ggml runtime, with commit-bound numerical modules, model bytes, tokenizer and prompt templates~\cite{records}. CUDA studies use a Windows RTX 5070 Ti Laptop GPU and a Linux RTX A5000; Vulkan studies use an Intel Arc B570. Models cover Qwen3, Llama and SmolLM2~\cite{qwen3,llama3,smol}. Each deployment fixes its own reference before candidate comparisons. The Linux deployment rebuilds the reference and candidate numerical modules from source, including the CUDA, base and CPU backends.
+
+The evaluated state profile is dense single-sequence inference, with F16 KV, greedy output and no FlashAttention. Outer known-query work reaches 32 positions; the later CUDA verification study supports eight occupied query rows. Natural service panels use C1024, and the final Vulkan append interface is also checked at C4096. Table~\ref{tab:panels} binds the measured profiles, producer semantics and cost windows.
+
+W/L denotes whole/local cuts, and L4/P denotes backend-loop4/packed projections. Q8\_0 names weight quantization; $q$ is the number of query rows and $k$ the number of draft proposals. M denotes target-only generation. D4 sets draft prefill microbatch UB4; it does not set $k$. Unless stated otherwise, $k=3$. All applicable controls receive the same legal numerical, residency and graph-reuse improvements. Ordinary generation remains an application alternative and loads no idle draft in the latest Linux panels.
+
+\begin{table*}[t]
+\centering\footnotesize\tighttable
+\caption{Main evidence panels. Counts exclude separate numerical qualification. A repeated timing is not an additional independent task. The 8B and 14B Linux transfer panels share the same sixteen task identities. Source and full control tables are in the supplement.}
+\label{tab:panels}
+\begin{tabularx}{\textwidth}{@{}L{2.00cm}L{2.22cm}L{2.40cm}L{1.64cm}L{1.40cm}Y@{}}\toprule
+Panel & Platform / model & Compared paths & Root / repetition unit & Measured + warm & Observation and cost window\\\midrule
+Linux service & A5000; Qwen3-8B, 14B & Four target-only M; W-L4-D4, L-P-D4 & 16 exposed roots; 4 sessions & $384+48$ each & Resident service plus actual startup, request burst and worker clocks.\\
+Llama service & A5000; Llama-8B/1B & Same six paths & 12 new project roots; 4 sessions & $288+48$ & Independent family reference; all fixed controls.\\
+Balanced factors & A5000; Qwen3-8B, 14B & W/L $\times$ L4/P; D4 fixed & 16 roots; 4 Williams rows & $256+32$ each & Cut and projection attribution in the same panel.\\
+Mixed-Q4 & A5000; Qwen3-32B & Four M; two D4; REF1 loop/group & 4 exposed roots; 4 rounds & $96+96$ & Resident service; shared graphs-off policy; descriptive.\\
+Eight-query live & Windows RTX; Qwen3-8B & W/L $\times$ L4/P $\times$ k3/k7 & 16 new roots; 8 Williams rows & $1024+128$ & Complete service; common candidate output reserve 8.\\
+Equal-work width & Windows RTX; Qwen3-8B & One q8 vs two q4 calls & 4 fixed origins; paired cells & $128+32$ & Identical state, eight tokens and all eight outputs.\\
+Vulkan append & B570; SmolLM2-1.7B & Scalar reference, W, L & 12 structural cells; 3 repeats & $108+108$ & C1024/C4096; append after valid state preparation.\\\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Independent numerical qualification}
+Repeated independent reference runs establish the vectors and logical state for the declared inputs before candidate execution. Forced-prefix and autonomous reference runs check candidate branches and free-generation endpoints, respectively. Comparisons cover requested full vocabulary vectors, active KV by layer and position, frontier, output ownership and pending/stop behavior.
+
+Native tests cover producer transitions, inside/crossing prefixes, tails, occupied widths, acceptance followed by rejection, trim, native EOG, cap and reset. Build records bind the complete source dependencies and loaded modules. Heavy observers are checked against the clean executable and remain outside its timed path.
+
+The Qwen-frozen CUDA rules transfer from grouped-query attention with 128-dimensional heads to multi-head attention with 64-dimensional heads. Llama uses its own family reference. The 32B extension checks actual mixed-Q4 operands, 60 geometry cases and all six paths; its reference has reserve 1 and its candidates reserve 32. Supplementary records give the full comparison counts and observation boundaries.
+
+Clean performance runs check reference endpoints, semantic traces, physical work, module identity and the absence of heavy state APIs. Full-vector/state correspondence is established at the declared heavy qualification boundaries; clean timing measures the same numerical implementation with endpoint and trace checks.
+
+\subsection{Natural inputs, warmup and service clocks}
+Natural service inputs come from pinned APPS and MATH snapshots~\cite{apps,math}. The Linux Qwen panels reuse the Windows panel's 16 task records, tokenized prompts and cap definitions. Each deployment establishes its own numerical reference and measurements; task reuse does not enlarge the independent sample. Llama uses 12 roots selected after project-exposure exclusion. The Windows $q=8$ live panel has 16 separate roots, prompt length at most 192 tokens and cap 96. Its equal-work study instead uses one APPS and three GSM8K~\cite{gsm8k} development origins selected before timing (Supplement~S4). The 32B panel uses four exposed mathematics roots with cap 128. The earlier producer study uses GSM8K and MATH-500 (Supplement~S5). ``New'' refers to project exposure, not model-training membership.
+
+In the Linux service panels, each arm/session starts one resident worker, loads its required models and contexts, performs two separate primer requests, and processes the fixed test roots with the declared reset policy. The 32B panel instead uses an identical-root full warmup immediately before each measured request. Both warmup schemes are retained as distinct designs. Each request ends at native EOG or its token cap, preserving its naturally observed output length.
+
+Resident service contains the registered reset, planning, target/draft execution, sampling, required state bookkeeping, synchronization and requested-output materialization. Separate clocks record process startup, model loading, integrity checks, primers, request-burst wall time and wrapper work. These overlapping windows describe distinct lifecycle costs. The first completed response measures full-request latency. Memory is reported from periodic device-global samples.
+
+Vulkan's structural endpoint starts after valid state preparation and includes phase binding, decode, synchronization and output copying. State preparation and import are separately accounted. Equal-work q8 diagnostics likewise retain identical input/state/output contracts and report their operation boundary. Profiling and synchronized host-component diagnostics use separate runs. Primary latencies include every operation within their declared measurement boundary.
+
+\subsection{Estimands and preserved dependence}
+For method $A$, task root $r$ and registered session $s$, let $t_{rsA}$ be complete resident-service time. The main application contrast is
+\begin{equation}
+ \rho_{A/B}=\frac{\sum_{r,s}t_{rsA}}{\sum_{r,s}t_{rsB}}.
+ \label{eq:ratio}
+\end{equation}
+A ratio below 1 favors $A$, and $1-\rho$ is the time reduction. We also retain equal-root geometric ratios and per-session summaries, which answer different weighting questions. Tables identify the fastest measured fixed M for descriptive comparison; the registered inference compares the candidate with every fixed M, rather than testing an outcome-selected minimum.
+
+The Linux application panels use 10,000 paired-root bootstrap draws, retaining every arm and session of a sampled root. Five fixed comparisons use 99\% percentile intervals with Bonferroni adjustment. The two balanced factors panels similarly use five estimands: four direct contrasts and an equal-root multiplicative interaction. The four Williams rows balance four-arm positions and within-session directed neighbors. By contrast, the six-arm service designs have partial order balance; the first Linux 8B D4 comparison retains a fixed relative order. We therefore use the balanced panels for cut/projection attribution.
+
+The Windows q8 panel uses eight Williams order blocks. Its four primary width comparisons use 98.75\% intervals; the four secondary fixed-k7 comparisons form a separate labeled family. All intervals condition on the finite roots, implementation and observed sessions. Repetitions do not increase the independent root count. The four-root 32B panel and deliberately chosen structural diagnostics remain descriptive, with complete observations rather than population confidence claims.

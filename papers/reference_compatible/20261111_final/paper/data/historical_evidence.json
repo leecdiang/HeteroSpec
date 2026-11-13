@@ -1,0 +1,462 @@
+{
+  "scope": "Values transcribed from commit-pinned reports/summary tables; not a replacement for original per-request raw data.",
+  "pins": {
+    "paper164": "06c5780d1a3e3e37b780d50274b6ab3e07bc96dc",
+    "cuda_repair162": "e11d2b75d82422409ba2b701aa38c59f36acc50b",
+    "vulkan_repair163": "10a70566ce01ab707dbdcc57d8270c1434088f07",
+    "vulkan_transfer165": "5aae66e05b0f6e8a8b44dac719b2b05b8f84f34f",
+    "cuda_transfer166": "abd36bea639bf814159ad68ab015bc983c5338b1",
+    "cuda_width168": "9c79594f679ea4aad1956d8a385fdf6a7352d892",
+    "vulkan_frontier169": "8ca17478c292275b3515a91b51d0e791a8fae256",
+    "cuda_packing171": "371223b696bb805030c29f04e39eb17b57fb2ebb"
+  },
+  "vulkan_width": [
+    {
+      "deployment": "Qwen C1024 dual-resident",
+      "q": 2,
+      "cross": 1.2168645930676347,
+      "inside": 1.0088352246488084,
+      "blocks": 9,
+      "cross_QB_faster": 8
+    },
+    {
+      "deployment": "Qwen C1024 dual-resident",
+      "q": 4,
+      "cross": 1.3138147941098088,
+      "inside": 1.0012197754726053,
+      "blocks": 9,
+      "cross_QB_faster": 9
+    },
+    {
+      "deployment": "Qwen C1024 dual-resident",
+      "q": 8,
+      "cross": 1.1932936858893644,
+      "inside": 1.0039293112466114,
+      "blocks": 9,
+      "cross_QB_faster": 9
+    },
+    {
+      "deployment": "Qwen C1024 dual-resident",
+      "q": 16,
+      "cross": 0.9547444327657716,
+      "inside": 1.0001928185964803,
+      "blocks": 9,
+      "cross_QB_faster": 0
+    },
+    {
+      "deployment": "Qwen C1024 dual-resident",
+      "q": 32,
+      "cross": 0.9478353244236264,
+      "inside": 0.9859449943531227,
+      "blocks": 9,
+      "cross_QB_faster": 0
+    },
+    {
+      "deployment": "Qwen C4096 target-only",
+      "q": 2,
+      "cross": 1.129786467954835,
+      "inside": 1.0001671349063352,
+      "blocks": 12,
+      "cross_QB_faster": 11
+    },
+    {
+      "deployment": "Qwen C4096 target-only",
+      "q": 4,
+      "cross": 1.133288245451749,
+      "inside": 0.988211183037963,
+      "blocks": 12,
+      "cross_QB_faster": 12
+    },
+    {
+      "deployment": "Qwen C4096 target-only",
+      "q": 8,
+      "cross": 1.076499447076281,
+      "inside": 1.0099334471963122,
+      "blocks": 12,
+      "cross_QB_faster": 12
+    },
+    {
+      "deployment": "Qwen C4096 target-only",
+      "q": 16,
+      "cross": 0.9900394162991626,
+      "inside": 1.0029579103985937,
+      "blocks": 12,
+      "cross_QB_faster": 1
+    },
+    {
+      "deployment": "Qwen C4096 target-only",
+      "q": 32,
+      "cross": 0.9854727865153503,
+      "inside": 1.0006715581565848,
+      "blocks": 12,
+      "cross_QB_faster": 1
+    },
+    {
+      "deployment": "Smol C4096 dual-resident",
+      "q": 2,
+      "cross": 1.2350177329818526,
+      "inside": 0.9888461777041816,
+      "blocks": 6,
+      "cross_QB_faster": 6
+    },
+    {
+      "deployment": "Smol C4096 dual-resident",
+      "q": 8,
+      "cross": 1.2640880679886073,
+      "inside": 0.9838738757200861,
+      "blocks": 6,
+      "cross_QB_faster": 6
+    },
+    {
+      "deployment": "Smol C4096 dual-resident",
+      "q": 16,
+      "cross": 1.083003935988183,
+      "inside": 1.0181986933036462,
+      "blocks": 6,
+      "cross_QB_faster": 6
+    },
+    {
+      "deployment": "Smol C4096 dual-resident",
+      "q": 32,
+      "cross": 0.9183103575750764,
+      "inside": 0.9988326286252164,
+      "blocks": 6,
+      "cross_QB_faster": 0
+    }
+  ],
+  "vulkan_natural": {
+    "inputs": 12,
+    "sessions": 6,
+    "measurements": 288,
+    "warmups": 288,
+    "positions_per_arm": 1331,
+    "service_seconds_rounded": {
+      "S1": 15.394,
+      "PQ": 10.723,
+      "QB": 7.255,
+      "WB": 7.258
+    },
+    "contrasts": [
+      {
+        "numerator": "S1",
+        "denominator": "QB",
+        "ratio": 2.12178566527497,
+        "ci95": [
+          1.8994966412098135,
+          2.3316069006093376
+        ],
+        "blocks": 72,
+        "QB_faster": 72
+      },
+      {
+        "numerator": "PQ",
+        "denominator": "QB",
+        "ratio": 1.4779640314571196,
+        "ci95": [
+          1.379483608575283,
+          1.5654284729927097
+        ],
+        "blocks": 72,
+        "QB_faster": 72
+      },
+      {
+        "numerator": "WB",
+        "denominator": "QB",
+        "ratio": 1.0002920203610761,
+        "ci95": [
+          0.9996693425823957,
+          1.001203802901704
+        ],
+        "blocks": 72,
+        "QB_faster": 33
+      }
+    ],
+    "uncertainty": "Reported input-cluster bootstrap intervals, conditional on these measured sessions; not independently bootstrapped from raw requests in this package.",
+    "fast": {
+      "time_over_QB": 0.7169,
+      "endpoint_match": 11,
+      "inputs": 12,
+      "full_vector_sequences_match": 0
+    }
+  },
+  "cuda_operator": [
+    {
+      "op": "Q",
+      "k": 4096,
+      "m": 4096,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 172.4,
+      "packed_us": 150.2,
+      "tile_concat_MiB": 2.19
+    },
+    {
+      "op": "V",
+      "k": 4096,
+      "m": 1024,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 67.1,
+      "packed_us": 67.5,
+      "tile_concat_MiB": 0.55
+    },
+    {
+      "op": "K",
+      "k": 4096,
+      "m": 1024,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 68.4,
+      "packed_us": 45.9,
+      "tile_concat_MiB": 0.55
+    },
+    {
+      "op": "O",
+      "k": 4096,
+      "m": 4096,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 173.7,
+      "packed_us": 148.2,
+      "tile_concat_MiB": 2.19
+    },
+    {
+      "op": "FFN gate",
+      "k": 4096,
+      "m": 12288,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 745.3,
+      "packed_us": 681.7,
+      "tile_concat_MiB": 6.56
+    },
+    {
+      "op": "FFN up",
+      "k": 4096,
+      "m": 12288,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 730.7,
+      "packed_us": 688.9,
+      "tile_concat_MiB": 6.56
+    },
+    {
+      "op": "FFN down",
+      "k": 12288,
+      "m": 4096,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 759.1,
+      "packed_us": 735.4,
+      "tile_concat_MiB": 2.19
+    },
+    {
+      "op": "Vocabulary",
+      "k": 4096,
+      "m": 151936,
+      "tile_kernels": 23,
+      "packed_kernels": 2,
+      "tile_us": 8864.1,
+      "packed_us": 8542.4,
+      "tile_concat_MiB": 81.14
+    }
+  ],
+  "cuda_append": [
+    {
+      "boundary": 256,
+      "head": 248,
+      "q": 8,
+      "cross": false,
+      "S1_ms": 140.02,
+      "QB4_ms": 49.06,
+      "WB4_ms": 48.75,
+      "newQB_ms": 38.32,
+      "newWB_ms": 37.61
+    },
+    {
+      "boundary": 256,
+      "head": 253,
+      "q": 8,
+      "cross": true,
+      "S1_ms": 125.57,
+      "QB4_ms": 46.76,
+      "WB4_ms": 62.88,
+      "newQB_ms": 41.98,
+      "newWB_ms": 62.75
+    },
+    {
+      "boundary": 256,
+      "head": 224,
+      "q": 32,
+      "cross": false,
+      "S1_ms": 448.43,
+      "QB4_ms": 165.81,
+      "WB4_ms": 165.57,
+      "newQB_ms": 135.44,
+      "newWB_ms": 135.47
+    },
+    {
+      "boundary": 256,
+      "head": 253,
+      "q": 32,
+      "cross": true,
+      "S1_ms": 468.85,
+      "QB4_ms": 182.15,
+      "WB4_ms": 197.86,
+      "newQB_ms": 150.56,
+      "newWB_ms": 171.65
+    },
+    {
+      "boundary": 1024,
+      "head": 1016,
+      "q": 8,
+      "cross": false,
+      "S1_ms": 119.58,
+      "QB4_ms": 44.54,
+      "WB4_ms": 45.21,
+      "newQB_ms": 39.69,
+      "newWB_ms": 39.96
+    },
+    {
+      "boundary": 1024,
+      "head": 1021,
+      "q": 8,
+      "cross": true,
+      "S1_ms": 125.39,
+      "QB4_ms": 46.82,
+      "WB4_ms": 63.35,
+      "newQB_ms": 41.79,
+      "newWB_ms": 62.91
+    },
+    {
+      "boundary": 1024,
+      "head": 992,
+      "q": 32,
+      "cross": false,
+      "S1_ms": 457.04,
+      "QB4_ms": 173.39,
+      "WB4_ms": 174.04,
+      "newQB_ms": 143.85,
+      "newWB_ms": 144.72
+    },
+    {
+      "boundary": 1024,
+      "head": 1021,
+      "q": 32,
+      "cross": true,
+      "S1_ms": 465.91,
+      "QB4_ms": 179.69,
+      "WB4_ms": 194.7,
+      "newQB_ms": 147.59,
+      "newWB_ms": 167.91
+    }
+  ],
+  "cuda_natural": {
+    "inputs": 4,
+    "sessions": 3,
+    "measurements": 36,
+    "warmups": 36,
+    "committed_comparisons": 1524,
+    "branch_comparisons_overlapping": 1836,
+    "service_seconds_rounded": {
+      "oldQB": 3.3562,
+      "newQB": 3.2219,
+      "newWB": 3.1985
+    },
+    "prefill_seconds_rounded": {
+      "oldQB": 2.0814,
+      "newQB": 1.942,
+      "newWB": 1.9228
+    },
+    "verify_seconds_rounded": {
+      "oldQB": 0.7848,
+      "newQB": 0.7759,
+      "newWB": 0.7753
+    },
+    "old_over_newQB_reported": 1.0417,
+    "newWB_over_newQB_reported": 0.9928,
+    "old_over_newQB_sessions": [
+      1.0446,
+      1.039,
+      1.0415
+    ],
+    "newWB_over_newQB_sessions": [
+      0.9864,
+      0.9936,
+      0.9983
+    ],
+    "newQB_faster_old_blocks": 11,
+    "blocks": 12
+  },
+  "scope_history": {
+    "Qwen": {
+      "GS": 0.834652,
+      "PQ": 1.121863,
+      "QB": 1.188438
+    },
+    "Smol": {
+      "GS": 0.684205,
+      "PQ": 0.805284,
+      "QB": 0.804877
+    },
+    "definition": "Registered PR151 estimator: equal input log contrasts within session, two sessions per date, three dates equally. D = same-layout target-only / speculative; >1 favors drafting. Fixed exposed historical panels, not latest binaries.",
+    "source": "29511ed91eb9f3d9773cfdda53e3554b0f4ad08b / benchmarks/rtx_scope_transfer_v1/host_execution/day2/RESULTS.md"
+  },
+  "transfer_history": [
+    {
+      "campaign": 162,
+      "backend": "CUDA",
+      "model": "Llama",
+      "inputs": 24,
+      "M_QB_over_M_PQ": 1.004367,
+      "C_QB_over_C_PQ": 0.975530833,
+      "D_QB": 0.973607,
+      "M_QB_over_R": 0.446871,
+      "C_QB_over_R": 0.458985
+    },
+    {
+      "campaign": 163,
+      "backend": "Vulkan",
+      "model": "Llama",
+      "inputs": 24,
+      "M_QB_over_M_PQ": 0.8993,
+      "C_QB_over_C_PQ": 0.950548531,
+      "D_QB": 0.334255,
+      "M_QB_over_R": 0.544429,
+      "C_QB_over_R": 1.628786691
+    },
+    {
+      "campaign": 166,
+      "backend": "CUDA",
+      "model": "Qwen8B",
+      "inputs": 4,
+      "M_QB_over_M_PQ": 1.0168148677907753,
+      "C_QB_over_C_PQ": 0.958174623854198,
+      "D_QB": 1.194423229729671,
+      "M_QB_over_R": 0.5278838412530658,
+      "C_QB_over_R": 0.4419571121138858
+    },
+    {
+      "campaign": 166,
+      "backend": "CUDA",
+      "model": "Qwen14B",
+      "inputs": 4,
+      "M_QB_over_M_PQ": 0.9835331210203129,
+      "C_QB_over_C_PQ": 0.9768167221064984,
+      "D_QB": 1.6585574813374253,
+      "M_QB_over_R": 0.5430495635447465,
+      "C_QB_over_R": 0.32742281751178315
+    },
+    {
+      "campaign": 165,
+      "backend": "Vulkan",
+      "model": "Qwen8B",
+      "inputs": 8,
+      "M_QB_over_M_PQ": 0.9150470979407569,
+      "C_QB_over_C_PQ": 0.9691227478334372,
+      "D_QB": 0.2691722163242668,
+      "M_QB_over_R": 0.6038131493502596,
+      "C_QB_over_R": 2.243222
+    }
+  ]
+}

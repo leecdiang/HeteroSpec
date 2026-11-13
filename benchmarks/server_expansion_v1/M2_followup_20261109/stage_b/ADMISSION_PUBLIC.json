@@ -1,0 +1,131 @@
+{
+  "schema": "heterospec.pr210.stage-B.admission.v1",
+  "prepared_utc": "2026-11-09T10:11:17.741551+00:00",
+  "protocol_head": "3268a63dcbde99d5d9f8dd461f34d56e9840d3a0",
+  "Stage_A_head": "398e79a177bc71d83db4d58cf78672554f552586",
+  "original_reference_unchanged": true,
+  "reference_freeze_sha256": "fa8ceec6d54f98730d63880436a6bf088c119232c0f091406725e724a4665731",
+  "amendment": "Register three same-R extensions plus four full autonomous R replays, because historical formal receipts did not retain intermediate vectors/state. Replayed128-token endpoints must equal old frozen receipts; extension initial full-vector/KV must equal the replayed old terminal. One already complete extension is reused only after exact job/build/module/payload checks. Old baseline and root order unchanged.",
+  "origins": [
+    "MATH/geometry/train/333",
+    "MATH/algebra/train/313",
+    "MATH/intermediate_algebra/train/315",
+    "MATH/geometry/train/654"
+  ],
+  "extension_jobs": [
+    {
+      "origin": 0,
+      "root": "MATH/geometry/train/333",
+      "job": "R-extension-0.json",
+      "job_sha256": "d024046ee4a0059f78571ff56cdd457b294a82c94198b45a41949266792a8ebd",
+      "prompt_tokens": 198,
+      "cap": 63,
+      "rows_bound": 1404,
+      "bridge_position": 198,
+      "old_receipt_sha256": "4ae5e8d0b1c565a0188dc23cec0471f26d7be7a618a010038f4f37a2ec0dca79",
+      "old_pending_id": 1318
+    },
+    {
+      "origin": 1,
+      "root": "MATH/algebra/train/313",
+      "job": "R-extension-1.json",
+      "job_sha256": "ede6fb267e6c459a25660abd607ffc7022a6f8f2d5e4a15a76a56055a8a47bf3",
+      "prompt_tokens": 195,
+      "cap": 66,
+      "rows_bound": 1446,
+      "bridge_position": 195,
+      "old_receipt_sha256": "72c106dd2b4b0625e2acbe2b35825b5c06f3fa5273c4463f410862d48f62b688",
+      "old_pending_id": 14085
+    },
+    {
+      "origin": 3,
+      "root": "MATH/geometry/train/654",
+      "job": "R-extension-3.json",
+      "job_sha256": "14a56d1d46e6fcc09507530cd604f0cc3765ee5f6490222f86950258bc694c5a",
+      "prompt_tokens": 196,
+      "cap": 65,
+      "rows_bound": 1432,
+      "bridge_position": 196,
+      "old_receipt_sha256": "4358cc45a332567768bf7b662c973496300f289a2e69fc8e446751e5775c682d",
+      "old_pending_id": 26715
+    }
+  ],
+  "job_counts": {
+    "extension": 3,
+    "autonomous_R_replay": 4,
+    "forced_scalar_oracle": 4,
+    "candidate_qualification": 32,
+    "primer": 8,
+    "timed": 16,
+    "total_planned": 67,
+    "already_charged": 1,
+    "stage_B_ceiling": 80,
+    "unspent_failure_oracle_reservation": 13
+  },
+  "inherited": {
+    "requests": 1827,
+    "rows": 3022535,
+    "request_ceiling": 2048,
+    "row_ceiling": 8000000
+  },
+  "planned_rows_conservative_bound": 28807,
+  "accounting": "Each extension input, forced oracle case, or eight-output diagnostic operation is one logical request. q4pair is one request/two calls/eight physical rows. Restored prefix length is conservatively reserved again although not forwarded.",
+  "geometry": {
+    "within": 248,
+    "crossing": 252,
+    "append_tokens": 8,
+    "observed_extent": 256
+  },
+  "target": {
+    "C": 1024,
+    "KV": "F16",
+    "FA": false,
+    "UB": 32,
+    "reserve": 8,
+    "cut": "LOCAL",
+    "threads": 2
+  },
+  "R": {
+    "UB": 1,
+    "reserve": 1,
+    "executable_sha256": "5c23a74ffaeec433f9dbc37ce1e014f374839b84da0eb19e4cd36146cc7d5199"
+  },
+  "allocation": {
+    "approved": true,
+    "device": "Previously explicitly assigned GPU1; full UUID private",
+    "protected_indices": [
+      0
+    ],
+    "CPU_affinity": [
+      32,
+      33
+    ]
+  },
+  "timing": {
+    "origin": "MATH/geometry/train/333",
+    "rounds": 2,
+    "block_order_round0": [
+      "loop4-within",
+      "loop4-crossing",
+      "packed-within",
+      "packed-crossing"
+    ],
+    "round1": "reverse block order",
+    "execution_order": [
+      "q4pair,q8",
+      "q8,q4pair"
+    ],
+    "primers_per_cell": 1,
+    "outputs": "all eight full owned vocabulary vectors; same ownership moves on both paths",
+    "restore": "outside primary operation timer; separately reported",
+    "qualification": "all four roots, all eight cells, exact full vectors and active KV/frontier; no tolerance change"
+  },
+  "shutdown": {
+    "new_worker_cutoff_BJT": "2026-11-09T20:30:00+08:00",
+    "hard_archive_boundary_BJT": "2026-11-09T21:00:00+08:00",
+    "worker_timeout_s": 900,
+    "start_margin_s": 960
+  },
+  "next_stages": "No automatic C/D/E or 32B; no optimization without measured hotspot and further bounded registration",
+  "new_task_policy": "User revised policy: pause on assigned-GPU conflict, reserve violation, reboot or observable interference. Other-device jobs alone do not pause. Never signal foreign tasks."
+}

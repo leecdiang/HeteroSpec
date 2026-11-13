@@ -1,0 +1,13 @@
+\section{Related Work}
+\label{sec:related}
+\subsection{Preserving arithmetic across parallel execution}
+Thinking Machines studies batch-invariant reduction choices for normalization, matrix multiplication and attention~\cite{thinkingmachines}. Taming reconstructs the bitwise arithmetic of existing cuBLAS kernels, enforces reduction descriptions during lowering and verifies compiled arithmetic properties~\cite{taming}. These works establish that existing numerical behavior can be an optimization target. Our contribution connects reference-compatible arithmetic to dense-cache prefixes, phase transitions and requested-output ownership in a quantized inference runtime. The native grouping recipes expose independent work while retaining the reference-sensitive organization within each group.
+
+Public \texttt{llama\_reproducible} code includes a small-column quantized execution path~\cite{loop4code}. Backend-loop4 is therefore a direct performance control. The balanced experiments separate its remaining projection increment from cut scope. The mixed-Q4 study uses a scalar-column recipe and a different graph-level baseline, as summarized in Fig.~\ref{fig:q4}.
+
+\subsection{System determinism and speculative execution}
+Vosti studies engine-level determinism through formal relationships between engine state, cache behavior and kernel properties~\cite{vosti}. We study compatibility with an existing quantized deployment: phase-specific producers, physical cache geometry and qualified arithmetic determine the whole/local execution plans. Native numerical correspondence and complete-service measurements evaluate these plans.
+
+LLM-42 uses a consistent verifier execution with verification and state repair~\cite{llm42}. Our supported paths organize compatible work before execution by binding offline-qualified arithmetic and cache requirements at each call. CoRun isolates prefill and uses fixed-shape batched decode for deterministic service~\cite{corun}. Phase plans instead expose row-dependent physical-prefix and output-state requirements, allowing attention-local cuts within a wider graph.
+
+Speculative decoding and sampling reduce target invocations by evaluating proposals together~\cite{leviathan2023,chen2023}. Distribution preservation does not establish byte-identical finite-precision vectors and KV; the target-compatibility contract specifies those additional obligations. Draft width remains an application control. HeteroSpec allocates verification effort using contextual heterogeneity~\cite{liu2026heterospec}, a different objective from compatibility with a fixed deployment.

@@ -1,0 +1,103 @@
+--- before/04_evaluation.tex
++++ after/04_evaluation.tex
+@@ -10,7 +10,7 @@
+ \caption{Evaluation panels. A root is one task input; repeated timings retain that root identity. Counts give measured requests or operations, followed by separate warmups. The two Qwen service panels and their factorials reuse the same 16 roots.}
+ \label{tab:panels}
+ \begin{tabularx}{\textwidth}{@{}L{2.22cm}L{2.48cm}L{2.62cm}L{2.24cm}Y@{}}\toprule
+-Question & Deployment & Comparison & Independent unit & Measured / warm\\\midrule
++Question & Deployment & Comparison & Input / repeats & Measured / warm\\\midrule
+ Component attribution & A5000; Qwen3-8B, 14B & Whole/local $\times$ loop4/packed & 16 roots; 4 balanced rows & $256/32$ per model\\
+ Natural-request value & A5000; Qwen3-8B, 14B & Four target-only; two speculative & 16 roots; 4 sessions & $384/48$ per model\\
+ Family transfer & A5000; Llama-8B & Same six controls & 12 roots; 4 sessions & $288/48$\\
+@@ -21,14 +21,14 @@
+ \end{tabularx}
+ \end{table*}
+ 
+-We denote whole-graph and local-attention cuts by W and L, and backend-loop4 and independent-group packing by L4 and P. The loop4 control quantizes activations once and invokes the reference dot computation in the backend. M is ordinary target-only generation. D4 is speculative generation with draft prefill microbatch four; its proposal count is $k=3$ unless stated otherwise. Thus D4, physical query width $q$ and Q8\_0 weight quantization name different properties. All controls receive the same applicable residency, graph-reuse and numerical improvements. M loads only its target resources.
++We denote whole-graph and local-attention cuts by W and L, and backend-loop4 and independent-group packing by L4 and P. The loop4 control quantizes activations once and invokes the reference dot computation in the backend. M is ordinary generation and loads only target resources. D4 is speculative generation with draft prefill microbatch four; its proposal count is $k=3$ unless stated otherwise. D4 specifies draft prefill, $q$ counts target query rows, and Q8\_0 specifies weight quantization. All controls receive the same applicable residency, graph-reuse and numerical improvements.
+ 
+ \subsection{Numerical observations and timing boundaries}
+ Numerical qualification compares each requested full vocabulary vector and active KV state against repeated independent reference runs. Forced-prefix references supply the target values for speculative branches, and autonomous references supply the emitted-token and stopping endpoints. Tests exercise prefill, continuation, boundary crossings, acceptance and rejection, trim, pending tokens, native end of generation, caps and reset. Heavy observers run separately from clean timing; clean runs retain endpoint, transaction-trace, module-identity and physical-work checks.
+ 
+-Natural requests use pinned APPS and MATH inputs~\cite{apps,math}. Linux Qwen experiments reuse the 16 Windows task records with separately established deployment references. Llama uses 12 subsequently selected project-unseen roots. The live-width panel uses another 16 roots; its equal-work diagnostic uses one APPS and three GSM8K origins~\cite{gsm8k}. The four-root mixed-Q4 study is descriptive. Supplement~S1 gives input, warmup and order details.
++Natural requests use pinned APPS and MATH inputs~\cite{apps,math}. Linux Qwen experiments reuse the 16 Windows task records with separately established deployment references. Llama uses 12 roots selected after excluding previous project exposure. The live-width panel uses another 16 roots; its equal-work diagnostic uses one APPS and three GSM8K origins~\cite{gsm8k}. Supplement~S1 gives input, warmup and order details.
+ 
+-Resident-service time includes reset, planning, target and draft execution, sampling, state bookkeeping, synchronization and requested-output copying. Separate worker clocks include model loading and warmup. Vulkan append and equal-work width timings start from prepared state and include their registered execution and output-copy boundary. These windows answer distinct deployment questions and are reported separately.
++Resident-service time includes reset, planning, target and draft execution, sampling, state bookkeeping, synchronization and requested-output copying. Separate worker clocks include model loading and warmup. Vulkan append and equal-work width timings start from prepared state and include the specified execution and output copying. These operation timings exclude the separately recorded state preparation.
+ 
+ \subsection{Paired estimates}
+ For method $A$, root $r$ and session $s$, let $t_{rsA}$ be resident-service time. Our main effect is the ratio of totals,
+@@ -36,6 +36,6 @@
+  \rho_{A/B}=\frac{\sum_{r,s}t_{rsA}}{\sum_{r,s}t_{rsB}}.
+  \label{eq:ratio}
+ \end{equation}
+-Time reduction is $1-\rho$. We compare the candidate with every fixed control; the fastest measured M provides a descriptive application summary. Paired-root bootstrap resampling keeps all arms and sessions of each sampled root together. Application and factorial panels use 10,000 draws and 99\% percentile intervals for five predeclared comparisons. Four-arm Williams orders balance positions and directed neighbors in the factorials, which isolate cut and projection effects. The service panels use partial six-arm order balance.
++Time reduction is $1-\rho$. We compare the candidate with every fixed control; the fastest measured M provides a descriptive application summary. Paired-root bootstrap resampling keeps all arms and sessions of each sampled root together. Application and factorial panels use 10,000 draws and 99\% percentile intervals, applying a Bonferroni adjustment across five predeclared comparisons. Four-arm Williams orders balance positions and directed neighbors in the factorials, which isolate cut and projection effects. The service panels use partial six-arm order balance.
+ 
+ The live-width panel uses eight Williams rows and 98.75\% intervals for four primary width contrasts; its secondary fixed-k7 contrasts form a separate family. Intervals describe variation across the tested roots under the observed sessions. Fixed structural cells and four-root pilots are reported with their observations, without population intervals. Supplement~S3--S4 gives the complete estimands and reconstruction inputs.
+--- before/05_results.tex
++++ after/05_results.tex
+@@ -1,11 +1,9 @@
+ \section{Results}
+ \label{sec:results}
+ \subsection{Parallel execution preserves the reference observations}
+-The implementations preserve the requested full vectors and active state throughout the qualified inference transactions. On Linux, the Qwen/Smol deployment compares 6,740 full vocabulary vectors and 4,784 active-state records across geometry, natural requests and terminal cases. The checks cover all four cut/projection combinations and both speculative paths. Qwen's grouped-query attention has 128-dimensional heads; Smol's multi-head attention has 64-dimensional heads. Applying their respective arithmetic recipes preserves the reference across both structures.
++All requested full-vector and active-state comparisons pass at the qualified transaction boundaries. On Linux, the Qwen/Smol deployment compares 6,740 full vocabulary vectors and 4,784 active-state records across geometry, natural requests and terminal cases. Both model families pass all four target-only cut/projection combinations and both speculative paths. Qwen's grouped-query attention has 128-dimensional heads; Smol's multi-head attention has 64-dimensional heads. The qualified arithmetic recipes preserve the reference observations across both structures.
+ 
+ The Llama transfer uses its own family reference. On Vulkan, combined arithmetic and physical-range repair clears the full-vector differences left by arithmetic repair alone, including the 99 committed differences described in Section~\ref{sec:reference}. The 32B mixed-Q4 extension qualifies all six paths and 60 geometry cases. Eight-query qualification additionally checks all requested rows, boundary crossings, rollback, frontier ownership and pending/terminal transitions. Supplement~S1 records the observation counts and boundaries. The clean timing runs then check the corresponding endpoints and execution traces while measuring the qualified implementation.
+-
+-These observations connect the mechanism to complete execution: matching arithmetic within an operator is retained through producer state, output ownership and commit. We next measure what each parallel construction contributes.
+ 
+ \subsection{Packing and local cuts contribute at different scales}
+ \label{sec:factors}
+@@ -13,16 +11,18 @@
+ 
+ \begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{figures/factorial.pdf}
+-\caption{Component attribution in balanced A5000 experiments. Points show the 16 task-root ratios; diamonds (8B) and squares (14B) give ratios of total resident-service time. Segments are 99\% paired-root intervals from the five-comparison family. Hollow neutral markers identify intervals that include 1. Projection comparisons fix cut scope; cut comparisons fix projection. The fifth estimand is the interaction in Supplement~S3.}
++\caption{Component attribution in balanced A5000 experiments. Points show the 16 task-root ratios; diamonds (8B) and squares (14B) give ratios of total resident-service time. Segments are 99\% paired-root intervals from the five-comparison family. Hollow markers identify intervals that include 1. Projection comparisons fix cut scope; cut comparisons fix projection. The fifth estimand is the interaction in Supplement~S3.}
+ \label{fig:factorial}
+ \end{figure*}
+ 
+ Packing reduces service by 1.64\% with whole cuts and 1.56\% with local cuts at 8B, and by 0.99\% and 0.80\% at 14B. The backend-loop4 baseline already moves the loop out of the graph and shares activation quantization, so these differences measure the remaining independent-group packing increment.
+ 
+-Local cuts reduce service by 0.21\% and 0.30\% at fixed loop4 for 8B and 14B. At fixed packing, the reductions are 0.13\% and 0.11\%, with intervals crossing equal time. The equal-root interactions are 1.000696 and 1.001703, indicating slight attenuation when the components are combined. The physical-work records explain the modest local-cut effect and the phase in which packing helps, as shown next.
++Local cuts reduce service by 0.21\% and 0.30\% at fixed loop4 for 8B and 14B. At fixed packing, the reductions are 0.13\% and 0.11\%, with intervals containing 1. The equal-root interactions are 1.000696 and 1.001703, indicating slight attenuation when the components are combined.
+ 
+ \paragraph{Typed extension to mixed quantization.}
+-For Qwen3-32B, grouping retains the scalar-column Q4\_K and Q6\_K arithmetic and schedules independent columns as channels. Over four roots and four rounds, ordinary grouped execution uses 5.62\% less service with whole cuts and 5.61\% less with local cuts than the graph-level scalar-column loop. All 16 matched pairs improve in each comparison. A subsequent operator study adds a backend-internal scalar loop: the grouped/backend-loop geometric ratio is 0.8528 over four exposed tensor cells, with mixed directions in Q6\_K/q4. Supplement~S3 presents both baselines and all observations. The completed service comparison measures the graph-level grouping package; the stronger backend comparison currently supplies operator evidence.
++For Qwen3-32B, grouping retains the scalar-column Q4\_K and Q6\_K arithmetic and schedules independent columns as channels. Over four roots and four rounds, ordinary grouped execution uses 5.62\% less service with whole cuts and 5.61\% less with local cuts than the graph-level scalar-column loop. All 16 matched pairs improve in each comparison.
++
++A subsequent operator study adds a backend-internal scalar loop: the grouped/backend-loop geometric ratio is 0.8528 over four exposed tensor cells, with mixed paired directions in Q6\_K/q4. Supplement~S3 presents both baselines and all observations. The completed service comparison measures the graph-level grouping implementation; the stronger backend comparison currently supplies operator evidence.
+ 
+ \subsection{Boundary geometry determines the opportunity for local cuts}
+ \label{sec:geometry}
+@@ -54,7 +54,7 @@
+ 
+ The 14B improvement persists beyond the resident timer. Its measured-request burst takes 294.632\,s for the fastest fixed M and 219.405\,s for LOCAL-packed D4. Including model loading, integrity checks, primers and the requests, native-worker time falls from 662.546 to 594.559\,s, a 10.26\% reduction. Llama's resident requests improve, but its short worker workload favors M after initialization is included. The Windows Qwen3-8B study separately reports 29.11\% less resident time and 26.00\% less worker time; the Linux Qwen studies reuse the Windows task records with separate references and measurements. Supplement~S2 gives the complete costs.
+ 
+-The choice also depends on target and draft economics. On the 32B mixed-Q4 panel, ordinary grouped generation is fastest; grouped D4 takes 14.00\% more resident time. In the B570 resident pilot, local verification halves the occupied target-graph count relative to the earlier scalar speculative path, but draft work leaves the complete speculative request slower than ordinary generation. Reference compatibility makes the parallel execution usable; the complete cost determines which inference policy benefits from it.
++On the 32B mixed-Q4 panel, ordinary grouped generation is fastest; grouped D4 takes 14.00\% more resident time. In the B570 resident pilot, local verification halves the occupied target-graph count relative to the earlier scalar speculative path, but draft work leaves the complete speculative request slower than ordinary generation.
+ 
+ \subsection{Wider execution lowers equal-work cost but changes live work}
+ \label{sec:width}
+@@ -62,11 +62,11 @@
+ 
+ \begin{figure*}[t]
+ \centering\includegraphics[width=\textwidth]{figures/width_tradeoff.pdf}
+-\caption{Execution efficiency and complete live cost. (a) One $q=8$ operation versus two $q=4$ operations from identical state, with the same eight known tokens and all eight requested outputs; faint points retain four development origins. (b) Separate live $k=7$/$k=3$ service comparisons over 16 roots and eight balanced rows, with 98.75\% adjusted intervals. Both widths reserve eight outputs. (c) LOCAL-packed phase costs over 128 requests, expressed as $k=7$ minus $k=3$. Equal-work calls and live generation have different work contracts.}
++\caption{Execution efficiency and live workload. (a) One $q=8$ operation versus two $q=4$ operations from identical state, with the same eight known tokens and all eight requested outputs; faint points retain four development origins. (b) Separate live $k=7$/$k=3$ service comparisons over 16 roots and eight balanced rows, with 98.75\% adjusted intervals. Both widths reserve eight outputs. (c) Work per arm for the same 11,472 emitted tokens: verification cycles fall from 3,504 to 2,296, verified rows rise from 14,016 to 18,368, and draft proposals rise from 10,512 to 16,072.}
+ \label{fig:width}
+ \end{figure*}
+ 
+-On the Windows RTX, one q8 call uses 3.94\%--11.91\% less aggregate operation time than two q4 calls across the four fixed method/geometry cells. The comparison holds the initial state, eight input tokens and all requested output vectors constant. A matched-history A5000 follow-up likewise reports q8/q4-pair geometric ratios of 0.9904 and 0.9781 for loop4, and 0.9370 and 0.9476 for packing, on one exposed origin. Supplement~S4 retains its process-level observations and the separate live pilot.
++On the Windows RTX, one q8 call uses 3.94\%--11.91\% less aggregate operation time than two q4 calls across the four fixed method/geometry cells. A matched-history A5000 diagnostic on one exposed origin reports q8/q4-pair geometric ratios of 0.9904 and 0.9781 for loop4, and 0.9370 and 0.9476 for packing. Each A5000 cell has four process clusters; loop4 includes mixed process-level directions. Supplement~S4 retains these observations and the separate live pilot.
+ 
+ In live generation, however, k7 changes the work. Per arm, verification cycles fall from 3,504 to 2,296, while verified rows rise from 14,016 to 18,368 for the same 11,472 emitted tokens. Acceptance among inspected proposals changes little, from 87.47\% to 87.93\%, but accepted proposals as a fraction of all proposals fall from 75.42\% to 56.94\%. Longer proposals spend more work on suffixes that are not consumed.
+ 
+@@ -77,4 +77,4 @@
+  T_{\mathrm{spec}}=T_{\mathrm{target}}+T_{\mathrm{draft}}+T_{\mathrm{state/output/host}}.
+  \label{eq:cost}
+ \end{equation}
+-Wider parallel execution improves the cost of equal work. Its benefit in an inference policy depends on the number of target and draft rows that policy creates. For these live inputs, k3 provides the lower complete cost.
++The equal-work panels show lower aggregate cost for wider execution. In live generation, the additional target and draft rows outweigh that saving, leaving k3 with the lower complete cost.

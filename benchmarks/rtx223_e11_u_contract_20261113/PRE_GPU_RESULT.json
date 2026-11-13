@@ -1,0 +1,101 @@
+{
+  "schema": "heterospec.e11.u_contract.preGPU.v1",
+  "utc": "2026-11-13T03:47:00.004942+00:00",
+  "status": "BLOCKED_WINDOWS_ADMIN_ADMISSION",
+  "parents": [
+    {
+      "number": 230,
+      "head": "ba019f30522352c87cac2cc527082ecc6c73ed97",
+      "base": "ba2b8734f60183c58b09c30163ea0eeb13fc009d",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/230"
+    },
+    {
+      "number": 234,
+      "head": "304dcbff6d17461237774464c67ce8cb0ed60189",
+      "base": "ba019f30522352c87cac2cc527082ecc6c73ed97",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/234"
+    },
+    {
+      "number": 235,
+      "head": "01a4cf847bfc8340321564c66132680d4131bf0d",
+      "base": "304dcbff6d17461237774464c67ce8cb0ed60189",
+      "draft": true,
+      "merged": false,
+      "url": "https://github.com/leecdiang/HeteroSpec/pull/235"
+    }
+  ],
+  "upstream_commit": "0fb8f157702702f33f4e018de8701b2569a1bc28",
+  "contracts": {
+    "A": "unchanged complete bitwise B;new GPU replays NOT_RUN",
+    "B": "new shared inverse set +full output bound +repeatability;CPU oracle tests PASS,newGPU qualification NOT_RUN",
+    "C": "extracted resident operator,PDL0-equivalent,graphsOFF;full backend COMPILE_PASS,RUNTIME_NOT_RUN"
+  },
+  "gates": {
+    "original_capture_and_model_raw_tensor": "PASS",
+    "parents_failures_and_budgets": "PASS",
+    "new_CPU_oracle_fault_tests": "PASS",
+    "CPU_C_ABI_budget_fault_tests_v1": "FAIL_PRESERVED",
+    "CPU_C_ABI_budget_fault_tests_v2": "PASS",
+    "extracted_build003": "PASS",
+    "full_backend_build001": "FAIL_PRESERVED",
+    "full_backend_build002": "PASS",
+    "same_admin_restricted_CPU_ETW_admission": "NOT_RUN",
+    "new_A_and_U_GPU_qualification": "NOT_RUN",
+    "paired_timing": "NOT_RUN",
+    "actual_occupancy": "NOT_MEASURED",
+    "L2_DRAM": "NOT_MEASURED",
+    "service_5pct_feasibility": "UNDETERMINED_NO_MEASURED_U_RATIO_OR_SAME_REQUEST_COST_STACK"
+  },
+  "budget": {
+    "limit": 500,
+    "planned": {
+      "qualification": 14,
+      "one_diagnosed_repair": 14,
+      "timing": 416,
+      "margin": 56
+    },
+    "planned_successful_actual": 400,
+    "reserved": 0,
+    "explicit_prelaunch_permits": 0,
+    "runtime_family_ledger_exists": false,
+    "runtime_family_ledger": "D:\\HeteroSpec-PC\\rtx223-e11-u-contract\\family.jsonl",
+    "preparation_journal": "PREPARATION_LEDGER.jsonl",
+    "old_e10_reservation14_permits6_unchanged": true
+  },
+  "consumption": {
+    "model_loads": 0,
+    "new_captures": 0,
+    "forward": 0,
+    "numerical_root_DLL_loads": 0,
+    "experimental_CUDA_initializations": 0,
+    "experimental_GPU_contexts": 0,
+    "explicit_application_kernel_permits": 0,
+    "physical_all_host_launches": null
+  },
+  "selected_build": {
+    "path": "build-003/operator-upstream.exe",
+    "sha256": "de350801047138acfd22454d31b2186d02dfba981ed1ed84ae115a7fb5f725b0",
+    "freeze_sha256": "ece9bc339e4d884da64ac0137bc9ccbdbb87a60584553a47383f705ecec3be3c"
+  },
+  "full_backend": {
+    "built": true,
+    "path": "C:\\Users\\ASUS\\Documents\\ChatGPT\\HeteroSpec\\rtx223-e11-u-contract\\full-backend-002\\build\\bin\\ggml-cuda.dll",
+    "sha256": "3839d8c7c50bc88da6b00314a5b83b12374cc51bba1a85286981890331bfdded",
+    "bytes": 38267392,
+    "source_commit": "0fb8f157702702f33f4e018de8701b2569a1bc28",
+    "loaded": false,
+    "backend_run": "NOT_RUN",
+    "reason": "Full dispatcher,initialization,graph/replay explicit-call control not closed within this500 exploration. Only extracted4 author dispatch sites admitted.",
+    "compile_only": true,
+    "CUDA_ABI_execution_suppressed": true
+  },
+  "minimal_gap": "One Windows onsite UAC elevation,then same-identity CPU ETW/AppContainer admission and freshexclusive checks. No historical thread gap invented,no safety/ACL relaxation.",
+  "e10_original_qualification": "FAIL_UNCHANGED",
+  "production_native": "DENY_UNCHANGED",
+  "old_4096": "NOT_CLOSED",
+  "next_candidate": "conditional eight-warp raw-weight shared stage proposal only;NOT_IMPLEMENTED_NOT_RUN"
+}

@@ -1,0 +1,13 @@
+# 14B D4 attribution, prospective local follow-up
+
+This new work root preserves the completed D14 six-arm panel, its frozen14B reference, original model bytes and numerical executables. No previous service timings are pooled. No paper changes, merge, external publication or deletion is authorized.
+
+After complete Llama confirmation/archive, revalidate all predecessor text commitments and every consumed original reference vector/state operand. Reuse complete qualification jobs only with exact payload, pristine reference/build, actual loaded-module and native capability bindings. Run real W_P_D4 and L_L4_D4 heavy/clean transactions, full requested vectors, active KV/frontier, pending, rollback, real EOG/cap and physical execution gates; retain failures. The original six controls/geometry are revalidated. A lane-scoped frozen-slot admission adapter derives from qualified M1; numerical executables and original host source stay unchanged.
+
+Four arms × four rounds ×16 exposed deployment roots =256 measurements plus32 primers, all newly timed. Williams rows: ABCD labels A=W_L4, B=W_P, C=L_L4, D=L_P; rows ABDC / BCAD / CDBA / DACB. Every position and every directed within-round adjacency appears once; between-round adjacency is not balanced. Seed19820261108. Five fixed estimands: LOCAL with loop4, LOCAL with packed, packing with whole cut, packing with LOCAL, and multiplicative interaction. Root bootstrap10000 with five-estimand Bonferroni adjustment, conditional on these16 roots and four rounds. This D4-only panel supplies attribution, not a new speculation-vs-target-only comparison.
+
+Time-only fallback before any new formal worker: four-arm latest start2026-11-09 02:30 Asia/Shanghai; packed W_P/L_P pair latest start03:30, AB/BA twice each,128 measurements plus16 primers. If neither fits, keep qualification and previous results. A missing/failed formal slot forbids successful-subset inference and selected retries.
+
+No new timed worker starts unless current time+900s existing timeout+60s verification fits before05:00 Asia/Shanghai. Do not interrupt an active measurement for this deadline. Overall closure deadline08:00; final three hours reserved for export, archival readback and delivery checks. M2 and Q4 GPU extension remain deferred.
+
+Archives keep own captures and the exact predecessor derived bundle/indices separately; the entire predecessor private capture index is reread, and a delivery index binds both scopes. Raw model weights, company configuration and full vocabulary are excluded. A derived-text readback does not grant numerical qualification or third-party raw-capture reproduction.

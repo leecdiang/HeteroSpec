@@ -1,0 +1,66 @@
+{
+  "status": "TRANSPORT_ONLY_INTERRUPTED_ATTEMPTS_PRESERVED",
+  "attempts": [
+    {
+      "pid": 7812,
+      "archive": "RTX_CLOSEOUT_000.zip",
+      "expected_bytes": 826684188,
+      "utc": "2026-10-21T17:58:04.163019+00:00",
+      "reason": "Sustained extremely slow file-read progress on this connection; other same-size transfers completed. Transport-only retry, no scientific/native slot repeated.",
+      "already_terminated_by_prior_attempt": true,
+      "incomplete_asset_already_absent": true
+    },
+    {
+      "pid": 33604,
+      "archive": "RTX_CLOSEOUT_005.zip",
+      "expected_bytes": 947285425,
+      "utc": "2026-10-21T17:58:10.527135+00:00",
+      "reason": "Sustained extremely slow file-read progress on this connection; other same-size transfers completed. Transport-only retry, no scientific/native slot repeated.",
+      "already_terminated_by_prior_attempt": true,
+      "original_asset": {
+        "url": "https://api.github.com/repos/leecdiang/HeteroSpec/releases/assets/663286150",
+        "id": 663286150,
+        "node_id": "RA_kwDOUQYb284niPGG",
+        "name": "RTX_CLOSEOUT_005.zip",
+        "label": "",
+        "uploader": {
+          "login": "leecdiang",
+          "id": 162876606,
+          "node_id": "U_kgDOCbVMvg",
+          "avatar_url": "https://avatars.githubusercontent.com/u/162876606?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/leecdiang",
+          "html_url": "https://github.com/leecdiang",
+          "followers_url": "https://api.github.com/users/leecdiang/followers",
+          "following_url": "https://api.github.com/users/leecdiang/following{/other_user}",
+          "gists_url": "https://api.github.com/users/leecdiang/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/leecdiang/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/leecdiang/subscriptions",
+          "organizations_url": "https://api.github.com/users/leecdiang/orgs",
+          "repos_url": "https://api.github.com/users/leecdiang/repos",
+          "events_url": "https://api.github.com/users/leecdiang/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/leecdiang/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "content_type": "application/zip",
+        "state": "starter",
+        "size": 947285425,
+        "digest": null,
+        "download_count": 0,
+        "created_at": "2026-10-21T17:33:46Z",
+        "updated_at": "2026-10-21T17:33:46Z",
+        "browser_download_url": "https://github.com/leecdiang/HeteroSpec/releases/download/untagged-fbbb45e649bd0ef298b5/RTX_CLOSEOUT_005.zip"
+      },
+      "incomplete_asset_deleted": true
+    }
+  ],
+  "prior_attempt_failures": [
+    "First repair terminated archive000 process; then a GitHub API GET returned EOF before any remote deletion. Its CLI wrapper exited15.",
+    "Next read found archive000 absent after cancellation; an overstrict one-asset assertion stopped that CPU delivery wrapper. Verified absence is accepted by this continuation."
+  ],
+  "retry_protocol": "Child gh processes use GODEBUG=http2client=0; TLS/authentication remain enabled.",
+  "protocol_documentation": "https://pkg.go.dev/net/http#hdr-HTTP_2",
+  "native_launches": 0
+}

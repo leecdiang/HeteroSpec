@@ -1,0 +1,95 @@
+{
+  "schema": "heterospec.pr210.stage-C.admission.v1",
+  "prepared_utc": "2026-11-09T12:28:55.249020+00:00",
+  "B_artifact_commit": "f0f53e1e3eceba96f61f472865491eef573048fa",
+  "B_delivery_proof_commit": "361fb4fc44be8f2c08c4ac91c4a6c36c3cb5832b",
+  "purpose": "Separate first-use from follow-up host target-operation cost; no CUDA kernel profiling or live-service result",
+  "cells": [
+    {
+      "id": "C00-loop4-248-q4pair",
+      "core": "loop4",
+      "position": 248,
+      "execution": "q4pair",
+      "job_sha256": "c712c7998c722a74d296d4417060de4b06a3d788890a6a466ccbf17884112ed4"
+    },
+    {
+      "id": "C01-loop4-248-q8",
+      "core": "loop4",
+      "position": 248,
+      "execution": "q8",
+      "job_sha256": "3009c09ae011feb3b6d0aaa61fa88b3a15a48007be73bcbc42f2397a0d2cdfad"
+    },
+    {
+      "id": "C02-loop4-252-q8",
+      "core": "loop4",
+      "position": 252,
+      "execution": "q8",
+      "job_sha256": "67189c6f70ced9a315596819c62a72ad3dc116f013e63544eb927ac8e9b67515"
+    },
+    {
+      "id": "C03-loop4-252-q4pair",
+      "core": "loop4",
+      "position": 252,
+      "execution": "q4pair",
+      "job_sha256": "1177364751616e25e3a860d569272880f2aa047330475acfa9f8cf5e67a243cd"
+    },
+    {
+      "id": "C04-packed-252-q4pair",
+      "core": "packed",
+      "position": 252,
+      "execution": "q4pair",
+      "job_sha256": "1177364751616e25e3a860d569272880f2aa047330475acfa9f8cf5e67a243cd"
+    },
+    {
+      "id": "C05-packed-252-q8",
+      "core": "packed",
+      "position": 252,
+      "execution": "q8",
+      "job_sha256": "67189c6f70ced9a315596819c62a72ad3dc116f013e63544eb927ac8e9b67515"
+    },
+    {
+      "id": "C06-packed-248-q8",
+      "core": "packed",
+      "position": 248,
+      "execution": "q8",
+      "job_sha256": "3009c09ae011feb3b6d0aaa61fa88b3a15a48007be73bcbc42f2397a0d2cdfad"
+    },
+    {
+      "id": "C07-packed-248-q4pair",
+      "core": "packed",
+      "position": 248,
+      "execution": "q4pair",
+      "job_sha256": "c712c7998c722a74d296d4417060de4b06a3d788890a6a466ccbf17884112ed4"
+    }
+  ],
+  "requests": {
+    "workers": 8,
+    "first_use_profiles": 8,
+    "follow_up_profiles": 8,
+    "total": 16,
+    "new_reference": 0,
+    "extra_primers": 0,
+    "failures_charged": true,
+    "ceiling": 16
+  },
+  "cumulative_before": {
+    "requests": 1893,
+    "reserved_rows": 3049826,
+    "request_ceiling": 2048,
+    "row_ceiling": 8000000
+  },
+  "conservative_new_rows": 4128,
+  "actual_expected_target_rows": 128,
+  "draft_rows": 0,
+  "eligibility_reuse": "Exact B binaries/modules/config/model/oracle states and all32 full-vector/initial/final-active-KV proofs. No arithmetic, lifecycle, precision or output-policy edit. Every new clean operation still checks all8 independent-R output hashes, bounds, masks and actual physical counters. No new live EOG/cap/rollback claim.",
+  "controls": "Fresh process per cell, two consecutive same-path operations. Identical scalar snapshot/frontier restored before each, outside primary timer. Both requests charged and reported; no hidden warmups. All cells retained. One follow-up observation is not a steady-state convergence proof.",
+  "profiling_scope": "Existing host phase/planning/copy clocks and physical/graph counters; no new CUDA profiler. Instrumentation overhead not independently measured. Full process/load/restore cost retained separately.",
+  "shutdown": {
+    "new_worker_cutoff_BJT": "2026-11-09T23:00:00+08:00",
+    "minimum_start_margin_s": 960,
+    "worker_timeout_s": 900,
+    "archive_boundary_BJT": "2026-11-09T23:30:00+08:00"
+  },
+  "resources": "Previously assigned single GPU1 UUID private; GPU0 protected; native affinity32,33/two threads. Pause only assigned-GPU conflict, reserves or observed interference.",
+  "next": "No automatic D/E or Q32. Candidate edits require measured removable hotspot and expected end-to-end contribution; otherwise stop and preserve negative diagnosis."
+}

@@ -1,0 +1,68 @@
+% One measured example throughout. Widths encode query grouping, never time.
+\begin{tikzpicture}[x=1cm,y=1cm,font=\fontsize{8.2}{9.7}\selectfont,
+  >=Latex,line cap=round,
+  flow/.style={->,draw=ASVgray,line width=.65pt},
+  stateflow/.style={->,draw=ASVgreen,line width=.65pt},
+  head/.style={font=\fontsize{8.8}{10.2}\selectfont\bfseries,anchor=west},
+  three/.style={draw=ASVblue,fill=ASVblue!6,line width=.65pt,align=center,inner sep=2pt},
+  one/.style={draw=ASVochre,fill=ASVochre!7,line width=.65pt,align=center,inner sep=2pt},
+  wide/.style={draw=ASVgray,fill=white,line width=.65pt,align=center,inner sep=3pt}]
+\path[use as bounding box] (0,0) rectangle (17.8,6.25);
+\node[head] at (.08,6.02) {(a) One append, four queries, two physical extents};
+\node[anchor=west,text=ASVgray] at (.14,5.50) {Query position};
+\node[anchor=west,text=ASVgray] at (.14,4.88) {Reference KV extent};
+\foreach \i/\pos/\ext in {0/765/768,1/766/768,2/767/768}{
+  \node[three,minimum width=1.20cm,minimum height=.42cm] at (4.52+1.38*\i,5.50) {\pos};
+  \draw[flow] (4.52+1.38*\i,5.26)--(4.52+1.38*\i,5.12);
+  \node[three,minimum width=1.20cm,minimum height=.38cm] at (4.52+1.38*\i,4.88) {$\ext$};
+}
+\node[one,minimum width=1.20cm,minimum height=.42cm] at (8.66,5.50) {768};
+\draw[flow] (8.66,5.26)--(8.66,5.12);
+\node[one,minimum width=1.20cm,minimum height=.38cm] at (8.66,4.88) {$1024$};
+\draw[ASVrule,densely dashed] (7.97,4.62)--(7.97,5.80);
+\node[anchor=north west,align=left,text width=7.35cm] at (10.07,5.80) {The mask selects visible keys.\\[2pt]The physical range also shapes native execution.};
+\node[anchor=west,text=ASVgray] at (10.07,4.82) {Bind the recipe and requested outputs.};
+% Branch to two alternative lowerings of exactly the same four rows.
+\draw[ASVgray,line width=.65pt] (6.60,4.64)--(6.60,4.43);
+\draw[flow] (6.60,4.43)--(4.10,4.43)--(4.10,4.15);
+\draw[flow] (6.60,4.43)--(13.30,4.43)--(13.30,4.15);
+\node[head] at (.08,3.94) {(b)};
+\node[head] at (.72,3.94) {Whole graph (W)};
+\node[anchor=east,text=ASVgray] at (8.17,3.94) {two compatible graph calls};
+\node[head] at (9.15,3.94) {Local attention (L)};
+\node[anchor=east,text=ASVgray] at (17.65,3.94) {one wider outer graph};
+% Whole graph: both projection and outer work are split along with attention.
+\node[three,minimum width=2.03cm,minimum height=.61cm] (wp3) at (1.46,3.07) {Projection\\queries 765--767};
+\node[three,minimum width=2.34cm,minimum height=.61cm] (wa3) at (4.18,3.07) {Attention: 3 rows\\$e=768$};
+\node[three,minimum width=2.04cm,minimum height=.61cm] (wf3) at (6.90,3.07) {Outer / FFN\\queries 765--767};
+\node[one,minimum width=2.03cm,minimum height=.61cm] (wp1) at (1.46,2.22) {Projection\\query 768};
+\node[one,minimum width=2.34cm,minimum height=.61cm] (wa1) at (4.18,2.22) {Attention: 1 row\\$e=1024$};
+\node[one,minimum width=2.04cm,minimum height=.61cm] (wf1) at (6.90,2.22) {Outer / FFN\\query 768};
+\draw[flow] (wp3)--(wa3);\draw[flow] (wa3)--(wf3);
+\draw[flow] (wp1)--(wa1);\draw[flow] (wa1)--(wf1);
+% Local attention: the same blue/ochre partition is confined to attention.
+\node[wide,minimum width=2.08cm,minimum height=1.46cm] (lp) at (10.36,2.645) {Projection\\all 4 queries};
+\node[three,minimum width=2.32cm,minimum height=.61cm] (la3) at (13.18,3.07) {Attention: 3 rows\\$e=768$};
+\node[one,minimum width=2.32cm,minimum height=.61cm] (la1) at (13.18,2.22) {Attention: 1 row\\$e=1024$};
+\node[wide,minimum width=2.12cm,minimum height=1.46cm] (lf) at (16.12,2.645) {Outer / FFN\\all 4 queries};
+\foreach \x in {10.36,16.12}{
+ \draw[ASVblue,line width=2.3pt] (\x-.72,3.18)--(\x+.30,3.18);
+ \draw[ASVochre,line width=2.3pt] (\x+.40,3.18)--(\x+.72,3.18);
+}
+\draw[flow] (lp.east)--++(.24,0)|-(la3.west);
+\draw[flow] (lp.east)--++(.24,0)|-(la1.west);
+\draw[flow] (la3.east)--++(.24,0)|-(lf.west);
+\draw[flow] (la1.east)--++(.24,0)|-(lf.west);
+% Either lowering returns the same logical outputs into one owned state.
+\draw[ASVgray,line width=.65pt] (wf3.east)--(8.20,3.07)--(8.20,1.61)--(6.60,1.61);
+\draw[ASVgray,line width=.65pt] (wf1.east)--(8.20,2.22);
+\draw[flow] (6.60,1.61)--(6.60,1.30);
+\draw[flow] (lf.south)--(16.12,1.61)--(13.20,1.61)--(13.20,1.30);
+\node[head] at (.08,1.04) {(c) Logical ownership};
+\node[draw=ASVgreen,fill=ASVgreen!5,line width=.65pt,minimum width=13.96cm,minimum height=.49cm,align=center] at (10.70,1.04)
+ {Requested logits in query order $\;\longrightarrow\;$ commit / trim with the correct frontier and pending token};
+\node[anchor=west,text=ASVgray] at (.14,.39) {Across every phase};
+\node[draw=ASVgreen,line width=.65pt,minimum width=13.96cm,minimum height=.45cm,align=center] at (10.70,.39)
+ {One resident target / KV allocation: prefill $\;\longrightarrow\;$ continuation or verification $\;\longrightarrow\;$ commit};
+\draw[stateflow] (10.70,.79)--(10.70,.64);
+\end{tikzpicture}

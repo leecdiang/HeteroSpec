@@ -1,0 +1,87 @@
+\section{Reference-Derived Phase Plans}
+\label{sec:method}
+\subsection{Separate arithmetic qualification from per-call planning}
+A backend recipe describes the operator conditions that preserve the deployment reference: weight and activation types, reduction organization, supported shapes and strides, placement and output layout. We establish these conditions through source analysis, own-path replay and controlled comparisons with independent reference operands. Descriptor guards select recipes whose numerical correspondence is established separately through native tests.
+
+The planner combines the recipe with sequence ownership, occupied slots, physical head, capacity and padding. In the supported dense, nonwrapping append profile, occupied cells form the logical prefix and the physical head agrees with its end. The extractor checks this correspondence and rejects shifted, wrapped or holey states.
+
+For first physical slot $H$, query row $i$, cache capacity $N$ and padding $P$, this profile gives
+\begin{equation}
+ e_i=\min\!\left(N,\max\!\left(P,P\left\lceil\frac{H+i+1}{P}\right\rceil\right)\right).
+ \label{eq:extent}
+\end{equation}
+Each row carries its position, $e_i$, admitted arithmetic class and requested-output flag. The class is normally constant within one attention graph, while the extent changes at a physical boundary. Graph-reuse identity includes the recipe, per-row geometry and phase policy as well as the outer shape.
+
+\subsection{Group compatible queries and place the cuts}
+Let $\kappa_i$ contain a row's physical extent and recipe class. Whole-graph lowering (W) takes maximal adjacent runs of equal $\kappa_i$, subject to the native width bound $W_{\max}$. For constant-key run lengths $r_1,\ldots,r_m$, its minimum number of contiguous calls is
+\begin{equation}
+ G_{\min}=\sum_{j=1}^{m}\left\lceil r_j/W_{\max}\right\rceil.
+ \label{eq:groups}
+\end{equation}
+Every key change forces a cut, and each run needs at least the stated number of bounded calls. Taking the longest allowed prefix of each run attains this grouping bound. Runtime also depends on cut placement and the backend implementation of each group.
+
+Whole lowering executes projection, attention and feed-forward work for each compatible call. After a boundary, it can restart full-width calls rather than preserve the remainder of an arbitrary outer chunk. We retain this rechunking behavior as a strong simple implementation.
+
+Local lowering (L) keeps the outer graph wider and forms compatible groups inside attention. Q, K, V and mask views use the appropriate reference extent. The adapter supplies the strides and, when required, contiguous mask materialization expected by the admitted backend. Attention outputs rejoin in query order, so projection and feed-forward operations outside the cut can use the wider query group. Native attention may further tile a compatible group according to its qualified recipe. Local cuts preserve parallel work around attention; they do not remove dependencies between autoregressively generated tokens.
+
+The grouping pass is linear in the number of query rows. The current dense-cache validator also inspects the occupied prefix. Both extraction and grouping remain in the measured service, together with native dispatch and required synchronization.
+
+\begin{algorithm}[t]
+\caption{Execute a reference-derived phase}
+\label{alg:plan}
+\begin{algorithmic}[1]
+\Require Live target/KV owner $S$, phase $p$, known rows $Q$, original requested-row mask $O$, admitted recipe $a$
+\State Check phase, capacity, cache ownership and support of $a$
+\State Extract physical-prefix requirements $\{e_i\}$ from $S$
+\State Form compatible runs under $(e_i,a)$
+\State Lower runs to whole-graph calls or local attention views
+\For{each native call in logical order}
+ \State Execute the selected arithmetic and original output requests
+ \State Synchronize; store requested vectors by logical row
+ \State Check successful append and expected physical execution
+\EndFor
+\State Commit or trim with the owned logical frontier and pending token
+\State On native failure, invalidate the owner for further execution
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Preserve arithmetic within groups, parallelize between groups}
+\label{sec:recipes}
+Projection organization is independent of cut scope. Consider $X\in\mathbb{R}^{K\times q}$, containing $q$ query columns, and a shared weight matrix. A recipe specifies an arithmetic group width $a$ whose native computation matches the reference. When $q=ag$, packing exposes the group index as an independent dimension:
+\begin{equation}
+ \widetilde X_{k,c,j}=X_{k,aj+c},\quad
+ \widetilde X\in\mathbb{R}^{K\times a\times g}.
+ \label{eq:packing}
+\end{equation}
+The backend computes each group with the admitted inner organization; the result is restored to logical column order. Each supported reshape is bound to the tensor layout and backend dispatch validated for that recipe.
+
+\begin{figure*}[t]
+\centering\input{figures/arithmetic}
+\caption{Arithmetic is preserved within each group. (a) Loop4 invokes four-column groups sequentially; packing exposes them to one batched operation. (b) The mixed-Q4 control uses scalar-column calls and concatenation; grouping exposes the columns as independent channels. Quantizer, stride and dispatch remain bound to the qualified recipe. Layout denotes operation organization, not timing.}
+\label{fig:arithmetic}
+\end{figure*}
+
+\subsubsection{CUDA Q8 recipe}
+For affected Q8\_0 projections with F32 input, the implementation preserves the existing small-column MMVQ path with $a=4$. The backend-loop4 control quantizes the input and invokes the original small-column specialization for successive groups and the supported tail. Packing uses $[K, 4,g]$ views for eligible multi-group work and shares the weight across groups. The four-column reduction within a group is retained. Tails retain the native path validated for their shape.
+
+This distinction matters for verification. A $k=3$ transaction requests at most four target positions and does not enter the wider packing route. A $k=7$ transaction can request eight positions and two independent four-column groups. The draft's prefill microbatch, denoted D1 or D4 in the experiments, is a separate parameter.
+
+\subsubsection{Mixed Q4\_K/Q6\_K recipe}
+The 32B model contains Q4\_K, Q6\_K and F32 tensors. Its affected mixed-quantized projections retain the original scalar-column path, so $a=1$. One implementation creates a view, scalar matrix operation and output concatenation for each column. The grouped implementation maps the same columns to $[K, 1,q]$ and executes them as independent channels, then reshapes the output to the caller's layout. The original per-type dot functions, activation quantizer and accumulation organization are preserved. The Q8 four-column guard remains unchanged.
+
+The mixed-Q4 service implementation changes graph lowering and compiled into a new core archive; the recorded CUDA numerical objects remain byte-identical. Qualification uses actual full-model operands and an independent scalar reference, followed by full-model state and output checks. The full-service control is graph-level scalar-column execution using the same per-type arithmetic.
+
+\subsubsection{Vulkan mapping}
+Affected Q8-weight projections retain F32 activation input rather than selecting the wider Q8\_1 path. Attention preserves the admitted scalar-equivalent AV reduction and its stride/dispatch requirements, including the p021 mapping used by the resident implementation. The physical-prefix grouping principle is shared with CUDA; its native arithmetic implementation is backend-specific. This supports two-query verification and wider known-query append with the original prompt producer.
+
+\subsection{Keep one state owner across phases}
+The phase interface binds each plan to the existing target context. Prefill, ordinary continuation and verification share one resident target/KV owner; a phase transition changes the execution policy while retaining that allocation.
+
+The caller's requested-row mask is preserved through splitting. After a native call has made the requested vectors available, the executor copies them into logical output slots before subsequent calls can reuse scratch memory. The accepted prefix can then select its frontier even when a later physical row was rejected. A commit or trim updates active state and pending-token bookkeeping together. Reset returns the owner to its declared initial condition; an execution failure prevents further use of a partially updated owner.
+
+Clean execution performs planning, synchronization, output copies and state operations. Independent-reference replay and heavy internal-state capture are confined to qualification runs using the same numerical build and transaction semantics.
+
+\subsection{Why the requirements compose}
+The compositional argument has three obligations. A phase begins from reference-compatible active state and producer history. Each native group uses a recipe that preserves the required outputs and state update for its supported descriptor. Finally, logical output ownership and the transaction rules retain the reference frontier and committed state at the next boundary. Under these obligations, an induction over groups and phase boundaries preserves the contract in Eq.~\eqref{eq:contract}.
+
+This argument identifies what must be checked when a recipe or lowering changes. Source analysis, actual-operand comparisons and full-model tests evaluate these obligations in the listed deployments. Descriptor guards enforce the resulting supported domain.

@@ -1,0 +1,50 @@
+test_bad_numeric_inputs (test_preflight.PlannerTests.test_bad_numeric_inputs) ... ok
+test_budget_excess_is_not_payload_impossibility (test_preflight.PlannerTests.test_budget_excess_is_not_payload_impossibility) ... ok
+test_cli_and_optimized_validation (test_preflight.PlannerTests.test_cli_and_optimized_validation) ... ok
+test_fp32_kv (test_preflight.PlannerTests.test_fp32_kv) ... ok
+test_full671b_even_ideal_four_bit_fails (test_preflight.PlannerTests.test_full671b_even_ideal_four_bit_fails) ... ok
+test_hardware_validation (test_preflight.PlannerTests.test_hardware_validation) ... ok
+test_index_payload_selection (test_preflight.PlannerTests.test_index_payload_selection) ... ok
+test_integer_ceil_no_float_rounding (test_preflight.PlannerTests.test_integer_ceil_no_float_rounding) ... ok
+test_invalid_index_payload (test_preflight.PlannerTests.test_invalid_index_payload) ... ok
+test_metadata_extras_imbalance (test_preflight.PlannerTests.test_metadata_extras_imbalance) ... ok
+test_mla_never_uses_gqa (test_preflight.PlannerTests.test_mla_never_uses_gqa) ... ok
+test_official_always_denied (test_preflight.PlannerTests.test_official_always_denied) ... ok
+test_rank_not_total (test_preflight.PlannerTests.test_rank_not_total) ... ok
+test_replication (test_preflight.PlannerTests.test_replication) ... ok
+test_units_and_formula (test_preflight.PlannerTests.test_units_and_formula) ... ok
+test_unknown_topology_or_memory (test_preflight.PlannerTests.test_unknown_topology_or_memory) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.490s
+
+OK
+test_bad_numeric_inputs (test_preflight.PlannerTests.test_bad_numeric_inputs) ... ok
+test_budget_excess_is_not_payload_impossibility (test_preflight.PlannerTests.test_budget_excess_is_not_payload_impossibility) ... ok
+test_cli_and_optimized_validation (test_preflight.PlannerTests.test_cli_and_optimized_validation) ... ok
+test_fp32_kv (test_preflight.PlannerTests.test_fp32_kv) ... ok
+test_full671b_even_ideal_four_bit_fails (test_preflight.PlannerTests.test_full671b_even_ideal_four_bit_fails) ... ok
+test_hardware_validation (test_preflight.PlannerTests.test_hardware_validation) ... ok
+test_index_payload_selection (test_preflight.PlannerTests.test_index_payload_selection) ... ok
+test_integer_ceil_no_float_rounding (test_preflight.PlannerTests.test_integer_ceil_no_float_rounding) ... ok
+test_invalid_index_payload (test_preflight.PlannerTests.test_invalid_index_payload) ... ok
+test_metadata_extras_imbalance (test_preflight.PlannerTests.test_metadata_extras_imbalance) ... ok
+test_mla_never_uses_gqa (test_preflight.PlannerTests.test_mla_never_uses_gqa) ... ok
+test_official_always_denied (test_preflight.PlannerTests.test_official_always_denied) ... ok
+test_rank_not_total (test_preflight.PlannerTests.test_rank_not_total) ... ok
+test_replication (test_preflight.PlannerTests.test_replication) ... ok
+test_units_and_formula (test_preflight.PlannerTests.test_units_and_formula) ... ok
+test_unknown_topology_or_memory (test_preflight.PlannerTests.test_unknown_topology_or_memory) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.492s
+
+OK
+
+Compileall: passed (exit 0).
+Example CLI checks:
+examples/full671b_ideal4bit_tp8.json: exit=1, status=payload_exceeds_memory, per-rank planned budget=41937500000 bytes, weight payload floor=41937500000 bytes
+examples/official_deepinfer_sm86_denied.json: exit=1, status=unsupported_native, per-rank planned budget=14402653184 bytes, weight payload floor=14000000000 bytes
+examples/qwen14b_tp2.json: exit=1, status=unsupported_missing_evidence, per-rank planned budget=15172686848 bytes, weight payload floor=14770033664 bytes
+examples/qwen32b_tp4.json: exit=1, status=unsupported_missing_evidence, per-rank planned budget=16650373632 bytes, weight payload floor=16381938176 bytes
+examples/qwen32b_tp8.json: exit=1, status=unsupported_missing_evidence, per-rank planned budget=8325186816 bytes, weight payload floor=8190969088 bytes

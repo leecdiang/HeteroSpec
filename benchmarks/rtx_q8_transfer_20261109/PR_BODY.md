@@ -1,0 +1,18 @@
+本 PR 是 #211（设计提交 `ad9fb6846dd979c3a76d3c415c74fa9f86565f7d`）的独立 Windows RTX 结果分支，base 保持设计分支。原生 RTX 5070 Ti Laptop 的真物理 q8、共同 reserve8 通过有限严格资格；完整冻结八臂面板中 k7 的服务时间均比 k3 多13.6%–14.6%。同状态/同8 token/全部8行输出的 q8 算子更省时，未转化为本轮 live 收益。
+
+| 预注册主比较 | k7/k3 服务变化 | 根级98.75%调整区间 |
+| --- | --- | --- |
+| whole-loop4 | +13.835% | [+8.400%, +21.121%] |
+| whole-packed | +13.818% | [+8.566%, +20.163%] |
+| LOCAL-loop4 | +14.588% | [+9.240%, +21.362%] |
+| LOCAL-packed | +13.578% | [+8.898%, +19.800%] |
+
+16根×8臂×8 Williams顺序块=1024正式测量，另128 live primers；cap96、prompt≤192，全部保留。独立 Windows R 新参考仅作正确性oracle。四主比较每个16/16根方向均不利；独立四次要机制比较区间均跨零，不作等价或稳定赢家结论。固定四开发来源的同工作量诊断128测量+32 primers，四格 q8 算子变化为−11.910%、−3.944%、−10.408%、−10.904%，不与 live 混池。
+
+资格463请求/212866预留行，包含全词表向量、active KV/frontier、独立pending/trim/stop、拒绝/全接受/bonus、cap/EOG/reset、真实物理计数及负例和owned-tape桥接。原Windows R与历史基线、模型和数值模块保持不变。新增1775/2048请求；RTX累计2679/3072请求、2854298/4000000保守行数。profiling与closure新增GPU请求均为0，无A5000预算借用。
+
+交付核验：16687逻辑文件的完整本地CAS归档约5.346GiB，5720唯一blob全部解压重哈希、全部路径恢复；从恢复记录复算统计完全一致。远端199个分片全部下载，103898263字节/6212条文字记录逐一核对，再次复算全部固定统计完全一致。原始数值二进制完整保留本地，公开文字及二进制哈希承诺不等于另一机器的新数值资格，权重未归档。
+
+审查限制：资格fixture按阶段递增冻结；完整C/D清单与统计脚本在干净输出前发布并完整回读。#210全文审查晚于初批几何资格、早于全部干净计时。首个live worker原生18请求完成后修复了caller-global mask的Python后置读者，封存源码/原始文件并离线重核，原样复用，0 GPU重跑；间隙未隐去。其他准备/收尾helper失败及一次异常空闲频率采样均保留。初始工程和完整远端交付墙钟未完整计量，明确为null。
+
+[完整中文结果、全部八臂/成本/敏感性](https://github.com/leecdiang/HeteroSpec/blob/54f4b6bd0b806f5efa10477c11c6c3fd57165e79/benchmarks/rtx_q8_transfer_20261109/RESULT.md)、[复现说明](https://github.com/leecdiang/HeteroSpec/blob/54f4b6bd0b806f5efa10477c11c6c3fd57165e79/benchmarks/rtx_q8_transfer_20261109/REPRODUCE_RESULTS.md)、[限制](https://github.com/leecdiang/HeteroSpec/blob/54f4b6bd0b806f5efa10477c11c6c3fd57165e79/benchmarks/rtx_q8_transfer_20261109/LIMITATIONS.md)。本轮可按预注册负结果结题：支持实现/输入/horizon条件下的宽度工作量边界；无同期计时M、无kernel profiling，不宣称相对M优越性或GPU架构因果。未合并、发布Release、删除数据、改论文或启动32B/B570。

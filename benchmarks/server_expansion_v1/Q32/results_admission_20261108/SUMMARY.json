@@ -1,0 +1,117 @@
+{
+  "status": "COMPLETE_LIMITED_ADMISSION_AND_SMOKE_ONLY",
+  "model": {
+    "filename": "Qwen3-32B-Q4_K_M.gguf",
+    "bytes": 19762149024,
+    "sha256": "efd971561896866f0e910cce52761ca77b1b138090c7f15fe284676d57d1f689",
+    "canonical_revision": "938a7432affaec9157f883a87164e2646ae17555",
+    "official_mirror_revision": "7bd9b0147e1ea387abb1a27b35f0be79bfef5f99",
+    "license": "Apache-2.0"
+  },
+  "allocation": {
+    "status": "ZERO_FORWARD_ADMISSION_PASS",
+    "mode": "allocation",
+    "native_receipt_sha256": "b4c4be5beabeb2eefbeeb7d6e22323d624a777d0d2592b72050ebf60bcb02950",
+    "host_receipt_sha256": "287d764b5fa670cac4d00e93711a7472897fc82df5a9a0d01dcc19a3a9a2d5c9",
+    "module_map_sha256": "8cf864e94c8df3ad5ff3bdac7d019e28e8a83249e0e4d04fc21cb6cd18633c32",
+    "memory_sample_count": 48,
+    "minimum_sampled_free_bytes": 4269801472,
+    "maximum_sampled_total_minus_free_bytes": 21487419392,
+    "memory_scope": "Selected-GPU total-minus-free includes driver/reserved/unavailable bytes; 2s sampling, not per-process peak",
+    "safety_reserve_bytes": 1073741824,
+    "model_forwards": 0,
+    "token_rows": 0,
+    "all_weights_and_KV_on_allocated_GPU": true,
+    "context_capacity": 1024,
+    "KV_precision": "F16",
+    "source_numerics": "Unchanged pristine reference archives, original llama_decode; allocation/short-forward observer only",
+    "numerical_qualification": "NOT_RUN",
+    "independent_Q32_reference": "NOT_FROZEN",
+    "performance_panel": "NOT_RUN",
+    "limitation": "Admission and finite-vector smoke only; no equivalence, speed, long-context, speculative transaction or candidate-Q4 qualification"
+  },
+  "short_forward": {
+    "status": "SHORT_FORWARD_SMOKE_PASS_NOT_QUALIFICATION",
+    "mode": "short_forward",
+    "native_receipt_sha256": "69a247365d14fbcded098ebd1856d83781f8f3d8c077dadaa55abedb51cb1ccb",
+    "host_receipt_sha256": "392ed3609e276b00ae943d78f50369483a6d102b7e978674becb4e08f6489c73",
+    "module_map_sha256": "8cf864e94c8df3ad5ff3bdac7d019e28e8a83249e0e4d04fc21cb6cd18633c32",
+    "memory_sample_count": 48,
+    "minimum_sampled_free_bytes": 4269801472,
+    "maximum_sampled_total_minus_free_bytes": 21487419392,
+    "memory_scope": "Selected-GPU total-minus-free includes driver/reserved/unavailable bytes; 2s sampling, not per-process peak",
+    "safety_reserve_bytes": 1073741824,
+    "model_forwards": 8,
+    "token_rows": 16,
+    "all_weights_and_KV_on_allocated_GPU": true,
+    "context_capacity": 1024,
+    "KV_precision": "F16",
+    "source_numerics": "Unchanged pristine reference archives, original llama_decode; allocation/short-forward observer only",
+    "numerical_qualification": "NOT_RUN",
+    "independent_Q32_reference": "NOT_FROZEN",
+    "performance_panel": "NOT_RUN",
+    "limitation": "Admission and finite-vector smoke only; no equivalence, speed, long-context, speculative transaction or candidate-Q4 qualification"
+  },
+  "costs": {
+    "allocation": {
+      "native_receipt": "ZERO_FORWARD_ADMISSION_PASS",
+      "model_hash_s": 101.713538887,
+      "model_pair_load_s": 4.197086303,
+      "context_pair_allocation_s": 0.035810051,
+      "whole_native_main_s": 113.571343869,
+      "host": {
+        "status": "COMPLETE",
+        "returncode": 0,
+        "worker_wall_s": 113.8861860500183,
+        "wrapper_wall_s": 115.18160372399143,
+        "no_reservation_refund": true,
+        "native_numeric_qualification": "NOT_INFERRED_FROM_EXIT_CODE"
+      }
+    },
+    "short_forward": {
+      "native_receipt": "SHORT_FORWARD_SMOKE_PASS_NOT_QUALIFICATION",
+      "model_hash_s": 101.888590989,
+      "model_pair_load_s": 4.204333606,
+      "context_pair_allocation_s": 0.026818259,
+      "whole_native_main_s": 113.976700845,
+      "host": {
+        "status": "COMPLETE",
+        "returncode": 0,
+        "worker_wall_s": 114.22306009699241,
+        "wrapper_wall_s": 115.51030056399759,
+        "no_reservation_refund": true,
+        "native_numeric_qualification": "NOT_INFERRED_FROM_EXIT_CODE"
+      },
+      "target_tokens": [
+        12095,
+        13,
+        1096,
+        374
+      ],
+      "draft_tokens": [
+        12095,
+        13,
+        576,
+        6722
+      ]
+    }
+  },
+  "model_forwards_counter_scope": "llama_decode API calls, not physical graph count; draft prompt may split into UB4 microbatches",
+  "source_archive": {
+    "bytes": 321454,
+    "sha256": "2d376f13ceea146080abd11074640120a42f773a13f177a0a632f0a56d027289",
+    "sanitized_text_records": 150,
+    "local_full_byte_readback": "PASS"
+  },
+  "numeric_qualification": "NOT_RUN",
+  "independent_Q32_R": "NOT_FROZEN",
+  "performance_panel": "NOT_RUN",
+  "M2": "Separate active study. Inherited Q32 source/status M2=DEFERRED field is an earlier Q32-epoch scope label, not current global M2 status.",
+  "limitations": [
+    "Short raw-prefix smoke only; not chat-template/natural-input validation",
+    "No Q4 speculative candidate qualification or speed claim",
+    "C1024 capacity and short active prefix; no C4096 or long-run workspace guarantee",
+    "Memory sampled2s total-minus-free, includes driver/reserved/unavailable memory; not exact/per-process peak",
+    "All weights and KV on allocated GPU, not a claim every operator is GPU-only"
+  ]
+}

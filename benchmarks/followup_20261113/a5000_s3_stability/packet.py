@@ -57,7 +57,10 @@ def main(campaign, out, public):
     copy_text(Path(config['state_profile']), Path('data/STATE_PROFILE.json'))
     write(out / 'data/NUMERIC_INVENTORY.json', numeric)
     write(out / 'data/EXECUTION_SOURCE_COMMITS.json', source_commits)
-    write(out / 'data/IDENTITIES.json', dict(initial_H_source_commit=config['source_commit'],
+    initial_h = json.loads((campaign / 'outputs/H1/START.json').read_text())['source_commit']
+    dated = json.loads((campaign / 'CONFIG_DATES.private.json').read_text())['source_commit']
+    write(out / 'data/IDENTITIES.json', dict(H_initial_controller_source_commit=initial_h,
+          H_final_config_source_commit=config['source_commit'], dated_controller_source_commit=dated,
           model_sha256=config['model']['sha256'], model_bytes=config['model']['bytes'],
           native_ELF_sha256={k:config['executables'][k]['sha256'] for k in ('R', 'model')},
           state_profile_sha256=config['state_profile_sha256'],
@@ -76,8 +79,9 @@ def main(campaign, out, public):
     need(all(protected.values()), 'Protected historical file changed; preserve and investigate')
     write(out / 'data/PROTECTED_AUDIT.json', dict(files=len(protected), all_unchanged=True,
           scope='Original source plus historical STATE and journal; checked against retained original commitments'))
-    for source in sorted((campaign / 'reporting').glob('*.js')):
-        copy_text(source, Path('source') / source.name)
+    for source in sorted((campaign / 'reporting').glob('*')):
+        if source.is_file() and source.suffix in ('.js', '.py'):
+            copy_text(source, Path('source') / source.name)
     for source in sorted(out.rglob('*')):
         if source.is_file():
             index.append(dict(path=source.relative_to(out).as_posix(), bytes=source.stat().st_size, sha256=sha(source)))

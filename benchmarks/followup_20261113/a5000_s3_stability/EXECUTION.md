@@ -24,4 +24,4 @@ The frozen H candidates remain unchanged: six CodeContests and six MATH inputs, 
 
 Original S3 C/B = 0.9848637428511184 is a historical comparator only. Each new date and H are reported separately. Only complete R1+R2 supports the registered combined R estimate, with equal root/date weighting and domain-stratified paired-root bootstrap conditional on those dates. A partial panel remains descriptive. No significance-based extension, performance retry, 5% target, old/new pooling, merge, paper edit or submission is authorized.
 
-CPU validation: the existing 10 adapter tests and five new journal/disposal tests pass in ordinary Python and -O; native --echo and py_compile pass. Native qualification and timings are reported by actual status, never inferred from these CPU checks.
+CPU validation: the existing 10 adapter tests, five journal/disposal tests and two dated-window tests pass in ordinary Python and -O; native --echo and py_compile pass. The date tests check the completed-R1 boundary and skip-already-completed-panel handoff. Native qualification and timings are reported by actual status, never inferred from these CPU checks.

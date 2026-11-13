@@ -1,0 +1,22 @@
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp: In member function ‘void hs::n1chain::WorkerCapture::after_next(const string&, const std::vector<float>&)’:
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:64:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   64 |   if(previous_operation.empty())return;const auto end=++ordinal;const auto work=J::parse(core.actual_work_json());uint64_t rows=0;for(auto&w:work)rows+=w.contains("rows")?w.at("rows").get<uint64_t>():w.at("width").get<uint64_t>();
+      |   ^~
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:64:40: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   64 |   if(previous_operation.empty())return;const auto end=++ordinal;const auto work=J::parse(core.actual_work_json());uint64_t rows=0;for(auto&w:work)rows+=w.contains("rows")?w.at("rows").get<uint64_t>():w.at("width").get<uint64_t>();
+      |                                        ^~~~~
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp: In function ‘int hs::n1chain::prepare_native_worker(const J&, hs::n1chain::ProductionGate&, hs::n1chain::BudgetHooks&)’:
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:155:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::previous_terminal’ [-Wmissing-field-initializers]
+  155 |  Session session(*core,account);WorkerCapture capture{*core,gate,account,job};
+      |                                                                             ^
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:155:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::previous_operation’ [-Wmissing-field-initializers]
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:155:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::snapshots’ [-Wmissing-field-initializers]
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:155:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::descriptors’ [-Wmissing-field-initializers]
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:155:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::capture_receipts’ [-Wmissing-field-initializers]
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp: In lambda function:
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:178:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  178 |     if(op.contains("expected_canonical_ids"))require(q==token_json(op.at("expected_canonical_ids")),"canonical producer differs from frozen reference; do not force R tape");return q;
+      |     ^~
+${TASK_ROOT}/source-04/native_chain_successor_20261112/native/worker.cpp:178:174: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  178 |     if(op.contains("expected_canonical_ids"))require(q==token_json(op.at("expected_canonical_ids")),"canonical producer differs from frozen reference; do not force R tape");return q;
+      |                                                                                                                                                                              ^~~~~~

@@ -1,0 +1,52 @@
+{
+  "schema": "hs.production-bridge.initial-static-review.v1",
+  "scope": "READ_ONLY_SOURCE_REVIEW_NO_BUILDS_OR_RUNTIME_ACTIONS",
+  "source_hashes": {
+    "bridge.py": "d0eb2bdbafcf42e9f41851df8c03b41b8f5828c5b30c54e01ebf2a1d3efdcbb0",
+    "cpu_run.py": "8aede5fa0c12da3bc220b02253ff562ddfb24d5c7a9b9f2d515660835dfa73d4",
+    "resource_domain.py": "f7a1059e2a54b299f2f621a68f0a2c25e539c78d71656b971eff6c9b8b6d1f9a",
+    "supervisor.hpp": "6a276b999e76e816f95d43a639ff72e4f040a99d6e02d9e90d9517d5562ef455"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "kind": "BLOCKING_INTEGRATION",
+      "trigger": "reserve_launch with actual ResourceDomain followed by register_launcher",
+      "problem": "Pre-bind _bridge_guard called assert_live before any resource peer existed",
+      "status": "PREBIND_PHASE_GUARD_FIXED_IN_CURRENT_SOURCE_PENDING_WHOLE_CHAIN_TEST",
+      "required_evidence": "Actual OrdinaryCgroupAdapter integration through child binding; no domain=None-only happy proof"
+    },
+    {
+      "id": "R2",
+      "kind": "BLOCKING_INTEGRATION",
+      "trigger": "bridge.bind_child passes controller process identities into ResourceDomain",
+      "problem": "Controller start_ticks/boot_id schema differs from domain start_time/boot_id_sha256; required ancestry/executable fields absent. Actual pre-exec image is launcher, independently held image is future worker",
+      "status": "OPEN_AT_INITIAL_REVIEW",
+      "required_evidence": "Explicit independently validated preexec mapping and postexec identity transition; exit-envelope validation after child disappearance before supervisor/reap release"
+    },
+    {
+      "id": "R3",
+      "kind": "BLOCKING_INTEGRATION",
+      "trigger": "cpu_run uses O_RDWR log FDs while supervisor requires O_WRONLY",
+      "problem": "Actual Python-to-C++ happy path rejects before child fork",
+      "status": "OPEN_AT_INITIAL_REVIEW",
+      "required_evidence": "Separate readable/controller and write-only/launcher FDs to same frozen single-link files, verified whole-chain logs"
+    },
+    {
+      "id": "R4",
+      "kind": "CPU_NATIVE_BOUNDARY",
+      "trigger": "Arbitrary launcher/worker CLI paths plus caller-supplied SHAs and only NEEDED whitelist",
+      "problem": "Standard-library-only dependencies do not prove reviewed fixed CPU source; arbitrary static/dlopen or CPU model/vocab helper may satisfy this test",
+      "status": "OPEN_AT_INITIAL_REVIEW",
+      "required_evidence": "Independently verified complete fixture source/build receipt or internal typed source-owned registry before every Popen; no user hash as CPU authority"
+    }
+  ],
+  "native_execution": 0,
+  "model_creations": 0,
+  "backend_initializations": 0,
+  "contexts": 0,
+  "placement": 0,
+  "forward": 0,
+  "all261_actual_native_checks": "NOT_RUN",
+  "approval_status": "CPU_ONLY_NATIVE_NOT_AUTHORIZED"
+}

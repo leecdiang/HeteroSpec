@@ -1,0 +1,8 @@
+"""Read actual saved real-free producer receipts; no tokenizer/model/context."""
+import json,argparse
+from pathlib import Path
+p=argparse.ArgumentParser();p.add_argument('--root',required=True);p.add_argument('--out',required=True);a=p.parse_args();rows=[]
+for f in sorted((Path(a.root)/'R/episodes').glob('*/EPISODE.json')):
+ e=json.loads(f.read_text());r0,r1=e['requests'];old=r0['logical_ids'];q=r1['prompt']['canonical_ids'];lcp=next((i for i,(x,y) in enumerate(zip(old,q)) if x!=y),min(len(old),len(q)));k=r1['retained'];n=len(r0['prompt']['canonical_ids']);assert k==min(lcp,r0['native_head_after']);assert q[k:k+8]==r0['consumer']['sampled_ids'][:8]
+ rows.append(dict(case=e['case'],initial_prompt_tokens=n,materialized_after_first=r0['native_head_after'],logical_after_first=len(old),next_canonical_tokens=len(q),LCP=lcp,retained=k,retained_sampled_assistant_KV_rows=max(0,k-n),old_first_difference_ids=old[k:k+12],new_first_difference_ids=q[k:k+12],initial_prompt_tail=r0['prompt']['prompt_utf8'][-48:],second_request_rows=r1['rows'],same_response_cold_rows=len(q)+len(r1['consumer']['sampled_ids'])-1,second_request_saved_rows=k,assistant_samples=len(r0['consumer']['sampled_ids']),first_stop=r0['consumer']['stop'],second_stop=r1['consumer']['stop']))
+Path(a.out).open('x').write(json.dumps(dict(status='CPU_RECEIPT_ANALYSIS_OF_REAL_FREE_GPU_OUTPUTS',cases=rows,interpretation='Both reuse only user/template prefix before the empty-think suffix, not generated assistant KV. Strong and LOCAL receive identical LCP reuse, trim and canonical reconstruction. Saved rows cannot be attributed to LOCAL.',additional_model_or_GPU_calls=0),indent=2)+'\n');print('ACTUAL_FREE_PREFIX_RECEIPT_ANALYSIS_PASS')

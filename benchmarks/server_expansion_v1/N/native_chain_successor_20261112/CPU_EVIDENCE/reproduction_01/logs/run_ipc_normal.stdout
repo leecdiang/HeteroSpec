@@ -1,0 +1,18 @@
+PASS two separate clients spend one global request/row/deployment ledger
+PASS second worker cannot evade aggregate row cap with a new process
+PASS model/context/backend/placement ceilings are shared too
+PASS partial lost ACK keeps reservation and forbids retry/reconnect
+PASS broker crash after durable request before ACK is inspection-only
+PASS duplicate worker handshake cannot reconnect under another process
+PASS run and manifest handshake mismatch stops before work
+PASS cross-worker request assignment is rejected
+PASS partial frame and unexpected disconnect stop globally
+PASS private socket path and actual peer UID are enforced
+PASS finite idle deadline stops absent next worker without new STATE
+PASS native worker handshake without completed pre-exec reservation is rejected
+PASS launch reserves placement once and worker verifies rather than recharges
+PASS launch cannot close or admit a worker without reserving placement
+PASS two strict launch-worker pairs still share only one global ledger
+PASS concrete production launch gate stops before IPC and exec callback
+PASS provided synthetic journal beyond64MiB streams without granting authority
+{"status":"CPU_MOCK_IPC_PASS","groups":17,"one_global_ledger_per_case":true,"native_authority":false,"backend_init":0,"model_creation":0,"native_contexts":0,"placements":0,"forwards":0}

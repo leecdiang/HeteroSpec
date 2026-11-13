@@ -1,0 +1,41 @@
+{
+  "schema": "hs.production-bridge.resource-archive-plan.v1",
+  "mode": "CPU_PROPOSAL_ONLY",
+  "approval": null,
+  "native_execution_authorized": false,
+  "raw_archive": {
+    "status": "NOT_FROZEN_NO_NATIVE_DATA",
+    "entry_ceiling": 4096,
+    "relative_path_bytes_ceiling": 256,
+    "header_bytes_ceiling": 16777216,
+    "raw_metadata_journal_restore_bytes": 144739606528,
+    "ancillary_export_bytes_ceiling": 1073741824,
+    "ancillary_strict_restore_bytes_ceiling": 1073741824,
+    "ancillary_restore_pool": "existing 7GiB retained-artifact pool; selected artifacts plus this restore must fit together",
+    "archive_bytes_ceiling": 147651175875,
+    "include_categories": [
+      "all protocol-required native raw vectors and active-KV captures, without selecting favorable requests",
+      "all required transport, state, failure and ownership receipts",
+      "the one cumulative budget journal and bounded final controller/domain/bridge records",
+      "bounded worker, launcher, controller and bridge logs",
+      "SOURCE_IDENTITIES and immutable Git/source-bundle/rebuild references"
+    ],
+    "exclude_categories": [
+      "retained native or std-only ELFs and object files",
+      "system, CUDA and NCCL libraries",
+      "model weights",
+      "complete restored source and dependency trees",
+      "historical unrelated worktrees, old results and prior raw datasets"
+    ],
+    "selection_rule": "Freeze an exact relative-path allowlist after the finite run, then check entries, payload bytes and complete readback; no recursive inclusion of the retained build selection",
+    "missing_required_evidence": "BLOCKED or partial, never omitted to fit",
+    "deletion_required": false
+  },
+  "public_cpu_archive": {
+    "status": "SEPARATE_REVIEWED_EXPORT",
+    "payload_rule": "only explicitly selected reviewed UTF-8 code, configuration, receipts, logs and documentation from this successor plus needed pinned old CPU code",
+    "exclude_categories": ["ELFs", "objects", "system libraries", "model weights", "company credentials", "unrelated internal paths"],
+    "whole_retained_build_selection_included": false,
+    "authority": "exact export allowlist and byte identities; a retained build measurement is not the export manifest"
+  }
+}

@@ -1,3 +1,5 @@
+> Historical first-version review. For the current revision see [v2/REVISION_RESPONSE.md](v2/REVISION_RESPONSE.md).
+
 # Cross-review response and final scope
 
 This file records concrete changes made after independent method/science, literature/language and figure/data review. The reviews describe the snapshots they read; the final manuscript checks identify the delivered PDF and source version. No native or GPU experiment was added.

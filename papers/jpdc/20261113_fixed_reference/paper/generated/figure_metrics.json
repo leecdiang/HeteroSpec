@@ -50,7 +50,38 @@
       0.984959368890745
     ],
     "measured_rows": 144,
-    "warm_rows": 144
+    "warm_rows": 144,
+    "phase_totals_s": {
+      "B": {
+        "requests": 48,
+        "service_s": 364.8316790080001,
+        "reset_s": 0.00551443,
+        "prefill_s": 143.92656936699998,
+        "decode_s": 216.663232421,
+        "planning_s": 0.005185591999999999,
+        "owned_host_output_copy_s": 0.3599496350000001,
+        "residual_unpartitioned_s": 3.8712275630000077,
+        "other_s": 4.241877220000106
+      },
+      "C": {
+        "requests": 48,
+        "service_s": 358.9248593159999,
+        "reset_s": 0.0055244940000000005,
+        "prefill_s": 137.984134692,
+        "decode_s": 216.68981281800006,
+        "planning_s": 0.005159405000000001,
+        "owned_host_output_copy_s": 0.36729467600000004,
+        "residual_unpartitioned_s": 3.872933231000017,
+        "other_s": 4.250911805999863
+      }
+    },
+    "phase_changes_C_minus_B_s": {
+      "prefill_s": -5.942434674999987,
+      "decode_s": 0.02658039700006043,
+      "other_s": 0.009034585999756928,
+      "service_s": -5.90681969200017
+    },
+    "phase_scope": "Descriptive sums of 48 measured requests per arm; no additional independent samples or phase confidence intervals."
   },
   "factorial": [
     {
@@ -670,7 +701,773 @@
       "local_physical_calls": 2224,
       "k": 3,
       "target_width": 4
+    },
+    "source_derived_89_rows": {
+      "W": {
+        "name": "proposed supplied-history append",
+        "arm": "W",
+        "rows": 89,
+        "calls": 4,
+        "projection_4column_groups_per_fully_consumed_projection": 23,
+        "attention_4query_tiles_per_layer": 23,
+        "attention_concat_nodes_per_layer": 19,
+        "concat_logical_output_token_vectors_per_layer": 360,
+        "guaranteed_strided_mask_cont_nodes_per_layer": 0,
+        "guaranteed_strided_mask_cont_logical_F32_bytes_per_layer": 0,
+        "mask_cont_scope": "lower-extent views with query width>1 necessarily require cont in the fixed builder; this counts created nodes/logical data, not optimized CUDA launches, and conservatively excludes singleton views",
+        "logical_F32_mask_elements": 39424,
+        "logical_F32_mask_bytes": 157696,
+        "minimum_required_graph_key_transitions": 3,
+        "all_calls_rebuilt_if_reuse_disabled": 4,
+        "graph_key_scope": "width, exact per-row extents, output count; equal key permits but does not prove full reuse. Other input checks and runtime reuse setting unknown.",
+        "projection_tile_positions": [
+          [
+            232,
+            4
+          ],
+          [
+            236,
+            4
+          ],
+          [
+            240,
+            4
+          ],
+          [
+            244,
+            4
+          ],
+          [
+            248,
+            4
+          ],
+          [
+            252,
+            4
+          ],
+          [
+            256,
+            4
+          ],
+          [
+            260,
+            4
+          ],
+          [
+            264,
+            4
+          ],
+          [
+            268,
+            4
+          ],
+          [
+            272,
+            4
+          ],
+          [
+            276,
+            4
+          ],
+          [
+            280,
+            4
+          ],
+          [
+            284,
+            4
+          ],
+          [
+            288,
+            4
+          ],
+          [
+            292,
+            4
+          ],
+          [
+            296,
+            4
+          ],
+          [
+            300,
+            4
+          ],
+          [
+            304,
+            4
+          ],
+          [
+            308,
+            4
+          ],
+          [
+            312,
+            4
+          ],
+          [
+            316,
+            4
+          ],
+          [
+            320,
+            1
+          ]
+        ],
+        "attention_tile_positions": [
+          [
+            232,
+            4,
+            256
+          ],
+          [
+            236,
+            4,
+            256
+          ],
+          [
+            240,
+            4,
+            256
+          ],
+          [
+            244,
+            4,
+            256
+          ],
+          [
+            248,
+            4,
+            256
+          ],
+          [
+            252,
+            4,
+            256
+          ],
+          [
+            256,
+            4,
+            512
+          ],
+          [
+            260,
+            4,
+            512
+          ],
+          [
+            264,
+            4,
+            512
+          ],
+          [
+            268,
+            4,
+            512
+          ],
+          [
+            272,
+            4,
+            512
+          ],
+          [
+            276,
+            4,
+            512
+          ],
+          [
+            280,
+            4,
+            512
+          ],
+          [
+            284,
+            4,
+            512
+          ],
+          [
+            288,
+            4,
+            512
+          ],
+          [
+            292,
+            4,
+            512
+          ],
+          [
+            296,
+            4,
+            512
+          ],
+          [
+            300,
+            4,
+            512
+          ],
+          [
+            304,
+            4,
+            512
+          ],
+          [
+            308,
+            4,
+            512
+          ],
+          [
+            312,
+            4,
+            512
+          ],
+          [
+            316,
+            4,
+            512
+          ],
+          [
+            320,
+            1,
+            512
+          ]
+        ],
+        "keys": [
+          {
+            "position": 232,
+            "width": 24,
+            "requestedOutputs": 0,
+            "extent_runs": [
+              256
+            ]
+          },
+          {
+            "position": 256,
+            "width": 32,
+            "requestedOutputs": 0,
+            "extent_runs": [
+              512
+            ]
+          },
+          {
+            "position": 288,
+            "width": 32,
+            "requestedOutputs": 0,
+            "extent_runs": [
+              512
+            ]
+          },
+          {
+            "position": 320,
+            "width": 1,
+            "requestedOutputs": 1,
+            "extent_runs": [
+              512
+            ]
+          }
+        ]
+      },
+      "L": {
+        "name": "proposed supplied-history append",
+        "arm": "L",
+        "rows": 89,
+        "calls": 3,
+        "projection_4column_groups_per_fully_consumed_projection": 23,
+        "attention_4query_tiles_per_layer": 23,
+        "attention_concat_nodes_per_layer": 20,
+        "concat_logical_output_token_vectors_per_layer": 385,
+        "guaranteed_strided_mask_cont_nodes_per_layer": 6,
+        "guaranteed_strided_mask_cont_logical_F32_bytes_per_layer": 24576,
+        "mask_cont_scope": "lower-extent views with query width>1 necessarily require cont in the fixed builder; this counts created nodes/logical data, not optimized CUDA launches, and conservatively excludes singleton views",
+        "logical_F32_mask_elements": 45568,
+        "logical_F32_mask_bytes": 182272,
+        "minimum_required_graph_key_transitions": 3,
+        "all_calls_rebuilt_if_reuse_disabled": 3,
+        "graph_key_scope": "width, exact per-row extents, output count; equal key permits but does not prove full reuse. Other input checks and runtime reuse setting unknown.",
+        "projection_tile_positions": [
+          [
+            232,
+            4
+          ],
+          [
+            236,
+            4
+          ],
+          [
+            240,
+            4
+          ],
+          [
+            244,
+            4
+          ],
+          [
+            248,
+            4
+          ],
+          [
+            252,
+            4
+          ],
+          [
+            256,
+            4
+          ],
+          [
+            260,
+            4
+          ],
+          [
+            264,
+            4
+          ],
+          [
+            268,
+            4
+          ],
+          [
+            272,
+            4
+          ],
+          [
+            276,
+            4
+          ],
+          [
+            280,
+            4
+          ],
+          [
+            284,
+            4
+          ],
+          [
+            288,
+            4
+          ],
+          [
+            292,
+            4
+          ],
+          [
+            296,
+            4
+          ],
+          [
+            300,
+            4
+          ],
+          [
+            304,
+            4
+          ],
+          [
+            308,
+            4
+          ],
+          [
+            312,
+            4
+          ],
+          [
+            316,
+            4
+          ],
+          [
+            320,
+            1
+          ]
+        ],
+        "attention_tile_positions": [
+          [
+            232,
+            4,
+            256
+          ],
+          [
+            236,
+            4,
+            256
+          ],
+          [
+            240,
+            4,
+            256
+          ],
+          [
+            244,
+            4,
+            256
+          ],
+          [
+            248,
+            4,
+            256
+          ],
+          [
+            252,
+            4,
+            256
+          ],
+          [
+            256,
+            4,
+            512
+          ],
+          [
+            260,
+            4,
+            512
+          ],
+          [
+            264,
+            4,
+            512
+          ],
+          [
+            268,
+            4,
+            512
+          ],
+          [
+            272,
+            4,
+            512
+          ],
+          [
+            276,
+            4,
+            512
+          ],
+          [
+            280,
+            4,
+            512
+          ],
+          [
+            284,
+            4,
+            512
+          ],
+          [
+            288,
+            4,
+            512
+          ],
+          [
+            292,
+            4,
+            512
+          ],
+          [
+            296,
+            4,
+            512
+          ],
+          [
+            300,
+            4,
+            512
+          ],
+          [
+            304,
+            4,
+            512
+          ],
+          [
+            308,
+            4,
+            512
+          ],
+          [
+            312,
+            4,
+            512
+          ],
+          [
+            316,
+            4,
+            512
+          ],
+          [
+            320,
+            1,
+            512
+          ]
+        ],
+        "keys": [
+          {
+            "position": 232,
+            "width": 32,
+            "requestedOutputs": 0,
+            "extent_runs": [
+              256,
+              512
+            ]
+          },
+          {
+            "position": 264,
+            "width": 32,
+            "requestedOutputs": 0,
+            "extent_runs": [
+              512
+            ]
+          },
+          {
+            "position": 296,
+            "width": 25,
+            "requestedOutputs": 1,
+            "extent_runs": [
+              512
+            ]
+          }
+        ]
+      }
     }
+  },
+  "work_cost": {
+    "equal_work": [
+      {
+        "projection": "loop4",
+        "geometry": "within",
+        "ratio": 0.8808980963634365,
+        "origin_ratios": [
+          0.853374992922032,
+          0.8550536245060216,
+          0.9076682722623464,
+          0.9082593684906449
+        ]
+      },
+      {
+        "projection": "loop4",
+        "geometry": "cross",
+        "ratio": 0.9605618044931769,
+        "origin_ratios": [
+          0.9527840172930642,
+          1.0635859851026932,
+          0.9345577419807096,
+          0.8986538564745403
+        ]
+      },
+      {
+        "projection": "packed",
+        "geometry": "within",
+        "ratio": 0.8959158556556672,
+        "origin_ratios": [
+          0.8430274583170804,
+          0.9787477808325716,
+          0.8283986007697078,
+          0.9495309126470568
+        ]
+      },
+      {
+        "projection": "packed",
+        "geometry": "cross",
+        "ratio": 0.890961781188657,
+        "origin_ratios": [
+          0.8808961619709684,
+          0.8984340308881696,
+          0.8608858325131984,
+          0.9256242879755103
+        ]
+      }
+    ],
+    "work_counts": {
+      "3": {
+        "cycles": 3504,
+        "proposed": 10512,
+        "accepted": 7928,
+        "first_rejections": 1136,
+        "tail_unconsumed": 1448,
+        "target_rows": 28416,
+        "draft_rows": 28416,
+        "verify_rows": 14016,
+        "output_tokens": 11472,
+        "CAP": 104,
+        "EOG": 24
+      },
+      "7": {
+        "cycles": 2296,
+        "proposed": 16072,
+        "accepted": 9152,
+        "first_rejections": 1256,
+        "tail_unconsumed": 5664,
+        "target_rows": 32768,
+        "draft_rows": 32768,
+        "verify_rows": 18368,
+        "output_tokens": 11472,
+        "CAP": 104,
+        "EOG": 24
+      }
+    },
+    "work_count_scope": "Per-arm sums over 128 requests (16 roots x eight repeated order blocks); shared across all four methods at each k, not summed over methods.",
+    "work_ratios_k7_over_k3": {
+      "cycles": 0.6552511415525114,
+      "output_tokens": 1.0,
+      "verify_rows": 1.3105022831050228,
+      "proposed": 1.5289193302891932
+    },
+    "live_contrasts": [
+      {
+        "family": "primary",
+        "numerator": "W-loop4-k7",
+        "denominator": "W-loop4-k3",
+        "ratio": 1.1383511310294214,
+        "change_pct": 13.835113102942142,
+        "adjusted_interval": [
+          1.0839950398845781,
+          1.2112116354418734
+        ],
+        "adjusted_interval_change_pct": [
+          8.399503988457813,
+          21.12116354418734
+        ],
+        "adverse_roots": 16,
+        "root_ratios": [
+          1.072813795416029,
+          1.1366296288433522,
+          1.2165759423441436,
+          1.1049829618244165,
+          1.0289054007735534,
+          1.3763209116551332,
+          1.0335927450224403,
+          1.1451226890653572,
+          1.1672000263047293,
+          1.0789218833269452,
+          1.1301765067496214,
+          1.17628279736838,
+          1.0678639806206525,
+          1.1331598378218577,
+          1.1339737673982084,
+          1.1084069354974757
+        ],
+        "descriptive_leave_one_root_out_range_pct": [
+          11.408326182597461,
+          14.744680104619135
+        ],
+        "descriptive_code_change_pct": 14.788415949834022,
+        "descriptive_math_change_pct": 12.588078613622189
+      },
+      {
+        "family": "primary",
+        "numerator": "W-packed-k7",
+        "denominator": "W-packed-k3",
+        "ratio": 1.1381789651126708,
+        "change_pct": 13.81789651126708,
+        "adjusted_interval": [
+          1.0856569496631,
+          1.2016292580666788
+        ],
+        "adjusted_interval_change_pct": [
+          8.565694966309989,
+          20.162925806667875
+        ],
+        "adverse_roots": 16,
+        "root_ratios": [
+          1.0375548783403292,
+          1.1061656781241807,
+          1.1693261520135059,
+          1.1428396222708879,
+          1.0078123851746574,
+          1.3302645783524192,
+          1.058542573815557,
+          1.157083184744687,
+          1.2090846289845674,
+          1.0884540479595308,
+          1.1132438894994956,
+          1.2173030623578351,
+          1.107598671766806,
+          1.1444130978986247,
+          1.1532788314043028,
+          1.108298522908981
+        ],
+        "descriptive_leave_one_root_out_range_pct": [
+          11.781319576632665,
+          14.855069598218297
+        ],
+        "descriptive_code_change_pct": 13.401913201571713,
+        "descriptive_math_change_pct": 14.372216869676446
+      },
+      {
+        "family": "primary",
+        "numerator": "L-loop4-k7",
+        "denominator": "L-loop4-k3",
+        "ratio": 1.1458778065862028,
+        "change_pct": 14.587780658620275,
+        "adjusted_interval": [
+          1.0924015946961738,
+          1.2136216723572748
+        ],
+        "adjusted_interval_change_pct": [
+          9.240159469617382,
+          21.36216723572748
+        ],
+        "adverse_roots": 16,
+        "root_ratios": [
+          1.0546177413861104,
+          1.120686432199107,
+          1.1451230229851395,
+          1.1194885113669062,
+          1.0123055407872275,
+          1.3674191033183458,
+          1.0877200453380362,
+          1.1746232852685567,
+          1.1843596081668863,
+          1.0808872878103655,
+          1.142076884919879,
+          1.2063960594308334,
+          1.1296854384817618,
+          1.2192474958129917,
+          1.1536437676350328,
+          1.072617051616322
+        ],
+        "descriptive_leave_one_root_out_range_pct": [
+          12.338061328902562,
+          15.635999441658477
+        ],
+        "descriptive_code_change_pct": 14.36185524748006,
+        "descriptive_math_change_pct": 14.886839997166689
+      },
+      {
+        "family": "primary",
+        "numerator": "L-packed-k7",
+        "denominator": "L-packed-k3",
+        "ratio": 1.135776714683109,
+        "change_pct": 13.577671468310903,
+        "adjusted_interval": [
+          1.088982192113392,
+          1.19800286820368
+        ],
+        "adjusted_interval_change_pct": [
+          8.898219211339198,
+          19.800286820368008
+        ],
+        "adverse_roots": 16,
+        "root_ratios": [
+          1.0516727983999112,
+          1.1166841510783543,
+          1.169579712446233,
+          1.101726259288446,
+          1.0875606495256451,
+          1.333710465389295,
+          1.0638473945127374,
+          1.1705499830138695,
+          1.2075243171964671,
+          1.066325236992014,
+          1.064598213112825,
+          1.1973859231036488,
+          1.073730850337171,
+          1.1855303582558872,
+          1.1236220021635428,
+          1.0667875865552743
+        ],
+        "descriptive_leave_one_root_out_range_pct": [
+          11.525909592933692,
+          14.166644305759778
+        ],
+        "descriptive_code_change_pct": 14.572553151116585,
+        "descriptive_math_change_pct": 12.290867543693995
+      }
+    ]
   },
   "width_tradeoff": {
     "equal_work": [

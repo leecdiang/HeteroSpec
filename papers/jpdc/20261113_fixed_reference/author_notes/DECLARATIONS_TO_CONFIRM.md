@@ -1,6 +1,6 @@
 # Submission declarations: author confirmation required
 
-This is a preparation record, not a signed author declaration. The manuscript currently marks these matters as pending. Do not replace the pending text with a claim of author approval until the author has reviewed and approved it.
+This is a preparation record, not a signed author declaration. These internal action items are kept outside the manuscript. The manuscript contains factual scope and AI-use statements; it does not imply that the author has confirmed the items below.
 
 | Field | Current factual basis | Author action |
 |---|---|---|
@@ -25,10 +25,18 @@ No generative image tool was used to create numerical data or experimental image
 
 The prior project records also report AI-assisted research-code work. The author must confirm the complete historical tool names, model versions where known, purposes, supervision and validation. This preparation cannot infer that history from the current assistant identity. Do not fabricate missing versions or claim that all historical research was performed with the current model.
 
-The manuscript has a Methods account, a caption disclosure for the conceptual figure and a separate general AI declaration. Its final sentence deliberately records that author approval is pending. The final publication statement should be revised only after the author has actually reviewed and edited the content and accepted responsibility, as required by the verified [Elsevier policy](https://www.elsevier.com/about/policies-and-standards/generative-ai-policies-for-journals).
+The manuscript has a Methods account, a caption disclosure for the conceptual figure and a separate factual AI declaration. Final human review and responsibility are recorded here as author actions rather than as already completed. The final publication statement should be revised only after the author has actually reviewed and edited the content and accepted responsibility, as required by the verified [Elsevier policy](https://www.elsevier.com/about/policies-and-standards/generative-ai-policies-for-journals).
 
 ## Data statement draft logic
 
-Distinguish four categories: public implementation code; public complete timing rows and numeric projections; restricted original native records; and temporary intermediates that were pruned. State the real reason and scope of restrictions after author verification. A GitHub code link does not by itself establish that all underlying research data meet the journal's archival-deposit requirement.
+Distinguish four categories: public implementation code; public complete timing rows, numeric projections and short diagnostic token/text excerpts; restricted original native records; and temporary intermediates that were pruned. State the real reason and scope of restrictions after author verification. A GitHub code link does not by itself establish that all underlying research data meet the journal's archival-deposit requirement.
 
 The final repository identifier, DOI if issued, permitted access mechanism and institutional/company approval are pending. No archive upload or new public release of restricted material is authorized by this preparation.
+
+## Version 2 review items
+
+- Confirm the four-query state example and the supported all-row/last-row output contract.
+- Confirm the fixed-reference method framing and the same-contract S3 scalar-loop interpretation.
+- Approve the limited statistical scope, including the explicitly post-hoc leave-one-root-out supplement.
+- Confirm publication permission for the five added public source records; the history diagnostic includes short token/text excerpts and does not bundle the full corpus.
+- Review the final main/supplement PDFs and flat editable source archive; no submission is authorized by this checklist.

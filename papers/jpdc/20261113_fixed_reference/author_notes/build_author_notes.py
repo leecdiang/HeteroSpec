@@ -253,7 +253,9 @@ class NotesDoc(BaseDocTemplate):
 
 
 def table_flowable(rows: list[list[str]], st: dict) -> Table:
-    if "原稿" in rows[0][0]:
+    if len(rows[0]) == 2:
+        fractions = [0.25, 0.75]
+    elif "原稿" in rows[0][0]:
         fractions = [0.31, 0.40, 0.29]
     elif "主张" in rows[0][0]:
         fractions = [0.25, 0.39, 0.36]

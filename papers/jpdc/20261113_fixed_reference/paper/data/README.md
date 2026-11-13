@@ -24,12 +24,18 @@ or private absolute paths are included.
   It contains the four natural paired comparisons and all fifteen fixed
   application contrasts with exact timing/interval source references.
 
-The 47 source files are byte-preserving copies with SHA-256 checks. Git blob
+The 47 baseline source files are byte-preserving copies with SHA-256 checks. Git blob
 identities are retained for the 24 paper-source inputs. The exact URLs and
-versions are in `generated/figure_source_downloads.json`; per-figure subsets
-also appear in `generated/figure_manifest.json`.
+versions are in `../generated/figure_source_downloads.json`; per-figure subsets
+also appear in `../generated/figure_manifest.json`.
 
 The package reconstructs the published statistics and figures. It does not
 provide the unavailable or separately held native full-vector/KV captures and
 does not claim a fresh numerical qualification of the models. Authors must
 confirm the broader research data-availability statement before submission.
+
+## Revision 2 additions
+
+The 47 baseline input files remain byte-identical to the #243 review commit. Five additional public fixed-version records are stored under `v2/`: the S3 phase account, the natural-history reconciliation, the source-derived local-cost report, modern-U compiler resources, and the original live-width arm analysis. Their full commit, Git blob, SHA-256 and direct URL are in `../generated/figure_sources_v2.json`; the original source manifest remains in `../generated/figure_source_downloads.json`.
+
+The history report contains short public token/text excerpts explaining the canonical-history transition. It does not contain the full conversation corpus. Original native tensor archives, company-restricted records, model weights and pruned temporary data are not added. New derived summaries in `generated/` are CPU explanations, not new experimental measurements.

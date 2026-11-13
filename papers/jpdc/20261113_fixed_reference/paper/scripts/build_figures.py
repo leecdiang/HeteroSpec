@@ -95,6 +95,9 @@ def check_close(name, actual, expected, atol=2e-12):
 def verify_sources():
     manifest = json.loads((GEN / "figure_source_downloads.json").read_text())
     sources = manifest if isinstance(manifest, list) else manifest.get("sources", manifest.get("files", []))
+    extra = GEN / "figure_sources_v2.json"
+    if extra.exists():
+        sources = sources + json.loads(extra.read_text())
     for item in sources:
         SOURCE_BY_LOCAL[item["local"]] = item
         p = ROOT / item["local"]
@@ -163,7 +166,7 @@ def save(fig, stem, sources, width, height, markers=None):
     fig.set_size_inches(width, height, forward=True)
     # The CAS manuscript scales 7 in to 6.84 in; the supplement scales to
     # approximately 6.53 in. Keep the final embedded figure text at >= 8 pt.
-    minimum_font = 8.6 if stem.startswith("supp") else 8.2
+    minimum_font = 8.6 if stem.startswith("supp") or stem == "fig05_application" else 8.2
     for t in fig.findobj(matplotlib.text.Text):
         if t.get_fontsize() < minimum_font:
             t.set_fontsize(minimum_font)
@@ -250,69 +253,95 @@ def interval(c):
 
 
 def overview():
-    fig = plt.figure(figsize=(7,3.45))
-    ax = fig.add_axes([0,0,1,1]); ax.set_xlim(0,7); ax.set_ylim(0,3.45); ax.axis("off")
-    ax.text(.10,3.29,"(a)  The same visible keys can take different paths",fontsize=9.2,fontweight="bold")
-    ax.text(3.74,3.29,"(b)  Two different reasons to group queries",fontsize=9.2,fontweight="bold")
-    # A measured example. The source's logical positions are not cache indices.
-    x0,cw=1.12,.52
-    ax.text(.1,2.91,"Query position",fontsize=8.3,va="center")
-    for i,p in enumerate([765,766,767,768]):
-        ax.text(x0+cw*(i+.5),2.91,str(p),ha="center",va="center",fontsize=8.5)
-    ax.text(.1,2.55,"Scalar reference",fontsize=8.3,va="center")
-    ax.text(.1,2.16,"Direct wide call",fontsize=8.3,va="center")
-    for i,e in enumerate([768,768,768,1024]):
-        box(ax,x0+i*cw,2.39,cw,.30,str(e),BLUE_LIGHT if e==768 else OCHRE_LIGHT,
-            BLUE if e==768 else OCHRE,hatch=None if e==768 else "///",fs=8.4)
-        box(ax,x0+i*cw,2.00,cw,.30,"1024",OCHRE_LIGHT,OCHRE,hatch="///",fs=8.4)
-    ax.text(1.12,1.78,"Physical KV range changes for the first three rows.",fontsize=8.25)
-    ax.text(.1,1.54,"A causal mask fixes visibility; it need not fix reduction geometry.",fontsize=8.2)
-    # Independent schematic: 8 known columns, a=4 arithmetic inner groups.
-    xx=4.63; ww=.272
-    ax.text(3.74,2.91,"Eight columns",fontsize=8.25,va="center")
-    for i in range(8):
-        ax.text(xx+ww*(i+.5),2.91,str(i+1),ha="center",va="center",fontsize=8.3)
-    ax.text(3.74,2.55,"KV range",fontsize=8.25,va="center")
-    for i in range(8):
-        box(ax,xx+i*ww,2.39,ww,.30,"",BLUE_LIGHT if i<3 else OCHRE_LIGHT,
-            BLUE if i<3 else OCHRE,hatch=None if i<3 else "///")
-    ax.text(3.74,2.16,"Arithmetic",fontsize=8.25,va="center")
-    for i in range(8):
-        box(ax,xx+i*ww,2.00,ww,.30,"",LIGHT,GRAY,lw=.45)
-    for g in range(2):
-        box(ax,xx+g*4*ww,1.97,4*ww,.36,"",fill="none",edge=INK,lw=1.1)
-    ax.text(xx+ww*2,1.78,"a = 4",ha="center",fontsize=8.3)
-    ax.text(xx+ww*6,1.78,"a = 4",ha="center",fontsize=8.3)
-    ax.text(3.74,1.54,"Outer groups expose parallel work; inner order stays fixed.",fontsize=8.2)
-    ax.plot([.1,6.9],[1.35,1.35],color=PALE,lw=.8)
-    ax.text(.1,1.17,"(c)  Cut at the affected consumer, then rejoin in query order",fontsize=9.2,fontweight="bold")
-    box(ax,.1,.42,.72,.54,"Known\nqueries",LIGHT,GRAY)
-    arrow(ax,(.82,.69),(1.02,.69))
-    box(ax,1.02,.42,1.13,.54,"QKV projection\nwide group",BLUE_LIGHT,BLUE)
-    arrow(ax,(2.15,.69),(2.35,.69))
-    box(ax,2.35,.71,1.26,.30,"Attention: 3 rows",BLUE_LIGHT,BLUE,fs=8.3)
-    box(ax,2.35,.34,1.26,.30,"Attention: 1 row",OCHRE_LIGHT,OCHRE,hatch="///",fs=8.3)
-    ax.text(2.98,.14,"768 / 1024 KV entries",ha="center",fontsize=8.1)
-    arrow(ax,(3.61,.69),(3.84,.69))
-    box(ax,3.84,.42,1.12,.54,"O / FFN projection\nwide group",BLUE_LIGHT,BLUE,fs=8.3)
-    arrow(ax,(4.96,.69),(5.17,.69))
-    box(ax,5.17,.71,1.72,.30,"Full vectors → next consumer",WHITE,INK,fs=8.2)
-    box(ax,5.17,.34,1.72,.30,"KV and pending state → reuse",WHITE,INK,fs=8.2)
-    save(fig,"fig01_overview",["pr222/rewrite_figure_sources.json"],7,3.45,
-         {"measured_positions":4,"arithmetic_schematic_columns":8})
+    """One four-query example; the wider-prefill inset is explicitly separate."""
+    fig = plt.figure(figsize=(7,5.2))
+    ax = fig.add_axes([0,0,1,1]); ax.set_xlim(0,7); ax.set_ylim(-.2,5); ax.axis("off")
+    ax.text(.12,4.81,"(a)  Four known queries; a wider call changes three physical ranges",fontsize=9.4,fontweight="bold")
+    x0,cw=2.00,1.10
+    ax.text(.12,4.46,"Known target inputs",fontsize=8.7,va="center")
+    for i,label in enumerate(["seed s · 765","draft d1 · 766","draft d2 · 767","draft d3 · 768"]):
+        ax.text(x0+cw*(i+.5),4.46,label,ha="center",va="center",fontsize=8.5)
+    for y,label,exts in [(4.05,"Reference KV extent",[768,768,768,1024]),(3.65,"Direct wide extent",[1024]*4)]:
+        ax.text(.12,y+.15,label,fontsize=8.7,va="center")
+        for i,e in enumerate(exts):
+            box(ax,x0+i*cw,y,cw-.035,.30,str(e),BLUE_LIGHT if e==768 else OCHRE_LIGHT,
+                BLUE if e==768 else OCHRE,hatch=None if e==768 else "///",fs=8.6)
+    ax.plot([x0,x0+cw*3-.035],[3.57,3.57],color=OCHRE,lw=1.2)
+    ax.text(x0+cw*1.5,3.43,"Same causal visibility, different physical attention problem",ha="center",fontsize=8.4,color=OCHRE)
+
+    ax.plot([.12,6.88],[3.30,3.30],color=PALE,lw=.7)
+    ax.text(.12,3.12,"(b)  Preserve the numerical paths; change where the cut is paid",fontsize=9.4,fontweight="bold")
+    left,right,width=.12,3.70,3.18
+    for x,title in [(left,"SIMPLE · whole-call cut"),(right,"LOCAL · attention-only cut")]:
+        ax.text(x+width/2,2.88,title,ha="center",fontweight="bold",fontsize=8.9)
+    # Execution ribbons share the four-query column scale. SIMPLE's whole-call
+    # frames split every decoder layer; LOCAL's frame spans all four rows.
+    box(ax,left,1.82,width*.75-.035,.92,"",fill="none",edge=GRAY,lw=.9)
+    box(ax,left+width*.75+.015,1.82,width*.25-.015,.92,"",fill="none",edge=GRAY,lw=.9)
+    box(ax,right,1.82,width,.92,"",fill="none",edge=INK,lw=1.0)
+    for x,n,w in [(left+.035,3,width*.75-.105),(left+width*.75+.05,1,width*.25-.085)]:
+        label="Projection: 3-column tail" if n==3 else "1 col."
+        box(ax,x,2.45,w,.23,label,LIGHT,PALE,fs=8.3,lw=.5)
+        box(ax,x,2.15,w,.23,"Attention · 768" if n==3 else "1024",BLUE_LIGHT if n==3 else OCHRE_LIGHT,
+            BLUE if n==3 else OCHRE,hatch=None if n==3 else "///",fs=8.3,lw=.6)
+        box(ax,x,1.88,w,.20,"Output proj. / FFN: 3 rows" if n==3 else "1 row",LIGHT,PALE,fs=8.2,lw=.5)
+    box(ax,right+.035,2.45,width-.07,.23,"Projection: one four-column group (a = 4)",LIGHT,INK,fs=8.35,lw=.65)
+    box(ax,right+.035,2.15,width*.75-.055,.23,"Attention: first 3 rows · 768",BLUE_LIGHT,BLUE,fs=8.3,lw=.6)
+    box(ax,right+width*.75+.015,2.15,width*.25-.05,.23,"last · 1024",OCHRE_LIGHT,OCHRE,hatch="///",fs=8.3,lw=.6)
+    box(ax,right+.035,1.88,width-.07,.20,"Output proj. / FFN: all four rows",LIGHT,INK,fs=8.3,lw=.65)
+
+    ax.text(.12,1.62,"(c)  Own every requested output; commit the accepted prefix",fontsize=9.4,fontweight="bold")
+    for i in range(4):
+        box(ax,.12+i*.47,1.06,.43,.27,f"z{i}",WHITE,INK,fs=8.6)
+    ax.text(.12,1.43,"Outputs in row order",fontsize=8.3)
+    arrow(ax,(2.03,1.195),(2.34,1.195),INK)
+    ax.text(2.53,1.29,"z2 selects c",ha="center",fontsize=8.2)
+    ax.text(2.53,1.07,"d1, d2 accepted",ha="center",fontsize=8.2)
+    ax.text(3.25,1.43,"Keep KV through 767",fontsize=8.3)
+    for i,t in enumerate(["…","s","d1","d2"]):
+        box(ax,3.25+i*.46,1.06,.43,.27,t,BLUE_LIGHT,BLUE,fs=8.6)
+    box(ax,5.18,1.06,.43,.27,"d3",LIGHT,GRAY,fs=8.6)
+    ax.plot([5.19,5.60],[1.065,1.325],color=GRAY,lw=.8)
+    ax.text(5.395,.91,"trim",ha="center",fontsize=8.2)
+    box(ax,6.08,1.06,.76,.27,"c at 768",WHITE,INK,fs=8.4)
+    ax.patches[-1].set_linestyle((0,(3,2)))
+    ax.text(6.46,1.43,"Pending token",ha="center",fontsize=8.3)
+    ax.text(6.46,.91,"not yet in KV",ha="center",fontsize=8.2)
+
+    ax.plot([.12,6.88],[.79,.79],color=PALE,lw=.7)
+    ax.text(.12,.62,"(d)  Cross-group packing: 8 known prefill rows; last output requested",fontsize=9.1,fontweight="bold")
+    ix,iw=3.00,.48
+    ax.text(.12,.41,"Positions / physical runs 7 + 1",fontsize=8.25,va="center")
+    for i,p in enumerate(range(761,769)):
+        box(ax,ix+i*iw,.30,iw-.015,.20,str(p),BLUE_LIGHT if i<7 else OCHRE_LIGHT,
+            BLUE if i<7 else OCHRE,hatch=None if i<7 else "///",fs=8.3,lw=.45)
+    ax.text(.12,.205,"Attention tiles: 4 + 3 + 1",fontsize=8.25,va="center")
+    # The upper solid braces encode attention tiles, the lower dark braces
+    # arithmetic 4+4. Their separate vertical placement prevents conflation.
+    for off,n in [(0,4),(4,3),(7,1)]:
+        xx=ix+off*iw;ww=n*iw-.015
+        ax.plot([xx,xx,xx+ww,xx+ww],[.255,.205,.205,.255],color=BLUE if off<7 else OCHRE,lw=1.0)
+    for off in [0,4]:
+        xx=ix+off*iw;ww=4*iw-.015
+        ax.plot([xx,xx,xx+ww,xx+ww],[.065,-.005,-.005,.065],color=INK,lw=1.0)
+        ax.text(xx+ww/2,-.15,"a = 4",ha="center",va="bottom",fontsize=8.2)
+    ax.text(.12,-.005,"Arithmetic groups: 4 + 4",fontsize=8.25,va="center")
+    save(fig,"fig01_overview",["pr222/rewrite_figure_sources.json"],7,5.2,
+         {"main_example_known_queries":4,"main_arithmetic_groups":1,"prefill_inset_known_rows":8,
+          "prefill_inset_physical_runs":[7,1],"prefill_inset_attention_tiles":[4,3,1],"prefill_inset_arithmetic_groups":[4,4]})
     CAPTIONS["fig01_overview"] = (
-        "Preserving a numerical reference leaves more than one way to organize work. "
-        "(a) At the measured 765--768 position boundary, scalar calls use physical KV "
-        "ranges 768, 768, 768, and 1024, whereas a direct wide call uses 1024 for all rows. "
-        "(b) The eight-column drawing is a schematic: physical-range groups and arithmetic "
-        "groups need not share boundaries. The illustrated inner width a=4 is used for the "
-        "qualified Q8_0 path; the mixed Q4_K/Q6_K path keeps a=1. Independent outer "
-        "groups expose parallel work without reordering operations inside a group. "
-        "(c) LOCAL confines the 3+1 split to attention and preserves wider projections, "
-        "ordered full-vector outputs, and the state required by later consumers. "
-        "The diagram describes execution structure, not unrestricted concurrency or a proof "
-        "for arbitrary backends. This conceptual figure was produced with AI-assisted code; "
-        "the authors are responsible for its content.")
+        "Preserve each group's numerical path while changing the organization between groups. "
+        "(a) The four known verification inputs at positions 765--768 require physical "
+        "KV extents 768, 768, 768 and 1024. Draft proposals are known inputs to verification, "
+        "not assumed future target tokens. (b) SIMPLE cuts whole calls 3+1; LOCAL retains "
+        "one four-column projection group and cuts attention 3+1. Each used 1--4-column "
+        "path must satisfy the backend's numerical contract. (c) All four requested vectors "
+        "are owned in row order. In the illustrated acceptance outcome d1 and d2 are accepted, "
+        "d3 is rejected, and z2 supplies correction c. KV is retained through position 767; "
+        "c at 768 is pending until materialized. (d) A separate eight-row known-prefill "
+        "example requests only its last output. Physical runs 7+1 give attention tiles "
+        "4+3+1, while projection groups are 4+4. This is not the four-row k=3 verifier. "
+        "The conceptual diagram was prepared with AI-assisted drawing code.")
 
 
 def extent():
@@ -354,8 +383,7 @@ def extent():
 
 def strong_baseline():
     rows=frame("closeout/service/S3_TIMINGS.csv")
-    measured=rows[rows.role=="measure"].copy()
-    if measured.empty: measured=rows[rows.role=="measured"].copy()
+    measured=rows[rows.role=="measured"].copy()
     assert len(measured)==144
     pivot=measured.pivot(index=["slot","root","domain","round"],columns="arm",values="service_s").sort_index()
     pr=frame("pr218/PER_ROOT.csv").sort_values("slot")
@@ -365,55 +393,73 @@ def strong_baseline():
     for c in result["contrasts"]:
         ratios=np.exp(np.log(pivot[c["candidate"]]/pivot[c["baseline"]]).groupby(level="slot").mean())
         check_close("S3 "+c["candidate"]+"/"+c["baseline"],np.exp(np.log(ratios).mean()),c["ratio"])
-    fig=plt.figure(figsize=(7,3.38))
-    left=fig.add_axes([.115,.23,.36,.63]);right=fig.add_axes([.64,.40,.34,.46])
+    audit=read_json("v2/s3_cost_audit.json")["groups"]
+    phase={arm:audit[arm]["measured"] for arm in ["B","C"]}
+    for arm in ["B","C"]:
+        check_close("S3 phase-accounting service "+arm,phase[arm]["service_s"],measured.loc[measured.arm==arm,"service_s"].sum())
+    keys=["prefill_s","decode_s","other_s","service_s"]
+    for arm in ["B","C"]:
+        phase[arm]["other_s"]=phase[arm]["service_s"]-phase[arm]["prefill_s"]-phase[arm]["decode_s"]
+    delta={k:phase["C"][k]-phase["B"][k] for k in keys}
+    check_close("S3 phase-change balance",delta['prefill_s']+delta['decode_s']+delta['other_s'],delta['service_s'],atol=1e-10)
+    fig=plt.figure(figsize=(7,4.40))
+    left=fig.add_axes([.115,.435,.36,.455]);right=fig.add_axes([.64,.58,.34,.31])
     clean(left);clean(right);refline(left);refline(right)
-    ptitle(left,"a","C/B for each independent root")
-    ptitle(right,"b","The baseline changes the conclusion")
+    ptitle(left,"a","Twelve roots, four paired rounds each")
+    ptitle(right,"b","Beyond shared quantization")
     for slot in range(12):
-        q=pivot.loc[slot]
-        dots=(q.C/q.B).values
-        y=11-slot
+        q=pivot.loc[slot];dots=(q.C/q.B).values;y=11-slot
         color=BLUE if slot<6 else OCHRE;marker="o" if slot<6 else "^"
         left.plot(dots,np.full(4,y),linestyle="none",marker=marker,ms=3.2,
                   mfc=WHITE,mec=color,mew=.6,alpha=.65,zorder=2)
         left.plot(rr.loc[slot],y,marker=marker,color=color,ms=4.6,ls="none",zorder=4)
     left.set_yticks(range(12),[f"Math {6-i}" for i in range(6)]+[f"Code {12-i}" for i in range(6,12)])
     left.set_xlim(.972,1.003);left.set_ylim(-.65,11.65)
-    left.xaxis.set_major_locator(MultipleLocator(.01))
-    left.xaxis.set_major_formatter(FormatStrFormatter("%.2f"))
-    left.set_xlabel("C/B service-time ratio (lower is faster)")
+    left.xaxis.set_major_locator(MultipleLocator(.01));left.xaxis.set_major_formatter(FormatStrFormatter("%.2f"))
+    left.set_xlabel("C/B resident-service-time ratio")
     left.axhline(5.5,color=PALE,lw=.65)
     for i,c in enumerate(result["contrasts"]):
-        y=2-i
-        color=BLUE if i==0 else GRAY
+        y=2-i;color=BLUE if i==0 else GRAY
         forest(right,c["ratio"],y,c["interval"],color=color,marker="D" if i==0 else "s")
-        right.text(.927,y+.27,
-                   f"{c['candidate']}/{c['baseline']}  ·  {100*c['confidence']:g}% CI",fontsize=8.1,color=color)
+        right.text(.927,y+.29,f"{c['candidate']}/{c['baseline']} · {100*c['confidence']:g}% CI",fontsize=8.2,color=color)
     right.set_yticks([]);right.set_ylim(-.5,2.6);right.set_xlim(.925,1.003)
-    right.xaxis.set_major_locator(MultipleLocator(.02))
-    right.xaxis.set_major_formatter(FormatStrFormatter("%.2f"))
-    right.set_xlabel("Equal-root geometric service-time ratio")
-    fig.text(.64,.20,"C/B: 1.51% less service time",fontsize=10.0,fontweight="bold",color=BLUE)
-    fig.text(.64,.13,"95% CI: 1.23%–1.79%",fontsize=8.8)
-    fig.text(.115,.045,"Open symbols: paired rounds     Filled symbols: root geometric means",fontsize=8.3)
-    save(fig,"fig03_strong_baseline",["closeout/service/S3_TIMINGS.csv","closeout/service/ORIGINAL_RESULTS.json","pr218/PER_ROOT.csv"],7,3.38,
-         {"roots":12,"paired_rounds":48,"contrasts":3})
-    METRICS["strong_baseline"]={"contrasts":result["contrasts"],"root_ratios":rr.tolist(),"measured_rows":144,"warm_rows":144}
+    right.xaxis.set_major_locator(MultipleLocator(.02));right.xaxis.set_major_formatter(FormatStrFormatter("%.2f"))
+    right.set_xlabel("Equal-root geometric time ratio")
+    fig.text(.64,.455,"C/B: 1.51% less service time",fontsize=10,fontweight="bold",color=BLUE)
+    fig.text(.64,.407,"95% CI: 1.23%–1.79%",fontsize=8.8)
+    fig.text(.115,.315,"Open: paired rounds    Filled: root means    Ratios below 1 favor the numerator",fontsize=8.3)
+    fig.text(.115,.264,"(c)  Prefill explains the summed change",fontsize=9.4,fontweight="bold")
+    fig.text(.58,.264,"B → C totals; 48 requests per arm",fontsize=8.4)
+    ax=fig.add_axes([.405,.11,.55,.145]);clean(ax)
+    ax.axvline(0,color=GRAY,lw=.8)
+    labels=[]
+    for y,k,name in zip([3,2,1,0],keys,["Prefill","Decode","Other + residual","Service"]):
+        val=delta[k];col=INK if k=='service_s' else BLUE if val<0 else OCHRE
+        ax.plot([0,val],[y,y],color=col,lw=3.2 if k!='service_s' else 3.8,solid_capstyle='butt')
+        ax.plot(val,y,marker='D' if k=='service_s' else 'o',ms=3.6,color=col,ls='none')
+        ax.text(val+(-.13 if val<0 else .13),y,f"{val:+.3f}",ha='right' if val<0 else 'left',va='center',fontsize=8.2,color=col)
+        labels.append(f"{name}: {phase['B'][k]:.3f} → {phase['C'][k]:.3f}")
+    ax.set_yticks([3,2,1,0],labels);ax.tick_params(axis='y',length=0,pad=8)
+    ax.set_xlim(-8.1,2.1);ax.set_ylim(-.6,3.6);ax.set_xticks([-8,-6,-4,-2,0,2])
+    ax.set_xlabel("Change in summed time, C − B (s)",labelpad=3)
+    save(fig,"fig03_strong_baseline",["closeout/service/S3_TIMINGS.csv","closeout/service/ORIGINAL_RESULTS.json","pr218/PER_ROOT.csv","v2/s3_cost_audit.json"],7,4.40,
+         {"roots":12,"paired_rounds":48,"contrasts":3,"descriptive_phase_totals_per_arm":4})
+    METRICS["strong_baseline"]={"contrasts":result["contrasts"],"root_ratios":rr.tolist(),"measured_rows":144,"warm_rows":144,
+                               "phase_totals_s":phase,"phase_changes_C_minus_B_s":delta,
+                               "phase_scope":"Descriptive sums of 48 measured requests per arm; no additional independent samples or phase confidence intervals."}
     CAPTIONS["fig03_strong_baseline"] = (
-        "Strong same-contract service comparison on A5000 with Qwen3-32B-Q4_K_M, "
-        "target-only generation and WHOLE execution. G uses graph-level scalar calls; "
-        "B quantizes the input once and invokes the backend scalar projection for each "
-        "column; C uses independent scalar arithmetic channels. B is not a four-column "
-        "loop4 kernel. (a) Four paired rounds are retained inside each of 12 roots "
-        "(six code, six mathematics); the filled symbol is the root geometric mean. "
-        "(b) Equal-root geometric ratios use the registered stratified root bootstrap "
-        "with 20,000 draws. C/B has a 95% interval; the two G comparisons use 97.5% "
-        "intervals. C/B is 0.984864 [0.982148, 0.987721], a 1.51% reduction. The resident "
-        "service timer includes reset and executed planning, and excludes model/context "
-        "creation and terminal heavy exports. Generation is capped at 128 tokens. "
-        "The result is a same-deployment target-only increment, not a speculative or "
-        "cross-backend service comparison.")
+        "Independent scalar groups reduce 32B target-only service time beyond shared quantization. "
+        "A5000, Qwen3-32B mixed Q4_K/Q6_K, a=1 and whole-graph cuts. B shares activation "
+        "quantization and loops over scalar backend calls; C exposes those scalar groups "
+        "as channels; G is the graph-level scalar control. (a) Open markers retain all "
+        "48 paired rounds; filled markers are means of log ratios within the twelve roots. "
+        "(b) C/B is the primary equal-root geometric estimate, with a 95% stratified "
+        "paired-root interval; G comparisons have 97.5% intervals. (c) Phase accounting "
+        "uses sums of the same 48 measured requests per arm. Prefill falls by 5.942 s, "
+        "decode rises by 0.027 s, and other named costs plus unpartitioned residual rise "
+        "by 0.009 s. These sums explain the measured localization without replacing the "
+        "root-weighted estimate or creating new independent samples. The resident timer "
+        "includes reset and requested-output ownership, and excludes loading and capture.")
 
 
 def factorial():
@@ -515,16 +561,15 @@ def application():
 
 
 def geometry():
-    data=read_json("pr222/b570_inputs.json");summary=read_json("pr222/b570_append.json")
-    fig=plt.figure(figsize=(7,2.95))
-    axs=[fig.add_axes([.09,.36,.39,.48]),fig.add_axes([.58,.36,.39,.48])]
+    data=read_json("pr222/b570_inputs.json")
+    fig=plt.figure(figsize=(7,4.00))
+    axs=[fig.add_axes([.09,.49,.39,.34]),fig.add_axes([.58,.49,.39,.34])]
     stats=[]
     for ax,ctx,letter in zip(axs,[1024,4096],["a","b"]):
-        clean(ax,"y");refline(ax,"y");ptitle(ax,letter,f"B570 · context capacity {ctx}")
+        clean(ax,"y");refline(ax,"y");ptitle(ax,letter,f"B570 · capacity {ctx}")
         for j,q in enumerate([2,4,32]):
             for cond,offset,color,marker in [("crossing",-.13,BLUE,"^"),("inside",.13,OCHRE,"o")]:
-                key=f"C{ctx}-q{q}-{cond}"
-                a=np.asarray(data["cells"][key]);rr=a[2]/a[1];r=a[2].sum()/a[1].sum()
+                key=f"C{ctx}-q{q}-{cond}";a=np.asarray(data["cells"][key]);rr=a[2]/a[1];r=a[2].sum()/a[1].sum()
                 check_close("B570 "+key,r,data["reported_L_over_S"][key])
                 xx=j+offset
                 ax.plot([xx,xx],[rr.min(),rr.max()],color=color,lw=1.2,zorder=2)
@@ -533,30 +578,127 @@ def geometry():
                 ax.plot(xx,r,marker="_",ms=10,mew=1.8,color=INK,zorder=4)
                 stats.append({"cell":key,"ratio_of_totals":float(r),"paired_ratios":rr.tolist(),"range":[float(rr.min()),float(rr.max())]})
         ax.set_xlim(-.45,2.45);ax.set_ylim(.50,1.13);ax.set_xticks(range(3),["q = 2","q = 4","q = 32"])
-        ax.set_xlabel("Append width");ax.yaxis.set_major_locator(MultipleLocator(.1))
+        ax.yaxis.set_major_locator(MultipleLocator(.2))
         ax.yaxis.set_major_formatter(FormatStrFormatter("%.1f"))
         if ax is axs[0]:ax.set_ylabel("LOCAL / SIMPLE append time")
-    handles=[Line2D([],[],color=BLUE,marker="^",ls="none",ms=5,label="Crossing: 1 + (q − 1) split"),
-             Line2D([],[],color=OCHRE,marker="o",mfc=WHITE,ls="none",ms=5,label="Inside one physical range")]
-    fig.legend(handles=handles,loc="lower center",bbox_to_anchor=(.53,.105),ncol=2,frameon=False,columnspacing=2)
+    fig.text(.09,.935,"Controlled opportunity: a 1 + (q − 1) boundary split",fontsize=9.7,fontweight='bold')
+    handles=[Line2D([],[],color=BLUE,marker="^",ls="none",ms=5,label="Crossing: 20.34–44.68% less time"),
+             Line2D([],[],color=OCHRE,marker="o",mfc=WHITE,ls="none",ms=5,label="Inside: 0.43–3.74% more time")]
+    fig.legend(handles=handles,loc="lower center",bbox_to_anchor=(.53,.365),ncol=2,frameon=False,columnspacing=1.3)
+    fig.add_artist(Line2D([.09,.97],[.355,.355],transform=fig.transFigure,color=PALE,lw=.7))
     natural=read_json("pr222/rewrite_figure_sources.json")["natural_geometry"]
-    fig.text(.09,.035,f"Natural A5000 Qwen3-8B workload: {natural['whole_extra_call_cycles']:,}/{natural['logical_cycles']:,} verification cycles required an extra SIMPLE call.",fontsize=8.3)
-    save(fig,"fig06_geometry",["pr222/b570_inputs.json","pr222/b570_append.json","pr222/rewrite_figure_sources.json"],7,2.95,
-         {"fixed_cells":12,"paired_observations":36,"timing_rows":108})
-    METRICS["geometry"]={"controlled":stats,"natural":natural}
+    density=fig.add_axes([.09,.045,.39,.255]);density.set_xlim(0,1);density.set_ylim(0,1);density.axis('off')
+    density.text(0,1.00,"(c)  Separate A5000 verification census",fontsize=9.2,fontweight='bold',va='top')
+    frac=natural['whole_extra_call_cycles']/natural['logical_cycles']
+    density.text(0,.64,f"{natural['whole_extra_call_cycles']} / {natural['logical_cycles']:,} cycles",fontsize=15.2,fontweight='bold',color=BLUE)
+    density.text(.97,.66,f"{100*frac:.3f}%",fontsize=11,ha='right',color=BLUE)
+    box(density,0,.37,.97,.13,"",LIGHT,PALE,lw=.6)
+    box(density,0,.37,.97*frac,.13,"",BLUE,BLUE,lw=.5)
+    density.text(0,.22,"An extra whole-call split was possible.",fontsize=8.4)
+    density.text(0,.03,"Qwen3-8B; k = 3; opportunity count, not time.",fontsize=8.25)
+    source=read_json('v2/local_cost_REPORT.json')
+    static={x['arm']:x for x in source['source_derived_proposed_append_work'] if x['rows']==89}
+    assert set(static)=={'W','L'}
+    info=fig.add_axes([.58,.045,.39,.255]);info.set_xlim(0,1);info.set_ylim(0,1);info.axis('off')
+    info.text(0,1.00,"(d)  Source-derived 89-row append",fontsize=9.2,fontweight='bold',va='top')
+    for x,t in [(.67,'SIMPLE'),(.94,'LOCAL')]:info.text(x,.72,t,ha='right',fontsize=8.3,fontweight='bold')
+    rows=[('Decoder calls','calls',1),('Tiles / projection','projection_4column_groups_per_fully_consumed_projection',1),
+          ('Logical mask size (KiB)','logical_F32_mask_bytes',1024),('Concat nodes / layer','attention_concat_nodes_per_layer',1)]
+    for y,(label,k,scale) in zip([.56,.40,.24,.08],rows):
+        info.text(0,y,label,fontsize=8.3)
+        for arm,x in [('W',.67),('L',.94)]:info.text(x,y,f"{static[arm][k]/scale:g}",ha='right',fontsize=8.6,color=INK if arm=='W' else BLUE)
+    save(fig,"fig06_geometry",["pr222/b570_inputs.json","pr222/b570_append.json","pr222/rewrite_figure_sources.json","v2/local_cost_REPORT.json"],7,4.00,
+         {"fixed_cells":12,"paired_observations":36,"timing_rows":108,"separate_natural_cycle_count":2224,"source_derived_proposed_append_rows":89})
+    METRICS["geometry"]={"controlled":stats,"natural":natural,"source_derived_89_rows":static}
     CAPTIONS["fig06_geometry"] = (
-        "Local cuts help when a physical-range boundary would split a larger amount "
-        "of projection work. The controlled B570 SmolLM2-1.7B panel retains all 12 "
-        "fixed cells and three paired observations per cell. Crossing cells use a "
-        "1+(q-1) split; inside controls remain in one physical range. Symbols are "
-        "the paired LOCAL/SIMPLE append-time ratios, segments show their minimum "
-        "and maximum, and short black ticks are ratios of summed times. These "
-        "ranges are descriptive, not confidence intervals. Crossing reductions "
-        "range from 20.34% to 44.68%; inside aggregate ratios are 0.43%--3.74% "
-        "slower. The separate natural A5000 Qwen3-8B census found 20 extra-call "
-        "cycles among 2,224 logical verification cycles (2,244 WHOLE versus 2,224 "
-        "LOCAL physical calls). That count explains a small opportunity fraction; "
-        "it is not a service-time measurement from the controlled B570 panel.")
+        "Opportunity frequency and saved work explain different local-cut outcomes. "
+        "(a,b) B570 SmolLM2-1.7B prepared-state appends retain all twelve controlled cells "
+        "and three paired observations per cell. Triangles cross a boundary with a "
+        "1+(q−1) split; hollow circles remain inside one range. Segments are paired "
+        "min–max ranges, and black ticks are ratios of summed times. The timer includes "
+        "binding, decode, synchronization and output copying, excluding preparation. "
+        "(c) A separate A5000 Qwen3-8B census has 20 extra-call opportunities among "
+        "2,224 verification cycles. It supplies an opportunity frequency, not the B570 "
+        "saving per event. (d) Source analysis of a proposed 89-row supplied-history "
+        "append reduces four decoder calls to three but retains 23 ordered projection "
+        "tiles per fully consumed projection. Logical masks grow and concat nodes "
+        "increase. These are graph-construction quantities, not measured GPU traffic "
+        "or time. No cross-platform service gain is formed by multiplying the panels.")
+
+
+def work_cost():
+    """Separate fixed-work efficiency, changed live work, and live service."""
+    eq=read_json('pr222/q8_equal_work.json');live=read_json('pr222/q8_recomputed.json')
+    work=read_json('pr222/q8_phase_work.json')['work_by_k']
+    original=read_json('v2/q8_live_ANALYSIS.json')
+    arms=original['all_eight_arms']
+    check_close('q8 repeated measurements per arm', [a['measurements'] for a in arms], [128]*8)
+    assert sum(a['measurements'] for a in arms)==original['measured_requests']==1024
+    fields=[('cycles','cycles'),('proposed','proposed'),('verify_physical_rows','verify_rows'),('emitted_tokens','output_tokens')]
+    expected=[];observed=[]
+    for arm in arms:
+        k=arm['label'].rsplit('k',1)[1]
+        observed.append([arm[source_key] for source_key,_ in fields])
+        expected.append([work[k][projection_key] for _,projection_key in fields])
+    check_close('q8 shared per-arm work counts, not a sum across methods',observed,expected)
+    fig=plt.figure(figsize=(7,3.30))
+    a=fig.add_axes([.09,.30,.235,.49]);b=fig.add_axes([.425,.30,.24,.49]);c=fig.add_axes([.755,.30,.225,.49])
+    clean(a,'y');refline(a,'y');ptitle(a,'a','Same eight known tokens')
+    eqpoints=[]
+    for i,cell in enumerate(eq['cells']):
+        ratios=np.asarray(cell['q8'])/np.asarray(cell['q4pair']);val=sum(cell['q8'])/sum(cell['q4pair'])
+        a.scatter(i+np.linspace(-.09,.09,4),ratios,s=17,marker='o' if cell['geometry']=='within' else '^',
+                  facecolors=BLUE if cell['geometry']=='within' else WHITE,edgecolors=BLUE,lw=.75,zorder=3)
+        a.plot(i,val,marker='_',ms=13,mew=2,color=INK,zorder=4,ls='none')
+        eqpoints.append({'projection':cell['projection'],'geometry':cell['geometry'],'ratio':val,'origin_ratios':ratios.tolist()})
+    a.set_xlim(-.5,3.5);a.set_ylim(.79,1.10);a.set_xticks(range(4),['L4\ninside','L4\ncross','P\ninside','P\ncross'])
+    a.set_ylabel('q = 8 / two q = 4 operation time');a.yaxis.set_major_locator(MultipleLocator(.1))
+    a.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    a.text(.5,-.31,'Four origin aggregates per cell',transform=a.transAxes,ha='center',fontsize=8.2)
+    clean(b,'y');ptitle(b,'b','Live work changes')
+    counts=[('cycles','Cycles',BLUE,'v'),('output_tokens','Emitted',GRAY,'o'),('verify_rows','Verified',OCHRE,'s'),('proposed','Proposals',OCHRE,'^')]
+    work_ratios={}
+    for key,label,col,marker in counts:
+        ratio=work['7'][key]/work['3'][key];work_ratios[key]=ratio
+        b.plot([0,1],[1,ratio],color=col,lw=1.3,marker=marker,ms=4,
+               mfc=WHITE if key=='output_tokens' else col,mew=.8,zorder=3)
+        b.text(1.12,ratio,label,fontsize=8.2,va='center',color=col)
+    b.axhline(1,color=GRAY,lw=.6,ls=(0,(3,2)))
+    b.set_xlim(-.13,2.10);b.set_ylim(.54,1.65);b.set_xticks([0,1],['k = 3','k = 7'])
+    b.set_ylabel('Work relative to k = 3');b.set_yticks([.6,1.0,1.4,1.6])
+    b.text(.5,-.31,'Per-arm counts; same emitted total',transform=b.transAxes,ha='center',fontsize=8.2)
+    clean(c,'y');refline(c,'y');ptitle(c,'c','Service becomes slower')
+    primary=[x for x in live['contrasts'] if x['family']=='primary']
+    for i,item in enumerate(primary):
+        ratios=item['root_ratios'];strip_offsets=np.resize([-.10,-.05,0,.05,.10],len(ratios))
+        c.scatter(i+np.asarray(strip_offsets),ratios,s=9,color=GRAY,alpha=.5,lw=0,zorder=2)
+        lo,hi=item['adjusted_interval'];val=item['ratio']
+        c.plot([i,i],[lo,hi],color=OCHRE,lw=1.5,zorder=4)
+        c.plot([i,i],[lo,hi],marker='_',color=OCHRE,ms=5,ls='none',zorder=4)
+        c.plot(i,val,marker='D',color=OCHRE,ms=4,ls='none',zorder=5)
+    c.set_xlim(-.5,3.5);c.set_ylim(.98,1.40);c.set_xticks(range(4),['L4','P','L4','P'])
+    c.text(.25,-.19,'SIMPLE',transform=c.transAxes,ha='center',fontsize=8.2)
+    c.text(.75,-.19,'LOCAL',transform=c.transAxes,ha='center',fontsize=8.2)
+    c.set_ylabel('k = 7 / k = 3 service time');c.set_yticks([1.0,1.2,1.4])
+    c.text(.5,-.31,'16 roots; original 98.75% intervals',transform=c.transAxes,ha='center',fontsize=8.2)
+    fig.text(.09,.945,'Faster fixed-work execution can coexist with slower service',fontsize=10,fontweight='bold')
+    fig.text(.09,.105,'Each arm: 11,472 emitted tokens; verified rows 14,016 → 18,368; proposals 10,512 → 16,072.',fontsize=8.45)
+    fig.text(.09,.04,'Windows RTX: fixed-work operation and live resident-service measurements have separate clocks.',fontsize=8.3)
+    save(fig,'fig07_work_cost',['pr222/q8_equal_work.json','pr222/q8_recomputed.json','pr222/q8_root_sums.json','pr222/q8_phase_work.json','v2/q8_live_ANALYSIS.json'],7,3.30,
+         {'equal_work_origin_aggregates':16,'live_root_ratios':64,'workload_counts':8})
+    METRICS['work_cost']={'equal_work':eqpoints,'work_counts':work,'work_count_scope':'Per-arm sums over 128 requests (16 roots x eight repeated order blocks); shared across all four methods at each k, not summed over methods.','work_ratios_k7_over_k3':work_ratios,'live_contrasts':primary}
+    CAPTIONS['fig07_work_cost']=(
+        'Wider execution changes both efficiency and live work. (a) One q=8 call is compared '
+        'with two q=4 calls for the same eight known tokens and requested outputs. Points '
+        'are four origin-level operation aggregates per cell; black ticks are ratios of totals. '
+        '(b) Per-arm counts cover 128 measured requests (sixteen roots in eight repeated order '
+        'blocks). The four methods share the displayed counts at each k. Normalized to '
+        'k=3, verification cycles fall from 3,504 to 2,296 at k=7, '
+        'while verified rows and draft proposals rise; the emitted total remains 11,472. '
+        '(c) All sixteen root ratios per method remain visible. Diamonds show total resident-service '
+        'ratios with the original 98.75% paired-root intervals for four contrasts. L4 denotes '
+        'backend-loop4 and P packed projection. The fixed-work operation experiment and live-service '
+        'experiment are separate; the panels explain the observed tradeoff without fitting a service prediction.')
 
 
 def width_tradeoff():
@@ -564,7 +706,7 @@ def width_tradeoff():
     fig=plt.figure(figsize=(7,3.8))
     ax1=fig.add_axes([.16,.42,.30,.43]);ax2=fig.add_axes([.65,.42,.32,.43])
     for ax in [ax1,ax2]:clean(ax);refline(ax)
-    ptitle(ax1,"a","Equal work: one q8 / two q4 calls")
+    ptitle(ax1,"a","Equal work: q = 8 / two q = 4 calls")
     ptitle(ax2,"b","Live service: k = 7 / k = 3")
     labels=[];eqmetrics=[]
     for i,c in enumerate(eq["cells"]):
@@ -609,8 +751,9 @@ def width_tradeoff():
         "(b) Each dot is one of 16 root-level live-service ratios; diamonds and segments "
         "are the reported total-time estimates and 98.75% root-bootstrap intervals "
         "for four primary contrasts. All eight measured blocks remain inside each root. "
-        "(c) Exact work counts show fewer verification cycles but more proposals and "
-        "verified rows at k=7, with the same emitted-token count. Operation and resident "
+        "(c) Per-arm counts over 128 measured requests are shared by the four methods at "
+        "each k. They show fewer verification cycles but more proposals and verified rows "
+        "at k=7, with the same emitted-token count. Operation and resident "
         "service timers belong to separate experiments and have separate scales.")
 
 
@@ -857,7 +1000,7 @@ def finish():
 def main():
     verify_sources()
     with plt.rc_context(STYLE):
-        overview();extent();strong_baseline();factorial();application();geometry()
+        overview();extent();strong_baseline();factorial();application();geometry();work_cost()
         width_tradeoff();width_cost();historical_geometry();old32_and_lifecycle();rtx_contracts();natural_table();application_controls_table()
     finish()
 

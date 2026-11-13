@@ -10,12 +10,35 @@ APPS and MATH provide the natural Qwen task identities~\cite{apps,math}. Qwen 8B
 
 The 32B strong comparison uses 12 roots, six coding and six mathematics, four rounds and three arms. Its 144 measured requests each follow a matched warmup. Root-level paired log ratios are averaged equally; the bootstrap resamples the two six-root strata separately. Its primary C/B interval uses 95\% coverage and secondary G comparisons 97.5\%. Q8 application and factorial intervals use 99\% coverage for their five-comparison families. Repeated sessions travel with the root under resampling. These intervals condition on the observed sessions.
 
-The natural multi-turn pilot uses two OpenAssistant development conversations~\cite{oasst}, two rounds and eight measured episodes. Its canonical transition does not initially retain the currently generated body as reusable KV; an earlier canonical prefix can be reused on later turns. This protocol creates less local-cut opportunity than assuming that every generated body persists. Its pooled ratio is descriptive. The dataset revision's card and license identify Apache-2.0; the manuscript package redistributes timing records rather than conversation text.
+The natural multi-turn pilot uses two OpenAssistant development conversations~\cite{oasst}, two rounds and eight measured episodes. Its canonical transition does not initially retain the currently generated body as reusable KV; an earlier canonical prefix can be reused on later turns. This protocol creates less local-cut opportunity than assuming that every generated body persists. Its pooled ratio is descriptive. The dataset revision's card and license identify Apache-2.0. The package includes public timing records and diagnostic projections, including short token and text excerpts used to explain the history transition; it does not bundle the full conversation corpus.
 
 \paragraph{Reconstruction levels.}
 The supplied 8B/14B/Llama service and factorial files contain 1,568 measured timing rows. The 32B strong file includes 144 warm and 144 measured rows; the multi-turn file has eight measured episodes. The CPU routines preserve original root order, bootstrap seeds and estimands. Separate NumPy and standard-library implementations agree to $2\times10^{-12}$ in the reconstructed statistics. This tolerance concerns arithmetic in the statistical analysis, not numerical compatibility of inference. Other legacy panels supply the public numeric projections or root aggregates identified in their manifests; availability of those projections does not imply availability of all native receipts.
 
+\section{Strong-control phase account and sensitivity}
+\label{sec:supp-s3}
+The S3 phase account sums the same 48 measured requests in each arm. The timers partition the resident-service clock: prefill and decode include their nested backend quantization, kernels and synchronization. Those nested activities were not separately timed. Table~\ref{tab:supp-s3-phase} shows why the service reduction is concentrated in prefill. It is descriptive accounting of the original panel, not a new set of independent phase samples.
+
+\begin{table}[htbp]
+\centering\small
+\caption{S3 host-phase sums in seconds. B is the shared-quantization backend scalar loop; C exposes independent scalar groups. The difference is C minus B. These totals do not replace the equal-root primary estimator.}
+\label{tab:supp-s3-phase}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Phase & B (s) & C (s) & Difference (s)\\\midrule
+\SuppSthreePhaseRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+The primary ratio remains the exponentiated mean of twelve root-level paired log ratios, 0.984864, with its original stratified 95\% interval. A post-hoc leave-one-root-out sensitivity analysis recomputes the point estimate with equal weight across the eleven remaining roots. Its range is 0.984246--0.985561: the minimum omits \texttt{CodeContests/train/99}, and the maximum omits \texttt{CodeContests/train/173}. This exploratory check was not preregistered and supplies no new confidence interval. The complete twelve estimates are in \texttt{generated/s3\_leave\_one\_root\_out.csv}; \texttt{scripts/analyze\_v2.py} reproduces them from unchanged measured rows. The pooled service ratio, 0.983809, answers a different weighting question and remains separate from the primary result.
+\FloatBarrier
+
 \section{Complete application and component comparisons}
+\begin{figure}[htbp]
+\centering\includegraphics[width=\textwidth]{fig05_application.pdf}
+\caption{The execution increment and complete speculative-application benefit. Panel (a) compares \Local-packed D4 with \Simple-loop4 D4 at the same draft setup; panel (b) compares it with the fastest measured fixed target-only M implementation. Dots sum repeated sessions within each root; diamonds are ratios of total resident time with the original 99\% paired-root intervals for five comparisons. Qwen uses 16 roots and Llama 12, each measured in four sessions. The 8B D4-arm order was fixed; the separate balanced factorial provides the stronger component attribution. The panels use separate scales.}
+\label{fig:supp-application}
+\end{figure}
 \begin{table}[htbp]
 \centering\small
 \caption{Mean resident seconds per request for all six A5000 application arms. Each Qwen arm contains 64 measured requests, and each Llama arm 48. W means \Simple{} whole-graph cuts; L means \Local; L4 is backend-loop4 and P is packing. M loads target resources alone. D4 uses draft prefill microbatch four with $k=3$.}
@@ -59,7 +82,7 @@ The B570 resident pilot instead favors ordinary generation. Its four exposed roo
 
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{supp04_prior32b_lifecycle.pdf}
-\caption{Earlier mixed-Q4 application results and the lifecycle reversal. Panel (a): the four-root 32B panel uses a graph scalar-loop control and is distinct from the later 12-root strong-backend study; all six paths include slower speculative generation. Panel (b): Llama-8B resident and worker costs are shown for the four fixed M controls and the candidate; overlapping clocks are not stacked. Source values are public numeric projections, identified in the manifest.}
+\caption{Earlier mixed-Q4 application results and the lifecycle reversal. Panel (a): the four-root 32B panel uses a graph scalar-loop control and is distinct from the later 12-root strong-backend study; all six paths are shown, including the slower speculative arms. Panel (b): Llama-8B resident and worker costs are shown for the four fixed M controls and the candidate; overlapping clocks are not stacked. Source values are public numeric projections, identified in the manifest.}
 \label{fig:supp-old32}
 \end{figure}
 
@@ -85,12 +108,39 @@ Cell & B/G & C/B & C/B range\\\midrule
 \end{table}
 \FloatBarrier
 
+\section{Natural-history reuse and source-derived work}
+\label{sec:supp-history}
+The natural two-turn pilot uses Qwen3-8B Q8 on the A5000 with capacity 4096, F16 K/V, two CPU threads and a 32-output reserve. Both arms retain backend-loop4 projections and target-only generation. The resident request timer includes reset, history rendering and tokenization, controller transport and durable per-decode accounting in the frozen host adapter. It excludes model loading, network and human waiting time, and post-response audit. These boundaries describe the experimental adapter rather than a production latency target.
+
+The second request must reconcile its canonical history with the first request's materialized state. Table~\ref{tab:supp-history} follows the two observed transitions. The current assistant prompt ends with a four-token empty-think stub. After a capped 128-token reply, 127 body tokens are materialized and the final emitted token is pending. The next request's canonical history omits the stub, retaining the same 128 body token IDs at earlier positions. The first differing token is therefore at the start of the stub. Trimming to that common prefix is correct; reusing the old body KV would preserve the wrong positions and conditioning.
+
+\begin{table}[htbp]
+\centering\small
+\caption{A timeline of the two observed history transitions. Positions are zero-based; ranges are half-open. C0 and C1 are the two free-generation conversations, not the separate supplied-history corpus. The same reconciliation is used by \Simple{} and \Local.}
+\label{tab:supp-history}
+\begin{tabularx}{\textwidth}{@{}p{3.7cm}p{2.2cm}p{2.2cm}Y@{}}\toprule
+Transition & C0 & C1 & State consequence\\\midrule
+Initial prompt, including stub & 92 tokens & 27 tokens & Four-token stub precedes the generated body.\\
+After 128 emitted body tokens & KV end 219; pending 219 & KV end 154; pending 154 & The final emitted token is not yet in KV.\\
+Canonical history removes stub & Body $[88,216)$ & Body $[23,151)$ & All 128 body token IDs match; their positions and prefix change.\\
+Reconcile at common prefix & Keep 88; trim 131 & Keep 23; trim 131 & Remove four stub rows and 127 materialized body rows.\\
+Prefill the next canonical suffix & $250-88=162$ rows & $551-23=528$ rows & Both arms recompute the required suffix before continuing.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+The two arms retain the same reusable earlier prefix. On later requests, older assistant turns that are already canonical can remain before the first difference. A separate CPU calculation over supplied histories predicts that 331 of 1,127 later nodes retain an earlier canonical assistant span. This is a conditional prediction for those supplied histories, not a frequency measured from free generation or a GPU saving.
+
+The eight timed episodes sum to 36.385331\,s for whole-graph cuts and 37.920656\,s for \Local. Of the 1.535324\,s pooled difference, 1.419701\,s lies in the common sampling span. The equal-partition controls also include slower \Local{} episodes. With two conversations and two rounds, these observations do not isolate a stable local-cut penalty; they show why a saved outer call cannot by itself predict the resident result.
+
+The proposed 89-row append provides a complementary, source-derived account. Starting at head 232, whole-call chunks are $[24,32,32,1]$ and local-call chunks $[32,32,25]$. Both retain the same ordered 23 projection tiles per fully consumed projection and 23 attention tiles per layer. Logical F32 mask storage rises from 157,696 to 182,272 bytes, while attention concatenation nodes increase from 19 to 20 per layer. The local construction additionally entails six strided-mask contiguous-copy nodes per layer, representing 24,576 logical bytes. These counts describe graph construction; actual launches, graph reuse, allocation, DRAM traffic and latency were not measured for this proposed case. \texttt{analyze\_v2.py} checks the row and tile correspondence in the fixed source analysis.
+\FloatBarrier
+
 \section{Wider execution and workload cost}
 The Windows equal-work panel uses one APPS and three GSM8K origins~\cite{gsm8k}, fixed initial state, the same eight known tokens and all eight requested outputs. Its 128 measured operations and 32 primers address operation efficiency. The separate live panel uses 16 roots, prompt length at most 192, cap 96, and eight balanced order rows. Both $k=3$ and $k=7$ reserve eight outputs; 1,024 measured requests and 128 primers cover eight arms. The four primary width comparisons use 98.75\% paired-root intervals; secondary fixed-$k=7$ comparisons form a separate family.
 
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{supp01_width_tradeoff.pdf}
-\caption{Physical execution width and live proposal width. Equal-work $q=8$ versus two $q=4$ operations is a fixed-input comparison; $k=7$ versus $k=3$ resident generation changes the work. The live summaries use ratios of totals and 98.75\% paired-root intervals over 16 roots, with repeats clustered by root. Work counts refer to the same emitted-token total. These panels intentionally have different measurement boundaries.}
+\caption{Physical execution width and live proposal width. Equal-work $q=8$ versus two $q=4$ operations is a fixed-input comparison; $k=7$ versus $k=3$ resident generation changes the work. The live summaries use ratios of totals and 98.75\% paired-root intervals over 16 roots, with repeats clustered by root. Per-arm work counts are shared by the four methods at each $k$. These panels have different measurement boundaries.}
 \end{figure}
 
 Each live arm emits 11,472 tokens. For $k=3$/$k=7$, proposed tokens are 10,512/16,072, accepted proposals 7,928/9,152, first inspected mismatches 1,136/1,256, and unconsumed suffix tokens 1,448/5,664. Native cap/end-of-generation counts are 104/24 in each arm. Suffix waste includes post-rejection and terminal-boundary work; the aggregate counts do not separate these causes.
@@ -131,12 +181,25 @@ The final B570 append panel has 12 fixed cells, three paths and three paired rep
 \caption{Earlier local-cut geometries, including reversals. Every recorded cell and its inside control is retained; a missing cell is shown as unmeasured, not zero. These historical fixed-cell timings use their original measurement boundaries. They establish sensitivity to split geometry, not a population estimate or an isolated capacity effect.}
 \end{figure}
 
-The modern RTX comparison extracts a $4096\times4096$ Q8 projection with $q=8$ from one captured activation. U uses the upstream quantizer and few-row projection~\cite{llama_cpp_fewrow}; B retains the old reference. Ordinary launches with CUDA graphs disabled and the recorded programmatic-launch setting are timed using GPU events. Allocation, copies and checks are excluded. The full quantization-plus-projection and projection-only boundaries have 12 paired repeats each, totaling 48 samples. Ratios are reconstructed from event duration divided by batch repetitions, avoiding rounding in the printed per-operation column.
+The modern RTX comparison extracts a $4096\times4096$ Q8 projection with $q=8$ from one captured activation. U uses the upstream quantizer and few-row projection~\cite{llama_cpp_fewrow}; B retains the old reference. Table~\ref{tab:supp-rtx-variants} distinguishes the implementations. Ordinary launches with CUDA graphs disabled and the recorded programmatic-launch setting are timed using GPU events. Allocation, copies and checks are excluded; host-submission gaps can remain within an event window. The full quantization-plus-projection and projection-only boundaries have 12 paired repeats each, totaling 48 samples. Ratios are reconstructed from event duration divided by batch repetitions, avoiding rounding in the printed per-operation column.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Extracted RTX variants on the captured input. Register and shared-memory figures describe the projection kernel. Shared memory is per thread block; registers are per thread. No spilling is reported. C, C1 and U are measured in separate sessions against their respective B, so C/C1 is not a paired intervention. Compiler resources do not measure achieved occupancy or memory traffic.}
+\label{tab:supp-rtx-variants}
+\begin{tabularx}{\textwidth}{@{}p{0.65cm}Y>{\raggedright\arraybackslash}p{3.25cm}>{\raggedright\arraybackslash}p{2.5cm}r@{}}\toprule
+Path & Execution change & Numerical contract & Projection resources & Complete / B\\\midrule
+B & Two four-column groups in separate block groups; old packed path & Old quantizer and DP4A projection path & 63 registers; 3\,KiB static shared & 1\\
+C & Two arithmetic groups in one block, reusing register-held weight fragments & Old contract, qualified on the captured case & 91 registers; 6\,KiB static shared & 1.1264\\
+C1 & Sequential groups in one block, with an added barrier and no cross-group register-weight reuse & Old contract, qualified on the captured case & 64 registers; 3\,KiB static shared & 1.0261\\
+U & Upstream few-row integer MMA and asynchronous weight staging & Modern quantizer and arithmetic; differs from B & 244 registers; 68\,KiB dynamic shared & 0.6129\\\bottomrule
+\end{tabularx}
+\end{table}
 
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{supp05_rtx_contracts.pdf}
 \caption{Extracted RTX operator alternatives under distinct numerical contracts. Legacy-compatible C and C1, and modern upstream U, come from separate sessions and are not directly paired with one another. Points retain all paired repeat ratios for each boundary. U/B complete-operator time is 0.612924 with a 95\% paired-repeat interval [0.607906, 0.618665]; projection-only time is 0.582391. U does not preserve B's quantization or output bytes. The earlier old-oracle qualification failure and the unrun complete default backend have no timing point.}
 \end{figure}
 
-U's older-contract qualification fails before timing; the subsequent U-contract study compares a valid modern numerical alternative. Static API checks for a complete current default backend pass without loading a model, but full-backend numerical qualification and service timing are unrun. These statuses cannot be promoted to measured service performance. The faster U operator and slower same-contract candidates are retained together so that changing the reference remains a visible engineering option.
+An earlier attempt to qualify the upstream path against a strict CPU-round-to-nearest oracle fails before timing. The subsequent study explicitly binds U's own contract and compares a valid modern numerical alternative. Static API checks for a complete current default backend pass without loading a model, but full-backend numerical qualification and service timing are unrun. These statuses cannot be promoted to measured service performance. The faster U operator and slower same-contract candidates are retained together so that changing the reference remains a visible engineering option.
 \FloatBarrier

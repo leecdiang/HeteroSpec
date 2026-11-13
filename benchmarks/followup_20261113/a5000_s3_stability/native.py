@@ -93,7 +93,7 @@ class Campaign:
         from host import resource
         self.verify, self.resource = verify, resource
         self.profile = read(self.c['state_profile'])
-        self.modules = read(self.c['compiled_closure'])['files'].copy()
+        self.modules = {str(Path(p).resolve()): digest for p, digest in read(self.c['compiled_closure'])['files'].items()}
         self.modules.update({str(Path(x['path']).resolve()): x['sha256'] for x in self.c['executables'].values()})
 
     def preflight(self):

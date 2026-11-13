@@ -12,6 +12,16 @@ import sys
 import tarfile
 
 
+def resource_summary(samples):
+    return dict(samples=len(samples),
+                min_sampled_gpu_free_bytes=min(s['gpu_free_bytes'] for s in samples),
+                max_sampled_gpu_used_bytes=max(int(s['selected_gpu'][2])*1024**2 for s in samples),
+                min_sampled_ram_available_bytes=min(s['mem_available_bytes'] for s in samples),
+                min_sampled_disk_free_bytes=min(s['disk_free_bytes'] for s in samples),
+                max_sampled_host_load_fraction=max(s['host_load_fraction'] for s in samples),
+                scope='Sampled existing resource checks; not continuous peak measurements')
+
+
 def main(campaign, out, public):
     if out.exists():
         raise ValueError('Fresh packet directory required')
@@ -22,7 +32,7 @@ def main(campaign, out, public):
     sys.path.insert(0, str(Path(config['original_source']) / 'execution_s3_v1'))
     from public_text import transform
     out.mkdir(parents=True)
-    index = []; numeric = {}; samples = []; source_commits = {}
+    index = []; numeric = {}; samples = []; samples_by_panel = {}; source_commits = {}
 
     def copy_text(source, relative):
         text = source.read_text()
@@ -39,7 +49,9 @@ def main(campaign, out, public):
             relative = Path('data') / section / source.relative_to(campaign / section)
             if '.private.' in source.name:
                 if source.name == 'RESOURCE.private.jsonl':
-                    samples.extend(json.loads(line) for line in source.read_text().splitlines())
+                    batch = [json.loads(line) for line in source.read_text().splitlines()]
+                    samples.extend(batch)
+                    samples_by_panel.setdefault(relative.parts[2], []).extend(batch)
                 if source.name == 'GRANT.private.json':
                     source_commits[source.parent.name] = json.loads(source.read_text())['successor_source_commit']
                 continue
@@ -68,13 +80,8 @@ def main(campaign, out, public):
           planned_requests=444, request_ceiling=468, row_ceiling=149760,
           model_completion_time_limit=None, native_arithmetic_changed=False))
     if samples:
-        write(out / 'data/RESOURCE_SUMMARY.json', dict(samples=len(samples),
-              min_sampled_gpu_free_bytes=min(s['gpu_free_bytes'] for s in samples),
-              max_sampled_gpu_used_bytes=max(int(s['selected_gpu'][2])*1024**2 for s in samples),
-              min_sampled_ram_available_bytes=min(s['mem_available_bytes'] for s in samples),
-              min_sampled_disk_free_bytes=min(s['disk_free_bytes'] for s in samples),
-              max_sampled_host_load_fraction=max(s['host_load_fraction'] for s in samples),
-              scope='Sampled existing resource checks; not continuous peak measurements'))
+        write(out / 'data/RESOURCE_SUMMARY.json', resource_summary(samples))
+        write(out / 'data/RESOURCE_BY_PANEL.json', {p:resource_summary(rows) for p,rows in samples_by_panel.items() if rows})
     protected = {p:sha(p)==digest for p,digest in config['protected_files'].items()}
     need(all(protected.values()), 'Protected historical file changed; preserve and investigate')
     write(out / 'data/PROTECTED_AUDIT.json', dict(files=len(protected), all_unchanged=True,

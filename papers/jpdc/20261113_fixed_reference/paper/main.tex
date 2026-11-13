@@ -1,0 +1,33 @@
+\documentclass[a4paper,fleqn]{cas-dc}
+\input{preamble}
+\begin{document}
+\let\WriteBookmarks\relax
+\shorttitle{Parallel inference under a fixed numerical reference}
+\shortauthors{C. Li}
+\title[mode=title]{Parallelizing Quantized LLM Inference\texorpdfstring{\\}{ }Under a Fixed Numerical Reference}
+\author[1]{Chengzhan Li}
+\cormark[1]
+\ead{chengzhan.li@std.uestc.edu.cn}
+\affiliation[1]{organization={University of Electronic Science and Technology of China},city={Chengdu},country={China}}
+\cortext[1]{Corresponding author.}
+\begin{abstract}
+Batching known queries can change a quantized language model's outputs and persistent state even when the causal token dependencies are unchanged. We study parallel execution that preserves a fixed deployment's numerical reference. The method separates two grouping decisions: the physical KV range exposed to attention and the arithmetic organization used by quantized projections. It places required range boundaries locally inside attention, exposes independent arithmetic groups to the backend, and preserves the outputs and state needed by downstream consumers. A conditional composition argument connects these obligations across decoder calls. Implementations in CUDA and Vulkan show where this construction creates useful parallel work. On an A5000 with Qwen3-32B, independent scalar-column groups reduce target-only resident-service time by 1.51\% relative to a strong backend scalar-loop control (95\% paired-root interval: 1.23--1.79\%). Q8 factorial experiments separate projection packing from local-cut effects: packing contributes 0.80--1.64\%, while local cuts add little on the tested natural requests. Controlled boundary crossings benefit substantially, but a two-conversation multi-turn pilot shows no local-cut service improvement. Complete speculative applications improve on their target-only controls; their larger gains are distinct from the execution method's increment. A modern upstream operator is faster under a different numerical contract. These results identify a practical compatibility option: preserve an established reference while reorganizing the parallel work that its arithmetic and state requirements still permit.
+\end{abstract}
+\begin{keywords}
+Large language model inference \sep Parallel execution \sep Quantization \sep Numerical reproducibility \sep KV cache \sep Speculative decoding
+\end{keywords}
+\maketitle
+\hypersetup{pdftitle={Parallelizing Quantized LLM Inference Under a Fixed Numerical Reference},pdfauthor={Chengzhan Li},pdfsubject={JPDC author-review manuscript}}
+\input{sections/01_introduction}
+\input{sections/03_method}
+\input{sections/04_implementation}
+\input{sections/05_evaluation}
+\input{sections/06_results}
+\input{sections/07_related}
+\input{sections/08_discussion}
+\input{sections/09_conclusion}
+\input{sections/10_declarations}
+\balance
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+\end{document}

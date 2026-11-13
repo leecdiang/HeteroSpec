@@ -1,0 +1,65 @@
+\section{Parallel execution with a fixed reference}
+\label{sec:method}
+
+\subsection{Two grouping decisions}
+Consider four known queries at positions 765--768. A scalar continuation path with a 256-entry KV padding unit exposes physical attention ranges of $[768,768,768,1024]$. Executing the queries together can expose 1024 entries to every query. The causal mask still hides the same future tokens, yet the attention kernel now receives a different physical problem. In the captured CUDA case, the visible operands and probability prefixes agree, and the additional probabilities are zero; changing the physical range alone reproduces the two different attention--value outputs~\cite{records}. A mask preserves mathematical visibility, but need not preserve the executed reduction.
+
+Splitting the entire decoder into calls of three queries and one query restores the required ranges. It also splits projections and feed-forward work that need no such boundary. Our construction keeps the wider decoder graph and places the split inside attention. This is the first grouping decision: which queries can share a physical KV range? The second concerns arithmetic: which query columns can share an existing quantizer and reduction specialization? These groups need not coincide (Fig.~\ref{fig:overview}).
+
+For example, a supported CUDA Q8 projection preserves the established four-column arithmetic while presenting several such groups as independent channels. The mixed Q4\_K/Q6\_K implementation instead retains one-column arithmetic. Neither choice follows from the weight format alone: activation representation, reduction organization, tensor strides and device placement also determine the result. Parallel work is exposed around those decisions rather than by changing them.
+
+\subsection{Reference and consumer contract}
+The reference is a particular deployment, denoted $R_d$. It fixes model and tokenizer bytes, input formatting, numerical modules, placement, cache types and capacity, prompt production, requested outputs, and sampling and stopping rules. A different device or numerical backend defines a different reference.
+
+Let $O$ be the output rows requested by the consumer. For a materialized prefix $x$, let $z_i(x)$ be row $i$'s complete binary32 vocabulary vector, and let $K(x)$ contain active keys and values in canonical logical order. Let $s(x)$ record logical positions, the retained frontier, any emitted but unmaterialized token, and termination status. The compatibility target at the relevant boundaries is
+\begin{equation}
+ \begin{split}
+ z_i^{F}(x)&\overset{\mathrm{bits}}{=}z_i^{R_d}(x),\quad i\in O,\\
+ K^{F}(x)&\overset{\mathrm{bits}}{=}K^{R_d}(x),\qquad
+ s^{F}(x)=s^{R_d}(x).
+ \end{split}
+ \label{eq:reference-contract}
+\end{equation}
+Unused cache storage is outside this relation. Token agreement is a consequence for the specified greedy consumer, not a substitute for the vector and state obligations. A vector omitted from $O$ must be excluded by the consumer before execution, rather than discarded after finding a discrepancy.
+
+Speculative verification illustrates why this distinction matters. The target evaluates a seed and draft proposals, including prefixes that may later be rejected. Their requested vectors are compared with an independent reference following those same prefixes after the fixed prompt producer. A separate autonomous reference supplies the generated-token endpoint. This preserves the target's obligations without requiring the draft to reproduce the reference trajectory.
+
+\subsection{Constructing compatible groups}
+The construction takes an ordered sequence of known token rows, their positions and requested-output flags, the incoming cache, and backend-specific numerical requirements. It returns an execution organization and owned outputs in the original logical order. Backend analysis supplies the numerical requirements; the planner does not discover equivalent kernels automatically.
+
+For each row $i$, determine the physical extent $e_i$ that its reference call would expose. In the admitted dense, nonwrapping cache, with padding unit $P$, capacity $C$, and zero-based position $p_i$, this is
+\begin{equation}
+ e_i=\min\!\left(C,\max\!\left(P,
+ P\left\lceil\frac{p_i+1}{P}\right\rceil\right)\right).
+ \label{eq:physical-extent}
+\end{equation}
+The implementation obtains the padding and cache metadata from the native engine and checks the append mapping. It retains producer-specific behavior when a prompt phase uses a different reference schedule.
+
+A \emph{physical group} is an adjacent run with the same extent and compatible attention descriptor, including relevant data types, layouts and dispatch conditions. Rows remain in their original order. Each run is tiled to the admitted attention width. A whole-call implementation, \textsc{Simple}, executes these groups as separate decoder calls. The \textsc{Local} implementation creates matching Q, K, V and mask views inside attention, computes each tile, and concatenates its outputs in logical order. QKV projections and feed-forward operations remain in the enclosing wider graph. This changes where the boundary is paid, not the causal dependencies between tokens.
+
+An \emph{arithmetic group} retains a qualified column width $a$ and its numerical specialization. With an activation matrix $X\in\mathbb{R}^{K\times q}$, separate complete groups from the tail before taking the grouped view:
+\begin{equation}
+ \begin{split}
+ X[K,q]&=[X_{\mathrm{full}}[K,ag]\;X_{\mathrm{tail}}[K,r]],\\
+ X_{\mathrm{full}}[K,ag]&\longrightarrow X_{\mathrm{full}}[K,a,g],\\
+ q&=ag+r,\qquad 0\le r<a.
+ \end{split}
+ \label{eq:arithmetic-groups}
+\end{equation}
+The outer dimension exposes independent groups to the existing backend while the inner width remains $a$; a tail uses an admitted smaller width. The weight tensor is broadcast across groups. Preserving a shape alone is insufficient: the selected kernel must retain the required activation quantization, inner reduction, strides and placement. Each deployment binds these choices to a fixed implementation; qualification checks the resulting outputs and state for the reported cases.
+
+The reusable construction therefore has four steps:
+\begin{enumerate}
+ \item Bind the producer, incoming state, consumer outputs and backend numerical behavior.
+ \item Derive each row's physical extent and partition the attention work at changes in extent or numerical descriptor.
+ \item Retain the admitted inner arithmetic while exposing independent outer groups; keep extent-independent work outside local attention cuts.
+ \item Copy requested outputs into row-owned storage, then commit the accepted state and logical frontier together.
+\end{enumerate}
+Equal-descriptor runs minimize the number of adjacent groups under those equality and width constraints. They do not minimize end-to-end latency: local views, launches, concatenation and output ownership all incur costs. The measured comparison between \textsc{Simple} and \textsc{Local} determines whether retaining wider work repays those costs.
+
+\subsection{Why the construction composes}
+The argument is conditional on three obligations: the incoming producer state satisfies Eq.~\ref{eq:reference-contract}; each admitted operator organization preserves its reference values and state effects; and the consumer receives the required outputs with the same commit semantics. Under these conditions, induction over the dependency graph preserves each intermediate required by subsequent operations. Physical views retain the reference operands and arithmetic, row-wise reconstruction retains output identity, and state updates retain the active prefix. Applying the same argument at successive commit boundaries preserves continuation.
+
+Output ownership is essential to the last step. A later native call can reuse an earlier output buffer, while speculative acceptance can select an earlier row as the retained frontier. The executor therefore copies every requested vector before another group can overwrite its storage. It trims rejected KV entries and records a correction or bonus token as pending until that token is actually materialized. A generation limit or end-of-generation token can stop execution in this pending state.
+
+This argument explains the obligations that an implementation must discharge. The experiments test the contract at their reported cases and boundaries; the argument is not an all-input proof of the native kernels. The methodological contribution is the separation of physical and arithmetic grouping, local placement of the resulting cuts, and composition through an explicit consumer contract. Packing, fixed reductions, weight broadcasting and existing small-column kernels remain reusable components of the construction~\cite{loop4code}.

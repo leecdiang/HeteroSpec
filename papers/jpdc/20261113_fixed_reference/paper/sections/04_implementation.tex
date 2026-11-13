@@ -1,0 +1,23 @@
+\section{Implementation}
+\label{sec:implementation}
+
+\subsection{Backend organizations and fair controls}
+We implement the construction in a modified llama.cpp execution path~\cite{records}. The phase executor retains a resident target context and binds the method to a dense, contiguous, nonwrapping cache with one owned sequence and F16 keys and values. Its CUDA attention path uses causal, non-Flash attention for the supported Llama and Qwen architectures. The backend-independent planner carries ordered rows, physical extents and requested-output flags; backend code supplies the actual views, numerical specializations and placement decisions.
+
+The Q8 implementation preserves the established small-column arithmetic~\cite{loop4code}. Its packed projection presents complete four-column groups as channels and reconstructs the original column order. The strong \emph{backend-loop4} control quantizes the wide activation once, then invokes the existing four-column and tail kernels in a backend loop. This removes repeated graph-level quantization as an explanation for any remaining packed-path gain. It also distinguishes the cost of graph slicing from the benefit of exposing independent groups to the backend. With three draft proposals, verification has four rows; multi-group Q8 packing therefore arises in wider prompt work in those experiments.
+
+The 32B mixed Q4\_K/Q6\_K experiment uses a different arithmetic unit: one column. Its strong control, B, quantizes the activation once and loops over scalar backend projections. Candidate C uses a $[K,1,q]$ activation view to expose those scalar computations as independent channels, followed by output reshaping. B is therefore a backend scalar-loop control, not backend-loop4. Both arms retain the same quantized weights and one-column dot-product specialization. Their comparison measures the additional effect of execution organization beyond shared activation quantization.
+
+The Vulkan companion preserves F32 activations where the scalar reference uses F32 and wider native dispatch would select Q8\_1. Its attention implementation also retains the relevant physical extent and layout. These backend-specific choices implement a common construction; they do not imply equal results between CUDA and Vulkan.
+
+\subsection{Resident execution and graph reuse}
+\textsc{Simple} issues decoder calls at the planned boundaries. \textsc{Local} retains wider phase calls and builds the cuts within attention, using the native cache's per-row extent vector. Both preserve the caller's output requests. After synchronizing each call, the executor copies requested full vocabulary vectors into owned storage and checks the physical append endpoint. The clean path performs neither reference replay nor state export to construct its plan.
+
+Graph reuse accounts for more than outer tensor shape. The live implementation compares the numerical policy, the complete physical-extent vector, relevant head-normalization and rotary-placement decisions, and the engine's normal topology and output-count conditions. A mismatch rebuilds the graph. The deployment freezes additional model and module choices; the small frontend arithmetic tag, which encodes cache types, is not a complete numerical fingerprint.
+
+\subsection{Checks, qualification and failure behavior}
+Three mechanisms have distinct roles. Online checks admit the dense cache, supported widths and requested-output reserve; marked backend-loop4 operators additionally check tensor descriptors, actual device residency and dispatch constraints. Capture runs observe selected operators and collect vectors and native state for offline comparison. The conditional argument in Section~\ref{sec:method} then relates those observations to the consumer contract. Clean service timings exclude the diagnostic captures.
+
+The packed Q8 nodes use ordinary backend dispatch and do not carry the loop4 marker, so they do not inherit all of that control's device and dispatch checks. Their evidence is deployment-specific qualification. Likewise, placement observation is enabled during capture rather than on every clean call. These differences are recorded with the exact implementations in the supplement.
+
+Exceptions during target-group execution or its postchecks poison the target context, preventing its reuse. Other failures, including trimming, draft execution and sampling, are contained by termination of the published command-line worker. Some unsupported graph conditions use assertions. This is the implemented failure boundary; a persistent service that catches errors and continues would require transaction-wide invalidation before reusing its state. No automatic replay into a partially updated owner is performed.

@@ -1,0 +1,30 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Suppose a decoder is about to evaluate four known token positions. Processing them together can reuse weights and expose more GPU work. Yet crossing a KV-cache padding boundary can enlarge the physical attention range seen by earlier queries, even when the causal mask hides the same future tokens. The resulting kernel can produce different output bytes. A quantized projection can introduce another difference when query width selects a different quantizer or dot-product specialization.
+
+Such differences matter when an optimization must retain the result of an existing deployment. For example, a regression workflow may compare full output vectors, an exact replay may resume from a stored cache, and a component migration may exchange states with an unchanged consumer. These scenarios motivate our question: \emph{what parallel execution remains available when the numerical reference is fixed?}
+
+Existing work provides several answers to related problems. Batch-invariant kernels make results insensitive to batch composition~\cite{thinkingmachines}; deterministic scheduling can keep selected execution shapes fixed~\cite{corun}. Reconstruction of GPU arithmetic can reproduce an external matrix-multiplication implementation while changing scheduling and pipelining~\cite{taming}. Verified speculation can obtain deterministic inference by checking and repairing a fast path, including its KV state~\cite{llm42}. These approaches establish that reproducibility is a system property and that the choice of reference matters. Our focus is a composition problem in quantized decoding: preserve an established numerical path while changing how known queries share physical cache views and backend execution.
+
+The central insight is that physical grouping and arithmetic grouping answer different questions. A \emph{physical group} determines which queries can share the attention range and descriptor required by their reference. An \emph{arithmetic group} retains the column width, activation quantization and reduction organization of a qualified projection. Their boundaries need not coincide. We keep the surrounding decoder graph wide, split attention where the physical reference requires it, and expose independent arithmetic groups through an outer tensor dimension. Requested output rows receive owned storage, and accepted state is committed with the same logical frontier. Figure~\ref{fig:overview} presents this construction.
+
+\begin{figure*}[t]
+ \centering
+ \includegraphics[width=\textwidth]{fig01_overview.pdf}
+ \caption{Parallel work around a fixed numerical reference. Direct batching can enlarge a query's physical attention range. The construction instead retains the reference ranges inside attention, preserves the inner arithmetic of projection groups, and reconstructs ordered outputs and successor state for the consumer. Colored boundaries and line patterns distinguish physical ranges from arithmetic groups; the drawing describes execution dependencies, not concurrent execution of causally unknown tokens. Conceptual diagram developed with ChatGPT (OpenAI, GPT-6 Astra Pro) assistance and rendered from the supplied editable script.}
+ \label{fig:overview}
+\end{figure*}
+
+The construction combines established four-column kernels, weight broadcasting, packing, and fixed reduction orders around two distinct grouping constraints. Its method contribution lies in the placement of cuts inside the decoder and the output and state obligations that make the result usable by a downstream decoder. This yields an implementation recipe with explicit admission conditions and a conditional composition argument. It also makes the performance question testable: a local cut helps only when the wider surrounding work it preserves pays for its own overhead.
+
+We evaluate that question with interventions, strong controls and application measurements. A physical-range intervention reproduces the observed attention-output change while holding the visible operands fixed. On A5000, a target-only Qwen3-32B comparison isolates independent scalar-column execution from a backend control that already shares activation quantization. The additional resident-service reduction is 1.51\%, with a 95\% paired-root interval of 1.23--1.79\%. Balanced Q8 factorials show that projection packing and local attention cuts contribute at different scales. Controlled Vulkan crossings reveal a substantial local opportunity, whereas natural requests encounter few useful crossings and a small multi-turn pilot shows no service gain. Speculative applications provide a consumer of the compatible execution path, with their complete gains reported separately from the method's increment.
+
+The paper makes three contributions:
+\begin{enumerate}
+ \item A fixed-reference execution construction that separates physical KV grouping from arithmetic grouping, places required cuts locally, and preserves the consumer's requested outputs and successor state.
+ \item An implementation analysis that connects that construction to quantized CUDA and Vulkan paths, distinguishing run-time checks, offline qualification and the assumptions of the composition argument.
+ \item An evidence-based account of the available parallelism: strong same-contract controls, component attribution, complete application measurements, and counterexamples that explain when local cuts or wider speculation fail to improve service.
+\end{enumerate}
+
+The resulting claim is a compatibility method with measured benefits in defined deployments. Its value depends on retaining the reference: changing the numerical contract opens other choices, including a faster modern upstream operator examined in our evaluation.

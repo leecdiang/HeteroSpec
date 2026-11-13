@@ -1,0 +1,51 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,mathpazo}
+\usepackage[margin=22mm]{geometry}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{amsmath,amssymb,booktabs,tabularx,longtable,array}
+\usepackage{graphicx,xurl,enumitem,microtype,placeins}
+\usepackage[colorlinks=true,allcolors=black]{hyperref}
+\usepackage{fancyhdr}
+\graphicspath{{figures/}}
+\setlist{nosep,leftmargin=*}
+\setlength{\emergencystretch}{1.5em}
+\lefthyphenmin=2
+\righthyphenmin=3
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\Simple}{\textsc{Simple}}
+\newcommand{\Local}{\textsc{Local}}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Fixed-reference parallel inference}
+\fancyhead[R]{\small Supplementary material}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\hypersetup{pdftitle={Supplement: Parallelizing Quantized LLM Inference Under a Fixed Numerical Reference},pdfauthor={Chengzhan Li}}
+\input{generated/table_application_means}
+\input{generated/table_factorials}
+\input{generated/table_prior32b}
+\input{generated/table_ampere_width}
+\input{generated/table_matched_width}
+\input{generated/table_strong_operators}
+\begin{document}
+\begin{center}
+{\Large\bfseries Supplementary material}\par\medskip
+{\large Parallelizing Quantized LLM Inference\\Under a Fixed Numerical Reference}\par\medskip
+Chengzhan Li\par
+Author-review draft, 13 November 2026
+\end{center}
+\noindent This supplement supplies implementation coverage, complete comparisons and reproducible source identities for the main paper. Numerical observations refer to their recorded implementations and inputs. The reconstruction accompanying this draft uses CPU analysis of public records; it adds no native qualification or model timing.
+
+\input{sections/supp_contract}
+\input{sections/supp_experiments}
+\input{sections/supp_sources}
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+\end{document}

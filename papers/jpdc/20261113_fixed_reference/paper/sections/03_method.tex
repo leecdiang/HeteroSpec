@@ -46,7 +46,9 @@ An \emph{arithmetic group} retains the admitted inner column width $a$. For a pr
  \end{split}
  \label{eq:arithmetic-groups}
 \end{equation}
-Weights are broadcast across the outer group dimension; outputs are reshaped back to column order. A tail follows its separately admitted width. Shape preservation does not fix activation quantization or reduction order: the CUDA two-dimensional wide-matrix path can select a different numerical operation, and the Vulkan reference requires F32 activations where a wider native path would use Q8\_1. These choices belong to the backend profile.
+Weights are broadcast across the outer group dimension; outputs are reshaped back to column order. A tail follows its separately admitted width. The backend profile fixes quantization and reduction as well as shape.
+
+Captured CUDA replays show why these distinctions matter. Across eight Q8 operator classes in each of Qwen3-0.6B and Qwen3-8B, native widths two and four match concatenated scalar outputs, whereas widths eight, sixteen and thirty-two differ. Keeping four-column inner groups and packing them along an outer dimension restores complete operator-output agreement at all three wider widths~\cite{records}. In the profiled 8B operators, the four- and eight-column kernels use the same activation quantizer but different reduction-warp counts; wider calls select matrix--matrix kernels. The supplementary mechanism table gives the captured-input and dispatch scope. Preserving inner arithmetic, rather than width alone, creates the freedom to reorganize groups.
 
 \paragraph{Construction.}
 The following procedure separates planning, numerical execution and consumer commit. $H$ denotes physical runs, $A_c$ arithmetic groups for call $c$, and $h$ the admitted attention tile width.
@@ -63,7 +65,7 @@ The following procedure separates planning, numerical execution and consumer com
 \end{enumerate}
 \textbf{Return:} owned requested outputs $Y$ and the consumer's successor state.
 \end{quote}
-The planner preserves contiguous row order, complete nonoverlapping partitions, and output-to-row identity. It makes no choice based on token values or observed output agreement. Execution cost also depends on the work retained around the groups and the overhead of constructing and joining them.
+The planner preserves contiguous row order, complete nonoverlapping partitions, and output-to-row identity. It makes no choice based on token values or observed output agreement.
 
 \subsection{Conditions for composition}
 Three distinct obligations connect the construction to Eq.~\ref{eq:reference-contract}.

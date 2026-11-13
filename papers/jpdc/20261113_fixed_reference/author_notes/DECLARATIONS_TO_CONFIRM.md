@@ -40,3 +40,13 @@ The final repository identifier, DOI if issued, permitted access mechanism and i
 - Approve the limited statistical scope, including the explicitly post-hoc leave-one-root-out supplement.
 - Confirm publication permission for the five added public source records; the history diagnostic includes short token/text excerpts and does not bundle the full corpus.
 - Review the final main/supplement PDFs and flat editable source archive; no submission is authorized by this checklist.
+
+## Version 3 targeted review items
+
+- Review the captured arithmetic-width comparison: 16 model/operator descriptors, with dispatch profiling limited to eight Qwen3-8B descriptors and fixed captured operands.
+- Confirm the historical Llama interpretation: 99/128 differing committed vectors in each speculative layout on the long input, 198/1,920 across the audited matrix including R, and attention-off counts inferred from the recorded full trajectory reversal.
+- Confirm the historical producer table's fixed-R comparison, joint KV/initial-logit boundary, and separation from the current C4096 multi-turn implementation.
+- Confirm permission to republish the newly included public record-field projections; no raw native tensor archive or private workstation path is included.
+- Review the final 13-page main manuscript and 14-page supplement, including three new mechanism tables. Existing timing data, baselines, estimands and numerical figures are unchanged.
+
+This targeted revision used ChatGPT and independent assistant reviews for historical-source checks, CPU record counting, table-generation code, English editing and document layout. The historical native experiments were not rerun. Earlier AI use remains subject to the author's separate confirmation described above.

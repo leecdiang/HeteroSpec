@@ -2,7 +2,7 @@
 \label{sec:supp-contract}
 
 \subsection{What is bound and what is checked}
-The reference binds the producer as well as the consumer. In the CUDA deployment, the original prompt producer uses physical microbatch one and requests its original final output. Candidate prefill can regroup known rows when the resulting requested vector and active cache preserve that producer. The Vulkan companion retains its original physical microbatch 128 and outer prompt chunks. Equal emitted-token endpoints alone do not make states produced by different schedules interchangeable.
+The reference binds the producer as well as the consumer. In the CUDA deployment, the original prompt producer uses physical microbatch one and requests its original final output. Candidate prefill can regroup known rows when the resulting requested vector and active cache preserve that producer. The controlled SmolLM2 Vulkan append study retains its original prompt calls of up to 512 tokens and physical microbatch 128. Equal emitted-token endpoints alone do not make states produced by different schedules interchangeable.
 
 The dense append check in \texttt{phase\_append\_requirements} requires one stream, no sliding window or shifted cells, an occupied prefix whose end and physical head equal the append position, and sufficient capacity. Existing cells must have their own logical positions and include sequence zero. The native padding is at least 256 entries. The executor additionally binds F16 K/V and a context owned by its single-sequence frontend. The sequence-membership check is not an exclusivity test for externally mutated, shared caches.
 
@@ -36,3 +36,51 @@ Two CPU diagnostics demonstrate why output and state requirements must be declar
 First, a two-row call and two successive one-row calls start from identical state at history length 248. Although both operation argmax values and the next forced-continuation argmax agree, 242 of 256 output float bit patterns differ. Their final serialized active-sequence states differ in 43 bytes, and the continuation differs in 127 of 128 float bit patterns. The diagnostic does not localize the cause. It demonstrates that token agreement can coexist with different full vectors, state and subsequent computation.
 
 Second, an eight-row operation is compared with a predefined four-plus-four reference at history lengths 248 and 252. All eight shared outputs, active state, geometry and one forced continuation agree. A restricted downstream consumer instead requires the first four vectors, retains five materialized rows, and then consumes fixed token 37. This comparison uses a four-plus-one reference and trims the wider execution to the same five-row frontier. Extra vectors are captured for diagnosis, but the fifth vector is excluded from the downstream contract before execution. It differs in 117 and 128 entries at the two histories, respectively, despite unchanged argmax; the required four outputs, retained state and forced consumer agree. Thus this restricted consumer passes while one requiring the fifth vector does not. These are explicit diagnostic schedules, not an autonomous scalar deployment reference. They establish neither natural speculative acceptance behavior nor a general qualification of an eight-output production verifier.
+
+\subsection{Captured arithmetic paths and attention repairs}
+\label{sec:supp-historical-mechanisms}
+The historical RTX width study captures Qwen3-0.6B-Q8\_0 and Qwen3-8B-Q8\_0 on an RTX 5070 Ti Laptop GPU. A deterministic 32-token fixture supplies real model activations. Each model contributes layer-0 Q/K/V, attention-output, FFN gate/up/down and vocabulary projections: 16 descriptors, rather than 16 independent workloads. Replays hold each captured weight and F32 activation prefix fixed. The scalar route evaluates and concatenates single columns; the native route uses a wide two-dimensional matrix; the grouped route uses $[K,4,q/4]$ and restores column order. Recorded complete-output digests give Table~\ref{tab:history-width}~\cite{records}.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Native width can change arithmetic; outer grouping preserves the sampled outputs. Equality counts compare the complete operator output with same-operand scalar replay across both models. CUPTI dispatch was profiled for the eight 8B descriptors. A dash means no multi-group packed operation was constructed at that width.}
+\label{tab:history-width}
+\begin{tabularx}{\textwidth}{@{}rYrr@{}}\toprule
+Width & Native dispatch observed on 8B & Native = scalar & Grouped four = scalar\\\midrule
+\HistoryWidthRows
+\bottomrule\end{tabularx}
+\par\smallskip\raggedright\footnotesize
+\textsuperscript{a}Stream-K fixup occurs for seven of eight traced classes; the vocabulary projection omits it. Grouped widths 8/16/32 retain row-Q8\_1 and four-warp MMVQ. Internal temporary quantized bytes were not separately captured.
+\end{table}
+
+All 16 native width-32 replays reproduce their own live captures. At the first Q projection, both models additionally have matching live scalar/native input bytes and scalar-output replay. Later operator comparisons hold their captured operands fixed; they do not reconstruct a whole scalar decoder. The historical source uses four reduction warps at native widths 1--4 and two at widths 5--8. Thus width eight can alter reduction organization even with the same activation-quantizer entry point.
+
+The Vulkan Llama companion starts from its own stock scalar reference: Meta-Llama-3.1-8B-Instruct-Q8\_0 on B570, a CPU Llama-3.2-1B-Instruct-Q8\_0 draft, capacity 1024, F16 KV and $k=3$. A scoped F32 projection policy repairs the scalar-versus-wide activation path. Endpoints then agree, but the long development input still exposes 99 different committed vectors in each speculative layout. Combining that policy with reference attention groups removes the differences (Table~\ref{tab:history-repair}). At the diagnosed boundary, changing extent also changes V contiguity and the selected matvec kernel. This is a joint attention-path repair.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Projection and attention repairs are complementary in the historical Vulkan case. ``Match'' refers to emitted-token and stopping endpoints. Vector columns count differing complete vocabulary vectors. The long input is CodeContests/valid/108; each of its two speculative layouts contributes 128 committed decisions. The full audit covers three inputs and five audited arms (R, M\_PQ, M\_QB, C\_PQ, C\_QB), including the R control.}
+\label{tab:history-repair}
+\begin{tabularx}{\textwidth}{@{}Yp{1.7cm}rr@{}}\toprule
+Configuration & Endpoints & Long input, per layout & All committed rows\\\midrule
+\HistoryRepairRows
+\bottomrule\end{tabularx}
+\par\smallskip\raggedright\footnotesize
+\textsuperscript{b}The same-binary attention-off run reproduces the projection-only trajectory across all 36 requests and 3,152 saved target/draft vectors. Its committed counts follow that recorded trajectory equality. The dash in the projection-off row means no committed-vector count is used here; its endpoint failures already distinguish it. The two layouts' 99 affected positions account for 198 differing records, not 99 across the entire audit.
+\end{table}
+
+\subsection{Producer state changes consumer compatibility}
+A historical B570 Qwen3-8B/0.6B Q8 test exports the initial target state into a clean receiving context. P1 produces the prompt one token per call; P4T uses four-token calls with separately defined tails. C1 is ordinary target-only continuation; PQ and QB are the two speculative layouts with $k=1$. Table~\ref{tab:history-producer} groups all eight inputs by endpoint outcome against the same independently executed reference R. PQ and QB agree with one another on endpoints, cycles and complete vectors for all 16 input--producer pairs, yet this agreement does not imply equality with R.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Producer $\times$ consumer endpoint compatibility at the historical boundary-zero clean-receiver interface. Each column compares with the fixed R endpoint. Grouped rows cover all eight inputs and all 48 producer/consumer cells. ``PQ/QB'' means both layouts have the displayed outcome.}
+\label{tab:history-producer}
+\begin{tabularx}{\textwidth}{@{}Yrcccc@{}}\toprule
+Input class & $n$ & P1 C1 & P4T C1 & P1 PQ/QB & P4T PQ/QB\\\midrule
+\HistoryProducerRows
+\bottomrule\end{tabularx}
+\end{table}
+
+On the two prealgebra inputs, changing the producer changes whether the speculative consumers preserve R while C1 retains the same endpoint. KV serialization and the initial full logits both change on every input; this experiment does not isolate KV alone. These boundary-zero, $k=1$ observations precede the later repairs and belong to a different contract from the capacity-4096 multi-turn implementation. The included matrix retains all individual input identities and producer-conditioned comparisons.
+\FloatBarrier

@@ -1,0 +1,5 @@
+// Standard-library-only substitute, not a model/native executable.
+#include "pilot_gate.hpp"
+#include <iostream>
+using namespace hs::n1chain;
+int main(int argc,char**argv){try{pilot_need(argc==2,"CPU job");PJ j=PJ::parse(textfile(argv[1]));PilotGate gate(j);gate.before_backend_init("CPU_ONLY");gate.before_model_load("CPU_ONLY");gate.before_context("A");gate.before_context("B");gate.request(0);gate.row(186);gate.finish();gate.request(1);bool rejected=false;try{gate.row(187);}catch(const Blocked&){rejected=true;}pilot_need(rejected&&gate.state().at("rows")==186,"row cap did not fail before work");gate.poison("CPU expected fault");bool closed=false;try{gate.guard();}catch(const Blocked&){closed=true;}pilot_need(closed,"poison allowed reentry");durable(j.at("output").get<std::string>()+"/CPU_PROBE.json",PJ{{"status","PASS_REAL_DOMAIN_PILOT_GATE_CPU_SUBSTITUTE"},{"logical_mock_counters",gate.state()},{"actual_models",0},{"actual_GPU_contexts",0},{"actual_placements",0},{"actual_decode_calls",0}}.dump(2)+"\n");return 0;}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}

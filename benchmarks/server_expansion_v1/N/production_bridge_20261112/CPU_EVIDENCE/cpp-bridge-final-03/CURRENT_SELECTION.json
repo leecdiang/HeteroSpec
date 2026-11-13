@@ -1,0 +1,123 @@
+{
+  "schema": "hs.production-bridge.current-CPP-selection.v1",
+  "scope": "CPU build, static inspection and four std-only supervisor boundary tests; native qualification is not run",
+  "artifacts": [
+    {
+      "role": "FIXED_STD_CPU_WORKER",
+      "path": "cpp-build-02/cpp_fixed_worker",
+      "sha256": "8ea68312efbdcf00fbf0c5d58354055a741ea91c4ddb3d9406af18538f2f1295",
+      "bytes": 253232
+    },
+    {
+      "role": "FIXED_STD_CPU_LAUNCHER",
+      "path": "launcher-build-03/cpp_bridge_launcher",
+      "sha256": "770609a9fc019701a8252bbffc63f968b481789f34f4cbee7182b9344ca3290e",
+      "bytes": 329392
+    },
+    {
+      "role": "NATIVE_R",
+      "path": "native-bridge-build-01/R/n1a-native-not-admitted",
+      "sha256": "7bc87ec910740a2eb6b511f5e6e6f98ceac44ffd0563a5d1b2318633fc0dc235",
+      "bytes": 223378672,
+      "executed": false
+    },
+    {
+      "role": "NATIVE_LOOP4",
+      "path": "native-bridge-build-01/loop4/n1a-native-not-admitted",
+      "sha256": "5d4b49bbba871655c5d6af24b32cb322faf171524f04648a9106c9d687e38981",
+      "bytes": 223969760,
+      "executed": false
+    },
+    {
+      "role": "NATIVE_LAUNCHER",
+      "path": "launcher-build-03/native_bridge_launcher_NOT_ADMITTED",
+      "sha256": "b64b163ca5652f626affc1f1254c881f324a399041388e758f0b8735bc5b8eee",
+      "bytes": 3482696,
+      "executed": false
+    }
+  ],
+  "boundary_tests": {
+    "status": "PASS",
+    "count": 4,
+    "kind": "Fixed std-only CPU children; no native numerical calls"
+  },
+  "original_source_identities": "BRIDGE_BUILD.json retains the five full source gates, 27 original inputs, numerical archive and parser identities.",
+  "native_qualification_checks": {
+    "total": 261,
+    "NOT_RUN": 261
+  },
+  "production_gate": "PERMANENT_DENIAL",
+  "native_model_backend_context_placement_forward_calls": 0,
+  "history": [
+    "CPP_BUILD_02 includes historical launcher e74f... before deadline correction; its fixed worker remains current.",
+    "BRIDGE_BUILD includes historical native launcher bf650... before deadline correction; its two numerical workers remain current.",
+    "LAUNCHER_BUILD_03 is the final launcher selection. Initial relative-path CPU test invocation was safely rejected; corrected absolute invocation passed four tests. Both logs retained."
+  ],
+  "sources": [
+    {
+      "file": "bridge_client.hpp",
+      "bytes": 11358,
+      "sha256": "c24b82a2d31e3846532e7e1df2e739bb31edceff8a12149b6cbfe0c3e745eee2"
+    },
+    {
+      "file": "bridge_job.hpp",
+      "bytes": 6275,
+      "sha256": "c6f5f97a287f5452dc312803234449583b3307b4cfac13053a6ee7e21eb76763"
+    },
+    {
+      "file": "supervisor.hpp",
+      "bytes": 9955,
+      "sha256": "aa8308513c930f2de0c8b77105df4c4fa47b1411b07e1e5a93c5647065b52e7d"
+    },
+    {
+      "file": "cpp_fixed_worker.cpp",
+      "bytes": 2276,
+      "sha256": "344f322847fd0eb01b503b619df234c89b50904d9dbb8a6da8cdd769177fb62e"
+    },
+    {
+      "file": "cpp_bridge_launcher.cpp",
+      "bytes": 8007,
+      "sha256": "edcb9fd8d0b896bb8e8b2244d44a0d3c0cbabe1222c15f10ea5ac4fb66806a76"
+    },
+    {
+      "file": "native/worker.cpp",
+      "bytes": 19136,
+      "sha256": "0ca2eadcbdc9ac3c92b49f5f89eca6259c4d13976ec6fa794907e0d8ac386848"
+    },
+    {
+      "file": "generate_native_worker.py",
+      "bytes": 3263,
+      "sha256": "e7a6bf8661b377827bbec64c5305ed5a820045335df30bc9789672648ca9216f"
+    },
+    {
+      "file": "build_native_bridge.py",
+      "bytes": 3980,
+      "sha256": "01221d8430f249801e02bf57f42bf4b117e5e82ee17d40b4c1e7b7c86a8ce1a9"
+    },
+    {
+      "file": "build_cpp.py",
+      "bytes": 3227,
+      "sha256": "15da1b2741d2da6e7a87e3e7b5be2eab0c8785c1d1ab88687f5c25aeeaff6463"
+    },
+    {
+      "file": "rebuild_launchers.py",
+      "bytes": 3629,
+      "sha256": "50c622749fabad79de994ccb328dcddd7590c200faa67c51fa5cc6bed932a032"
+    },
+    {
+      "file": "test_supervisor_boundary.cpp",
+      "bytes": 2974,
+      "sha256": "be1a8025e2571156f1da5fe05bd96cbb248282325bef470ee561b40b1997d520"
+    },
+    {
+      "file": "finalize_launcher_epoch.py",
+      "bytes": 4532,
+      "sha256": "7b9134f281347e6d4b6163824e02b46febd2b980f8bf1855bc7f87dbd9161f8a"
+    },
+    {
+      "file": "inspect_cpp_artifacts.py",
+      "bytes": 2946,
+      "sha256": "e1887ce5b5318309b339132db6f6785ac793770cdf5696a7b6e80811b7d60984"
+    }
+  ]
+}

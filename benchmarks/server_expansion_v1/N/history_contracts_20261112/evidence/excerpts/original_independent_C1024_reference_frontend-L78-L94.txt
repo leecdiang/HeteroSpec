@@ -1,0 +1,17 @@
+    }else{
+        for(const auto&entry:job.at("inputs")){
+            const auto input=entry.at("input");const std::string name=entry.at("name");need(!name.empty()&&name.find('/')==std::string::npos&&name.find('\\')==std::string::npos&&name!="..","safe request name");
+            const auto ids=input.at("prompt_ids").get<std::vector<int>>();const int limit=input.at("cap");const bool heavy=entry.value("capture",false);
+            token_check(ids,nv);need(!ids.empty()&&limit>0&&limit<=128&&ids.size()+size_t(limit)<=size_t(cap),"reference input capacity");
+            auto t=Clock::now();llama_memory_clear(llama_get_memory(ctx.get()),true);llama_synchronize(ctx.get());decode(ctx.get(),ids,0);int pos=int(ids.size());
+            J emitted=J::array(),eog=J::array();std::vector<float> v=logits(ctx.get(),nv);
+            const auto state_positions=entry.value("state_positions",std::vector<int>{});
+            for(int n=0;n<limit;++n){
+                const int token=greedy(v);const bool stop=llama_vocab_is_eog(vocab,token);
+                if(heavy)capture(ctx.get(),out/name/"captures"/std::to_string(pos),v,n==0||stop||n+1==limit||contains(state_positions,pos));
+                emitted.push_back(token);eog.push_back(stop);
+                if(stop||n+1==limit)break;decode(ctx.get(),{token},pos);++pos;v=logits(ctx.get(),nv);
+            }
+            const double elapsed=seconds(t);J rec={{"ids",emitted},{"eog",eog},{"cap",limit},{"pending_id",emitted.back()},{"pending_position",pos},{"materialized_tokens",pos},
+                {"terminal_kind",eog.back().get<bool>()?"EOG":"CAP"},{"state_capture_policy","initial/terminal plus explicitly requested logical positions"},{"service_s",elapsed},{"heavy",heavy}};
+            write_json(out/name/"receipt.json",rec);result["requests"].push_back({{"name",name},{"record",name+"/receipt.json"}});

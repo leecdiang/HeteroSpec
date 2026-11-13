@@ -1,0 +1,44 @@
+[
+  {
+    "role": "R",
+    "argv": [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/include",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/src",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/include",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/src",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/common",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/vendor",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/tools/server",
+      "-I${HS_ROOT}/run-01/stage-03/sources/reference/tools/mtmd",
+      "${ORIGINAL_RUN}/abi_probe02.cpp",
+      "-o",
+      "${ORIGINAL_RUN}/abi02-R"
+    ],
+    "compiler_stderr": "${ORIGINAL_RUN}/abi_probe02.cpp: In function \u2018int main()\u2019:\n${ORIGINAL_RUN}/abi_probe02.cpp:6:265: warning: \u2018offsetof\u2019 within non-standard-layout type \u2018server_task_result_cmpl_final\u2019 is conditionally-supported [-Winvalid-offsetof]\n    6 | int main(){std::cout<<\"common_chat_params \"<<sizeof(common_chat_params)<<\"\\nparser \"<<sizeof(common_chat_parser_params)<<\"\\ntask_state \"<<sizeof(task_result_state)<<\"\\nserver_final \"<<sizeof(server_task_result_cmpl_final)<<\"\\nfinal_n_decoded \"<<__builtin_offsetof(server_task_result_cmpl_final,n_decoded)<<\"\\nfinal_oaicompat_msg \"<<__builtin_offsetof(server_task_result_cmpl_final,oaicompat_msg)<<\"\\njson \"<<sizeof(nlohmann::json)<<\"\\ncommon_json \"<<sizeof(common_json)<<\"\\n\";}\n      |                                                                                                                                                                                                                                                      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n${ORIGINAL_RUN}/abi_probe02.cpp:6:352: warning: \u2018offsetof\u2019 within non-standard-layout type \u2018server_task_result_cmpl_final\u2019 is conditionally-supported [-Winvalid-offsetof]\n    6 | int main(){std::cout<<\"common_chat_params \"<<sizeof(common_chat_params)<<\"\\nparser \"<<sizeof(common_chat_parser_params)<<\"\\ntask_state \"<<sizeof(task_result_state)<<\"\\nserver_final \"<<sizeof(server_task_result_cmpl_final)<<\"\\nfinal_n_decoded \"<<__builtin_offsetof(server_task_result_cmpl_final,n_decoded)<<\"\\nfinal_oaicompat_msg \"<<__builtin_offsetof(server_task_result_cmpl_final,oaicompat_msg)<<\"\\njson \"<<sizeof(nlohmann::json)<<\"\\ncommon_json \"<<sizeof(common_json)<<\"\\n\";}\n      |                                                                                                                                                                                                                                                                                                                                             ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n",
+    "layout": "common_chat_params 304\nparser 144\ntask_state 624\nserver_final 3152\nfinal_n_decoded 196\nfinal_oaicompat_msg 2816\njson 16\ncommon_json 32\n"
+  },
+  {
+    "role": "loop4",
+    "argv": [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/include",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/src",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/include",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/src",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/common",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/vendor",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/tools/server",
+      "-I${HS_ROOT}/run-01/stage-04/sources/loop4/tools/mtmd",
+      "${ORIGINAL_RUN}/abi_probe02.cpp",
+      "-o",
+      "${ORIGINAL_RUN}/abi02-loop4"
+    ],
+    "compiler_stderr": "${ORIGINAL_RUN}/abi_probe02.cpp: In function \u2018int main()\u2019:\n${ORIGINAL_RUN}/abi_probe02.cpp:6:265: warning: \u2018offsetof\u2019 within non-standard-layout type \u2018server_task_result_cmpl_final\u2019 is conditionally-supported [-Winvalid-offsetof]\n    6 | int main(){std::cout<<\"common_chat_params \"<<sizeof(common_chat_params)<<\"\\nparser \"<<sizeof(common_chat_parser_params)<<\"\\ntask_state \"<<sizeof(task_result_state)<<\"\\nserver_final \"<<sizeof(server_task_result_cmpl_final)<<\"\\nfinal_n_decoded \"<<__builtin_offsetof(server_task_result_cmpl_final,n_decoded)<<\"\\nfinal_oaicompat_msg \"<<__builtin_offsetof(server_task_result_cmpl_final,oaicompat_msg)<<\"\\njson \"<<sizeof(nlohmann::json)<<\"\\ncommon_json \"<<sizeof(common_json)<<\"\\n\";}\n      |                                                                                                                                                                                                                                                      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n${ORIGINAL_RUN}/abi_probe02.cpp:6:352: warning: \u2018offsetof\u2019 within non-standard-layout type \u2018server_task_result_cmpl_final\u2019 is conditionally-supported [-Winvalid-offsetof]\n    6 | int main(){std::cout<<\"common_chat_params \"<<sizeof(common_chat_params)<<\"\\nparser \"<<sizeof(common_chat_parser_params)<<\"\\ntask_state \"<<sizeof(task_result_state)<<\"\\nserver_final \"<<sizeof(server_task_result_cmpl_final)<<\"\\nfinal_n_decoded \"<<__builtin_offsetof(server_task_result_cmpl_final,n_decoded)<<\"\\nfinal_oaicompat_msg \"<<__builtin_offsetof(server_task_result_cmpl_final,oaicompat_msg)<<\"\\njson \"<<sizeof(nlohmann::json)<<\"\\ncommon_json \"<<sizeof(common_json)<<\"\\n\";}\n      |                                                                                                                                                                                                                                                                                                                                             ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n",
+    "layout": "common_chat_params 304\nparser 144\ntask_state 624\nserver_final 3216\nfinal_n_decoded 228\nfinal_oaicompat_msg 2880\njson 16\ncommon_json 32\n"
+  }
+]

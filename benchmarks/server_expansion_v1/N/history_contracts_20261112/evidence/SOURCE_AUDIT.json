@@ -1,0 +1,1261 @@
+{
+  "schema": "heterospec.pr224.history-runtime-source-audit.v1",
+  "collected_utc": "2026-11-12T09:12:21.021159+00:00",
+  "method": "Read-only file reads and SHA-256 hashing over SSH. No native executable invoked, no model forward, no model/GPU context, no placement action.",
+  "scope": "Source and historical receipt audit only; no current resource permission, live runtime process or free-generation evidence inferred.",
+  "private_path_policy": "Public paths use HS_ROOT placeholder; the real root is only in PRIVATE_PATH_MAP.json. No credentials, GPU UUIDs or foreign processes collected.",
+  "source_objects": [
+    {
+      "logical_role": "original_independent_C1024_reference_frontend",
+      "cached_path": "${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native/reference.cpp",
+      "relative_cached_path": "repository-01/benchmarks/linux_transfer_v1/native/reference.cpp",
+      "full_file_sha256": "111401574d53c534e3a39cac75785ae5ae5fa9a61b44fc7ada989a96305f4723",
+      "full_file_bytes": 8818,
+      "full_file_lines": 100,
+      "status": "SOURCE_AVAILABLE; C1024 hard guard; per-input reset; NOT C4096 sequential N reference",
+      "fragments": [
+        {
+          "start_line": 49,
+          "end_line": 69,
+          "byte_count": 2654,
+          "sha256": "336270bb2543de7888d73244699f3eca91d4b94c4282a3d073293144ad0d878d",
+          "utf8": "int main(int argc,char**argv){try{\n    need(argc==3,\"reference JOB.json OUT\");std::ifstream jf(argv[1]);need(bool(jf),\"job input\");J job;jf>>job;\n    fs::path out=argv[2];need(!fs::exists(out),\"fresh output directory required\");fs::create_directories(out);\n    const int cap=job.value(\"n_ctx\",1024),threads=job.value(\"threads\",8);\n    need(cap==1024 && threads>0,\"Phase one reference is C1024; context expansion is a new deployment\");\n    ggml_time_init();llama_backend_init();ggml_backend_dev_t gpu=nullptr;\n    for(size_t i=0;i<ggml_backend_dev_count();++i){auto d=ggml_backend_dev_get(i);if(ggml_backend_dev_type(d)==GGML_BACKEND_DEVICE_TYPE_GPU){need(!gpu,\"exactly one visible GPU required\");gpu=d;}}\n    need(gpu,\"no GPU; CPU test is not a deployment reference\");ggml_backend_dev_t devices[]={gpu,nullptr};\n    auto mp=llama_model_default_params();mp.devices=devices;mp.n_gpu_layers=999;mp.split_mode=LLAMA_SPLIT_MODE_NONE;\n    auto began=Clock::now();std::unique_ptr<llama_model,ModelDelete> model(llama_model_load_from_file(job.at(\"target_model\").get<std::string>().c_str(),mp));need(bool(model),\"reference model\");\n    auto cp=llama_context_default_params();cp.n_ctx=cap;cp.n_batch=cap;cp.n_ubatch=1;cp.n_seq_max=1;cp.n_outputs_max=1;cp.n_outputs_max_per_seq=1;\n    cp.n_threads=threads;cp.n_threads_batch=threads;cp.type_k=GGML_TYPE_F16;cp.type_v=GGML_TYPE_F16;cp.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;\n    std::unique_ptr<llama_context,ContextDelete> ctx(llama_init_from_model(model.get(),cp));need(bool(ctx),\"reference context\");\n    const auto*vocab=llama_model_get_vocab(model.get());const int nv=llama_vocab_n_tokens(vocab);\n    J result={{\"schema\",\"linux-transfer.reference.v1\"},{\"setup_s\",seconds(began)},{\"reference_kind\",\"independent-pristine-upstream-Linux-UB1\"},\n        {\"n_ctx\",llama_n_ctx(ctx.get())},{\"n_batch\",llama_n_batch(ctx.get())},{\"n_ubatch\",llama_n_ubatch(ctx.get())},\n        {\"output_reserve\",1},{\"threads\",threads},{\"vocab\",nv},{\"modules_before\",linux_transfer::modules()},{\"requests\",J::array()},{\"cases\",J::array()}};\n    need(llama_n_ctx(ctx.get())==unsigned(cap)&&llama_n_ubatch(ctx.get())==1,\"observed reference allocation\");\n    if(job.contains(\"cases\")||job.contains(\"forced\")){\n        const J cases=job.contains(\"cases\")?job.at(\"cases\"):J::array({job});\n        for(size_t k=0;k<cases.size();++k){const auto&c=cases[k];const std::string name=c.value(\"name\",std::to_string(k));need(!name.empty()&&name!=\"..\"&&name.find('/')==std::string::npos&&name.find('\\\\')==std::string::npos,\"safe case name\");fs::path dir=out/name;llama_memory_clear(llama_get_memory(ctx.get()),true);llama_synchronize(ctx.get());\n",
+          "local_excerpt_relative_path": "excerpts/original_independent_C1024_reference_frontend-L49-L69.txt",
+          "evidence_id": "original_independent_C1024_reference_frontend:L49-L69"
+        },
+        {
+          "start_line": 78,
+          "end_line": 94,
+          "byte_count": 1859,
+          "sha256": "f162cf6292e636c30404941cea58c5f1273384646ae1d9bda08b3b8b17e14a2d",
+          "utf8": "    }else{\n        for(const auto&entry:job.at(\"inputs\")){\n            const auto input=entry.at(\"input\");const std::string name=entry.at(\"name\");need(!name.empty()&&name.find('/')==std::string::npos&&name.find('\\\\')==std::string::npos&&name!=\"..\",\"safe request name\");\n            const auto ids=input.at(\"prompt_ids\").get<std::vector<int>>();const int limit=input.at(\"cap\");const bool heavy=entry.value(\"capture\",false);\n            token_check(ids,nv);need(!ids.empty()&&limit>0&&limit<=128&&ids.size()+size_t(limit)<=size_t(cap),\"reference input capacity\");\n            auto t=Clock::now();llama_memory_clear(llama_get_memory(ctx.get()),true);llama_synchronize(ctx.get());decode(ctx.get(),ids,0);int pos=int(ids.size());\n            J emitted=J::array(),eog=J::array();std::vector<float> v=logits(ctx.get(),nv);\n            const auto state_positions=entry.value(\"state_positions\",std::vector<int>{});\n            for(int n=0;n<limit;++n){\n                const int token=greedy(v);const bool stop=llama_vocab_is_eog(vocab,token);\n                if(heavy)capture(ctx.get(),out/name/\"captures\"/std::to_string(pos),v,n==0||stop||n+1==limit||contains(state_positions,pos));\n                emitted.push_back(token);eog.push_back(stop);\n                if(stop||n+1==limit)break;decode(ctx.get(),{token},pos);++pos;v=logits(ctx.get(),nv);\n            }\n            const double elapsed=seconds(t);J rec={{\"ids\",emitted},{\"eog\",eog},{\"cap\",limit},{\"pending_id\",emitted.back()},{\"pending_position\",pos},{\"materialized_tokens\",pos},\n                {\"terminal_kind\",eog.back().get<bool>()?\"EOG\":\"CAP\"},{\"state_capture_policy\",\"initial/terminal plus explicitly requested logical positions\"},{\"service_s\",elapsed},{\"heavy\",heavy}};\n            write_json(out/name/\"receipt.json\",rec);result[\"requests\"].push_back({{\"name\",name},{\"record\",name+\"/receipt.json\"}});\n",
+          "local_excerpt_relative_path": "excerpts/original_independent_C1024_reference_frontend-L78-L94.txt",
+          "evidence_id": "original_independent_C1024_reference_frontend:L78-L94"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "shared_M2_B2_service_and_context_wrapper",
+      "cached_path": "${HS_ROOT}/pr210-stage-b-build-02/frontend/worker.cpp",
+      "relative_cached_path": "pr210-stage-b-build-02/frontend/worker.cpp",
+      "full_file_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+      "full_file_bytes": 26914,
+      "full_file_lines": 338,
+      "status": "BUILD-bound service source; resident allocation reuse resets KV per request; NOT natural multi-turn producer",
+      "fragments": [
+        {
+          "start_line": 94,
+          "end_line": 116,
+          "byte_count": 2620,
+          "sha256": "55e2e31cfa22dd7e177843d01ac2b341a451e525ac0b2278bfac49f5364463e1",
+          "utf8": "    llama_context*c=nullptr;llama_model*model;bool target,capture,scoped;const int selector,ub;Observer obs;\n    json caller_trace=json::array();fs::path path;int calls=0;std::map<std::string,double> phases;json physical_by_phase=json::object();\n    Context(llama_model*m,int ub,bool istarget,bool scope,bool cap,const fs::path&dir,int layout,int draft_physical=1):model(m),target(istarget),capture(cap),scoped(scope),selector(layout),ub(ub),path(dir){\n        hs_scope::requested_layout=selector;\n        hs_scope::active=scoped;\n        auto p=llama_context_default_params();p.n_ctx=1024;p.n_batch=1024;p.n_ubatch=istarget?ub:phase_draft_width;\n        p.n_threads=phase_threads;p.n_threads_batch=phase_threads;p.n_outputs_max=istarget?phase_target_reserve:1;p.n_outputs_max_per_seq=istarget?phase_target_reserve:1;\n        p.type_k=GGML_TYPE_F16;p.type_v=GGML_TYPE_F16;p.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;\n        p.cb_eval=Observer::callback;p.cb_eval_user_data=&obs;if(cap)fs::create_directories(dir);\n        hs_scope::active=false;c=llama_init_from_model(m,p);need(c,\"context initialization\");hs_scope::active=scoped;\n    }\n    ~Context(){if(c)llama_free(c);}\n    void reset(bool cap,const fs::path&dir){plan.clear();capture=cap;path=dir;calls=0;caller_trace=json::array();phases.clear();physical_by_phase=json::object();obs=Observer{};if(cap)fs::create_directories(dir);hs_scope::requested_layout=selector;hs_scope::active=scoped;llama_memory_clear(llama_get_memory(c),false);need(llama_memory_seq_pos_max(llama_get_memory(c),0)<0,\"KV not empty after reset\");}\n\n    void decode(const std::vector<int>&ids,int pos,bool all,const char*phase){\n        if(target){if(capture)caller_trace.push_back({{\"phase\",phase},{\"position\",pos},{\"rows\",ids.size()},{\"all_outputs\",all}});plan.decode(*this,ids,pos,all,phase);return;}\n        if(capture)caller_trace.push_back({{\"phase\",phase},{\"position\",pos},{\"rows\",ids.size()},{\"all_outputs\",all}});obs.phase=phase;obs.base=pos;obs.caller=int(ids.size());hs_scope::requested_layout=selector;hs_scope::active=scoped;\n        auto widths_before=hsc::w.target_physical;\n        auto b=llama_batch_init(int(ids.size()),0,1);b.n_tokens=int(ids.size());\n        for(int i=0;i<b.n_tokens;i++){b.token[i]=ids[i];b.pos[i]=pos+i;b.n_seq_id[i]=1;b.seq_id[i][0]=0;b.logits[i]=all||i==b.n_tokens-1;}\n        hsc::decode_begin(c,target?\"target\":\"draft\",std::string(phase)==\"PREFILL\",b.n_tokens);\n        auto t=Clock::now();int rc=llama_decode(c,b);llama_batch_free(b);\n        need(rc==0,\"decode failed\");llama_synchronize(c);phases[phase]+=since(t);hsc::decode_end();calls++;\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_service_and_context_wrapper-L94-L116.txt",
+          "evidence_id": "shared_M2_B2_service_and_context_wrapper:L94-L116"
+        },
+        {
+          "start_line": 124,
+          "end_line": 132,
+          "byte_count": 662,
+          "sha256": "54bfcd9c95795df6192ed596f7a097a545efbdb73d2fe583ef912e98ef2636a0",
+          "utf8": "    int sample(int row,const std::string&name){\n        auto*p=target?plan.logits(row):llama_get_logits_ith(c,row);need(p,\"logits missing\");int n=llama_vocab_n_tokens(llama_model_get_vocab(model));\n        int best=0;for(int i=0;i<n;i++){need(std::isfinite(p[i]),\"nonfinite logit\");if(p[i]>p[best])best=i;}\n        if(capture){++phase_heavy_captures;std::ofstream f(path/(name+\".f32\"),std::ios::binary);f.write((char*)p,size_t(n)*sizeof(float));need(bool(f),\"full logits write\");}\n        return best;\n    }\n    void trim(int keep){need(llama_memory_seq_rm(llama_get_memory(c),0,keep,-1),\"KV trim failed\");}\n\n    void snapshot(const std::string & key,int row) {\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_service_and_context_wrapper-L124-L132.txt",
+          "evidence_id": "shared_M2_B2_service_and_context_wrapper:L124-L132"
+        },
+        {
+          "start_line": 145,
+          "end_line": 182,
+          "byte_count": 3150,
+          "sha256": "bb0c930cb3bc15aea42114dc4a0e5ee9ba7e785a9ccb3b53dbcf65b2ed88418e",
+          "utf8": "    const auto& arm=spec.name;int k=spec.k;\n    hs_scope::requested_layout=spec.selector;\n    auto start=Clock::now();hsc::begin(capture?\"heavy\":\"counts\",int(input[\"prompt_ids\"].size()));\n    json r={{\"arm\",arm},{\"k\",k},{\"lifecycle\",life},{\"cycles\",json::array()},{\"capture\",capture},\n        {\"draft_enabled\",spec.draft},{\"observed_scope\",spec.scope},{\"context_scope_fixed\",true},\n        {\"producer\",producer},{\"draft_producer\",\"NATIVE\"},{\"draft_ubatch\",draft_ubatch}};\n    Pair fresh;Context*target=nullptr,*draft=nullptr;\n    if(life==\"resident\"){\n        need(bool(resident.target),\"pool must be provisioned before requests\");\n        target=resident.target.get();\n        need(target->selector==spec.selector && target->scoped==spec.scoped && target->ub==spec.target_ub,\"context scope/config changed\");\n        target->reset(capture,dir/\"target\");\n        if(spec.draft){need(bool(resident.draft),\"draft pool missing\");draft=resident.draft.get();draft->reset(capture,dir/\"draft\");}\n    }else{\n        fresh.target=std::make_unique<Context>(t,spec.target_ub,true,spec.scoped,capture,dir/\"target\",spec.selector);target=fresh.target.get();\n        if(spec.draft){fresh.draft=std::make_unique<Context>(d,1,false,false,capture,dir/\"draft\",spec.selector,draft_ubatch);draft=fresh.draft.get();}\n    }\n    if(draft)need(int(llama_n_ubatch(draft->c))==draft_ubatch,\"actual draft width differs\");\n    const bool replay=phase_proposal_mode==\"replay\";\n    need(phase_proposal_mode==\"live\"||replay,\"transaction mode\");\n    need(input.contains(\"proposal_tape\")==replay,\"live/replay tape permission\");\n    if(replay){need(input.at(\"proposal_tape\").at(\"prompt_ids\")==input.at(\"prompt_ids\"),\"owned tape prompt\");\n        need(hash_text(input.at(\"proposal_tape\").dump())==input.at(\"proposal_tape_sha256\"),\"owned tape content SHA\");}\n    need(input.at(\"prompt_ids\").size()+size_t(input.at(\"cap\").get<int>())+size_t(k+1)<=llama_n_ctx(target->c),\"transient position capacity\");\n    r[\"proposal_mode\"]=phase_proposal_mode;r[\"target_output_reserve\"]=phase_target_reserve;\n    if(replay)r[\"proposal_tape_sha256\"]=input.at(\"proposal_tape_sha256\");\n    double setup=since(start);\n    auto request_start=Clock::now();auto prompt=input[\"prompt_ids\"].get<std::vector<int>>();\n    if(producer==\"P1\"){for(size_t i=0;i<prompt.size();i++)target->decode({prompt[i]},int(i),false,\"PREFILL\");}\n    else target->decode(prompt,0,false,\"PREFILL\");\n    if(draft&&!replay)draft->decode(prompt,0,false,\"PREFILL\");\n    int final_frontier=-1;int pending=target->sample(-1,\"initial\"),base=int(prompt.size()),cycle=0,cap=input[\"cap\"];\n    std::vector<int> ids;std::vector<bool> eog;const auto*v=llama_model_get_vocab(t);\n    auto commit=[&](int id){ids.push_back(id);eog.push_back(llama_vocab_is_eog(v,id));return bool(eog.back())||int(ids.size())==cap;};\n    if(capture)target->snapshot(\"initial\",-1);\n    bool done=commit(pending);\n    while(!done){\n        if(!draft){target->decode({pending},base++,false,\"ORDINARY\");pending=target->sample(-1,\"ordinary-\"+std::to_string(ids.size()));if(capture)target->snapshot(\"ordinary-\"+std::to_string(ids.size()),-1);done=commit(pending);continue;}\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_service_and_context_wrapper-L145-L182.txt",
+          "evidence_id": "shared_M2_B2_service_and_context_wrapper:L145-L182"
+        },
+        {
+          "start_line": 209,
+          "end_line": 228,
+          "byte_count": 2213,
+          "sha256": "ca8fe3d1e1da57c946f7236c1fe9dbe15750f223c2ba32ba8ed5c8ba598413c0",
+          "utf8": "           {\"target_before\",target_before},{\"draft_before\",draft_before},{\"target_after\",target->bounds()},{\"draft_after\",draft->bounds()},\n           {\"caller_rows\",k+1}});\n        base=keep;cycle++;\n    }\n    llama_synchronize(target->c);if(draft)llama_synchronize(draft->c);\n    r[\"ids\"]=ids;r[\"eog\"]=eog;r[\"length\"]=ids.size();r[\"terminal_id\"]=ids.back();r[\"stop_reason\"]=eog.back()?\"EOG\":\"CAP\";\n    r[\"target_final_kv\"]=target->bounds();r[\"draft_final_kv\"]=draft?draft->bounds():json(nullptr);\n    r[\"request_seconds\"]=since(request_start);r[\"target_phases\"]=target->phases;r[\"draft_phases\"]=draft?json(draft->phases):json::object();\n    r[\"target_caller_trace\"]=target->caller_trace;r[\"draft_caller_trace\"]=draft?draft->caller_trace:json::array();r[\"draft_physical_width_hist\"]=json::object();for(size_t z=0;z<hsc::w.draft_physical.size();z++)if(hsc::w.draft_physical[z])r[\"draft_physical_width_hist\"][std::to_string(z)]=hsc::w.draft_physical[z];r[\"phase_executions\"]=target->plan.executions;r[\"target_calls\"]=target->calls;r[\"draft_calls\"]=draft?draft->calls:0;\n    r[\"geometry\"]=json::array();if(capture)for(auto&kv:target->obs.signatures)r[\"geometry\"].push_back(kv.second);\n    r[\"target_physical_width_hist\"]=json::object();for(size_t i=0;i<hsc::w.target_physical.size();i++)if(hsc::w.target_physical[i])r[\"target_physical_width_hist\"][std::to_string(i)]=hsc::w.target_physical[i];\n    r[\"graphs_reused\"]=hsc::w.graphs_reused;r[\"graphs_built\"]=hsc::w.graphs_built;r[\"observer_mode\"]=capture?\"heavy\":\"counts\";\n    r[\"physical_widths\"]=json::array();for(size_t i=0;i<hsc::w.target_physical.size();i++)if(hsc::w.target_physical[i])r[\"physical_widths\"].push_back(i);\n    r[\"target_physical_by_phase\"]=target->physical_by_phase;\n    r[\"setup_seconds\"]=setup;\n    auto teardown=Clock::now();fresh.draft.reset();fresh.target.reset();hs_scope::active=false;\n    r[\"teardown_seconds\"]=since(teardown);\n    r[\"endpoint\"]={{\"ids\",r[\"ids\"]},{\"eog\",r[\"eog\"]},{\"length\",r[\"length\"]},{\"terminal_id\",r[\"terminal_id\"]},{\"stop_reason\",r[\"stop_reason\"]}};\n    r[\"prompt_tokens\"]=prompt.size();r[\"prompt_ids\"]=prompt;\n    r[\"service_seconds\"]=since(start);r[\"context_teardown_completed\"]=life==\"fresh\";hsc::w.active=false;\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_service_and_context_wrapper-L209-L228.txt",
+          "evidence_id": "shared_M2_B2_service_and_context_wrapper:L209-L228"
+        }
+      ],
+      "additional_cached_aliases": [
+        {
+          "cached_path": "${HS_ROOT}/m2-build-01/frontend/worker.cpp",
+          "relative_cached_path": "m2-build-01/frontend/worker.cpp",
+          "sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "identical_bytes": true
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "shared_M2_B2_phase_context_planner_and_owned_outputs",
+      "cached_path": "${HS_ROOT}/pr210-stage-b-build-02/frontend/resident_context.hpp",
+      "relative_cached_path": "pr210-stage-b-build-02/frontend/resident_context.hpp",
+      "full_file_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+      "full_file_bytes": 4693,
+      "full_file_lines": 65,
+      "status": "BUILD-bound source; explicit position and whole-append rows; output ownership checks; NOT N sequential qualification",
+      "fragments": [
+        {
+          "start_line": 18,
+          "end_line": 38,
+          "byte_count": 1752,
+          "sha256": "ee6eb58e434da551730c436e817b3f602075326dbce2bcb36c569a99b41e797b",
+          "utf8": "    void clear(){need(!poisoned,\"poisoned phase context\");executions=json::array();outputs.clear();planning_s=output_copy_s=first_call_plan_s=0;}\n    template<class Native>\n    void decode(Native& owner,const std::vector<int>& ids,int position,bool all,const char* phase){\n        need(!poisoned && !ids.empty(),\"invalid phase call\");\n        auto began=Clock::now();\n        auto* cache=dynamic_cast<llama_kv_cache*>(llama_get_memory(owner.c));\n        need(cache,\"unsupported non-dense cache\");\n        const auto extents=cache->phase_append_requirements(uint32_t(position),uint32_t(ids.size()));\n        need(extents.size()==ids.size(),\"unsupported cache/append requirements\");\n        need(cache->type_k()==GGML_TYPE_F16 && cache->type_v()==GGML_TYPE_F16,\"unsupported cache arithmetic\");\n        need(!all||ids.size()<=size_t(phase_target_reserve),\"requested outputs exceed actual M2 output reserve\");\n        const uint64_t arithmetic=1+uint64_t(cache->type_k())+(uint64_t(cache->type_v())<<8);\n        std::vector<refplan::Row> rows;rows.reserve(ids.size());\n        for(size_t i=0;i<ids.size();++i)rows.push_back({position+int64_t(i),extents[i],arithmetic,all||i+1==ids.size()});\n        // SIMPLE's caller groups are maximal for the bound extent and width.\n        // LOCAL retains wide projection groups, splitting only attention locally.\n        std::vector<refplan::Group> groups;\n        if(phase_lowering==\"SIMPLE\")groups=refplan::plan(rows,32);\n        else {need(phase_lowering==\"LOCAL\",\"unknown lowering\");for(size_t i=0;i<rows.size();i+=32)groups.push_back({i,std::min<size_t>(32,rows.size()-i),0,1});}\n        const double compilation=since(began);planning_s+=compilation;\n        if(executions.empty())first_call_plan_s=compilation;\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_phase_context_planner_and_owned_outputs-L18-L38.txt",
+          "evidence_id": "shared_M2_B2_phase_context_planner_and_owned_outputs:L18-L38"
+        },
+        {
+          "start_line": 40,
+          "end_line": 63,
+          "byte_count": 2232,
+          "sha256": "ebdb2e5de55c050730cc0f0935306f2a4f8388a4ef4a754915e055521e3bc143",
+          "utf8": "        outputs.assign(ids.size(),{});\n        const size_t vocabulary=llama_vocab_n_tokens(llama_model_get_vocab(owner.model));\n        try{\n            for(const auto& group:groups){\n                auto b=llama_batch_init(int(group.count),0,1);b.n_tokens=int(group.count);\n                std::vector<size_t> wanted;\n                for(size_t j=0;j<group.count;++j){const size_t i=group.begin+j;b.token[j]=ids[i];b.pos[j]=int(rows[i].position);b.n_seq_id[j]=1;b.seq_id[j][0]=0;b.logits[j]=rows[i].requested_output;if(b.logits[j])wanted.push_back(i);}\n                owner.obs.phase=phase;owner.obs.base=position+int(group.begin);owner.obs.caller=int(group.count);\n                hs_scope::requested_layout=0;hs_scope::active=true;phase_observe=owner.capture;\n                hsc::decode_begin(owner.c,\"target\",std::string(phase)==\"PREFILL\",b.n_tokens);\n                auto t=Clock::now();int rc=llama_decode(owner.c,b);llama_batch_free(b);need(rc==0,\"phase native decode failed\");llama_synchronize(owner.c);owner.phases[phase]+=since(t);hsc::decode_end();owner.calls++;\n                t=Clock::now();\n                for(size_t i:wanted){auto* p=llama_get_logits_ith(owner.c,int(i-group.begin));need(p,\"requested row missing\");outputs[i].assign(p,p+vocabulary);}\n                output_copy_s+=since(t);\n                const auto& cells=cache->get_cells(0);\n                need(cells.used_max_p1()==uint32_t(position+group.begin+group.count),\"unexpected physical append mapping\");\n                executions.push_back({{\"phase\",phase},{\"position\",position+group.begin},{\"width\",group.count},{\"expected_extents\",std::vector<uint32_t>(extents.begin()+group.begin,extents.begin()+group.begin+group.count)},{\"actual_attention_extent\",cache->phase_current_extent()},{\"requested_rows\",wanted},{\"active_cells\",cells.get_used()}});\n                need(!owner.obs.bad,\"phase graph placement failed\");\n            }\n        }catch(...){poisoned=true;throw;}\n    }\n    float* logits(int row){\n        if(row<0){for(size_t i=outputs.size();i>0;--i)if(!outputs[i-1].empty())return outputs[i-1].data();}\n        need(row>=0 && size_t(row)<outputs.size() && !outputs[row].empty(),\"unrequested phase output\");return outputs[row].data();\n",
+          "local_excerpt_relative_path": "excerpts/shared_M2_B2_phase_context_planner_and_owned_outputs-L40-L63.txt",
+          "evidence_id": "shared_M2_B2_phase_context_planner_and_owned_outputs:L40-L63"
+        }
+      ],
+      "additional_cached_aliases": [
+        {
+          "cached_path": "${HS_ROOT}/m2-build-01/frontend/resident_context.hpp",
+          "relative_cached_path": "m2-build-01/frontend/resident_context.hpp",
+          "sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "identical_bytes": true
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "M2_native_entry",
+      "cached_path": "${HS_ROOT}/m2-build-01/frontend/entry.cpp",
+      "relative_cached_path": "m2-build-01/frontend/entry.cpp",
+      "full_file_sha256": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+      "full_file_bytes": 11288,
+      "full_file_lines": 126,
+      "status": "BUILD-bound M2 draft/replay/append entry; NOT natural conversation service",
+      "fragments": [
+        {
+          "start_line": 1,
+          "end_line": 17,
+          "byte_count": 859,
+          "sha256": "e83a581db8add1b0be4233aaf714e3f0b41d486cd8bdcc3af5d5a88b9cdfa462",
+          "utf8": "#include \"llama.h\"\n#include <cstdint>\nstatic uint64_t phase_exports=0,phase_imports=0,phase_contexts=0,phase_heavy_captures=0;\nstatic size_t counted_get(llama_context*c,uint8_t*d,size_t n,llama_seq_id s){++phase_exports;return llama_state_seq_get_data(c,d,n,s);}\nstatic size_t counted_set(llama_context*c,const uint8_t*d,size_t n,llama_seq_id s){++phase_imports;return llama_state_seq_set_data(c,d,n,s);}\nstatic llama_context* counted_context(llama_model*m,llama_context_params p){++phase_contexts;return llama_init_from_model(m,p);}\n#define llama_state_seq_get_data counted_get\n#define llama_state_seq_set_data counted_set\n#define llama_init_from_model counted_context\n#define main historical_entry\n#include \"worker.cpp\"\n#undef main\n#define FRONTIER_PROFILE\n#include \"linux_profile_disabled.hpp\"\nstatic bool phase1_profiling=false;\n#include \"llama-model.h\"\n\n",
+          "local_excerpt_relative_path": "excerpts/M2_native_entry-L1-L17.txt",
+          "evidence_id": "M2_native_entry:L1-L17"
+        },
+        {
+          "start_line": 33,
+          "end_line": 76,
+          "byte_count": 4097,
+          "sha256": "611b62c382569fbafac202622884bf2ed78c9e43ccb1b708c780bf3559b36b01",
+          "utf8": "int main(int argc,char**argv){\n    const auto phase1_main_started=Clock::now();\n    llama_model*t=nullptr,*d=nullptr;Pair pool;fs::path root;\n    try{\n        need(argc==3,\"phase worker JOB OUT\");const auto job=load(argv[1]);root=argv[2];need(!fs::exists(root),\"fresh native output\");fs::create_directories(root);\n        phase_target_reserve=job.at(\"target_output_reserve\");\n        const int m2_k=job.at(\"k\");phase_proposal_mode=job.at(\"proposal_mode\");\n        need(phase_target_reserve==8&&(m2_k==3||m2_k==7)&&job.at(\"draft\")==true&&job.at(\"draft_width\")==4,\"M2 explicit k3/7 reserve8 D4 contract\");\n        need(phase_proposal_mode==\"live\"||phase_proposal_mode==\"replay\"||phase_proposal_mode==\"producer\",\"M2 proposal mode\");\n        phase_threads=job.at(\"threads\").get<int>();need(phase_threads>0 && phase_threads<=2,\"allocated CPU thread budget\");\n        const auto bin=linux_transfer::executable().parent_path();\n        ggml_time_init();\n        ggml_backend_load_all_from_path(bin.string().c_str());llama_backend_init();ggml_backend_dev_t gpu=nullptr;\n        for(size_t i=0;i<ggml_backend_dev_count();++i){auto x=ggml_backend_dev_get(i);if(ggml_backend_dev_type(x)==GGML_BACKEND_DEVICE_TYPE_GPU){need(!gpu,\"ambiguous GPU\");gpu=x;}}need(gpu,\"GPU required\");\n        ggml_backend_dev_t devices[]={gpu,nullptr};auto mp=llama_model_default_params();mp.devices=devices;mp.n_gpu_layers=999;mp.split_mode=LLAMA_SPLIT_MODE_NONE;\n        json result={{\"requests\",json::array()},{\"trajectories\",0},{\"token_rows\",0},{\"modules_before\",module_inventory()},{\"GPU_device\",ggml_backend_dev_description(gpu)}};\n        const std::string residency=job.value(\"residency\",std::string(\"matched\"));\n        need(residency==\"matched\" || residency==\"target_only\",\"unknown residency\");\n        const bool target_only=residency==\"target_only\";\n        need(!target_only || !job.value(\"draft\",false),\"target-only cannot execute draft\");\n        auto start=Clock::now();\n        t=llama_model_load_from_file(job.at(\"target_model\").get<std::string>().c_str(),mp);\n        if(!target_only)d=llama_model_load_from_file(job.at(\"draft_model\").get<std::string>().c_str(),mp);\n        need(t && (target_only || d),\"models\");\n        result[\"model_load_s\"]=since(start);result[\"phase1_residency\"]=residency;\n        const auto*tv=llama_model_get_vocab(t);\n        if(d){const auto*dv=llama_model_get_vocab(d);\n        need(llama_vocab_n_tokens(tv)==llama_vocab_n_tokens(dv),\"vocab size\");\n        for(int i=0;i<llama_vocab_n_tokens(tv);++i)need(strcmp(llama_vocab_get_text(tv,i),llama_vocab_get_text(dv,i))==0&&llama_vocab_is_eog(tv,i)==llama_vocab_is_eog(dv,i),\"vocab mismatch\");}\n#if PHASE_CANDIDATE\n        phase_lowering=job.at(\"lowering\");phase_draft_width=job.value(\"draft_width\",1);need(phase_draft_width==1||phase_draft_width==4,\"draft width\");\n        auto spec=ArmSpec{\"phase\",\"QB\",0,32,m2_k,true,job.value(\"draft\",false)};\n#else\n        auto spec=arm_spec(\"R\");\n#endif\n        start=Clock::now();provision(pool,t,d,spec,root/\"pool\");\n        // Match resident model/context occupancy for M and speculative controls.\n        if(d && !pool.draft)pool.draft=std::make_unique<Context>(d,1,false,false,false,root/\"pool/draft\",0);\n        result[\"pool_setup_s\"]=since(start);result[\"vocab\"]=llama_vocab_n_tokens(tv);result[\"eog_ids\"]=json::array();for(int i=0;i<llama_vocab_n_tokens(tv);++i)if(llama_vocab_is_eog(tv,i))result[\"eog_ids\"].push_back(i);\n        result[\"model_structure\"]={{\"layers\",t->hparams.n_layer()},{\"query_heads\",t->hparams.n_head()},{\"kv_heads\",t->hparams.n_head_kv()},{\"head_k\",t->hparams.n_embd_head_k()},{\"head_v\",t->hparams.n_embd_head_v()},{\"K_elements\",t->hparams.n_embd_k_gqa()},{\"V_elements\",t->hparams.n_embd_v_gqa()}};\n        m1_capability(job,pool,t,d,spec,root,result);\n        phase1_profiling=job.value(\"profile\",false);if(phase1_profiling){profile::init();if(!job.contains(\"append_probes\"))profile::begin();}\n        if(job.contains(\"proposal_tape_requests\")){m2_tapes(job,result,root,pool,d);}\n        else if(job.contains(\"append_probes\")){phase1_append(job,result,root,pool);}\n",
+          "local_excerpt_relative_path": "excerpts/M2_native_entry-L33-L76.txt",
+          "evidence_id": "M2_native_entry:L33-L76"
+        },
+        {
+          "start_line": 77,
+          "end_line": 104,
+          "byte_count": 2915,
+          "sha256": "189743ff609664af02ae044b96fce445f660b46a422bbbc66dbbb65ff78e273b",
+          "utf8": "        else if(job.contains(\"forced\")||job.contains(\"cases\")){\n          const json cases=job.contains(\"cases\")?job.at(\"cases\"):json::array({job});result[\"cases\"]=json::array();\n          for(size_t index=0;index<cases.size();++index){\n            const auto& one=cases[index];const auto& f=one.at(\"forced\");auto*ctx=pool.target.get();auto case_root=job.contains(\"cases\")?root/one.at(\"name\").get<std::string>():root;ctx->reset(true,case_root/\"forced\");int position=0;hsc::begin(\"heavy\",int(f.at(0).at(\"ids\").size()));\n            const auto wanted=one.at(\"observe_positions\").get<std::vector<int>>(),states=one.at(\"state_positions\").get<std::vector<int>>();\n            auto observe=[&](int p,int row){if(std::find(wanted.begin(),wanted.end(),p)!=wanted.end())observe_state(*ctx,case_root/\"captures\"/std::to_string(p),row,std::find(states.begin(),states.end(),p)!=states.end());};\n            for(const auto& call:f){auto tokens=call.at(\"ids\").get<std::vector<int>>();std::string phase=call.value(\"phase\",std::string(\"VERIFY\"));bool all=call.value(\"all\",phase!=\"PREFILL\");\n#if PHASE_CANDIDATE\n                ctx->decode(tokens,position,all,phase.c_str());for(size_t j=0;j<tokens.size();++j)if(all||j+1==tokens.size())observe(position+int(j)+1,all?int(j):-1);\n#else\n                if(phase==\"PREFILL\"){ctx->decode(tokens,position,false,\"PREFILL\");observe(position+int(tokens.size()),-1);}\n                else for(size_t j=0;j<tokens.size();++j){ctx->decode({tokens[j]},position+int(j),false,phase.c_str());observe(position+int(j)+1,-1);}\n#endif\n                position+=int(tokens.size());result[\"token_rows\"]=result[\"token_rows\"].get<int>()+int(tokens.size());\n            }\n            json record={{\"index\",index},{\"rows\",position},{\"graphs_reused\",hsc::w.graphs_reused},{\"geometry\",json::array()}};for(auto& x:ctx->obs.signatures)record[\"geometry\"].push_back(x.second);\n#if PHASE_CANDIDATE\n            record[\"executions\"]=ctx->plan.executions;record[\"planning_s\"]=ctx->plan.planning_s;record[\"output_copy_s\"]=ctx->plan.output_copy_s;\n            if(!job.contains(\"cases\"))result[\"executions\"]=ctx->plan.executions;\n#endif\n            result[\"cases\"].push_back(record);result[\"trajectories\"]=result[\"trajectories\"].get<int>()+1;dump(root/\"result.json\",result);\n          }\n        }else{\n            for(const auto& entry:job.at(\"inputs\")){\n                std::string name=entry.at(\"name\");bool capture=entry.value(\"capture\",false);auto input=entry.at(\"input\");auto dir=root/name;fs::create_directories(dir);\n                const auto exports=phase_exports,imports=phase_imports,contexts=phase_contexts,heavy_before=phase_heavy_captures;\n                auto r=request(t,d,input,spec,\"resident\",capture,\"NATIVE\",dir,pool);\n                r[\"observed_API_calls_within_service\"]={{\"state_exports\",phase_exports-exports},{\"state_imports\",phase_imports-imports},{\"context_creates\",phase_contexts-contexts}};\n",
+          "local_excerpt_relative_path": "excerpts/M2_native_entry-L77-L104.txt",
+          "evidence_id": "M2_native_entry:L77-L104"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "B2_native_equal_work_entry",
+      "cached_path": "${HS_ROOT}/pr210-stage-b-build-02/frontend/entry.cpp",
+      "relative_cached_path": "pr210-stage-b-build-02/frontend/entry.cpp",
+      "full_file_sha256": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+      "full_file_bytes": 9387,
+      "full_file_lines": 110,
+      "status": "BUILD-bound q4pair/q8 snapshot restoration; NOT multi-turn service",
+      "fragments": [
+        {
+          "start_line": 1,
+          "end_line": 24,
+          "byte_count": 1312,
+          "sha256": "c2e33698f1b9850f2581e80ccff9ab2de3c7b07229c88887bc06ff107f4bb66e",
+          "utf8": "#include \"llama.h\"\n#include <cstdint>\nstatic uint64_t phase_exports=0,phase_imports=0,phase_contexts=0,phase_heavy_captures=0;\nstatic size_t counted_get(llama_context*c,uint8_t*d,size_t n,llama_seq_id s){++phase_exports;return llama_state_seq_get_data(c,d,n,s);}\nstatic size_t counted_set(llama_context*c,const uint8_t*d,size_t n,llama_seq_id s){++phase_imports;return llama_state_seq_set_data(c,d,n,s);}\nstatic llama_context* counted_context(llama_model*m,llama_context_params p){++phase_contexts;return llama_init_from_model(m,p);}\n#define llama_state_seq_get_data counted_get\n#define llama_state_seq_set_data counted_set\n#define llama_init_from_model counted_context\n#define main historical_entry\n#include \"worker.cpp\"\n#undef main\n#define FRONTIER_PROFILE\n#include \"linux_profile_disabled.hpp\"\nstatic bool phase1_profiling=false;\n#include \"llama-model.h\"\n\n#include \"m1_capability.hpp\"\nstatic json module_inventory(){ return json(linux_transfer::modules()); }\nstatic void observe_state(Context& c,const fs::path& dir,int row,bool state=true){\n    ++phase_heavy_captures;\n#if PHASE_CANDIDATE\n    llama_synchronize(c.c);const int n=llama_vocab_n_tokens(llama_model_get_vocab(c.model));auto*p=c.plan.logits(row);\n    fs::create_directories(dir);tpds_decisive::capture_write_new(dir/\"frontier.f32\",p,size_t(n)*4);\n",
+          "local_excerpt_relative_path": "excerpts/B2_native_equal_work_entry-L1-L24.txt",
+          "evidence_id": "B2_native_equal_work_entry:L1-L24"
+        },
+        {
+          "start_line": 57,
+          "end_line": 104,
+          "byte_count": 4726,
+          "sha256": "ff1f33b310b01ac4fd9966caabf3109103e37261aefd377159daf4ad3b6c7f96",
+          "utf8": "          {\"context\",m1_context(ctx)},{\"placement\",m1_placement(t)},{\"projection\",M1_PROJECTION},\n          {\"setup_s\",since(began)},{\"vocab\",nv},{\"draft_calls\",0},{\"requests\",json::array()}};\n        for(const auto& x:job.at(\"diagnostics\")) {\n            need(!fs::exists(job.at(\"pause_file\").get<std::string>()),\"new work detected; no next logical request\");\n            const std::string name=x.at(\"name\");need(name.find('/')==std::string::npos&&name.find(\"..\") ==std::string::npos,\"safe diagnostic name\");\n            const auto dir=root/name;fs::create_directories(dir);\n            const int base=x.at(\"position\");const auto ids=x.at(\"ids\").get<std::vector<int>>();\n            const std::string path=x.at(\"execution\");const bool heavy=x.at(\"capture\");\n            need((base==248||base==252)&&ids.size()==8&&(path==\"q4pair\"||path==\"q8\"),\"registered equal work\");\n            for(int id:ids)need(id>=0&&id<nv,\"token bounds\");\n            auto at=Clock::now();auto bytes=ew_bytes(x.at(\"state_path\").get<std::string>());\n            auto front=ew_bytes(x.at(\"frontier_path\").get<std::string>());const double disk=since(at);\n            need(hash_file(x.at(\"state_path\").get<std::string>())==x.at(\"state_sha256\")&&hash_file(x.at(\"frontier_path\").get<std::string>())==x.at(\"frontier_sha256\"),\"bound initial operands\");\n            need(front.size()==size_t(nv)*4,\"initial full frontier\");\n            ctx.reset(heavy,dir/\"context\");at=Clock::now();\n            need(llama_state_seq_set_data(ctx.c,bytes.data(),bytes.size(),0)==bytes.size(),\"snapshot import\");\n            llama_synchronize(ctx.c);ctx.plan.outputs.resize(1);ctx.plan.outputs[0].resize(nv);\n            std::memcpy(ctx.plan.outputs[0].data(),front.data(),front.size());\n            const double restore=since(at);need(ctx.bounds()==json({{\"min\",0},{\"max\",base-1}}),\"restored frontier bounds\");\n            if(heavy)observe_state(ctx,dir/\"initial\",0);\n            const auto imports=phase_imports,exports=phase_exports,captures=phase_heavy_captures;\n            hsc::begin(heavy?\"heavy\":\"counts\",8);\n            const auto start=Clock::now();\n            // Exactly eight owned vectors on both paths; moves retain the first\n            // q4 outputs across the second decode without an extra payload copy.\n            std::vector<std::vector<float>> owned(8);\n            for(int off=0;off<8;) {\n                const int width=path==\"q8\"?8:4;\n                std::vector<int> call(ids.begin()+off,ids.begin()+off+width);\n                ctx.decode(call,base+off,true,\"VERIFY\");\n                need(ctx.plan.outputs.size()==size_t(width),\"complete requested row array\");\n                for(int row=0;row<width;++row){need(ctx.plan.outputs[row].size()==size_t(nv),\"full requested vector\");owned[off+row]=std::move(ctx.plan.outputs[row]);}\n                off+=width;\n            }\n            llama_synchronize(ctx.c);const double seconds=since(start);hsc::w.active=false;\n            json r={{\"name\",name},{\"position\",base},{\"ids\",ids},{\"execution\",path},{\"capture\",heavy},\n              {\"operation_s\",seconds},{\"snapshot_disk_read_s\",disk},{\"restore_and_frontier_copy_s\",restore},\n              {\"executions\",ctx.plan.executions},{\"planning_s\",ctx.plan.planning_s},{\"output_copy_s\",ctx.plan.output_copy_s},\n              {\"phase_seconds\",ctx.phases},{\"final_bounds\",ctx.bounds()},{\"output_vectors\",8},{\"output_floats\",8*nv},\n              {\"graph_built\",hsc::w.graphs_built},{\"graph_reused\",hsc::w.graphs_reused},\n              {\"online_state_imports\",phase_imports-imports},{\"online_state_exports\",phase_exports-exports},\n              {\"online_heavy_captures\",phase_heavy_captures-captures},{\"physical_width_histogram\",json::object()},\n              {\"output_sha256\",json::array()},{\"geometry\",json::array()}};\n            need(ctx.bounds()==json({{\"min\",0},{\"max\",base+7}}),\"final active frontier\");\n            for(size_t i=0;i<hsc::w.target_physical.size();++i)if(hsc::w.target_physical[i])r[\"physical_width_histogram\"][std::to_string(i)]=hsc::w.target_physical[i];\n            for(int i=0;i<8;++i){for(float v:owned[i])need(std::isfinite(v),\"nonfinite output\");Sha256 h;h.update(reinterpret_cast<const char*>(owned[i].data()),size_t(nv)*4);r[\"output_sha256\"].push_back(h.finish());if(heavy)tpds_decisive::capture_write_new(dir/(\"row-\"+std::to_string(i)+\".f32\"),owned[i].data(),size_t(nv)*4);}\n            for(auto& kv:ctx.obs.signatures)r[\"geometry\"].push_back(kv.second);\n            if(heavy){const auto size=llama_state_seq_get_size(ctx.c,0);std::vector<uint8_t> state(size);need(llama_state_seq_get_data(ctx.c,state.data(),size,0)==size,\"final state export\");tpds_decisive::capture_write_new(dir/\"final-sequence.bin\",state.data(),state.size());}\n",
+          "local_excerpt_relative_path": "excerpts/B2_native_equal_work_entry-L57-L104.txt",
+          "evidence_id": "B2_native_equal_work_entry:L57-L104"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "pinned_upstream_server_token_LCP_cache_and_pending",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/server/server-context.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/server/server-context.cpp",
+      "full_file_sha256": "c347b2403b0f7e314960b9170f39e27fe67049420fe9ae272852d98028955ce7",
+      "full_file_bytes": 225283,
+      "full_file_lines": 5542,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; NOT built or deployed or qualified as N server",
+      "fragments": [
+        {
+          "start_line": 504,
+          "end_line": 541,
+          "byte_count": 1607,
+          "sha256": "ff63208d4c00cda4d748d585bca68acbc6a234a17cce8645e6d84647326e5bae",
+          "utf8": "    // add sampled token of this slot to the batch, optionally add the speculative draft tokens if any\n    void handle_last_sampled_token(server_batch & batch) {\n        bool add_ok = true;\n        if (spec_draft.empty()) {\n            // no speculative decoding\n            i_batch = batch.size();\n\n            if (!inp_embd.empty()) {\n                add_ok &= batch.add(id, inp_embd, prompt.tokens.pos_next(), true, false);\n            } else {\n                add_ok &= batch.add(id, sampled, prompt.tokens.pos_next(), true, false);\n            }\n\n            SLT_DBG(*this, \"slot decode token, id=%d, n_ctx = %d, n_tokens = %d, truncated = %d\\n\",\n                    sampled, n_ctx, prompt.n_tokens(), truncated);\n        } else {\n            SLT_DBG(*this, \"generate_draft: id=%d, #tokens=%zu, #draft=%zu, pos_next=%d\\n\",\n                    sampled, prompt.tokens.size(), spec_draft.size(), prompt.tokens.pos_next());\n\n            GGML_ASSERT(spec_i_batch.empty());\n\n            spec_i_batch.push_back(batch.size());\n            for (size_t i = 0; i < spec_draft.size(); i++) {\n                spec_i_batch.push_back(batch.size() + i + 1);\n            }\n\n            auto pos0 = prompt.tokens.pos_next();\n\n            add_ok &= batch.add(id, sampled, pos0++, true, false);\n            for (auto token : spec_draft) {\n                add_ok &= batch.add(this->id, token, pos0++, true, false);\n            }\n        }\n\n        GGML_ASSERT(add_ok && \"batch must be large enough to hold the sampled and draft tokens\");\n\n        prompt.tokens.push_back(sampled);\n        prompt.tokens.insert(spec_draft);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L504-L541.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L504-L541",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L504-L541"
+        },
+        {
+          "start_line": 1833,
+          "end_line": 1842,
+          "byte_count": 460,
+          "sha256": "9c7896819ceae9d60f0d9f8510a99cd9d67286b01d0336f8d776f9a49ce14a64",
+          "utf8": "    bool process_token(completion_token_output & result, server_slot & slot) {\n        // remember which tokens were sampled - used for repetition penalties during sampling\n        const std::string token_str = result.text_to_send;\n        slot.sampled = result.tok;\n\n        slot.generated_text += token_str;\n        if (slot.task->params.return_tokens) {\n            slot.generated_tokens.push_back(result.tok);\n        }\n        slot.has_next_token = true;\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L1833-L1842.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L1833-L1842",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L1833-L1842"
+        },
+        {
+          "start_line": 1952,
+          "end_line": 1962,
+          "byte_count": 417,
+          "sha256": "51e648fdad63042182663fe013fdc3c42e346c44384d82057def97107cdec05b",
+          "utf8": "        if (llama_vocab_is_eog(vocab, result.tok)) {\n            slot.stop           = STOP_TYPE_EOS;\n            slot.has_next_token = false;\n\n            SLT_DBG(slot, \"%s\", \"stopped by EOS\\n\");\n        }\n\n        SLT_DBG(slot, \"n_gen = %d, n_remaining = %d, next token: %5d '%s'\\n\", (int) slot.stats.n_gen, slot.n_remaining(), result.tok, token_str.c_str());\n\n        return slot.has_next_token; // continue\n    }\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L1952-L1962.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L1952-L1962",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L1952-L1962"
+        },
+        {
+          "start_line": 3190,
+          "end_line": 3208,
+          "byte_count": 1361,
+          "sha256": "8f318b454673b540b9743659b9413dc7badcd7e584b7ec18cc10c230c660e15e",
+          "utf8": "                        } else {\n                            if (slot.task->n_tokens() >= slot.n_ctx) {\n                                send_error(slot,\n                                           string_format(\"request (%d tokens) exceeds the available context size (%d \"\n                                                         \"tokens), try increasing it\",\n                                                         slot.task->n_tokens(), slot.n_ctx),\n                                           ERROR_TYPE_EXCEED_CONTEXT_SIZE);\n                                slot.release();\n                                return;\n                            }\n\n                            if (slot.task->params.cache_prompt) {\n                                // reuse any previously computed tokens that are common with the new prompt\n                                n_past = slot.prompt.tokens.get_common_prefix(input_tokens);\n\n                                // if there is an alora invoked, don't cache after the invocation start\n                                if (slot.alora_invocation_start > 0) {\n                                    SLT_DBG(slot, \"only caching to alora invocation start (n_past = %d, alora_invocation_start = %d)\\n\", n_past, slot.alora_invocation_start);\n                                    n_past = std::min(n_past, slot.alora_invocation_start - 1);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3190-L3208.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3190-L3208",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3190-L3208"
+        },
+        {
+          "start_line": 3271,
+          "end_line": 3275,
+          "byte_count": 264,
+          "sha256": "2e5bafb9f9cae88d829ba08ea401d2986bdbe3c000de99f64d5f3d0cf877d78f",
+          "utf8": "                                // if we don't cache the prompt, we have to remove all previous tokens\n                                n_past = 0;\n                            }\n\n                            llama_pos pos_next = slot.prompt.tokens.pos_next(n_past);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3271-L3275.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3271-L3275",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3271-L3275"
+        },
+        {
+          "start_line": 3386,
+          "end_line": 3398,
+          "byte_count": 683,
+          "sha256": "920f9734ccae69a784267168e97d810babd93a889f8f41945dc3f640534ff8be",
+          "utf8": "                        // [TAG_PROMPT_LOGITS]\n                        if (n_past == slot.task->n_tokens() && n_past > 0) {\n                            SLT_WRN(slot, \"need to evaluate at least 1 token for each active slot (n_past = %d, task.n_tokens() = %d)\\n\", n_past, slot.task->n_tokens());\n                            n_past--;\n                            SLT_WRN(slot, \"n_past was set to %d\\n\", n_past);\n                        }\n\n                        slot.stats.n_prompt_cached    = n_past;\n                        slot.stats.n_prompt_processed = 0;\n\n                        metrics.add_prompt_cached(n_past);\n\n                        slot.prompt.tokens.keep_first(n_past);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3386-L3398.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3386-L3398",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3386-L3398"
+        },
+        {
+          "start_line": 3423,
+          "end_line": 3428,
+          "byte_count": 322,
+          "sha256": "b0e028062119bc2f5a21feb699f42803de5382b693997073bcdd0101893cd660",
+          "utf8": "                    // truncate any tokens that are beyond n_past for this slot\n                    const llama_pos p0 = slot.prompt.tokens.pos_next();\n\n                    SLT_TRC(slot, \"cached n_tokens = %d, memory_seq_rm [%d, end)\\n\", slot.prompt.n_tokens(), p0);\n\n                    slot.mem.seq_rm(slot.id, p0, -1);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3423-L3428.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3423-L3428",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3423-L3428"
+        },
+        {
+          "start_line": 3858,
+          "end_line": 3875,
+          "byte_count": 793,
+          "sha256": "e05eaafa68f39816e2470e008b562095f981e17faf4ef941cb17d16dde9f2ebc",
+          "utf8": "            slot.stats.update_gen_last();\n\n            completion_token_output result;\n            result.tok          = id;\n            result.text_to_send = common_token_to_piece(slot.ctx_tgt, result.tok, accept_special_token(slot, result.tok));\n            result.prob         = 1.0f; // TODO: set it here instead of doing inside populate_token_probs\n\n            if (slot.task->params.sampling.n_probs > 0) {\n                populate_token_probs(slot, result, slot.task->params.post_sampling_probs, params_base.special, tok_idx);\n            }\n\n            if (!process_token(result, slot)) {\n                // release slot because of stop condition\n                slot.print_timings();\n                send_final_response(slot);\n                slot.release();\n\n                return;\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3858-L3875.txt",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3858-L3875",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3858-L3875"
+        },
+        {
+          "start_line": 334,
+          "end_line": 407,
+          "byte_count": 2052,
+          "sha256": "6d485b39952d2f1c748e01ab1141deeb453222f8d1f96b5317b2048c80be4528",
+          "utf8": "    void prompt_clear() {\n        SLT_TRC(*this, \"clearing prompt with %zu tokens\\n\", prompt.tokens.size());\n\n        mem.seq_rm(id, -1, -1);\n\n        prompt.clear();\n    }\n\n    std::vector<common_adapter_lora_info> lora;\n    int32_t alora_invocation_start = -1;\n\n    // sampling\n    json json_schema;\n\n    common_sampler_ptr smpl;\n\n    llama_token sampled; // in speculative mode, this is the last accepted token\n\n    // for TTS models, this is the embd generated from prev step, decode this to generate next hidden state\n    // corresponding to one token position (size = n_embd)\n    std::vector<float> inp_embd;\n\n    server_slot_stats stats;\n\n    // accepted tokens per draft position\n    // not in server_slot_stats to avoid copying to every task result\n    std::vector<uint64_t> n_accepted_per_pos;\n\n    std::function<void(int /* id_slot */)>   callback_on_release;\n    std::function<void(const server_slot &)> callback_on_reset; // called before reset()\n\n    // this is for printing timings with slot progress, not part of metrics\n    int64_t t_print_last = 0;\n    int32_t n_gen_last = 0;\n\n    void reset() {\n        SLT_DBG(*this, \"%s\", \"\\n\");\n\n        spec_is_replay = false;\n\n        last_nl_pos    = 0;\n        generated_text = \"\";\n        has_new_line   = false;\n        truncated      = false;\n        stop           = STOP_TYPE_NONE;\n        stopping_word  = \"\";\n        n_sent_text    = 0;\n\n        if (can_speculate()) {\n            spec_draft.clear();\n            spec_i_batch.clear();\n            spec_ckpt.clear();\n        }\n        generated_tokens.clear();\n        generated_token_probs.clear();\n        json_schema = json();\n\n        task_prev = std::move(task);\n        task.reset();\n\n        // note: callback_on_reset() must have run before this, see release()\n        stats = {};\n        n_accepted_per_pos.clear();\n\n        n_predict_max = -1;\n\n        llama_set_sampler(ctx_tgt, id, nullptr);\n\n        // clear alora start\n        alora_invocation_start = -1;\n\n        // clear multimodal state\n        mbatch.reset();\n    }\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L334-L407",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L334-L407.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L334-L407"
+        },
+        {
+          "start_line": 544,
+          "end_line": 565,
+          "byte_count": 560,
+          "sha256": "fcc46832e691ef10122d22ef4f1a789fe6d81ce1b84a5a90f7a6f9c407f08c0c",
+          "utf8": "    void release() {\n        if (is_processing()) {\n            GGML_ASSERT(task);\n\n            SLT_INF(*this, \"stop processing: n_tokens = %d, truncated = %d\\n\", prompt.n_tokens(), truncated);\n\n            t_last_used = ggml_time_us();\n\n            state = SLOT_STATE_IDLE;\n\n            // do not keep context of the child slots - the parent's context is enough\n            if (task->is_child()) {\n                prompt_clear();\n            }\n\n            callback_on_reset(*this);\n\n            reset();\n\n            callback_on_release(id);\n        }\n    }\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L544-L565",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L544-L565.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L544-L565"
+        },
+        {
+          "start_line": 1600,
+          "end_line": 1655,
+          "byte_count": 1913,
+          "sha256": "ed4831d1a75e79de295ce1053b622756fc0a8e24e88c9a0b2ec6814192ad9414",
+          "utf8": "                if (task.id_slot == -1) {\n                    SLT_INF(*ret, \"selected slot by LCP similarity, f_sim_best = %.3f (> %.3f thold), f_keep = %.3f\\n\",\n                            f_sim_best, slot_prompt_similarity, f_keep);\n                }\n\n                // if we are about to lose a large portion of the existing context - save it in the prompt cache\n                if (f_keep < 0.5f) {\n                    update_cache = true;\n                }\n            }\n        }\n\n        // find the slot that has been least recently used\n        if (ret == nullptr) {\n            int64_t t_last = -1;\n\n            for (server_slot & slot : slots) {\n                // skip the slot if it is not available\n                if (slot.is_processing()) {\n                    continue;\n                }\n\n                // select the current slot if the criteria match\n                if (!ret || slot.t_last_used <= t_last) {\n                    t_last = slot.t_last_used;\n                    ret = &slot;\n                }\n            }\n\n            if (ret != nullptr) {\n                SLT_INF(*ret, \"selected slot by LRU, t_last = %\" PRId64 \"\\n\", t_last);\n\n                update_cache = true;\n            }\n        }\n\n        if (ret) {\n            update_cache = update_cache && prompt_cache;\n\n            // cache prompts only for completion tasks\n            update_cache = update_cache && task.type == SERVER_TASK_TYPE_COMPLETION;\n\n            if (update_cache) {\n                SRV_TRC(\"%s\", \"updating prompt cache\\n\");\n\n                const int64_t t_start = ggml_time_us();\n\n                ret->prompt_save(*prompt_cache);\n\n                if (!ret->prompt_load(*prompt_cache, task.tokens)) {\n                    ret->prompt_clear();\n                }\n\n                prompt_cache->update();\n\n                SRV_TRC(\"prompt cache update took %.2f ms\\n\", (ggml_time_us() - t_start) / 1000.0);\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L1600-L1655",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L1600-L1655.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L1600-L1655"
+        },
+        {
+          "start_line": 1667,
+          "end_line": 1689,
+          "byte_count": 553,
+          "sha256": "95e7a8e156127013de47bf04afad109020a85513ffe675eeb3b864c82b84daec",
+          "utf8": "    bool try_clear_idle_slots() {\n        bool res = false;\n\n        if (!params_base.kv_unified) {\n            return res;\n        }\n\n        for (auto & slot : slots) {\n            if (slot.is_processing()) {\n                continue;\n            }\n\n            if (slot.prompt.n_tokens() > 0) {\n                SRV_WRN(\"purging slot %d with %zu tokens\\n\", slot.id, slot.prompt.tokens.size());\n\n                slot.prompt_clear();\n\n                res = true;\n\n                // clear slots one by one\n                break;\n            }\n        }\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L1667-L1689",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L1667-L1689.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L1667-L1689"
+        },
+        {
+          "start_line": 1873,
+          "end_line": 1901,
+          "byte_count": 1162,
+          "sha256": "29aac1ca63bb744445fffb33b101626ef19c6a2478b45bb332b9e8222b6924ae",
+          "utf8": "            }\n\n            slot.add_token(result);\n            if (slot.task->params.stream) {\n                send_partial_response(slot, result, false);\n            }\n        }\n\n        if (incomplete) {\n            slot.has_next_token = true;\n        }\n\n        // if context shifting is disabled, make sure that we don't run out of context\n        if (!params_base.ctx_shift && slot.prompt.n_tokens() + 1 >= slot.n_ctx) {\n            slot.truncated      = true;\n            slot.stop           = STOP_TYPE_LIMIT;\n            slot.has_next_token = false;\n\n            SLT_DBG(slot, \"stopped due to running out of context capacity, prompt.n_tokens() = %d, task.n_tokens = %d, n_gen = %d, n_ctx = %d\\n\",\n                    slot.prompt.n_tokens(), slot.task->n_tokens(), (int) slot.stats.n_gen, slot.n_ctx);\n        }\n\n        // check the limits\n        if (slot.stats.n_gen > 0 && slot.has_next_token && !slot.has_budget()) {\n            slot.stop           = STOP_TYPE_LIMIT;\n            slot.has_next_token = false;\n\n            SLT_DBG(slot, \"stopped by limit, n_gen = %d, n_predict = %d\\n\", (int) slot.stats.n_gen, slot.task->params.n_predict);\n        }\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L1873-L1901",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L1873-L1901.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L1873-L1901"
+        },
+        {
+          "start_line": 2893,
+          "end_line": 2954,
+          "byte_count": 2905,
+          "sha256": "d38e70c047e8d01149844d19321b8b1420c436cb4b426f6bbbb0eb2cc924f41f",
+          "utf8": "    void pre_decode() {\n        // apply context-shift if needed\n        // TODO: simplify and improve\n        iterate(slots, [&](server_slot & slot) {\n            if (slot.state == SLOT_STATE_GENERATING && slot.prompt.n_tokens() + 1 >= slot.n_ctx) {\n                if (!params_base.ctx_shift) {\n                    // this check is redundant (for good)\n                    // we should never get here, because generation should already stopped in process_token()\n                    send_error(slot, \"context shift is disabled\", ERROR_TYPE_SERVER);\n                    slot.release();\n                    return;\n                }\n\n                if (mctx) {\n                    // we should never reach this because params_base.ctx_shift is automatically disabled if mmproj is loaded\n                    // we don't support ctx_shift because an image chunk may contains multiple tokens\n                    GGML_ABORT(\"not supported by multimodal\");\n                }\n\n                if (slot.task->is_parent() || slot.task->is_child()) {\n                    send_error(slot, \"context shift cannot be used for shared prompt\", ERROR_TYPE_SERVER);\n                    slot.release();\n                    return;\n                }\n\n                // Shift context\n                int n_keep = slot.task->params.n_keep < 0 ? slot.task->n_tokens() : slot.task->params.n_keep;\n\n                if (add_bos_token) {\n                    n_keep += 1;\n                }\n\n                n_keep = std::min(slot.n_ctx - 4, n_keep);\n\n                const int n_left    = slot.prompt.n_tokens() - n_keep;\n                int       n_discard = slot.task->params.n_discard ? slot.task->params.n_discard : (n_left / 2);\n\n                // ref: https://github.com/ggml-org/llama.cpp/pull/24786\n                n_discard = std::clamp(n_discard, 0, std::max(0, n_left - 1));\n\n                SLT_WRN(slot, \"slot context shift, n_keep = %d, n_left = %d, n_discard = %d\\n\", n_keep, n_left, n_discard);\n\n                slot.mem.seq_rm (slot.id, n_keep            , n_keep + n_discard);\n                slot.mem.seq_add(slot.id, n_keep + n_discard, slot.prompt.tokens.pos_next(), -n_discard);\n\n                // add generated tokens to cache\n                // ref: https://github.com/ggml-org/llama.cpp/pull/16818#discussion_r2473269481\n                {\n                    GGML_ASSERT(!slot.prompt.tokens.has_mtmd);\n\n                    llama_tokens new_tokens = slot.prompt.tokens.get_tokens(); // copy\n                    for (size_t i = n_keep + n_discard; i < new_tokens.size(); i++) {\n                        new_tokens[i - n_discard] = new_tokens[i];\n                    }\n\n                    new_tokens.resize(slot.prompt.tokens.size() - n_discard);\n\n                    slot.prompt.clear();\n                    slot.prompt.tokens.insert(new_tokens);\n                }\n\n                slot.truncated = true;\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L2893-L2954",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L2893-L2954.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L2893-L2954"
+        },
+        {
+          "start_line": 3108,
+          "end_line": 3132,
+          "byte_count": 1227,
+          "sha256": "9b70dfbc38524a6e2622b1e5f84a4815980e9d99be77e35b1542578e5ecce0b6",
+          "utf8": "                if (slot_batched && !slot_batched->can_batch_with(slot)) {\n                    return;\n                }\n\n                // check if this is a child slot\n                if (slot.state == SLOT_STATE_WAIT_OTHER) {\n                    SLT_DBG(slot, \"%s\", \"waiting for parent slot to complete\\n\");\n                    return;\n                }\n\n                // this slot still has a prompt to be processed\n                if (slot.state == SLOT_STATE_PROCESSING_PROMPT || slot.state == SLOT_STATE_STARTED) {\n                    const auto & input_tokens = slot.task->tokens;\n\n                    // used to determine the number of tokens added to the batch for the current slot\n                    const auto n_tokens_prev = batch.size();\n\n                    // TODO: maybe move branch to outside of this loop in the future\n                    if (slot.state == SLOT_STATE_STARTED) {\n                        slot.stats.update_prompt_start();\n\n                        slot.state = SLOT_STATE_PROCESSING_PROMPT;\n\n                        SLT_TRC(slot, \"new prompt, n_ctx_slot = %d, n_keep = %d, task.n_tokens = %d\\n\",\n                                slot.n_ctx, slot.task->params.n_keep, slot.task->n_tokens());\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3108-L3132",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3108-L3132.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3108-L3132"
+        },
+        {
+          "start_line": 3209,
+          "end_line": 3275,
+          "byte_count": 3969,
+          "sha256": "f55591295471701d8ed817ff8cdc78920c47cd49b79c915ce2e3e2925511385b",
+          "utf8": "                                }\n\n                                const auto n_cache_reuse = slot.task->params.n_cache_reuse;\n\n                                const bool can_cache_reuse =\n                                    llama_memory_can_shift(llama_get_memory(ctx_tgt)) &&\n                                    !slot.prompt.tokens.has_mtmd;\n\n                                if (!can_cache_reuse && n_cache_reuse > 0) {\n                                    SLT_WRN(slot, \"cache reuse is not supported - ignoring n_cache_reuse = %d\\n\", n_cache_reuse);\n                                }\n\n                                // reuse chunks from the cached prompt by shifting their KV cache in the new position\n                                if (can_cache_reuse && n_cache_reuse > 0) {\n                                    GGML_ASSERT(!slot.prompt.tokens.has_mtmd);\n\n                                    size_t head_c = n_past; // cache\n                                    size_t head_p = n_past; // current prompt\n\n                                    if (mctx) {\n                                        // we should never reach this\n                                        GGML_ABORT(\"not supported by multimodal\");\n                                    }\n\n                                    SLT_DBG(slot, \"trying to reuse chunks with size > %d, n_past = %d\\n\", n_cache_reuse, n_past);\n\n                                    while (head_c < slot.prompt.tokens.size() &&\n                                           head_p < input_tokens.size()) {\n\n                                        size_t n_match = 0;\n                                        while (head_c + n_match < slot.prompt.tokens.size() &&\n                                               head_p + n_match < input_tokens.size()       &&\n                                               slot.prompt.tokens[head_c + n_match] == input_tokens[head_p + n_match]) {\n                                            n_match++;\n                                        }\n\n                                        if (n_match >= (size_t) n_cache_reuse) {\n                                            SLT_TRC(slot, \"reusing chunk with size %zu, shifting KV cache [%zu, %zu) -> [%zu, %zu)\\n\", n_match, head_c, head_c + n_match, head_p, head_p + n_match);\n                                            //for (size_t i = head_p; i < head_p + n_match; i++) {\n                                            //    SLT_DBG(slot, \"cache token %3zu: %6d '%s'\\n\", i, prompt_tokens[i], common_token_to_piece(ctx_tgt, prompt_tokens[i]).c_str());\n                                            //}\n\n                                            const int64_t kv_shift = (int64_t) head_p - (int64_t) head_c;\n\n                                            slot.mem.seq_rm (slot.id, head_p, head_c);\n                                            slot.mem.seq_add(slot.id, head_c, head_c + n_match, kv_shift);\n\n                                            for (size_t i = 0; i < n_match; i++) {\n                                                slot.prompt.tokens.set_token(head_p + i, slot.prompt.tokens[head_c + i]);\n                                                n_past++;\n                                            }\n\n                                            head_c += n_match;\n                                            head_p += n_match;\n                                        } else {\n                                            head_c += 1;\n                                        }\n                                    }\n\n                                    SLT_DBG(slot, \"after context reuse, new n_past = %d\\n\", n_past);\n                                }\n                            } else {\n                                // if we don't cache the prompt, we have to remove all previous tokens\n                                n_past = 0;\n                            }\n\n                            llama_pos pos_next = slot.prompt.tokens.pos_next(n_past);\n",
+          "evidence_id": "pinned_upstream_server_token_LCP_cache_and_pending:L3209-L3275",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_token_LCP_cache_and_pending-L3209-L3275.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp#L3209-L3275"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-context.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_CLI_message_history",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/cli/cli-context.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/cli/cli-context.cpp",
+      "full_file_sha256": "1d418665a19ab34ca7cce209a3ec63d36334e0cb5c09d0171296b9bd50647027",
+      "full_file_bytes": 22494,
+      "full_file_lines": 677,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; parsed JSON message history; NOT raw-token-history N producer",
+      "fragments": [
+        {
+          "start_line": 344,
+          "end_line": 357,
+          "byte_count": 435,
+          "sha256": "566d00d706af7341be97e6635d3ef860ce06602fe866d1dfb8774d98aaafa7a4",
+          "utf8": "    if (output_file) {\n        (*output_file) << content;\n        output_file->flush();\n    }\n}\n\nbool cli_context::generate_completion(generated_content & content_out, cli_timings & timings) {\n    json body = {\n        {\"messages\",          impl->messages},\n        {\"stream\",            true},\n        // in order to get timings even when we cancel mid-way\n        {\"timings_per_token\", true},\n    };\n    if (!client.model.empty()) {\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_CLI_message_history-L344-L357.txt",
+          "evidence_id": "pinned_upstream_CLI_message_history:L344-L357",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/cli/cli-context.cpp#L344-L357"
+        },
+        {
+          "start_line": 622,
+          "end_line": 633,
+          "byte_count": 413,
+          "sha256": "0cf0665e577980d988fdce232048e6ef5064bdfad89ce378d52bfe05541c95e6",
+          "utf8": "        cli_timings timings;\n        generated_content content;\n        generate_completion(content, timings);\n\n        json assistant_msg = {\n            {\"role\",    \"assistant\"},\n            {\"content\", content.content}\n        };\n        if (!content.reasoning.empty()) {\n            assistant_msg[\"reasoning_content\"] = content.reasoning;\n        }\n        impl->messages.push_back(std::move(assistant_msg));\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_CLI_message_history-L622-L633.txt",
+          "evidence_id": "pinned_upstream_CLI_message_history:L622-L633",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/cli/cli-context.cpp#L622-L633"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/cli/cli-context.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_chat_formatter",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/common/chat.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/common/chat.cpp",
+      "full_file_sha256": "abab0d03a111bd198693a518c7cdd07a33326a6a6685cc182a88d4fdae5f61dc",
+      "full_file_bytes": 174542,
+      "full_file_lines": 3915,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; text substring suffix is not token-prefix validation",
+      "fragments": [
+        {
+          "start_line": 653,
+          "end_line": 680,
+          "byte_count": 1386,
+          "sha256": "c3621974bba3466a44ea1fecbdbcdbc89e93e572609df213942065f9b7087110",
+          "utf8": "std::string common_chat_format_single(const struct common_chat_templates * tmpls,\n                                      const std::vector<common_chat_msg> & past_msg,\n                                      const common_chat_msg &              new_msg,\n                                      bool                                 add_ass,\n                                      bool                                 use_jinja) {\n    common_chat_templates_inputs inputs;\n    inputs.use_jinja = use_jinja;\n    inputs.add_bos   = tmpls->add_bos;\n    inputs.add_eos   = tmpls->add_eos;\n\n    std::string fmt_past_msg;\n    if (!past_msg.empty()) {\n        inputs.messages              = past_msg;\n        inputs.add_generation_prompt = false;\n        fmt_past_msg                 = common_chat_templates_apply(tmpls, inputs).prompt;\n    }\n    std::ostringstream ss;\n    // if the past_msg ends with a newline, we must preserve it in the formatted version\n    if (add_ass && !fmt_past_msg.empty() && fmt_past_msg.back() == '\\n') {\n        ss << \"\\n\";\n    };\n    // format chat with new_msg\n    inputs.messages.push_back(new_msg);\n    inputs.add_generation_prompt = add_ass;\n    auto fmt_new_msg             = common_chat_templates_apply(tmpls, inputs).prompt;\n    // get the diff part\n    ss << fmt_new_msg.substr(fmt_past_msg.size(), fmt_new_msg.size() - fmt_past_msg.size());\n    return ss.str();\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_chat_formatter-L653-L680.txt",
+          "evidence_id": "pinned_upstream_chat_formatter:L653-L680",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/chat.cpp#L653-L680"
+        },
+        {
+          "start_line": 3816,
+          "end_line": 3822,
+          "byte_count": 399,
+          "sha256": "63935873d07d692a18e7e11314b4ec28026a56bcbb27f412394c7736ca92f374",
+          "utf8": "common_chat_params common_chat_templates_apply(const struct common_chat_templates *        tmpls,\n                                               const struct common_chat_templates_inputs & inputs) {\n    GGML_ASSERT(tmpls != nullptr);\n    return inputs.use_jinja ? common_chat_templates_apply_jinja(tmpls, inputs) :\n                              common_chat_templates_apply_legacy(tmpls, inputs);\n}\n\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_chat_formatter-L3816-L3822.txt",
+          "evidence_id": "pinned_upstream_chat_formatter:L3816-L3822",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/chat.cpp#L3816-L3822"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/chat.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_llama_C_API",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/include/llama.h",
+      "relative_cached_path": "run-01/stage-03/sources/reference/include/llama.h",
+      "full_file_sha256": "3d1b18eda626c1b9ecf5bda0798e65b974a8f70f30d56726610633a980cb4160",
+      "full_file_bytes": 84829,
+      "full_file_lines": 1638,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; predefined C template API is not arbitrary Jinja parser",
+      "fragments": [
+        {
+          "start_line": 244,
+          "end_line": 260,
+          "byte_count": 1079,
+          "sha256": "b39d532af8379360e656f03c617d762519ba9d496923ced020e3a23416ae5232",
+          "utf8": "    typedef bool (*llama_progress_callback)(float progress, void * user_data);\n\n    // Input data for llama_encode/llama_decode\n    // A llama_batch object can contain input about one or many sequences\n    // The provided arrays (i.e. token, embd, pos, etc.) must have size of n_tokens\n    //\n    // - token  : the token ids of the input (used when embd is NULL)\n    // - embd   : token embeddings (i.e. float vector of size n_embd) (used when token is NULL)\n    // - pos    : the positions of the respective token in the sequence\n    //            (if set to NULL, the token position will be tracked automatically by llama_encode/llama_decode)\n    // - seq_id : the sequence to which the respective token belongs\n    //            (if set to NULL, the sequence ID will be assumed to be 0)\n    // - logits : if zero, the logits (and/or the embeddings) for the respective token will not be output\n    //            (if set to NULL:\n    //               - if embeddings: all tokens are output\n    //               - if not:        only the last token is output\n    //            )\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_llama_C_API-L244-L260.txt",
+          "evidence_id": "pinned_upstream_llama_C_API:L244-L260",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/include/llama.h#L244-L260"
+        },
+        {
+          "start_line": 974,
+          "end_line": 992,
+          "byte_count": 1153,
+          "sha256": "0acb089c487392bb345f7f2dc523c45bb5d57d8435cb3901080db980cc217314",
+          "utf8": "    LLAMA_API int32_t llama_encode(\n            struct llama_context * ctx,\n              struct llama_batch   batch);\n\n    // Process a batch of tokens.\n    // Requires the context to have a memory.\n    // For encode-decoder contexts, processes the batch using the decoder.\n    // Positive return values does not mean a fatal error, but rather a warning.\n    // Upon fatal-error or abort, the ubatches that managed to be been processed will remain in the memory state of the context\n    //   To handle this correctly, query the memory state using llama_memory_seq_pos_min() and llama_memory_seq_pos_max()\n    // Upon other return values, the memory state is restored to the state before this call\n    //    0 - success\n    //    1 - could not find a KV slot for the batch (try reducing the size of the batch or increase the context)\n    //    2 - aborted     (processed ubatches will remain in the context's memory)\n    //   -1 - invalid input batch\n    // < -1 - fatal error (processed ubatches will remain in the context's memory)\n    LLAMA_API int32_t llama_decode(\n            struct llama_context * ctx,\n              struct llama_batch   batch);\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_llama_C_API-L974-L992.txt",
+          "evidence_id": "pinned_upstream_llama_C_API:L974-L992",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/include/llama.h#L974-L992"
+        },
+        {
+          "start_line": 1207,
+          "end_line": 1225,
+          "byte_count": 1200,
+          "sha256": "bb346c26e418702b2e5b5bac6518c14356ae8d4b13fb90f593b405dab4b72c19",
+          "utf8": "                            bool   unparse_special);\n\n    //\n    // Chat templates\n    //\n\n    /// Apply chat template. Inspired by hf apply_chat_template() on python.\n    ///\n    /// NOTE: This function does not use a jinja parser. It only support a pre-defined list of template. See more: https://github.com/ggml-org/llama.cpp/wiki/Templates-supported-by-llama_chat_apply_template\n    /// @param tmpl A Jinja template to use for this chat.\n    /// @param chat Pointer to a list of multiple llama_chat_message\n    /// @param n_msg Number of llama_chat_message in this chat\n    /// @param add_ass Whether to end the prompt with the token(s) that indicate the start of an assistant message.\n    /// @param buf A buffer to hold the output formatted prompt. The recommended alloc size is 2 * (total number of characters of all messages)\n    /// @param length The size of the allocated buffer\n    /// @return The total number of bytes of the formatted prompt. If is it larger than the size of buffer, you may need to re-alloc it and then re-apply the template.\n    LLAMA_API int32_t llama_chat_apply_template(\n                            const char * tmpl,\n       const struct llama_chat_message * chat,\n",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_llama_C_API-L1207-L1225.txt",
+          "evidence_id": "pinned_upstream_llama_C_API:L1207-L1225",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/include/llama.h#L1207-L1225"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/include/llama.h",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "original_stage04_service_frontend",
+      "cached_path": "${HS_ROOT}/run-01/stage-04/frontend/worker.cpp",
+      "relative_cached_path": "run-01/stage-04/frontend/worker.cpp",
+      "full_file_sha256": "4a748ebd7d7aea489ff00e88b55f3584ae10cdabf244bd34f90040f34c18ec40",
+      "full_file_bytes": 25502,
+      "full_file_lines": 322,
+      "status": "SOURCE_AVAILABLE; original resident per-request reset, complete prompt decode; not N integration",
+      "fragments": [
+        {
+          "start_line": 124,
+          "end_line": 132,
+          "byte_count": 662,
+          "sha256": "54bfcd9c95795df6192ed596f7a097a545efbdb73d2fe583ef912e98ef2636a0",
+          "utf8": "    int sample(int row,const std::string&name){\n        auto*p=target?plan.logits(row):llama_get_logits_ith(c,row);need(p,\"logits missing\");int n=llama_vocab_n_tokens(llama_model_get_vocab(model));\n        int best=0;for(int i=0;i<n;i++){need(std::isfinite(p[i]),\"nonfinite logit\");if(p[i]>p[best])best=i;}\n        if(capture){++phase_heavy_captures;std::ofstream f(path/(name+\".f32\"),std::ios::binary);f.write((char*)p,size_t(n)*sizeof(float));need(bool(f),\"full logits write\");}\n        return best;\n    }\n    void trim(int keep){need(llama_memory_seq_rm(llama_get_memory(c),0,keep,-1),\"KV trim failed\");}\n\n    void snapshot(const std::string & key,int row) {\n",
+          "local_excerpt_relative_path": "excerpts/original_stage04_service_frontend-L124-L132.txt",
+          "evidence_id": "original_stage04_service_frontend:L124-L132"
+        },
+        {
+          "start_line": 145,
+          "end_line": 176,
+          "byte_count": 2569,
+          "sha256": "8ed03abf8572d3be90009f3925185e23848b81c0d72f3c27fb733c827cfc584c",
+          "utf8": "    const auto& arm=spec.name;int k=spec.k;\n    hs_scope::requested_layout=spec.selector;\n    auto start=Clock::now();hsc::begin(capture?\"heavy\":\"counts\",int(input[\"prompt_ids\"].size()));\n    json r={{\"arm\",arm},{\"k\",k},{\"lifecycle\",life},{\"cycles\",json::array()},{\"capture\",capture},\n        {\"draft_enabled\",spec.draft},{\"observed_scope\",spec.scope},{\"context_scope_fixed\",true},\n        {\"producer\",producer},{\"draft_producer\",\"NATIVE\"},{\"draft_ubatch\",draft_ubatch}};\n    Pair fresh;Context*target=nullptr,*draft=nullptr;\n    if(life==\"resident\"){\n        need(bool(resident.target),\"pool must be provisioned before requests\");\n        target=resident.target.get();\n        need(target->selector==spec.selector && target->scoped==spec.scoped && target->ub==spec.target_ub,\"context scope/config changed\");\n        target->reset(capture,dir/\"target\");\n        if(spec.draft){need(bool(resident.draft),\"draft pool missing\");draft=resident.draft.get();draft->reset(capture,dir/\"draft\");}\n    }else{\n        fresh.target=std::make_unique<Context>(t,spec.target_ub,true,spec.scoped,capture,dir/\"target\",spec.selector);target=fresh.target.get();\n        if(spec.draft){fresh.draft=std::make_unique<Context>(d,1,false,false,capture,dir/\"draft\",spec.selector,draft_ubatch);draft=fresh.draft.get();}\n    }\n    if(draft)need(int(llama_n_ubatch(draft->c))==draft_ubatch,\"actual draft width differs\");\n    double setup=since(start);\n    auto request_start=Clock::now();auto prompt=input[\"prompt_ids\"].get<std::vector<int>>();\n    if(producer==\"P1\"){for(size_t i=0;i<prompt.size();i++)target->decode({prompt[i]},int(i),false,\"PREFILL\");}\n    else target->decode(prompt,0,false,\"PREFILL\");\n    if(draft)draft->decode(prompt,0,false,\"PREFILL\");\n    int final_frontier=-1;int pending=target->sample(-1,\"initial\"),base=int(prompt.size()),cycle=0,cap=input[\"cap\"];\n    std::vector<int> ids;std::vector<bool> eog;const auto*v=llama_model_get_vocab(t);\n    auto commit=[&](int id){ids.push_back(id);eog.push_back(llama_vocab_is_eog(v,id));return bool(eog.back())||int(ids.size())==cap;};\n    if(capture)target->snapshot(\"initial\",-1);\n    bool done=commit(pending);\n    while(!done){\n        if(!draft){target->decode({pending},base++,false,\"ORDINARY\");pending=target->sample(-1,\"ordinary-\"+std::to_string(ids.size()));if(capture)target->snapshot(\"ordinary-\"+std::to_string(ids.size()),-1);done=commit(pending);continue;}\n        int seed=pending;auto target_before=target->bounds(),draft_before=draft->bounds();\n        draft->trim(base);draft->decode({seed},base,false,\"DRAFT_SYNC\");\n",
+          "local_excerpt_relative_path": "excerpts/original_stage04_service_frontend-L145-L176.txt",
+          "evidence_id": "original_stage04_service_frontend:L145-L176"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    },
+    {
+      "logical_role": "pinned_upstream_completion_incremental_producer",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/completion/completion.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/completion/completion.cpp",
+      "full_file_sha256": "290ae2ba7e3960fd6a7f7e066ba1d6726caec423188627a9740e1a47a4fd08db",
+      "full_file_bytes": 38512,
+      "full_file_lines": 956,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; general incremental retained-KV chat producer exists; NOT N deployed or qualified; matching nonthinking flags not established",
+      "fragments": [
+        {
+          "start_line": 235,
+          "end_line": 245,
+          "byte_count": 549,
+          "sha256": "f85349685865f5ba74b0f0be20fa2d907820723d2efa31ab2edb6596fe83543c",
+          "utf8": "    std::vector<llama_token> embd_inp;\n\n    bool waiting_for_first_input = false;\n    auto chat_add_and_format = [&chat_msgs, &chat_templates](const std::string & role, const std::string & content) {\n        common_chat_msg new_msg;\n        new_msg.role = role;\n        new_msg.content = content;\n        auto formatted = common_chat_format_single(chat_templates.get(), chat_msgs, new_msg, role == \"user\", g_params->use_jinja);\n        chat_msgs.push_back(new_msg);\n        LOG_DBG(\"formatted: '%s'\\n\", formatted.c_str());\n        return formatted;\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L235-L245",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L235-L245.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L235-L245"
+        },
+        {
+          "start_line": 545,
+          "end_line": 594,
+          "byte_count": 2421,
+          "sha256": "bc8ef8d3f88a72f37bdacd3013dff3a356c3c8700b32693a4e566a62b1956597",
+          "utf8": "    while ((n_remain != 0 && !is_antiprompt) || params.interactive) {\n        // predict\n        if (!embd.empty()) {\n            // Note: (n_ctx - 4) here is to match the logic for commandline prompt handling via\n            // --prompt or --file which uses the same value.\n            int max_embd_size = n_ctx - 4;\n\n            // Ensure the input doesn't exceed the context size by truncating embd if necessary.\n            if ((int) embd.size() > max_embd_size) {\n                const int skipped_tokens = (int) embd.size() - max_embd_size;\n                embd.resize(max_embd_size);\n\n                console::set_display(DISPLAY_TYPE_ERROR);\n                LOG_WRN(\"<<input too long: skipped %d token%s>>\", skipped_tokens, skipped_tokens != 1 ? \"s\" : \"\");\n                console::set_display(DISPLAY_TYPE_RESET);\n            }\n\n            if (ga_n == 1) {\n                // infinite text generation via context shifting\n                // if we run out of context:\n                // - take the n_keep first tokens from the original prompt (via n_past)\n                // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches\n\n                if (n_past + (int) embd.size() >= n_ctx) {\n                    if (!params.ctx_shift){\n                        LOG_WRN(\"\\n\\n%s: context full and context shift is disabled => stopping\\n\", __func__);\n                        break;\n                    }\n\n                    if (params.n_predict == -2) {\n                        LOG_WRN(\"\\n\\n%s: context full and n_predict == %d => stopping\\n\", __func__, params.n_predict);\n                        break;\n                    }\n\n                    const int n_left    = n_past - params.n_keep;\n                    const int n_discard = n_left/2;\n\n                    LOG_DBG(\"context full, swapping: n_past = %d, n_left = %d, n_ctx = %d, n_keep = %d, n_discard = %d\\n\",\n                            n_past, n_left, n_ctx, params.n_keep, n_discard);\n\n                    llama_memory_seq_rm (mem, 0, params.n_keep            , params.n_keep + n_discard);\n                    llama_memory_seq_add(mem, 0, params.n_keep + n_discard, n_past, -n_discard);\n\n                    n_past -= n_discard;\n\n                    LOG_DBG(\"after swap: n_past = %d\\n\", n_past);\n\n                    LOG_DBG(\"embd: %s\\n\", string_from(ctx, embd).c_str());\n\n                    LOG_DBG(\"clear session path\\n\");\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L545-L594",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L545-L594.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L545-L594"
+        },
+        {
+          "start_line": 643,
+          "end_line": 677,
+          "byte_count": 1472,
+          "sha256": "c8c2dfb5df0e9f93bd21beaf8b04d7334a84c2010654e874a7319614b63dfc5c",
+          "utf8": "            if (!embd.empty()) {\n                const bool is_last_batch = (n_consumed >= (int) embd_inp.size());\n                const bool save_now = session_do_save && is_last_batch;\n                session_tokens.insert(session_tokens.end(), embd.begin(), embd.end());\n                if (!common_prompt_batch_decode(ctx, session_tokens, embd.size(), n_past, params.n_batch, path_session, save_now)) {\n                    return 1;\n                }\n                n_session_consumed += embd.size();\n                if (save_now) {\n                    session_do_save = false;\n                }\n\n                LOG_DBG(\"n_past = %d\\n\", n_past);\n\n                // Display total tokens alongside total time\n                if (params.n_print > 0 && n_past % params.n_print == 0) {\n                    LOG_DBG(\"\\n\\033[31mTokens consumed so far = %d / %d \\033[0m\\n\", n_past, n_ctx);\n                }\n            }\n        }\n\n        embd.clear();\n\n        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {\n\n            const llama_token id = common_sampler_sample(smpl, ctx, -1);\n\n            common_sampler_accept(smpl, id, /* accept_grammar= */ true);\n\n            // LOG_DBG(\"last: %s\\n\", string_from(ctx, smpl->prev.to_vector()).c_str());\n\n            embd.push_back(id);\n\n            if (params.conversation_mode && !waiting_for_first_input && !llama_vocab_is_eog(vocab, id)) {\n                assistant_ss << common_token_to_piece(ctx, id, false);\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L643-L677",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L643-L677.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L643-L677"
+        },
+        {
+          "start_line": 772,
+          "end_line": 795,
+          "byte_count": 1083,
+          "sha256": "2d9398b0ea0b998dbeb7c709ef171bd2fda940edc6fbbe9d299274910a8c898e",
+          "utf8": "                if (is_antiprompt) {\n                    LOG_DBG(\"found antiprompt: %s\\n\", last_output.c_str());\n                }\n            }\n\n            // deal with end of generation tokens in interactive mode\n            if (!waiting_for_first_input && llama_vocab_is_eog(vocab, common_sampler_last(smpl))) {\n                LOG_DBG(\"found an EOG token\\n\");\n\n                if (params.interactive) {\n                    if (!params.antiprompt.empty()) {\n                        // tokenize and inject first reverse prompt\n                        const auto first_antiprompt = common_tokenize(ctx, params.antiprompt.front(), false, true);\n                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());\n                        is_antiprompt = true;\n                    }\n\n                    if (params.enable_chat_template) {\n                        chat_add_and_format(\"assistant\", assistant_ss.str());\n                    }\n                    is_interacting = true;\n                    LOG(\"\\n\");\n                }\n            }\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L772-L795",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L772-L795.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L772-L795"
+        },
+        {
+          "start_line": 850,
+          "end_line": 887,
+          "byte_count": 2308,
+          "sha256": "fa052eea424dce0e9225cd8c988c38e573a779372b209067551e05dda0e4612b",
+          "utf8": "                if (buffer.empty()) { // Enter key on empty line lets the user pass control back\n                    LOG_DBG(\"empty line, passing control back\\n\");\n                } else { // Add tokens to embd only if the input buffer is non-empty\n                    // append input suffix if any\n                    if (!params.input_suffix.empty() && !params.conversation_mode) {\n                        LOG_DBG(\"appending input suffix: '%s'\\n\", params.input_suffix.c_str());\n                        LOG(\"%s\", params.input_suffix.c_str());\n                    }\n\n                    LOG_DBG(\"buffer: '%s'\\n\", buffer.c_str());\n\n                    const size_t original_size = embd_inp.size();\n\n                    if (params.escape) {\n                        string_process_escapes(buffer);\n                    }\n\n                    bool format_chat = params.conversation_mode && params.enable_chat_template;\n                    std::string user_inp = format_chat\n                        ? chat_add_and_format(\"user\", std::move(buffer))\n                        : std::move(buffer);\n                    // TODO: one inconvenient of current chat template implementation is that we can't distinguish between user input and special tokens (prefix/postfix)\n                    const auto line_pfx = common_tokenize(ctx, params.input_prefix, false, true);\n                    const auto line_inp = common_tokenize(ctx, user_inp,            false, format_chat);\n                    const auto line_sfx = common_tokenize(ctx, params.input_suffix, false, true);\n\n                    LOG_DBG(\"input tokens: %s\\n\", string_from(ctx, line_inp).c_str());\n\n                    // if user stop generation mid-way, we must add EOT to finish model's last response\n                    if (need_insert_eot && format_chat) {\n                        llama_token eot = llama_vocab_eot(vocab);\n                        embd_inp.push_back(eot == LLAMA_TOKEN_NULL ? llama_vocab_eos(vocab) : eot);\n                        need_insert_eot = false;\n                    }\n\n                    embd_inp.insert(embd_inp.end(), line_pfx.begin(), line_pfx.end());\n                    embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());\n                    embd_inp.insert(embd_inp.end(), line_sfx.begin(), line_sfx.end());\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L850-L887",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L850-L887.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L850-L887"
+        },
+        {
+          "start_line": 928,
+          "end_line": 939,
+          "byte_count": 557,
+          "sha256": "a819b378f725d7935e58f0e7515b6952efbd9742d6268db815e80dc158fe1ff3",
+          "utf8": "        // end of generation\n        if (!embd.empty() && llama_vocab_is_eog(vocab, embd.back()) && !(params.interactive)) {\n            LOG(\" [end of text]\\n\");\n            break;\n        }\n\n        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.\n        // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).\n        if (params.interactive && n_remain <= 0 && params.n_predict >= 0) {\n            n_remain = params.n_predict;\n            is_interacting = true;\n        }\n",
+          "evidence_id": "pinned_upstream_completion_incremental_producer:L928-L939",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_completion_incremental_producer-L928-L939.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp#L928-L939"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/completion/completion.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_server_request_template_and_stops",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/server/server-common.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/server/server-common.cpp",
+      "full_file_sha256": "bbece72259e2aaab94ac0f31ba404b4a3f2868848cce1fe19a255009a60c6eb1",
+      "full_file_bytes": 65676,
+      "full_file_lines": 1834,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; full messages template and configurable thinking/additional stops; NOT deployed N flags",
+      "fragments": [
+        {
+          "start_line": 1150,
+          "end_line": 1163,
+          "byte_count": 527,
+          "sha256": "c860c093865bef7b06474861e3c7d8891b5ea8848ca5bc0afd2908cd1944cfcb",
+          "utf8": "        if (tool_choice != \"auto\") {\n            throw std::runtime_error(\"tool_choice param requires --jinja flag\");\n        }\n    }\n\n    // Handle \"stop\" field\n    if (body.contains(\"stop\") && body.at(\"stop\").is_string()) {\n        llama_params[\"stop\"] = json::array({body.at(\"stop\").get<std::string>()});\n    } else {\n        llama_params[\"stop\"] = json_value(body, \"stop\", json::array());\n    }\n\n    auto json_schema = json_value(body, \"json_schema\", json());\n    auto grammar = json_value(body, \"grammar\", std::string());\n",
+          "evidence_id": "pinned_upstream_server_request_template_and_stops:L1150-L1163",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_template_and_stops-L1150-L1163.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-common.cpp#L1150-L1163"
+        },
+        {
+          "start_line": 1268,
+          "end_line": 1321,
+          "byte_count": 3336,
+          "sha256": "47cb98b77e84951f8b5609f6e74fef3e4917795f972e68c8ab14626ef86dcdc0",
+          "utf8": "    inputs.tools                  = common_chat_tools_parse_oaicompat(tools);\n    inputs.tool_choice            = common_chat_tool_choice_parse_oaicompat(tool_choice);\n    inputs.json_schema            = json_schema.is_null() ? \"\" : json_schema.dump();\n    inputs.grammar                = grammar;\n    inputs.use_jinja              = opt.use_jinja;\n    inputs.parallel_tool_calls    = json_value(body, \"parallel_tool_calls\", caps[\"supports_parallel_tool_calls\"]);\n    inputs.add_generation_prompt  = json_value(body, \"add_generation_prompt\", true);\n    inputs.continue_final_message = body.contains(\"continue_final_message\") ?\n        common_chat_continuation_parse(body.at(\"continue_final_message\")) :\n        COMMON_CHAT_CONTINUATION_NONE;\n    if (inputs.continue_final_message == COMMON_CHAT_CONTINUATION_NONE && opt.prefill_assistant\n        && !inputs.messages.empty() && inputs.messages.back().role == \"assistant\") {\n        if (inputs.messages.size() >= 2 && inputs.messages[inputs.messages.size() - 2].role == \"assistant\") {\n            throw std::invalid_argument(\"Cannot have 2 or more assistant messages at the end of the list.\");\n        }\n        inputs.continue_final_message = COMMON_CHAT_CONTINUATION_AUTO;\n        inputs.add_generation_prompt  = false;\n    }\n    if (inputs.continue_final_message != COMMON_CHAT_CONTINUATION_NONE && inputs.add_generation_prompt) {\n        throw std::invalid_argument(\"Cannot set both add_generation_prompt and continue_final_message to true.\");\n    }\n    if (inputs.continue_final_message != COMMON_CHAT_CONTINUATION_NONE\n        && !inputs.messages.empty()\n        && inputs.messages.back().role == \"assistant\"\n        && !inputs.messages.back().tool_calls.empty()) {\n        throw std::invalid_argument(\"Cannot continue an assistant message that contains tool calls.\");\n    }\n    inputs.reasoning_format = opt.reasoning_format;\n    if (body.contains(\"reasoning_format\")) {\n        inputs.reasoning_format = common_reasoning_format_from_name(body.at(\"reasoning_format\").get<std::string>());\n    }\n    inputs.enable_thinking = opt.enable_thinking;\n    if (!inputs.tools.empty() && inputs.tool_choice != COMMON_CHAT_TOOL_CHOICE_NONE) {\n        if (body.contains(\"grammar\")) {\n            throw std::invalid_argument(\"Cannot use custom grammar constraints with tools.\");\n        }\n        llama_params[\"parse_tool_calls\"] = true;\n    }\n\n    // merge the template args provided from command line with the args provided in the user request\n    auto chat_template_kwargs_object = json_value(body, \"chat_template_kwargs\", json::object());\n    inputs.chat_template_kwargs = opt.chat_template_kwargs;\n    for (const auto & item : chat_template_kwargs_object.items()) {\n        inputs.chat_template_kwargs[item.key()] = item.value().dump();\n    }\n\n    // parse the \"enable_thinking\" kwarg to override the default value\n    auto enable_thinking_kwarg = json_value(inputs.chat_template_kwargs, \"enable_thinking\", std::string(\"\"));\n    if (enable_thinking_kwarg == \"true\") {\n        inputs.enable_thinking = true;\n    } else if (enable_thinking_kwarg == \"false\") {\n        inputs.enable_thinking = false;\n    } else if (!enable_thinking_kwarg.empty() && enable_thinking_kwarg[0] == '\"') {\n        throw std::invalid_argument(\"invalid type for \\\"enable_thinking\\\" (expected boolean, got string)\");\n",
+          "evidence_id": "pinned_upstream_server_request_template_and_stops:L1268-L1321",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_template_and_stops-L1268-L1321.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-common.cpp#L1268-L1321"
+        },
+        {
+          "start_line": 1335,
+          "end_line": 1357,
+          "byte_count": 1071,
+          "sha256": "378501e7e4abde48a17c87042466f28fc857e932053300f1ad3b373f1e9f69b5",
+          "utf8": "    inputs.force_pure_content = opt.force_pure_content;\n\n    // Apply chat template to the list of messages\n    auto chat_params = common_chat_templates_apply(opt.tmpls.get(), inputs);\n\n    llama_params[\"chat_format\"] = static_cast<int>(chat_params.format);\n    llama_params[\"prompt\"]      = chat_params.prompt;\n    if (!chat_params.grammar.empty()) {\n        llama_params[\"grammar\"]      = chat_params.grammar;\n        llama_params[\"grammar_type\"] = std::string(\"tool_calls\");\n    }\n    llama_params[\"grammar_lazy\"] = chat_params.grammar_lazy;\n    auto grammar_triggers        = json::array();\n    for (const auto & trigger : chat_params.grammar_triggers) {\n        server_grammar_trigger ct(trigger);\n        grammar_triggers.push_back(ct.to_json());\n    }\n    llama_params[\"grammar_triggers\"]  = grammar_triggers;\n    llama_params[\"preserved_tokens\"]  = chat_params.preserved_tokens;\n    llama_params[\"generation_prompt\"] = chat_params.generation_prompt;\n    for (const auto & stop : chat_params.additional_stops) {\n        llama_params[\"stop\"].push_back(stop);\n    }\n",
+          "evidence_id": "pinned_upstream_server_request_template_and_stops:L1335-L1357",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_template_and_stops-L1335-L1357.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-common.cpp#L1335-L1357"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-common.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_server_request_schema",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/server/server-schema.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/server/server-schema.cpp",
+      "full_file_sha256": "c3d2899d2a078adae6c4971b3da825bad1aab9cda6b2af652e41e6aef1665274",
+      "full_file_bytes": 32843,
+      "full_file_lines": 658,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; request-level cache/keep/reuse/stop fields and global-default inheritance",
+      "fragments": [
+        {
+          "start_line": 31,
+          "end_line": 69,
+          "byte_count": 2356,
+          "sha256": "344c775294da81ea6c6bc11d52719c864eac110093f59dd823f24123fad95b59",
+          "utf8": "    add((new field_bool(\"cache_prompt\", params.cache_prompt))\n        ->set_desc(\"Re-use KV cache from a previous request if possible. This way the common prefix does not have to be re-processed, only the suffix that differs between the requests\"));\n\n    add((new field_bool(\"return_tokens\", params.return_tokens))\n        ->set_desc(\"Return the raw generated token ids in the `tokens` field\"));\n\n    add((new field_bool(\"return_progress\", params.return_progress))\n        ->set_desc(\"Include prompt processing progress events in stream mode\"));\n\n    add((new field_num(\"sse_ping_interval\", params.sse_ping_interval))\n        ->set_hard_limits(-1, INT32_MAX)\n        ->set_desc(\"Interval in seconds between SSE comment pings emitted while the stream stays silent, -1 disables pings\"));\n\n    add((new field_num(\"n_predict\", params.n_predict))\n        ->set_hard_limits(-1, INT32_MAX)\n        ->add_alias(\"max_completion_tokens\")\n        ->add_alias(\"max_tokens\")\n        ->set_desc(\"Set the maximum number of tokens to predict. When 0, no tokens will be generated but the prompt is evaluated into the cache\"));\n\n    add((new field_num(\"n_indent\", params.n_indent))\n        ->set_hard_limits(0, INT32_MAX)\n        ->set_desc(\"Specify the minimum line indentation for the generated text in number of whitespace characters. Useful for code completion tasks\"));\n\n    add((new field_num(\"n_keep\", params.n_keep))\n        ->set_hard_limits(-1, INT32_MAX)\n        ->set_desc(\"Specify the number of tokens from the initial prompt to retain when context size is exceeded. Use -1 to retain all tokens from the prompt\"));\n\n    add((new field_num(\"n_discard\", params.n_discard))\n        ->set_hard_limits(0, INT32_MAX)\n        ->set_desc(\"Number of tokens after n_keep that may be discarded when shifting context (0 = half context)\"));\n\n    add((new field_num(\"n_cmpl\", params.n_cmpl))\n        ->set_hard_limits(1, params_base.n_parallel)\n        ->add_alias(\"n\") // alias \"n\" as fallback (OpenAI completions API)\n        ->set_desc(\"Number of completions to generate. If the input has multiple prompts, total outputs will be N prompts times n_cmpl\"));\n\n    add((new field_num(\"n_cache_reuse\", params.n_cache_reuse))\n        ->set_hard_limits(0, INT32_MAX)\n        ->set_desc(\"Min chunk size to attempt reusing from the cache via KV shifting. See --cache-reuse arg\"));\n",
+          "evidence_id": "pinned_upstream_server_request_schema:L31-L69",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_schema-L31-L69.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-schema.cpp#L31-L69"
+        },
+        {
+          "start_line": 483,
+          "end_line": 499,
+          "byte_count": 872,
+          "sha256": "d16580a1e47d6bcb4000d41e5d7403400f5d9d831b1a79f05774d581097aea25",
+          "utf8": "    add((new field_json(\"stop\"))\n        ->set_desc(\"Specify stopping strings. Generation stops when one is produced, and the string is not included in the output\")\n        ->set_handler([&](field_eval_context & ctx, const json & data) {\n            ctx.params.antiprompt.clear();\n            const auto & stop = data.at(\"stop\");\n            if (stop.is_array()) {\n                for (const auto & word : stop) {\n                    if (!word.empty()) ctx.params.antiprompt.push_back(word);\n                }\n            } else if (stop.is_string()) {\n                ctx.params.antiprompt.push_back(stop.get<std::string>());\n            }\n            // fall back to CLI defaults if the request provided no effective stop strings\n            if (ctx.params.antiprompt.empty()) {\n                ctx.params.antiprompt = params_base.antiprompt;\n            }\n        }));\n",
+          "evidence_id": "pinned_upstream_server_request_schema:L483-L499",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_schema-L483-L499.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-schema.cpp#L483-L499"
+        },
+        {
+          "start_line": 515,
+          "end_line": 529,
+          "byte_count": 745,
+          "sha256": "95843abe3eef42e62518d10902c05a362f434b8c1ea5aa1570bdec815e129bb8",
+          "utf8": "task_params eval_llama_cmpl_schema(\n                const llama_vocab * vocab,\n                const common_params & params_base,\n                const std::vector<llama_logit_bias> & logit_bias_eog,\n                const json & data) {\n    task_params params;\n\n    // Sampling parameter defaults are loaded from the global server context (but individual requests can still override them)\n    params.sampling      = params_base.sampling;\n    params.speculative   = params_base.speculative;\n    params.n_keep        = params_base.n_keep;\n    params.n_predict     = params_base.n_predict;\n    params.n_cache_reuse = params_base.n_cache_reuse;\n    params.cache_prompt  = params_base.cache_prompt;\n    params.antiprompt    = params_base.antiprompt;\n",
+          "evidence_id": "pinned_upstream_server_request_schema:L515-L529",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_schema-L515-L529.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-schema.cpp#L515-L529"
+        },
+        {
+          "start_line": 535,
+          "end_line": 547,
+          "byte_count": 395,
+          "sha256": "379fb95c39041deabeeec701010afd4d3f64c2ab471632820455c4705a413330",
+          "utf8": "    params.chat_parser_params.reasoning_format = params_base.reasoning_format;\n\n    // create context and schema\n    field_eval_context ctx(params);\n    ctx.vocab          = vocab;\n    ctx.logit_bias_eog = &logit_bias_eog;\n\n    auto schema = make_llama_cmpl_schema(params_base, params);\n\n    // eval all fields in the schema\n    for (const auto & f : schema) {\n        f->eval(ctx, data);\n    }\n",
+          "evidence_id": "pinned_upstream_server_request_schema:L535-L547",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_request_schema-L535-L547.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-schema.cpp#L535-L547"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-schema.cpp",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_common_runtime_defaults",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/common/common.h",
+      "relative_cached_path": "run-01/stage-03/sources/reference/common/common.h",
+      "full_file_sha256": "7cfcc6a57122702ea35d04ed20861aef162bd94f55cfbbf9fd23ee3127fe6cb4",
+      "full_file_bytes": 51088,
+      "full_file_lines": 1213,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; compile-time defaults, NOT observed deployed flags",
+      "fragments": [
+        {
+          "start_line": 448,
+          "end_line": 456,
+          "byte_count": 798,
+          "sha256": "f23f5ccf3d55698128019c65e53e5e6b11b76315f54b2b7a034939c2ae350ac3",
+          "utf8": "struct common_params {\n    int32_t n_predict             =    -1; // max. number of new tokens to predict, -1 == no limit\n    int32_t n_ctx                 =     0; // context size, 0 == context the model was trained with\n    int32_t n_batch               =  2048; // logical batch size for prompt processing (must be >=32 to use BLAS)\n    int32_t n_ubatch              =   512; // physical batch size for prompt processing (must be >=32 to use BLAS)\n    int32_t n_keep                =     0; // number of tokens to keep from initial prompt\n    int32_t n_chunks              =    -1; // max number of chunks to process (-1 = unlimited)\n    int32_t n_parallel            =     1; // number of parallel sequences to decode\n    int32_t n_sequences           =     1; // number of sequences to decode\n",
+          "evidence_id": "pinned_upstream_common_runtime_defaults:L448-L456",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_common_runtime_defaults-L448-L456.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.h#L448-L456"
+        },
+        {
+          "start_line": 523,
+          "end_line": 526,
+          "byte_count": 232,
+          "sha256": "059e88a57e297dce0faae6202fdbcf4405a798838179f044186187127d2ce98e",
+          "utf8": "\n    std::vector<std::string> in_files;   // all input files\n    std::vector<std::string> antiprompt; // strings upon which more user input is prompted (a.k.a. reverse prompts)\n    std::vector<llama_model_kv_override> kv_overrides;\n",
+          "evidence_id": "pinned_upstream_common_runtime_defaults:L523-L526",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_common_runtime_defaults-L523-L526.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.h#L523-L526"
+        },
+        {
+          "start_line": 565,
+          "end_line": 573,
+          "byte_count": 753,
+          "sha256": "405be16e34c9a968a63b559d767cc2869521b848578ddcf8c5452b02cd16285f",
+          "utf8": "    bool escape            = true;  // escape \"\\n\", \"\\r\", \"\\t\", \"\\'\", \"\\\"\", and \"\\\\\"\n    bool multiline_input   = false; // reverse the usage of `\\`\n    bool simple_io         = false; // improves compatibility with subprocesses and limited consoles\n    bool cont_batching     = true;  // insert new sequences for decoding on-the-fly\n    bool no_perf           = false; // disable performance metrics\n    bool show_timings      = true;  // show timing information on CLI\n    bool ctx_shift         = false; // context shift on infinite text generation\n    bool swa_full          = false; // use full-size SWA cache (https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\n    bool kv_unified        = false; // enable unified KV cache\n",
+          "evidence_id": "pinned_upstream_common_runtime_defaults:L565-L573",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_common_runtime_defaults-L565-L573.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.h#L565-L573"
+        },
+        {
+          "start_line": 619,
+          "end_line": 639,
+          "byte_count": 1705,
+          "sha256": "b2f34b230133142028cc8719ac41ac821a7fb4df7d116337ee87bc2133fec37c",
+          "utf8": "    // server params\n    int32_t port                = 8080;          // server listens on this network port\n    bool    reuse_port          = false;         // allow multiple sockets to bind to the same port\n    int32_t timeout_read        = 3600;          // http read timeout in seconds\n    int32_t timeout_write       = timeout_read;  // http write timeout in seconds\n    int32_t sse_ping_interval   = 30;            // SSE ping interval in seconds\n    int32_t n_threads_http      = -1;    // number of threads to process HTTP requests (TODO: support threadpool)\n    int32_t n_cache_reuse       = 0;     // min chunk size to reuse from the cache via KV shifting\n    bool    cache_prompt        = true;  // whether to enable prompt caching\n    bool    cache_idle_slots    = true;  // save and clear idle slots upon starting a new task\n    int32_t n_ctx_checkpoints   = 32;    // max number of context checkpoints per slot\n    int32_t kv_unified_per_slot = 0;     // max context per parallel slot; 0 = unset\n    int32_t checkpoint_min_step = 8192;  // minimum spacing between context checkpoints\n    int32_t cache_ram_mib       = 8192;  // -1 = no limit, 0 - disable, 1 = 1 MiB, etc.\n\n    std::string hostname      = \"127.0.0.1\";\n    std::string public_path   = \"\";                                                                         // NOLINT\n    std::string api_prefix    = \"\";                                                                         // NOLINT\n    std::string chat_template = \"\";                                                                         // NOLINT\n    bool use_jinja = true;                                                                                  // NOLINT\n\n",
+          "evidence_id": "pinned_upstream_common_runtime_defaults:L619-L639",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_common_runtime_defaults-L619-L639.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.h#L619-L639"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.h",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_chat_input_defaults",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/common/chat.h",
+      "relative_cached_path": "run-01/stage-03/sources/reference/common/chat.h",
+      "full_file_sha256": "2e9d19421fde1deeaebba9f9cdc18097b41e3a9974a89bbb9061792faabf2ea3",
+      "full_file_bytes": 15550,
+      "full_file_lines": 388,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; default thinking true; legacy format_single does not override it",
+      "fragments": [
+        {
+          "start_line": 249,
+          "end_line": 267,
+          "byte_count": 1282,
+          "sha256": "811c875901dcb402c85527972076defd02f9ebaaf9cb62db951e7d2a75704779",
+          "utf8": "struct common_chat_templates_inputs {\n    std::vector<common_chat_msg>          messages;\n    std::string                           grammar;\n    std::string                           json_schema;\n    bool                                  add_generation_prompt  = true;\n    common_chat_continuation              continue_final_message = COMMON_CHAT_CONTINUATION_NONE;\n    bool                                  use_jinja              = true;\n    // Parameters below only supported when use_jinja is true\n    std::vector<common_chat_tool>         tools;\n    common_chat_tool_choice               tool_choice         = COMMON_CHAT_TOOL_CHOICE_AUTO;\n    bool                                  parallel_tool_calls = false;\n    common_reasoning_format               reasoning_format    = COMMON_REASONING_FORMAT_NONE; // TODO: refactor this to \"bool enable_thinking\"\n    bool                                  enable_thinking     = true;\n    std::chrono::system_clock::time_point now                 = std::chrono::system_clock::now();\n    std::map<std::string, std::string>    chat_template_kwargs;\n    bool                                  add_bos = false;\n    bool                                  add_eos = false;\n    bool                                  force_pure_content = false;\n};\n",
+          "evidence_id": "pinned_upstream_chat_input_defaults:L249-L267",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_chat_input_defaults-L249-L267.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/chat.h#L249-L267"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/chat.h",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_server_task_defaults",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/tools/server/server-task.h",
+      "relative_cached_path": "run-01/stage-03/sources/reference/tools/server/server-task.h",
+      "full_file_sha256": "413733f2c47897e9a531dbc382a72e7676d46164d92996da1f008185f059bcf2",
+      "full_file_bytes": 18433,
+      "full_file_lines": 644,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; source defaults only",
+      "fragments": [
+        {
+          "start_line": 45,
+          "end_line": 67,
+          "byte_count": 1048,
+          "sha256": "d2340f7715cbf7d4c8fd3f7f2803f5a5583e2eda685b6da7c96d8482eaddf5a2",
+          "utf8": "    STOP_TYPE_EOS,\n    STOP_TYPE_WORD,\n    STOP_TYPE_LIMIT,\n};\n\nstruct task_params {\n    bool stream          = false;\n    bool include_usage   = false;\n    bool cache_prompt    = true; // remember the prompt to avoid reprocessing all prompt\n    bool return_tokens   = false;\n    bool return_progress = false;\n\n    int32_t sse_ping_interval = 30; // seconds between SSE comment pings while the stream stays silent, -1 disables\n\n    int32_t n_keep    =  0; // number of tokens to keep from initial prompt\n    int32_t n_discard =  0; // number of tokens after n_keep that may be discarded when shifting context, 0 defaults to half\n    int32_t n_predict = -1; // new tokens to predict\n    int32_t n_indent  =  0; // minimum line indentation for the generated text in number of whitespace characters\n    int32_t n_cmpl    =  1; // number of completions to generate from this prompt\n\n    int32_t n_cache_reuse = 0; // min chunk size to attempt reusing from the cache via KV shifting (0 = disabled)\n\n    int64_t t_max_prompt_ms  = -1; // TODO: implement\n",
+          "evidence_id": "pinned_upstream_server_task_defaults:L45-L67",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_server_task_defaults-L45-L67.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-task.h#L45-L67"
+        }
+      ],
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      },
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/tools/server/server-task.h",
+      "link_binding": "Official pinned repository/commit/path from inherited pins; remote source bytes hashed; official raw bytes not separately re-downloaded in this audit"
+    },
+    {
+      "logical_role": "pinned_upstream_incremental_decode_helper",
+      "cached_path": "${HS_ROOT}/run-01/stage-03/sources/reference/common/common.cpp",
+      "relative_cached_path": "run-01/stage-03/sources/reference/common/common.cpp",
+      "full_file_sha256": "9d0819ee984f36cab9c35eb0fb374c9e73bfd0af0fe6a5b912cdf1ccce7d51a3",
+      "full_file_bytes": 79606,
+      "full_file_lines": 2362,
+      "status": "UPSTREAM_SOURCE_AVAILABLE; helper appends n_new suffix to same ctx and increments n_past; not an N producer qualification",
+      "fragments": [
+        {
+          "start_line": 2202,
+          "end_line": 2253,
+          "byte_count": 2081,
+          "sha256": "3134f6962c00593dbf3ca97b8de0ab63466348d084edb03e3898ab8f2c88c7b2",
+          "utf8": "bool common_prompt_batch_decode(\n              struct llama_context * ctx,\n    const std::vector<llama_token> & all_tokens,\n                               int   n_new,\n                               int & n_past,\n                               int   n_batch,\n                  std::string_view   state_path,\n                              bool   save_state) {\n    if (n_new == 0) {\n        return true;\n    }\n    const int offset = all_tokens.size() - n_new;\n\n    if (save_state && n_new > 1) {\n        const int n_tokens_before_last = n_new - 1;\n\n        GGML_ASSERT(n_new <= n_batch);\n\n        // Decode all but the last token so we can save the memory state before decoding the last token.\n        // This is done so we can restore the session state later and replay the last token.\n        // Memory implementations in recurrent/hybrid models don't support removing tokens from their\n        // memory, so we can't just remove the last token from the memory and replay the last token which\n        // is the reason for this logic.\n        if (llama_decode(ctx, llama_batch_get_one(const_cast<llama_token*>(all_tokens.data() + offset), n_tokens_before_last))) {\n            COM_ERR(\"%s\", \"failed to eval\\n\");\n            return false;\n        }\n        n_past += n_tokens_before_last;\n\n        llama_state_save_file(ctx, state_path.data(), all_tokens.data(), all_tokens.size());\n        COM_INF(\"saved session before last token to %s, n_new = %zu\\n\", state_path.data(), all_tokens.size());\n\n        llama_token last_token = all_tokens.back();\n        llama_batch batch = llama_batch_get_one(&last_token, 1);\n        int32_t pos = n_past;\n        batch.pos = &pos;\n\n        if (llama_decode(ctx, batch)) {\n            COM_ERR(\"%s\", \"failed to eval last token\\n\");\n            return false;\n        }\n        n_past++;\n    } else {\n        if (llama_decode(ctx, llama_batch_get_one(const_cast<llama_token*>(all_tokens.data() + offset), n_new))) {\n            COM_ERR(\"%s\", \"failed to eval\\n\");\n            return false;\n        }\n        n_past += n_new;\n    }\n\n    return true;\n}\n",
+          "evidence_id": "pinned_upstream_incremental_decode_helper:L2202-L2253",
+          "local_excerpt_relative_path": "excerpts/pinned_upstream_incremental_decode_helper-L2202-L2253.txt",
+          "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.cpp#L2202-L2253"
+        }
+      ],
+      "pinned_upstream_source_link": "https://github.com/ggml-org/llama.cpp/blob/0cae43063cf15170e91a2ff4d034da0ecef4a1b2/common/common.cpp",
+      "link_binding": "Inherited source pins; official raw bytes not separately re-downloaded",
+      "digest_semantics": {
+        "full_file_sha256": "SHA-256 of complete cached source file read from server; full source not included in this packet",
+        "fragment_sha256": "SHA-256 only of exact bytes of the inclusive one-based source line range; separately included as excerpt"
+      }
+    }
+  ],
+  "receipt_objects": [
+    {
+      "logical_role": "historical_B2_admission",
+      "cached_path": "${HS_ROOT}/strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/prepared/ADMISSION_02.private.json",
+      "relative_cached_path": "strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/prepared/ADMISSION_02.private.json",
+      "full_file_sha256": "f59d9372ff646fb785ea80e3ed37e8b7ecc79b85f1c6ab91a4141d0d737101eb",
+      "bytes": 26182,
+      "historical_receipt_not_current_authorization": true,
+      "selected_fields": {
+        "schema": "hs.B2.host-admission.v1",
+        "runtime": "${HS_ROOT}/strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/prepared/runtime-exec-01",
+        "execution_source": "${HS_ROOT}/strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/final-source-04",
+        "archive_source": "${HS_ROOT}/strong-baseline-followup-20261110/sb217-s0-20261110T162100Z-09/source/execution_v1"
+      },
+      "raw_receipt_included": false,
+      "accessibility": "Original historical receipt remains in server cache; public audit retains its full hash and the listed redacted fields only."
+    },
+    {
+      "logical_role": "historical_B2_equal_work_plan",
+      "cached_path": "${HS_ROOT}/strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/prepared/PLAN.json",
+      "relative_cached_path": "strong-baseline-followup-20261110/sb217-b2-20261110T151900Z-03/prepared/PLAN.json",
+      "full_file_sha256": "9a9b9fc3366a4fc32a2eacc3e31a5220e702ceb1f937d9694546b77f95d703e6",
+      "bytes": 94914,
+      "historical_receipt_not_current_authorization": true,
+      "selected_fields": {
+        "schema": "heterospec.pr210.controlled-B2.v1",
+        "warmup_requests": 64,
+        "measured_requests": 64,
+        "total_requests": 128,
+        "reserved_rows": 33024,
+        "complete_all_eight_outputs": true,
+        "identical_state_restore_before_every_operation": true,
+        "qualifications_reused": 32,
+        "independent_processes_per_cell": 4,
+        "analysis": "Descriptive process-blocked contrasts; only exposed root0; no general steady-state, live-service or population-confirmation claim",
+        "execution_requires": "Full32B delivery public byte/statistical readback PASS and enough complete-panel time; no native auto-retry"
+      },
+      "worker_count": 16,
+      "matches_admission_frozen_hash": true,
+      "raw_receipt_included": false,
+      "accessibility": "Original historical receipt remains in server cache; public audit retains its full hash and the listed redacted fields only."
+    }
+  ],
+  "built_ELF_identities": [
+    {
+      "logical_role": "pr210-stage-b-build-02_loop4",
+      "build_receipt_path": "${HS_ROOT}/pr210-stage-b-build-02/loop4/BUILD.json",
+      "build_receipt_sha256": "0e30a02c6e2fbbc01e44e6bffa7b0a137388769ce476eb1f2672ad15a20b7521",
+      "build_receipt_bytes": 7579,
+      "executable_relative_path": "pr210-stage-b-build-02/loop4/transfer-worker",
+      "executable_path": "${HS_ROOT}/pr210-stage-b-build-02/loop4/transfer-worker",
+      "executable_bytes": 207735976,
+      "executable_sha256_from_BUILD": "7ff1ec68ff273d935cfe1475542e04824b7d9a56177bd06e6d67347b32b9d088",
+      "executable_sha256_read_now": "7ff1ec68ff273d935cfe1475542e04824b7d9a56177bd06e6d67347b32b9d088",
+      "executable_matches_BUILD": true,
+      "executable_invoked": false,
+      "selected_build_receipt_fields": {
+        "role": "loop4",
+        "status": "EQUALWORK_DIAGNOSTIC_NOT_YET_QUALIFIED",
+        "GPU_qualification": "NOT_RUN",
+        "source_lock_sha256": "06a1628a87c32a73c43fd7313638e9e95ff2a0a44c408f434b26f339400ce82f",
+        "reference_source_is_pristine": false,
+        "cuda": true,
+        "architecture": "86",
+        "all_numerical_modules_built_from_source": true,
+        "dependency_closure_sha256": "3a5486d40c83ac1ed32370e7990b608fa1cff59ff174989c924e3312f89e46bb",
+        "dependency_closure_complete": true,
+        "cpu_build_is_not_GPU_reference": false,
+        "native_capability_schema": "heterospec.m2.native-capability.v1",
+        "original_build_sha256": "c59c9ffca4e72df7e3831189a60e70fa4cdaceb718e7065c8e78aaf3437e9b54",
+        "parent_build_sha256": "52df645bb32bfea044e61430d78b042d716c3ca17765174c23feaff5a6ef1404"
+      },
+      "frontend_file_hashes_from_BUILD": {
+        "rtx_append.inc": "116deef0dc59ccfdd1111ff58ba19dc0006eb811ced80936ad9be340ac87489b",
+        "linux_platform.hpp": "4f3caf0b09dd6172573ebfe89e29f10fdbbfbf3ca3588f4d5f0f9a9e1ffaa3dc",
+        "resident_context.hpp": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+        "arm_spec.h": "bc440e8fa8c356eed4f3799949cdd1546e4bf20f45301ff348f8b11ba6621ed7",
+        "phase_plan.hpp": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+        "m1_capability.hpp": "4979ac70a5bcc7a8ca4dc7a253195812ae83e9738b45846b5227455b429ce847",
+        "entry.cpp": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+        "linux_profile_disabled.hpp": "99e830b7dfb01134f6c43da6e6e5cd22508526cb21811fc2bcaff617c7fd46d3",
+        "m2_tapes.hpp": "c89eefd812fe7f4b6020a24a20aa839efa2f4a26f8a4670778313983380763b1",
+        "target_capture.hpp": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+        "profiler.inc": "d5c3aed5754249ba7706af1a362b2af7acaf2e09a09e91e8a5413f4971fdcf22",
+        "worker.cpp": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+      },
+      "new_N_qualification": false,
+      "dependency_receipt": {
+        "relative_path": "pr210-stage-b-build-02/loop4/DEPENDENCIES.json",
+        "sha256": "3a5486d40c83ac1ed32370e7990b608fa1cff59ff174989c924e3312f89e46bb",
+        "matches_BUILD_closure_hash": true,
+        "matches_B2_admission_frozen_hash": true
+      },
+      "matches_B2_admission_frozen_hash": true,
+      "audited_frontend_checks": [
+        {
+          "filename": "worker.cpp",
+          "actual_source_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "source_sha256_from_BUILD": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "matches": true
+        },
+        {
+          "filename": "resident_context.hpp",
+          "actual_source_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "source_sha256_from_BUILD": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "matches": true
+        },
+        {
+          "filename": "entry.cpp",
+          "actual_source_sha256": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+          "source_sha256_from_BUILD": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "logical_role": "pr210-stage-b-build-02_packed",
+      "build_receipt_path": "${HS_ROOT}/pr210-stage-b-build-02/packed/BUILD.json",
+      "build_receipt_sha256": "158c693a6b105b31888ac7b4272d5eaff26d4ea3545f56b3c47bbf9fe6f61e7c",
+      "build_receipt_bytes": 7775,
+      "executable_relative_path": "pr210-stage-b-build-02/packed/transfer-worker",
+      "executable_path": "${HS_ROOT}/pr210-stage-b-build-02/packed/transfer-worker",
+      "executable_bytes": 207735888,
+      "executable_sha256_from_BUILD": "62675dee280d354b0a4fb2d43f67649d4b43496efded411ec6d894eb3af191c7",
+      "executable_sha256_read_now": "62675dee280d354b0a4fb2d43f67649d4b43496efded411ec6d894eb3af191c7",
+      "executable_matches_BUILD": true,
+      "executable_invoked": false,
+      "selected_build_receipt_fields": {
+        "role": "packed",
+        "status": "EQUALWORK_DIAGNOSTIC_NOT_YET_QUALIFIED",
+        "GPU_qualification": "NOT_RUN",
+        "source_lock_sha256": "06a1628a87c32a73c43fd7313638e9e95ff2a0a44c408f434b26f339400ce82f",
+        "reference_source_is_pristine": false,
+        "cuda": true,
+        "architecture": "86",
+        "all_numerical_modules_built_from_source": true,
+        "dependency_closure_sha256": "1e60d2b4ce1aa619db83272b1a13a5ee1618c112a0df06cac4c64b41459c9fc2",
+        "dependency_closure_complete": true,
+        "cpu_build_is_not_GPU_reference": false,
+        "native_capability_schema": "heterospec.m2.native-capability.v1",
+        "original_build_sha256": "ffab8ed675ccc666f0c3844ff357700c7eec88b22fdbe5c19dc68bcb9fe15d9a",
+        "parent_build_sha256": "e3e16b9f4bf7f1f51eac4290dd115e3469a6ba4dd90d4c4ebbe0076c8f3f5050"
+      },
+      "frontend_file_hashes_from_BUILD": {
+        "rtx_append.inc": "116deef0dc59ccfdd1111ff58ba19dc0006eb811ced80936ad9be340ac87489b",
+        "linux_platform.hpp": "4f3caf0b09dd6172573ebfe89e29f10fdbbfbf3ca3588f4d5f0f9a9e1ffaa3dc",
+        "resident_context.hpp": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+        "arm_spec.h": "bc440e8fa8c356eed4f3799949cdd1546e4bf20f45301ff348f8b11ba6621ed7",
+        "phase_plan.hpp": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+        "m1_capability.hpp": "4979ac70a5bcc7a8ca4dc7a253195812ae83e9738b45846b5227455b429ce847",
+        "entry.cpp": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+        "linux_profile_disabled.hpp": "99e830b7dfb01134f6c43da6e6e5cd22508526cb21811fc2bcaff617c7fd46d3",
+        "m2_tapes.hpp": "c89eefd812fe7f4b6020a24a20aa839efa2f4a26f8a4670778313983380763b1",
+        "target_capture.hpp": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+        "profiler.inc": "d5c3aed5754249ba7706af1a362b2af7acaf2e09a09e91e8a5413f4971fdcf22",
+        "worker.cpp": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+      },
+      "new_N_qualification": false,
+      "dependency_receipt": {
+        "relative_path": "pr210-stage-b-build-02/packed/DEPENDENCIES.json",
+        "sha256": "1e60d2b4ce1aa619db83272b1a13a5ee1618c112a0df06cac4c64b41459c9fc2",
+        "matches_BUILD_closure_hash": true,
+        "matches_B2_admission_frozen_hash": true
+      },
+      "matches_B2_admission_frozen_hash": true,
+      "audited_frontend_checks": [
+        {
+          "filename": "worker.cpp",
+          "actual_source_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "source_sha256_from_BUILD": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "matches": true
+        },
+        {
+          "filename": "resident_context.hpp",
+          "actual_source_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "source_sha256_from_BUILD": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "matches": true
+        },
+        {
+          "filename": "entry.cpp",
+          "actual_source_sha256": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+          "source_sha256_from_BUILD": "e8a4096ded03e5312f07ca851a1bc7865ba7589203578757efe7ff10ea163dd8",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "logical_role": "m2-build-01_loop4",
+      "build_receipt_path": "${HS_ROOT}/m2-build-01/loop4/BUILD.json",
+      "build_receipt_sha256": "52df645bb32bfea044e61430d78b042d716c3ca17765174c23feaff5a6ef1404",
+      "build_receipt_bytes": 7473,
+      "executable_relative_path": "m2-build-01/loop4/transfer-worker",
+      "executable_path": "${HS_ROOT}/m2-build-01/loop4/transfer-worker",
+      "executable_bytes": 207855608,
+      "executable_sha256_from_BUILD": "5c06079b90e856585d5bc8707e1860be0c9a41fa093a492ea5d49d1abaa641bb",
+      "executable_sha256_read_now": "5c06079b90e856585d5bc8707e1860be0c9a41fa093a492ea5d49d1abaa641bb",
+      "executable_matches_BUILD": true,
+      "executable_invoked": false,
+      "selected_build_receipt_fields": {
+        "role": "loop4",
+        "status": "M1_OBSERVER_RELINK_NOT_YET_QUALIFIED",
+        "GPU_qualification": "NOT_RUN",
+        "source_lock_sha256": "06a1628a87c32a73c43fd7313638e9e95ff2a0a44c408f434b26f339400ce82f",
+        "reference_source_is_pristine": false,
+        "cuda": true,
+        "architecture": "86",
+        "all_numerical_modules_built_from_source": true,
+        "dependency_closure_sha256": "7958f4a2f313197977fdd96494952a78da45c82b0fdbd2ef811d434a513e46a8",
+        "dependency_closure_complete": true,
+        "cpu_build_is_not_GPU_reference": false,
+        "native_capability_schema": "heterospec.m2.native-capability.v1",
+        "original_build_sha256": "c59c9ffca4e72df7e3831189a60e70fa4cdaceb718e7065c8e78aaf3437e9b54",
+        "parent_build_sha256": null
+      },
+      "frontend_file_hashes_from_BUILD": {
+        "arm_spec.h": "bc440e8fa8c356eed4f3799949cdd1546e4bf20f45301ff348f8b11ba6621ed7",
+        "entry.cpp": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+        "linux_platform.hpp": "4f3caf0b09dd6172573ebfe89e29f10fdbbfbf3ca3588f4d5f0f9a9e1ffaa3dc",
+        "linux_profile_disabled.hpp": "99e830b7dfb01134f6c43da6e6e5cd22508526cb21811fc2bcaff617c7fd46d3",
+        "m1_capability.hpp": "4979ac70a5bcc7a8ca4dc7a253195812ae83e9738b45846b5227455b429ce847",
+        "m2_tapes.hpp": "c89eefd812fe7f4b6020a24a20aa839efa2f4a26f8a4670778313983380763b1",
+        "phase_plan.hpp": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+        "profiler.inc": "d5c3aed5754249ba7706af1a362b2af7acaf2e09a09e91e8a5413f4971fdcf22",
+        "resident_context.hpp": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+        "rtx_append.inc": "116deef0dc59ccfdd1111ff58ba19dc0006eb811ced80936ad9be340ac87489b",
+        "target_capture.hpp": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+        "worker.cpp": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+      },
+      "new_N_qualification": false,
+      "dependency_receipt": {
+        "relative_path": "m2-build-01/loop4/DEPENDENCIES.json",
+        "sha256": "7958f4a2f313197977fdd96494952a78da45c82b0fdbd2ef811d434a513e46a8",
+        "matches_BUILD_closure_hash": true,
+        "matches_B2_admission_frozen_hash": null
+      },
+      "matches_B2_admission_frozen_hash": null,
+      "audited_frontend_checks": [
+        {
+          "filename": "worker.cpp",
+          "actual_source_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "source_sha256_from_BUILD": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "matches": true
+        },
+        {
+          "filename": "resident_context.hpp",
+          "actual_source_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "source_sha256_from_BUILD": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "matches": true
+        },
+        {
+          "filename": "entry.cpp",
+          "actual_source_sha256": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+          "source_sha256_from_BUILD": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "logical_role": "m2-build-01_packed",
+      "build_receipt_path": "${HS_ROOT}/m2-build-01/packed/BUILD.json",
+      "build_receipt_sha256": "e3e16b9f4bf7f1f51eac4290dd115e3469a6ba4dd90d4c4ebbe0076c8f3f5050",
+      "build_receipt_bytes": 7669,
+      "executable_relative_path": "m2-build-01/packed/transfer-worker",
+      "executable_path": "${HS_ROOT}/m2-build-01/packed/transfer-worker",
+      "executable_bytes": 207855520,
+      "executable_sha256_from_BUILD": "5cff818510fa423a6c2617841d8ec3ba662fd8e2ce99ed19f607f9d54d7d5b98",
+      "executable_sha256_read_now": "5cff818510fa423a6c2617841d8ec3ba662fd8e2ce99ed19f607f9d54d7d5b98",
+      "executable_matches_BUILD": true,
+      "executable_invoked": false,
+      "selected_build_receipt_fields": {
+        "role": "packed",
+        "status": "M1_OBSERVER_RELINK_NOT_YET_QUALIFIED",
+        "GPU_qualification": "NOT_RUN",
+        "source_lock_sha256": "06a1628a87c32a73c43fd7313638e9e95ff2a0a44c408f434b26f339400ce82f",
+        "reference_source_is_pristine": false,
+        "cuda": true,
+        "architecture": "86",
+        "all_numerical_modules_built_from_source": true,
+        "dependency_closure_sha256": "805c159bf49d97b0bbd3b303713063ea8d055f422054952a59978cd4e623508d",
+        "dependency_closure_complete": true,
+        "cpu_build_is_not_GPU_reference": false,
+        "native_capability_schema": "heterospec.m2.native-capability.v1",
+        "original_build_sha256": "ffab8ed675ccc666f0c3844ff357700c7eec88b22fdbe5c19dc68bcb9fe15d9a",
+        "parent_build_sha256": null
+      },
+      "frontend_file_hashes_from_BUILD": {
+        "arm_spec.h": "bc440e8fa8c356eed4f3799949cdd1546e4bf20f45301ff348f8b11ba6621ed7",
+        "entry.cpp": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+        "linux_platform.hpp": "4f3caf0b09dd6172573ebfe89e29f10fdbbfbf3ca3588f4d5f0f9a9e1ffaa3dc",
+        "linux_profile_disabled.hpp": "99e830b7dfb01134f6c43da6e6e5cd22508526cb21811fc2bcaff617c7fd46d3",
+        "m1_capability.hpp": "4979ac70a5bcc7a8ca4dc7a253195812ae83e9738b45846b5227455b429ce847",
+        "m2_tapes.hpp": "c89eefd812fe7f4b6020a24a20aa839efa2f4a26f8a4670778313983380763b1",
+        "phase_plan.hpp": "d379ba5518dd03c6d6439ad5024a957af0f1b71d92f062688bc8cc1de52935b5",
+        "profiler.inc": "d5c3aed5754249ba7706af1a362b2af7acaf2e09a09e91e8a5413f4971fdcf22",
+        "resident_context.hpp": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+        "rtx_append.inc": "116deef0dc59ccfdd1111ff58ba19dc0006eb811ced80936ad9be340ac87489b",
+        "target_capture.hpp": "1ac0699d1b04f55075ad8128b3ed3158fb3809ff9f1d1e1d2525cbab92e7ea46",
+        "worker.cpp": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+      },
+      "new_N_qualification": false,
+      "dependency_receipt": {
+        "relative_path": "m2-build-01/packed/DEPENDENCIES.json",
+        "sha256": "805c159bf49d97b0bbd3b303713063ea8d055f422054952a59978cd4e623508d",
+        "matches_BUILD_closure_hash": true,
+        "matches_B2_admission_frozen_hash": null
+      },
+      "matches_B2_admission_frozen_hash": null,
+      "audited_frontend_checks": [
+        {
+          "filename": "worker.cpp",
+          "actual_source_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "source_sha256_from_BUILD": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+          "matches": true
+        },
+        {
+          "filename": "resident_context.hpp",
+          "actual_source_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "source_sha256_from_BUILD": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "matches": true
+        },
+        {
+          "filename": "entry.cpp",
+          "actual_source_sha256": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+          "source_sha256_from_BUILD": "2f0abacbf0aae577153b4f9620bdeadbf4de1da6a01b257b381d624059403663",
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "upstream_identity": {
+    "repository_from_pins": "https://github.com/ggml-org/llama.cpp.git",
+    "commit_from_pins": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "commit_from_SOURCE_LOCK": "0cae43063cf15170e91a2ff4d034da0ecef4a1b2",
+    "source_lock_relative_path": "run-01/stage-03/SOURCE_LOCK.json",
+    "source_lock_sha256": "63497387dc015b330883888fa528c3950bbc2dd68b1af6ebe08ac5448842cf81",
+    "pins_relative_path": "repository-01/benchmarks/linux_transfer_v1/pins.json",
+    "pins_sha256": "c3c623b9fde54dfea9fc77d7aaeb7aa86176e9adf6a1cdba5a91a42ac1a0efe2",
+    "SOURCE_LOCK_status": "SOURCE_PORTED_NOT_BUILT",
+    "SOURCE_LOCK_native_build": "NOT_RUN",
+    "official_raw_bytes_independently_downloaded": false
+  },
+  "stop_policy_lexical_audit": [
+    {
+      "relative_cached_path": "pr210-stage-b-build-02/frontend/worker.cpp",
+      "full_file_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+      "searched_terms": {
+        "antiprompt": 0,
+        "additional_stops": 0,
+        "stop_strings": 0,
+        "find_stopping_strings": 0
+      },
+      "interpretation": "All absent; direct greedy commit loop terminates EOG or input cap. Capacity errors are separate failures, not additional text stop lists."
+    },
+    {
+      "relative_cached_path": "m2-build-01/frontend/worker.cpp",
+      "full_file_sha256": "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938",
+      "searched_terms": {
+        "antiprompt": 0,
+        "additional_stops": 0,
+        "stop_strings": 0,
+        "find_stopping_strings": 0
+      },
+      "interpretation": "All absent; direct greedy commit loop terminates EOG or input cap. Capacity errors are separate failures, not additional text stop lists."
+    },
+    {
+      "relative_cached_path": "run-01/stage-04/frontend/worker.cpp",
+      "full_file_sha256": "4a748ebd7d7aea489ff00e88b55f3584ae10cdabf244bd34f90040f34c18ec40",
+      "searched_terms": {
+        "antiprompt": 0,
+        "additional_stops": 0,
+        "stop_strings": 0,
+        "find_stopping_strings": 0
+      },
+      "interpretation": "All absent; direct greedy commit loop terminates EOG or input cap. Capacity errors are separate failures, not additional text stop lists."
+    }
+  ],
+  "refined_findings": {
+    "B": "General source-existing retained-KV incremental producer is present in upstream tools/completion. Parsed text message history does not imply KV is discarded. Its matched nonthinking N0 flags/producer contract are not implemented or frozen. Not A-token-equivalent or deployed N.",
+    "modern_CLI": "Full JSON messages are reserialized by server; resident prompt/token/KV may survive release and be reused by token LCP. JSON content-only storage does not prove absent raw tokens in cache.",
+    "C": "Canonical full-message tokens plus token-LCP/tail-trim is supported by upstream source. Not built, deployed, configured or qualified N. Current HeteroSpec experimental workers reset per request.",
+    "defaults": "Source defaults cache_prompt=true,n_cache_reuse=0,ctx_shift=false,n_keep=0,use_jinja=true. Server schema inherits defaults then evaluates request overrides. Cache/slot/checkpoint/shift flags must be explicitly frozen; source defaults are not observed deployment."
+  },
+  "audit_resource_costs": {
+    "native_executables_invoked": 0,
+    "model_forwards": 0,
+    "model_contexts_created": 0,
+    "GPU_contexts_created": 0,
+    "placement_actions": 0,
+    "new_GPU_requests": 0,
+    "model_weight_bytes_read": 0,
+    "built_ELF_files_hashed_as_data": 4,
+    "built_ELF_bytes_hashed_as_data": 831182992,
+    "other_costs": "CPU source/receipt reading, file hashing, SSH transport and local artifact verification; no measured GPU/service cost inferred"
+  }
+}

@@ -1,0 +1,467 @@
+test_bridge_record_alias_or_replacement_denied (__main__.BridgeFaultTests) ... ERROR
+test_budget_is_reserved_before_any_process (__main__.BridgeFaultTests) ... ERROR
+test_changed_source_denied (__main__.BridgeFaultTests) ... ERROR
+test_cold_first_difference_preserved_and_strong_never_starts (__main__.BridgeFaultTests) ... ERROR
+test_concurrent_launch_one_slot_and_fail_closed (__main__.BridgeFaultTests) ... ERROR
+test_cpu_proposal_cannot_carry_approval (__main__.BridgeFaultTests) ... ERROR
+test_disk_full_does_not_retry (__main__.BridgeFaultTests) ... ERROR
+test_duplicate_does_not_refund_or_reserve_again (__main__.BridgeFaultTests) ... ERROR
+test_existing_state_is_inspect_only (__main__.BridgeFaultTests) ... ERROR
+test_expired_lease_or_deadline_denied (__main__.BridgeFaultTests) ... ERROR
+test_fsync_failure_is_not_success (__main__.BridgeFaultTests) ... ERROR
+test_legacy_claim_bypass_denied (__main__.BridgeFaultTests) ... ERROR
+test_legacy_start_bypass_denied (__main__.BridgeFaultTests) ... ERROR
+test_lost_lock_denied_without_removing_old_lock (__main__.BridgeFaultTests) ... ERROR
+test_manifest_or_device_cannot_change (__main__.BridgeFaultTests) ... ERROR
+test_native_gate_has_no_action_or_reservation (__main__.BridgeFaultTests) ... ERROR
+test_no_result_even_exited_process_is_not_success (__main__.BridgeFaultTests) ... ERROR
+test_partial_journal_reservation_retains_upper_bound (__main__.BridgeFaultTests) ... ERROR
+test_preflight_is_mandatory (__main__.BridgeFaultTests) ... ERROR
+test_quota_failure_has_no_launcher (__main__.BridgeFaultTests) ... ERROR
+test_stage_order_denied_before_launcher (__main__.BridgeFaultTests) ... ERROR
+test_unbound_or_replayed_exit_cannot_release_slot (__main__.BridgeFaultTests) ... ERROR
+
+======================================================================
+ERROR: test_bridge_record_alias_or_replacement_denied (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 133, in test_bridge_record_alias_or_replacement_denied
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_budget_is_reserved_before_any_process (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 101, in test_budget_is_reserved_before_any_process
+    f = self.fixture(); f.preflight(); result = f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_changed_source_denied (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 127, in test_changed_source_denied
+    f = self.fixture(); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_cold_first_difference_preserved_and_strong_never_starts (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 208, in test_cold_first_difference_preserved_and_strong_never_starts
+    f = self.fixture(fail_stage=C.STAGES[2])
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_concurrent_launch_one_slot_and_fail_closed (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 114, in test_concurrent_launch_one_slot_and_fail_closed
+    f = self.fixture(); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_cpu_proposal_cannot_carry_approval (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 74, in test_cpu_proposal_cannot_carry_approval
+    f = self.fixture()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_disk_full_does_not_retry (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 194, in test_disk_full_does_not_retry
+    io = FaultIO(); f = self.fixture(io=io); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_duplicate_does_not_refund_or_reserve_again (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 108, in test_duplicate_does_not_refund_or_reserve_again
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_existing_state_is_inspect_only (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 202, in test_existing_state_is_inspect_only
+    f = self.fixture(); f.preflight(); f.reserve(); f.close()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_expired_lease_or_deadline_denied (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 146, in test_expired_lease_or_deadline_denied
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_fsync_failure_is_not_success (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 184, in test_fsync_failure_is_not_success
+    io = FaultIO(); f = self.fixture(io=io); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_legacy_claim_bypass_denied (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 96, in test_legacy_claim_bypass_denied
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_legacy_start_bypass_denied (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 91, in test_legacy_start_bypass_denied
+    f = self.fixture(); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_lost_lock_denied_without_removing_old_lock (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 152, in test_lost_lock_denied_without_removing_old_lock
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_manifest_or_device_cannot_change (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 140, in test_manifest_or_device_cannot_change
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_native_gate_has_no_action_or_reservation (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 67, in test_native_gate_has_no_action_or_reservation
+    f = self.fixture()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_no_result_even_exited_process_is_not_success (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 165, in test_no_result_even_exited_process_is_not_success
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_partial_journal_reservation_retains_upper_bound (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 175, in test_partial_journal_reservation_retains_upper_bound
+    io = FaultIO(); f = self.fixture(io=io); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_preflight_is_mandatory (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 86, in test_preflight_is_mandatory
+    f = self.fixture()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_quota_failure_has_no_launcher (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 169, in test_quota_failure_has_no_launcher
+    f = self.fixture(limits={"placements": 2}); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_stage_order_denied_before_launcher (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 81, in test_stage_order_denied_before_launcher
+    f = self.fixture(); f.preflight()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+======================================================================
+ERROR: test_unbound_or_replayed_exit_cannot_release_slot (__main__.BridgeFaultTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 160, in test_unbound_or_replayed_exit_cannot_release_slot
+    f = self.fixture(); f.preflight(); f.reserve()
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 56, in fixture
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/tests/bridge_tests.py", line 36, in __init__
+    self.ctrl = BridgeController(self.root / "run", m, self.verifier, FakePolicy(),
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/production_bridge_20261112/bridge.py", line 69, in __init__
+    super().__init__(*args, **kwargs)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 508, in __init__
+    self.store = Store(root, manifest, self.clock, io)
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 140, in __init__
+    need(manifest.get("manifest_sha256") == self.fingerprint,
+  File "[PRIVATE_HOME]/heterospec-linux-transfer/n229-production-bridge-20261112-01-root-cpu-epoch01/benchmarks/server_expansion_v1/N/admission_controller_20261112/controller.py", line 34, in need
+    raise Closed(message)
+controller.Closed: manifest fingerprint stale/changed
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.643s
+
+FAILED (errors=22)

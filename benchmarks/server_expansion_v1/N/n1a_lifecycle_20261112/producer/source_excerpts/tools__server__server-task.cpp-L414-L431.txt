@@ -1,0 +1,18 @@
+json server_task_result_cmpl_final::to_json_oaicompat_chat() {
+    std::string finish_reason = "length";
+    common_chat_msg msg;
+    if (!oaicompat_msg.empty()) {
+        msg = oaicompat_msg;
+    } else {
+        msg.role = "assistant";
+        msg.content = content;
+    }
+    if (stop == STOP_TYPE_WORD || stop == STOP_TYPE_EOS) {
+        finish_reason = msg.tool_calls.empty() ? "stop" : "tool_calls";
+    }
+
+    json choice {
+        {"finish_reason", finish_reason},
+        {"index", index},
+        {"message", msg.to_json_oaicompat()},
+    };

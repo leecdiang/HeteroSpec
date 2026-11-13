@@ -1,0 +1,21 @@
+    void clear(){need(!poisoned,"poisoned phase context");executions=json::array();outputs.clear();planning_s=output_copy_s=first_call_plan_s=0;}
+    template<class Native>
+    void decode(Native& owner,const std::vector<int>& ids,int position,bool all,const char* phase){
+        need(!poisoned && !ids.empty(),"invalid phase call");
+        auto began=Clock::now();
+        auto* cache=dynamic_cast<llama_kv_cache*>(llama_get_memory(owner.c));
+        need(cache,"unsupported non-dense cache");
+        const auto extents=cache->phase_append_requirements(uint32_t(position),uint32_t(ids.size()));
+        need(extents.size()==ids.size(),"unsupported cache/append requirements");
+        need(cache->type_k()==GGML_TYPE_F16 && cache->type_v()==GGML_TYPE_F16,"unsupported cache arithmetic");
+        need(!all||ids.size()<=size_t(phase_target_reserve),"requested outputs exceed actual M2 output reserve");
+        const uint64_t arithmetic=1+uint64_t(cache->type_k())+(uint64_t(cache->type_v())<<8);
+        std::vector<refplan::Row> rows;rows.reserve(ids.size());
+        for(size_t i=0;i<ids.size();++i)rows.push_back({position+int64_t(i),extents[i],arithmetic,all||i+1==ids.size()});
+        // SIMPLE's caller groups are maximal for the bound extent and width.
+        // LOCAL retains wide projection groups, splitting only attention locally.
+        std::vector<refplan::Group> groups;
+        if(phase_lowering=="SIMPLE")groups=refplan::plan(rows,32);
+        else {need(phase_lowering=="LOCAL","unknown lowering");for(size_t i=0;i<rows.size();i+=32)groups.push_back({i,std::min<size_t>(32,rows.size()-i),0,1});}
+        const double compilation=since(began);planning_s+=compilation;
+        if(executions.empty())first_call_plan_s=compilation;

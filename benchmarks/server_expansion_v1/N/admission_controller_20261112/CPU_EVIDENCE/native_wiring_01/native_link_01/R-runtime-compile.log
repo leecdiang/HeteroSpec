@@ -1,0 +1,25 @@
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/native_chain_successor_20261112/native/runtime.cpp: In destructor ‘virtual hs::n1chain::{anonymous}::BoundCore::~BoundCore()’:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/native_chain_successor_20261112/native/runtime.cpp:115:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  115 |   if(ctx_)llama_free(ctx_);if(model_)llama_model_free(model_);
+      |   ^~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/native_chain_successor_20261112/native/runtime.cpp:115:28: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  115 |   if(ctx_)llama_free(ctx_);if(model_)llama_model_free(model_);
+      |                            ^~
+In file included from ${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/native_chain_successor_20261112/native/runtime.cpp:52:
+native-link-01/frozen_reference_primitives.inc: At global scope:
+native-link-01/frozen_reference_primitives.inc:48:13: warning: ‘void token_check(const std::vector<int>&, int)’ defined but not used [-Wunused-function]
+   48 | static void token_check(const std::vector<int>&v,int nv){for(int x:v)need(x>=0&&x<nv,"invalid input token");}
+      |             ^~~~~~~~~~~
+native-link-01/frozen_reference_primitives.inc:47:13: warning: ‘bool contains(const std::vector<int>&, int)’ defined but not used [-Wunused-function]
+   47 | static bool contains(const std::vector<int>&v,int x){return std::find(v.begin(),v.end(),x)!=v.end();}
+      |             ^~~~~~~~
+native-link-01/frozen_reference_primitives.inc:43:13: warning: ‘void capture(llama_context*, const std::filesystem::__cxx11::path&, const std::vector<float>&, bool)’ defined but not used [-Wunused-function]
+   43 | static void capture(llama_context*c,const fs::path&dir,const std::vector<float>&v,bool state){
+      |             ^~~~~~~
+In file included from ${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/native_chain_successor_20261112/native/runtime.cpp:52:
+native-link-01/frozen_reference_primitives.inc:22:13: warning: ‘void write_json(const std::filesystem::__cxx11::path&, const J&)’ defined but not used [-Wunused-function]
+   22 | static void write_json(const fs::path& p,const J& j){need(!fs::exists(p),"output exists");fs::create_directories(p.parent_path());std::ofstream f(p);f<<j.dump(2)<<'\n';need(bool(f),"write JSON");}
+      |             ^~~~~~~~~~
+native-link-01/frozen_reference_primitives.inc:21:15: warning: ‘double seconds(std::chrono::_V2::steady_clock::time_point)’ defined but not used [-Wunused-function]
+   21 | static double seconds(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
+      |               ^~~~~~~

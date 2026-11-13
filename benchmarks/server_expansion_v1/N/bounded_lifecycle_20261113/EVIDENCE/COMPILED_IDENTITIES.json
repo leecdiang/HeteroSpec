@@ -1,0 +1,568 @@
+{
+  "scope": "Actual build receipts; COMPILED_NOT_EXECUTED describes compile-time state. Actual execution is proven by separately indexed units, trace, captures and final report.",
+  "images": [
+    {
+      "role": "R",
+      "private_original_receipt_sha256": "b37cafc3185aeb5214537faf23e78e761f28f51c762e3c88835987ccfd51c38e",
+      "receipt": {
+        "status": "COMPILED_NOT_EXECUTED",
+        "executable_sha256": "31b113b057b6345dc46558db925aca14f3dd9f6904feb4aa3ffd16fe99b17f95",
+        "bytes": 213529544,
+        "derivation": {
+          "active_kv.hpp": {
+            "original": "c50edeb26d09ebe4cc7bcaff22c3590bcd093a2e49dbc4aa5fbfff0f14370433",
+            "derived": "0004328c2ed5f5c158a33e9b1df9d31d02a033146c93ca65808fde980f9f6111",
+            "changes": "admission type only; extraction unchanged"
+          },
+          "active_kv.cpp": {
+            "original": "f0bf4c1bd3ab934e5f13a71349a4d6cbeb57ce109bfe88ce48470270d1a2ad03",
+            "derived": "77e2b695c6be37389ec1a239fc4d8aba2448cdbecc823d2bbbb4a6c73c0c094b",
+            "changes": "admission type only; extraction unchanged"
+          }
+        },
+        "archives": [
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "bytes": 212322374,
+            "sha256": "393d2170027a3133b7b54018f7863f7bee73095b0a59e5a38af65db8c50d642e"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-base.a",
+            "bytes": 1295044,
+            "sha256": "223f9f810e71bd98bca635096c1009a98b855e3155ecc267f10e4094d0f54cc2"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-cpu.a",
+            "bytes": 1558574,
+            "sha256": "cabba686ea82a878f9a14657d9921d49060b0a48303aad00715a2dbc5ab52252"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml.a",
+            "bytes": 57614,
+            "sha256": "a45a96e3fb970cf132db5c2af1bc806538df22f861a39817da7124c8c8423b49"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/src/libllama.a",
+            "bytes": 10529088,
+            "sha256": "3eaf8780a6d539f67fe0877d0c422c20cfffca7462e3a9b8cbc9b18cef719a56"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-R-01/native/llama/vendor/hash/libvendor-hash.a",
+            "bytes": 71190,
+            "sha256": "43da898ae626261e3b2b1fca6a304fde389233da943be9ca51614daa2ea96ef8"
+          }
+        ],
+        "source_identities": [
+          [
+            "repository-01/benchmarks/linux_transfer_v1/native/reference.cpp",
+            "111401574d53c534e3a39cac75785ae5ae5fa9a61b44fc7ada989a96305f4723"
+          ],
+          [
+            "run-01/stage-03/sources/reference/include/llama.h",
+            "3d1b18eda626c1b9ecf5bda0798e65b974a8f70f30d56726610633a980cb4160"
+          ],
+          [
+            "run-01/stage-03/sources/reference/common/chat.cpp",
+            "abab0d03a111bd198693a518c7cdd07a33326a6a6685cc182a88d4fdae5f61dc"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/worker.cpp",
+            "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/resident_context.hpp",
+            "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647"
+          ]
+        ],
+        "commands": [
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-00c6b32a8d7fd7b4\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0\"",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/include",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/src",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-c",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113/lifecycle.cpp",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/lifecycle.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-00c6b32a8d7fd7b4\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0\"",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/include",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/src",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-03/sources/reference/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-c",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/active_kv.cpp",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/active_kv.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-O0",
+            "-fno-lto",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/lifecycle.o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/active_kv.o",
+            "-Wl,--start-group",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-base.a",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-cpu.a",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml.a",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/src/libllama.a",
+            "${HS_ROOT}/run-01/build-R-01/native/llama/vendor/hash/libvendor-hash.a",
+            "-Wl,--end-group",
+            "-lgomp",
+            "-lpthread",
+            "-lm",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcudart.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublas.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublasLt.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libculibos.a",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/stubs/libcuda.so",
+            "-ldl",
+            "-lrt",
+            "/usr/local/lib/libnccl.so",
+            "-Wl,-rpath,/usr/local/cuda-12.5/targets/x86_64-linux/lib:/usr/local/lib",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/bounded-reference"
+          ],
+          [
+            "readelf",
+            "-d",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/build01/bounded-reference"
+          ]
+        ],
+        "source_files": {
+          "successor_gate.hpp": "4fe3220e1a605acfdeff79b170f587693fa2c007934094c4c3daf91f79632c97",
+          "build.py": "5918161f3f5cd60cb2ab96b7abfbdbee4ea4fcd83fd8d188027550546688e8ff",
+          "control.py": "698163170cb5abb272078f9bd6d2e9eff834d5631e75cc511506c8ef57453262",
+          "verify.py": "d57879b610c521bc8caf2ca98e98fc66057708c866d9d4782a693dee001c07eb",
+          "freeze.py": "4046e325576d5c7d4a3f886673dba024fc445ae59caa84dc3f32d2f089c5b11c",
+          "lifecycle.cpp": "5bb142b2e185d7f94d155ae9906f13dd34b880945abae2fe079b82bc7b9561ff",
+          "MANIFEST.json": "57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0"
+        },
+        "GPU_calls": 0
+      },
+      "redacted": true
+    },
+    {
+      "role": "STRONG_FAILED",
+      "private_original_receipt_sha256": "c2cc58fc6138dda542a862a8a81478f3f4083f65715bde2d1840d6e3d492b40b",
+      "receipt": {
+        "status": "COMPILED_NOT_EXECUTED",
+        "executable_sha256": "bb098664aaa32816f8cf15cf79fb143114961821bc7db026b7cd4e7e938ef559",
+        "bytes": 214267576,
+        "derivation": {
+          "active_kv.hpp": {
+            "original": "c50edeb26d09ebe4cc7bcaff22c3590bcd093a2e49dbc4aa5fbfff0f14370433",
+            "derived": "0004328c2ed5f5c158a33e9b1df9d31d02a033146c93ca65808fde980f9f6111",
+            "changes": "admission type only; extraction unchanged"
+          },
+          "active_kv.cpp": {
+            "original": "f0bf4c1bd3ab934e5f13a71349a4d6cbeb57ce109bfe88ce48470270d1a2ad03",
+            "derived": "77e2b695c6be37389ec1a239fc4d8aba2448cdbecc823d2bbbb4a6c73c0c094b",
+            "changes": "admission type only; extraction unchanged"
+          }
+        },
+        "strong_derivation": {
+          "original_planner_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "derived_planner_sha256": "63e386af163e05069dc1e8e5ee3c65921520036fd0e83e15000e72308554c64d",
+          "reference_driver_sha256": "5bb142b2e185d7f94d155ae9906f13dd34b880945abae2fe079b82bc7b9561ff",
+          "derived_driver_sha256": "233d28dfc817fccea9615078d9f82c0ceb4742f0a9fb230edb55c7e42451c9b4",
+          "changes": [
+            "original planner groups/math retained",
+            "output reserve32 checked per physical group; qualification caller ownership may hold more copied rows across groups",
+            "same initial producer and q1 supplied body; whole suffix caller for strong/LOCAL",
+            "complete raw comparison inline stops first mismatch",
+            "real backend physical counters and GPU placement observer"
+          ],
+          "qualification_only": true
+        },
+        "archives": [
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "bytes": 212332970,
+            "sha256": "8b37eb31a5641aeac715baeb831d95ac2ff3e41433fda05241480735b88fc3ed"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-base.a",
+            "bytes": 1304436,
+            "sha256": "be4f26d3df1f770683f16a87d1862d679698bb171d1384c8b0f7786c9b140a8d"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-cpu.a",
+            "bytes": 1558734,
+            "sha256": "9dd1e58643bf494175e9b2e8d24cb5356b85284c0c72f6481d8debf0482c01f8"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml.a",
+            "bytes": 57614,
+            "sha256": "dc8f011dfff187f907063dfc4616189ef9811c2eb05cc86de319932831540099"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/src/libllama.a",
+            "bytes": 10931262,
+            "sha256": "c4d87d6a6b81a16b3ff817daca16ff45550f233f7556b39e1ff906e2c24af709"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/vendor/hash/libvendor-hash.a",
+            "bytes": 71190,
+            "sha256": "43da898ae626261e3b2b1fca6a304fde389233da943be9ca51614daa2ea96ef8"
+          }
+        ],
+        "source_identities": [
+          [
+            "repository-01/benchmarks/linux_transfer_v1/native/reference.cpp",
+            "111401574d53c534e3a39cac75785ae5ae5fa9a61b44fc7ada989a96305f4723"
+          ],
+          [
+            "run-01/stage-03/sources/reference/include/llama.h",
+            "3d1b18eda626c1b9ecf5bda0798e65b974a8f70f30d56726610633a980cb4160"
+          ],
+          [
+            "run-01/stage-03/sources/reference/common/chat.cpp",
+            "abab0d03a111bd198693a518c7cdd07a33326a6a6685cc182a88d4fdae5f61dc"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/worker.cpp",
+            "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/resident_context.hpp",
+            "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647"
+          ]
+        ],
+        "commands": [
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-00c6b32a8d7fd7b4\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0\"",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-I${HS_ROOT}/pr210-stage-b-build-02/frontend",
+            "-c",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/strong.cpp",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/strong.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-00c6b32a8d7fd7b4\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0\"",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01",
+            "-I${HS_ROOT}/bl-00c6b32a8d7fd7b4/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-I${HS_ROOT}/pr210-stage-b-build-02/frontend",
+            "-c",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/active_kv.cpp",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/active_kv.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-O0",
+            "-fno-lto",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/strong.o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/active_kv.o",
+            "-Wl,--start-group",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-base.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-cpu.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/src/libllama.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/vendor/hash/libvendor-hash.a",
+            "-Wl,--end-group",
+            "-lgomp",
+            "-lpthread",
+            "-lm",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcudart.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublas.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublasLt.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libculibos.a",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/stubs/libcuda.so",
+            "-ldl",
+            "-lrt",
+            "/usr/local/lib/libnccl.so",
+            "-Wl,-rpath,/usr/local/cuda-12.5/targets/x86_64-linux/lib:/usr/local/lib",
+            "-o",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/bounded-strong"
+          ],
+          [
+            "readelf",
+            "-d",
+            "${HS_ROOT}/bl-00c6b32a8d7fd7b4/strong-build01/bounded-strong"
+          ]
+        ],
+        "source_files": {
+          "build_strong.py": "afd520f6e1ee8115ee5c23561a6975bfcfc6b2e0481cf6634af05d8244a14dea",
+          "successor_gate.hpp": "4fe3220e1a605acfdeff79b170f587693fa2c007934094c4c3daf91f79632c97",
+          "strong_step.inc": "eab62feade3d52dafc53fe6e17e0d1dfa8391dd6203403ee8de9854b8c720d37",
+          "strong_support.hpp": "d1aba772714c66733073b9a3126e531859f86298a9ffeba67eb1aaf30e4ac67e",
+          "build.py": "5918161f3f5cd60cb2ab96b7abfbdbee4ea4fcd83fd8d188027550546688e8ff",
+          "derive_strong.py": "99b3df6a893f2a93f50e16ae48e5e562e793bf4c65d513057903afd001224b80",
+          "control.py": "698163170cb5abb272078f9bd6d2e9eff834d5631e75cc511506c8ef57453262",
+          "verify.py": "d57879b610c521bc8caf2ca98e98fc66057708c866d9d4782a693dee001c07eb",
+          "cpu_check.py": "3c407d8520816c82249f2bb84a888d727953c87945802c3825c49d69dbe6d193",
+          "freeze.py": "4046e325576d5c7d4a3f886673dba024fc445ae59caa84dc3f32d2f089c5b11c",
+          "lifecycle.cpp": "5bb142b2e185d7f94d155ae9906f13dd34b880945abae2fe079b82bc7b9561ff",
+          "cpu_probe.cpp": "2eb0249fb6ad85f6d46f5adcc298aa2514a7f7ac95c3aa6e70e8170db3404fc1",
+          "PRE_REGISTERED.md": "5fd2b38f9cf1986379ee07df7edea647f7e542b1b9da3b0e4cac92858663aee4",
+          "MANIFEST.json": "57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0"
+        },
+        "GPU_calls": 0
+      },
+      "redacted": true
+    },
+    {
+      "role": "STRONG_LOCAL_RETRY",
+      "private_original_receipt_sha256": "5ee6053fefc6c9d9bdc58e824d07783973905cf3075e6f7f18ff93c672f64f3b",
+      "receipt": {
+        "status": "COMPILED_NOT_EXECUTED",
+        "executable_sha256": "ad15e7514ab7a50c42b835b4ac02d45a2f7895f75b5838cd2206dd108d317b4f",
+        "bytes": 214273824,
+        "derivation": {
+          "active_kv.hpp": {
+            "original": "c50edeb26d09ebe4cc7bcaff22c3590bcd093a2e49dbc4aa5fbfff0f14370433",
+            "derived": "acc32404457a2f540c062d5ea4b66a13b04870f6566bd7ca02c49490dffd029b",
+            "changes": "admission type only; extraction unchanged"
+          },
+          "active_kv.cpp": {
+            "original": "f0bf4c1bd3ab934e5f13a71349a4d6cbeb57ce109bfe88ce48470270d1a2ad03",
+            "derived": "77e2b695c6be37389ec1a239fc4d8aba2448cdbecc823d2bbbb4a6c73c0c094b",
+            "changes": "admission type only; extraction unchanged"
+          }
+        },
+        "strong_derivation": {
+          "original_planner_sha256": "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647",
+          "derived_planner_sha256": "63e386af163e05069dc1e8e5ee3c65921520036fd0e83e15000e72308554c64d",
+          "reference_driver_sha256": "5bb142b2e185d7f94d155ae9906f13dd34b880945abae2fe079b82bc7b9561ff",
+          "derived_driver_sha256": "9e7e0d43a647fad7e2aece6e89f78d52d836ddab861a19fa18cba4c1bf629854",
+          "changes": [
+            "original planner groups/math retained",
+            "output reserve32 checked per physical group; qualification caller ownership may hold more copied rows across groups",
+            "same initial producer and q1 supplied body; whole suffix caller for strong/LOCAL",
+            "complete raw comparison inline stops first mismatch",
+            "real backend physical counters and GPU placement observer"
+          ],
+          "qualification_only": true
+        },
+        "archives": [
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "bytes": 212332970,
+            "sha256": "8b37eb31a5641aeac715baeb831d95ac2ff3e41433fda05241480735b88fc3ed"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-base.a",
+            "bytes": 1304436,
+            "sha256": "be4f26d3df1f770683f16a87d1862d679698bb171d1384c8b0f7786c9b140a8d"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-cpu.a",
+            "bytes": 1558734,
+            "sha256": "9dd1e58643bf494175e9b2e8d24cb5356b85284c0c72f6481d8debf0482c01f8"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml.a",
+            "bytes": 57614,
+            "sha256": "dc8f011dfff187f907063dfc4616189ef9811c2eb05cc86de319932831540099"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/src/libllama.a",
+            "bytes": 10931262,
+            "sha256": "c4d87d6a6b81a16b3ff817daca16ff45550f233f7556b39e1ff906e2c24af709"
+          },
+          {
+            "path": "${HS_ROOT}/run-01/build-loop4-01/native/llama/vendor/hash/libvendor-hash.a",
+            "bytes": 71190,
+            "sha256": "43da898ae626261e3b2b1fca6a304fde389233da943be9ca51614daa2ea96ef8"
+          }
+        ],
+        "source_identities": [
+          [
+            "repository-01/benchmarks/linux_transfer_v1/native/reference.cpp",
+            "111401574d53c534e3a39cac75785ae5ae5fa9a61b44fc7ada989a96305f4723"
+          ],
+          [
+            "run-01/stage-03/sources/reference/include/llama.h",
+            "3d1b18eda626c1b9ecf5bda0798e65b974a8f70f30d56726610633a980cb4160"
+          ],
+          [
+            "run-01/stage-03/sources/reference/common/chat.cpp",
+            "abab0d03a111bd198693a518c7cdd07a33326a6a6685cc182a88d4fdae5f61dc"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/worker.cpp",
+            "429ca63224bffdc62fff65cc0c4b4199ea0ae9677fa3b087d1bbbe1d01b12938"
+          ],
+          [
+            "pr210-stage-b-build-02/frontend/resident_context.hpp",
+            "02b361035da2baa586e7c2192ca05a87036ef4336a478f954ee1a006fa6b8647"
+          ]
+        ],
+        "commands": [
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-retry01-20261112T1700Z\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"d33d817b811f647ff83b413cc1fc384318daebf817272f2c194ce147b29c31d6\"",
+            "-I${HS_ROOT}/bl-retry01-20261112T1700Z/build01",
+            "-I${HS_ROOT}/bl-retry01-20261112T1700Z/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-I${HS_ROOT}/pr210-stage-b-build-02/frontend",
+            "-c",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/strong.cpp",
+            "-o",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/strong.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-std=c++17",
+            "-O0",
+            "-g",
+            "-fno-inline",
+            "-fno-lto",
+            "-Wall",
+            "-Wextra",
+            "-DHS_SUCC_ROOT=\"${HS_ROOT}/bl-retry01-20261112T1700Z\"",
+            "-DHS_SUCC_MANIFEST_SHA=\"d33d817b811f647ff83b413cc1fc384318daebf817272f2c194ce147b29c31d6\"",
+            "-I${HS_ROOT}/bl-retry01-20261112T1700Z/build01",
+            "-I${HS_ROOT}/bl-retry01-20261112T1700Z/source/benchmarks/server_expansion_v1/N/bounded_lifecycle_20261113",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/include",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/ggml/src",
+            "-I${HS_ROOT}/run-01/stage-04/sources/loop4/vendor",
+            "-I${HS_ROOT}/repository-01/benchmarks/linux_transfer_v1/native",
+            "-I${HS_ROOT}/pr210-stage-b-build-02/frontend",
+            "-c",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/active_kv.cpp",
+            "-o",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/active_kv.o"
+          ],
+          [
+            "/usr/bin/g++",
+            "-O0",
+            "-fno-lto",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/strong.o",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/active_kv.o",
+            "-Wl,--start-group",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-base.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml-cpu.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/ggml/src/libggml.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/src/libllama.a",
+            "${HS_ROOT}/run-01/build-loop4-01/native/llama/vendor/hash/libvendor-hash.a",
+            "-Wl,--end-group",
+            "-lgomp",
+            "-lpthread",
+            "-lm",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcudart.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublas.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublasLt.so",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libculibos.a",
+            "/usr/local/cuda-12.5/targets/x86_64-linux/lib/stubs/libcuda.so",
+            "-ldl",
+            "-lrt",
+            "/usr/local/lib/libnccl.so",
+            "-Wl,-rpath,/usr/local/cuda-12.5/targets/x86_64-linux/lib:/usr/local/lib",
+            "-o",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/bounded-strong"
+          ],
+          [
+            "readelf",
+            "-d",
+            "${HS_ROOT}/bl-retry01-20261112T1700Z/build01/bounded-strong"
+          ]
+        ],
+        "source_files": {
+          "derive_strong_retry.py": "6dbb5a41feeaa93169ef2d144f00ed134de3f38b7cf21dac5339ff2aaad4c601",
+          "build_strong.py": "afd520f6e1ee8115ee5c23561a6975bfcfc6b2e0481cf6634af05d8244a14dea",
+          "continue_strong.py": "e05a92f3d922e68267caa12d03a9ac9dd52875736fa62785814cda20f606437d",
+          "build_strong_retry.py": "0c3085b03739c5e52dd0c8c422a06b53c114e5a8e866fe9baa7a05244d7bd7a4",
+          "successor_gate.hpp": "4fe3220e1a605acfdeff79b170f587693fa2c007934094c4c3daf91f79632c97",
+          "strong_step.inc": "eab62feade3d52dafc53fe6e17e0d1dfa8391dd6203403ee8de9854b8c720d37",
+          "verify_strong.py": "1dac6a4203979ca7cf46437f8876a8c86898f9947a771b8beaa5ba61417c900e",
+          "strong_support.hpp": "d1aba772714c66733073b9a3126e531859f86298a9ffeba67eb1aaf30e4ac67e",
+          "control_retry.py": "1e41929b0223042a6ae8b8b72676f2b41c26b648ff668062ca09dbe9067d3097",
+          "build.py": "5918161f3f5cd60cb2ab96b7abfbdbee4ea4fcd83fd8d188027550546688e8ff",
+          "derive_strong.py": "99b3df6a893f2a93f50e16ae48e5e562e793bf4c65d513057903afd001224b80",
+          "control.py": "698163170cb5abb272078f9bd6d2e9eff834d5631e75cc511506c8ef57453262",
+          "verify.py": "d57879b610c521bc8caf2ca98e98fc66057708c866d9d4782a693dee001c07eb",
+          "verify_retry.py": "c044e8713ff334d9db82fa112ffcf381bab97cc289cbbd16be7e708fcdfb2e92",
+          "cpu_check.py": "3c407d8520816c82249f2bb84a888d727953c87945802c3825c49d69dbe6d193",
+          "freeze.py": "4046e325576d5c7d4a3f886673dba024fc445ae59caa84dc3f32d2f089c5b11c",
+          "STRONG_LOCAL_FREEZE.md": "5ce149af43f5276cda3b558817fab8152cce64f08f256e329828c71b7656c5a6",
+          "lifecycle.cpp": "5bb142b2e185d7f94d155ae9906f13dd34b880945abae2fe079b82bc7b9561ff",
+          "cpu_probe.cpp": "2eb0249fb6ad85f6d46f5adcc298aa2514a7f7ac95c3aa6e70e8170db3404fc1",
+          "PRE_REGISTERED.md": "5fd2b38f9cf1986379ee07df7edea647f7e542b1b9da3b0e4cac92858663aee4",
+          "MANIFEST.json": "57e632fedea56b6baf1dc8901a8962086f25cc1dd6da97f124063c3ec4ed75e0"
+        },
+        "GPU_calls": 0
+      },
+      "redacted": true
+    }
+  ]
+}

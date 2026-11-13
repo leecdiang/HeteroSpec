@@ -1,0 +1,24 @@
+#include "llama.h"
+#include <cstdint>
+static uint64_t phase_exports=0,phase_imports=0,phase_contexts=0,phase_heavy_captures=0;
+static size_t counted_get(llama_context*c,uint8_t*d,size_t n,llama_seq_id s){++phase_exports;return llama_state_seq_get_data(c,d,n,s);}
+static size_t counted_set(llama_context*c,const uint8_t*d,size_t n,llama_seq_id s){++phase_imports;return llama_state_seq_set_data(c,d,n,s);}
+static llama_context* counted_context(llama_model*m,llama_context_params p){++phase_contexts;return llama_init_from_model(m,p);}
+#define llama_state_seq_get_data counted_get
+#define llama_state_seq_set_data counted_set
+#define llama_init_from_model counted_context
+#define main historical_entry
+#include "worker.cpp"
+#undef main
+#define FRONTIER_PROFILE
+#include "linux_profile_disabled.hpp"
+static bool phase1_profiling=false;
+#include "llama-model.h"
+
+#include "m1_capability.hpp"
+static json module_inventory(){ return json(linux_transfer::modules()); }
+static void observe_state(Context& c,const fs::path& dir,int row,bool state=true){
+    ++phase_heavy_captures;
+#if PHASE_CANDIDATE
+    llama_synchronize(c.c);const int n=llama_vocab_n_tokens(llama_model_get_vocab(c.model));auto*p=c.plan.logits(row);
+    fs::create_directories(dir);tpds_decisive::capture_write_new(dir/"frontier.f32",p,size_t(n)*4);

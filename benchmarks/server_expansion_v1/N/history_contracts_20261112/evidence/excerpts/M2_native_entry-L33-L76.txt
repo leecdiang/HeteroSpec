@@ -1,0 +1,44 @@
+int main(int argc,char**argv){
+    const auto phase1_main_started=Clock::now();
+    llama_model*t=nullptr,*d=nullptr;Pair pool;fs::path root;
+    try{
+        need(argc==3,"phase worker JOB OUT");const auto job=load(argv[1]);root=argv[2];need(!fs::exists(root),"fresh native output");fs::create_directories(root);
+        phase_target_reserve=job.at("target_output_reserve");
+        const int m2_k=job.at("k");phase_proposal_mode=job.at("proposal_mode");
+        need(phase_target_reserve==8&&(m2_k==3||m2_k==7)&&job.at("draft")==true&&job.at("draft_width")==4,"M2 explicit k3/7 reserve8 D4 contract");
+        need(phase_proposal_mode=="live"||phase_proposal_mode=="replay"||phase_proposal_mode=="producer","M2 proposal mode");
+        phase_threads=job.at("threads").get<int>();need(phase_threads>0 && phase_threads<=2,"allocated CPU thread budget");
+        const auto bin=linux_transfer::executable().parent_path();
+        ggml_time_init();
+        ggml_backend_load_all_from_path(bin.string().c_str());llama_backend_init();ggml_backend_dev_t gpu=nullptr;
+        for(size_t i=0;i<ggml_backend_dev_count();++i){auto x=ggml_backend_dev_get(i);if(ggml_backend_dev_type(x)==GGML_BACKEND_DEVICE_TYPE_GPU){need(!gpu,"ambiguous GPU");gpu=x;}}need(gpu,"GPU required");
+        ggml_backend_dev_t devices[]={gpu,nullptr};auto mp=llama_model_default_params();mp.devices=devices;mp.n_gpu_layers=999;mp.split_mode=LLAMA_SPLIT_MODE_NONE;
+        json result={{"requests",json::array()},{"trajectories",0},{"token_rows",0},{"modules_before",module_inventory()},{"GPU_device",ggml_backend_dev_description(gpu)}};
+        const std::string residency=job.value("residency",std::string("matched"));
+        need(residency=="matched" || residency=="target_only","unknown residency");
+        const bool target_only=residency=="target_only";
+        need(!target_only || !job.value("draft",false),"target-only cannot execute draft");
+        auto start=Clock::now();
+        t=llama_model_load_from_file(job.at("target_model").get<std::string>().c_str(),mp);
+        if(!target_only)d=llama_model_load_from_file(job.at("draft_model").get<std::string>().c_str(),mp);
+        need(t && (target_only || d),"models");
+        result["model_load_s"]=since(start);result["phase1_residency"]=residency;
+        const auto*tv=llama_model_get_vocab(t);
+        if(d){const auto*dv=llama_model_get_vocab(d);
+        need(llama_vocab_n_tokens(tv)==llama_vocab_n_tokens(dv),"vocab size");
+        for(int i=0;i<llama_vocab_n_tokens(tv);++i)need(strcmp(llama_vocab_get_text(tv,i),llama_vocab_get_text(dv,i))==0&&llama_vocab_is_eog(tv,i)==llama_vocab_is_eog(dv,i),"vocab mismatch");}
+#if PHASE_CANDIDATE
+        phase_lowering=job.at("lowering");phase_draft_width=job.value("draft_width",1);need(phase_draft_width==1||phase_draft_width==4,"draft width");
+        auto spec=ArmSpec{"phase","QB",0,32,m2_k,true,job.value("draft",false)};
+#else
+        auto spec=arm_spec("R");
+#endif
+        start=Clock::now();provision(pool,t,d,spec,root/"pool");
+        // Match resident model/context occupancy for M and speculative controls.
+        if(d && !pool.draft)pool.draft=std::make_unique<Context>(d,1,false,false,false,root/"pool/draft",0);
+        result["pool_setup_s"]=since(start);result["vocab"]=llama_vocab_n_tokens(tv);result["eog_ids"]=json::array();for(int i=0;i<llama_vocab_n_tokens(tv);++i)if(llama_vocab_is_eog(tv,i))result["eog_ids"].push_back(i);
+        result["model_structure"]={{"layers",t->hparams.n_layer()},{"query_heads",t->hparams.n_head()},{"kv_heads",t->hparams.n_head_kv()},{"head_k",t->hparams.n_embd_head_k()},{"head_v",t->hparams.n_embd_head_v()},{"K_elements",t->hparams.n_embd_k_gqa()},{"V_elements",t->hparams.n_embd_v_gqa()}};
+        m1_capability(job,pool,t,d,spec,root,result);
+        phase1_profiling=job.value("profile",false);if(phase1_profiling){profile::init();if(!job.contains("append_probes"))profile::begin();}
+        if(job.contains("proposal_tape_requests")){m2_tapes(job,result,root,pool,d);}
+        else if(job.contains("append_probes")){phase1_append(job,result,root,pool);}

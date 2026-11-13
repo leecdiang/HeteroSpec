@@ -1,0 +1,35 @@
+            if (!embd.empty()) {
+                const bool is_last_batch = (n_consumed >= (int) embd_inp.size());
+                const bool save_now = session_do_save && is_last_batch;
+                session_tokens.insert(session_tokens.end(), embd.begin(), embd.end());
+                if (!common_prompt_batch_decode(ctx, session_tokens, embd.size(), n_past, params.n_batch, path_session, save_now)) {
+                    return 1;
+                }
+                n_session_consumed += embd.size();
+                if (save_now) {
+                    session_do_save = false;
+                }
+
+                LOG_DBG("n_past = %d\n", n_past);
+
+                // Display total tokens alongside total time
+                if (params.n_print > 0 && n_past % params.n_print == 0) {
+                    LOG_DBG("\n\033[31mTokens consumed so far = %d / %d \033[0m\n", n_past, n_ctx);
+                }
+            }
+        }
+
+        embd.clear();
+
+        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
+
+            const llama_token id = common_sampler_sample(smpl, ctx, -1);
+
+            common_sampler_accept(smpl, id, /* accept_grammar= */ true);
+
+            // LOG_DBG("last: %s\n", string_from(ctx, smpl->prev.to_vector()).c_str());
+
+            embd.push_back(id);
+
+            if (params.conversation_mode && !waiting_for_first_input && !llama_vocab_is_eog(vocab, id)) {
+                assistant_ss << common_token_to_piece(ctx, id, false);

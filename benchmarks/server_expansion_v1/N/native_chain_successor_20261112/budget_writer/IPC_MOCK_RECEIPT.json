@@ -1,0 +1,94 @@
+{
+  "schema": "hs.N1chain.central-accounting.cpu-mock-receipt.v1",
+  "scope": "ONE_GLOBAL_LEDGER_PRIVATE_IPC_MOCK_NOT_NATIVE_PERMISSION",
+  "source_files": {
+    "hooks.hpp": {
+      "bytes": 1854,
+      "sha256": "77ce40a6d17421a3f44f5a9ec5667394d6acf70113f7c0c0085879225ec2751f"
+    },
+    "posix.hpp": {
+      "bytes": 3652,
+      "sha256": "b38a9ac4f9be39f7a3daa59c2baff46eff3e01bd3e29773c1171b00d64a33198"
+    },
+    "sha256.hpp": {
+      "bytes": 2502,
+      "sha256": "b6278032dd74253425d958cbba495555715977d273e45077e3f8d09c2ab40060"
+    },
+    "durable_budget.hpp": {
+      "bytes": 11563,
+      "sha256": "1eb0a0809026a4bed3f5c6c21dff91f2fd55497bffe01355702c9dd8f8560a2a"
+    },
+    "accounting_ipc.hpp": {
+      "bytes": 14629,
+      "sha256": "0dda4bb9195d9a4fec1b90f94b6d8dd0bc967fb0142365d0ed8a268bb250eff1"
+    },
+    "launch_gate.hpp": {
+      "bytes": 920,
+      "sha256": "d3f26bb595703a5c0642f94c89ee47986905eb85ff26587cd2cff9b688d6b9e4"
+    },
+    "test_ipc_mock.cpp": {
+      "bytes": 13260,
+      "sha256": "9deed87a11d2315139358ebe55c8ffa0763f1b4a58c7e4a8528b2547776d71d5"
+    }
+  },
+  "tests": [
+    {
+      "mode": "NORMAL",
+      "status": "PASS",
+      "checks": 17,
+      "bytes": 192472,
+      "sha256": "4bacc7c3d0c3a80e7fb1ca769b84ad3a6f027d489b97b9391ad25b2e4d15463b",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "native_libraries_linked": false,
+      "executed_only_as_std_CPU_mock": true
+    },
+    {
+      "mode": "NDEBUG",
+      "status": "PASS",
+      "checks": 17,
+      "bytes": 192472,
+      "sha256": "4bacc7c3d0c3a80e7fb1ca769b84ad3a6f027d489b97b9391ad25b2e4d15463b",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "native_libraries_linked": false,
+      "executed_only_as_std_CPU_mock": true
+    }
+  ],
+  "global_ledger_per_case": 1,
+  "frame_max_bytes": 65536,
+  "journal_max_bytes": 536870912,
+  "journal_reader_chunk_bytes": 8192,
+  "journal_line_max_bytes": 65536,
+  "large_provided_journal_fixtures": {
+    "NORMAL": {
+      "bytes": 68337029,
+      "sha256": "b9047175c0a0b38e1a12481936a3d0abceb7b07b2dfe75b7ab508d2bef1b89d4"
+    },
+    "NDEBUG": {
+      "bytes": 68337029,
+      "sha256": "5ce12d85c6561ce8afb56419e7a9be40c97ed4a062cffbcd47c3d14c0edad93c"
+    }
+  },
+  "large_fixture_scope": "Provided synthetic hash-chain bytes; not native operation receipts",
+  "pre_exec_policy": "LAUNCH_ONLY pre-reservation and close precede WORKER; worker verifies without double charge",
+  "concrete_native_exec_callback_calls": 0,
+  "ACK_scope": "ACCOUNTING_ONLY_NOT_NATIVE_AUTHORITY",
+  "no_retry_reconnect": true,
+  "actual_execution": {
+    "model_creation": 0,
+    "vocabulary_only_model_creation": 0,
+    "backend_init": 0,
+    "native_contexts": 0,
+    "placement_actions": 0,
+    "model_forwards": 0,
+    "real_linked_binary_invocations": 0
+  },
+  "native_admission": false
+}

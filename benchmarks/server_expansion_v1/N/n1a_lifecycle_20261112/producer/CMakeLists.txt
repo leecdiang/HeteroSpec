@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.20)
+project(heterospec_n1a_cpu_producer LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(HS_UPSTREAM_SOURCE "" CACHE PATH "Exact pinned pristine upstream source")
+if(NOT EXISTS "${HS_UPSTREAM_SOURCE}/common/chat.cpp")
+ message(FATAL_ERROR "Pass exact pinned HS_UPSTREAM_SOURCE")
+endif()
+foreach(flag GGML_CUDA GGML_METAL GGML_VULKAN GGML_SYCL GGML_RPC GGML_OPENCL GGML_BLAS GGML_OPENMP GGML_BACKEND_DL GGML_NATIVE LLAMA_BUILD_TESTS LLAMA_BUILD_TOOLS LLAMA_BUILD_EXAMPLES LLAMA_BUILD_SERVER LLAMA_BUILD_APP LLAMA_OPENSSL LLAMA_LLGUIDANCE LLAMA_SUBPROCESS BUILD_SHARED_LIBS)
+ set(${flag} OFF CACHE BOOL "CPU bridge restriction" FORCE)
+endforeach()
+set(LLAMA_BUILD_COMMON ON CACHE BOOL "Actual common parser and renderer" FORCE)
+add_subdirectory("${HS_UPSTREAM_SOURCE}" upstream)
+add_executable(producer_bridge producer_bridge.cpp)
+target_sources(producer_bridge PRIVATE
+ "${HS_UPSTREAM_SOURCE}/tools/server/server-task.cpp"
+ "${HS_UPSTREAM_SOURCE}/tools/server/server-common.cpp"
+ "${HS_UPSTREAM_SOURCE}/tools/server/server-chat.cpp")
+target_include_directories(producer_bridge PRIVATE "${HS_UPSTREAM_SOURCE}/tools/server" "${HS_UPSTREAM_SOURCE}/tools/mtmd")
+target_compile_options(producer_bridge PRIVATE -ffunction-sections -fdata-sections)
+target_link_options(producer_bridge PRIVATE -Wl,--gc-sections)
+target_link_libraries(producer_bridge PRIVATE llama-common)

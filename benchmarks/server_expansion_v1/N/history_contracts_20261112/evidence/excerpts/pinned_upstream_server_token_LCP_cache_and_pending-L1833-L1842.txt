@@ -1,0 +1,10 @@
+    bool process_token(completion_token_output & result, server_slot & slot) {
+        // remember which tokens were sampled - used for repetition penalties during sampling
+        const std::string token_str = result.text_to_send;
+        slot.sampled = result.tok;
+
+        slot.generated_text += token_str;
+        if (slot.task->params.return_tokens) {
+            slot.generated_tokens.push_back(result.tok);
+        }
+        slot.has_next_token = true;

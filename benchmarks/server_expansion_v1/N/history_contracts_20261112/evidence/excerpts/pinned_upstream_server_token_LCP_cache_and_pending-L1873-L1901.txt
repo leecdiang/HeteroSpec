@@ -1,0 +1,29 @@
+            }
+
+            slot.add_token(result);
+            if (slot.task->params.stream) {
+                send_partial_response(slot, result, false);
+            }
+        }
+
+        if (incomplete) {
+            slot.has_next_token = true;
+        }
+
+        // if context shifting is disabled, make sure that we don't run out of context
+        if (!params_base.ctx_shift && slot.prompt.n_tokens() + 1 >= slot.n_ctx) {
+            slot.truncated      = true;
+            slot.stop           = STOP_TYPE_LIMIT;
+            slot.has_next_token = false;
+
+            SLT_DBG(slot, "stopped due to running out of context capacity, prompt.n_tokens() = %d, task.n_tokens = %d, n_gen = %d, n_ctx = %d\n",
+                    slot.prompt.n_tokens(), slot.task->n_tokens(), (int) slot.stats.n_gen, slot.n_ctx);
+        }
+
+        // check the limits
+        if (slot.stats.n_gen > 0 && slot.has_next_token && !slot.has_budget()) {
+            slot.stop           = STOP_TYPE_LIMIT;
+            slot.has_next_token = false;
+
+            SLT_DBG(slot, "stopped by limit, n_gen = %d, n_predict = %d\n", (int) slot.stats.n_gen, slot.task->params.n_predict);
+        }

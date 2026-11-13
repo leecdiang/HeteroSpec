@@ -1,0 +1,11 @@
+        if (llama_vocab_is_eog(vocab, result.tok)) {
+            slot.stop           = STOP_TYPE_EOS;
+            slot.has_next_token = false;
+
+            SLT_DBG(slot, "%s", "stopped by EOS\n");
+        }
+
+        SLT_DBG(slot, "n_gen = %d, n_remaining = %d, next token: %5d '%s'\n", (int) slot.stats.n_gen, slot.n_remaining(), result.tok, token_str.c_str());
+
+        return slot.has_next_token; // continue
+    }

@@ -1,0 +1,81 @@
+{
+  "status": "PASS_INDEPENDENT_TEXT_RECEIPT_STATISTICS",
+  "measured_episodes": 8,
+  "roots": [
+    {
+      "root": "C0",
+      "pairs": [
+        {
+          "round": 0,
+          "W": 8.091856084996834,
+          "L": 8.898652870993828,
+          "L_over_W": 1.099704786827942
+        },
+        {
+          "round": 1,
+          "L": 8.870700971019687,
+          "W": 8.849195897986647,
+          "L_over_W": 1.0024301725581568
+        }
+      ],
+      "W_total": 16.94105198298348,
+      "L_total": 17.769353842013516,
+      "L_over_W": 1.0488931773458947
+    },
+    {
+      "root": "C1",
+      "pairs": [
+        {
+          "round": 0,
+          "L": 10.089393511996605,
+          "W": 9.26804521700251,
+          "L_over_W": 1.0886215243627972
+        },
+        {
+          "round": 1,
+          "W": 10.176234259997727,
+          "L": 10.061908299016068,
+          "L_over_W": 0.9887653961120894
+        }
+      ],
+      "W_total": 19.444279477000237,
+      "L_total": 20.151301811012672,
+      "L_over_W": 1.0363614570984099
+    }
+  ],
+  "totals": {
+    "W": 36.38533145998372,
+    "L": 37.92065565302619
+  },
+  "L_over_W": 1.0421962403923957,
+  "reduction_percent": -4.219624039239567,
+  "phase_totals": {
+    "W": {
+      "actual_consumer_s": 0.020687012060079724,
+      "canonical_producer_s": 0.15158334706211463,
+      "decode_sync_and_budget_s": 22.654689372051507,
+      "greedy_sampling_s": 11.686458785348805,
+      "output_owned_copy_s": 0.08957728152745403,
+      "reconcile_and_checkpoint_s": 0.003129236021777615,
+      "request_finish_s": 0.012572181003633887,
+      "request_reserve_s": 0.023541002039564773
+    },
+    "L": {
+      "actual_consumer_s": 0.023150765046011657,
+      "canonical_producer_s": 0.1569659170054365,
+      "decode_sync_and_budget_s": 22.755881662626052,
+      "greedy_sampling_s": 13.106159288261551,
+      "output_owned_copy_s": 0.09389002004172653,
+      "reconcile_and_checkpoint_s": 0.003480594983557239,
+      "request_finish_s": 0.013481540023349226,
+      "request_reserve_s": 0.023981818987522274
+    }
+  },
+  "limitations": [
+    "two preselected roots; repeats are paired observations, not additional roots",
+    "decode_sync_and_budget_s combines native decode, sync and durable admission; not isolated GPU/kernel time",
+    "only same-panel measured receipts; reset separately summed; no other-experiment cost stack",
+    "no population confidence interval or confirmatory performance claim"
+  ],
+  "model_calls": 0
+}

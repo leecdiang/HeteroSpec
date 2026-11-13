@@ -1,0 +1,38 @@
+    if (!batch.logits) {
+        if (output_all) {
+            // return the output for all tokens
+            output.resize(batch.n_tokens, true);
+        } else {
+            // return the output only for the last token
+            output.resize(batch.n_tokens, false);
+            output[output.size() - 1] = true;
+        }
+
+        batch.logits = output.data();
+    } else if (output_all) {
+        bool warn = false;
+
+        for (int32_t i = 0; i < batch.n_tokens; ++i) {
+            if (batch.logits[i] == 0) {
+                warn = true;
+            }
+        }
+
+        if (warn) {
+            LLAMA_LOG_WARN("%s: embeddings required but some input tokens were not marked as outputs -> overriding\n", __func__);
+
+            output.resize(batch.n_tokens, true);
+            batch.logits = output.data();
+        }
+    }
+
+    //
+    // compute stats
+    //
+
+    this->n_embd    = n_embd;
+    this->n_seq_max = n_seq_max;
+
+    // count the outputs in this batch
+    for (int32_t i = 0; i < batch.n_tokens; ++i) {
+        n_outputs += batch.logits[i] != 0;

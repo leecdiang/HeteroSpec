@@ -1,0 +1,32 @@
+    const auto& arm=spec.name;int k=spec.k;
+    hs_scope::requested_layout=spec.selector;
+    auto start=Clock::now();hsc::begin(capture?"heavy":"counts",int(input["prompt_ids"].size()));
+    json r={{"arm",arm},{"k",k},{"lifecycle",life},{"cycles",json::array()},{"capture",capture},
+        {"draft_enabled",spec.draft},{"observed_scope",spec.scope},{"context_scope_fixed",true},
+        {"producer",producer},{"draft_producer","NATIVE"},{"draft_ubatch",draft_ubatch}};
+    Pair fresh;Context*target=nullptr,*draft=nullptr;
+    if(life=="resident"){
+        need(bool(resident.target),"pool must be provisioned before requests");
+        target=resident.target.get();
+        need(target->selector==spec.selector && target->scoped==spec.scoped && target->ub==spec.target_ub,"context scope/config changed");
+        target->reset(capture,dir/"target");
+        if(spec.draft){need(bool(resident.draft),"draft pool missing");draft=resident.draft.get();draft->reset(capture,dir/"draft");}
+    }else{
+        fresh.target=std::make_unique<Context>(t,spec.target_ub,true,spec.scoped,capture,dir/"target",spec.selector);target=fresh.target.get();
+        if(spec.draft){fresh.draft=std::make_unique<Context>(d,1,false,false,capture,dir/"draft",spec.selector,draft_ubatch);draft=fresh.draft.get();}
+    }
+    if(draft)need(int(llama_n_ubatch(draft->c))==draft_ubatch,"actual draft width differs");
+    double setup=since(start);
+    auto request_start=Clock::now();auto prompt=input["prompt_ids"].get<std::vector<int>>();
+    if(producer=="P1"){for(size_t i=0;i<prompt.size();i++)target->decode({prompt[i]},int(i),false,"PREFILL");}
+    else target->decode(prompt,0,false,"PREFILL");
+    if(draft)draft->decode(prompt,0,false,"PREFILL");
+    int final_frontier=-1;int pending=target->sample(-1,"initial"),base=int(prompt.size()),cycle=0,cap=input["cap"];
+    std::vector<int> ids;std::vector<bool> eog;const auto*v=llama_model_get_vocab(t);
+    auto commit=[&](int id){ids.push_back(id);eog.push_back(llama_vocab_is_eog(v,id));return bool(eog.back())||int(ids.size())==cap;};
+    if(capture)target->snapshot("initial",-1);
+    bool done=commit(pending);
+    while(!done){
+        if(!draft){target->decode({pending},base++,false,"ORDINARY");pending=target->sample(-1,"ordinary-"+std::to_string(ids.size()));if(capture)target->snapshot("ordinary-"+std::to_string(ids.size()),-1);done=commit(pending);continue;}
+        int seed=pending;auto target_before=target->bounds(),draft_before=draft->bounds();
+        draft->trim(base);draft->decode({seed},base,false,"DRAFT_SYNC");

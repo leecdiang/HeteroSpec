@@ -1,0 +1,479 @@
+{
+  "schema": "hs.N1controller.python-frozen-node-differential.v1",
+  "status": "PASS",
+  "scope": "ARTIFICIAL_PROVIDED_RAW_BYTES_NOT_NATIVE_EVIDENCE",
+  "source_inputs": [
+    {
+      "file": "stage_verify.py",
+      "sha256": "641ffbf045485b10d7f94c9c979122c45442c514a3b9671f5abe3862cb0d1e42",
+      "bytes": 42391
+    },
+    {
+      "file": "test_stage_verify.py",
+      "sha256": "3e96357b235e67ff6228e46e80918673f316f8d510bd51add137bfc355341c9e",
+      "bytes": 17220
+    },
+    {
+      "file": "cpu_stage_fixture.py",
+      "sha256": "7e0c2489f6eef304c1712d119c9064cc97e84817a8549c6540ede2e18323fee1",
+      "bytes": 10009
+    },
+    {
+      "file": "differential_fixture.py",
+      "sha256": "9a8836c5548ab643c7e28e21f984efbc6b3d696a96faa4a5a511e925b330ea2f",
+      "bytes": 6285
+    }
+  ],
+  "frozen_node_checker_sha256": "561fc44696b6ba9993033798035e1b6670832fce497219388ed845f4b4d6265b",
+  "cases": 12,
+  "matched": 12,
+  "compared_fields": [
+    "status",
+    "bytes_compared",
+    "scalars_compared",
+    "bit_different_scalars",
+    "retained_positions",
+    "source_row_bytes_compared",
+    "first_difference_scalar_index_byte_offset_coordinate_hex",
+    "first_nonfinite_coordinate",
+    "recursive_tensor_and_before_after_results"
+  ],
+  "not_compared": [
+    "diagnostic_reason_wording",
+    "max_absolute_difference",
+    "decoded_float_value_rendering"
+  ],
+  "results": [
+    {
+      "case": "aligned_equal",
+      "match": true,
+      "python": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "PASS",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 0
+          }
+        }
+      },
+      "node": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "PASS",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 0
+          }
+        }
+      }
+    },
+    {
+      "case": "signed_zero_last_vocab",
+      "match": true,
+      "python": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 1,
+            "first_difference": {
+              "scalar_index": 151935,
+              "byte_offset": 607740,
+              "coordinate": {
+                "vocabulary": 151935,
+                "requested_row": 0
+              },
+              "left_hex": "00000000",
+              "right_hex": "00000080"
+            }
+          }
+        }
+      },
+      "node": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 1,
+            "first_difference": {
+              "scalar_index": 151935,
+              "byte_offset": 607740,
+              "coordinate": {
+                "vocabulary": 151935,
+                "requested_row": 0
+              },
+              "left_hex": "00000000",
+              "right_hex": "00000080"
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "equal_nonfinite_last_vocab",
+      "match": true,
+      "python": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 0,
+            "first_nonfinite": {
+              "scalar_index": 151935,
+              "coordinate": {
+                "vocabulary": 151935,
+                "requested_row": 0
+              }
+            }
+          }
+        }
+      },
+      "node": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "vectors": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 607744,
+            "scalars_compared": 151936,
+            "bit_different_scalars": 0,
+            "first_nonfinite": {
+              "scalar_index": 151935,
+              "coordinate": {
+                "vocabulary": 151935,
+                "requested_row": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "pending_state_difference",
+      "match": true,
+      "python": {
+        "status": "STATE_FAIL"
+      },
+      "node": {
+        "status": "STATE_FAIL"
+      }
+    },
+    {
+      "case": "invalid_EOG_CAP_precedence",
+      "match": true,
+      "python": {
+        "status": "INVALID_CAPTURE"
+      },
+      "node": {
+        "status": "INVALID_CAPTURE"
+      }
+    },
+    {
+      "case": "cold_invalid_resident_frontier_exception",
+      "match": true,
+      "python": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          }
+        }
+      },
+      "node": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "scalars_compared": 36864,
+            "bit_different_scalars": 0
+          }
+        }
+      }
+    },
+    {
+      "case": "retained_old_head_stride_equal",
+      "match": true,
+      "python": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          }
+        }
+      },
+      "node": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          },
+          "active_v": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          }
+        }
+      }
+    },
+    {
+      "case": "retained_last_layer_V_difference",
+      "match": true,
+      "python": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          },
+          "active_v": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 1,
+            "retained_positions": 1,
+            "first_difference": {
+              "coordinate": {
+                "layer": 35,
+                "kv_head": 7,
+                "position": 0,
+                "dimension": 127
+              },
+              "left_hex": "0000",
+              "right_hex": "003c"
+            }
+          }
+        }
+      },
+      "node": {
+        "status": "NUMERIC_FAIL",
+        "tensors": {
+          "active_k": {
+            "status": "PASS",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 0,
+            "retained_positions": 1
+          },
+          "active_v": {
+            "status": "NUMERIC_FAIL",
+            "bytes_compared": 73728,
+            "bit_different_scalars": 1,
+            "retained_positions": 1,
+            "first_difference": {
+              "coordinate": {
+                "layer": 35,
+                "kv_head": 7,
+                "position": 0,
+                "dimension": 127
+              },
+              "left_hex": "0000",
+              "right_hex": "003c"
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "owned_source_and_before_after_equal",
+      "match": true,
+      "python": {
+        "status": "PASS",
+        "bytes_compared": 607744,
+        "scalars_compared": 151936,
+        "bit_different_scalars": 0,
+        "source_row_bytes_compared": 607744
+      },
+      "node": {
+        "status": "PASS",
+        "bytes_compared": 607744,
+        "scalars_compared": 151936,
+        "bit_different_scalars": 0,
+        "source_row_bytes_compared": 607744
+      }
+    },
+    {
+      "case": "owned_equal_copies_differ_from_source",
+      "match": true,
+      "python": {
+        "status": "NUMERIC_FAIL",
+        "source_row_bytes_compared": 607744,
+        "before_after": {
+          "status": "PASS",
+          "bytes_compared": 607744,
+          "scalars_compared": 151936,
+          "bit_different_scalars": 0
+        }
+      },
+      "node": {
+        "status": "NUMERIC_FAIL",
+        "source_row_bytes_compared": 607744,
+        "before_after": {
+          "status": "PASS",
+          "bytes_compared": 607744,
+          "scalars_compared": 151936,
+          "bit_different_scalars": 0
+        }
+      }
+    },
+    {
+      "case": "reset_empty_files",
+      "match": true,
+      "python": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          },
+          "active_v": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          },
+          "vectors": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          }
+        }
+      },
+      "node": {
+        "status": "PASS",
+        "tensors": {
+          "active_k": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          },
+          "active_v": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          },
+          "vectors": {
+            "status": "EMPTY_FILE_VERIFIED",
+            "bytes_compared": 0
+          }
+        }
+      }
+    },
+    {
+      "case": "reset_nonempty_raw_rejected",
+      "match": true,
+      "python": {
+        "status": "INVALID_CAPTURE"
+      },
+      "node": {
+        "status": "INVALID_CAPTURE"
+      }
+    }
+  ],
+  "native_ELF": 0,
+  "model_forwards": 0,
+  "archive_sha256": "f586d5e711488f055fc63284c62366fbdac0e9276f5fb574b2d12f6f8e8137b0"
+}

@@ -1,0 +1,15 @@
+    if (hs_loop4::marked(dst)) {
+        hs_loop4::require(src0,src1,dst);
+        if (ids || fusion)throw std::runtime_error("loop4 rejects IDs and fused arithmetic");
+        const auto tiles=hs_loop4::plan(ncols_dst,stride_col_y,stride_col_dst,sizeof(block_q8_1));
+        for (const auto & tile : tiles) {
+            const void * quantized=src1_q8_1.get()+tile.input_byte_offset;
+            float * output=dst_d+tile.output_float_offset;
+            // Singleton channel/sample dimensions: use exactly the old tile's
+            // derived contiguous strides, not the wide graph's unused strides.
+            mul_mat_vec_q_switch_type(src0->data,src0->type,quantized,nullptr,fusion_local,output,ne00,
+                ne01,int(tile.width),s01,stride_col_y,stride_col_dst,
+                1,1,1,s02,int(tile.input_group_blocks),int(tile.output_group_floats),
+                1,1,s03,int(tile.input_group_blocks),int(tile.output_group_floats),0,stream);
+        }
+        return;

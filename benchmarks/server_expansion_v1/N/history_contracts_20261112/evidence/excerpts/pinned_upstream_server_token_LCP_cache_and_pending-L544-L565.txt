@@ -1,0 +1,22 @@
+    void release() {
+        if (is_processing()) {
+            GGML_ASSERT(task);
+
+            SLT_INF(*this, "stop processing: n_tokens = %d, truncated = %d\n", prompt.n_tokens(), truncated);
+
+            t_last_used = ggml_time_us();
+
+            state = SLOT_STATE_IDLE;
+
+            // do not keep context of the child slots - the parent's context is enough
+            if (task->is_child()) {
+                prompt_clear();
+            }
+
+            callback_on_reset(*this);
+
+            reset();
+
+            callback_on_release(id);
+        }
+    }

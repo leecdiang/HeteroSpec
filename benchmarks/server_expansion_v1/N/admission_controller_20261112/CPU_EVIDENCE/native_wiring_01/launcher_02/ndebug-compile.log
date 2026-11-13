@@ -1,0 +1,34 @@
+In file included from ${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp:2:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp: In function ‘hs::n1chain::BoundedLaunchResult hs::n1chain::launch_detail::supervise_owned(const hs::n1chain::BoundedLaunchSpec&, ChildAction, hs::n1chain::BoundedLogIO)’:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:67:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   67 |   if(::setsid()<0)::_exit(124);char permit=0;
+      |   ^~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:67:32: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   67 |   if(::setsid()<0)::_exit(124);char permit=0;
+      |                                ^~~~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:68:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   68 |   if(::read(barrier_read.n,&permit,1)!=1||permit!='1')::_exit(125);barrier_read=FD{};
+      |   ^~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:68:68: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   68 |   if(::read(barrier_read.n,&permit,1)!=1||permit!='1')::_exit(125);barrier_read=FD{};
+      |                                                                    ^~~~~~~~~~~~
+In file included from ${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp:2:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp: In lambda function:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:97:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   97 |   if(s.arguments.empty()||s.arguments.front()!=s.executable)::_exit(130);::execve(s.executable.c_str(),argv.data(),env.data());::_exit(131);
+      |   ^~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/bounded_launcher.hpp:97:74: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   97 |   if(s.arguments.empty()||s.arguments.front()!=s.executable)::_exit(130);::execve(s.executable.c_str(),argv.data(),env.data());::_exit(131);
+      |                                                                          ^~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp: In lambda function:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp:31:323: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   31 |  test("partial parent log write stops without retry",[&]{auto l=logs(root,"short");auto s=spec();s.stdout_fd=l.out.n;s.stderr_fd=l.err.n;s.per_log_bytes=16;BoundedLogIO io;unsigned writes=0;io.write=[&](int f,const void*p,size_t n){writes++;return::write(f,p,n/2);};const auto r=launch_detail::supervise_owned(s,[]{::write(STDOUT_FILENO,"abcdefgh",8);hang();},io);ck(r.status=="OUTPUT_WRITE_FAILURE_STOP_SENT"&&r.exit_confirmed&&r.output_partial&&r.stdout_bytes==4&&writes==1&&fs::file_size(l.a)==4,"partial log retained without retry");});
+      |                                                                                                                                                                                                                                                                                                                            ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp: In lambda function:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp:32:296: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   32 |  test("ENOSPC parent log failure stops owned child",[&]{auto l=logs(root,"full");auto s=spec();s.stdout_fd=l.out.n;s.stderr_fd=l.err.n;s.per_log_bytes=16;BoundedLogIO io;io.write=[](int,const void*,size_t)->ssize_t{errno=ENOSPC;return-1;};const auto r=launch_detail::supervise_owned(s,[]{::write(STDOUT_FILENO,"x",1);hang();},io);ck(r.status=="OUTPUT_WRITE_FAILURE_STOP_SENT"&&r.exit_confirmed&&fs::file_size(l.a)==0,"disk full log stop");});
+      |                                                                                                                                                                                                                                                                                                 ~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp: In lambda function:
+${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_launcher.cpp:33:269: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   33 |  test("fsync failure remains failure after child exits0",[&]{auto l=logs(root,"sync");auto s=spec();s.stdout_fd=l.out.n;s.stderr_fd=l.err.n;s.per_log_bytes=16;BoundedLogIO io;io.sync=[](int){errno=EIO;return-1;};const auto r=launch_detail::supervise_owned(s,[]{::write(STDOUT_FILENO,"x",1);},io);ck(r.status=="OUTPUT_FSYNC_FAILURE"&&r.exit_confirmed&&r.output_partial&&!r.stdout_complete&&!r.stderr_complete&&r.stdout_bytes==1&&WIFEXITED(r.wait_status)&&WEXITSTATUS(r.wait_status)==0,"exit0 cannot erase parent write failure");});
+      |                                                                                                                                                                                                                                                                      ~~~~~~~^~~~~~~~~~~~~~~~~~~~~

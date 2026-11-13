@@ -1,0 +1,74 @@
+    void prompt_clear() {
+        SLT_TRC(*this, "clearing prompt with %zu tokens\n", prompt.tokens.size());
+
+        mem.seq_rm(id, -1, -1);
+
+        prompt.clear();
+    }
+
+    std::vector<common_adapter_lora_info> lora;
+    int32_t alora_invocation_start = -1;
+
+    // sampling
+    json json_schema;
+
+    common_sampler_ptr smpl;
+
+    llama_token sampled; // in speculative mode, this is the last accepted token
+
+    // for TTS models, this is the embd generated from prev step, decode this to generate next hidden state
+    // corresponding to one token position (size = n_embd)
+    std::vector<float> inp_embd;
+
+    server_slot_stats stats;
+
+    // accepted tokens per draft position
+    // not in server_slot_stats to avoid copying to every task result
+    std::vector<uint64_t> n_accepted_per_pos;
+
+    std::function<void(int /* id_slot */)>   callback_on_release;
+    std::function<void(const server_slot &)> callback_on_reset; // called before reset()
+
+    // this is for printing timings with slot progress, not part of metrics
+    int64_t t_print_last = 0;
+    int32_t n_gen_last = 0;
+
+    void reset() {
+        SLT_DBG(*this, "%s", "\n");
+
+        spec_is_replay = false;
+
+        last_nl_pos    = 0;
+        generated_text = "";
+        has_new_line   = false;
+        truncated      = false;
+        stop           = STOP_TYPE_NONE;
+        stopping_word  = "";
+        n_sent_text    = 0;
+
+        if (can_speculate()) {
+            spec_draft.clear();
+            spec_i_batch.clear();
+            spec_ckpt.clear();
+        }
+        generated_tokens.clear();
+        generated_token_probs.clear();
+        json_schema = json();
+
+        task_prev = std::move(task);
+        task.reset();
+
+        // note: callback_on_reset() must have run before this, see release()
+        stats = {};
+        n_accepted_per_pos.clear();
+
+        n_predict_max = -1;
+
+        llama_set_sampler(ctx_tgt, id, nullptr);
+
+        // clear alora start
+        alora_invocation_start = -1;
+
+        // clear multimodal state
+        mbatch.reset();
+    }

@@ -1,0 +1,56 @@
+{
+  "schema": "heterospec.N.history-contract-cpu.v1",
+  "predecessor_PR": 224,
+  "predecessor_head": "8be5f9acf3139356ecd95f065964373c7c83ffde",
+  "inputs": {
+    "SPEC.json": {
+      "bytes": 3158,
+      "sha256": "c78c2c0b259c9fb94986588cd253b891942c9dec4aa48fd8d58c4de12ef55ab8"
+    },
+    "CORPUS.json": {
+      "bytes": 18374066,
+      "sha256": "8fed8afce4ea4821d6e829d20d3e777f0524c9e56aa99d084a9a21f04b128949"
+    },
+    "TURN_CENSUS.json": {
+      "bytes": 21942314,
+      "sha256": "06125c3380292e51b4dd15c0a9d9b803fa9aed7b734ac53cfcc586d81a5bb7b4"
+    },
+    "CENSUS_REPORT.json": {
+      "bytes": 3237,
+      "sha256": "11f7351ba769edb0d6c7248959c9273a1ca950275270bb1d822560b29b64242c"
+    },
+    "TOKENIZER_OUTPUT.jsonl": {
+      "bytes": 19525498,
+      "sha256": "23e812286a06ce6e067eb89648221b4348daeb1d3b5722aab780d09c56288350"
+    },
+    "FOUR_DEVELOPMENT_SOURCE_INPUTS.json": {
+      "bytes": 1535,
+      "sha256": "2fb58887db352517dd57b21062ec897f0afc003318114c1ae33b87454c7889a8"
+    }
+  },
+  "model": {
+    "name": "Qwen3-8B-Q8_0.gguf",
+    "bytes": 8709518112,
+    "sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6"
+  },
+  "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+  "tokenizer_executable_sha256": "c2024eb5cd5fd613f3716f84d30c4930cf24ef37c6302a02002c2ec05ef9a1db",
+  "source_universe": "Exactly the same complete4401-message518-root OASST validation subset; no sample/offset/template search",
+  "A": "Frozen canonical provided-history plus full common rebuild; saved rows/metrics reused without executing old census",
+  "B": "Raw logical-output-token retention as append-only history; not implemented in current worker and incompatible with unchanged canonical next input when full history is not a prefix. No invented suffix or favorable geometry.",
+  "C": "Source-supported upstream token-LCP suffix repair, not deployed/qualified N integration. Bound retain by materialized head, trim tail, discard/reconcile pending, decode exact canonical suffix. If fully cached, replay last token to refresh owned frontier. All R/candidates share this new repair rule and full cost.",
+  "history_mode": "SUPPLIED_HISTORY_SAVED_TOKENS_ONLY; body tokens and providedEOG are hypothetical, not actual greedy output",
+  "C_failure_policy": "Invalid cache/unsupported or failed trim -> identical full canonical reset/rebuild, fully charged; no favorable per-arm fallback. Empty next prompt unsupported.",
+  "q": 32,
+  "padding": 256,
+  "capacity": 4096,
+  "response_cap": 128,
+  "native_head_observations": 0,
+  "all_model_forward_calls": 0,
+  "GPU_actions": 0,
+  "placement_actions": 0,
+  "model_context_creations": 0,
+  "new_tokenizer_calls": 0,
+  "source_support": "Pinned upstream server token-LCP+seq_rm; current experiment has trim primitive but resets each request. Exact numerical/state equivalence still requires independent sequential R.",
+  "no_latency_acceptance_or_5pct_selection": true
+}

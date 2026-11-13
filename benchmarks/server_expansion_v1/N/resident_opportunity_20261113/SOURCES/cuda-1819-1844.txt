@@ -1,0 +1,26 @@
+static void ggml_cuda_mul_mat(ggml_backend_cuda_context & ctx, const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
+    if (hs_loop4::marked(dst)) {
+        hs_loop4::require(src0,src1,dst);
+#if defined(GGML_USE_HIP) || defined(GGML_USE_MUSA)
+        throw std::runtime_error("loop4 baseline is NVIDIA-CUDA-only");
+#endif
+        for (const auto * t : {src0,src1,static_cast<const ggml_tensor *>(dst)})
+            if (!t->data || !t->buffer || t->buffer->buft!=ggml_backend_cuda_buffer_type(ctx.device))
+                throw std::runtime_error("loop4 requires actual same-device CUDA residency");
+        const bool bad_padding=ggml_backend_buffer_get_usage(src0->buffer)==GGML_BACKEND_BUFFER_USAGE_COMPUTE &&
+            ggml_nbytes(src0)!=ggml_backend_buffer_get_alloc_size(src0->buffer,src0) && src0->view_src;
+        if (bad_padding)throw std::runtime_error("loop4 cannot reproduce original padding branch");
+        const auto & device=ggml_cuda_info().devices[ctx.device];
+        if(device.warp_size!=32)throw std::runtime_error("loop4 requires NVIDIA warp32");
+        for (int64_t col=0;col<src1->ne[1];col+=4) {
+            const auto width=std::min<int64_t>(4,src1->ne[1]-col);
+            // Require the original dispatcher to select MMVQ for EACH old tile.
+            if (ggml_cuda_should_use_mmvf(src0->type,device.cc,src0->ne,src0->nb,width) ||
+                ggml_cuda_should_use_mmf(src0->type,device.cc,device.warp_size,src0->ne,src0->nb,width,false) ||
+                !ggml_cuda_should_use_mmvq(src0->type,device.cc,width))
+                throw std::runtime_error("loop4 old tile dispatch is not MMVQ");
+        }
+        // Existing quantizer executes on the wide input; the same old MMVQ
+        // specializations are invoked by the marked path below, four at a time.
+        ggml_cuda_mul_mat_vec_q(ctx,src0,src1,nullptr,dst);
+        return;

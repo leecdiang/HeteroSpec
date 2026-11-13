@@ -1,0 +1,5095 @@
+{
+  "N1b": false,
+  "N2": false,
+  "RPC_budget": {
+    "aggregate_command_ceiling": 250000,
+    "command_components": {
+      "append_begin_RPC": 9880,
+      "decode_RPC": 85738,
+      "owned_RPC": 1280,
+      "producer_RPC": 32,
+      "records_RPC": 588,
+      "request_trace_finish_RPC": 228,
+      "startup_frames_and_probe_allowance": 1024,
+      "state_RPC": 100122,
+      "trim_clear_RPC": 304
+    },
+    "including_failure_states": {
+      "KV_chunks": 36000,
+      "nonempty_states": 192,
+      "state_RPC": 100122,
+      "state_phases": 268,
+      "state_vector_rows": 4737
+    },
+    "journal_bytes_product": 512204800,
+    "journal_record_bytes_max": 2048,
+    "journal_records_max": 250100,
+    "log_requirement": "Pre-reserve each bounded log stream once or buffer fixed64KiB; unbounded one-byte-per-read journaling is not covered",
+    "native_RPC_upper_bound": 199196,
+    "per_worker_state_RPC": {
+      "COLD_CANONICAL_ORACLE/CONTROL": 6080,
+      "COLD_CANONICAL_ORACLE/NATURAL": 14960,
+      "REPEAT_RESIDENT_R/CONTROL": 6070,
+      "REPEAT_RESIDENT_R/NATURAL": 14952,
+      "RESIDENT_R/CONTROL": 6070,
+      "RESIDENT_R/NATURAL": 14952,
+      "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL": 6070,
+      "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL": 14952
+    },
+    "planned_states": {
+      "KV_chunks": 29088,
+      "nonempty_states": 180,
+      "state_RPC": 84106,
+      "state_phases": 252,
+      "state_vector_rows": 4217
+    },
+    "remaining_command_headroom": 50804,
+    "source_rule": "State constant18+72(nonempty)+2*(72ceil(head/512)+vectorrows); owned16; record4. Decode count<=charged rows. No comparison/read/finite check is removed.",
+    "status": "STATIC_SOURCE_UPPER_BOUND_NOT_OBSERVED"
+  },
+  "accounting_rule": "One global ledger; per-phase/per-request/per-worker caps intersect aggregate caps; reserved failure quota never supplies a runnable retry",
+  "approval": null,
+  "deployments": [
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "preflight/R",
+      "kind": "PREFLIGHT",
+      "models": 1,
+      "placements": 1,
+      "requests": 0,
+      "rows": 0,
+      "source_binary": "R",
+      "stage": "PREFLIGHT",
+      "timeout_seconds": 120,
+      "worker": null
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "preflight/loop4",
+      "kind": "PREFLIGHT",
+      "models": 1,
+      "placements": 1,
+      "requests": 0,
+      "rows": 0,
+      "source_binary": "loop4",
+      "stage": "PREFLIGHT",
+      "timeout_seconds": 120,
+      "worker": null
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/RESIDENT_R/NATURAL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "RESIDENT_R",
+      "timeout_seconds": 600,
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/RESIDENT_R/CONTROL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "RESIDENT_R",
+      "timeout_seconds": 600,
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/REPEAT_RESIDENT_R/NATURAL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "REPEAT_RESIDENT_R",
+      "timeout_seconds": 600,
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/REPEAT_RESIDENT_R/CONTROL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "REPEAT_RESIDENT_R",
+      "timeout_seconds": 600,
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/COLD_CANONICAL_ORACLE/NATURAL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "timeout_seconds": 600,
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/COLD_CANONICAL_ORACLE/CONTROL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "timeout_seconds": 600,
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "timeout_seconds": 600,
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    {
+      "backend_inits": 1,
+      "contexts": 1,
+      "id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+      "kind": "WORKER",
+      "models": 1,
+      "placements": 1,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "timeout_seconds": 600,
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    }
+  ],
+  "failure_reserve": {
+    "automatic_retry": false,
+    "metadata_bytes": 25452544,
+    "raw_bytes": 7568646144,
+    "requests": 4,
+    "rows": 16384,
+    "runnable": false
+  },
+  "gpu_uuid_sha256": null,
+  "identity_bindings": {
+    "allocation_lease": null,
+    "loaded_identity_certificate": null,
+    "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+    "producer_sha256": null,
+    "source_sha256": null,
+    "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+    "writer_sha256": null
+  },
+  "journal_rule": "Broker and controller share the same512MiB journal ceiling; no second allowance",
+  "limits": {
+    "archive_bytes": 147651175875,
+    "archive_entries": 4096,
+    "archive_header_bytes": 16777216,
+    "backend_inits": 10,
+    "build_artifacts_bytes": 7516192768,
+    "build_text_bytes": 8589934592,
+    "capture_bytes": 144202735616,
+    "contexts": 10,
+    "controller_logs_bytes": 268435456,
+    "controller_state_indices_bytes": 536870912,
+    "deadline_seconds": 18000,
+    "failed_metadata_composition_bytes": 25427968,
+    "failure_requests": 4,
+    "failure_rows": 16384,
+    "journal_bytes": 536870912,
+    "known_archive_entries": 2471,
+    "last_launch_offset_seconds": 6600,
+    "max_capture_directories": 348,
+    "max_commands": 250000,
+    "max_window_seconds": 18000,
+    "metadata_bytes": 398458880,
+    "minimum_free_VRAM_bytes": 2147483648,
+    "models": 10,
+    "native_end_offset_seconds": 7200,
+    "partial_marker_bytes": 1048576,
+    "placements": 10,
+    "planned_metadata_composition_bytes": 351469568,
+    "planned_requests": 72,
+    "planned_rows": 69354,
+    "prelaunch_RAM_bytes": 51539607552,
+    "prepaid_marker_bytes_per_capture": 1024,
+    "probe_timeout_seconds": 120,
+    "protected_RAM_bytes": 25769803776,
+    "protected_disk_bytes": 107374182400,
+    "raw_and_journal_bytes": 144739606528,
+    "raw_bytes": 143804276736,
+    "requests": 76,
+    "required_disk_bytes": 553094505923,
+    "restore_bytes": 144739606528,
+    "rows": 85738,
+    "snapshot_max_age_seconds": 10,
+    "worker_RSS_bytes": 25769803776,
+    "worker_logs_bytes": 268435456,
+    "worker_timeout_seconds": 600
+  },
+  "manifest_sha256": "f4cd66d571b65454a188f78717042254ae6fa00c255ff699ec64abcb2bd079d6",
+  "mode": "CPU_MOCK_ONLY",
+  "native_execution_authorized": false,
+  "performance": false,
+  "requests": {
+    "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1": {
+      "byte_limit": 1897212928,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1": {
+      "byte_limit": 1897212928,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/pending_cap_append/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/pending_cap_append/1": {
+      "byte_limit": 1897212928,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 29,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1": {
+      "byte_limit": 1897212928,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1": {
+      "byte_limit": 1897212928,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 1,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/pending_cap_append/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/pending_cap_append/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/empty_think_lcp_trim/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/empty_think_lcp_trim/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/fully_cached_replay_ownership/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/fully_cached_replay_ownership/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 1,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/pending_cap_append/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/pending_cap_append/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/trim_unsupported_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/RESIDENT_R/trim_unsupported_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "empty_think_lcp_trim",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "fully_cached_replay_ownership",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 1,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "pending_cap_append",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 16,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_pre_mutation_failure_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0": {
+      "byte_limit": 1895901184,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 13,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1": {
+      "byte_limit": 1897278464,
+      "cap": 1,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "CONTROL",
+      "episode": "trim_unsupported_rebuild",
+      "metadata_byte_limit": 5116928,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 25,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/0/0": {
+      "byte_limit": 1895901184,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 219,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/0/1": {
+      "byte_limit": 1897212928,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/1/0": {
+      "byte_limit": 1895901184,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 190,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/1/1": {
+      "byte_limit": 1897212928,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/2/0": {
+      "byte_limit": 1895901184,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 154,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/2/1": {
+      "byte_limit": 1897212928,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/3/0": {
+      "byte_limit": 1895901184,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 3739648,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 235,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/COLD_CANONICAL_ORACLE/3/1": {
+      "byte_limit": 1897212928,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 0,
+        "reconcile_receipts": 0,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 5051392,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "worker": "COLD_CANONICAL_ORACLE/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/0/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 219,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/0/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/1/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 190,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/1/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/2/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 154,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/2/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/3/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 235,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/REPEAT_RESIDENT_R/3/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "REPEAT_RESIDENT_R",
+      "worker": "REPEAT_RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/0/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 219,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/0/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/1/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 190,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/1/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/2/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 154,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/2/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/3/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 235,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/RESIDENT_R/3/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "RESIDENT_R",
+      "worker": "RESIDENT_R/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 219,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 190,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 154,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0": {
+      "byte_limit": 1896949760,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 0,
+        "mutation_receipts": 0,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 0,
+        "state_snapshots": 3
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 4788224,
+      "prepaid_marker_bytes": 4096,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 235,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    },
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1": {
+      "byte_limit": 1898327040,
+      "cap": 128,
+      "capture_counts": {
+        "binding_receipts": 1,
+        "mutation_receipts": 1,
+        "owned_events": 1,
+        "producer_receipts": 1,
+        "reconcile_receipts": 1,
+        "state_snapshots": 4
+      },
+      "capture_phase_limits": {
+        "OWNED_EVENT": {
+          "bytes": 805376,
+          "metadata_bytes": 197632,
+          "raw_bytes": 607744
+        },
+        "POST_APPEND": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "POST_RECONCILE": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 604587520
+        },
+        "PRODUCER_RECEIPT": {
+          "bytes": 1048576,
+          "metadata_bytes": 1048576,
+          "raw_bytes": 0
+        },
+        "RESET": {
+          "bytes": 1180672,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 0
+        },
+        "TERMINAL": {
+          "bytes": 700000000,
+          "metadata_bytes": 1180672,
+          "raw_bytes": 681771008
+        },
+        "TRANSITION_RECORD": {
+          "bytes": 65536,
+          "metadata_bytes": 65536,
+          "raw_bytes": 0
+        }
+      },
+      "cohort": "NATURAL",
+      "episode": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+      "metadata_byte_limit": 6165504,
+      "prepaid_marker_bytes": 5120,
+      "raw_byte_limit": 1892161536,
+      "retry": false,
+      "row_limit": 4096,
+      "runnable": true,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "worker": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+    }
+  },
+  "role_order": [
+    "RESIDENT_R",
+    "REPEAT_RESIDENT_R",
+    "COLD_CANONICAL_ORACLE",
+    "STRONG_WHOLE_RECHUNK_LOOP4"
+  ],
+  "run_id": null,
+  "schema": "hs.N1a.admission-controller.manifest.v1",
+  "source_bindings": {
+    "frozen_N1a_proposal": {
+      "bytes": 142233,
+      "sha256": "bf00a976a5f5385bd818bd58bdfcaa575e49f9548fee615320ed9b1d86194892"
+    },
+    "native_job_template": {
+      "bytes": 111517,
+      "sha256": "4287bde0bfb1b34b35fbd2a4b0d9ef39106e1fefa864eea760196ecbc3c063ac"
+    },
+    "required_261_checks": {
+      "bytes": 105133,
+      "sha256": "b28a8ba5337707a4e11f7a920ea665e6f4030a4028395158b9857101e201f8b2"
+    },
+    "resource_review": {
+      "bytes": 4483,
+      "sha256": "c82a19394b39be188a90dfa5a7504c566d15bcca04352d01424bc74d97ee1cf4"
+    }
+  },
+  "stage_check_ids": {
+    "COLD_CANONICAL_ORACLE": [
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/0/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/0/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/0/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/1/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/1/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/0/1/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/0/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/0/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/0/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/1/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/1/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/1/1/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/0/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/0/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/0/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/1/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/1/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/2/1/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/0/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/0/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/0/TERMINAL",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/1/POST_RECONCILE",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/1/POST_APPEND",
+      "aligned/natural/COLD_CANONICAL_ORACLE/3/1/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/0/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/0/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/0/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/1/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/1/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/pending_cap_append/1/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0/TERMINAL",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1/POST_RECONCILE",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1/POST_APPEND",
+      "aligned/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1/TERMINAL",
+      "ownership/natural/COLD_CANONICAL_ORACLE/0/0",
+      "reset/natural/COLD_CANONICAL_ORACLE/0/1",
+      "ownership/natural/COLD_CANONICAL_ORACLE/1/0",
+      "reset/natural/COLD_CANONICAL_ORACLE/1/1",
+      "ownership/natural/COLD_CANONICAL_ORACLE/2/0",
+      "reset/natural/COLD_CANONICAL_ORACLE/2/1",
+      "ownership/natural/COLD_CANONICAL_ORACLE/3/0",
+      "reset/natural/COLD_CANONICAL_ORACLE/3/1",
+      "ownership/control/COLD_CANONICAL_ORACLE/pending_cap_append/0",
+      "reset/control/COLD_CANONICAL_ORACLE/pending_cap_append/1",
+      "ownership/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0",
+      "reset/control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1",
+      "ownership/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0",
+      "reset/control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1",
+      "ownership/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0",
+      "reset/control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1",
+      "ownership/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0",
+      "reset/control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1"
+    ],
+    "REPEAT_RESIDENT_R": [
+      "aligned/natural/REPEAT_RESIDENT_R/0/0/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/0/0/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/0/0/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/0/1/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/0/1/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/0/1/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/1/0/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/1/0/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/1/0/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/1/1/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/1/1/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/1/1/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/2/0/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/2/0/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/2/0/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/2/1/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/2/1/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/2/1/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/3/0/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/3/0/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/3/0/TERMINAL",
+      "aligned/natural/REPEAT_RESIDENT_R/3/1/POST_RECONCILE",
+      "aligned/natural/REPEAT_RESIDENT_R/3/1/POST_APPEND",
+      "aligned/natural/REPEAT_RESIDENT_R/3/1/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/0/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/0/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/0/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/1/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/1/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/pending_cap_append/1/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0/TERMINAL",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1/POST_RECONCILE",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1/POST_APPEND",
+      "aligned/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1/TERMINAL",
+      "retention/natural/REPEAT_RESIDENT_R/0/0",
+      "ownership/natural/REPEAT_RESIDENT_R/0/0",
+      "reset/natural/REPEAT_RESIDENT_R/0/1",
+      "retention/natural/REPEAT_RESIDENT_R/1/0",
+      "ownership/natural/REPEAT_RESIDENT_R/1/0",
+      "reset/natural/REPEAT_RESIDENT_R/1/1",
+      "retention/natural/REPEAT_RESIDENT_R/2/0",
+      "ownership/natural/REPEAT_RESIDENT_R/2/0",
+      "reset/natural/REPEAT_RESIDENT_R/2/1",
+      "retention/natural/REPEAT_RESIDENT_R/3/0",
+      "ownership/natural/REPEAT_RESIDENT_R/3/0",
+      "reset/natural/REPEAT_RESIDENT_R/3/1",
+      "retention/control/REPEAT_RESIDENT_R/pending_cap_append/0",
+      "ownership/control/REPEAT_RESIDENT_R/pending_cap_append/0",
+      "reset/control/REPEAT_RESIDENT_R/pending_cap_append/1",
+      "retention/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0",
+      "ownership/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0",
+      "reset/control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1",
+      "retention/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0",
+      "ownership/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0",
+      "reset/control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1",
+      "retention/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0",
+      "ownership/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0",
+      "reset/control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1",
+      "retention/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+      "ownership/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+      "reset/control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+    ],
+    "RESIDENT_R": [
+      "retention/natural/RESIDENT_R/0/0",
+      "ownership/natural/RESIDENT_R/0/0",
+      "reset/natural/RESIDENT_R/0/1",
+      "retention/natural/RESIDENT_R/1/0",
+      "ownership/natural/RESIDENT_R/1/0",
+      "reset/natural/RESIDENT_R/1/1",
+      "retention/natural/RESIDENT_R/2/0",
+      "ownership/natural/RESIDENT_R/2/0",
+      "reset/natural/RESIDENT_R/2/1",
+      "retention/natural/RESIDENT_R/3/0",
+      "ownership/natural/RESIDENT_R/3/0",
+      "reset/natural/RESIDENT_R/3/1",
+      "retention/control/RESIDENT_R/pending_cap_append/0",
+      "ownership/control/RESIDENT_R/pending_cap_append/0",
+      "reset/control/RESIDENT_R/pending_cap_append/1",
+      "retention/control/RESIDENT_R/empty_think_lcp_trim/0",
+      "ownership/control/RESIDENT_R/empty_think_lcp_trim/0",
+      "reset/control/RESIDENT_R/empty_think_lcp_trim/1",
+      "retention/control/RESIDENT_R/fully_cached_replay_ownership/0",
+      "ownership/control/RESIDENT_R/fully_cached_replay_ownership/0",
+      "reset/control/RESIDENT_R/fully_cached_replay_ownership/1",
+      "retention/control/RESIDENT_R/trim_unsupported_rebuild/0",
+      "ownership/control/RESIDENT_R/trim_unsupported_rebuild/0",
+      "reset/control/RESIDENT_R/trim_unsupported_rebuild/1",
+      "retention/control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+      "ownership/control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+      "reset/control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+    ],
+    "STRONG_WHOLE_RECHUNK_LOOP4": [
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0/TERMINAL",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1/POST_RECONCILE",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1/POST_APPEND",
+      "aligned/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0/TERMINAL",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1/POST_RECONCILE",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1/POST_APPEND",
+      "aligned/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1/TERMINAL",
+      "retention/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0",
+      "ownership/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0",
+      "reset/natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1",
+      "retention/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0",
+      "ownership/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0",
+      "reset/natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1",
+      "retention/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0",
+      "ownership/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0",
+      "reset/natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1",
+      "retention/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0",
+      "ownership/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0",
+      "reset/natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1",
+      "retention/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0",
+      "ownership/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0",
+      "reset/control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1",
+      "retention/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0",
+      "ownership/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0",
+      "reset/control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1",
+      "retention/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0",
+      "ownership/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0",
+      "reset/control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1",
+      "retention/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0",
+      "ownership/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0",
+      "reset/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1",
+      "retention/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0",
+      "ownership/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0",
+      "reset/control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1"
+    ]
+  },
+  "window": {
+    "deadline_mono": null,
+    "deadline_wall": null,
+    "last_launch_mono": null,
+    "last_launch_wall": null,
+    "max_seconds": 18000,
+    "start_mono": null,
+    "start_wall": null
+  },
+  "worker_bindings": {
+    "COLD_CANONICAL_ORACLE/CONTROL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "COLD_CANONICAL_ORACLE/NATURAL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "REPEAT_RESIDENT_R/CONTROL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "REPEAT_RESIDENT_R/NATURAL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "RESIDENT_R/CONTROL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "RESIDENT_R/NATURAL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    },
+    "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL": {
+      "boot_id_sha256": null,
+      "executable_sha256": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": null,
+        "producer_sha256": null,
+        "template_sha256": null,
+        "tokenizer_sha256": null
+      },
+      "pid": null,
+      "source_sha256": null,
+      "start_time": null,
+      "writer_sha256": null
+    }
+  },
+  "workers": [
+    {
+      "deployment_id": "deploy/RESIDENT_R/NATURAL",
+      "executable_sha256": null,
+      "id": "RESIDENT_R/NATURAL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 43814912,
+      "raw_byte_limit": 15137292288,
+      "request_ids": [
+        "natural/RESIDENT_R/0/0",
+        "natural/RESIDENT_R/0/1",
+        "natural/RESIDENT_R/1/0",
+        "natural/RESIDENT_R/1/1",
+        "natural/RESIDENT_R/2/0",
+        "natural/RESIDENT_R/2/1",
+        "natural/RESIDENT_R/3/0",
+        "natural/RESIDENT_R/3/1"
+      ],
+      "row_limit": 17182,
+      "stage": "RESIDENT_R",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/RESIDENT_R/CONTROL",
+      "executable_sha256": null,
+      "id": "RESIDENT_R/CONTROL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 44282880,
+      "raw_byte_limit": 18921615360,
+      "request_ids": [
+        "control/RESIDENT_R/pending_cap_append/0",
+        "control/RESIDENT_R/pending_cap_append/1",
+        "control/RESIDENT_R/empty_think_lcp_trim/0",
+        "control/RESIDENT_R/empty_think_lcp_trim/1",
+        "control/RESIDENT_R/fully_cached_replay_ownership/0",
+        "control/RESIDENT_R/fully_cached_replay_ownership/1",
+        "control/RESIDENT_R/trim_unsupported_rebuild/0",
+        "control/RESIDENT_R/trim_unsupported_rebuild/1",
+        "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+        "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+      ],
+      "row_limit": 148,
+      "stage": "RESIDENT_R",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/REPEAT_RESIDENT_R/NATURAL",
+      "executable_sha256": null,
+      "id": "REPEAT_RESIDENT_R/NATURAL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 43814912,
+      "raw_byte_limit": 15137292288,
+      "request_ids": [
+        "natural/REPEAT_RESIDENT_R/0/0",
+        "natural/REPEAT_RESIDENT_R/0/1",
+        "natural/REPEAT_RESIDENT_R/1/0",
+        "natural/REPEAT_RESIDENT_R/1/1",
+        "natural/REPEAT_RESIDENT_R/2/0",
+        "natural/REPEAT_RESIDENT_R/2/1",
+        "natural/REPEAT_RESIDENT_R/3/0",
+        "natural/REPEAT_RESIDENT_R/3/1"
+      ],
+      "row_limit": 17182,
+      "stage": "REPEAT_RESIDENT_R",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/REPEAT_RESIDENT_R/CONTROL",
+      "executable_sha256": null,
+      "id": "REPEAT_RESIDENT_R/CONTROL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 44282880,
+      "raw_byte_limit": 18921615360,
+      "request_ids": [
+        "control/REPEAT_RESIDENT_R/pending_cap_append/0",
+        "control/REPEAT_RESIDENT_R/pending_cap_append/1",
+        "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0",
+        "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1",
+        "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0",
+        "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1",
+        "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0",
+        "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1",
+        "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+        "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+      ],
+      "row_limit": 148,
+      "stage": "REPEAT_RESIDENT_R",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/COLD_CANONICAL_ORACLE/NATURAL",
+      "executable_sha256": null,
+      "id": "COLD_CANONICAL_ORACLE/NATURAL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 35164160,
+      "raw_byte_limit": 15137292288,
+      "request_ids": [
+        "natural/COLD_CANONICAL_ORACLE/0/0",
+        "natural/COLD_CANONICAL_ORACLE/0/1",
+        "natural/COLD_CANONICAL_ORACLE/1/0",
+        "natural/COLD_CANONICAL_ORACLE/1/1",
+        "natural/COLD_CANONICAL_ORACLE/2/0",
+        "natural/COLD_CANONICAL_ORACLE/2/1",
+        "natural/COLD_CANONICAL_ORACLE/3/0",
+        "natural/COLD_CANONICAL_ORACLE/3/1"
+      ],
+      "row_limit": 17182,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/COLD_CANONICAL_ORACLE/CONTROL",
+      "executable_sha256": null,
+      "id": "COLD_CANONICAL_ORACLE/CONTROL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 43955200,
+      "raw_byte_limit": 18921615360,
+      "request_ids": [
+        "control/COLD_CANONICAL_ORACLE/pending_cap_append/0",
+        "control/COLD_CANONICAL_ORACLE/pending_cap_append/1",
+        "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0",
+        "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1",
+        "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0",
+        "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1",
+        "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0",
+        "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1",
+        "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0",
+        "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1"
+      ],
+      "row_limit": 182,
+      "stage": "COLD_CANONICAL_ORACLE",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+      "executable_sha256": null,
+      "id": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 43814912,
+      "raw_byte_limit": 15137292288,
+      "request_ids": [
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0",
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1"
+      ],
+      "row_limit": 17182,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "timeout_seconds": 600
+    },
+    {
+      "deployment_id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+      "executable_sha256": null,
+      "id": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+      "identity_bindings": {},
+      "metadata_byte_limit": 44282880,
+      "raw_byte_limit": 18921615360,
+      "request_ids": [
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1"
+      ],
+      "row_limit": 148,
+      "stage": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "timeout_seconds": 600
+    }
+  ]
+}

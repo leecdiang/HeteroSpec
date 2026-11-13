@@ -1,0 +1,145 @@
+{
+  "status": "COMPILED_NOT_EXECUTED",
+  "executable_sha256": "733287a010c50486c26d97a86d83c172544867fd987d88012e96e5dda35ce192",
+  "bytes": 213741224,
+  "derivation": {
+    "active_kv.hpp": {
+      "original_sha256": "c50edeb26d09ebe4cc7bcaff22c3590bcd093a2e49dbc4aa5fbfff0f14370433",
+      "derived_sha256": "dcec5f6aa1d9aa8aed12a97a1a84422f90af061c8cfcb9cd1baaaa5ea4777a4b",
+      "changes": "concrete admission type only; tensor extraction/arithmetic unchanged"
+    },
+    "active_kv.cpp": {
+      "original_sha256": "f0bf4c1bd3ab934e5f13a71349a4d6cbeb57ce109bfe88ce48470270d1a2ad03",
+      "derived_sha256": "4c0417f9f83fde276b1fe936610c3b17a2fa6a9a5e1b4b4647259fb46a9a3933",
+      "changes": "concrete admission type only; tensor extraction/arithmetic unchanged"
+    }
+  },
+  "archives": [
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+      "bytes": 212322374,
+      "sha256": "393d2170027a3133b7b54018f7863f7bee73095b0a59e5a38af65db8c50d642e"
+    },
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-base.a",
+      "bytes": 1295044,
+      "sha256": "223f9f810e71bd98bca635096c1009a98b855e3155ecc267f10e4094d0f54cc2"
+    },
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml-cpu.a",
+      "bytes": 1558574,
+      "sha256": "cabba686ea82a878f9a14657d9921d49060b0a48303aad00715a2dbc5ab52252"
+    },
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/ggml/src/libggml.a",
+      "bytes": 57614,
+      "sha256": "a45a96e3fb970cf132db5c2af1bc806538df22f861a39817da7124c8c8423b49"
+    },
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/src/libllama.a",
+      "bytes": 10529088,
+      "sha256": "3eaf8780a6d539f67fe0877d0c422c20cfffca7462e3a9b8cbc9b18cef719a56"
+    },
+    {
+      "path": "${HS_ROOT}/run-01/build-R-01/native/llama/vendor/hash/libvendor-hash.a",
+      "bytes": 71190,
+      "sha256": "43da898ae626261e3b2b1fca6a304fde389233da943be9ca51614daa2ea96ef8"
+    }
+  ],
+  "commands": [
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O0",
+      "-g",
+      "-fno-inline",
+      "-fno-lto",
+      "-Wall",
+      "-Wextra",
+      "-DHS_PILOT_RUN_ID=\"p4-36c27856d91b1c5b\"",
+      "-DHS_PILOT_OUTPUT=\"[HS_ROOT]/p4-36c27856d91b1c5b/attempt\"",
+      "-I[HS_ROOT]/p4-36c27856d91b1c5b/build04",
+      "-I[HS_ROOT]/p4-36c27856d91b1c5b/benchmarks/server_expansion_v1/N/pilot4_20261112",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/include",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/src",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/ggml/include",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/ggml/src",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/vendor",
+      "-I[HS_ROOT]/repository-01/benchmarks/linux_transfer_v1/native",
+      "-c",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/benchmarks/server_expansion_v1/N/pilot4_20261112/pilot.cpp",
+      "-o",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/pilot.o"
+    ],
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O0",
+      "-g",
+      "-fno-inline",
+      "-fno-lto",
+      "-Wall",
+      "-Wextra",
+      "-DHS_PILOT_RUN_ID=\"p4-36c27856d91b1c5b\"",
+      "-DHS_PILOT_OUTPUT=\"[HS_ROOT]/p4-36c27856d91b1c5b/attempt\"",
+      "-I[HS_ROOT]/p4-36c27856d91b1c5b/build04",
+      "-I[HS_ROOT]/p4-36c27856d91b1c5b/benchmarks/server_expansion_v1/N/pilot4_20261112",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/include",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/src",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/ggml/include",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/ggml/src",
+      "-I[HS_ROOT]/run-01/stage-03/sources/reference/vendor",
+      "-I[HS_ROOT]/repository-01/benchmarks/linux_transfer_v1/native",
+      "-c",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/active_kv.cpp",
+      "-o",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/active_kv.o"
+    ],
+    [
+      "/usr/bin/g++",
+      "-O0",
+      "-fno-lto",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/pilot.o",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/active_kv.o",
+      "-Wl,--start-group",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/ggml/src/ggml-cuda/libggml-cuda.a",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/ggml/src/libggml-base.a",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/ggml/src/libggml-cpu.a",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/ggml/src/libggml.a",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/src/libllama.a",
+      "[HS_ROOT]/run-01/build-R-01/native/llama/vendor/hash/libvendor-hash.a",
+      "-Wl,--end-group",
+      "-lgomp",
+      "-lpthread",
+      "-lm",
+      "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcudart.so",
+      "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublas.so",
+      "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libcublasLt.so",
+      "/usr/local/cuda-12.5/targets/x86_64-linux/lib/libculibos.a",
+      "/usr/local/cuda-12.5/targets/x86_64-linux/lib/stubs/libcuda.so",
+      "-ldl",
+      "-lrt",
+      "/usr/local/lib/libnccl.so",
+      "-Wl,-rpath,/usr/local/cuda-12.5/targets/x86_64-linux/lib:/usr/local/lib",
+      "-o",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/pilot-single-attempt"
+    ],
+    [
+      "readelf",
+      "-d",
+      "[HS_ROOT]/p4-36c27856d91b1c5b/build04/pilot-single-attempt"
+    ]
+  ],
+  "attempt": {
+    "run_id": "p4-36c27856d91b1c5b",
+    "root": "[HS_ROOT]/p4-36c27856d91b1c5b",
+    "native_output": "[HS_ROOT]/p4-36c27856d91b1c5b/attempt",
+    "unit": "hs-p4-36c27856d91b1c5b.service"
+  },
+  "source_files": {
+    "pilot.cpp": "f7f4bf4c73d1c901a5198d38d5c6cf7ca78f747547154f26e1ae9bc5ea762e28",
+    "pilot_gate.hpp": "bc20863854d7a02094a1910d6bef1be55acfa229d51eae2894bb832df2fc57ee",
+    "CASE_FROZEN.json": "a1d8644035c366bdf25b99e49347cf49ce5390ec88268f459d39265bcc751921"
+  },
+  "GPU_calls": 0
+}

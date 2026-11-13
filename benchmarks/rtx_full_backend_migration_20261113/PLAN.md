@@ -1,5 +1,5 @@
 # RTX 5070 Ti: full-backend numerical-migration comparison
-Status: DESIGN ONLY — no GPU work, runtime qualification or performance result.
+Status: EXECUTED on Windows. See windows_20261113/RESULT_REPORT_ZH.md and IMPLEMENTATION_PROTOCOL_ZH.md. The design/proposed-budget text below is preserved as the preregistration, not current authorization/status.
 Date: 2026-11-13. Target: RTX 5070 Ti Laptop GPU, 12 GiB, one owned device.
 
 ## Question and contribution
@@ -91,5 +91,9 @@ Ordinary CPU build/path/JSON/schema bugs may be fixed and retested before approv
 ## Deliverables
 PLAN, frozen manifest and input IDs, build/adapter changes, CPU tests, within-arm qualification results, all P/G rows, analysis script with mock tests, compact per-root/phase figures, report interpreting negative as well as positive outcomes. Update this PR; keep #230/#237/#240, old ledgers and paper unchanged. No merge, release, arXiv or journal submission.
 
-## Current status
+## Historical status at design head (superseded by execution closeout)
 Design source review complete. Modern source fixed from public #240. Actual R restoration, M complete model build, adapter implementation, local resources, runtime qualification and all performance panels: NOT_RUN. No result or timing forecast is implied by this plan.
+
+
+## Execution closeout
+User approved this campaign in the execution chat. Both panels completed:192formal,220totalrequests,51370actualrows,18deployments,1085.38seconds model window. Qualifier uses6deployments(total18) for independent native+two fresh adapter processes/reset. Original long bin was unfillable; predeclared deterministic fallback froze26..161-token formal prompts before inference. P ratio .678474 is full-model equal-work execution cost;G .676136 is separately reported with different trajectories. Large cross-contract vector differences remain;no quality/reference equivalence claim. See the complete report,source,rawrecords and scope limits in windows_20261113/. No new GPU work is queued.

@@ -1,0 +1,21 @@
+int main(int argc,char**argv){try{
+    need(argc==3,"reference JOB.json OUT");std::ifstream jf(argv[1]);need(bool(jf),"job input");J job;jf>>job;
+    fs::path out=argv[2];need(!fs::exists(out),"fresh output directory required");fs::create_directories(out);
+    const int cap=job.value("n_ctx",1024),threads=job.value("threads",8);
+    need(cap==1024 && threads>0,"Phase one reference is C1024; context expansion is a new deployment");
+    ggml_time_init();llama_backend_init();ggml_backend_dev_t gpu=nullptr;
+    for(size_t i=0;i<ggml_backend_dev_count();++i){auto d=ggml_backend_dev_get(i);if(ggml_backend_dev_type(d)==GGML_BACKEND_DEVICE_TYPE_GPU){need(!gpu,"exactly one visible GPU required");gpu=d;}}
+    need(gpu,"no GPU; CPU test is not a deployment reference");ggml_backend_dev_t devices[]={gpu,nullptr};
+    auto mp=llama_model_default_params();mp.devices=devices;mp.n_gpu_layers=999;mp.split_mode=LLAMA_SPLIT_MODE_NONE;
+    auto began=Clock::now();std::unique_ptr<llama_model,ModelDelete> model(llama_model_load_from_file(job.at("target_model").get<std::string>().c_str(),mp));need(bool(model),"reference model");
+    auto cp=llama_context_default_params();cp.n_ctx=cap;cp.n_batch=cap;cp.n_ubatch=1;cp.n_seq_max=1;cp.n_outputs_max=1;cp.n_outputs_max_per_seq=1;
+    cp.n_threads=threads;cp.n_threads_batch=threads;cp.type_k=GGML_TYPE_F16;cp.type_v=GGML_TYPE_F16;cp.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;
+    std::unique_ptr<llama_context,ContextDelete> ctx(llama_init_from_model(model.get(),cp));need(bool(ctx),"reference context");
+    const auto*vocab=llama_model_get_vocab(model.get());const int nv=llama_vocab_n_tokens(vocab);
+    J result={{"schema","linux-transfer.reference.v1"},{"setup_s",seconds(began)},{"reference_kind","independent-pristine-upstream-Linux-UB1"},
+        {"n_ctx",llama_n_ctx(ctx.get())},{"n_batch",llama_n_batch(ctx.get())},{"n_ubatch",llama_n_ubatch(ctx.get())},
+        {"output_reserve",1},{"threads",threads},{"vocab",nv},{"modules_before",linux_transfer::modules()},{"requests",J::array()},{"cases",J::array()}};
+    need(llama_n_ctx(ctx.get())==unsigned(cap)&&llama_n_ubatch(ctx.get())==1,"observed reference allocation");
+    if(job.contains("cases")||job.contains("forced")){
+        const J cases=job.contains("cases")?job.at("cases"):J::array({job});
+        for(size_t k=0;k<cases.size();++k){const auto&c=cases[k];const std::string name=c.value("name",std::to_string(k));need(!name.empty()&&name!=".."&&name.find('/')==std::string::npos&&name.find('\\')==std::string::npos,"safe case name");fs::path dir=out/name;llama_memory_clear(llama_get_memory(ctx.get()),true);llama_synchronize(ctx.get());

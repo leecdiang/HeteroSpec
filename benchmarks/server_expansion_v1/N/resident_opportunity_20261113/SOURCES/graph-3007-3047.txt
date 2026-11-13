@@ -1,0 +1,41 @@
+    const auto & prefix=inp->prefix_n_kv;
+    bool ordered=ubatch.pos && ubatch.n_seqs_unq==1;
+    for (uint32_t row=1;ordered && row<ubatch.n_tokens;++row) ordered=ubatch.pos[row]==ubatch.pos[0]+int(row);
+    const bool grouped=hs_query_batch && cparams.causal_attn && !cparams.flash_attn && ordered &&
+        q->ne[2]>1 && prefix.size()==size_t(q->ne[2]) && (prefix.front()!=prefix.back() || q->ne[2]>4) &&
+        k->ne[3]==1 && v->ne[3]==1 && kq_b==nullptr && sinks==nullptr && v_mla==nullptr;
+    if (hs_query_batch && std::getenv("HS_RTX164_TRACE") && !prefix.empty()) {
+        std::fprintf(stderr,"RTX164_ATTN layer=%d heads=%lld kv_heads=%lld rows=%lld first=%u last=%u split=%d position=%d\n",
+            il,(long long)q->ne[1],(long long)k->ne[1],(long long)q->ne[2],prefix.front(),prefix.back(),grouped,ubatch.pos ? int(ubatch.pos[0]) : -1);
+    }
+    ggml_tensor * cur=nullptr;
+    if (grouped) {
+        const bool transposed=v->nb[1]>v->nb[2];
+        const uint64_t arithmetic = 1 + uint64_t(q->type) + (uint64_t(k->type) << 8) + (uint64_t(v->type) << 16);
+        GGML_ASSERT(q->ne[0] <= 65535 && q->ne[1] <= 65535 && k->ne[1] <= 65535);
+        const uint64_t dispatch = uint64_t(q->ne[0]) | (uint64_t(q->ne[1]) << 16) |
+                                  (uint64_t(k->ne[1]) << 32) | (uint64_t(transposed) << 48);
+        const auto groups=hs_reference_batching::partition_adjacent(prefix, arithmetic, dispatch);
+        // Physical query tiles preserve the validated backend layout. Q, K, V,
+        // projection and FFN still belong to the single caller graph.
+        for (const auto & run : groups) {
+          const size_t tile = hs_scope::layout95()==1 ? 1 : 4;
+          for (size_t begin=run.begin; begin<run.end; begin+=tile) {
+            auto planned=run; planned.begin=begin;
+            planned.end=std::min(run.end,begin+tile);
+            const int64_t width=planned.end-planned.begin,extent=planned.requirement.extent;
+            GGML_ASSERT(extent>0 && extent<=k->ne[2] && extent<=kq_mask->ne[0]);
+            auto * qg=ggml_view_3d(ctx0,q,q->ne[0],q->ne[1],width,q->nb[1],q->nb[2],begin*q->nb[2]);
+            auto * kg=ggml_view_4d(ctx0,k,k->ne[0],k->ne[1],extent,1,k->nb[1],k->nb[2],k->nb[3],0);
+            auto * vg=ggml_view_4d(ctx0,v,transposed?extent:v->ne[0],v->ne[1],transposed?v->ne[2]:extent,1,v->nb[1],v->nb[2],v->nb[3],0);
+            auto * mg=ggml_view_2d(ctx0,kq_mask,extent,width,kq_mask->nb[1],begin*kq_mask->nb[1]);
+            if (!ggml_is_contiguous(mg)) mg=ggml_cont(ctx0,mg);
+            auto * group=build_attn_mha(qg,kg,vg,nullptr,mg,nullptr,nullptr,0,kq_scale,il);
+            cb(group,"hs_prefix_attention",il);
+            if (std::getenv("HS_TPDS_TRACE") && il==0)
+                std::fprintf(stderr,"TPDS_TILE base=%d begin=%zu width=%lld extent=%lld\n",
+                    int(ubatch.pos[0]),begin,(long long)width,(long long)extent);
+            cur=cur?ggml_concat(ctx0,cur,group,1):group;
+          }
+        }
+        ggml_build_forward_expand(gf,cur);

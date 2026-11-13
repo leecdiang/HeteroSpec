@@ -1,0 +1,820 @@
+{
+  "all_mock_ELFs_checked_before_first_mock_execution": true,
+  "backend_init": 0,
+  "elapsed_seconds": 35.42706254099903,
+  "failures": [],
+  "forwards": 0,
+  "model_creation": 0,
+  "native_authority": false,
+  "native_contexts": 0,
+  "partial_artifacts_preserved": true,
+  "placements": 0,
+  "real_linked_binary_executions": 0,
+  "runner_source": {
+    "bytes": 9601,
+    "sha256": "c7347eb88e2ed1a8b7fa707333fe89bf178338ec5b28b165fe10a96c30a49a0b"
+  },
+  "schema": "hs.N1chain.std-only-reproduction.v1",
+  "scope": "SYNTHETIC_CPU_COMPONENTS_NOT_NATIVE_QUALIFICATION",
+  "source_files": {
+    "budget_writer/accounting_ipc.hpp": {
+      "bytes": 14629,
+      "sha256": "0dda4bb9195d9a4fec1b90f94b6d8dd0bc967fb0142365d0ed8a268bb250eff1"
+    },
+    "budget_writer/durable_budget.hpp": {
+      "bytes": 11563,
+      "sha256": "1eb0a0809026a4bed3f5c6c21dff91f2fd55497bffe01355702c9dd8f8560a2a"
+    },
+    "budget_writer/hooks.hpp": {
+      "bytes": 1854,
+      "sha256": "77ce40a6d17421a3f44f5a9ec5667394d6acf70113f7c0c0085879225ec2751f"
+    },
+    "budget_writer/launch_gate.hpp": {
+      "bytes": 920,
+      "sha256": "d3f26bb595703a5c0642f94c89ee47986905eb85ff26587cd2cff9b688d6b9e4"
+    },
+    "budget_writer/posix.hpp": {
+      "bytes": 3652,
+      "sha256": "b38a9ac4f9be39f7a3daa59c2baff46eff3e01bd3e29773c1171b00d64a33198"
+    },
+    "budget_writer/sha256.hpp": {
+      "bytes": 2502,
+      "sha256": "b6278032dd74253425d958cbba495555715977d273e45077e3f8d09c2ab40060"
+    },
+    "budget_writer/stream_writer.hpp": {
+      "bytes": 8415,
+      "sha256": "11fabf47367636ecaf6047fd065b6b6d2d665462a9bd71df8fc6af16346608f7"
+    },
+    "budget_writer/test_ipc_mock.cpp": {
+      "bytes": 13260,
+      "sha256": "9deed87a11d2315139358ebe55c8ffa0763f1b4a58c7e4a8528b2547776d71d5"
+    },
+    "budget_writer/test_mock.cpp": {
+      "bytes": 9810,
+      "sha256": "c3ec856323f72bb91574b63714d53961ff75b6c1b63b84787b20986ba5235282"
+    },
+    "native/active_kv_host.hpp": {
+      "bytes": 3307,
+      "sha256": "1bdcb5e79ce300055d1ca8319b8ae98a73e3824e64d78d5a153f6295b833b020"
+    },
+    "native/raw_checks.hpp": {
+      "bytes": 3027,
+      "sha256": "e7513df94679c702b7670af8a34e79013efc12ee871eb066aa80773743f7c7ca"
+    },
+    "native/session.hpp": {
+      "bytes": 7800,
+      "sha256": "3c03863806cdc2a4beb1fe954cf909c65c8ef8304d982a6adaa03b56a6f0a674"
+    },
+    "native/test_active_kv_host.cpp": {
+      "bytes": 3144,
+      "sha256": "03ce3fc2ae9699c799d6e931edab60386887f7da26606b26b3f5e9355f4ce5fc"
+    },
+    "review/independent_budget_writer_mock.cpp": {
+      "bytes": 5894,
+      "sha256": "11464d59671d315dbfe8562ca9aa63a8d364498f829ca5443164ced8ba91253d"
+    },
+    "review/independent_raw_checks_mock.cpp": {
+      "bytes": 2850,
+      "sha256": "411bf8e7e662478bac5bfea6abf5d67bc0b4619b3587aac576673813417ae278"
+    },
+    "review/independent_session_mock.cpp": {
+      "bytes": 8277,
+      "sha256": "8e1340b42db753fbf0e259c4f0f5bad75e6edf7ba6c6ac19d11c12d12d384f58"
+    }
+  },
+  "status": "PASS",
+  "steps": [
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/budget_writer/test_mock.cpp",
+        "-o",
+        "${OUT}/bin/component_normal"
+      ],
+      "elapsed_seconds": 4.320614562995615,
+      "id": "compile_component_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_component_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_component_normal.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/component_normal"
+      ],
+      "elapsed_seconds": 0.00414314899535384,
+      "id": "readelf_component_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_component_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1600,
+        "file": "logs/readelf_component_normal.stdout",
+        "sha256": "a8021335ed4ceb8cbeb61ba8009ceb2fc82ece5c2690f37d901b4066081f5f76"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-DNDEBUG",
+        "${SOURCE}/budget_writer/test_mock.cpp",
+        "-o",
+        "${OUT}/bin/component_ndebug"
+      ],
+      "elapsed_seconds": 4.320592058997136,
+      "id": "compile_component_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_component_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_component_ndebug.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/component_ndebug"
+      ],
+      "elapsed_seconds": 0.004159383999649435,
+      "id": "readelf_component_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_component_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1600,
+        "file": "logs/readelf_component_ndebug.stdout",
+        "sha256": "a8021335ed4ceb8cbeb61ba8009ceb2fc82ece5c2690f37d901b4066081f5f76"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/budget_writer/test_ipc_mock.cpp",
+        "-o",
+        "${OUT}/bin/ipc_normal"
+      ],
+      "elapsed_seconds": 4.320486522003193,
+      "id": "compile_ipc_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_ipc_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_ipc_normal.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/ipc_normal"
+      ],
+      "elapsed_seconds": 0.004096942997421138,
+      "id": "readelf_ipc_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_ipc_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1600,
+        "file": "logs/readelf_ipc_normal.stdout",
+        "sha256": "a8ad099f572ca065c0656076c8cbeb9535891d4ff9c872b7f317838b1edc6f33"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-DNDEBUG",
+        "${SOURCE}/budget_writer/test_ipc_mock.cpp",
+        "-o",
+        "${OUT}/bin/ipc_ndebug"
+      ],
+      "elapsed_seconds": 4.320931656999164,
+      "id": "compile_ipc_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_ipc_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_ipc_ndebug.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/ipc_ndebug"
+      ],
+      "elapsed_seconds": 0.004197932008537464,
+      "id": "readelf_ipc_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_ipc_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1600,
+        "file": "logs/readelf_ipc_ndebug.stdout",
+        "sha256": "a8ad099f572ca065c0656076c8cbeb9535891d4ff9c872b7f317838b1edc6f33"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/review/independent_budget_writer_mock.cpp",
+        "-o",
+        "${OUT}/bin/independent_budget"
+      ],
+      "elapsed_seconds": 3.8196273599896813,
+      "id": "compile_independent_budget",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_independent_budget.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_independent_budget.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/independent_budget"
+      ],
+      "elapsed_seconds": 0.0040591509896330535,
+      "id": "readelf_independent_budget",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_independent_budget.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1600,
+        "file": "logs/readelf_independent_budget.stdout",
+        "sha256": "999d3d63c72ec415428463631507e33d4316a8b39115545eb9555cf6935032f0"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/review/independent_session_mock.cpp",
+        "-o",
+        "${OUT}/bin/independent_session"
+      ],
+      "elapsed_seconds": 2.617849248010316,
+      "id": "compile_independent_session",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_independent_session.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_independent_session.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/independent_session"
+      ],
+      "elapsed_seconds": 0.004006868010037579,
+      "id": "readelf_independent_session",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_independent_session.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1597,
+        "file": "logs/readelf_independent_session.stdout",
+        "sha256": "346eb3591f8c47850c876f8133b81b3cfa448e166d6b5ba30470f4c7b7291ef6"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/review/independent_raw_checks_mock.cpp",
+        "-o",
+        "${OUT}/bin/independent_raw"
+      ],
+      "elapsed_seconds": 1.3159354270028416,
+      "id": "compile_independent_raw",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_independent_raw.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_independent_raw.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/independent_raw"
+      ],
+      "elapsed_seconds": 0.003974481005570851,
+      "id": "readelf_independent_raw",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_independent_raw.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1593,
+        "file": "logs/readelf_independent_raw.stdout",
+        "sha256": "b96f024948c7f6075b7fe0968ea42779617da473ca789670a326bc27a600a467"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "${SOURCE}/native/test_active_kv_host.cpp",
+        "-o",
+        "${OUT}/bin/active_kv_host"
+      ],
+      "elapsed_seconds": 1.1657452509971336,
+      "id": "compile_active_kv_host",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/compile_active_kv_host.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "file": "logs/compile_active_kv_host.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/readelf",
+        "-d",
+        "${OUT}/bin/active_kv_host"
+      ],
+      "elapsed_seconds": 0.004043909997562878,
+      "id": "readelf_active_kv_host",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/readelf_active_kv_host.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1588,
+        "file": "logs/readelf_active_kv_host.stdout",
+        "sha256": "485489eeeaed9dc3bc9344340e6d0295074382f4b766be2fe7a25220bac667f7"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/component_normal",
+        "--cpu-mock-selftest",
+        "${OUT}/cases/component_normal"
+      ],
+      "elapsed_seconds": 0.0640990310057532,
+      "id": "run_component_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_component_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 208,
+        "file": "logs/run_component_normal.stdout",
+        "sha256": "d006bc92a40652c8af1fd37977a1bf605c7cfc34f80f22fb80a90bc9bcc76003"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/component_ndebug",
+        "--cpu-mock-selftest",
+        "${OUT}/cases/component_ndebug"
+      ],
+      "elapsed_seconds": 0.063993825999205,
+      "id": "run_component_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_component_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 208,
+        "file": "logs/run_component_ndebug.stdout",
+        "sha256": "d006bc92a40652c8af1fd37977a1bf605c7cfc34f80f22fb80a90bc9bcc76003"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/ipc_normal",
+        "--cpu-mock-ipc-selftest",
+        "${OUT}/cases/ipc_normal"
+      ],
+      "elapsed_seconds": 4.470771530002821,
+      "id": "run_ipc_normal",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_ipc_normal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1343,
+        "file": "logs/run_ipc_normal.stdout",
+        "sha256": "1437b5ee72540030b99618cadcbe845bc2e711e0516ced484ea02ef2d3606b6b"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/ipc_ndebug",
+        "--cpu-mock-ipc-selftest",
+        "${OUT}/cases/ipc_ndebug"
+      ],
+      "elapsed_seconds": 4.470833517989377,
+      "id": "run_ipc_ndebug",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_ipc_ndebug.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1343,
+        "file": "logs/run_ipc_ndebug.stdout",
+        "sha256": "1437b5ee72540030b99618cadcbe845bc2e711e0516ced484ea02ef2d3606b6b"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/independent_budget",
+        "${OUT}/cases/independent_budget"
+      ],
+      "elapsed_seconds": 0.032491966005181894,
+      "id": "run_independent_budget",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_independent_budget.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 607,
+        "file": "logs/run_independent_budget.stdout",
+        "sha256": "a7dc7d19c062872387a525bd43d5a0577c8897b70e6cbd890b462b07c2f635cd"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/independent_session"
+      ],
+      "elapsed_seconds": 0.008191849003196694,
+      "id": "run_independent_session",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_independent_session.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1015,
+        "file": "logs/run_independent_session.stdout",
+        "sha256": "423a1a6b514d854309fabd1a6fd9c8f3e88e6085755d823c99842e44d6b2ce61"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/independent_raw",
+        "${OUT}/cases/independent_raw"
+      ],
+      "elapsed_seconds": 0.032133888991666026,
+      "id": "run_independent_raw",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_independent_raw.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 146,
+        "file": "logs/run_independent_raw.stdout",
+        "sha256": "0a0cb00639fef41a112cf5a8134f39ee476904f8f52dcc0debca53d2a98588c0"
+      }
+    },
+    {
+      "argv": [
+        "${OUT}/bin/active_kv_host"
+      ],
+      "elapsed_seconds": 0.008014499006094411,
+      "id": "run_active_kv_host",
+      "returncode": 0,
+      "stderr": {
+        "bytes": 0,
+        "file": "logs/run_active_kv_host.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 150,
+        "file": "logs/run_active_kv_host.stdout",
+        "sha256": "7014efb5b5996673772d9f0b4048a225319a75f3d32346671683086a1be0211d"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "ELF": {
+        "bytes": 177552,
+        "sha256": "9fc29c80c52b33de46f8e6cf9d7e89b8d1752595b39dee8535357e5f2bf58212"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "component_normal",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "checks": 52,
+        "forwards": 0,
+        "model_creation": 0,
+        "native_contexts": 0,
+        "native_libraries_linked": false,
+        "partial_mock_artifacts_preserved": true,
+        "placement_actions": 0,
+        "status": "CPU_MOCK_TESTS_PASS"
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 177552,
+        "sha256": "9fc29c80c52b33de46f8e6cf9d7e89b8d1752595b39dee8535357e5f2bf58212"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "component_ndebug",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "checks": 52,
+        "forwards": 0,
+        "model_creation": 0,
+        "native_contexts": 0,
+        "native_libraries_linked": false,
+        "partial_mock_artifacts_preserved": true,
+        "placement_actions": 0,
+        "status": "CPU_MOCK_TESTS_PASS"
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 192472,
+        "sha256": "4bacc7c3d0c3a80e7fb1ca769b84ad3a6f027d489b97b9391ad25b2e4d15463b"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "ipc_normal",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "forwards": 0,
+        "groups": 17,
+        "model_creation": 0,
+        "native_authority": false,
+        "native_contexts": 0,
+        "one_global_ledger_per_case": true,
+        "placements": 0,
+        "status": "CPU_MOCK_IPC_PASS"
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 192472,
+        "sha256": "4bacc7c3d0c3a80e7fb1ca769b84ad3a6f027d489b97b9391ad25b2e4d15463b"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "ipc_ndebug",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "forwards": 0,
+        "groups": 17,
+        "model_creation": 0,
+        "native_authority": false,
+        "native_contexts": 0,
+        "one_global_ledger_per_case": true,
+        "placements": 0,
+        "status": "CPU_MOCK_IPC_PASS"
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 174928,
+        "sha256": "74157dde59e1024f24417c5938fd5ba22d8e7421bfd9333fa5f14eeea015f675"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "independent_budget",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "evidence": "INDEPENDENT_STD_ONLY_SYNTHETIC",
+        "failures": 0,
+        "forwards": 0,
+        "model_loads": 0,
+        "native_contexts": 0,
+        "placements": 0,
+        "tests": 8
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 117264,
+        "sha256": "e1488a40874551000950237f2318336a7cdb65018b7e7d1e0cfbdffc69190ad1"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "independent_session",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "backend_init": 0,
+        "evidence": "INDEPENDENT_STD_ONLY_SYNTHETIC_SESSION",
+        "failures": 0,
+        "forwards": 0,
+        "model_loads": 0,
+        "native_contexts": 0,
+        "placements": 0,
+        "tests": 12
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 48040,
+        "sha256": "ff63f111d820f497d8f44a88033f3270effb647de1b4144d5f411c82fd3cac62"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "independent_raw",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "contexts": 0,
+        "evidence": "INDEPENDENT_HOST_RAW_SYNTHETIC",
+        "failures": 0,
+        "forwards": 0,
+        "models": 0,
+        "native_backend_calls": 0,
+        "placements": 0,
+        "tests": 5
+      }
+    },
+    {
+      "ELF": {
+        "bytes": 44440,
+        "sha256": "0b2f91ff753cb581ce40cfcc37c43171b8ab2037d8aa49030523fd14f79d73ac"
+      },
+      "dependency_gate": "STDLIB_ONLY_PASS",
+      "execution_status": "PASS",
+      "id": "active_kv_host",
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "GPU_or_model_calls": 0,
+        "V_transposed": true,
+        "checks": 194,
+        "layers": 36,
+        "native_or_model_linkage": false,
+        "nonidentity_physical_map": true,
+        "status": "PASS"
+      }
+    }
+  ],
+  "tools": {
+    "g++": {
+      "bytes": 932680,
+      "sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    },
+    "readelf": {
+      "bytes": 776640,
+      "sha256": "4df484ab601f7196528c0cfab86f13a35c5cd929cd0c7c277136309d7d04afe1"
+    }
+  },
+  "vocabulary_only_model_creation": 0
+}

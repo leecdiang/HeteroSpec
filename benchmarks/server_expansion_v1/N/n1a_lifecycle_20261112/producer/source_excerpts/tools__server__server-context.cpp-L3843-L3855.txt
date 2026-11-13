@@ -1,0 +1,13 @@
+            slot.i_batch = -1;
+
+            common_sampler_accept(slot.smpl.get(), id, true);
+
+            // here we have synchronized the llama_context (due to the sampling above), so we can do time measurement
+            const int64_t t_now = ggml_time_us();
+
+            slot.stats.n_gen += 1;
+
+            if (slot.stats.n_gen == 1) {
+                slot.stats.update_prompt_last();
+                slot.t_print_last = t_now;
+                slot.n_gen_last = 0;

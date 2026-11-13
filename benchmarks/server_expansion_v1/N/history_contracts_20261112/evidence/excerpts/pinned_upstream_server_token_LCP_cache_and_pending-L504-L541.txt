@@ -1,0 +1,38 @@
+    // add sampled token of this slot to the batch, optionally add the speculative draft tokens if any
+    void handle_last_sampled_token(server_batch & batch) {
+        bool add_ok = true;
+        if (spec_draft.empty()) {
+            // no speculative decoding
+            i_batch = batch.size();
+
+            if (!inp_embd.empty()) {
+                add_ok &= batch.add(id, inp_embd, prompt.tokens.pos_next(), true, false);
+            } else {
+                add_ok &= batch.add(id, sampled, prompt.tokens.pos_next(), true, false);
+            }
+
+            SLT_DBG(*this, "slot decode token, id=%d, n_ctx = %d, n_tokens = %d, truncated = %d\n",
+                    sampled, n_ctx, prompt.n_tokens(), truncated);
+        } else {
+            SLT_DBG(*this, "generate_draft: id=%d, #tokens=%zu, #draft=%zu, pos_next=%d\n",
+                    sampled, prompt.tokens.size(), spec_draft.size(), prompt.tokens.pos_next());
+
+            GGML_ASSERT(spec_i_batch.empty());
+
+            spec_i_batch.push_back(batch.size());
+            for (size_t i = 0; i < spec_draft.size(); i++) {
+                spec_i_batch.push_back(batch.size() + i + 1);
+            }
+
+            auto pos0 = prompt.tokens.pos_next();
+
+            add_ok &= batch.add(id, sampled, pos0++, true, false);
+            for (auto token : spec_draft) {
+                add_ok &= batch.add(this->id, token, pos0++, true, false);
+            }
+        }
+
+        GGML_ASSERT(add_ok && "batch must be large enough to hold the sampled and draft tokens");
+
+        prompt.tokens.push_back(sampled);
+        prompt.tokens.insert(spec_draft);

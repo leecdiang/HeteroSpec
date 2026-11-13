@@ -1,0 +1,81 @@
+{
+  "schema": "hs.production-bridge.independent-resource-source-review.v1",
+  "scope": "INDEPENDENT_READ_ONLY_SOURCE_REVIEW_NO_BINARY_EXECUTION",
+  "source": {
+    "bridge.py": {
+      "bytes": 31904,
+      "sha256": "4901145180e5bdf6d44cef83899d771db393b9e4653dc3b0c88c80db21e7c45a"
+    },
+    "cpu_run.py": {
+      "bytes": 14849,
+      "sha256": "68961c91b8484a8c00a192b840da0661b743f9e7b9e95402bafe0ae935ac7c2f"
+    },
+    "supervisor.hpp": {
+      "bytes": 9955,
+      "sha256": "aa8308513c930f2de0c8b77105df4c4fa47b1411b07e1e5a93c5647065b52e7d"
+    },
+    "cpp_bridge_launcher.cpp": {
+      "bytes": 8007,
+      "sha256": "edcb9fd8d0b896bb8e8b2244d44a0d3c0cbabe1222c15f10ea5ac4fb66806a76"
+    },
+    "cpp_fixed_worker.cpp": {
+      "bytes": 2276,
+      "sha256": "344f322847fd0eb01b503b619df234c89b50904d9dbb8a6da8cdd769177fb62e"
+    },
+    "bridge_client.hpp": {
+      "bytes": 11358,
+      "sha256": "c24b82a2d31e3846532e7e1df2e739bb31edceff8a12149b6cbfe0c3e745eee2"
+    },
+    "bridge_job.hpp": {
+      "bytes": 6275,
+      "sha256": "c6f5f97a287f5452dc312803234449583b3307b4cfac13053a6ee7e21eb76763"
+    },
+    "resource_domain.py": {
+      "bytes": 37749,
+      "sha256": "709f568b60bce39c7c6880937a1521c3c1720dca02cfac1f17406f6640f9939d"
+    },
+    "cpu_resource_fixture.py": {
+      "bytes": 6640,
+      "sha256": "1daa22acc980972f659d5cf4d6fecfe02e9a73b93c753bd717c65fa062b01b0b"
+    }
+  },
+  "findings": [
+    {
+      "id": "DEADLINE_SUCCESS_ORDER",
+      "status": "SOURCE_CORRECTED_BEHAVIORAL_EVIDENCE_PENDING",
+      "before": "Success returned before timer/owner checks, permitting simultaneous late exit/EOF acceptance.",
+      "after": "Deadline/owner checked before normal success and again after log fsync."
+    },
+    {
+      "id": "ABSOLUTE_FRAME_BOUND",
+      "status": "SOURCE_CORRECTED_BEHAVIORAL_EVIDENCE_PENDING",
+      "before": "Inherited recv_frame timeout reset on each recv; accepted socket not explicitly closed by broker.close.",
+      "after": "One absolute mono deadline spans header+payload, exact live peer is checked before HELLO bytes, accepted socket is shut down on close."
+    },
+    {
+      "id": "RESOURCE_OBJECT_TUPLE_JOIN",
+      "status": "SOURCE_CORRECTED_BEHAVIORAL_EVIDENCE_PENDING",
+      "before": "Resource object validated its own binding while a caller supplied the separate HELLO domain/device/worker tuple.",
+      "after": "Before placement reservation, exact ResourceDomain type/SHA and run/manifest/worker/stage/device/lease/images/owner/supervisor fields are joined; domain deadline covers the parsed immutable job deadline."
+    }
+  ],
+  "reviewed_positive": [
+    "Sealed fixed launcher, worker and job bytes prevent path replacement from selecting executed content.",
+    "PREEXEC launcher image and POSTEXEC worker image are distinct and share the bound process identity.",
+    "REAPED closes domain before internal exit release; store, source and deadline checks remain, and the closed domain is not incorrectly polled again.",
+    "Unknown/nonzero/partial exit or log results cannot release worker or advance stage.",
+    "Signals only address exact owned launcher or forked child pidfds; no numeric-PID or process-group kill fallback."
+  ],
+  "remaining_specific_limits": [
+    "Kernel cgroup operation body is permanently denied and not executed; no actual memory/pids enforcement or atomic domain clone is proved.",
+    "CPU external GPU lease, free-VRAM and delegation flags are explicitly synthetic.",
+    "Native host peak and physical placement are not measured; all261native numerical checks remain NOT_RUN.",
+    "PIDfd SIGKILL delivery is not a bound on GPU completion or uninterruptible kernel I/O; unconfirmed exit must remain stopped/uncertain.",
+    "A full CPU fault suite tests one fixed worker path, not the72-request native qualification panel."
+  ],
+  "actual_native_ELF_invocations": 0,
+  "actual_model_backend_context_placement_forwards": 0,
+  "actual_cgroup_activation": 0,
+  "independent_execution_performed": false,
+  "note": "Resolved findings are source conclusions. Current full-chain14-case receipts, timer-boundary and partial-frame tests are separately supplied by the implementing agents; this review does not claim to have run them."
+}

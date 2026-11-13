@@ -1,0 +1,16 @@
+{
+  "id": "N1a-source-coverage-v1",
+  "episode_user_turns": 2,
+  "root_rank_seed": "N1a-source-coverage-v1:root:",
+  "leaf_rank_seed": "N1a-source-coverage-v1:leaf:",
+  "rule": "Each original root: rank all source paths with at least two user turns by SHA256(seed+leafID), choose first before consulting any geometry. Keep its first two user turns exactly. Mark original necessary cap/stop incompatibility without replacing the path. For the explicit development-coverage strata only, select the first two eligible distinct roots by root hash for predicted difference and no difference. Preserve every root/path denominator, no latency/offset/template/padding/token search.",
+  "coverage": "Provided-history predictions only. Actual FREE_R responses/head/partition may differ; never replace a chosen episode after native output. Two roots per stratum is coverage, not representative statistical sampling or N2 eligibility.",
+  "forbidden": [
+    "offset/padding changes",
+    "speed or acceptance search",
+    "replacing a selected path after inspecting geometry",
+    "using supplied assistant bodies as future generated response",
+    "adaptive re-selection after R"
+  ],
+  "origin": "PR224 complete source cohort and PR225 immutable supplied-token predictions; neither census is re-executed"
+}

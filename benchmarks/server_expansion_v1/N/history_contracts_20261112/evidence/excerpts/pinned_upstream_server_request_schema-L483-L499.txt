@@ -1,0 +1,17 @@
+    add((new field_json("stop"))
+        ->set_desc("Specify stopping strings. Generation stops when one is produced, and the string is not included in the output")
+        ->set_handler([&](field_eval_context & ctx, const json & data) {
+            ctx.params.antiprompt.clear();
+            const auto & stop = data.at("stop");
+            if (stop.is_array()) {
+                for (const auto & word : stop) {
+                    if (!word.empty()) ctx.params.antiprompt.push_back(word);
+                }
+            } else if (stop.is_string()) {
+                ctx.params.antiprompt.push_back(stop.get<std::string>());
+            }
+            // fall back to CLI defaults if the request provided no effective stop strings
+            if (ctx.params.antiprompt.empty()) {
+                ctx.params.antiprompt = params_base.antiprompt;
+            }
+        }));

@@ -1,0 +1,11 @@
+# Initial actual-host audit — CPU only
+
+Snapshot: 2026-11-12T14:12:00.237268+00:00. All280 immutable parent Git files match the actual pinned PR229 head. All209 expected host file bindings match after correcting one absent locator using the recorded compiler argument. No changed worker bytes were found: the compiled descendant is native-link-01-driver/worker.cpp, not a guessed source-tree location. The initial missing lookup and exact correction are retained. Three complete source trees and five dependency closures match; the exact8B GGUF was fully hashed as a file. Neither model nor native executable was loaded.
+
+The120 old STATE/ledger files are unchanged, all three historical lock inode identities match with no holder, and no original native/controller task was observed. The two same-task process matches were this audit's own shell/SSH ancestry. Target compute count is0 with24,111MiB free, available RAM is517,319,424KiB and disk1,658,999,390,208bytes. These observations are dated file/NVML snapshots, not allocations or quiet-window guarantees. Unrelated users, commands and device IDs are omitted.
+
+The existing user manager still reports Delegate=yes; the owned app subtree delegates memory and pids and exposes writable memory.max and cgroup.procs. No subgroup was created, limit changed, process moved or enforcement tested. Python3.10 and the recorded compiler/toolchain exist; Node remains absent in the host PATH.
+
+The inherited production owner→BINDCHILD→domain/lease→launcher close→worker HELLO→supervisor connector is the implementation/review target of this successor; its initial blocked status is not retroactively marked passed. Separate native UUID/window/budget approval, real resource admission, actual loaded identities, device quiescence and all261 real qualification checks remain unapproved/NOT_RUN. CPU mock accounting, a compile/link result or the availability snapshot cannot grant any of them.
+
+No old source, reference, STATE, result, failure or budget was edited. No model (including vocab-only), backend, GPU/model context, placement, forward, native ELF or native denial-path selftest ran. No cgroup/system policy, driver, power, linger setting or other task was changed. Exact private receipts remain outside Git; public report contains permitted relative identities and raw-receipt digests only.

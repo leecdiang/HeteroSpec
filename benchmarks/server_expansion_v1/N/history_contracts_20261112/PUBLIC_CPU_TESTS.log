@@ -1,0 +1,18 @@
+PASS all actual Qwen EOG IDs remain actual terminal IDs
+PASS CAP keeps last actual generated token without adding EOS
+PASS stop violations fail instead of inventing EOS or truncating
+PASS pending token is replayed once at unchanged logical position
+PASS CAP pending token is not replaced with a synthetic EOG
+PASS canonical stub mismatch trims/replays while preserving exact canonical input
+PASS matching token value after earlier mismatch does not preserve old pending identity
+PASS unsupported trim and declared trim failure use common full rebuild
+PASS pending mismatch without cached suffix never trims an unmaterialized token
+PASS fully materialized identical or shorter prompt forces final token re-evaluation
+PASS identical logical prompt with pending terminal decodes pending once instead of stale sampling
+PASS capacity refusal never emits state-mutating actions
+PASS invalid logical state, tokens, booleans and empty frontier input fail
+PASS pure planner never changes caller arrays or claims native observations
+PASS retained geometry205/84 distinguishes strong rechunk from LOCALouter
+PASS dense ordered geometry exhaustively conserves rows and attention work
+PASS geometry capacity, zero-width tails and non-divisible q are explicit
+{"tests":17,"failures":0,"model_forwards":0,"GPU_requests":0,"tokenizer_calls":0,"scope":"Synthetic CPU token/cache-plan and geometry tests, not native qualification"}

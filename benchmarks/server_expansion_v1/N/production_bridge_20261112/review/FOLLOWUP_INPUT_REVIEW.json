@@ -1,0 +1,16 @@
+{
+  "schema": "hs.production-bridge.followup-input-review.v1",
+  "scope": "STATIC_ONLY_NO_EXECUTION",
+  "bridge_sha256": "83d38053e04ef84a9f268341862a66d4ad9202f27d8edf2cfbd9e2d335b387be",
+  "finding": {
+    "id": "R5",
+    "kind": "IMMUTABLE_INPUT_BOUNDARY",
+    "trigger": "Held job FD verified by bounded hash but not seal bits",
+    "problem": "A mutable regular job file can be altered after BINDCHILD; one hash does not guarantee the worker later consumes the same bytes",
+    "status": "SEAL_REQUIREMENT_IMPLEMENTED_IN_CURRENT_SOURCE_PENDING_WHOLE_CHAIN_TEST",
+    "required_evidence": "Sealed immutable job bytes, independently verified at BINDCHILD and consumed by exact fixed worker; after-bind mutation/alias fault test",
+    "resolution_observed": "Controller now requires F_SEAL_SEAL|SHRINK|GROW|WRITE on held job FD in addition to size/hash"
+  },
+  "native_actions": 0,
+  "all261_actual_native_checks": "NOT_RUN"
+}

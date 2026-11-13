@@ -1,0 +1,13 @@
+    params.chat_parser_params.reasoning_format = params_base.reasoning_format;
+
+    // create context and schema
+    field_eval_context ctx(params);
+    ctx.vocab          = vocab;
+    ctx.logit_bias_eog = &logit_bias_eog;
+
+    auto schema = make_llama_cmpl_schema(params_base, params);
+
+    // eval all fields in the schema
+    for (const auto & f : schema) {
+        f->eval(ctx, data);
+    }

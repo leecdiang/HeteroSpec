@@ -1,0 +1,20 @@
+           {"target_before",target_before},{"draft_before",draft_before},{"target_after",target->bounds()},{"draft_after",draft->bounds()},
+           {"caller_rows",k+1}});
+        base=keep;cycle++;
+    }
+    llama_synchronize(target->c);if(draft)llama_synchronize(draft->c);
+    r["ids"]=ids;r["eog"]=eog;r["length"]=ids.size();r["terminal_id"]=ids.back();r["stop_reason"]=eog.back()?"EOG":"CAP";
+    r["target_final_kv"]=target->bounds();r["draft_final_kv"]=draft?draft->bounds():json(nullptr);
+    r["request_seconds"]=since(request_start);r["target_phases"]=target->phases;r["draft_phases"]=draft?json(draft->phases):json::object();
+    r["target_caller_trace"]=target->caller_trace;r["draft_caller_trace"]=draft?draft->caller_trace:json::array();r["draft_physical_width_hist"]=json::object();for(size_t z=0;z<hsc::w.draft_physical.size();z++)if(hsc::w.draft_physical[z])r["draft_physical_width_hist"][std::to_string(z)]=hsc::w.draft_physical[z];r["phase_executions"]=target->plan.executions;r["target_calls"]=target->calls;r["draft_calls"]=draft?draft->calls:0;
+    r["geometry"]=json::array();if(capture)for(auto&kv:target->obs.signatures)r["geometry"].push_back(kv.second);
+    r["target_physical_width_hist"]=json::object();for(size_t i=0;i<hsc::w.target_physical.size();i++)if(hsc::w.target_physical[i])r["target_physical_width_hist"][std::to_string(i)]=hsc::w.target_physical[i];
+    r["graphs_reused"]=hsc::w.graphs_reused;r["graphs_built"]=hsc::w.graphs_built;r["observer_mode"]=capture?"heavy":"counts";
+    r["physical_widths"]=json::array();for(size_t i=0;i<hsc::w.target_physical.size();i++)if(hsc::w.target_physical[i])r["physical_widths"].push_back(i);
+    r["target_physical_by_phase"]=target->physical_by_phase;
+    r["setup_seconds"]=setup;
+    auto teardown=Clock::now();fresh.draft.reset();fresh.target.reset();hs_scope::active=false;
+    r["teardown_seconds"]=since(teardown);
+    r["endpoint"]={{"ids",r["ids"]},{"eog",r["eog"]},{"length",r["length"]},{"terminal_id",r["terminal_id"]},{"stop_reason",r["stop_reason"]}};
+    r["prompt_tokens"]=prompt.size();r["prompt_ids"]=prompt;
+    r["service_seconds"]=since(start);r["context_teardown_completed"]=life=="fresh";hsc::w.active=false;

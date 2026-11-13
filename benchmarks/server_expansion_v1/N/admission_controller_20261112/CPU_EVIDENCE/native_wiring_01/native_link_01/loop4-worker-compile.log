@@ -1,0 +1,22 @@
+native-link-01-driver/worker.cpp: In member function ‘void hs::n1chain::WorkerCapture::after_next(const string&, const std::vector<float>&)’:
+native-link-01-driver/worker.cpp:65:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   65 |   if(previous_operation.empty())return;const auto end=++ordinal;const auto work=J::parse(core.actual_work_json());uint64_t rows=0;for(auto&w:work)rows+=w.contains("rows")?w.at("rows").get<uint64_t>():w.at("width").get<uint64_t>();
+      |   ^~
+native-link-01-driver/worker.cpp:65:40: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   65 |   if(previous_operation.empty())return;const auto end=++ordinal;const auto work=J::parse(core.actual_work_json());uint64_t rows=0;for(auto&w:work)rows+=w.contains("rows")?w.at("rows").get<uint64_t>():w.at("width").get<uint64_t>();
+      |                                        ^~~~~
+native-link-01-driver/worker.cpp: In function ‘int hs::n1chain::prepare_native_worker(const J&, hs::n1chain::ProductionGate&, hs::n1chain::BudgetHooks&)’:
+native-link-01-driver/worker.cpp:156:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::previous_terminal’ [-Wmissing-field-initializers]
+  156 |  Session session(*core,account);WorkerCapture capture{*core,gate,account,job};
+      |                                                                             ^
+native-link-01-driver/worker.cpp:156:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::previous_operation’ [-Wmissing-field-initializers]
+native-link-01-driver/worker.cpp:156:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::snapshots’ [-Wmissing-field-initializers]
+native-link-01-driver/worker.cpp:156:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::descriptors’ [-Wmissing-field-initializers]
+native-link-01-driver/worker.cpp:156:77: warning: missing initializer for member ‘hs::n1chain::WorkerCapture::capture_receipts’ [-Wmissing-field-initializers]
+native-link-01-driver/worker.cpp: In lambda function:
+native-link-01-driver/worker.cpp:179:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  179 |     if(op.contains("expected_canonical_ids"))require(q==token_json(op.at("expected_canonical_ids")),"canonical producer differs from frozen reference; do not force R tape");return q;
+      |     ^~
+native-link-01-driver/worker.cpp:179:174: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  179 |     if(op.contains("expected_canonical_ids"))require(q==token_json(op.at("expected_canonical_ids")),"canonical producer differs from frozen reference; do not force R tape");return q;
+      |                                                                                                                                                                              ^~~~~~

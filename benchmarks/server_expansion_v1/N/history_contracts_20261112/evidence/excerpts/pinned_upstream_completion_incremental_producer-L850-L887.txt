@@ -1,0 +1,38 @@
+                if (buffer.empty()) { // Enter key on empty line lets the user pass control back
+                    LOG_DBG("empty line, passing control back\n");
+                } else { // Add tokens to embd only if the input buffer is non-empty
+                    // append input suffix if any
+                    if (!params.input_suffix.empty() && !params.conversation_mode) {
+                        LOG_DBG("appending input suffix: '%s'\n", params.input_suffix.c_str());
+                        LOG("%s", params.input_suffix.c_str());
+                    }
+
+                    LOG_DBG("buffer: '%s'\n", buffer.c_str());
+
+                    const size_t original_size = embd_inp.size();
+
+                    if (params.escape) {
+                        string_process_escapes(buffer);
+                    }
+
+                    bool format_chat = params.conversation_mode && params.enable_chat_template;
+                    std::string user_inp = format_chat
+                        ? chat_add_and_format("user", std::move(buffer))
+                        : std::move(buffer);
+                    // TODO: one inconvenient of current chat template implementation is that we can't distinguish between user input and special tokens (prefix/postfix)
+                    const auto line_pfx = common_tokenize(ctx, params.input_prefix, false, true);
+                    const auto line_inp = common_tokenize(ctx, user_inp,            false, format_chat);
+                    const auto line_sfx = common_tokenize(ctx, params.input_suffix, false, true);
+
+                    LOG_DBG("input tokens: %s\n", string_from(ctx, line_inp).c_str());
+
+                    // if user stop generation mid-way, we must add EOT to finish model's last response
+                    if (need_insert_eot && format_chat) {
+                        llama_token eot = llama_vocab_eot(vocab);
+                        embd_inp.push_back(eot == LLAMA_TOKEN_NULL ? llama_vocab_eos(vocab) : eot);
+                        need_insert_eot = false;
+                    }
+
+                    embd_inp.insert(embd_inp.end(), line_pfx.begin(), line_pfx.end());
+                    embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
+                    embd_inp.insert(embd_inp.end(), line_sfx.begin(), line_sfx.end());

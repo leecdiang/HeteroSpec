@@ -1,0 +1,8 @@
+        json assistant_msg = {
+            {"role",    "assistant"},
+            {"content", content.content}
+        };
+        if (!content.reasoning.empty()) {
+            assistant_msg["reasoning_content"] = content.reasoning;
+        }
+        impl->messages.push_back(std::move(assistant_msg));

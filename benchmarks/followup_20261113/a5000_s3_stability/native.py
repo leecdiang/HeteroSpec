@@ -52,7 +52,7 @@ class Budget:
 
     def event(self, value):
         with self.path.open('a') as f:
-            f.write(json.dumps(dict(utc=utc(), **value), allow_nan=False) + '\n')
+            f.write(json.dumps({'utc': utc(), **value}, allow_nan=False) + '\n')
             f.flush(); os.fsync(f.fileno())
 
     def reserve(self, cohort, worker):
@@ -130,6 +130,17 @@ class Campaign:
         for path, digest in c['successor_files'].items():
             need(sha(path) == digest, 'Controller/input source changed')
         out = self.root / panel / 'workers' / worker['worker_id']
+        if self.reuse_first_reference and worker == self.reuse_first_reference:
+            need(read(out / 'JOB.json') == job and read(out / 'WORKER.json') == worker, 'Exact retained first reference')
+            host = read(out / 'HOST.json')
+            need(host['returncode'] == 0 and host['error'] is None, 'Only known successful native exit can be reused')
+            need(read(out / 'native/result.json')['status'] == 'COMPLETE' and (out / 'ACTUAL_MODULES.private.json').exists()
+                 and (out / 'ACTUAL_REQUESTS.json').exists(), 'Complete original native evidence')
+            events = self.budget.entries()
+            need(not any(x['event'] == 'EXIT' and x['worker_id'] == worker['worker_id'] for x in events), 'Missing exit repair only once')
+            self.budget.event(dict(event='EXIT', cohort=panel[0], worker_id=worker['worker_id'], **host,
+                                   recovery='Original successful HOST/native evidence; controller UTC-key bookkeeping failure; no new launch'))
+            return out
         need(not out.exists(), 'Preserve previous worker')
         out.mkdir(parents=True)
         write(out / 'JOB.json', job); write(out / 'WORKER.json', worker)
@@ -199,11 +210,19 @@ class Campaign:
             self.budget.event(dict(event='EXIT', cohort=panel[0], worker_id=worker['worker_id'], **host))
         return out
 
-    def panel(self, panel):
+    def panel(self, panel, resume_first_reference=False):
         c = self.c; destination = self.root / panel
-        need(not destination.exists(), 'Panel already started; inspect evidence before continuation')
-        destination.mkdir()
         manifest = read(Path(c['plans']) / panel / 'MANIFEST.json')
+        self.reuse_first_reference = None
+        if resume_first_reference:
+            need(read(destination / 'STATUS.json')['error'] == "dict() got multiple values for keyword argument 'utc'", 'Only audited first-reference bookkeeping failure')
+            reserved = [x for x in self.budget.entries() if x['event'] == 'RESERVE']
+            first = manifest['workers'][0]
+            need(len(reserved) == 1 and reserved[0]['worker_id'] == first['worker_id'] and first['arm'] == 'R', 'Exactly one original reference, no other launched work')
+            self.reuse_first_reference = first
+        else:
+            need(not destination.exists(), 'Panel already started; inspect evidence before continuation')
+            destination.mkdir()
         xs = manifest['roots']['inputs']
         self.stack = ExitStack()
         started = time.monotonic()
@@ -216,7 +235,11 @@ class Campaign:
                 first = read(self.root / 'R1' / 'START.json')
                 need((dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(first['utc'])).total_seconds() >= 86400, '24h date separation')
                 need(read(self.root / 'R1' / 'STATUS.json')['status'] == 'COMPLETE', 'R1 complete prerequisite')
-            write(destination / 'START.json', dict(utc=utc(), panel=panel, deployment='Original native ELF and full compiled closure', source_commit=c['source_commit']))
+            if resume_first_reference:
+                write(destination / 'RESUME.json', dict(utc=utc(), source_commit=c['source_commit'], native_relaunches=0,
+                      reason='Repair controller exit bookkeeping; original successful first R request remains charged'))
+            else:
+                write(destination / 'START.json', dict(utc=utc(), panel=panel, deployment='Original native ELF and full compiled closure', source_commit=c['source_commit']))
             references = read(self.root / 'R1' / 'ORACLES.json') if panel == 'R2' else {}
             pending = {}; tapes = {}
             for w in manifest['workers']:
@@ -284,9 +307,10 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=Path, required=True)
     parser.add_argument('--panel', choices=['R1', 'R2', 'H1'])
     parser.add_argument('--preflight', action='store_true')
+    parser.add_argument('--resume-first-reference', action='store_true')
     args = parser.parse_args()
     campaign = Campaign(args.config)
     if args.preflight: print(json.dumps(campaign.preflight(), indent=2))
     else:
         need(args.panel is not None, 'Panel required')
-        campaign.panel(args.panel)
+        campaign.panel(args.panel, args.resume_first_reference)

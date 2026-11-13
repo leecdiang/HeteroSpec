@@ -21,7 +21,8 @@ class NativeTests(unittest.TestCase):
 
     def test_failed_worker_stays_charged(self):
         self.budget.reserve('H', self.worker('first', 176, 56320))
-        self.budget.event(dict(event='EXIT', worker_id='first', error='failure'))
+        self.budget.event(dict(event='EXIT', worker_id='first', error='failure', utc='2026-11-13T15:00:00+00:00'))
+        self.assertEqual(self.budget.entries()[-1]['utc'], '2026-11-13T15:00:00+00:00')
         with self.assertRaises(ValueError):
             self.budget.reserve('H', self.worker('next', 1, 1))
 

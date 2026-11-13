@@ -16,6 +16,7 @@ STARTS = [('H1', '2026-11-13T15:00:00+00:00'),
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
+    parser.add_argument('--resume-first-reference', action='store_true')
     args = parser.parse_args()
     root = Path(read(args.config)['output_root'])
     root.mkdir(parents=True, exist_ok=True)
@@ -32,8 +33,10 @@ if __name__ == '__main__':
                 sys.exit(2)
             time.sleep(min(30, max(0, (deadline - dt.datetime.now(dt.timezone.utc)).total_seconds())))
         write(root / 'QUEUE.json', dict(status='RUNNING', panel=panel, scheduled_utc=start, utc=utc()))
-        rc = subprocess.call([sys.executable, '-B', str(Path(__file__).with_name('native.py')),
-                              '--config', str(args.config.resolve()), '--panel', panel])
+        argv = [sys.executable, '-B', str(Path(__file__).with_name('native.py')),
+                '--config', str(args.config.resolve()), '--panel', panel]
+        if panel == 'H1' and args.resume_first_reference: argv.append('--resume-first-reference')
+        rc = subprocess.call(argv)
         analyze(root, root / 'ANALYSIS.json')
         if rc:
             write(root / 'QUEUE.json', dict(status='STOPPED', panel=panel, returncode=rc, utc=utc(),

@@ -1,0 +1,66 @@
+{
+  "schema": "heterospec.independent-matched-q1-smoke-audit.v1",
+  "status": "PASS_Q1_PROTOCOL_ONLY",
+  "reviewer_native_executions": 0,
+  "reviewer_GPU_executions": 0,
+  "capture_references_rehashed": 50,
+  "comparison_blob_pairs": 40,
+  "unique_raw_blobs": 10,
+  "unique_raw_bytes": 3104840,
+  "independently_enumerated_work": {
+    "contexts": 10,
+    "native_calls": 136,
+    "target_rows": 3524
+  },
+  "measurement_modes": {
+    "first_after_fresh_context": 4,
+    "one_shape_warmup_then_reset": 4
+  },
+  "graph_counters": [
+    {
+      "stage": "qualification",
+      "built": 1,
+      "reused": 0,
+      "records": 2
+    },
+    {
+      "stage": "measurement/first_after_fresh_context",
+      "built": 1,
+      "reused": 0,
+      "records": 4
+    },
+    {
+      "stage": "measurement/one_shape_warmup_then_reset",
+      "built": 1,
+      "reused": 0,
+      "records": 4
+    }
+  ],
+  "warm_reset_evidence": "Executed bound source enforces reset/replay initial active sequence bytes and native geometry equality before timing; reset export is not separately saved in raw captures.",
+  "timing_scope": "Capture-conditioned LOCAL target operation; budget aggregation outside window, original PhaseContext synchronization and full requested vector materialization inside. Both modes rebuilt one graph in these q1 samples, so warm mode is not a steady-state guarantee.",
+  "qualification_scope": "q1 reference only; no distinct width candidate. Does not amend or override the independently confirmed full-width q2 failure.",
+  "executed_wrapper_snapshot": {
+    "bytes": 16004,
+    "sha256": "2d365ee8f3ef6e7169b613ccce785e7bfafa4704e5cbfa5956f3e705c4ddf5b3"
+  },
+  "workspace_scope": "Requires the complete review workspace and its originally bound model/build paths. Use matched_cost/verify_run.py for portable raw-only replay.",
+  "performance_claim": false,
+  "bindings": {
+    "matched_cost/cpu_protocol_final/RUN.json": {
+      "bytes": 13243,
+      "sha256": "135e1901e8c2715492f512c54dc949d21b363b9dddf9a7d01f7c9a4a16a4324f"
+    },
+    "matched_cost/cpu_protocol_final/PLAN.json": {
+      "bytes": 780,
+      "sha256": "63e78e7c7730223dd715e6cd8aca247fde356998898bde1fce97383af933f2cd"
+    },
+    "matched_cost/cpu_protocol_final/native/RESULT.json": {
+      "bytes": 36269,
+      "sha256": "285739a70ae3392cc30d9d2ff95ae413e9d1e2f306abf4aa52f1159d634acfe8"
+    },
+    "review/audit_matched_smoke.py": {
+      "bytes": 9311,
+      "sha256": "87707cea0c87b7febabf007e8bc5c6809a1da42896830d8c9f4b9b190a952d03"
+    }
+  }
+}

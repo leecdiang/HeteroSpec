@@ -1,0 +1,94 @@
+{
+  "schema": "heterospec.independent-new-components-audit.v1",
+  "status": "PASS_HOST_ONLY_CONTRACT_CHECKS",
+  "sources": {
+    "protocol": {
+      "bytes": 9373,
+      "sha256": "c1920719a8992fb155525b9595c22cca324e0a02ae2f3239ab310b27ac5b777b"
+    },
+    "independent_production": {
+      "bytes": 17363,
+      "sha256": "b39d2820853fcec8902da0fbad3f3d2392fa22bb6e0e3d77817ef9e630716f0d"
+    },
+    "independent_causal": {
+      "bytes": 13721,
+      "sha256": "8882bae0389009f24c5490e9acf34d3723361195c9ebe93410132096a5953c52"
+    }
+  },
+  "auditor": {
+    "bytes": 12350,
+    "sha256": "96a119aea94cb3764b23fda47f884071dfa3c9ec7a720d23f7dea941e7049c14"
+  },
+  "checks": [
+    {
+      "check": "original_entry_terminal_two_files",
+      "status": "PASS",
+      "detail": "Initial EOG parser fixture accepted; no terminal capture.txt invented"
+    },
+    {
+      "check": "terminal_state_still_required",
+      "status": "PASS",
+      "detail": "Missing sequence payload rejected before a qualification can be claimed"
+    },
+    {
+      "check": "API_vs_physical_and_tail_recovery",
+      "status": "PASS",
+      "detail": "Manual two-cycle counterexample: eager17/deferred16 draft API calls; physical54/53; recovered one fully accepted tail"
+    },
+    {
+      "check": "fixed_production_plan_budget",
+      "status": "PASS",
+      "detail": "12 requests maximum; 1686 decode APIs; 2082 physical microbatches; 6096 total rows; no execution"
+    },
+    {
+      "check": "complete_with_only_capture_pair",
+      "status": "PASS",
+      "detail": "Rejected before any request/vector record was read: status/process count is partial, excessive, or inconsistent"
+    },
+    {
+      "check": "capture_pair_after_failed_extra_attempt",
+      "status": "PASS",
+      "detail": "Rejected before any request/vector record was read: status/process count is partial, excessive, or inconsistent"
+    },
+    {
+      "check": "cross_run_record",
+      "status": "PASS",
+      "detail": "Rejected before any request/vector record was read: cross-run or skipped job"
+    },
+    {
+      "check": "terminal_p4_materialization_gate",
+      "status": "PASS",
+      "detail": "Unpriced target q1 is unavailable; explicitly synthetic complete branch can be modeled"
+    },
+    {
+      "check": "causal_observation_and_censoring",
+      "status": "PASS",
+      "detail": "First mismatch closes learning; later bits ignored; duplicate event rejected"
+    },
+    {
+      "check": "future_fields_rejected",
+      "status": "PASS",
+      "detail": "Snapshot interface rejects explicit future acceptance"
+    },
+    {
+      "check": "runtime_abstains_from_every_available_cost_type",
+      "status": "PASS",
+      "detail": "Even a relabeled macro cannot enable actuation"
+    },
+    {
+      "check": "fallback_overhead_accounted",
+      "status": "PASS",
+      "detail": "Over-budget evaluation remains charged and disables later recommendations"
+    }
+  ],
+  "new_model_executions": 0,
+  "CUDA_driver_calls": 0,
+  "native_executable_runs": 0,
+  "production_qualification": "NOT_RUN",
+  "performance_admitted": false,
+  "limitations": [
+    "Synthetic parser/policy cases test software contracts only.",
+    "No measured stage costs or real controller action were admitted.",
+    "Production GPU integration, historical R and clean-state bridge remain open."
+  ]
+}

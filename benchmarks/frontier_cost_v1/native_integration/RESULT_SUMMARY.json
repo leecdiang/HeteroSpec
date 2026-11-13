@@ -1,0 +1,107 @@
+{
+  "schema": "heterospec.worker-integration-summary.v1",
+  "status": "PASS",
+  "request_pairs": 32,
+  "CPU_requests": 64,
+  "GPU_requests": 0,
+  "performance_claim": false,
+  "full_frontend_read_vector_pairs": 552,
+  "native_sequence_pairs": 272,
+  "compared_bytes_per_side": 76633984,
+  "tail_skips": 29,
+  "tail_recoveries": 19,
+  "coverage": {
+    "initial_CAP": 4,
+    "initial_EOG": 4,
+    "accepted_terminal_full": 8,
+    "accepted_terminal_partial": 12,
+    "bonus_terminal": 2,
+    "correction": 17,
+    "CAP": 20,
+    "EOG": 12,
+    "dirty_resident_resets": 28,
+    "crossing_extent_256": 4
+  },
+  "scope": "Unchanged worker provision/request function, actual greedy vectors and native EOS metadata; synthetic F32 CPU fixtures, no text tokenization or production/GPU qualification.",
+  "context": {
+    "target_ubatch": 32,
+    "draft_ubatch": 4,
+    "target_output_reserve": 8,
+    "n_ctx": 1024
+  },
+  "loaded_numerical_libraries": {
+    "libllama.so": {
+      "bytes": 4783928,
+      "sha256": "445a5cc6f2162287ef7ea003eacbd4427797f85ee9138edcbf376764bfa15d53"
+    },
+    "libggml.so": {
+      "bytes": 55920,
+      "sha256": "658533d605a997f2850ccc51d1dcacc020b1fa33207cc4d6da3c817e89819813"
+    },
+    "libggml-base.so": {
+      "bytes": 900032,
+      "sha256": "301735d962b61d5434b19ab9dfafacc9801db8d1fa0319c54c0446320c31bc8f"
+    },
+    "libggml-cpu.so": {
+      "bytes": 1201824,
+      "sha256": "c6e6e7451cd331ec3c89e5a8ab417ab3888a59c29585ac33af0c6f0fdf1ae2bc"
+    }
+  },
+  "source_sha256": {
+    "cpu_request_driver.cpp": "fd7ac492d36ce601f8a17a4cd4847fd4099ba54872a3a9d3d001007cdc9b0807",
+    "build_integration.py": "8d4fc4d7b3e41de6d400fb553de5330876fbb003124dc70b7bc16b26e0eecc12",
+    "run_integration.py": "70112ba9724e3ca6eef2228b8ccb450f59f59ea9a3cc51d52c2e0e7694103594",
+    "make_integration_fixture.py": "4b8a6b156193686601d42fd9551c64bfbbedb11d5c4c36d23ded294d842f14da",
+    "compare_integration.py": "d74f043be2ed02e76c4afb481e8b4b54cf400b381ed26c844f691654c95e844f"
+  },
+  "built_binaries": {
+    "cpu_request_0": {
+      "name": "cpu_request_0",
+      "bytes": 405736,
+      "sha256": "988b1cccfc53910d14590cb1ce4c29d2556ff1997e98fac6578d6e1dd5049e12"
+    },
+    "cpu_request_1": {
+      "name": "cpu_request_1",
+      "bytes": 405736,
+      "sha256": "cca6594846f419ab38dd5cf6abf52e9318e24a42f4866513adcb576e13837375"
+    },
+    "guarded_entry": {
+      "name": "guarded_entry",
+      "bytes": 431808,
+      "sha256": "1c0ce82db095284947b19b52d41c4de40bef5d60c8382688a74e7ba3b97e6503"
+    },
+    "guarded_entry_eager": {
+      "name": "guarded_entry_eager",
+      "bytes": 431808,
+      "sha256": "74cc2174f981fc6f649996e29aa120cc8575a03d46bc30782f3abf041474a8b2"
+    }
+  },
+  "fixture_models": [
+    {
+      "name": "target.gguf",
+      "bytes": 7087744,
+      "sha256": "5a4c448d35fca1d92ab683797c19e1094194e430ebdd49088c9dee005fee16e0"
+    },
+    {
+      "name": "draft_mismatch.gguf",
+      "bytes": 7087744,
+      "sha256": "3164a44e7a4e5ab2cf34d5dd4fb9208d878dfe7e0267a796e64340117132c4dd"
+    }
+  ],
+  "binding": {
+    "candidate_worker_sha256": "05e395aa3082b08229946139c1f0d298bfc1c3064f001ba5c10aefcc9487eecb",
+    "helper_sha256": "8602ac1e2ad93972d36ff8fc3f7dca5e16c0a8385ac058bd1b367331f6c2f62f",
+    "build_receipt_sha256": "75007a8f2270a9a2b1b543bf593ed5429048730c55491aaf1c3b52aea74518b2",
+    "run_summary_sha256": "c9992cea1403a0e007c0b6704d96aec2e4bad17faf0e9d8e9544bd4ae00d23cb",
+    "comparison_sha256": "e6bd6054b3db1dc42cc3a164684078ccab6bd865c6049515140b61e501f76ec2"
+  },
+  "original_guarded_entry": "Compiled both macro modes without edits; deferred entry rejected CPU at original GPU-required gate before model load. No original production CLI request completed.",
+  "implementation_preflight_CPU_requests": 1,
+  "total_CPU_fixture_requests_this_module": 65,
+  "final_matrix_CPU_requests": 64,
+  "independent_audit": {
+    "file": "INDEPENDENT_AUDIT.json",
+    "status": "PASS_SAVED_BYTES_AND_RECOMPUTED_LOGIC",
+    "sha256": "493687add07a7b125c69f5282e88ab35d89ebac2c04560bc84682a556b5624f5"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "schema": "heterospec.independent-q4-raw-review.v1",
+  "status": "PASS_FOR_FROZEN_PRIMARY_CONSUMER_CONTRACTS",
+  "publication_commit": "ef2766327e7821fe188d1ad788b2c3b05531eb9a",
+  "native_result": {
+    "bytes": 92981,
+    "sha256": "6aebb51bb96ffa962ee8907ffa03900890414b752e1f021f17382af982e6c967"
+  },
+  "run_receipt": {
+    "bytes": 3742,
+    "sha256": "b0119921d3aa5987755499acd253ad91a3ca440b00fa9c3ae9125bbf69192b49"
+  },
+  "job": {
+    "bytes": 8550,
+    "sha256": "43d02f4365334deaa2bd20e7c6226c78592e5ab268b95a66d07a42bc5d952458"
+  },
+  "independent_method": "Read every raw blob and recompute comparisons and expected per-stage physical/API work without importing the experiment verifier or running native code.",
+  "unique_blobs_verified": 30,
+  "raw_bytes_verified": 7385976,
+  "contexts": 14,
+  "decode_api_calls": 146,
+  "physical_calls": 146,
+  "target_rows": 3612,
+  "trim_calls": 4,
+  "model_loads": 1,
+  "native_child_launches": 1,
+  "completed_reference_captures": 6,
+  "completed_comparisons": 8,
+  "primary_comparison_fields": 64,
+  "captured_operation_and_continuation_vectors": 112,
+  "comparisons": [
+    {
+      "history_length": 248,
+      "arm": "macro_reference_repeat",
+      "reference": "macro_reference",
+      "shared_operation_rows": 8,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 248,
+      "arm": "macro_wide",
+      "reference": "macro_reference",
+      "shared_operation_rows": 8,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 248,
+      "arm": "frontier4_wide_trim",
+      "reference": "frontier4_reference",
+      "shared_operation_rows": 4,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 248,
+      "arm": "frontier5_wide_trim",
+      "reference": "frontier5_reference_materialize",
+      "shared_operation_rows": 4,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 252,
+      "arm": "macro_reference_repeat",
+      "reference": "macro_reference",
+      "shared_operation_rows": 8,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 252,
+      "arm": "macro_wide",
+      "reference": "macro_reference",
+      "shared_operation_rows": 8,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 252,
+      "arm": "frontier4_wide_trim",
+      "reference": "frontier4_reference",
+      "shared_operation_rows": 4,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    },
+    {
+      "history_length": 252,
+      "arm": "frontier5_wide_trim",
+      "reference": "frontier5_reference_materialize",
+      "shared_operation_rows": 4,
+      "raw_comparisons": {
+        "initial_state": true,
+        "shared_operation_vectors": true,
+        "final_state": true,
+        "continuation_vector": true,
+        "continuation_state": true,
+        "initial_geometry": true,
+        "final_geometry": true,
+        "continuation_geometry": true
+      }
+    }
+  ],
+  "fifth_vector_diagnostics": [
+    {
+      "history_length": 248,
+      "vocabulary": 128,
+      "different_float_bit_patterns": 117,
+      "different_numerical_float_values": 117,
+      "maximum_absolute_difference": 3.5762786865234375e-07,
+      "reference_argmax": 13,
+      "wide_argmax": 13,
+      "argmax_equal": true,
+      "is_primary_consumer": false
+    },
+    {
+      "history_length": 252,
+      "vocabulary": 128,
+      "different_float_bit_patterns": 128,
+      "different_numerical_float_values": 128,
+      "maximum_absolute_difference": 3.889203071594238e-06,
+      "reference_argmax": 14,
+      "wide_argmax": 14,
+      "argmax_equal": true,
+      "is_primary_consumer": false
+    }
+  ],
+  "meaning": "q8 and q4+q4 agree on all eight operation vectors in the macro tests. At frontier5, the first four consumer vectors, materialized active-state bytes, geometry and common forced continuation agree, while the fifth output is unequal in both histories. Thus full-output interchangeability does not follow from the primary pass.",
+  "claims_not_established": [
+    "historical R equivalence",
+    "production q8 full output-mask qualification",
+    "natural acceptance or terminal behavior",
+    "quantized CUDA recipe qualification",
+    "stage-cost or service speedup",
+    "general 5 percent gain"
+  ],
+  "performance_admitted": false,
+  "reviewer_native_execution_count": 0
+}

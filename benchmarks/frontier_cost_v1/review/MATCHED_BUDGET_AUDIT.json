@@ -1,0 +1,46 @@
+{
+  "schema": "heterospec.matched-cost-budget-independent-audit.v1",
+  "status": "PASS_STATIC_FIXED_PLAN",
+  "reviewer": "continuation_review",
+  "checked_utc": "2026-11-11T09:09:40.858848+00:00",
+  "input_sha256": "af504f403fb02665636dff2141ba0d0562650cee7f88229d5413b260656f1874",
+  "plan_sha256": "ba621194ac74ee296524d58661ccc244abddb72110f64246d2c514445cc44b07",
+  "schedules_per_q_1_to_8": [
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3
+  ],
+  "total_outer_calls_per_q_1_to_8": [
+    1,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10,
+    11
+  ],
+  "qualification": {
+    "contexts": 38,
+    "native_calls": 444,
+    "target_rows": 9732
+  },
+  "measurement": {
+    "contexts": 152,
+    "native_calls": 2588,
+    "target_rows": 58316
+  },
+  "budget": {
+    "contexts": 190,
+    "native_calls": 3032,
+    "target_rows": 68048
+  },
+  "native_call_mapping": "M2 LOCAL divides only at 32 rows. Prefix calls are explicitly <=32, tested operations <=8, continuation=1, with actual n_ubatch=32. Thus each reserved outer call maps to one llama_decode API invocation in this fixed scope; no claim about the number of GPU kernels. Final runtime counters still require comparison.",
+  "measurement_ledger_review": "Updated source reserves operation budget before Clock and aggregates observed hsc counts after Clock, including exception accounting. No added per-call JSON budget bookkeeping is inside measured_operation.",
+  "execution_by_reviewer": false
+}

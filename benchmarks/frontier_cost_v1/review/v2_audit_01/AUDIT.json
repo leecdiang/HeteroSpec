@@ -1,0 +1,107 @@
+{
+  "schema": "heterospec.independent-cost-admission-audit.v1",
+  "admission_source_sha256": "469735678f4b00274e8c59d42532fe03845f2ea2cc153bcdb95aae2fe28cdaf9",
+  "auditor_source_sha256": "7e4ebfc2abfb8754d776b2b24495e166482bae3bf66ca8d1d4d2c4d5eba75f42",
+  "original_RUN_sha256": "135e1901e8c2715492f512c54dc949d21b363b9dddf9a7d01f7c9a4a16a4324f",
+  "pin_source": "Retained original PR221 CPU RUN identity, not a new fixture hash",
+  "model_executions": 0,
+  "CUDA_driver_calls": 0,
+  "new_measurements": 0,
+  "checks": [
+    {
+      "case": "unaltered_original_CPU",
+      "integrity": "EXACT_RUN_VALIDATED",
+      "cost_admission": "REJECTED_CPU_SMOKE_AS_DEPLOYMENT_COST",
+      "macro_costs": 0,
+      "stage_costs": 0,
+      "measurements_replayed": 8,
+      "work": {
+        "contexts": 10,
+        "native_calls": 136,
+        "target_rows": 3524
+      }
+    },
+    {
+      "case": "changed_same_length_history",
+      "scope": "ORIGINAL_EXTERNAL_PIN",
+      "status": "REJECTED",
+      "reason": "BINDING_MISMATCH",
+      "detail": "BINDING_MISMATCH: JOB"
+    },
+    {
+      "case": "changed_same_length_history",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "BINDING_MISMATCH",
+      "detail": "BINDING_MISMATCH: JOB"
+    },
+    {
+      "case": "failed_run_status",
+      "scope": "ORIGINAL_EXTERNAL_PIN",
+      "status": "REJECTED",
+      "reason": "RUN_PIN_MISMATCH",
+      "detail": "RUN_PIN_MISMATCH"
+    },
+    {
+      "case": "failed_run_status",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "RUN_NOT_SUCCESSFUL",
+      "detail": "RUN_NOT_SUCCESSFUL"
+    },
+    {
+      "case": "changed_model_identity",
+      "scope": "ORIGINAL_EXTERNAL_PIN",
+      "status": "REJECTED",
+      "reason": "RUN_PIN_MISMATCH",
+      "detail": "RUN_PIN_MISMATCH"
+    },
+    {
+      "case": "changed_model_identity",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "BINDING_MISMATCH",
+      "detail": "BINDING_MISMATCH: model"
+    },
+    {
+      "case": "missing_repeat_panel",
+      "scope": "ORIGINAL_EXTERNAL_PIN",
+      "status": "REJECTED",
+      "reason": "RUN_PIN_MISMATCH",
+      "detail": "RUN_PIN_MISMATCH"
+    },
+    {
+      "case": "missing_repeat_panel",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "RUN_WORK_BINDING",
+      "detail": "RUN_WORK_BINDING"
+    },
+    {
+      "case": "empty_actual_module_inventory",
+      "scope": "ORIGINAL_EXTERNAL_PIN",
+      "status": "REJECTED",
+      "reason": "RUN_PIN_MISMATCH",
+      "detail": "RUN_PIN_MISMATCH"
+    },
+    {
+      "case": "empty_actual_module_inventory",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "INCOMPLETE_ACTUAL_MODULES",
+      "detail": "INCOMPLETE_ACTUAL_MODULES"
+    },
+    {
+      "case": "duplicate_measurement_identity",
+      "scope": "REDTEAM_ONLY_INTERNAL_CHECK_NOT_TRUSTED_PROVENANCE",
+      "status": "REJECTED",
+      "reason": "MEASUREMENT_PANEL_COVERAGE",
+      "detail": "MEASUREMENT_PANEL_COVERAGE"
+    }
+  ],
+  "status": "PASS_SPECIFIC_ADMISSION_REGRESSIONS",
+  "actual_assets_unchanged": true,
+  "production_stage_costs_admitted": 0,
+  "GPU_admission_executed": false,
+  "limitation": "CPU replay and structural negatives only; CUDA success path remains unobserved"
+}

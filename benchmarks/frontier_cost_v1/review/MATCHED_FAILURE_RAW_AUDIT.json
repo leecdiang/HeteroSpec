@@ -1,0 +1,132 @@
+{
+  "schema": "heterospec.matched-first-failure-independent-audit.v1",
+  "status": "PASS_FAILURE_CONFIRMED_FROM_SAVED_BYTES",
+  "reviewer": "continuation_review",
+  "checked_utc": "2026-11-11T09:11:08.354023+00:00",
+  "run_sha256": "474c3532e384d51ca791f3b423aca4d02b4cd233039880ebead0f2f78b4642e4",
+  "result_sha256": "e187f26187b030850009a3bef8fd536039040def190b763890ad79b18cdd4f1f",
+  "probe_source_at_execution": {
+    "path": "/workspace/scratch/43ede5689c8f/continuation_20261111/matched_cost/matched_cost_probe.cpp",
+    "bytes": 21829,
+    "sha256": "b54fabdbd00d8e16cd315c6b7bc940eb1df30f772cbaac60fb58a79ff95adb60"
+  },
+  "binary_at_execution": {
+    "path": "/workspace/scratch/43ede5689c8f/continuation_20261111/matched_cost/cpu_f32_attempt02/build/matched_cost_probe",
+    "bytes": 335896,
+    "sha256": "ef4be100588dddaba8b9834c44b4400735a300c60a0b1ce6fbab9ce173e5f10e"
+  },
+  "model": {
+    "bytes": 7084832,
+    "sha256": "e4b4f329077cc07036a307566f652a35b10e6f41c3b7a98478f2dfca4b09c044"
+  },
+  "verified_capture_references": 15,
+  "verified_unique_blobs": 13,
+  "failed_case": "controlled-p248",
+  "q": 2,
+  "reference_schedule": [
+    1,
+    1
+  ],
+  "candidate_schedule": [
+    2
+  ],
+  "comparison_recomputed": {
+    "initial_state": true,
+    "initial_geometry": true,
+    "full_operation_vectors": false,
+    "final_state": false,
+    "final_geometry": true,
+    "full_continuation_vector": false,
+    "continuation_state": false,
+    "continuation_geometry": true
+  },
+  "raw_differences": {
+    "continuation_state": {
+      "bytes_left": 517132,
+      "bytes_right": 517132,
+      "different_bytes": 43,
+      "sizes_equal": true
+    },
+    "continuation_vector": {
+      "bytes_left": 512,
+      "bytes_right": 512,
+      "different_bytes": 174,
+      "sizes_equal": true,
+      "floats": 128,
+      "different_float_words": 127,
+      "max_abs_difference": 4.023313522338867e-06,
+      "argmax_left": [
+        75
+      ],
+      "argmax_right": [
+        75
+      ]
+    },
+    "final_state": {
+      "bytes_left": 515072,
+      "bytes_right": 515072,
+      "different_bytes": 43,
+      "sizes_equal": true
+    },
+    "initial_state": {
+      "bytes_left": 510952,
+      "bytes_right": 510952,
+      "different_bytes": 0,
+      "sizes_equal": true
+    },
+    "operation_vectors": {
+      "bytes_left": 1024,
+      "bytes_right": 1024,
+      "different_bytes": 335,
+      "sizes_equal": true,
+      "floats": 256,
+      "different_float_words": 242,
+      "max_abs_difference": 1.9937753677368164e-05,
+      "argmax_left": [
+        109,
+        5
+      ],
+      "argmax_right": [
+        109,
+        5
+      ]
+    }
+  },
+  "physical_widths_observed": {
+    "reference": {
+      "1": 2
+    },
+    "candidate": {
+      "2": 1
+    }
+  },
+  "work": {
+    "attempted_native_calls": 31,
+    "attempted_target_rows": 752,
+    "by_stage": {
+      "qualification/continuation": {
+        "attempted_calls": 3,
+        "attempted_rows": 3,
+        "reserved_calls": 3,
+        "reserved_rows": 3
+      },
+      "qualification/operation": {
+        "attempted_calls": 4,
+        "attempted_rows": 5,
+        "reserved_calls": 4,
+        "reserved_rows": 5
+      },
+      "qualification/prefill": {
+        "attempted_calls": 24,
+        "attempted_rows": 744,
+        "reserved_calls": 24,
+        "reserved_rows": 744
+      }
+    },
+    "contexts": 3,
+    "reserved_native_calls": 31,
+    "reserved_target_rows": 752
+  },
+  "measurement_records": 0,
+  "scope": "True CPU F32 q2 versus two q1 on the same exported native starting state, same M2 LOCAL configuration and actual physical widths. Shapes/endpoints match, but full vectors and active sequence bytes differ. No GPU inference, no extra native request, and no extrapolation to quantized CUDA qualification."
+}

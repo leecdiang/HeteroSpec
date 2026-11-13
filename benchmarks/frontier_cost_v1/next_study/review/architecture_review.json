@@ -1,0 +1,26 @@
+{
+  "status": "PASS_AS_UNIMPLEMENTED_ARCHITECTURE_HYPOTHESIS",
+  "document": {
+    "bytes": 10385,
+    "sha256": "80490a73986ed2e72b95c71abda3adc0edc219e56e02ead5413c5d7482c6158f"
+  },
+  "source_regions_independently_bound_to_archive": 8,
+  "source_archive_sha256": "57cbfbfe43ae1c4b4ed5ba3f5261412daa2b5c14b712e76d868da55f4f8a4101",
+  "source_findings": [
+    "Different arithmetic groups occupy distinct grid.y blocks at each row tile; grid.x still contains multiple row tiles.",
+    "The current case-4 kernel has no explicit cross-group register weight reuse. Same weight addresses do not establish DRAM savings.",
+    "Changing native columns from 4 to 8 changes generic NVIDIA warp count from 4 to 2; a separate groups-per-block dimension is needed to keep the proposed arithmetic organization."
+  ],
+  "source_level_resource_arithmetic": {
+    "accumulator_floats_per_thread_existing": 8,
+    "accumulator_floats_per_thread_proposed": 16,
+    "interwarp_buffer_bytes_existing": 3072,
+    "interwarp_buffer_bytes_proposed": 6144,
+    "compiled_register_or_occupancy_measurement": false
+  },
+  "experiment_scope": "Three-arm real-operand operator design only: backend-loop4, current packed, proposed within-block two-group reuse. Exact arithmetic/activation replay before timing; final system benefit needs native original-reference qualification and matched service measurement.",
+  "new_implementation": false,
+  "reviewer_native_or_GPU_runs": 0,
+  "performance_result": "NOT_MEASURED",
+  "remaining_review_blockers": []
+}

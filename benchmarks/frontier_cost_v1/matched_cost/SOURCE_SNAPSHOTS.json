@@ -1,0 +1,150 @@
+{
+  "schema": "heterospec.matched-cost-executed-source-snapshots.v1",
+  "runs": [
+    {
+      "run": "cpu_f32_attempt01",
+      "status": "FAILED",
+      "run_receipt_sha256": "d742889da906312e9e5e78e3bd3cfcfd6b515b9a1712356e712ed05cf3cef9ed",
+      "executed_runner_sha256": "dcf1a35d3b3451b5beda5abc625cb9b1e10ae6e439474d9c6460574530143868",
+      "retained_runner": "retained_attempt01/run_probe.py",
+      "probe_source_sha256": "b54fabdbd00d8e16cd315c6b7bc940eb1df30f772cbaac60fb58a79ff95adb60",
+      "retained_probe_source": "retained_attempt01/matched_cost_probe.cpp",
+      "model_requests": 0
+    },
+    {
+      "run": "cpu_f32_attempt02",
+      "status": "STOPPED_QUALIFICATION_FAILED",
+      "run_receipt_sha256": "474c3532e384d51ca791f3b423aca4d02b4cd233039880ebead0f2f78b4642e4",
+      "executed_runner_sha256": "decf00df7ca19f5c307504a3c3712462ae3d318aadee176db816610a8dd9edd3",
+      "retained_runner": "retained_attempt02/run_probe.py",
+      "probe_source_sha256": "b54fabdbd00d8e16cd315c6b7bc940eb1df30f772cbaac60fb58a79ff95adb60",
+      "retained_probe_source": "retained_attempt02/matched_cost_probe.cpp",
+      "model_requests": "See exact work totals in retained native result",
+      "native_result_sha256": "e187f26187b030850009a3bef8fd536039040def190b763890ad79b18cdd4f1f",
+      "work": {
+        "attempted_native_calls": 31,
+        "attempted_target_rows": 752,
+        "by_stage": {
+          "qualification/continuation": {
+            "attempted_calls": 3,
+            "attempted_rows": 3,
+            "reserved_calls": 3,
+            "reserved_rows": 3
+          },
+          "qualification/operation": {
+            "attempted_calls": 4,
+            "attempted_rows": 5,
+            "reserved_calls": 4,
+            "reserved_rows": 5
+          },
+          "qualification/prefill": {
+            "attempted_calls": 24,
+            "attempted_rows": 744,
+            "reserved_calls": 24,
+            "reserved_rows": 744
+          }
+        },
+        "contexts": 3,
+        "reserved_native_calls": 31,
+        "reserved_target_rows": 752
+      }
+    },
+    {
+      "run": "cpu_protocol_final",
+      "status": "PASS",
+      "run_receipt_sha256": "135e1901e8c2715492f512c54dc949d21b363b9dddf9a7d01f7c9a4a16a4324f",
+      "executed_runner_sha256": "2d365ee8f3ef6e7169b613ccce785e7bfafa4704e5cbfa5956f3e705c4ddf5b3",
+      "retained_runner": "retained_protocol_snapshot/run_probe.py",
+      "probe_source_sha256": "4cc4c7114262bea71957e95478e963486a95cc416a0465d37bb897e971f838ec",
+      "retained_probe_source": "retained_protocol_snapshot/matched_cost_probe.cpp",
+      "model_requests": "See exact work totals in retained native result",
+      "native_result_sha256": "285739a70ae3392cc30d9d2ff95ae413e9d1e2f306abf4aa52f1159d634acfe8",
+      "work": {
+        "attempted_native_calls": 136,
+        "attempted_target_rows": 3524,
+        "by_stage": {
+          "measurement/first_after_fresh_context/continuation": {
+            "attempted_calls": 4,
+            "attempted_rows": 4,
+            "reserved_calls": 4,
+            "reserved_rows": 4
+          },
+          "measurement/first_after_fresh_context/operation": {
+            "attempted_calls": 4,
+            "attempted_rows": 4,
+            "reserved_calls": 4,
+            "reserved_rows": 4
+          },
+          "measurement/first_after_fresh_context/prefill": {
+            "attempted_calls": 32,
+            "attempted_rows": 1000,
+            "reserved_calls": 32,
+            "reserved_rows": 1000
+          },
+          "measurement/one_shape_warmup_then_reset/continuation": {
+            "attempted_calls": 4,
+            "attempted_rows": 4,
+            "reserved_calls": 4,
+            "reserved_rows": 4
+          },
+          "measurement/one_shape_warmup_then_reset/operation": {
+            "attempted_calls": 4,
+            "attempted_rows": 4,
+            "reserved_calls": 4,
+            "reserved_rows": 4
+          },
+          "measurement/one_shape_warmup_then_reset/prefill": {
+            "attempted_calls": 32,
+            "attempted_rows": 1000,
+            "reserved_calls": 32,
+            "reserved_rows": 1000
+          },
+          "measurement/one_shape_warmup_then_reset/reset_prefill": {
+            "attempted_calls": 32,
+            "attempted_rows": 1000,
+            "reserved_calls": 32,
+            "reserved_rows": 1000
+          },
+          "measurement/one_shape_warmup_then_reset/warmup": {
+            "attempted_calls": 4,
+            "attempted_rows": 4,
+            "reserved_calls": 4,
+            "reserved_rows": 4
+          },
+          "qualification/continuation": {
+            "attempted_calls": 2,
+            "attempted_rows": 2,
+            "reserved_calls": 2,
+            "reserved_rows": 2
+          },
+          "qualification/operation": {
+            "attempted_calls": 2,
+            "attempted_rows": 2,
+            "reserved_calls": 2,
+            "reserved_rows": 2
+          },
+          "qualification/prefill": {
+            "attempted_calls": 16,
+            "attempted_rows": 500,
+            "reserved_calls": 16,
+            "reserved_rows": 500
+          }
+        },
+        "contexts": 10,
+        "reserved_native_calls": 136,
+        "reserved_target_rows": 3524
+      }
+    }
+  ],
+  "current_runner_sha256": "d10df8f66e5d2a31301445037b0bc8f3c5135e5086b29074e06cd38949299a8f",
+  "current_native_source_sha256": "4cc4c7114262bea71957e95478e963486a95cc416a0465d37bb897e971f838ec",
+  "current_runner_native_execution": "NOT_RUN_AFTER_WRAPPER_ONLY_HARDENING",
+  "current_native_source": "Same as executed q1-only CPU protocol smoke",
+  "post_smoke_changes": [
+    "Fixed 1800 second owned-child timeout; tested with sleeping child only",
+    "Require public input profile tracked in clean committed subtree",
+    "Hard bind authenticated original PR213 target GGUF and embedded tokenizer identity",
+    "Unique nonzero physical GPU/PCI binding, selected MIG refusal, CUDA PCI-order ordinal mapping and exact driver PCI match before loading; CUDA branch unexecuted"
+  ],
+  "new_scientific_matrix_after_q2_failure": false
+}

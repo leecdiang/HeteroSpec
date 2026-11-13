@@ -1,0 +1,108 @@
+{
+  "schema": "heterospec.independent-preexecution-review.v1",
+  "status": "SOURCE_REVIEW_READY",
+  "reviewed_at_utc": "2026-11-11T12:17:21.752746+00:00",
+  "remaining_source_review_blockers": [],
+  "scope": "Static source/build receipt review and host-only tests. Native execution requires root publication verification and explicit GO; this review is not execution authorization or native qualification.",
+  "source_files": {
+    "PLAN.json": {
+      "bytes": 9322,
+      "sha256": "9116bb02c0d3553a208abfbd8e7d36ef1eda7571511762f77b277a013ff4c6c2"
+    },
+    "README.md": {
+      "bytes": 8194,
+      "sha256": "7e4ee7eb5f8ab87261a1dcfdc16902ba1d9751cb9782ec493661139725c68df8"
+    },
+    "build.py": {
+      "bytes": 6043,
+      "sha256": "19b962f4ffdc6b724f9e1e6598b22dd845d268b1b159790f2aa37ad45245e827"
+    },
+    "frontier_probe.cpp": {
+      "bytes": 14017,
+      "sha256": "87a29b58de15e0c7269a37c3e260285c9a569ee3011a8394e8ecdddbbca1b820"
+    },
+    "protocol.py": {
+      "bytes": 5013,
+      "sha256": "f0a9d90914bb261e242fcf6ba22a3f5f173f5a23a0396d5349e6530d5663b5d9"
+    },
+    "run.py": {
+      "bytes": 6428,
+      "sha256": "c6edfcfb530080c72a06b103f50f4ca11436544cc93e55dcded3780c356aa8fe"
+    },
+    "test_protocol.py": {
+      "bytes": 5338,
+      "sha256": "f54bbb85dd7b4719187f287859ef51b60218cdfbff242472f86a1f16f66ad9fc"
+    },
+    "verify.py": {
+      "bytes": 16551,
+      "sha256": "c33ac19c2d3167609dc04ef21a56899e2178b0760713cbb4995aa3a3c54a10cc"
+    }
+  },
+  "build_receipt": {
+    "bytes": 6929,
+    "sha256": "47a5b368ae15b12ace25cb60a630c94da7559479fbcea2a9eca51b397c386205"
+  },
+  "binary": {
+    "bytes": 420832,
+    "sha256": "ad6ed997e4bf34d3758eb6311a5670c7a9f2c7cae22e616e57fc850cf9565923"
+  },
+  "compiler_stages": 2,
+  "compiler_nonzero_exits": 0,
+  "compiler_stderr_bytes": 0,
+  "inherited_bindings": {
+    "legacy_probe": {
+      "bytes": 21982,
+      "sha256": "4cc4c7114262bea71957e95478e963486a95cc416a0465d37bb897e971f838ec"
+    },
+    "numerical_source_members": 3539,
+    "numerical_source_manifest_sha256": "8d37214bb699565c535b52d3fd4439786f3e45c2d40a1aaff6db948c27366a1f",
+    "libraries": {
+      "libggml-base.so.0.23.0": "301735d962b61d5434b19ab9dfafacc9801db8d1fa0319c54c0446320c31bc8f",
+      "libggml-cpu.so.0.23.0": "c6e6e7451cd331ec3c89e5a8ab417ab3888a59c29585ac33af0c6f0fdf1ae2bc",
+      "libggml.so.0.23.0": "658533d605a997f2850ccc51d1dcacc020b1fa33207cc4d6da3c817e89819813",
+      "libllama.so.0.4.0": "445a5cc6f2162287ef7ea003eacbd4427797f85ee9138edcbf376764bfa15d53"
+    }
+  },
+  "host_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s ../q4_frontier -p test_protocol.py -v",
+    "independently_run": true,
+    "passed": 6,
+    "failed": 0,
+    "native_or_model_calls": 0
+  },
+  "independent_budget": {
+    "histories": [
+      248,
+      252
+    ],
+    "contexts_per_history": 7,
+    "decode_calls_per_history": 73,
+    "rows_per_history": [
+      1792,
+      1820
+    ],
+    "max_contexts": 14,
+    "max_decode_api_attempts": 146,
+    "max_target_rows": 3612,
+    "max_trim_calls": 4,
+    "max_model_loads": 1,
+    "raw_blob_byte_limit": 268435456,
+    "owned_child_timeout_seconds": 180
+  },
+  "resolved_review_points": [
+    "Frontier5 retains only the first four operation vectors as primary consumers; all actual requested extras are saved and their finite status recomputed diagnostically.",
+    "Missing earlier completed work stages, physical histogram inconsistencies and premature/missing trim counts are rejected by the offline verifier.",
+    "Geometry guard refusal is distinguished from vector/state-byte disagreement; an empty append guard does not expose the hidden head value.",
+    "Macro failure stops subsequent frontier branches, which remain NOT_RUN; no negative or positive result is imputed to them."
+  ],
+  "claims_not_established": [
+    "historical R equivalence",
+    "production q8 full output-mask qualification",
+    "natural acceptance or terminal behavior",
+    "quantized CUDA recipe qualification",
+    "stage-cost or service speedup",
+    "general 5 percent gain"
+  ],
+  "reviewer_native_execution_count": 0,
+  "native_evidence_at_review": "NOT_RUN"
+}

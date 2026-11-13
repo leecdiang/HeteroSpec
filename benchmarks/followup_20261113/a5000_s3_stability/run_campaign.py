@@ -21,6 +21,10 @@ if __name__ == '__main__':
     root.mkdir(parents=True, exist_ok=True)
     for panel, start in STARTS:
         deadline = dt.datetime.fromisoformat(start)
+        if panel == 'R2' and (root / 'R1/START.json').exists():
+            first = dt.datetime.fromisoformat(read(root / 'R1/START.json')['utc'])
+            deadline = max(deadline, first + dt.timedelta(hours=24, seconds=1))
+            start = deadline.isoformat()
         write(root / 'QUEUE.json', dict(status='WAITING', next_panel=panel, scheduled_utc=start, utc=utc()))
         while dt.datetime.now(dt.timezone.utc) < deadline:
             if (root / 'STOP_REQUESTED').exists():

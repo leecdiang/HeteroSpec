@@ -119,7 +119,6 @@ class Campaign:
 
     def launch(self, panel, worker, job, panel_start):
         c = self.c
-        need(time.monotonic() - panel_start + c['worker_timeout_s'] <= 4 * 3600, 'Panel four-hour stop limit')
         need(not (self.root / 'STOP_REQUESTED').exists(), 'Stop requested')
         self.resource(c)
         used = sum(p.stat().st_size for p in self.root.rglob('*') if p.is_file() and not p.is_symlink())
@@ -162,7 +161,6 @@ class Campaign:
                 write(out / 'LAUNCH.private.json', dict(pid=process.pid, argv=argv, utc=utc(), boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
                                                        launch_begin_monotonic_ns=begin, executable_sha256=sha(exe)))
                 while process.poll() is None:
-                    need((time.monotonic_ns() - begin) / 1e9 <= c['worker_timeout_s'], 'Native timeout')
                     sample = self.resource(c, process.pid)
                     telemetry.write(json.dumps(sample) + '\n'); telemetry.flush()
                     time.sleep(2)

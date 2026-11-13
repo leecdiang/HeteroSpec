@@ -1,0 +1,17 @@
+    do {
+        const auto & ubatch = mctx->get_ubatch();
+
+        // count the outputs in this ubatch
+        {
+            int32_t n_outputs_new = 0;
+
+            if (n_outputs_all == n_tokens_all) {
+                n_outputs_new = ubatch.n_tokens;
+            } else {
+                for (uint32_t i = 0; i < ubatch.n_tokens; i++) {
+                    n_outputs_new += (int32_t) (ubatch.output[i] != 0);
+                }
+            }
+
+            // needs to happen before the graph is built
+            n_outputs = n_outputs_new;

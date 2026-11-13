@@ -1,0 +1,20 @@
+{
+  "registered_before_GPU": true,
+  "primary_boundary": "complete-operator quantization+projection",
+  "secondary_boundary": "projection-only",
+  "all_samples_retained": true,
+  "pairs_per_boundary": 12,
+  "batch_repetitions": 5,
+  "ordering": "BU/UB alternating, six of each",
+  "stable_exploratory_advantage_requires_each_boundary": {
+    "geomean_U_over_B_below": 1.0,
+    "paired_log_bootstrap_95pct_upper_below": 1.0,
+    "minimum_U_faster_pairs": 10,
+    "both_order_strata_geomean_below": 1.0
+  },
+  "bootstrap": {"seed": 20261113, "draws": 10000, "unit": "whole adjacent B/U pair, not the five within-batch repetitions"},
+  "limits": "Single serial run and one operand; bootstrap does not establish between-session, between-input or universal stability. No dropped outliers or sample-based 5pct selection.",
+  "Amdahl": {"formula": "new_service/old_service = 1-f+f*r+h", "five_percent_required_f": "(0.05+h)/(1-r), if r<1", "f_same_request_eligible_fraction": null, "h_same_request_added_overhead_fraction": null, "measured_operator_r_is_different_numerical_contract": true},
+  "no_advantage_action": "Stop large tests;no service or new candidate GPU execution",
+  "advantage_action": "Report conditional Amdahl sensitivity;propose only one strict-legacy candidate,do not execute it or service automatically"
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "CPU suspended-creation diagnostics; no GPU, profiles or ACL changes",
+  "cases": [
+    {
+      "case": "same_cpu_plain_job",
+      "created_suspended": true,
+      "resumed": false,
+      "active": 1
+    },
+    {
+      "case": "same_cpu_appcontainer_job",
+      "created_suspended": false,
+      "error": "Atomic CreateProcessW with Job list: WinError 2"
+    },
+    {
+      "case": "same_cpu_system_cwd",
+      "created_suspended": false,
+      "error": "Atomic CreateProcessW with Job list: WinError 2"
+    },
+    {
+      "case": "system_image_appcontainer_job",
+      "created_suspended": false,
+      "error": "Atomic CreateProcessW with Job list: WinError 2"
+    }
+  ],
+  "profile_probe": {
+    "derived_sid_succeeded": true,
+    "folder_hresult": "0x80070002",
+    "folder": null
+  }
+}

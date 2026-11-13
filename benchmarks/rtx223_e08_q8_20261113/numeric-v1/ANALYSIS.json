@@ -1,0 +1,356 @@
+{
+  "schema": "heterospec.e08.closed.q8-operator-data.v1",
+  "created_utc": "2026-11-12T17:09:46.050142+00:00",
+  "parent_PR230": "ee999060ea342e96014827f6c14ff8d5118b3d18",
+  "device": {
+    "graph_policy": "disabled",
+    "max_threads_per_sm": 1536,
+    "name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "sm_count": 46,
+    "uuid": "GPU-6dd57db3-9aac-ccc8-bd69-225a5ea2c4dd"
+  },
+  "summary": {
+    "kernel-only": {
+      "A": {
+        "samples_us": [
+          44.02559995651245,
+          44.223999977111816,
+          43.7824010848999,
+          43.4112012386322,
+          43.801599740982056,
+          44.66559886932373
+        ],
+        "median_us": 43.91359984874725,
+        "mean_us": 43.98506681124369,
+        "sample_cv": 0.009783503281349509
+      },
+      "B": {
+        "samples_us": [
+          39.40480053424835,
+          40.326398611068726,
+          40.3328001499176,
+          40.52479863166809,
+          40.09599983692169,
+          39.71840143203735
+        ],
+        "median_us": 40.21119922399521,
+        "mean_us": 40.06719986597697,
+        "sample_cv": 0.01063803489786957
+      },
+      "C": {
+        "samples_us": [
+          45.81120014190674,
+          45.900800824165344,
+          45.849600434303284,
+          45.85599899291992,
+          45.84319889545441,
+          46.63679897785187
+        ],
+        "median_us": 45.8527997136116,
+        "mean_us": 45.982933044433594,
+        "sample_cv": 0.006994313205772535
+      }
+    },
+    "complete-operator": {
+      "A": {
+        "samples_us": [
+          48.21760058403015,
+          49.01759922504425,
+          55.76320290565491,
+          55.92319965362549,
+          49.55520033836365,
+          48.60160052776337
+        ],
+        "median_us": 49.28639978170395,
+        "mean_us": 51.179733872413635,
+        "sample_cv": 0.07111953794767328
+      },
+      "B": {
+        "samples_us": [
+          44.2111998796463,
+          44.29439902305603,
+          44.71040070056915,
+          44.518399238586426,
+          44.28800046443939,
+          44.19200122356415
+        ],
+        "median_us": 44.29119974374771,
+        "mean_us": 44.369066754976906,
+        "sample_cv": 0.004588399748664438
+      },
+      "C": {
+        "samples_us": [
+          50.335997343063354,
+          49.535998702049255,
+          50.361597537994385,
+          49.86239969730377,
+          49.54240024089813,
+          50.227200984954834
+        ],
+        "median_us": 50.0448003411293,
+        "mean_us": 49.97759908437729,
+        "sample_cv": 0.00767617032721769
+      }
+    }
+  },
+  "paired_comparisons": [
+    {
+      "mode": "kernel-only",
+      "reference": "A",
+      "candidate": "B",
+      "time_ratios": [
+        0.8950428971591886,
+        0.9118668286889404,
+        0.9212103299612768,
+        0.9335101880480685,
+        0.9154003523621697,
+        0.8892392005811859
+      ],
+      "geomean_time_ratio": 0.9109204821735708,
+      "geomean_time_change_pct": -8.90795178264292,
+      "candidate_faster_blocks": 6,
+      "n_blocks": 6
+    },
+    {
+      "mode": "kernel-only",
+      "reference": "A",
+      "candidate": "C",
+      "time_ratios": [
+        1.0405582249227283,
+        1.0379160828491625,
+        1.0472153033680087,
+        1.0563172104095582,
+        1.0466101504635725,
+        1.044132400738546
+      ],
+      "geomean_time_ratio": 1.0454419265986539,
+      "geomean_time_change_pct": 4.544192659865387,
+      "candidate_faster_blocks": 0,
+      "n_blocks": 6
+    },
+    {
+      "mode": "kernel-only",
+      "reference": "B",
+      "candidate": "C",
+      "time_ratios": [
+        1.162579166010251,
+        1.1382320863030542,
+        1.1367819805190726,
+        1.1315540247271152,
+        1.1433359707179693,
+        1.1741862032804282
+      ],
+      "geomean_time_ratio": 1.1476763856534413,
+      "geomean_time_change_pct": 14.767638565344132,
+      "candidate_faster_blocks": 0,
+      "n_blocks": 6
+    },
+    {
+      "mode": "complete-operator",
+      "reference": "A",
+      "candidate": "B",
+      "time_ratios": [
+        0.9169099943618766,
+        0.9036427675638788,
+        0.801790398880318,
+        0.7960631636659279,
+        0.8937104514166074,
+        0.9092704919937716
+      ],
+      "geomean_time_ratio": 0.868700956247888,
+      "geomean_time_change_pct": -13.129904375211199,
+      "candidate_faster_blocks": 6,
+      "n_blocks": 6
+    },
+    {
+      "mode": "complete-operator",
+      "reference": "A",
+      "candidate": "C",
+      "time_ratios": [
+        1.0439340973705529,
+        1.0105757826821544,
+        0.9031331579572387,
+        0.8916227970884925,
+        0.9997417002175732,
+        1.0334474675636012
+      ],
+      "geomean_time_ratio": 0.9784948005602195,
+      "geomean_time_change_pct": -2.1505199439780465,
+      "candidate_faster_blocks": 3,
+      "n_blocks": 6
+    },
+    {
+      "mode": "complete-operator",
+      "reference": "B",
+      "candidate": "C",
+      "time_ratios": [
+        1.1385349748500437,
+        1.1183354960130485,
+        1.126395575724583,
+        1.120040265376061,
+        1.1186416122054936,
+        1.1365676953813213
+      ],
+      "geomean_time_ratio": 1.1263885385674668,
+      "geomean_time_change_pct": 12.638853856746678,
+      "candidate_faster_blocks": 0,
+      "n_blocks": 6
+    }
+  ],
+  "resources": {
+    "0": {
+      "achieved_occupancy": "unknown",
+      "active_warps_per_sm_limit": 32,
+      "dram_bytes": "unknown",
+      "l2_traffic": "unknown",
+      "local_bytes_per_thread": 0,
+      "registers_per_thread": 63,
+      "resident_blocks_per_sm_limit": 8,
+      "spill_load_store_bytes": "build log",
+      "static_shared_bytes": 3072
+    },
+    "1": {
+      "achieved_occupancy": "unknown",
+      "active_warps_per_sm_limit": 32,
+      "dram_bytes": "unknown",
+      "l2_traffic": "unknown",
+      "local_bytes_per_thread": 0,
+      "registers_per_thread": 63,
+      "resident_blocks_per_sm_limit": 8,
+      "spill_load_store_bytes": "build log",
+      "static_shared_bytes": 3072
+    },
+    "2": {
+      "achieved_occupancy": "unknown",
+      "active_warps_per_sm_limit": 20,
+      "dram_bytes": "unknown",
+      "l2_traffic": "unknown",
+      "local_bytes_per_thread": 0,
+      "registers_per_thread": 91,
+      "resident_blocks_per_sm_limit": 5,
+      "spill_load_store_bytes": "build log",
+      "static_shared_bytes": 6144
+    }
+  },
+  "attempts": [
+    {
+      "phase": "capture-001",
+      "status": "FAIL",
+      "reserved": 64,
+      "explicit_admitted": 0,
+      "wall_seconds": 12.547000000005937,
+      "owned_exit_confirmed": true,
+      "temperature_max_c": 37,
+      "sampled_peak_device_used_bytes": 440504320,
+      "ETW_counts": null,
+      "journal_path": "D:\\HeteroSpec-PC\\rtx223-e08\\capture-001\\attempt.jsonl",
+      "journal_sha256": "4ba445a5e127274d6304a89339a46a4668b7aa94e8187575135559dbc4be04a6"
+    },
+    {
+      "phase": "capture-002",
+      "status": "FAIL",
+      "reserved": 64,
+      "explicit_admitted": 64,
+      "wall_seconds": 14.843999999997322,
+      "owned_exit_confirmed": true,
+      "temperature_max_c": 37,
+      "sampled_peak_device_used_bytes": 666996736,
+      "ETW_counts": null,
+      "journal_path": "D:\\HeteroSpec-PC\\rtx223-e08\\capture-002\\attempt.jsonl",
+      "journal_sha256": "ee795bf4c1dbe2deb121cf688574e402ff233f688916155d7ec615804b67eefb"
+    },
+    {
+      "phase": "capture-003",
+      "status": "PASS",
+      "reserved": 32,
+      "explicit_admitted": 4,
+      "wall_seconds": 13.625,
+      "owned_exit_confirmed": true,
+      "temperature_max_c": 37,
+      "sampled_peak_device_used_bytes": 650219520,
+      "ETW_counts": {
+        "1": 1,
+        "2": 1,
+        "5": 65,
+        "6": 65
+      },
+      "journal_path": "D:\\HeteroSpec-PC\\rtx223-e08\\capture-003\\attempt.jsonl",
+      "journal_sha256": "41b2eb69257f2e5832f2843841c685b9c62606d4a9c7a0d67bcfd32d4620abdd"
+    },
+    {
+      "phase": "qualification-001",
+      "status": "PASS",
+      "reserved": 14,
+      "explicit_admitted": 14,
+      "wall_seconds": 11.906000000002678,
+      "owned_exit_confirmed": true,
+      "temperature_max_c": 39,
+      "sampled_peak_device_used_bytes": 296747008,
+      "ETW_counts": {
+        "1": 1,
+        "2": 1,
+        "5": 55,
+        "6": 55
+      },
+      "journal_path": "D:\\HeteroSpec-PC\\rtx223-e08\\qualification-001\\attempt.jsonl",
+      "journal_sha256": "4c3fe797f06a454c0f771bf830e18adcf315a5c0c19452ded59159b8f868459c"
+    },
+    {
+      "phase": "timing-001",
+      "status": "PASS",
+      "reserved": 355,
+      "explicit_admitted": 355,
+      "wall_seconds": 11.765999999988708,
+      "owned_exit_confirmed": true,
+      "temperature_max_c": 40,
+      "sampled_peak_device_used_bytes": 296747008,
+      "ETW_counts": {
+        "1": 1,
+        "2": 1,
+        "5": 54,
+        "6": 54
+      },
+      "journal_path": "D:\\HeteroSpec-PC\\rtx223-e08\\timing-001\\attempt.jsonl",
+      "journal_sha256": "31d4b1621be9e2be4991af674cababe6f1f3eab369af2af10fb814b9b2331010"
+    }
+  ],
+  "usage": {
+    "explicit_application_reservations": 529,
+    "explicit_application_admitted_attempts": 437,
+    "unused_unreserved_of_567": 38,
+    "unused_reservations_not_refunded": 92,
+    "model_load_calls": 3,
+    "successful_model_loads": 2,
+    "decode_calls": 2,
+    "actual_token_rows_per_decode": 8,
+    "successful_bounded_operand_captures": 1,
+    "operator_qualification_launches": 14,
+    "operator_timing_launches": 355,
+    "physical_lifecycle_kernels": null,
+    "implicit_context_count": null
+  },
+  "gates": {
+    "bootstrap": "PASS_ATTEMPT006",
+    "real_q8_capture": "PASS_ATTEMPT003",
+    "bitwise_ABC": "PASS_ONE_FIXTURE_SIX_REPLAYS",
+    "paired_timing": "PASS_SINGLE_SESSION_NEGATIVE_C_VS_B",
+    "C_faster_than_B": "FAIL_ALL_TWELVE_PAIRS",
+    "original_full_lifecycle_4096": "FAIL_NOT_CLOSED",
+    "production_native_admission": "BLOCKED_UNCHANGED",
+    "native_request_chain": "NOT_RUN",
+    "qualification_66": "NOT_RUN",
+    "round_two": "NOT_RUN",
+    "paper_change": "NOT_RUN"
+  },
+  "limits": [
+    "One genuine q8 prefix fixture; CPU-mapped remainder of unchanged model. No equivalence to all-GPU request/service baseline.",
+    "Two A complete-operator samples are high and retained. No trimming, repeated-run stability or population confidence claim.",
+    "CUDA event intervals include device queues and any host submission gaps; exclude allocations, transfers, model load and qualification.",
+    "No numeric CUPTI/profiler. Actual occupancy, L2/DRAM traffic, hidden library work and entire physical lifecycle remain unknown."
+  ],
+  "input_sha256": {
+    "raw_timing": "4086356285e29eb309312107f77b2fabb813deaed34357fd47ab8da5fcb60db7",
+    "raw_qualification": "3b1c28f017ec2722a857d5c19fd28c1f19fbf5cd8c2c66447313c91646bb2daa",
+    "source": "6fa359000c6a0d73a7218f258081cafbdbfc185936a9e1f5eb313e7cd8fb6090"
+  }
+}

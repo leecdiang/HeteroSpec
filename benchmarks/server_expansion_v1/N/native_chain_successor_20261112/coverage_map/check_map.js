@@ -1,0 +1,16 @@
+'use strict';
+// Independent map integrity checks. No code generator/runtime imports.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+if(process.argv.length!==5)throw Error('Usage: node check_map.js REPOSITORY_ROOT MAP_DIRECTORY FRESH_REPORT_JSON');
+const [repo,dir,out]=process.argv.slice(2).map(x=>path.resolve(x));
+const read=f=>JSON.parse(fs.readFileSync(f,'utf8')),hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const rows=read(path.join(dir,'MAP_261.json')),summary=read(path.join(dir,'SUMMARY.json'));
+const frozen=read(path.join(repo,'benchmarks/server_expansion_v1/N/n1a_lifecycle_20261112/REQUIRED_COVERAGE.json'));
+let assertions=0;const verify=(a,b)=>{assert.deepEqual(a,b);assertions++;};
+verify(rows.length,261);verify(rows.map(r=>r.id),frozen.checks.map(r=>r.id));
+const byId=new Map(frozen.checks.map(c=>[c.id,c])),counts={},checked=new Map();
+function sourceIdentity(s){if(!s||typeof s!=='object')return;if(typeof s.file==='string'&&typeof s.sha256==='string'&&Number.isInteger(s.bytes)){if(!checked.has(s.file)){const b=fs.readFileSync(path.join(repo,s.file));checked.set(s.file,{bytes:b.length,sha256:hash(b)});}verify(checked.get(s.file),{bytes:s.bytes,sha256:s.sha256});if(s.symbol_marker){const lines=fs.readFileSync(path.join(repo,s.file),'utf8').split('\n');verify(lines[s.line-1].includes(s.symbol_marker),true);}}for(const v of Object.values(s))if(v&&typeof v==='object')sourceIdentity(v);}
+for(const row of rows){const expected=byId.get(row.id);verify(row.scope,expected.scope);verify(row.frozen_bindings,expected.bindings);verify(row.native_status,'NOT_RUN');verify(row.native_qualification,false);verify(row.actual_native_capture_files,0);verify(row.actual_native_comparison_results,0);counts[row.scope]=(counts[row.scope]||0)+1;sourceIdentity(row);if(row.scope==='PREFIX_RETENTION'){verify(JSON.stringify(row.frozen_bindings).includes('COLD_CANONICAL_ORACLE'),false);verify(row.inline_old_to_new_raw_prefix_source.symbol_marker,'inline PrefixResult compare_retained_prefix(');}for(const route of row.input_routes){if(route.operation_id.startsWith('control/'))verify(route.mode,'SCRIPTED_RAW_TOKEN_CONTROL');else if(route.operation_id.startsWith('natural/COLD_CANONICAL_ORACLE/'))verify(route.mode,'CANONICAL_R_INPUT_ORACLE_REPLAY_NOT_FREE_PRODUCER');else verify(route.mode,'OWN_FREE_SEQUENTIAL_PRODUCER');}}
+verify(counts,{ALIGNED_STATE:162,PREFIX_RETENTION:27,OWNED_VECTOR_STABILITY:36,RESET_EMPTY_CHECK:36});verify(summary.native_checks_run,0);verify(summary.native_checks_passed,0);verify(summary.real_linked_binary_executions,0);verify(summary.native_qualification,false);sourceIdentity(summary);
+const report={schema:'hs.N1chain.independent-static-map-check.v1',status:'PASS_STATIC_MAP_ONLY',assertions,checks:261,counts,unique_bound_files:checked.size,native_status_for_all_checks:'NOT_RUN',native_qualification:false,actual_model_backend_context_placement_forward_calls:0,real_linked_binary_executions:0,map_sha256:hash(fs.readFileSync(path.join(dir,'MAP_261.json'))),summary_sha256:hash(fs.readFileSync(path.join(dir,'SUMMARY.json')))};
+fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(report,null,2));

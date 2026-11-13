@@ -1,0 +1,442 @@
+test_budget_journal_ceiling_is_not_auto_extended (__main__.ControllerTests) ... ERROR
+test_close_accounting_waits_for_observed_process_exit (__main__.ControllerTests) ... ERROR
+test_cold_first_difference_stops_strong_and_preserves_bytes_report (__main__.ControllerTests) ... ERROR
+test_controller_crash_is_inspection_only_and_never_refunds (__main__.ControllerTests) ... ERROR
+test_duplicate_worker_and_parallel_worker_are_poisoned (__main__.ControllerTests) ... ERROR
+test_failed_exit_prevents_next_worker (__main__.ControllerTests) ... ERROR
+test_full_72_request_stage_order_and_inspect_only (__main__.ControllerTests) ... ERROR
+test_identity_change_stops_before_request (__main__.ControllerTests) ... ERROR
+test_lock_lost_or_replaced_never_deleted (__main__.ControllerTests) ... ERROR
+test_missing_preflight_is_no_launch (__main__.ControllerTests) ... ERROR
+test_missing_raw_coverage_or_reader_failure_blocks_next_stage (__main__.ControllerTests) ... ERROR
+test_native_gate_is_closed_before_any_launch_or_placement (__main__.ControllerTests) ... ERROR
+test_owner_lease_and_actual_binary_bindings (__main__.ControllerTests) ... ERROR
+test_partial_journal_fsync_and_disk_full_no_retry_reentry (__main__.ControllerTests) ... ERROR
+test_real_socket_owner_and_sequence_checks_cpu_only (__main__.ControllerTests) ... ERROR
+test_repeat_failure_blocks_cold (__main__.ControllerTests) ... ERROR
+test_resource_insufficiency_unknown_owner_and_timeout_stop (__main__.ControllerTests) ... ERROR
+test_rows_requests_and_raw_metadata_limits_keep_spent_counts (__main__.ControllerTests) ... ERROR
+test_same_process_cannot_be_independent_repeat (__main__.ControllerTests) ... ERROR
+test_stage_reordering_stops_before_any_worker (__main__.ControllerTests) ... ERROR
+test_unknown_existing_state_and_lock_untouched (__main__.ControllerTests) ... ERROR
+test_unknown_request_and_failed_finish_cannot_skip_panel (__main__.ControllerTests) ... ERROR
+test_worker_crash_and_PID_reuse_stop (__main__.ControllerTests) ... ERROR
+
+======================================================================
+ERROR: test_budget_journal_ceiling_is_not_auto_extended (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 335, in test_budget_journal_ceiling_is_not_auto_extended
+    f=self.fx();f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_close_accounting_waits_for_observed_process_exit (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 195, in test_close_accounting_waits_for_observed_process_exit
+    f = self.fx();f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_cold_first_difference_stops_strong_and_preserves_bytes_report (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 258, in test_cold_first_difference_stops_strong_and_preserves_bytes_report
+    f=self.fx(fail_stage="COLD_CANONICAL_ORACLE");f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_controller_crash_is_inspection_only_and_never_refunds (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 378, in test_controller_crash_is_inspection_only_and_never_refunds
+    f=self.fx();manifest=f.manifest;f.close()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_duplicate_worker_and_parallel_worker_are_poisoned (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 181, in test_duplicate_worker_and_parallel_worker_are_poisoned
+    f = self.fx();f.preflights();f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_failed_exit_prevents_next_worker (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 205, in test_failed_exit_prevents_next_worker
+    f = self.fx();f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_full_72_request_stage_order_and_inspect_only (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 151, in test_full_72_request_stage_order_and_inspect_only
+    f = self.fx();f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_identity_change_stops_before_request (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 213, in test_identity_change_stops_before_request
+    f = self.fx();f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_lock_lost_or_replaced_never_deleted (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 233, in test_lock_lost_or_replaced_never_deleted
+    f=self.fx("_"+mode);f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_missing_preflight_is_no_launch (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 176, in test_missing_preflight_is_no_launch
+    f = self.fx()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_missing_raw_coverage_or_reader_failure_blocks_next_stage (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 281, in test_missing_raw_coverage_or_reader_failure_blocks_next_stage
+    f=self.fx("_"+mode,missing=mode=="missing");f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_native_gate_is_closed_before_any_launch_or_placement (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 353, in test_native_gate_is_closed_before_any_launch_or_placement
+    f=self.fx();before=copy.deepcopy(f.ctrl.state["counts"])
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_owner_lease_and_actual_binary_bindings (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 220, in test_owner_lease_and_actual_binary_bindings
+    f = self.fx("_"+field);f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_partial_journal_fsync_and_disk_full_no_retry_reentry (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 311, in test_partial_journal_fsync_and_disk_full_no_retry_reentry
+    io=FaultIO();f=self.fx("_"+mode,io=io);f.preflights();w=f.begin();ident=w["request_ids"][0]
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_real_socket_owner_and_sequence_checks_cpu_only (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 359, in test_real_socket_owner_and_sequence_checks_cpu_only
+    f=self.fx();f.preflights();w=f.begin(actual_peer=C.process_identity())
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_repeat_failure_blocks_cold (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 271, in test_repeat_failure_blocks_cold
+    f=self.fx(fail_stage="REPEAT_RESIDENT_R");f.preflights();f.stage(C.STAGES[0])
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_resource_insufficiency_unknown_owner_and_timeout_stop (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 322, in test_resource_insufficiency_unknown_owner_and_timeout_stop
+    f=self.fx("_"+mode);f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_rows_requests_and_raw_metadata_limits_keep_spent_counts (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 296, in test_rows_requests_and_raw_metadata_limits_keep_spent_counts
+    f=self.fx("_"+mode,mutate=mutate);f.preflights();w=f.begin();ident=w["request_ids"][0]
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_same_process_cannot_be_independent_repeat (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 188, in test_same_process_cannot_be_independent_repeat
+    f = self.fx();f.preflights();f.worker(0)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_stage_reordering_stops_before_any_worker (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 167, in test_stage_reordering_stops_before_any_worker
+    f = self.fx();f.preflights()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_unknown_existing_state_and_lock_untouched (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 246, in test_unknown_existing_state_and_lock_untouched
+    f=self.fx();m=f.manifest
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_unknown_request_and_failed_finish_cannot_skip_panel (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 342, in test_unknown_request_and_failed_finish_cannot_skip_panel
+    f=self.fx("_"+mode);f.preflights();w=f.begin();ident=w["request_ids"][0]
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+ERROR: test_worker_crash_and_PID_reuse_stop (__main__.ControllerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 252, in test_worker_crash_and_PID_reuse_stop
+    f=self.fx();f.preflights();w=f.begin()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 140, in fx
+    f = Fixture(self._testMethodName + suffix, **kwargs)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/test_controller.py", line 80, in __init__
+    self.manifest = instantiate_cpu_manifest(name, self.clock.w, self.clock.m)
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 211, in instantiate_cpu_manifest
+    manifest = load_manifest()
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 172, in load_manifest
+    RPC_budget=static_rpc_bound(template),
+  File "${PRIVATE_TASK_ROOT}/source-controller-02/admission_controller_20261112/generate_manifest.py", line 49, in static_rpc_bound
+    q = (len(op['canonical_ids']) if 'canonical_ids' in op else
+TypeError: object of type 'NoneType' has no len()
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.088s
+
+FAILED (errors=23)

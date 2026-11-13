@@ -1,0 +1,7 @@
+std::string common_json::dump(int indent) const {
+    return guard([&] { return as_json(this).dump(indent); });
+}
+
+std::string common_json::dump_safe(int indent) const {
+    return as_json(this).dump(indent, ' ', false, ordered_json::error_handler_t::replace);
+}

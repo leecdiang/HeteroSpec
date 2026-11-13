@@ -1,0 +1,3580 @@
+{
+  "schema": "hs.N1chain.execution-template.v1",
+  "status": "CPU_TEMPLATE_NOT_ADMITTED",
+  "parent_PR226": "87ea17971642f65468678cee8477505b9956611a",
+  "execution_authorized": false,
+  "model_forwards": 0,
+  "request_limit": 76,
+  "row_limit": 85738,
+  "planned_requests": 72,
+  "planned_rows": 69354,
+  "failure_reserve_requests": 4,
+  "failure_reserve_rows": 16384,
+  "initializations": {
+    "backend_inits": 10,
+    "models": 10,
+    "model_contexts": 10,
+    "placements": 10
+  },
+  "counts_scope": "Two preflight deployments and eight worker deployments; loader placement reserved before exec, worker verifies same reservation without charging twice",
+  "role_order": [
+    "RESIDENT_R",
+    "REPEAT_RESIDENT_R",
+    "COLD_CANONICAL_ORACLE",
+    "STRONG_WHOLE_RECHUNK_LOOP4"
+  ],
+  "stage_gate": "Repeat R then strict cold canonical bridge must pass full raw comparisons before any of eighteen strong requests; identity/alignment conflict stops before numerical claim",
+  "request_rows": {
+    "natural/RESIDENT_R/0/0": 219,
+    "natural/RESIDENT_R/0/1": 4096,
+    "natural/RESIDENT_R/1/0": 190,
+    "natural/RESIDENT_R/1/1": 4096,
+    "natural/RESIDENT_R/2/0": 154,
+    "natural/RESIDENT_R/2/1": 4096,
+    "natural/RESIDENT_R/3/0": 235,
+    "natural/RESIDENT_R/3/1": 4096,
+    "control/RESIDENT_R/pending_cap_append/0": 13,
+    "control/RESIDENT_R/pending_cap_append/1": 16,
+    "control/RESIDENT_R/empty_think_lcp_trim/0": 13,
+    "control/RESIDENT_R/empty_think_lcp_trim/1": 16,
+    "control/RESIDENT_R/fully_cached_replay_ownership/0": 13,
+    "control/RESIDENT_R/fully_cached_replay_ownership/1": 1,
+    "control/RESIDENT_R/trim_unsupported_rebuild/0": 13,
+    "control/RESIDENT_R/trim_unsupported_rebuild/1": 25,
+    "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0": 13,
+    "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1": 25,
+    "natural/REPEAT_RESIDENT_R/0/0": 219,
+    "natural/REPEAT_RESIDENT_R/0/1": 4096,
+    "natural/REPEAT_RESIDENT_R/1/0": 190,
+    "natural/REPEAT_RESIDENT_R/1/1": 4096,
+    "natural/REPEAT_RESIDENT_R/2/0": 154,
+    "natural/REPEAT_RESIDENT_R/2/1": 4096,
+    "natural/REPEAT_RESIDENT_R/3/0": 235,
+    "natural/REPEAT_RESIDENT_R/3/1": 4096,
+    "control/REPEAT_RESIDENT_R/pending_cap_append/0": 13,
+    "control/REPEAT_RESIDENT_R/pending_cap_append/1": 16,
+    "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0": 13,
+    "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1": 16,
+    "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0": 13,
+    "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1": 1,
+    "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0": 13,
+    "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1": 25,
+    "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0": 13,
+    "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1": 25,
+    "natural/COLD_CANONICAL_ORACLE/0/0": 219,
+    "natural/COLD_CANONICAL_ORACLE/0/1": 4096,
+    "natural/COLD_CANONICAL_ORACLE/1/0": 190,
+    "natural/COLD_CANONICAL_ORACLE/1/1": 4096,
+    "natural/COLD_CANONICAL_ORACLE/2/0": 154,
+    "natural/COLD_CANONICAL_ORACLE/2/1": 4096,
+    "natural/COLD_CANONICAL_ORACLE/3/0": 235,
+    "natural/COLD_CANONICAL_ORACLE/3/1": 4096,
+    "control/COLD_CANONICAL_ORACLE/pending_cap_append/0": 13,
+    "control/COLD_CANONICAL_ORACLE/pending_cap_append/1": 29,
+    "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0": 13,
+    "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1": 25,
+    "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0": 13,
+    "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1": 13,
+    "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0": 13,
+    "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1": 25,
+    "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0": 13,
+    "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1": 25,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0": 219,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1": 4096,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0": 190,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1": 4096,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0": 154,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1": 4096,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0": 235,
+    "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1": 4096,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0": 13,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1": 16,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0": 13,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1": 16,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0": 13,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1": 1,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0": 13,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1": 25,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0": 13,
+    "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1": 25
+  },
+  "global_accounting": {
+    "ledger": "ONE_CANONICAL_GLOBAL_LEDGER_FOR_THIS_SUCCESSOR",
+    "mode": "CPU_MOCK_ONLY_IMPLEMENTATION_TESTED_NOT_NATIVE_AUTHORITY",
+    "socket_path": null,
+    "manifest_sha256": null,
+    "launch_clients": [
+      {
+        "id": "launch/RESIDENT_R/NATURAL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/RESIDENT_R/NATURAL"
+        ]
+      },
+      {
+        "id": "launch/RESIDENT_R/CONTROL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/RESIDENT_R/CONTROL"
+        ]
+      },
+      {
+        "id": "launch/REPEAT_RESIDENT_R/NATURAL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/REPEAT_RESIDENT_R/NATURAL"
+        ]
+      },
+      {
+        "id": "launch/REPEAT_RESIDENT_R/CONTROL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/REPEAT_RESIDENT_R/CONTROL"
+        ]
+      },
+      {
+        "id": "launch/COLD_CANONICAL_ORACLE/NATURAL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/COLD_CANONICAL_ORACLE/NATURAL"
+        ]
+      },
+      {
+        "id": "launch/COLD_CANONICAL_ORACLE/CONTROL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/COLD_CANONICAL_ORACLE/CONTROL"
+        ]
+      },
+      {
+        "id": "launch/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+        ]
+      },
+      {
+        "id": "launch/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+        "role": "LAUNCH_ONLY",
+        "request_ids": [],
+        "deployment_ids": [
+          "deploy/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+        ]
+      }
+    ],
+    "worker_clients": [
+      {
+        "id": "RESIDENT_R/NATURAL",
+        "role": "WORKER",
+        "request_ids": [
+          "natural/RESIDENT_R/0/0",
+          "natural/RESIDENT_R/0/1",
+          "natural/RESIDENT_R/1/0",
+          "natural/RESIDENT_R/1/1",
+          "natural/RESIDENT_R/2/0",
+          "natural/RESIDENT_R/2/1",
+          "natural/RESIDENT_R/3/0",
+          "natural/RESIDENT_R/3/1"
+        ],
+        "deployment_ids": [
+          "deploy/RESIDENT_R/NATURAL"
+        ]
+      },
+      {
+        "id": "RESIDENT_R/CONTROL",
+        "role": "WORKER",
+        "request_ids": [
+          "control/RESIDENT_R/pending_cap_append/0",
+          "control/RESIDENT_R/pending_cap_append/1",
+          "control/RESIDENT_R/empty_think_lcp_trim/0",
+          "control/RESIDENT_R/empty_think_lcp_trim/1",
+          "control/RESIDENT_R/fully_cached_replay_ownership/0",
+          "control/RESIDENT_R/fully_cached_replay_ownership/1",
+          "control/RESIDENT_R/trim_unsupported_rebuild/0",
+          "control/RESIDENT_R/trim_unsupported_rebuild/1",
+          "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+          "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+        ],
+        "deployment_ids": [
+          "deploy/RESIDENT_R/CONTROL"
+        ]
+      },
+      {
+        "id": "REPEAT_RESIDENT_R/NATURAL",
+        "role": "WORKER",
+        "request_ids": [
+          "natural/REPEAT_RESIDENT_R/0/0",
+          "natural/REPEAT_RESIDENT_R/0/1",
+          "natural/REPEAT_RESIDENT_R/1/0",
+          "natural/REPEAT_RESIDENT_R/1/1",
+          "natural/REPEAT_RESIDENT_R/2/0",
+          "natural/REPEAT_RESIDENT_R/2/1",
+          "natural/REPEAT_RESIDENT_R/3/0",
+          "natural/REPEAT_RESIDENT_R/3/1"
+        ],
+        "deployment_ids": [
+          "deploy/REPEAT_RESIDENT_R/NATURAL"
+        ]
+      },
+      {
+        "id": "REPEAT_RESIDENT_R/CONTROL",
+        "role": "WORKER",
+        "request_ids": [
+          "control/REPEAT_RESIDENT_R/pending_cap_append/0",
+          "control/REPEAT_RESIDENT_R/pending_cap_append/1",
+          "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0",
+          "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1",
+          "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0",
+          "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1",
+          "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0",
+          "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1",
+          "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+          "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1"
+        ],
+        "deployment_ids": [
+          "deploy/REPEAT_RESIDENT_R/CONTROL"
+        ]
+      },
+      {
+        "id": "COLD_CANONICAL_ORACLE/NATURAL",
+        "role": "WORKER",
+        "request_ids": [
+          "natural/COLD_CANONICAL_ORACLE/0/0",
+          "natural/COLD_CANONICAL_ORACLE/0/1",
+          "natural/COLD_CANONICAL_ORACLE/1/0",
+          "natural/COLD_CANONICAL_ORACLE/1/1",
+          "natural/COLD_CANONICAL_ORACLE/2/0",
+          "natural/COLD_CANONICAL_ORACLE/2/1",
+          "natural/COLD_CANONICAL_ORACLE/3/0",
+          "natural/COLD_CANONICAL_ORACLE/3/1"
+        ],
+        "deployment_ids": [
+          "deploy/COLD_CANONICAL_ORACLE/NATURAL"
+        ]
+      },
+      {
+        "id": "COLD_CANONICAL_ORACLE/CONTROL",
+        "role": "WORKER",
+        "request_ids": [
+          "control/COLD_CANONICAL_ORACLE/pending_cap_append/0",
+          "control/COLD_CANONICAL_ORACLE/pending_cap_append/1",
+          "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0",
+          "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1",
+          "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0",
+          "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1",
+          "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0",
+          "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1",
+          "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0",
+          "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1"
+        ],
+        "deployment_ids": [
+          "deploy/COLD_CANONICAL_ORACLE/CONTROL"
+        ]
+      },
+      {
+        "id": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+        "role": "WORKER",
+        "request_ids": [
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0",
+          "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1"
+        ],
+        "deployment_ids": [
+          "deploy/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL"
+        ]
+      },
+      {
+        "id": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+        "role": "WORKER",
+        "request_ids": [
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0",
+          "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1"
+        ],
+        "deployment_ids": [
+          "deploy/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL"
+        ]
+      }
+    ],
+    "no_worker_local_ledger": true,
+    "no_existing_STATE_restart": true,
+    "no_reconnect_retry": true
+  },
+  "jobs": [
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "RESIDENT_R/NATURAL",
+      "role": "RESIDENT_R",
+      "placement_id": "deploy/RESIDENT_R/NATURAL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "natural/RESIDENT_R/0/0": 128,
+        "natural/RESIDENT_R/0/1": 128,
+        "natural/RESIDENT_R/1/0": 128,
+        "natural/RESIDENT_R/1/1": 128,
+        "natural/RESIDENT_R/2/0": 128,
+        "natural/RESIDENT_R/2/1": 128,
+        "natural/RESIDENT_R/3/0": 128,
+        "natural/RESIDENT_R/3/1": 128
+      },
+      "operation_faults": {},
+      "episodes": [
+        {
+          "episode_id": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/RESIDENT_R/0/0",
+              "cap": 128,
+              "reserved_rows": 219,
+              "user": {
+                "role": "user",
+                "content": "Famously, some spy-satellites from the KeyHole series developed and operated by the US National Reconnaissance Office, where similar in capabilities to the Hubble Space Telescope, but then pointed at the earth rather than out into the universe. What can you tell me about these satellites? What era were they developed? Are they still active, and what are their approximate capabilities thought to be?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                37,
+                309,
+                7017,
+                11,
+                1045,
+                21236,
+                1331,
+                266,
+                41660,
+                504,
+                279,
+                5309,
+                39,
+                1263,
+                4013,
+                7881,
+                323,
+                23151,
+                553,
+                279,
+                2274,
+                5055,
+                82981,
+                45202,
+                8246,
+                11,
+                1380,
+                4428,
+                304,
+                16928,
+                311,
+                279,
+                472,
+                14600,
+                11487,
+                85962,
+                11,
+                714,
+                1221,
+                14283,
+                518,
+                279,
+                9393,
+                4751,
+                1091,
+                700,
+                1119,
+                279,
+                15494,
+                13,
+                3555,
+                646,
+                498,
+                3291,
+                752,
+                911,
+                1493,
+                46610,
+                30,
+                3555,
+                11385,
+                1033,
+                807,
+                7881,
+                30,
+                8713,
+                807,
+                2058,
+                4541,
+                11,
+                323,
+                1128,
+                525,
+                862,
+                44868,
+                16928,
+                3381,
+                311,
+                387,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/RESIDENT_R/0/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Has the US National Reconnaissance Office ever confirmed the existence and capabilities of the KeyHole satellites?"
+              }
+            }
+          ]
+        },
+        {
+          "episode_id": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/RESIDENT_R/1/0",
+              "cap": 128,
+              "reserved_rows": 190,
+              "user": {
+                "role": "user",
+                "content": "2-Zi.-Whg., 39 m2 Wfl., Blk., EBK, HMS, Stpl., 500 EUR KM\n\nDies ist eine Wohnunganzeige. Was bedeuten die einzelnen Sachen?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                17,
+                11171,
+                72,
+                12612,
+                1639,
+                70,
+                2572,
+                220,
+                18,
+                24,
+                296,
+                17,
+                467,
+                1489,
+                2572,
+                2502,
+                74,
+                2572,
+                49142,
+                42,
+                11,
+                96070,
+                11,
+                794,
+                500,
+                2572,
+                220,
+                20,
+                15,
+                15,
+                37088,
+                55776,
+                271,
+                47789,
+                5999,
+                9820,
+                52795,
+                51188,
+                2986,
+                7256,
+                13,
+                14804,
+                4845,
+                68,
+                13160,
+                2746,
+                94788,
+                12495,
+                37337,
+                268,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/RESIDENT_R/1/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Was umfasst ein Hausmeisterservice normalerweise?"
+              }
+            }
+          ]
+        },
+        {
+          "episode_id": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/RESIDENT_R/2/0",
+              "cap": 128,
+              "reserved_rows": 154,
+              "user": {
+                "role": "user",
+                "content": "¿Cómo podríamos crear un campo magnético artificial en marte?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                30182,
+                95897,
+                41915,
+                2426,
+                10585,
+                47737,
+                650,
+                26575,
+                8455,
+                86138,
+                20443,
+                662,
+                296,
+                19840,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/RESIDENT_R/2/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Interesante pregunta, yo no tengo los conocimientos suficientes para responder correctamente, aun así, déjame comentarte que existe ya un plan con esta finalidad:\n\nEs importante saber, que el campo magnético de un planeta se genera por el movimiento de su núcleo de hierro fundido. Sin embargo, Marte no tiene un núcleo de hierro líquido lo suficientemente grande como para generar un campo magnético significativo. Este escudo es fundamental para evitar el impacto de la radiación y los potentes vientos solares. El plan de la NASA, Green, formaría una magnetopausa: una cola magnética que envolvería todo el planeta rojo, reduciendo la radiación y el efecto del viento solar para así permitir un nuevo equilibrio atmosférico que protegiera a los humanos en la superficie y permitiera el proceso de terraformación. Green y sus colegas proponen colocar un dipolo magnético a modo de satélite para que acompañe al planeta en su órbita, protegiéndolo. Un dipolo es un elemento puntual que produce un campo magnético dipolar (dos polos magnéticos opuestos). Green asegura que ya se han creado magnetósferas artificiales en miniatura para proteger a las tripulaciones de naves espaciales.\nLos investigadores de la NASA realizaron simulaciones según las cuales un campo magnético ubicado en el llamado punto de Lagrange L1 sería suficiente para incrementar el grosor de la atmósfera y la temperatura en 4 grados centígrados. Los puntos de Lagrange o puntos L son las posiciones en un sistema orbital donde un objeto puede estar estacionario respecto a objetos más grandes"
+              }
+            }
+          ]
+        },
+        {
+          "episode_id": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/RESIDENT_R/3/0",
+              "cap": 128,
+              "reserved_rows": 235,
+              "user": {
+                "role": "user",
+                "content": "I live in Scotland and would like to know the most cost effective way to heat my house considering the rise in both gas and electric prices. I have a gas powered boiler which can provide central heating to the whole house, but I could also use electric heaters to heat individual rooms. Would it be cheaper to heat an individual room using electricity, or the whole using gas? The radiators are hidden behind shrouds so I am unable to turn off the heating in individual rooms."
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                40,
+                3887,
+                304,
+                19085,
+                323,
+                1035,
+                1075,
+                311,
+                1414,
+                279,
+                1429,
+                2783,
+                7373,
+                1616,
+                311,
+                8628,
+                847,
+                3753,
+                12831,
+                279,
+                10000,
+                304,
+                2176,
+                6819,
+                323,
+                9072,
+                7576,
+                13,
+                358,
+                614,
+                264,
+                6819,
+                22333,
+                27625,
+                892,
+                646,
+                3410,
+                8622,
+                23579,
+                311,
+                279,
+                4361,
+                3753,
+                11,
+                714,
+                358,
+                1410,
+                1083,
+                990,
+                9072,
+                81367,
+                311,
+                8628,
+                3842,
+                12026,
+                13,
+                18885,
+                432,
+                387,
+                23048,
+                311,
+                8628,
+                458,
+                3842,
+                3054,
+                1667,
+                17728,
+                11,
+                476,
+                279,
+                4361,
+                1667,
+                6819,
+                30,
+                576,
+                11900,
+                2973,
+                525,
+                8177,
+                4815,
+                557,
+                581,
+                5356,
+                773,
+                358,
+                1079,
+                11889,
+                311,
+                2484,
+                1007,
+                279,
+                23579,
+                304,
+                3842,
+                12026,
+                13,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/RESIDENT_R/3/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "How do I compute my boiler's cost-efficiency? What does it mean for a boiler to be \"not very efficient\"? How do I evaluate the energy-efficiency of different heating systems? I can compute the square footage of my house if needs be."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "RESIDENT_R/CONTROL",
+      "role": "RESIDENT_R",
+      "placement_id": "deploy/RESIDENT_R/CONTROL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "control/RESIDENT_R/pending_cap_append/0": 1,
+        "control/RESIDENT_R/pending_cap_append/1": 1,
+        "control/RESIDENT_R/empty_think_lcp_trim/0": 1,
+        "control/RESIDENT_R/empty_think_lcp_trim/1": 1,
+        "control/RESIDENT_R/fully_cached_replay_ownership/0": 1,
+        "control/RESIDENT_R/fully_cached_replay_ownership/1": 1,
+        "control/RESIDENT_R/trim_unsupported_rebuild/0": 1,
+        "control/RESIDENT_R/trim_unsupported_rebuild/1": 1,
+        "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0": 1,
+        "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1": 1
+      },
+      "operation_faults": {
+        "control/RESIDENT_R/trim_unsupported_rebuild/1": "UNSUPPORTED_BEFORE_CALL",
+        "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1": "FAILED_BEFORE_MUTATION"
+      },
+      "episodes": [
+        {
+          "episode_id": "pending_cap_append",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/RESIDENT_R/pending_cap_append/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/RESIDENT_R/pending_cap_append/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 13
+            }
+          ]
+        },
+        {
+          "episode_id": "empty_think_lcp_trim",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/RESIDENT_R/empty_think_lcp_trim/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/RESIDENT_R/empty_think_lcp_trim/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 9
+            }
+          ]
+        },
+        {
+          "episode_id": "fully_cached_replay_ownership",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/RESIDENT_R/fully_cached_replay_ownership/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/RESIDENT_R/fully_cached_replay_ownership/1",
+              "cap": 1,
+              "reserved_rows": 1,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 12
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_unsupported_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/RESIDENT_R/trim_unsupported_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/RESIDENT_R/trim_unsupported_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "UNSUPPORTED_BEFORE_CALL",
+              "reference_retained_head": 0
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_pre_mutation_failure_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/RESIDENT_R/trim_pre_mutation_failure_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "FAILED_BEFORE_MUTATION",
+              "reference_retained_head": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "REPEAT_RESIDENT_R/NATURAL",
+      "role": "REPEAT_RESIDENT_R",
+      "placement_id": "deploy/REPEAT_RESIDENT_R/NATURAL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "natural/REPEAT_RESIDENT_R/0/0": 128,
+        "natural/REPEAT_RESIDENT_R/0/1": 128,
+        "natural/REPEAT_RESIDENT_R/1/0": 128,
+        "natural/REPEAT_RESIDENT_R/1/1": 128,
+        "natural/REPEAT_RESIDENT_R/2/0": 128,
+        "natural/REPEAT_RESIDENT_R/2/1": 128,
+        "natural/REPEAT_RESIDENT_R/3/0": 128,
+        "natural/REPEAT_RESIDENT_R/3/1": 128
+      },
+      "operation_faults": {},
+      "episodes": [
+        {
+          "episode_id": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/REPEAT_RESIDENT_R/0/0",
+              "cap": 128,
+              "reserved_rows": 219,
+              "user": {
+                "role": "user",
+                "content": "Famously, some spy-satellites from the KeyHole series developed and operated by the US National Reconnaissance Office, where similar in capabilities to the Hubble Space Telescope, but then pointed at the earth rather than out into the universe. What can you tell me about these satellites? What era were they developed? Are they still active, and what are their approximate capabilities thought to be?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                37,
+                309,
+                7017,
+                11,
+                1045,
+                21236,
+                1331,
+                266,
+                41660,
+                504,
+                279,
+                5309,
+                39,
+                1263,
+                4013,
+                7881,
+                323,
+                23151,
+                553,
+                279,
+                2274,
+                5055,
+                82981,
+                45202,
+                8246,
+                11,
+                1380,
+                4428,
+                304,
+                16928,
+                311,
+                279,
+                472,
+                14600,
+                11487,
+                85962,
+                11,
+                714,
+                1221,
+                14283,
+                518,
+                279,
+                9393,
+                4751,
+                1091,
+                700,
+                1119,
+                279,
+                15494,
+                13,
+                3555,
+                646,
+                498,
+                3291,
+                752,
+                911,
+                1493,
+                46610,
+                30,
+                3555,
+                11385,
+                1033,
+                807,
+                7881,
+                30,
+                8713,
+                807,
+                2058,
+                4541,
+                11,
+                323,
+                1128,
+                525,
+                862,
+                44868,
+                16928,
+                3381,
+                311,
+                387,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/REPEAT_RESIDENT_R/0/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Has the US National Reconnaissance Office ever confirmed the existence and capabilities of the KeyHole satellites?"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/REPEAT_RESIDENT_R/1/0",
+              "cap": 128,
+              "reserved_rows": 190,
+              "user": {
+                "role": "user",
+                "content": "2-Zi.-Whg., 39 m2 Wfl., Blk., EBK, HMS, Stpl., 500 EUR KM\n\nDies ist eine Wohnunganzeige. Was bedeuten die einzelnen Sachen?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                17,
+                11171,
+                72,
+                12612,
+                1639,
+                70,
+                2572,
+                220,
+                18,
+                24,
+                296,
+                17,
+                467,
+                1489,
+                2572,
+                2502,
+                74,
+                2572,
+                49142,
+                42,
+                11,
+                96070,
+                11,
+                794,
+                500,
+                2572,
+                220,
+                20,
+                15,
+                15,
+                37088,
+                55776,
+                271,
+                47789,
+                5999,
+                9820,
+                52795,
+                51188,
+                2986,
+                7256,
+                13,
+                14804,
+                4845,
+                68,
+                13160,
+                2746,
+                94788,
+                12495,
+                37337,
+                268,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/REPEAT_RESIDENT_R/1/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Was umfasst ein Hausmeisterservice normalerweise?"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/REPEAT_RESIDENT_R/2/0",
+              "cap": 128,
+              "reserved_rows": 154,
+              "user": {
+                "role": "user",
+                "content": "¿Cómo podríamos crear un campo magnético artificial en marte?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                30182,
+                95897,
+                41915,
+                2426,
+                10585,
+                47737,
+                650,
+                26575,
+                8455,
+                86138,
+                20443,
+                662,
+                296,
+                19840,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/REPEAT_RESIDENT_R/2/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Interesante pregunta, yo no tengo los conocimientos suficientes para responder correctamente, aun así, déjame comentarte que existe ya un plan con esta finalidad:\n\nEs importante saber, que el campo magnético de un planeta se genera por el movimiento de su núcleo de hierro fundido. Sin embargo, Marte no tiene un núcleo de hierro líquido lo suficientemente grande como para generar un campo magnético significativo. Este escudo es fundamental para evitar el impacto de la radiación y los potentes vientos solares. El plan de la NASA, Green, formaría una magnetopausa: una cola magnética que envolvería todo el planeta rojo, reduciendo la radiación y el efecto del viento solar para así permitir un nuevo equilibrio atmosférico que protegiera a los humanos en la superficie y permitiera el proceso de terraformación. Green y sus colegas proponen colocar un dipolo magnético a modo de satélite para que acompañe al planeta en su órbita, protegiéndolo. Un dipolo es un elemento puntual que produce un campo magnético dipolar (dos polos magnéticos opuestos). Green asegura que ya se han creado magnetósferas artificiales en miniatura para proteger a las tripulaciones de naves espaciales.\nLos investigadores de la NASA realizaron simulaciones según las cuales un campo magnético ubicado en el llamado punto de Lagrange L1 sería suficiente para incrementar el grosor de la atmósfera y la temperatura en 4 grados centígrados. Los puntos de Lagrange o puntos L son las posiciones en un sistema orbital donde un objeto puede estar estacionario respecto a objetos más grandes"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/REPEAT_RESIDENT_R/3/0",
+              "cap": 128,
+              "reserved_rows": 235,
+              "user": {
+                "role": "user",
+                "content": "I live in Scotland and would like to know the most cost effective way to heat my house considering the rise in both gas and electric prices. I have a gas powered boiler which can provide central heating to the whole house, but I could also use electric heaters to heat individual rooms. Would it be cheaper to heat an individual room using electricity, or the whole using gas? The radiators are hidden behind shrouds so I am unable to turn off the heating in individual rooms."
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                40,
+                3887,
+                304,
+                19085,
+                323,
+                1035,
+                1075,
+                311,
+                1414,
+                279,
+                1429,
+                2783,
+                7373,
+                1616,
+                311,
+                8628,
+                847,
+                3753,
+                12831,
+                279,
+                10000,
+                304,
+                2176,
+                6819,
+                323,
+                9072,
+                7576,
+                13,
+                358,
+                614,
+                264,
+                6819,
+                22333,
+                27625,
+                892,
+                646,
+                3410,
+                8622,
+                23579,
+                311,
+                279,
+                4361,
+                3753,
+                11,
+                714,
+                358,
+                1410,
+                1083,
+                990,
+                9072,
+                81367,
+                311,
+                8628,
+                3842,
+                12026,
+                13,
+                18885,
+                432,
+                387,
+                23048,
+                311,
+                8628,
+                458,
+                3842,
+                3054,
+                1667,
+                17728,
+                11,
+                476,
+                279,
+                4361,
+                1667,
+                6819,
+                30,
+                576,
+                11900,
+                2973,
+                525,
+                8177,
+                4815,
+                557,
+                581,
+                5356,
+                773,
+                358,
+                1079,
+                11889,
+                311,
+                2484,
+                1007,
+                279,
+                23579,
+                304,
+                3842,
+                12026,
+                13,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/REPEAT_RESIDENT_R/3/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "How do I compute my boiler's cost-efficiency? What does it mean for a boiler to be \"not very efficient\"? How do I evaluate the energy-efficiency of different heating systems? I can compute the square footage of my house if needs be."
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "REPEAT_RESIDENT_R/CONTROL",
+      "role": "REPEAT_RESIDENT_R",
+      "placement_id": "deploy/REPEAT_RESIDENT_R/CONTROL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "control/REPEAT_RESIDENT_R/pending_cap_append/0": 1,
+        "control/REPEAT_RESIDENT_R/pending_cap_append/1": 1,
+        "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0": 1,
+        "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1": 1,
+        "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0": 1,
+        "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1": 1,
+        "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0": 1,
+        "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1": 1,
+        "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0": 1,
+        "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1": 1
+      },
+      "operation_faults": {
+        "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1": "UNSUPPORTED_BEFORE_CALL",
+        "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1": "FAILED_BEFORE_MUTATION"
+      },
+      "episodes": [
+        {
+          "episode_id": "pending_cap_append",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/REPEAT_RESIDENT_R/pending_cap_append/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/REPEAT_RESIDENT_R/pending_cap_append/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 13
+            }
+          ]
+        },
+        {
+          "episode_id": "empty_think_lcp_trim",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/REPEAT_RESIDENT_R/empty_think_lcp_trim/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 9
+            }
+          ]
+        },
+        {
+          "episode_id": "fully_cached_replay_ownership",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/REPEAT_RESIDENT_R/fully_cached_replay_ownership/1",
+              "cap": 1,
+              "reserved_rows": 1,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 12
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_unsupported_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/REPEAT_RESIDENT_R/trim_unsupported_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "UNSUPPORTED_BEFORE_CALL",
+              "reference_retained_head": 0
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_pre_mutation_failure_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/REPEAT_RESIDENT_R/trim_pre_mutation_failure_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "FAILED_BEFORE_MUTATION",
+              "reference_retained_head": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "COLD_CANONICAL_ORACLE/NATURAL",
+      "role": "COLD_CANONICAL_ORACLE",
+      "placement_id": "deploy/COLD_CANONICAL_ORACLE/NATURAL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "natural/COLD_CANONICAL_ORACLE/0/0": 128,
+        "natural/COLD_CANONICAL_ORACLE/0/1": 128,
+        "natural/COLD_CANONICAL_ORACLE/1/0": 128,
+        "natural/COLD_CANONICAL_ORACLE/1/1": 128,
+        "natural/COLD_CANONICAL_ORACLE/2/0": 128,
+        "natural/COLD_CANONICAL_ORACLE/2/1": 128,
+        "natural/COLD_CANONICAL_ORACLE/3/0": 128,
+        "natural/COLD_CANONICAL_ORACLE/3/1": 128
+      },
+      "operation_faults": {},
+      "episodes": [
+        {
+          "episode_id": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/0/0",
+              "cap": 128,
+              "reserved_rows": 219,
+              "user": {
+                "role": "user",
+                "content": "Famously, some spy-satellites from the KeyHole series developed and operated by the US National Reconnaissance Office, where similar in capabilities to the Hubble Space Telescope, but then pointed at the earth rather than out into the universe. What can you tell me about these satellites? What era were they developed? Are they still active, and what are their approximate capabilities thought to be?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                37,
+                309,
+                7017,
+                11,
+                1045,
+                21236,
+                1331,
+                266,
+                41660,
+                504,
+                279,
+                5309,
+                39,
+                1263,
+                4013,
+                7881,
+                323,
+                23151,
+                553,
+                279,
+                2274,
+                5055,
+                82981,
+                45202,
+                8246,
+                11,
+                1380,
+                4428,
+                304,
+                16928,
+                311,
+                279,
+                472,
+                14600,
+                11487,
+                85962,
+                11,
+                714,
+                1221,
+                14283,
+                518,
+                279,
+                9393,
+                4751,
+                1091,
+                700,
+                1119,
+                279,
+                15494,
+                13,
+                3555,
+                646,
+                498,
+                3291,
+                752,
+                911,
+                1493,
+                46610,
+                30,
+                3555,
+                11385,
+                1033,
+                807,
+                7881,
+                30,
+                8713,
+                807,
+                2058,
+                4541,
+                11,
+                323,
+                1128,
+                525,
+                862,
+                44868,
+                16928,
+                3381,
+                311,
+                387,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            },
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/0/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Has the US National Reconnaissance Office ever confirmed the existence and capabilities of the KeyHole satellites?"
+              },
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            }
+          ]
+        },
+        {
+          "episode_id": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/1/0",
+              "cap": 128,
+              "reserved_rows": 190,
+              "user": {
+                "role": "user",
+                "content": "2-Zi.-Whg., 39 m2 Wfl., Blk., EBK, HMS, Stpl., 500 EUR KM\n\nDies ist eine Wohnunganzeige. Was bedeuten die einzelnen Sachen?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                17,
+                11171,
+                72,
+                12612,
+                1639,
+                70,
+                2572,
+                220,
+                18,
+                24,
+                296,
+                17,
+                467,
+                1489,
+                2572,
+                2502,
+                74,
+                2572,
+                49142,
+                42,
+                11,
+                96070,
+                11,
+                794,
+                500,
+                2572,
+                220,
+                20,
+                15,
+                15,
+                37088,
+                55776,
+                271,
+                47789,
+                5999,
+                9820,
+                52795,
+                51188,
+                2986,
+                7256,
+                13,
+                14804,
+                4845,
+                68,
+                13160,
+                2746,
+                94788,
+                12495,
+                37337,
+                268,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            },
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/1/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Was umfasst ein Hausmeisterservice normalerweise?"
+              },
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            }
+          ]
+        },
+        {
+          "episode_id": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/2/0",
+              "cap": 128,
+              "reserved_rows": 154,
+              "user": {
+                "role": "user",
+                "content": "¿Cómo podríamos crear un campo magnético artificial en marte?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                30182,
+                95897,
+                41915,
+                2426,
+                10585,
+                47737,
+                650,
+                26575,
+                8455,
+                86138,
+                20443,
+                662,
+                296,
+                19840,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            },
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/2/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Interesante pregunta, yo no tengo los conocimientos suficientes para responder correctamente, aun así, déjame comentarte que existe ya un plan con esta finalidad:\n\nEs importante saber, que el campo magnético de un planeta se genera por el movimiento de su núcleo de hierro fundido. Sin embargo, Marte no tiene un núcleo de hierro líquido lo suficientemente grande como para generar un campo magnético significativo. Este escudo es fundamental para evitar el impacto de la radiación y los potentes vientos solares. El plan de la NASA, Green, formaría una magnetopausa: una cola magnética que envolvería todo el planeta rojo, reduciendo la radiación y el efecto del viento solar para así permitir un nuevo equilibrio atmosférico que protegiera a los humanos en la superficie y permitiera el proceso de terraformación. Green y sus colegas proponen colocar un dipolo magnético a modo de satélite para que acompañe al planeta en su órbita, protegiéndolo. Un dipolo es un elemento puntual que produce un campo magnético dipolar (dos polos magnéticos opuestos). Green asegura que ya se han creado magnetósferas artificiales en miniatura para proteger a las tripulaciones de naves espaciales.\nLos investigadores de la NASA realizaron simulaciones según las cuales un campo magnético ubicado en el llamado punto de Lagrange L1 sería suficiente para incrementar el grosor de la atmósfera y la temperatura en 4 grados centígrados. Los puntos de Lagrange o puntos L son las posiciones en un sistema orbital donde un objeto puede estar estacionario respecto a objetos más grandes"
+              },
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            }
+          ]
+        },
+        {
+          "episode_id": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/3/0",
+              "cap": 128,
+              "reserved_rows": 235,
+              "user": {
+                "role": "user",
+                "content": "I live in Scotland and would like to know the most cost effective way to heat my house considering the rise in both gas and electric prices. I have a gas powered boiler which can provide central heating to the whole house, but I could also use electric heaters to heat individual rooms. Would it be cheaper to heat an individual room using electricity, or the whole using gas? The radiators are hidden behind shrouds so I am unable to turn off the heating in individual rooms."
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                40,
+                3887,
+                304,
+                19085,
+                323,
+                1035,
+                1075,
+                311,
+                1414,
+                279,
+                1429,
+                2783,
+                7373,
+                1616,
+                311,
+                8628,
+                847,
+                3753,
+                12831,
+                279,
+                10000,
+                304,
+                2176,
+                6819,
+                323,
+                9072,
+                7576,
+                13,
+                358,
+                614,
+                264,
+                6819,
+                22333,
+                27625,
+                892,
+                646,
+                3410,
+                8622,
+                23579,
+                311,
+                279,
+                4361,
+                3753,
+                11,
+                714,
+                358,
+                1410,
+                1083,
+                990,
+                9072,
+                81367,
+                311,
+                8628,
+                3842,
+                12026,
+                13,
+                18885,
+                432,
+                387,
+                23048,
+                311,
+                8628,
+                458,
+                3842,
+                3054,
+                1667,
+                17728,
+                11,
+                476,
+                279,
+                4361,
+                1667,
+                6819,
+                30,
+                576,
+                11900,
+                2973,
+                525,
+                8177,
+                4815,
+                557,
+                581,
+                5356,
+                773,
+                358,
+                1079,
+                11889,
+                311,
+                2484,
+                1007,
+                279,
+                23579,
+                304,
+                3842,
+                12026,
+                13,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            },
+            {
+              "id": "natural/COLD_CANONICAL_ORACLE/3/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "How do I compute my boiler's cost-efficiency? What does it mean for a boiler to be \"not very efficient\"? How do I evaluate the energy-efficiency of different heating systems? I can compute the square footage of my house if needs be."
+              },
+              "canonical_ids": null,
+              "reference_retained_head": null,
+              "unresolved": "ACTUAL_R_CERTIFICATE_REQUIRED_NOT_SUPPLIED_HISTORY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "COLD_CANONICAL_ORACLE/CONTROL",
+      "role": "COLD_CANONICAL_ORACLE",
+      "placement_id": "deploy/COLD_CANONICAL_ORACLE/CONTROL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "control/COLD_CANONICAL_ORACLE/pending_cap_append/0": 1,
+        "control/COLD_CANONICAL_ORACLE/pending_cap_append/1": 1,
+        "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0": 1,
+        "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1": 1,
+        "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0": 1,
+        "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1": 1,
+        "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0": 1,
+        "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1": 1,
+        "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0": 1,
+        "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1": 1
+      },
+      "operation_faults": {
+        "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1": "UNSUPPORTED_BEFORE_CALL",
+        "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1": "FAILED_BEFORE_MUTATION"
+      },
+      "episodes": [
+        {
+          "episode_id": "pending_cap_append",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/pending_cap_append/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/pending_cap_append/1",
+              "cap": 1,
+              "reserved_rows": 29,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 13
+            }
+          ]
+        },
+        {
+          "episode_id": "empty_think_lcp_trim",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/empty_think_lcp_trim/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 9
+            }
+          ]
+        },
+        {
+          "episode_id": "fully_cached_replay_ownership",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/fully_cached_replay_ownership/1",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 12
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_unsupported_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/trim_unsupported_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "UNSUPPORTED_BEFORE_CALL",
+              "reference_retained_head": 0
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_pre_mutation_failure_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/COLD_CANONICAL_ORACLE/trim_pre_mutation_failure_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "FAILED_BEFORE_MUTATION",
+              "reference_retained_head": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+      "role": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "placement_id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/NATURAL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0": 128,
+        "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1": 128
+      },
+      "operation_faults": {},
+      "episodes": [
+        {
+          "episode_id": "330fc1cf-53dd-4d67-8201-2782df947dd5",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/0",
+              "cap": 128,
+              "reserved_rows": 219,
+              "user": {
+                "role": "user",
+                "content": "Famously, some spy-satellites from the KeyHole series developed and operated by the US National Reconnaissance Office, where similar in capabilities to the Hubble Space Telescope, but then pointed at the earth rather than out into the universe. What can you tell me about these satellites? What era were they developed? Are they still active, and what are their approximate capabilities thought to be?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                37,
+                309,
+                7017,
+                11,
+                1045,
+                21236,
+                1331,
+                266,
+                41660,
+                504,
+                279,
+                5309,
+                39,
+                1263,
+                4013,
+                7881,
+                323,
+                23151,
+                553,
+                279,
+                2274,
+                5055,
+                82981,
+                45202,
+                8246,
+                11,
+                1380,
+                4428,
+                304,
+                16928,
+                311,
+                279,
+                472,
+                14600,
+                11487,
+                85962,
+                11,
+                714,
+                1221,
+                14283,
+                518,
+                279,
+                9393,
+                4751,
+                1091,
+                700,
+                1119,
+                279,
+                15494,
+                13,
+                3555,
+                646,
+                498,
+                3291,
+                752,
+                911,
+                1493,
+                46610,
+                30,
+                3555,
+                11385,
+                1033,
+                807,
+                7881,
+                30,
+                8713,
+                807,
+                2058,
+                4541,
+                11,
+                323,
+                1128,
+                525,
+                862,
+                44868,
+                16928,
+                3381,
+                311,
+                387,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/0/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Has the US National Reconnaissance Office ever confirmed the existence and capabilities of the KeyHole satellites?"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "5edbd199-3e8f-450d-b204-e8e8b06d80d4",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/0",
+              "cap": 128,
+              "reserved_rows": 190,
+              "user": {
+                "role": "user",
+                "content": "2-Zi.-Whg., 39 m2 Wfl., Blk., EBK, HMS, Stpl., 500 EUR KM\n\nDies ist eine Wohnunganzeige. Was bedeuten die einzelnen Sachen?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                17,
+                11171,
+                72,
+                12612,
+                1639,
+                70,
+                2572,
+                220,
+                18,
+                24,
+                296,
+                17,
+                467,
+                1489,
+                2572,
+                2502,
+                74,
+                2572,
+                49142,
+                42,
+                11,
+                96070,
+                11,
+                794,
+                500,
+                2572,
+                220,
+                20,
+                15,
+                15,
+                37088,
+                55776,
+                271,
+                47789,
+                5999,
+                9820,
+                52795,
+                51188,
+                2986,
+                7256,
+                13,
+                14804,
+                4845,
+                68,
+                13160,
+                2746,
+                94788,
+                12495,
+                37337,
+                268,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/1/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Was umfasst ein Hausmeisterservice normalerweise?"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "889c27c2-1673-409b-a05a-7bf53d8ab0df",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/0",
+              "cap": 128,
+              "reserved_rows": 154,
+              "user": {
+                "role": "user",
+                "content": "¿Cómo podríamos crear un campo magnético artificial en marte?"
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                30182,
+                95897,
+                41915,
+                2426,
+                10585,
+                47737,
+                650,
+                26575,
+                8455,
+                86138,
+                20443,
+                662,
+                296,
+                19840,
+                30,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/2/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "Interesante pregunta, yo no tengo los conocimientos suficientes para responder correctamente, aun así, déjame comentarte que existe ya un plan con esta finalidad:\n\nEs importante saber, que el campo magnético de un planeta se genera por el movimiento de su núcleo de hierro fundido. Sin embargo, Marte no tiene un núcleo de hierro líquido lo suficientemente grande como para generar un campo magnético significativo. Este escudo es fundamental para evitar el impacto de la radiación y los potentes vientos solares. El plan de la NASA, Green, formaría una magnetopausa: una cola magnética que envolvería todo el planeta rojo, reduciendo la radiación y el efecto del viento solar para así permitir un nuevo equilibrio atmosférico que protegiera a los humanos en la superficie y permitiera el proceso de terraformación. Green y sus colegas proponen colocar un dipolo magnético a modo de satélite para que acompañe al planeta en su órbita, protegiéndolo. Un dipolo es un elemento puntual que produce un campo magnético dipolar (dos polos magnéticos opuestos). Green asegura que ya se han creado magnetósferas artificiales en miniatura para proteger a las tripulaciones de naves espaciales.\nLos investigadores de la NASA realizaron simulaciones según las cuales un campo magnético ubicado en el llamado punto de Lagrange L1 sería suficiente para incrementar el grosor de la atmósfera y la temperatura en 4 grados centígrados. Los puntos de Lagrange o puntos L son las posiciones en un sistema orbital donde un objeto puede estar estacionario respecto a objetos más grandes"
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        },
+        {
+          "episode_id": "9e9e8057-8769-42e1-ab20-97b54275cfe9",
+          "kind": "NATURAL_FIXED_USER_CONTINUATION",
+          "operations": [
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/0",
+              "cap": 128,
+              "reserved_rows": 235,
+              "user": {
+                "role": "user",
+                "content": "I live in Scotland and would like to know the most cost effective way to heat my house considering the rise in both gas and electric prices. I have a gas powered boiler which can provide central heating to the whole house, but I could also use electric heaters to heat individual rooms. Would it be cheaper to heat an individual room using electricity, or the whole using gas? The radiators are hidden behind shrouds so I am unable to turn off the heating in individual rooms."
+              },
+              "expected_canonical_ids": [
+                151644,
+                872,
+                198,
+                40,
+                3887,
+                304,
+                19085,
+                323,
+                1035,
+                1075,
+                311,
+                1414,
+                279,
+                1429,
+                2783,
+                7373,
+                1616,
+                311,
+                8628,
+                847,
+                3753,
+                12831,
+                279,
+                10000,
+                304,
+                2176,
+                6819,
+                323,
+                9072,
+                7576,
+                13,
+                358,
+                614,
+                264,
+                6819,
+                22333,
+                27625,
+                892,
+                646,
+                3410,
+                8622,
+                23579,
+                311,
+                279,
+                4361,
+                3753,
+                11,
+                714,
+                358,
+                1410,
+                1083,
+                990,
+                9072,
+                81367,
+                311,
+                8628,
+                3842,
+                12026,
+                13,
+                18885,
+                432,
+                387,
+                23048,
+                311,
+                8628,
+                458,
+                3842,
+                3054,
+                1667,
+                17728,
+                11,
+                476,
+                279,
+                4361,
+                1667,
+                6819,
+                30,
+                576,
+                11900,
+                2973,
+                525,
+                8177,
+                4815,
+                557,
+                581,
+                5356,
+                773,
+                358,
+                1079,
+                11889,
+                311,
+                2484,
+                1007,
+                279,
+                23579,
+                304,
+                3842,
+                12026,
+                13,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ]
+            },
+            {
+              "id": "natural/STRONG_WHOLE_RECHUNK_LOOP4/3/1",
+              "cap": 128,
+              "reserved_rows": 4096,
+              "user": {
+                "role": "user",
+                "content": "How do I compute my boiler's cost-efficiency? What does it mean for a boiler to be \"not very efficient\"? How do I evaluate the energy-efficiency of different heating systems? I can compute the square footage of my house if needs be."
+              },
+              "expected_canonical_ids": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "hs.N1chain.native-job-template.v1",
+      "execution_authorized": false,
+      "run_id": null,
+      "worker_id": "STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+      "role": "STRONG_WHOLE_RECHUNK_LOOP4",
+      "placement_id": "deploy/STRONG_WHOLE_RECHUNK_LOOP4/CONTROL",
+      "gpu_uuid": null,
+      "model_path": null,
+      "identity": {
+        "contract_sha256": null,
+        "model_sha256": "408b955510e196121c1c375201744783b5c9a43c7956d73fc78df54c66e883d6",
+        "tokenizer_sha256": null,
+        "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+        "producer_sha256": null
+      },
+      "source_sha256": null,
+      "writer_sha256": null,
+      "executable_sha256": null,
+      "capture_root": null,
+      "accounting_socket": null,
+      "accounting_manifest_sha256": null,
+      "operation_caps": {
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0": 1,
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1": 1
+      },
+      "operation_faults": {
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1": "UNSUPPORTED_BEFORE_CALL",
+        "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1": "FAILED_BEFORE_MUTATION"
+      },
+      "episodes": [
+        {
+          "episode_id": "pending_cap_append",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/pending_cap_append/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 13
+            }
+          ]
+        },
+        {
+          "episode_id": "empty_think_lcp_trim",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/empty_think_lcp_trim/1",
+              "cap": 1,
+              "reserved_rows": 16,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 9
+            }
+          ]
+        },
+        {
+          "episode_id": "fully_cached_replay_ownership",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/fully_cached_replay_ownership/1",
+              "cap": 1,
+              "reserved_rows": 1,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "reference_retained_head": 12
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_unsupported_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_unsupported_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "UNSUPPORTED_BEFORE_CALL",
+              "reference_retained_head": 0
+            }
+          ]
+        },
+        {
+          "episode_id": "trim_pre_mutation_failure_rebuild",
+          "kind": "SCRIPTED_RAW_TOKEN_CONTROL",
+          "operations": [
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/0",
+              "cap": 1,
+              "reserved_rows": 13,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                19077
+              ],
+              "reference_retained_head": 0
+            },
+            {
+              "id": "control/STRONG_WHOLE_RECHUNK_LOOP4/trim_pre_mutation_failure_rebuild/1",
+              "cap": 1,
+              "reserved_rows": 25,
+              "canonical_ids": [
+                151644,
+                872,
+                198,
+                20195,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                19077,
+                151645,
+                198,
+                151644,
+                872,
+                198,
+                11916,
+                151645,
+                198,
+                151644,
+                77091,
+                198,
+                151667,
+                271,
+                151668,
+                271
+              ],
+              "forced_terminal_ids": [
+                1802
+              ],
+              "caller_fault": "FAILED_BEFORE_MUTATION",
+              "reference_retained_head": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "late_bindings": [
+    "Explicit finite GPU approval; current concrete ProductionGate cannot admit execution",
+    "Allocated GPU UUID and exact CUDA_VISIBLE_DEVICES equality",
+    "Absolute quiet window, last-worker cutoff, safety and memory enforcement",
+    "Frozen own executable/source/writer/producer digests",
+    "Original modules and loaded-library identity certificate",
+    "Single global broker manifest fingerprint and protected socket",
+    "Actual resident R canonical/retained-head/full-raw certificate for subsequent stages"
+  ],
+  "no_old_budget_borrowing": true,
+  "N1b": false,
+  "N2": false,
+  "performance": false,
+  "preflight_templates": [
+    {
+      "id": "preflight/R",
+      "placement_id": "preflight/R",
+      "model_requests": 0,
+      "rows": 0,
+      "backend_inits": 1,
+      "model_loads": 1,
+      "contexts": 1,
+      "resource_probe_status": "NOT_IMPLEMENTED_AS_LIVE_GPU_PROBE_NOT_RUN",
+      "native_factory_compiled": true,
+      "requirements": "Separate approval, pre-exec placement reservation, same exact model/C4096/F16 profile; never use a forward as an initialization test",
+      "source_binary": "R",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "preflight/loop4",
+      "placement_id": "preflight/loop4",
+      "model_requests": 0,
+      "rows": 0,
+      "backend_inits": 1,
+      "model_loads": 1,
+      "contexts": 1,
+      "resource_probe_status": "NOT_IMPLEMENTED_AS_LIVE_GPU_PROBE_NOT_RUN",
+      "native_factory_compiled": true,
+      "requirements": "Separate approval, pre-exec placement reservation, same exact model/C4096/F16 profile; never use a forward as an initialization test",
+      "source_binary": "loop4",
+      "timeout_seconds": 120
+    }
+  ],
+  "proposal_bytes_sha256": "bf00a976a5f5385bd818bd58bdfcaa575e49f9548fee615320ed9b1d86194892"
+}

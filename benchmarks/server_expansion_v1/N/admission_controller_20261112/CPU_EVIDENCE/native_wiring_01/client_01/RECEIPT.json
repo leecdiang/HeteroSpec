@@ -1,0 +1,136 @@
+{
+  "schema": "hs.N1a.controlled-client.cpu-tests.v1",
+  "status": "PASS",
+  "scope": "STD_ONLY_SYNTHETIC_CLIENT_TRANSPORT_NOT_NATIVE_QUALIFICATION",
+  "source_files": [
+    {
+      "name": "admission_controller_20261112/native_client.hpp",
+      "bytes": 11108,
+      "sha256": "ed92a8f3766a110dfd4a05c274c4b14024b1a222427524caac8406b0c14b581e"
+    },
+    {
+      "name": "admission_controller_20261112/test_client.cpp",
+      "bytes": 11563,
+      "sha256": "eca1b527ad1c35309fdc61894f4b6168b1f6069001efc028d76b13fbfd4de6c0"
+    },
+    {
+      "name": "native_chain_successor_20261112/budget_writer/accounting_ipc.hpp",
+      "bytes": 14629,
+      "sha256": "0dda4bb9195d9a4fec1b90f94b6d8dd0bc967fb0142365d0ed8a268bb250eff1"
+    },
+    {
+      "name": "native_chain_successor_20261112/budget_writer/durable_budget.hpp",
+      "bytes": 11563,
+      "sha256": "1eb0a0809026a4bed3f5c6c21dff91f2fd55497bffe01355702c9dd8f8560a2a"
+    },
+    {
+      "name": "native_chain_successor_20261112/budget_writer/posix.hpp",
+      "bytes": 3652,
+      "sha256": "b38a9ac4f9be39f7a3daa59c2baff46eff3e01bd3e29773c1171b00d64a33198"
+    },
+    {
+      "name": "native_chain_successor_20261112/budget_writer/sha256.hpp",
+      "bytes": 2502,
+      "sha256": "b6278032dd74253425d958cbba495555715977d273e45077e3f8d09c2ab40060"
+    },
+    {
+      "name": "native_chain_successor_20261112/budget_writer/hooks.hpp",
+      "bytes": 1854,
+      "sha256": "77ce40a6d17421a3f44f5a9ec5667394d6acf70113f7c0c0085879225ec2751f"
+    }
+  ],
+  "tests": [
+    {
+      "mode": "normal",
+      "executable": "${CLIENT_MOCK_OUTPUT}/client-normal",
+      "sha256": "bce408240cb53c101ae400b254034ea7d680efb4ae16a797b460f670ed96627b",
+      "bytes": 140424,
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "status": "CPU_ONLY_CONTROLLED_CLIENT_PASS",
+        "groups": 19,
+        "native_authority": false,
+        "backend_init": 0,
+        "models": 0,
+        "contexts": 0,
+        "placements": 0,
+        "forwards": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "mode": "ndebug",
+      "executable": "${CLIENT_MOCK_OUTPUT}/client-ndebug",
+      "sha256": "bce408240cb53c101ae400b254034ea7d680efb4ae16a797b460f670ed96627b",
+      "bytes": 140424,
+      "needed_libraries": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "summary": {
+        "status": "CPU_ONLY_CONTROLLED_CLIENT_PASS",
+        "groups": 19,
+        "native_authority": false,
+        "backend_init": 0,
+        "models": 0,
+        "contexts": 0,
+        "placements": 0,
+        "forwards": 0
+      },
+      "status": "PASS"
+    }
+  ],
+  "commands": [
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_client.cpp",
+      "-o",
+      "${CLIENT_MOCK_OUTPUT}/client-normal"
+    ],
+    [
+      "readelf",
+      "-d",
+      "${CLIENT_MOCK_OUTPUT}/client-normal"
+    ],
+    [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-DNDEBUG",
+      "${TASK_ROOT}/native-source-01/benchmarks/server_expansion_v1/N/admission_controller_20261112/test_client.cpp",
+      "-o",
+      "${CLIENT_MOCK_OUTPUT}/client-ndebug"
+    ],
+    [
+      "readelf",
+      "-d",
+      "${CLIENT_MOCK_OUTPUT}/client-ndebug"
+    ],
+    [
+      "${CLIENT_MOCK_OUTPUT}/client-normal",
+      "--cpu-only-client-test",
+      "${CLIENT_MOCK_OUTPUT}/cases-normal"
+    ],
+    [
+      "${CLIENT_MOCK_OUTPUT}/client-ndebug",
+      "--cpu-only-client-test",
+      "${CLIENT_MOCK_OUTPUT}/cases-ndebug"
+    ]
+  ],
+  "all_mock_dependencies_checked_before_first_execution": true,
+  "elapsed_s": 6.862945671004127,
+  "actual_backend_model_context_placement_forward_calls": 0,
+  "native_linked_ELF_invocations": 0,
+  "native_authority": false
+}

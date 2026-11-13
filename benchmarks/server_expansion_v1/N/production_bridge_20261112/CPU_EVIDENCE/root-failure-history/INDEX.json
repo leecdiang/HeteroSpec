@@ -1,0 +1,98 @@
+{
+  "schema": "hs.production-bridge.cpu-failure-history.v1",
+  "scope": "CPU_ONLY_NOT_NATIVE",
+  "entries": [
+    {
+      "file": "BRIDGE_TEST_EPOCH01.log",
+      "original_bytes": 48076,
+      "original_sha256": "6e103d16c46800e80daccdcbca38552337342dc5d8f0e7f19677362b518d0e5f",
+      "public_bytes": 48538,
+      "public_sha256": "a417c4d9a9b5c1c403be73e2f639ff1d40134251ba291a5adb3f5212796e02ea",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "BRIDGE_TEST_EPOCH02.log",
+      "original_bytes": 2374,
+      "original_sha256": "6fdedc60606cd24a33e8bde4ddb706798c3766842c495766294c8601a175a893",
+      "public_bytes": 2377,
+      "public_sha256": "55cb9e08b74381ca1538dbf8d3df44168f32ff28229c3fde6f3d951d65bbe836",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "BRIDGE_TEST_EPOCH03.log",
+      "original_bytes": 1773,
+      "original_sha256": "fe5a17136d8e5314e8b0794c6ab6996082d73f611e652bb39f4d3eeba8e6dcfd",
+      "public_bytes": 1773,
+      "public_sha256": "fe5a17136d8e5314e8b0794c6ab6996082d73f611e652bb39f4d3eeba8e6dcfd",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "BRIDGE_FINAL_EPOCH06.log",
+      "original_bytes": 3546,
+      "original_sha256": "0f0fff381854def9534df276f46c7f9514338175396df07fdd34acb16e1cd024",
+      "public_bytes": 3546,
+      "public_sha256": "0f0fff381854def9534df276f46c7f9514338175396df07fdd34acb16e1cd024",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "INTEROP_EPOCH04.log",
+      "original_bytes": 1237,
+      "original_sha256": "5bb055d6a7cfb455e866dfa4826c5d0cc25dd8794cc1b36c634ff5add75214c2",
+      "public_bytes": 1237,
+      "public_sha256": "5bb055d6a7cfb455e866dfa4826c5d0cc25dd8794cc1b36c634ff5add75214c2",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "INTEROP_EPOCH05.log",
+      "original_bytes": 1299,
+      "original_sha256": "6f17b9743881a95dd71a2db47c766f40d11592363104b51cbbad4c852cd69ce7",
+      "public_bytes": 1299,
+      "public_sha256": "6f17b9743881a95dd71a2db47c766f40d11592363104b51cbbad4c852cd69ce7",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "INTEROP_EPOCH06.log",
+      "original_bytes": 1242,
+      "original_sha256": "e1d65264ee6c894b83877c13aa39b8d215ddeb5a907b4aa1fd54e2aad71500b4",
+      "public_bytes": 1242,
+      "public_sha256": "e1d65264ee6c894b83877c13aa39b8d215ddeb5a907b4aa1fd54e2aad71500b4",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "INTEROP_FAULTS_EPOCH06.log",
+      "original_bytes": 5306,
+      "original_sha256": "308c9c1f34bf22a00056dd906ec633567c4468e64d4c0f3d7104872efe770a95",
+      "public_bytes": 5306,
+      "public_sha256": "308c9c1f34bf22a00056dd906ec633567c4468e64d4c0f3d7104872efe770a95",
+      "redaction": "private workspace prefix only; original retained privately"
+    },
+    {
+      "file": "INTEROP_FAULTS_EPOCH07.log",
+      "original_bytes": 5291,
+      "original_sha256": "41ef487a8c716b59abcf953f73671d4ef4e757c8bf9a982fd34b4571efa76cda",
+      "public_bytes": 5291,
+      "public_sha256": "41ef487a8c716b59abcf953f73671d4ef4e757c8bf9a982fd34b4571efa76cda",
+      "redaction": "private workspace prefix only; original retained privately"
+    }
+  ],
+  "failures": [
+    {
+      "epoch": "unit01",
+      "reason": "new synthetic fixture passed a stale pre-finalization manifest;22 setup errors, no GPU"
+    },
+    {
+      "epoch": "unit02",
+      "reason": "bridge _guard needed to poison when its own guard failed;21 pass1 fail"
+    },
+    {
+      "epoch": "interop04",
+      "reason": "ambient umask created group-writable job; trusted launcher rejected before READY; fixed O_EXCL0600 durable write"
+    },
+    {
+      "epoch": "interop05",
+      "reason": "after owned supervisor reap, closed resource domain was rechecked before worker release; stopped at REAPED; guard order fixed"
+    }
+  ],
+  "native_checks": "ALL_261_NOT_RUN",
+  "actual_model_GPU_placement_forward_calls": 0
+}

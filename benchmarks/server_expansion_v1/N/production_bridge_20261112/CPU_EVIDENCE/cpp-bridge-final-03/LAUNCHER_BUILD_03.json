@@ -1,0 +1,156 @@
+{
+  "schema": "hs.production-bridge.launcher-only-rebuild.v1",
+  "status": "COMPILED_INSPECTED_BOUNDARY_CPU_TEST_PASS",
+  "artifacts": {
+    "cpp_bridge_launcher": {
+      "bytes": 329392,
+      "sha256": "770609a9fc019701a8252bbffc63f968b481789f34f4cbee7182b9344ca3290e",
+      "executed": false
+    },
+    "native_bridge_launcher_NOT_ADMITTED": {
+      "bytes": 3482696,
+      "sha256": "b64b163ca5652f626affc1f1254c881f324a399041388e758f0b8735bc5b8eee",
+      "executed": false
+    },
+    "cpu_supervisor_boundary": {
+      "bytes": 91544,
+      "sha256": "7f7e84e1a714966bd48c30dacbbaf4740e679596221344ed28f464c99ed24f69",
+      "executed": true
+    }
+  },
+  "fixed_worker": {
+    "path": "cpp-build-02/cpp_fixed_worker",
+    "sha256": "8ea68312efbdcf00fbf0c5d58354055a741ea91c4ddb3d9406af18538f2f1295",
+    "rebuilt": false
+  },
+  "unchanged_native_worker_pins": {
+    "R": "7bc87ec910740a2eb6b511f5e6e6f98ceac44ffd0563a5d1b2318633fc0dc235",
+    "loop4": "5d4b49bbba871655c5d6af24b32cb322faf171524f04648a9106c9d687e38981"
+  },
+  "NEEDED": {
+    "CPU": [
+      "libstdc++.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ],
+    "NATIVE": [
+      "libstdc++.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ],
+    "BOUNDARY": [
+      "libstdc++.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ]
+  },
+  "sources": [
+    {
+      "file": "cpp_bridge_launcher.cpp",
+      "bytes": 8007,
+      "sha256": "edcb9fd8d0b896bb8e8b2244d44a0d3c0cbabe1222c15f10ea5ac4fb66806a76"
+    },
+    {
+      "file": "supervisor.hpp",
+      "bytes": 9955,
+      "sha256": "aa8308513c930f2de0c8b77105df4c4fa47b1411b07e1e5a93c5647065b52e7d"
+    },
+    {
+      "file": "bridge_job.hpp",
+      "bytes": 6275,
+      "sha256": "c6f5f97a287f5452dc312803234449583b3307b4cfac13053a6ee7e21eb76763"
+    },
+    {
+      "file": "bridge_client.hpp",
+      "bytes": 11358,
+      "sha256": "c24b82a2d31e3846532e7e1df2e739bb31edceff8a12149b6cbfe0c3e745eee2"
+    },
+    {
+      "file": "test_supervisor_boundary.cpp",
+      "bytes": 2974,
+      "sha256": "be1a8025e2571156f1da5fe05bd96cbb248282325bef470ee561b40b1997d520"
+    },
+    {
+      "file": "rebuild_launchers.py",
+      "bytes": 3607,
+      "sha256": "a49f046e566a041c2321af5e10651681e4a52e643c27b833dbc9962622dbe401"
+    }
+  ],
+  "logs": [
+    {
+      "file": "BOUNDARY-readelf.log",
+      "bytes": 1598,
+      "sha256": "a24a542d7fa5d5d4a089f9c092f62dc256b3686f918194b82eab76a5b079a651"
+    },
+    {
+      "file": "BOUNDARY-test-02.log",
+      "bytes": 101,
+      "sha256": "c47a9fc36c629985718c658d1fdea6637b07fd530e7ee4bfc7f2c98c70ff7459"
+    },
+    {
+      "file": "BOUNDARY-test.log",
+      "bytes": 64,
+      "sha256": "9afb077683f9d5fb05164ec52a3e4e8b9d1590688740f538169ffa73073113c9"
+    },
+    {
+      "file": "CPU-readelf.log",
+      "bytes": 1601,
+      "sha256": "9c5304eb84b3b71163bdabc6f42c3ba67f77bed2b7c2c86a875eaf7931e0b416"
+    },
+    {
+      "file": "NATIVE-readelf.log",
+      "bytes": 1602,
+      "sha256": "1db42b724e46abb4e4085de5d23da1323a384410ce233487783ed4980f8db1ad"
+    },
+    {
+      "file": "boundary-compile.log",
+      "bytes": 5375,
+      "sha256": "916536f7b085bd95a725b4975d804479b739df10f93744f028eb07dd163c2dba"
+    },
+    {
+      "file": "cpu-launcher-compile.log",
+      "bytes": 2063,
+      "sha256": "9d665ff6eba89ceefb8a4bbc5f8265e09c9357a4661dc78e4f437ccbfef74dab"
+    },
+    {
+      "file": "native-launcher-compile.log",
+      "bytes": 2063,
+      "sha256": "9d665ff6eba89ceefb8a4bbc5f8265e09c9357a4661dc78e4f437ccbfef74dab"
+    }
+  ],
+  "boundary_tests": {
+    "status": "CPU_SUPERVISOR_BOUNDARY_PASS",
+    "tests": 4,
+    "native_model_context_placement_forward_calls": 0
+  },
+  "invocations": [
+    {
+      "command": [
+        "launcher-build-03/cpu_supervisor_boundary",
+        "launcher-build-03/boundary-fixture"
+      ],
+      "outcome": "SAFE_REJECTION_BEFORE_FIXTURE_EXECUTION",
+      "log": "BOUNDARY-test.log"
+    },
+    {
+      "command": [
+        "launcher-build-03/cpu_supervisor_boundary",
+        "${TASK_ROOT}/launcher-build-03/boundary-fixture"
+      ],
+      "outcome": "FOUR_CPU_BOUNDARY_TESTS_PASS",
+      "log": "BOUNDARY-test-02.log"
+    }
+  ],
+  "compile_recipe": "Retained source-snapshot rebuild_launchers.py; out was launcher-build-03. Only CPU boundary invocation corrected to absolute fixture path; no binary/source changes between invocations.",
+  "native_executables_started": 0,
+  "GPU_contexts": 0,
+  "model_creations": 0,
+  "backend_initializations": 0,
+  "placement_actions": 0,
+  "forwards": 0,
+  "production_gate": "PERMANENT_DENIAL",
+  "finalizer": {
+    "sha256": "7b9134f281347e6d4b6163824e02b46febd2b980f8bf1855bc7f87dbd9161f8a",
+    "scope": "READ_HASH_LOG_VALIDATION_ONLY_NO_EXEC"
+  }
+}

@@ -1,0 +1,9 @@
+# Static map of the frozen 261 checks
+
+`build_map.js` reads the unchanged #226 required graph and the actual successor source files. It maps every frozen check to worker/checkpoint dispatch, state-machine phase, active-KV capture, streamed transport, strict comparator and synthetic component evidence. It verifies that referenced symbols exist and that component source hashes still match their test receipts. A changed implementation cannot inherit an old mock PASS.
+
+The graph remains 162 aligned-state comparisons, 27 resident prior-terminal-to-next-prefix comparisons, 36 output-ownership transitions and 36 individual empty resets. Cold-oracle sessions have no prior-KV-retention check. Their independently constructed prefix is compared to R at the named aligned states. The C++ retained-prefix path compares old real active K/V files to the newly retained files using the old source stride; matching heads alone is not a comparison.
+
+Every map row has native status **NOT_RUN** and zero actual native captures/results. Shared standard-library-only mock tests and inherited synthetic byte fixtures are indexed as component evidence; they are not 261 native executions, model results or a qualification certificate. Compiled/native-linked symbols also do not establish numerical, context, producer or placement qualification. The current concrete ProductionGate remains non-admitting, including the guard before native ELF launch.
+
+Run `node build_map.js REPOSITORY_ROOT FRESH_OUTPUT_DIRECTORY` to create JSON, CSV and a source-identity summary. The script reads only source/evidence files and never loads a runtime or model. Preserve earlier failed-map attempts and outputs. New actual code or receipts require a new output directory and source-bound review; they do not replace the frozen #226 graph or any old results.

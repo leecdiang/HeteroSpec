@@ -1,0 +1,103 @@
+{
+  "schema": "hs.N1controller.CPU-final-evidence.v1",
+  "status": "CPU_ONLY_FINAL_TESTS_PASS_NATIVE_NO_GO",
+  "source_inputs": [
+    {
+      "file": "controller.py",
+      "bytes": 46962,
+      "sha256": "4448a7525b3f6b6a02b4881022d1d4ce33f903e1a2cfc8ccc5d3d61037fbfd65"
+    },
+    {
+      "file": "generate_manifest.py",
+      "bytes": 14957,
+      "sha256": "8114e0204aa16f72d1d188b19a4cd9977d812db1e7de8c01b8a904ef91d79356"
+    },
+    {
+      "file": "late_bind.py",
+      "bytes": 6839,
+      "sha256": "587e695e37cda3ebfa8f0e5331af625077105bacd0149e96cc370927d34ff09d"
+    },
+    {
+      "file": "resource_limits.py",
+      "bytes": 18721,
+      "sha256": "ec6caa7f09142ee336dd4d8152c021a6f5945fe7b970594825dcbf09eb5b4447"
+    },
+    {
+      "file": "test_controller.py",
+      "bytes": 28977,
+      "sha256": "4a8c69c1ed14bba0c3b2f9658cd82e6821f4b9b98508c709a5d16a1106ce9d95"
+    },
+    {
+      "file": "test_interop.py",
+      "bytes": 6870,
+      "sha256": "39aa69e0024a63838941aec17e0b92795661de52449b998ea7d6dcc1ec23588d"
+    }
+  ],
+  "normal": {
+    "tests": 37,
+    "elapsed_s": 17.713,
+    "status": "PASS"
+  },
+  "python_optimized": {
+    "tests": 37,
+    "elapsed_s": 18.413,
+    "status": "PASS"
+  },
+  "actual_std_CPP_Python_interop": {
+    "GPU_contexts": 0,
+    "NEEDED": [
+      "libstdc++.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ],
+    "actual_placement_actions": 0,
+    "backend_initializations": 0,
+    "counts": {
+      "backend_inits": 3,
+      "capture_bytes": 184,
+      "contexts": 3,
+      "metadata_bytes": 184,
+      "models": 3,
+      "placements": 3,
+      "raw_bytes": 0,
+      "requests": 8,
+      "rows": 8
+    },
+    "counts_scope": "SYNTHETIC_ACCOUNTING_NOT_MODEL_WORK",
+    "model_creations": 0,
+    "model_forwards": 0,
+    "native_ELF_invocations": 0,
+    "observed_owned_child_exit": 0,
+    "partial_stage": "R natural worker only; no checkpoint or native qualification",
+    "probe_sha256": "f063c162fbb6832dca2db5310325e75ba901bf3c8b8b59ba2cb3ebc0655bb56f",
+    "request_events": 8,
+    "row_reservations": 8,
+    "status": "PASS_STD_ONLY_CPP_PYTHON_INTEROP"
+  },
+  "stage_checks_executed_native": 0,
+  "actual": {
+    "model_creations_including_vocab_only": 0,
+    "backend_initializations": 0,
+    "GPU_contexts": 0,
+    "model_contexts": 0,
+    "placement_actions": 0,
+    "model_forwards": 0,
+    "native_ELF_invocations": 0
+  },
+  "failure_history": [
+    {
+      "epoch": 2,
+      "status": "FAIL_BEFORE_STATE",
+      "reason": "RPC budget generator used len(None) for unresolved cold canonical IDs; all23 tests failed before controller creation; fixed without fabricating R tokens"
+    },
+    {
+      "epoch": 4,
+      "status": "ONE_EXPECTED_DENIAL_CATEGORY_ERROR_36_OTHER_TESTS_PASSED",
+      "reason": "Missing R handoff failed closed via ValueError; made the controller boundary reject it explicitly as Closed, then reran all37 normally and optimized"
+    }
+  ],
+  "initial_epoch01": "23 PASS in3.479s; original source/fixtures and tool transcript retained, no separately captured server stdout file",
+  "intermediate_epoch03": "32 PASS in14.157s plusactualstdinterop; superseded bycurrent37 source",
+  "raw_fixture_directory_retention": true,
+  "native_qualification": "ALL261_NOT_RUN"
+}

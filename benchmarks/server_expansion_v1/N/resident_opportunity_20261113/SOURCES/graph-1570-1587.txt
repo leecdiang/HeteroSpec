@@ -1,0 +1,18 @@
+    ggml_tensor * res = nullptr;
+    if (hs_query_batch && w->type == GGML_TYPE_Q8_0 && cur->type == GGML_TYPE_F32 &&
+        cur->ne[1] > 4 && cur->ne[1] <= 32 && cur->ne[2] == 1 && cur->ne[3] == 1) {
+        // A wide MM dispatch is a different numerical operation on this backend.
+        // Preserve four-column parallel matmuls across the physical KV cut.
+        int64_t first_tail = 0;
+        if (ggml_is_contiguous(w) && ggml_is_contiguous(cur) && w->ne[2]==1 && w->ne[3]==1) {
+            res = ggml_mul_mat(ctx0,w,cur);
+            hs_loop4::mark(res);
+            ggml_format_name(res,"hs_backend_loop4_%s",w->name);
+            first_tail=cur->ne[1]; // the backend handles every 4-column slice and tail
+        }
+        for (int64_t i = first_tail; i < cur->ne[1]; i += 4) {
+            const int64_t rows = std::min<int64_t>(4, cur->ne[1] - i);
+            auto * x = ggml_view_2d(ctx0, cur, cur->ne[0], rows, cur->nb[1], i*cur->nb[1]);
+            auto * block = ggml_mul_mat(ctx0, w, x);
+            ggml_format_name(block, "tpds_projection_%s_%lld", w->name, (long long)i);
+            res = res ? ggml_concat(ctx0, res, block, 1) : block;

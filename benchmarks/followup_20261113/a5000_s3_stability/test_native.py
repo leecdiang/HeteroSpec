@@ -51,6 +51,8 @@ class NativeTests(unittest.TestCase):
         self.assertFalse(discard.exists())
         self.assertTrue((discard.parent / 'frontier.f32').exists())
         self.assertEqual(json.loads((self.root / 'DISPOSAL.json').read_text())['files'][0]['bytes'], 3)
+        prune_states(self.root, {keep})
+        self.assertEqual(json.loads((self.root / 'DISPOSAL.json').read_text())['files'][0]['bytes'], 3)
 
 
 if __name__ == '__main__': unittest.main()

@@ -75,6 +75,8 @@ def prune_states(directory, keep):
         if path in keep:
             continue
         removed.append(dict(path=str(path), bytes=path.stat().st_size))
+    if not removed:
+        return
     write(Path(directory) / 'DISPOSAL.json', dict(utc=utc(), policy='New compared states only; vectors and proofs retained', files=removed))
     for item in removed:
         Path(item['path']).unlink()
@@ -130,16 +132,19 @@ class Campaign:
         for path, digest in c['successor_files'].items():
             need(sha(path) == digest, 'Controller/input source changed')
         out = self.root / panel / 'workers' / worker['worker_id']
-        if self.reuse_first_reference and worker == self.reuse_first_reference:
+        if out.exists() and self.resuming:
             need(read(out / 'JOB.json') == job and read(out / 'WORKER.json') == worker, 'Exact retained first reference')
             host = read(out / 'HOST.json')
             need(host['returncode'] == 0 and host['error'] is None, 'Only known successful native exit can be reused')
             need(read(out / 'native/result.json')['status'] == 'COMPLETE' and (out / 'ACTUAL_MODULES.private.json').exists()
                  and (out / 'ACTUAL_REQUESTS.json').exists(), 'Complete original native evidence')
             events = self.budget.entries()
-            need(not any(x['event'] == 'EXIT' and x['worker_id'] == worker['worker_id'] for x in events), 'Missing exit repair only once')
-            self.budget.event(dict(event='EXIT', cohort=panel[0], worker_id=worker['worker_id'], **host,
-                                   recovery='Original successful HOST/native evidence; controller UTC-key bookkeeping failure; no new launch'))
+            exits = [x for x in events if x['event'] == 'EXIT' and x['worker_id'] == worker['worker_id']]
+            if not exits:
+                self.budget.event(dict(event='EXIT', cohort=panel[0], worker_id=worker['worker_id'], **host,
+                                       recovery='Original successful HOST/native evidence; controller UTC-key bookkeeping failure; no new launch'))
+            else:
+                need(len(exits) == 1 and all(exits[0][k] == v for k, v in host.items()), 'Recorded successful exit must match retained HOST')
             return out
         need(not out.exists(), 'Preserve previous worker')
         out.mkdir(parents=True)
@@ -150,7 +155,7 @@ class Campaign:
             need((self.root / panel / 'QUALIFIED.json').exists(), 'Full panel qualification before timing')
         # These ABI fields refer to actual retained S1 evidence and this new
         # frozen source/input inventory, never to a historical spending grant.
-        grant = dict(schema='hs.strong.native-reservation.v1', phase='S3' if formal else 'S1',
+        grant = dict(schema='hs.strong.native-reservation.v1', phase='S3' if formal else 'S3_QUAL',
                      GPU_authorized=True, complete_F0_readback=True, complete_F2_readback=True,
                      prior_S1_qualified=True, budget_reserved=True,
                      private_gpu_uuid=c['gpu_uuid'], job_sha256=sha(out / 'JOB.json'),
@@ -210,16 +215,12 @@ class Campaign:
             self.budget.event(dict(event='EXIT', cohort=panel[0], worker_id=worker['worker_id'], **host))
         return out
 
-    def panel(self, panel, resume_first_reference=False):
+    def panel(self, panel, resume=False):
         c = self.c; destination = self.root / panel
         manifest = read(Path(c['plans']) / panel / 'MANIFEST.json')
-        self.reuse_first_reference = None
-        if resume_first_reference:
-            need(read(destination / 'STATUS.json')['error'] == "dict() got multiple values for keyword argument 'utc'", 'Only audited first-reference bookkeeping failure')
-            reserved = [x for x in self.budget.entries() if x['event'] == 'RESERVE']
-            first = manifest['workers'][0]
-            need(len(reserved) == 1 and reserved[0]['worker_id'] == first['worker_id'] and first['arm'] == 'R', 'Exactly one original reference, no other launched work')
-            self.reuse_first_reference = first
+        self.resuming = resume
+        if resume:
+            need(read(destination / 'STATUS.json')['status'] == 'STOPPED', 'Inspect stopped panel before explicit continuation')
         else:
             need(not destination.exists(), 'Panel already started; inspect evidence before continuation')
             destination.mkdir()
@@ -235,9 +236,9 @@ class Campaign:
                 first = read(self.root / 'R1' / 'START.json')
                 need((dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(first['utc'])).total_seconds() >= 86400, '24h date separation')
                 need(read(self.root / 'R1' / 'STATUS.json')['status'] == 'COMPLETE', 'R1 complete prerequisite')
-            if resume_first_reference:
-                write(destination / 'RESUME.json', dict(utc=utc(), source_commit=c['source_commit'], native_relaunches=0,
-                      reason='Repair controller exit bookkeeping; original successful first R request remains charged'))
+            if resume:
+                write(destination / ('RESUME-' + str(time.monotonic_ns()) + '.json'), dict(utc=utc(), source_commit=c['source_commit'],
+                      reason='Continue only unstarted registered workers; reuse proven successful native exits; failed attempts stay charged'))
             else:
                 write(destination / 'START.json', dict(utc=utc(), panel=panel, deployment='Original native ELF and full compiled closure', source_commit=c['source_commit']))
             references = read(self.root / 'R1' / 'ORACLES.json') if panel == 'R2' else {}
@@ -252,14 +253,24 @@ class Campaign:
                     if w['roles'] == ['reference'] and w['worker_id'].endswith('R0'):
                         pending[slot] = str(native)
                     else:
-                        proof = self.verify.repeated_R(pending[slot], native, service, self.profile)
-                        write(out / 'CHECKED.json', proof)
-                        prune_states(native, set())
+                        if self.resuming and (out / 'CHECKED.json').exists():
+                            proof = read(out / 'CHECKED.json')
+                            need(proof[0]['input_id'] == name and proof[0]['endpoint'] == read(native / name / 'receipt.json'), 'Retained complete repeated-R proof/receipt binding')
+                            need((native / 'DISPOSAL.json').exists(), 'Intermediate repeat states were intentionally disposed after checking')
+                        else:
+                            proof = self.verify.repeated_R(pending[slot], native, service, self.profile)
+                            write(out / 'CHECKED.json', proof)
+                            prune_states(native, set())
                         references[str(slot)] = pending[slot]
                 else:
-                    proof = self.verify.complete_bridge(native, name + '-heavy', native, name + '-clean',
-                                                        references[str(slot)], service, self.profile, w['arm'], out / 'checker-view')
-                    write(out / 'CHECKED.json', proof)
+                    if self.resuming and (out / 'CHECKED.json').exists():
+                        proof = read(out / 'CHECKED.json')
+                        need(proof['heavy_receipt_sha256'] == sha(native / (name + '-heavy') / 'receipt.json') and
+                             proof['clean_receipt_sha256'] == sha(native / (name + '-clean') / 'receipt.json'), 'Retained complete bridge proof/receipt binding')
+                    else:
+                        proof = self.verify.complete_bridge(native, name + '-heavy', native, name + '-clean',
+                                                            references[str(slot)], service, self.profile, w['arm'], out / 'checker-view')
+                        write(out / 'CHECKED.json', proof)
                     heavy = read(native / (name + '-heavy') / 'receipt.json')
                     tapes[f'{slot}:{w["arm"]}'] = heavy['semantic_tape_sha256']
                     prune_states(native, {native / (name + '-clean') / 'post-service-terminal/sequence.bin'})
@@ -307,10 +318,10 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=Path, required=True)
     parser.add_argument('--panel', choices=['R1', 'R2', 'H1'])
     parser.add_argument('--preflight', action='store_true')
-    parser.add_argument('--resume-first-reference', action='store_true')
+    parser.add_argument('--resume', action='store_true')
     args = parser.parse_args()
     campaign = Campaign(args.config)
     if args.preflight: print(json.dumps(campaign.preflight(), indent=2))
     else:
         need(args.panel is not None, 'Panel required')
-        campaign.panel(args.panel, args.resume_first_reference)
+        campaign.panel(args.panel, args.resume)
